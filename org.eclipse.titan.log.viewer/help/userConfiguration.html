@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+	<title>User Configuration</title>
+</head>
+
+<body>
+<h1>User Configuration</h1>
+<br>
+<p class="text">The TITAN Log Viewer user configuration can be configured on either 
+  project or workspace level. The settings on the workspace level are referred 
+  to as preferences and applies to all projects in the workspace, while settings 
+  on the project level are referred to as properties and applies to the project 
+  they are set on. Project settings overrides the workspace settings when used.<br>
+  <br>
+  The workspace preferences are found in the <i>Preferences</i> in the Window 
+  menu while the project properties is found in the action <i>Properties</i> in 
+  the pop-up menu of the selected project. <br>
+  <br>
+  The layout of the property/preference pages are similar on project and workspace 
+  level, except the option to set workspace or project level that only exists 
+  in the project properties. If the user chooses to use settings defined on workspace 
+  level in the properties, the project settings will be disabled. </p>
+<br>
+<p class="text">All property/preference pages contain the same buttons, with the following 
+  functionality:<br>
+  <br>
+<table cellspacing="0" border="1" width="75%" cellpadding="3" bordercolor="gray">
+      <tr> 
+        <td width="20%" align ="left"><b>Button</b></td>
+        <td width="80%"><b>Description</b></td>
+      </tr>
+      
+        <tr> 
+        <td width="25%" align ="left">Import</td>
+        
+    <td width="75%" align="left">
+      <a href="#import">Import</a> opens a browser dialog for importing property/preference 
+        page settings.
+      </td>
+      </tr>
+       <tr> 
+        <td width="25%" align ="left">Export</td>
+        
+    <td width="75%" align="left"><a href="#export">Export</a> will open a browser 
+      dialog for exporting property/preference page settings.</td>
+      </tr>
+      
+      <tr> 
+        <td width="25%" align ="left">Apply</td>
+        <td width="75%" align="left">The changes in the property/preference page is saved and the focus will remain in the window.</td>
+      </tr>
+      <tr> 
+        <td align ="left">Restore Defaults</td>
+        <td align="left">Sets the values back to the default values.</td>
+      </tr>
+      <tr> 
+        <td align ="left">OK</td>
+        <td align="left">Saves the settings in the window and closes the window.</td>
+      </tr>
+      <tr> 
+        <td align ="left">Cancel</td>
+        <td align="left">Closes the window without saving the settings.</td>
+      </tr>
+    
+    </table>
+    <p></p><br>
+<p class="text">
+<a name="export"></a><p class="subtitle">Export</p>
+<p class="text"> The export functionality is available on each property/preference 
+  page, <a href="gereralSettings.html">General Settings</a>, <a href="componentsVisualOrder.html">Components&nbsp;Visual&nbsp;Order</a>, 
+  <a href="filteredComponents.html">Filtered&nbsp;Components</a>, <a href="filteredFunctions.html">Filtered&nbsp;Functions</a>, <a href="filteredSignals.html">Filtered&nbsp;Signals</a> 
+  and <a href="filteredSilentEvents.html">Filtered&nbsp;Silent&nbsp;Events</a> 
+  . </p>
+<p class="text">&nbsp;</p>
+<p class="text">The exported property/preference settings are stored in a XML 
+  file. The export functionality will export all settings that are visible in the 
+  property/preference page even if the have not been committed (e.g. stored).</p>
+<p class="text">The exported file is possible to transfer between different operating 
+  systems. A file exported from a project setting can be imported into the workspace 
+  setting and vice versa. <br>
+</p>
+<ol>
+<li>
+    <p class="subtitle">Press the <i>Export...</i> button in the property/preference 
+      page.</p>
+    <p class="text">The export dialog is opened.</p>
+</li>
+<li>
+    <p class="subtitle">Enter file name and output directory for the export 
+      file and press the <i>Save</i> button.</p>
+	<p class="text">The property/preference settings visible in the page is 
+      exported to a file with the extension xml with the selected name. </p>
+  </li>
+</ol>
+
+<a name="import"></a><p class="subtitle">Import</p>
+<p class="text"> The import functionality is available on each property/preference 
+  page, <a href="gereralSettings.html">General Settings</a>, <a href="componentsVisualOrder.html">Components&nbsp;Visual&nbsp;Order</a>, 
+  <a href="filteredComponents.html">Filtered&nbsp;Components</a>, <a href="filteredFunctions.html">Filtered&nbsp;Functions</a>, <a href="filteredSignals.html">Filtered&nbsp;Signals</a> 
+  and <a href="filteredSilentEvents.html">Filtered&nbsp;Silent&nbsp;Events</a> 
+  . </p>
+<p class="text">&nbsp;</p>
+<p class="text">This import functionality will import an existing XML file and 
+  visually display the data, the user must explicit save the content. The import 
+  can occur both on project and workspace level.</p>
+  <p class="text">
+  The file imported can have been created on a different operating system.
+  A file exported from a project setting can be imported into the workspace setting 
+  and vice versa.</p>
+
+<p></p>
+<ol>
+<li>
+    <p class="subtitle">Press the <i>Import...</i> button in the property/preference 
+      page.</p>
+    <p class="text">The import dialog is opened.</p>
+</li>
+<li>
+    <p class="subtitle">Select the file to import and press the <i>Open</i> 
+      button.</p>
+	<p class="text">The property/preference settings visible in the page is 
+      exported to a file with the extension xml with the selected name.</p>
+  </li>
+</ol>
+<br>
+<p class="text">The user configurations includes the following settings:
+<br>
+  <a href="gereralSettings.html">General Settings</a>, <a href="componentsVisualOrder.html">Components&nbsp;Visual&nbsp;Order</a>, <a href="filteredComponents.html">Filtered&nbsp;Components</a>, 
+  <a href="filteredFunctions.html">Filtered&nbsp;Functions</a>, <a href="filteredSignals.html">Filtered&nbsp;Signals</a>, <a href="filteredSilentEvents.html">Filtered&nbsp;Silent&nbsp;Events</a>,
+  <a href="decipheringPreferencePage.html">Message&nbspName&nbspDeciphering</a>
+</body>
+</html>

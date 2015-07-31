@@ -1,0 +1,93 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module shiftrotate {
+type record of integer ROI;
+type set of integer SOI;
+
+function f() {
+  const bitstring cbs := '001101'B;
+  var bitstring bs;
+  const charstring ccs := "";
+  var charstring cs;
+  const octetstring cos := 'CAFE8080'O;
+  var octetstring os;
+  const hexstring chs := 'FACE2'H;
+  var hexstring hs;
+  const ROI croi := {1, 2, 1, 2, 1};
+  var ROI roi;
+  const SOI csoi := {1, 2, 3};
+  var SOI soi;
+  const integer neg := -4;
+
+  // no problem
+  bs := cbs << 1;
+  // should be marked for negative shift
+  bs := cbs << neg;
+  // should be marked for negative shift
+  bs := cbs << -4;
+  // marked for zero shift
+  bs := cbs << 0;
+  // marked for large shift
+  bs := cbs << 100;
+
+  // no problem
+  bs := cbs >> 1;
+  // should be marked for negative shift
+  bs := cbs >> neg;
+  // should be marked for negative shift
+  bs := cbs >> -4;
+  // marked for zero shift
+  bs := cbs >> 0;
+  // marked for large shift
+  bs := cbs >> 100;
+
+  // no problem
+  bs := cbs @> 1;
+  // should be marked for negative rotate
+  bs := cbs @> neg;
+  // should be marked for negative rotate
+  bs := cbs @> -4;
+  // marked for zero rotate
+  bs := cbs @> 0;
+  // marked for large rotate
+  bs := cbs @> 100;
+
+  // no problem
+  bs := cbs <@ 1;
+  // should be marked for negative rotate
+  bs := cbs <@ neg;
+  // should be marked for negative rotate
+  bs := cbs <@ -4;
+  // marked for zero rotate
+  bs := cbs <@ 0;
+  // marked for large rotate
+  bs := cbs <@ 100;
+
+
+  // All of the below assignments are marked for zero shift/rotate
+  cs := ccs @> 0;
+  cs := ccs <@ 0;
+
+  os := cos >> 0;
+  os := cos << 0;
+  os := cos @> 0;
+  os := cos <@ 0;
+
+  hs := chs >> 0;
+  hs := chs << 0;
+  hs := chs @> 0;
+  hs := chs <@ 0;
+
+  roi := croi @> 0;
+  roi := croi <@ 0;
+
+  soi := csoi @> 0;
+  soi := csoi <@ 0;
+
+}
+}

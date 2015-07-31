@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="help extension" link_to="../org.eclipse.titan.help/toc.xml#TITAN_documentation">
+<topic label="TITAN Log Viewer">
+	<topic label="Introduction" href="help/introduction.html">
+	</topic>
+	<topic label="Getting Started" href="help/gettingstarted.html">
+	</topic>
+	<topic label="Working with projects" href="help/titanLogViewerProject.html"> 
+			<topic label="Import Project" href="help/importProject.html"/>
+			<topic label="Open Project" href="help/openProject.html"/>
+			<topic label="Close Project" href="help/closeProject.html"/>
+			<topic label="Delete Project" href="help/deleteProject.html"/>
+	</topic>
+	<topic label="Working with the TITAN Log Viewer Perspectives" href="help/perspective.html">
+			<topic label="Open Perspective" href="help/openPerspective.html"/>
+			<topic label="Close Perspective" href="help/closePerspective.html"/>
+			<topic label="Reset Perspective" href="help/resetPerspective.html"/>
+	</topic>
+	<topic label="Extracting Test Cases" href="help/extractTestCase.html"/>
+	<topic label="Extracting Components" href="help/extractComponents.html"/>
+	<topic label="View Text Table" href="help/openTextTable.html"/>
+	<topic label="View Message Sequence Chart" href="help/viewMessageSequenceChart.html"/>
+	<topic label="View Message Details" href="help/viewDetails.html"/>  
+	<topic label="View Statistics" href="help/viewStatistics.html"/>	
+	<topic label="User Configuration" href="help/userConfiguration.html">
+			<topic label="General Settings" href="help/gereralSettings.html"/>
+			<topic label="Components Visual Order" href="help/componentsVisualOrder.html"/>
+			<topic label="Filtered Components" href="help/filteredComponents.html"/>
+			<topic label="Filtered Functions" href="help/filteredFunctions.html"/>
+			<topic label="Filtered Ports" href="help/filteredPorts.html"/>
+			<topic label="Filtered Signals" href="help/filteredSignals.html"/>
+			<topic label="Filtered Silent Events" href="help/filteredSilentEvents.html"/>
+			<topic label="Setverdict" href="help/setverdict.html"/>
+			<topic label="Color Keywords" href="help/colorkeywords.html"/>
+   <topic href="help/decipheringPreferencePage.html" label="Message Name Deciphering">
+   </topic>
+	</topic>
+	<topic label="Searching in TITAN Log files" href="help/search.html"/>
+	<topic label="Filtering the displayed log records" href="help/filter.html"/>
+	<topic label="New and Noteworthy" href="help/newAndNoteworthy.html"/> 
+</topic>
+</toc>

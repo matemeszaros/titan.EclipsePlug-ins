@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<project basedir="." name="config">
+
+	<!-- The qualifier of the features -->
+	<property name="version" value="5.3.0.CRL_113_200_5_R3A"/>
+	<tstamp/>
+	<property name="timestamp" value="${DSTAMP}-${TSTAMP}"/>
+	<property name="version.qualifier" value="${version}_${timestamp}"/>
+
+	<property name="build.help" value="true"/>
+
+    <property name="ECLIPSE_HOME" value="/proj/TTCN/Tools/eclipse-3.7_x86_64/"/>
+	<!-- ANTLR runtime -->
+	<property name="antlr4.jar.location" location="/home/titanrt/tools/antlr/4.3/antlr-4.3-complete.jar"/>
+
+	<!-- The directory of the build system -->
+	<property name="base.dir" location="${basedir}"/>
+
+	<!-- The location of the configuration file -->
+	<property name="build.config" location="${basedir}/build_config.xml"/>
+
+	<!-- The directories to use during the build process -->
+	<property name="result.dir" location="${basedir}/result"/>
+	<property name="log.dir" location="${result.dir}/logs"/>
+	<property name="build.dir" location="${basedir}/../"/>
+	<property name="zip.dir" location="/home/titanrt/eclipse/zips/${version}"/>
+
+	<property name="updatesites.tmp.location" location="/home/titanrt/eclipse_automatic_build/tmp_update_sites" />
+	
+	<!-- Location of external jars -->
+	<property name="lib.dir" value="${base.dir}/../../titan_playground/jar"/>
+
+	<!-- Release update site -->
+	<property name="updatesite.release.location"
+			  location="/proj/TTCN/www/ttcn/root/download/update_site"/>
+	<property name="updatesite.release.name" value="TITAN on Eclipse update site"/>
+	<property name="updatesite.release.url" value="http://ttcn.ericsson.se/download/update_site/"/>
+
+	<!-- FOA update site -->
+	<property name="updatesite.FOA.location"
+			  location="/proj/TTCN/www/ttcn/root/download/update_site/FOA_update_site"/>
+	<property name="updatesite.FOA.name" value="FOA update Site"/>
+	<property name="updatesite.FOA.url" value="http://ttcn.ericsson.se/download/FOA_update_site/"/>
+
+	<!-- Experimental update site -->
+	<property name="updatesite.experimental.location"
+			  location="/proj/TTCN/www/ttcn/root/download/experimental_update_site"/>
+	<property name="updatesite.experimental.name" value="Experimental update site"/>
+	<property name="updatesite.experimental.url" value="http://ttcn.ericsson.se/download/experimental_update_site/"/>
+
+	<!-- Testing update site -->
+	<property name="updatesite.testing.location"
+			  location="/proj/TTCN/www/ttcn/root/download/testing_update_site"/>
+	<property name="updatesite.testing.name" value="Testing update site"/>
+	<property name="updatesite.testing.url" value="http://ttcn.ericsson.se/download/testing_update_site/"/>
+
+	<!-- directory names etc -->
+	<!-- These properties should not be changed -->
+	<property name="common.name" value="org.eclipse.titan.common"/>
+	<property name="designer.name" value="org.eclipse.titan.designer"/>
+	<property name="executor.name" value="org.eclipse.titan.executor"/>
+	<property name="help.name" value="org.eclipse.titan.help"/>
+	<property name="logviewer.name" value="org.eclipse.titan.log.viewer"/>
+	<property name="debug.name" value="org.eclipse.titan.debug"/>
+	<property name="regressiontests.name" value="org.eclipse.titan.regressiontests"/>
+	<property name="titanium.name" value="org.eclipse.titanium"/>
+	<property name="titanium.regressiontests.name" value="org.eclipse.titanium.regressiontests"/>
+	<property name="designer.feature.name" value="TITAN_Designer_feature"/>
+	<property name="executor.feature.name" value="TITAN_Executor_feature"/>
+	<property name="logviewer.feature.name" value="TITAN_Log_Viewer_Feature"/>
+	<property name="titanium.feature.name" value="Titanium_Feature"/>
+	
+	<property name="compiler.location" location="/home/titanrt/jenkins/titan_compiler_git/"/>
+	<property name="tpd.xsd" location="${compiler.location}/etc/xsd/TPD.xsd"/>
+	<property name="online.help.dir" location="${compiler.location}/help"/>
+	<property name="usrguide.compiler.dir" location="${compiler.location}/usrguide"/>
+	<property name="usrguide.eclipse.dir" location="${base.dir}/../"/>
+	<property name="doc2pdf.jar" location="${lib.dir}/doc2pdf.jar"/>
+
+    <property environment="env"/>
+
+	<!-- javac options -->
+	<property name="javac.debug" value="true"/>
+    <property name="javac.debuglevel" value="lines,vars,source"/>
+	<property name="javac.encoding" value="UTF-8"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+
+	<!-- The java 6 executable (needed for the doc2pdf.jar) -->
+	<property name="java6" location="/app/j2re/1.6.0_22/LMWP3/bin/java"/>
+
+	<!-- The location of the ant-contrib package -->
+	<property name="ant-contrib.location"
+			  location="${lib.dir}/ant-contrib/lib/ant-contrib.jar"/>
+</project>
+

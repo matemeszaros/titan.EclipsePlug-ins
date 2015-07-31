@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>Deciphering preference page</title>
+</head>
+<body>
+<h1>Deciphering Preference Page</h1>
+<br>
+<p class="text">The message name deciphering rules can be defined on this page. The stored rules can be used on the MSC view.
+<br>
+<br>
+
+  <p>
+  The rules are organized into groups. The group are identified by name and they contain a group of message types.
+  Each message type can have multiple rules associated with them. The Log Viewer will try to decipher messages with the given type,
+  using the rulesets associated with it.
+  </p>
+  <p>
+  The drop down list at the top of the page contains the names of the already stored rule sets.
+  Rule sets can be added or removed using the buttons "Add" and "Remove" below the list.
+  The message types of the selected rule set are displayed on the textbox, in the middle of the page.
+  The message types can be given using their fully qualified name. In the case of the SIP protocol: '@SIP_Definitions.SipMessage'
+  </p>
+  <p>
+  The rules for the selected message type are displayed in the text field at the bottom of the page.
+  Rules can be added and removed the same way as message types. The rule contains the field of the message
+  which should be displayed on the MSC view. For example: In the case of the SIP protocol the 'request.requestLine.method' rule
+  displays the method field of the messages. 
+  </p>
+  <p>
+  The stored rule sets can be exported to an XML file by clicking on the Export button.
+  The created XML file can be imported in another instance of the Log Viewer plugin, by clicking on the Import button. 
+  </p>
+  <img src="images/decipheringPreferencePage.png"> </p>
+<br>
+</body>
+</html>

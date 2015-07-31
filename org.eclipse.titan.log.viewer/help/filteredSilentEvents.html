@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>Filtered Silent Events</title>
+</head>
+<body>
+<h1>Filtered Silent Events</h1>
+<br>
+<p class="text">The user can specify which event types that will be filtered out 
+  when displaying the message sequence chart. <br>
+  The filtering will only be performed on silent events. If the event class are 
+  present in the file is determined by the TITAN logging setting. </p>
+<br>
+<img src="images/filteredSilentEvent.png"> <br>
+<br>
+<p class="text">The following table shows event types that can be filtered. The 
+  main categories applies to all log formats, while the subcategories only applies 
+  to the log format provided by the TITAN R7B and R7C releases.<br>
+  If one or more of the subcategories are checked, then the main category will be filtered in older log formats.</p>
+<br>
+<table cellspacing="0" border="1" width="75%" cellpadding="3" bordercolor="gray">
+  <tr> 
+    <td width="20%" align ="left"> 
+      <p class="subtitle">Button</p>
+    </td>
+    <td width="80%"> 
+      <p class="subtitle">Description</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="25%" align ="left"> 
+      <p class="text">Select All</p>
+    </td>
+    <td width="75%" align="left"> 
+      <p class="text">Selects all event types.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="25%" align ="left"> 
+      <p class="text">Deselect All
+    </td>
+    <td width="75%" align="left"> 
+      <p class="text">Unchecks all the event types.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="25%" align ="left"> 
+      <p class="text">Restore Defaults</p>
+    </td>
+    <td width="75%" align="left" > 
+      <p class="text">Restores the settings to default. Default setting is all 
+        event types unchecked.</p>
+    </td>
+  </tr>
+</table>
+<br>
+<p class="subtitle">Silent events have the following color mapping:<br>
+  <img src="images/silentEventColors.png"> </p>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<project basedir="." default="build" name="org.eclipse.titan.common" xmlns:ac="antlib:net.sf.antcontrib">
+	
+	<import file="build_import.xml" />
+
+	<property name="antlr.src.dir" location="${build.dir}/${common.name}/src/org/eclipse/titan/common/parsers/cfg"/>
+	<property name="build.generated.sources.dir" location="${antlr.src.dir}"/>
+
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.g4"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir=".">
+                <include name="toc.xml"/>
+                <include name="icons/*"/>
+            	<include name="lib/*"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+		<delete>
+			<fileset dir="${antlr.src.dir}" includes="*.java">
+				<present targetdir="${antlr.src.dir}">
+					<mapper type="glob" from="*.g" to="*.java" />
+				</present>
+			</fileset>
+		</delete>
+    </target>
+
+    <target depends="clean" name="cleanall"/>
+
+	<target name="build.jars" depends="build">
+		<copy file="plugin.xml" todir="bin" />
+		<mkdir dir="${result.dir}/plugins"/>
+		<update.manifest file="${build.dir}/${common.name}/META-INF/MANIFEST.MF"/>
+		<jar destfile="${result.dir}/plugins/org.eclipse.titan.common_${version.qualifier}.jar"
+			 manifest="${build.dir}/${common.name}/META-INF/MANIFEST.MF">
+			<fileset dir="bin"/>
+		</jar>
+	</target>
+
+    <target name="build" depends="init, antlr4" >
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="${javac.debug}" debuglevel="${javac.debuglevel}"
+				encoding="${javac.encoding}"
+			   destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="PDE.classpath"/>
+			<classpath refid="ANTLR4.classpath"/>
+        </javac>
+    </target>
+
+	<target name="antlr4">
+		<apply executable="java" parallel="false" verbose="true" timeout="60000" failonerror="true">
+			<arg value="-classpath" />
+			<arg value="${antlr4.jar.location}" />
+			<arg value="org.antlr.v4.Tool" />
+			<srcfile/>
+			<arg value="-no-listener" />
+			<arg value="-no-visitor" />
+			<arg value="-encoding" />
+			<arg value="UTF-8" />
+			<arg value="-package" />
+			<arg value="org.eclipse.titan.common.parsers.cfg" />
+			<!--
+			  Parsers are dependent to the *.token files (these are generated from  lexer),
+			  so the directory of the *.token file is added as lib
+			  NOTE: If parser g4 compilation is made from that directory, then -lib is not needed
+			-->
+			<arg value="-lib" />
+			<arg value="${antlr.src.dir}" />
+			<fileset dir="${antlr.src.dir}" >
+				<include name="CFGLexer2.g4" />
+				<include name="CFGParser2.g4" />
+				<!-- TODO: add new g4 files here -->
+			</fileset>
+		</apply>
+	</target>
+</project>
+

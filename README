@@ -1,0 +1,114 @@
+###############################################################################
+# Copyright (c) 2000-2014 Ericsson Telecom AB
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+###############################################################################
+#README file for the innersourced Titan Eclipse plugins project
+
+1. VERSION REQUIREMENTS
+
+Java 1.6 or higher, recommended: 1.7
+ANTLR UI 4.1.3 with ANTLR 2.7.6 or 2.7.7
+Ant 1.9.2 or higher
+  NOTE: Build will not work below 1.8 for sure!
+Eclipse Standard or Java 3.6 (Helios) or higher, recommended 4.4 (Luna)
+
+----------------------
+2. SETTING UP ECLIPSE FOR TITAN DEVELOPMENT
+ 
+2.1. Installing Eclipse plug-ins:
+Eclipse -> Help -> Install New Software...
+  Contact all update sites during install to find required software -> ALWAYS SWITCH OFF (it can cause problems)
+
+ANTLR
+http://antlreclipse.sourceforge.net/updates/
+
+Titan plug-ins
+from the Titan update site
+TODO: add URL
+
+Set the new JDK in Window -> Preferences -> Java -> Installed JREs
+
+Window->Preferences->TITAN Preferences:
+  TITAN installation path: <git repository>/titan/Install
+  License file (optional, only if license checking is switched on): /home/<user id>/license_<license id>.dat
+
+2.2. Importing Titan plug-in projects to Eclipse
+Add "Git Repository Exploring" perspective
+Add an existing local Git repository
+  Choose titan and titan_eclipse, finish
+titan_eclipse: right click -> import projects... -> next -> finish
+
+2.3. Other recommended settings
+Project property (right click, properties) -> TITAN Project Property -> Internal makefile creation attributes (middle tab) ->
+  Include source line info in C++ code (-l) -> switch on
+  Add source line info for logging (-L) -> switch on
+
+Add TITAN Editing perspective
+Add TITAN Executing perspective
+
+windows/customize perspective/commands groups availability -> "Launch" switch on
+
+----------------------
+3. SWITCHING ON TITAN LICENSE CHECKING AND USAGE STATISTICS SENDING
+
+By default Titan license checking and usage statistics sending are switched off. You can switch them on by running the following script:
+
+<git repository>/titan_eclipse/license.sh
+
+It modifies the source, you need to rebuild org.eclipse.titan.common plug-in project.
+
+----------------------
+4. BUILDING AND INSTALLING TITAN PLUG-INS FROM COMMAND LINE WITH ANT
+
+4.1. BUILDING TITAN PLUG-INS FROM COMMAND LINE WITH ANT
+cd <git repository>/titan_eclipse/automatic_build
+ant -f build_main.xml -lib <antlr plugin path>/antlr.jar <target>
+
+antlr.jar is installed in this directory: <eclipse_dir>/plugins/org.antlr_2.7....
+target can be one of the following:
+  common.plugin
+  designer.plugin
+  executor.plugin
+  help.plugin
+  logviewer.plugin
+  debug.plugin
+  regressiontests.plugin
+  titanium.plugin
+  titanium.regressiontests.plugin
+
+Make sure, that the following environment variables are set to a valid directory/file:
+
+JAVA_HOME
+ECLIPSE_HOME
+compiler.location: this is the titan project directory: <git repository>/titan
+java6: a java6 executable
+updatesite.experimental.location: output directory for experimental update site (optional)
+updatesites.tmp.location: temporary output directory for experimental update site (optional)
+zip.dir: output directory for zip package that contains all the plug-ins (optional)
+
+These variables can be set by editing <git repository>/titan_eclipse/automatic_build/build_config.xml
+and also in the command, here is a working example:
+
+ant -f build_main.xml \
+-lib $HOME/eclipse/plugins/org.antlr_2.7.6.20140628-1000/antlr.jar \
+-DJAVA_HOME=$HOME/jdk/ \
+-DECLIPSE_HOME=$HOME/eclipse/ \
+-Dcompiler.location=$HOME/git/titan/ \
+-Djava6=$HOME/jdk/bin/java \
+designer.plugin
+
+4.2. INSTALLING PLUG-INS TO ECLIPSE
+The plug-in jars are created in result/plugins/ directory.
+Copy these *.jar files to $ECLIPSE_HOME/plugins/ directory.
+
+----------------------
+5. BUILDING PLUG-INS WITH ONLY ANTLR 4 DEPENDENCIES
+
+cd automatic_build
+./setv4.sh
+
+This script sets the project to use only ANTLR 4 dependent parsers, and removes source files with unnecessary dependencies
+After this step plug-ins can be built and installed as it is described in chapter 4.

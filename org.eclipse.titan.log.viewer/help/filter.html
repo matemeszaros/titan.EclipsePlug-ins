@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>Filtering</title>
+</head>
+<body>
+	<h1>Filtering the displayed log records</h1>
+	<p>The displayed log records can be filtered in the <a href="openTextTable.html">TextTableView</a> and in the <a href="viewMessageSequenceChart.html">MSCView</a>.
+	To set the filtering rule, click on the <img src="images/filter2.gif"> button on the toolbar of an opened TexTableView or MSC view. <br>The filtering rule is defined using the following dialog. </p>
+	<img src="images/filterDialog.png"> 
+	<ol>
+		<li>
+			<p class="subtitle">Filtering on event types</p>
+			<p>The log records with the given event type can be filtered by checking the corresponding checkboxes in the "Event types" area. If the "Inclusive" button is active 
+				the log records with the selected event types will be displayed. Using the "Exclusive" button the filtering rule can be inverted.</p>
+		</li>
+		<li>
+			<p class="subtitle">Filtering based on the content of "Message" and "Source info" fields</p>
+			<p>The filter string is specified using the textbox in the "Filter string area". The log records containing the given string will be displayed. The following wildcards are allowed: * - any string, ? - any character, \ - escape for *?/<br> 
+				Regular expressions can be used instead of strings by selecting the "Regular expression" checkbox. <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/util/regex/Pattern.html">Information on regular expressions can be found on this site.</a></p>
+				<p>The "Source Info" and "Message" buttons specify which part of the log record will be matched. There is a logical OR relation between the two fields.</p>
+		
+		</li>
+		<li>
+			<p class="subtitle">Filtering on timestamps</p>
+			<p>A time interval can be specified by start and the end timestamps. The timestmp format of the currently opened log file is displayed under the textboxes.</p>
+		</li>
+	</ol>
+</body>
+</html>

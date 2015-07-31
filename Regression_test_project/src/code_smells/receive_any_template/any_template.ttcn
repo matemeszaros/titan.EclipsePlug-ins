@@ -1,0 +1,26 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module any_template {
+import from types all;
+
+altstep a1(test_int_port p) runs on c1_CT {
+  var integer i;
+  	// might not a problem, as the port has only one incoming type
+	[] p.receive(*) -> value i {}
+	// might be semantically invalid (TTCN3 specification unclear)
+	[] p1_PT.receive(?) -> value i {}  
+}
+
+// no problem
+altstep a2(test_int_port p) runs on c1_CT {
+  var integer i;
+	[] p1_PT.receive(integer:?) -> value i {}
+	[] p.receive((1, 2, 3)) {}
+}
+
+}

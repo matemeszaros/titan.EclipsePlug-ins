@@ -1,0 +1,1507 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.NatureConverter"
+                                                   id="org.eclipse.titan.designer.actions.NatureConverter"
+                                                   name="NatureConverter"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.RemoteBuilder"
+                                                   id="org.eclipse.titan.designer.actions.RemoteBuilder"
+                                                   name="RemoteBuilder"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.ExcludeFromBuild"
+                                                   id="org.eclipse.titan.designer.actions.ExcludeFromBuild"
+                                                   name="ExcludeFromBuild"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.GenerateBuilderInformation"
+                                                   id="org.eclipse.titan.designer.actions.GenerateBuilderInformation"
+                                                   name="GenerateBuilderInformation"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoringAction"
+                                                   id="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoringAction"
+                                                   name="Rename refactoring"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.FirstCharAction"
+                                                   id="org.eclipse.titan.designer.editors.FirstCharAction"
+                                                   name="Line Start"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.LastCharAction"
+                                                   id="org.eclipse.titan.designer.editors.LastCharAction"
+                                                   name="Line End"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoringAction"
+                                                   id="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoringAction"
+                                                   name="Rename refactoring"/></extension>
+
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.configeditor.FirstCharAction"
+                                                   id="org.eclipse.titan.designer.editors.configeditor.FirstCharAction"
+                                                   name="Line Start"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.configeditor.LastCharAction"
+                                                   id="org.eclipse.titan.designer.editors.configeditor.LastCharAction"
+                                                   name="Line End"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoringAction"
+                                                   id="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoringAction"
+                                                   name="Rename refactoring"/></extension>
+
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
+                                                   id="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
+                                                   name="Open Declaration"/>
+                                                   </extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
+                                                   id="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
+                                                   name="Find References"/></extension>
+    <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
+                                                   id="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
+                                                   name="Open Declaration"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
+                                                   id="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
+                                                   name="Find References"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoringAction"
+                                                   id="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoring"
+                                                   name="Rename refactoring"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
+                                                   id="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
+                                                   name="Open Declaration"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
+                                                   id="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
+                                                   name="Open Declaration"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
+                                                   id="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
+                                                   name="Find References"/></extension>
+
+   <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.ConvertXSD2TTCN"
+                                                   id="org.eclipse.titan.designer.actions.ConvertXSD2TTCN"
+                                                   name="Convert XSD files to TTCN-3"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.GenerateTestPortSkeleton"
+                                                   id="org.eclipse.titan.designer.actions.GenerateTestPortSkeleton"
+                                                   name="Generate Test Port skeleton"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.CheckSemantic"
+                                                   id="org.eclipse.titan.designer.actions.CheckSemantic"
+                                                   name="Check syntax and semantics (no code generation)"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.CheckSyntax"
+                                                   id="org.eclipse.titan.designer.actions.CheckSyntax"
+                                                   name="Check syntax (no semantic check, no code generation)"/></extension>
+
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.nativewin32actions.CheckVersion"
+                                                   id="org.eclipse.titan.designer.nativewin32actions.CheckVersion"
+                                                   name="Check compiler version"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.nativewin32actions.CheckSemantic"
+                                                   id="org.eclipse.titan.designer.nativewin32actions.CheckSemantic"
+                                                   name="Check syntax and semantics (no code generation, native Windows version)"/></extension>
+
+
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.nativewin32actions.CheckSyntax"
+                                                   id="org.eclipse.titan.designer.nativewin32actions.CheckSyntax"
+                                                   name="Check syntax (no semantic check, no code generation, native Windows version)"/></extension>
+
+
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.actions.CheckVersion"
+                                                   id="org.eclipse.titan.designer.actions.CheckVersion"
+                                                   name="Check syntax (no semantic check, no code generation, native Windows version)"/></extension>
+
+
+
+
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.asn1editor.IndentAction"
+                                                   id="org.eclipse.titan.designer.editors.asn1editor.IndentAction"
+                                                   name="IndentAction"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.configeditor.IndentAction"
+                                                   id="org.eclipse.titan.designer.editors.configeditor.IndentAction"
+                                                   name="IndentAction"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.IndentAction"
+                                                   id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3IndentAction"
+                                                   name="IndentAction"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.IndentAction"
+                                                   id="org.eclipse.titan.designer.editors.ttcnppeditor.IndentAction"
+                                                   name="IndentAction"/></extension>
+
+
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.GotoMatchingBracketAction"
+                                                   id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3GotoMatchingBracketAction"
+                                                   name="Go to Matching Bracket"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.GotoMatchingBracketAction"
+                                                   id="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPGotoMatchingBracketAction"
+                                                   name="Go to Matching Bracket"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.configeditor.GotoMatchingBracketAction"
+                                                   id="org.eclipse.titan.designer.editors.configeditor.ConfigGotoMatchingBracketAction"
+                                                   name="Go to Matching Bracket"/></extension>
+  <extension point="org.eclipse.ui.commands"><command
+                                                   defaultHandler="org.eclipse.titan.designer.editors.asn1editor.GotoMatchingBracketAction"
+                                                   id="org.eclipse.titan.designer.editors.asn1editor.ASN1GotoMatchingBracketAction"
+                                                   name="Go to Matching Bracket"/>
+    <command
+      defaultHandler="org.eclipse.titan.designer.actions.FindDefinitionAction"
+      id="org.eclipse.titan.designer.actions.FindDefinitionAction"
+      name="Find definition"/>
+  </extension>
+
+  <extension
+    point="org.eclipse.ui.editors">
+    <editor
+      name="TTCN-3 Editor"
+      extensions="ttcn, ttcn3"
+      icon="icons/ttcn.gif"
+      contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+      class="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Editor"
+      id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Editor">
+    </editor>
+    <editor
+      name="TTCNPP Editor"
+      extensions="ttcnpp"
+      icon="icons/ttcnpp.gif"
+      contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+      class="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPEditor"
+      id="org.eclipse.titan.designer.editors.ttcn3ppeditor.TTCN3PPEditor">
+    </editor>
+    <editor
+      name="TTCNINC Editor"
+      extensions="ttcnin"
+      icon="icons/ttcninc.gif"
+      contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+      class="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPEditor"
+      id="org.eclipse.titan.designer.editors.ttcn3ineditor.TTCN3INEditor">
+    </editor>
+    <editor
+      name="ASN1 Editor"
+      extensions="asn, asn1"
+      icon="icons/asn.gif"
+      contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+      class="org.eclipse.titan.designer.editors.asn1editor.ASN1Editor"
+      id="org.eclipse.titan.designer.editors.asn1editor.ASN1Editor">
+    </editor>
+    <editor
+      name="Configuration Editor"
+      extensions="cfg"
+      icon="icons/cfg.gif"
+      contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+      class="org.eclipse.titan.designer.editors.configeditor.ConfigEditor_V4"
+      id="org.eclipse.titan.designer.editors.configeditor.ConfigEditor">
+    </editor>
+  </extension>
+
+
+
+
+
+
+<extension
+    id="TITANActions"
+    name="TITAN Actions"
+    point="org.eclipse.ui.menus">
+    <menuContribution
+       locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+       <toolbar
+        id="org.eclipse.example.commands.toolbar.changeSetOperations"
+               label="ChangeSet Operations">
+      <command
+        commandId="org.eclipse.titan.designer.actions.ConvertXSD2TTCN"
+        icon="icons/xsd2ttcn.gif"
+        disabledIcon="icons/xsd2ttcn_d.gif"
+        label="Convert XSD files to TTCN-3"
+        tooltip="Convert XSD files to TTCN-3">
+        <visibleWhen>
+           <not>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+            </not>
+        </visibleWhen>
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.actions.GenerateTestPortSkeleton"
+        icon="icons/generate_testport.gif"
+        disabledIcon="icons/generate_testport_d.gif"
+        label="Generate Test Port skeleton"
+        tooltip="Generate Test Port skeleton">
+        <visibleWhen>
+           <not>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+            </not>
+        </visibleWhen>
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.actions.CheckVersion"
+        icon="icons/check_version.gif"
+        disabledIcon="icons/check_version_d.gif"
+        label="Check compiler version"
+        tooltip="Check compiler version">
+        <visibleWhen>
+           <not>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+            </not>
+        </visibleWhen>
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.actions.CheckSemantic"
+        icon="icons/check_semantic.gif"
+        disabledIcon="icons/check_semantic_d.gif"
+        label="Check semantics"
+        tooltip="Check syntax and semantics (no code generation)">
+        <visibleWhen>
+           <not>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+            </not>
+        </visibleWhen>
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.actions.CheckSyntax"
+        icon="icons/check_syntax.gif"
+        disabledIcon="icons/check_syntax_d.gif"
+        label="Check syntax"
+        tooltip="Check syntax (no semantic check, no code generation)">
+        <visibleWhen>
+           <not>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+            </not>
+        </visibleWhen>
+      </command>
+      <command
+        id="org.eclipse.titan.designer.editors.ttcn3editor.ToggleComment"
+        commandId="org.eclipse.titan.designer.editors.ttcn3editor.ToggleComment"
+        label="Toggle Comment"
+        tooltip="Toggle Comment">
+        <visibleWhen>
+           <not>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+            </not>
+        </visibleWhen>
+      </command>
+      </toolbar>
+    </menuContribution>
+    <menuContribution
+       locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+        <toolbar
+        id="org.eclipse.example.commands.toolbar.changeSetOperations"
+               label="ChangeSet Operations">
+      <command
+        icon="icons/check_version_win.gif"
+        disabledIcon="icons/check_version_win_d.gif"
+        label="Check compiler version"
+        tooltip="Check compiler version (native Windows version)"
+        commandId="org.eclipse.titan.designer.nativewin32actions.CheckVersion">
+        <visibleWhen>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+        </visibleWhen>
+      </command>
+      <command
+        id="org.eclipse.titan.designer.nativewin32CheckSemantic"
+        icon="icons/check_semantic_win.gif"
+        disabledIcon="icons/check_semantic_win_d.gif"
+        label="Check semantics"
+        tooltip="Check syntax and semantics (no code generation, native Windows version)"
+        commandId="org.eclipse.titan.designer.nativewin32actions.CheckSemantic">
+        <visibleWhen>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+        </visibleWhen>
+      </command>
+      <command
+        id="org.eclipse.titan.designer.nativewin32CheckSyntax"
+        icon="icons/check_syntax_win.gif"
+        disabledIcon="icons/check_syntax_win_d.gif"
+        label="Check syntax"
+        tooltip="Check syntax (no semantic check, no code generation, native Windows version)"
+        commandId="org.eclipse.titan.designer.nativewin32actions.CheckSyntax">
+        <visibleWhen>
+             <or>
+               <systemTest property="os.name" value="Windows 7"/>
+               <systemTest property="os.name" value="Windows Vista"/>
+             </or>
+        </visibleWhen>
+      </command>
+      </toolbar>
+    </menuContribution>
+  </extension>
+
+  <extension
+    id="org.eclipse.titan.designer.core.TITANNature"
+    name="TITAN Nature"
+    point="org.eclipse.core.resources.natures">
+    <runtime>
+      <run class="org.eclipse.titan.designer.core.TITANNature"/>
+    </runtime>
+    <builder id="org.eclipse.titan.designer.core.TITANBuilder"/>
+  </extension>
+  <extension
+    point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+      icon="icons/titan.gif"
+      id="org.eclipse.titan.designer.core.TITANNatureImage"
+      natureId="org.eclipse.titan.designer.core.TITANNature"/>
+  </extension>
+  <extension
+    id="org.eclipse.titan.designer.core.TITANBuilder"
+    name="TITANBuilder"
+    point="org.eclipse.core.resources.builders">
+    <builder hasNature="true">
+      <run class="org.eclipse.titan.designer.core.TITANBuilder"/>
+    </builder>
+  </extension>
+  <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+         locationURI=
+         "popup:org.eclipse.ui.popup.any?after=additions">
+         <menu label="Titan">
+             <command
+                   commandId="org.eclipse.titan.designer.actions.ExcludeFromBuild"
+                   label="Toggle exclude from build state"
+                   mode="FORCE_TEXT">
+                   <visibleWhen
+                     checkEnabled="false">
+                     <with  
+                        variable="selection">  
+                     <iterate  
+                           operator="or">
+                     <adapt  
+                              type="org.eclipse.core.resources.IResource">
+                              <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="org.eclipse.titan.designer.core.TITANNature">
+                        </test>
+                     </adapt>  
+                     </iterate>
+                     </with>
+                   </visibleWhen>
+             </command>
+             <command
+                   commandId="org.eclipse.titan.designer.actions.NatureConverter"
+                   label="Toggle Titan project nature"
+                   mode="FORCE_TEXT">
+                   <visibleWhen
+                     checkEnabled="false">
+                     <with  
+                        variable="selection">  
+                     <iterate operator="or">
+                     <adapt
+                        type="org.eclipse.core.resources.IProject">
+                     </adapt>
+                     </iterate>
+                     </with>
+                   </visibleWhen>
+              </command>
+             <separator
+                     name="org.eclipse.titan.designer.separator1"
+                     visible="true">
+             </separator>
+            <command
+                  commandId="org.eclipse.titan.designer.actions.GenerateBuilderInformation"
+                  id="org.eclipse.titan.designer.actions.GenerateBuilderInformation"
+                  label="Generate external builder information"
+                  mode="FORCE_TEXT">
+                   <visibleWhen
+                     checkEnabled="false">
+                     <with  
+                        variable="selection">  
+                     <iterate operator="or">
+                     <adapt
+                        type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="org.eclipse.titan.designer.core.TITANNature">
+                        </test>
+                     </adapt>
+                     </iterate>
+                     </with>
+                   </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.titan.designer.actions.RemoteBuilder"
+                  id="org.eclipse.titan.designer.core.RemoteBuilder"
+                  label="Build remotely">
+                   <visibleWhen
+                     checkEnabled="false">
+                     <with  
+                        variable="selection">  
+                     <iterate operator="or">
+                     <adapt
+                        type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="org.eclipse.titan.designer.core.TITANNature">
+                        </test>
+                     </adapt>
+                     </iterate>
+                     </with>
+                   </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+
+
+    <menuContribution
+    locationURI=
+         "popup:org.eclipse.titan.designer.editors.asn1editor.context?after=additions">
+      <command
+            id="org.eclipse.titan.designer.editors.asn1editor.ASN1Indentation"
+            commandId="org.eclipse.titan.designer.editors.asn1editor.IndentAction"
+            label="Correct Indentation"
+            icon="icons/titan.gif">
+      </command>
+      <command
+        id="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
+        commandId="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
+        label="Open Declaration"
+        icon="icons/titan.gif">
+      </command>
+      <command
+        id="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
+        commandId="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
+        label="Find References"
+        icon="icons/titan.gif">
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoring"
+        icon="icons/titan.gif"
+        id="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoring"
+        label="Rename refactoring">
+      </command>
+    </menuContribution>
+
+     <menuContribution
+     locationURI=
+         "popup:org.eclipse.titan.designer.editors.configeditor.context?after=additions">
+       <command
+        id="org.eclipse.titan.designer.editors.configeditor.ConfigIndentation"
+        commandId="org.eclipse.titan.designer.editors.configeditor.IndentAction"
+        label="Correct Indentation"
+        icon="icons/titan.gif">
+      </command>
+      <command
+        id="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
+        commandId="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
+        label="Open Declaration"
+        icon="icons/titan.gif">
+      </command>
+    </menuContribution>
+
+
+     <menuContribution
+      locationURI="popup:org.eclipse.titan.designer.editors.ttcn3editor.context?after=additions">
+      <command
+        id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Indentation"
+        commandId="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3IndentAction"
+        label="Correct Indentation"
+        icon="icons/titan.gif">
+      </command>
+      <command
+        id="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
+        commandId="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
+        label="Open Declaration"
+        icon="icons/titan.gif">
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
+        icon="icons/titan.gif"
+        id="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
+        label="Find References">
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoringAction"
+        icon="icons/titan.gif"
+        id="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoringAction"
+        label="Rename refactoring">
+      </command>
+    </menuContribution>
+
+    <menuContribution
+      locationURI="popup:org.eclipse.titan.designer.editors.ttcn3ppeditor.context?after=additions">
+      <command
+        id="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPIndentation"
+        commandId="org.eclipse.titan.designer.editors.ttcnppeditor.IndentAction"
+        label="Correct Indentation"
+        icon="icons/titan.gif">
+      </command>
+      <command
+        id="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
+        commandId="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
+        label="Open Declaration"
+        icon="icons/titan.gif">
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
+        icon="icons/titan.gif"
+        id="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
+        label="Find References">
+      </command>
+      <command
+        commandId="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoringAction"
+        icon="icons/titan.gif"
+        id="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoring"
+        label="Rename refactoring">
+      </command>
+    </menuContribution>
+
+
+   </extension>
+
+
+  <extension
+    point="org.eclipse.core.runtime.preferences">
+    <initializer class="org.eclipse.titan.designer.preferences.PreferenceInitializer"/>
+  </extension>
+  <extension point="org.eclipse.ui.preferencePages">
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"
+      class="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"
+      name="TITAN Preferences"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.ContentAssistPage"
+      class="org.eclipse.titan.designer.preferences.pages.ContentAssistPage"
+      name="Content Assist"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.FoldingPage"
+      class="org.eclipse.titan.designer.preferences.pages.FoldingPage"
+      name="Folding"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.OnTheFlyCheckerPreferencePage"
+      class="org.eclipse.titan.designer.preferences.pages.OnTheFlyCheckerPreferencePage"
+      name="On-the-fly checker"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.ErrorsWarningsPreferencePage"
+      class="org.eclipse.titan.designer.preferences.pages.ErrorsWarningsPreferencePage"
+      name="Errors/Warnings"
+      category="org.eclipse.titan.designer.preferences.pages.OnTheFlyCheckerPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.NamingConventionPreferencePage"
+      class="org.eclipse.titan.designer.preferences.pages.NamingConventionPreferencePage"
+      name="Naming conventions"
+      category="org.eclipse.titan.designer.preferences.pages.OnTheFlyCheckerPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.ExcludedResourcesPreferencePage"
+      class="org.eclipse.titan.designer.preferences.pages.ExcludedResourcesPreferencePage"
+      name="Excluded resources"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.SyntaxHighlightPage"
+      class="org.eclipse.titan.designer.preferences.pages.SyntaxHighlightPage"
+      name="Syntax Coloring"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.ShowMatchingBracketPage"
+      class="org.eclipse.titan.designer.preferences.pages.ShowMatchingBracketPage"
+      name="Highlight matching brackets"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.MarkOccurrencesPage"
+      class="org.eclipse.titan.designer.preferences.pages.MarkOccurrencesPage"
+      name="Mark occurrences"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.IndentationPage"
+      class="org.eclipse.titan.designer.preferences.pages.IndentationPage"
+      name="Indentation"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.TypingPage"
+      class="org.eclipse.titan.designer.preferences.pages.TypingPage"
+      name="Typing"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+    <page
+      id="org.eclipse.titan.designer.preferences.pages.TITANActionPage"
+      class="org.eclipse.titan.designer.preferences.pages.TITANActionPage"
+      name="TITAN actions"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+     <page
+      id="org.eclipse.titan.designer.preferences.pages.DebugPreferencePage"
+      class="org.eclipse.titan.designer.preferences.pages.DebugPreferencePage"
+      name="Debug"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+  </extension>
+  <extension
+    point="org.eclipse.ui.propertyPages">
+    <page
+      name="TITAN Project Property"
+      nameFilter="*"
+      class="org.eclipse.titan.designer.properties.pages.ProjectBuildPropertyPage"
+      id="org.eclipse.titan.designer.properties.pages.ProjectBuildPropertyPage">
+      <filter
+        name="projectNature"
+        value="org.eclipse.titan.designer.core.TITANNature">
+      </filter>
+      <enabledWhen>
+        <instanceof
+          value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page
+      name="Naming convention"
+      nameFilter="*"
+      class="org.eclipse.titan.designer.properties.pages.ProjectNamingConventionPropertyPage"
+      id="org.eclipse.titan.designer.properties.pages.ProjectNamingConventionPropertyPage"
+      category="org.eclipse.titan.designer.properties.pages.ProjectBuildPropertyPage">
+      <filter
+        name="projectNature"
+        value="org.eclipse.titan.designer.core.TITANNature">
+      </filter>
+      <enabledWhen>
+        <instanceof
+          value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page
+      name="Remote build"
+      nameFilter="*"
+      class="org.eclipse.titan.designer.properties.pages.ProjectRemoteBuildPropertyPage"
+      id="org.eclipse.titan.designer.properties.pages.ProjectRemoteBuildPropertyPage"
+      category="org.eclipse.titan.designer.properties.pages.ProjectBuildPropertyPage">
+      <filter
+        name="projectNature"
+        value="org.eclipse.titan.designer.core.TITANNature">
+      </filter>
+      <enabledWhen>
+        <instanceof
+          value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page
+      name="Project Configurations"
+      nameFilter="*"
+      class="org.eclipse.titan.designer.properties.pages.ProjectConfigurationsPropertyPage"
+      id="org.eclipse.titan.designer.properties.pages.ProjectConfigurationsPropertyPage"
+      category="org.eclipse.titan.designer.properties.pages.ProjectBuildPropertyPage">
+      <filter
+        name="projectNature"
+        value="org.eclipse.titan.designer.core.TITANNature">
+      </filter>
+      <enabledWhen>
+        <instanceof
+          value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page
+       name="TITAN Folder Property"
+      nameFilter="*"
+      class="org.eclipse.titan.designer.properties.pages.FolderBuildPropertyPage"
+      id="org.eclipse.titan.designer.properties.pages.FolderBuildPropertyPage">
+      <filter
+        name="projectNature"
+        value="org.eclipse.titan.designer.core.TITANNature">
+      </filter>
+      <enabledWhen>
+        <instanceof
+          value="org.eclipse.core.resources.IFolder">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page
+      name="Naming convention"
+      nameFilter="*"
+      class="org.eclipse.titan.designer.properties.pages.FolderNamingConventionPropertyPage"
+      id="org.eclipse.titan.designer.properties.pages.FolderNamingConventionPropertyPage"
+      category="org.eclipse.titan.designer.properties.pages.FolderBuildPropertyPage">
+      <filter
+        name="projectNature"
+        value="org.eclipse.titan.designer.core.TITANNature">
+      </filter>
+      <enabledWhen>
+        <instanceof
+          value="org.eclipse.core.resources.IFolder">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page
+      name="TITAN File Property"
+      nameFilter="*"
+      class="org.eclipse.titan.designer.properties.pages.FileBuildPropertyPage"
+      id="org.eclipse.titan.designer.properties.pages.FileBuildPropertyPage">
+      <filter
+        name="projectNature"
+        value="org.eclipse.titan.designer.core.TITANNature">
+      </filter>
+      <enabledWhen>
+        <instanceof
+          value="org.eclipse.core.resources.IFile">
+        </instanceof>
+      </enabledWhen>
+    </page>
+  </extension>
+  <extension point="org.eclipse.ui.decorators">
+    <decorator
+      id="org.eclipse.titan.designer.decorators.TITANDecorator"
+      lightweight="false"
+      label="TITAN Decorator"
+      state="true"
+      class= "org.eclipse.titan.designer.decorators.TITANDecorator"
+      adaptable="false">
+      <description>
+        This decorator shows whether the Makefile is managed by TITAN or the user.
+      </description>
+      <enablement>
+        <objectClass name="org.eclipse.core.resources.IResource"/>
+      </enablement>
+    </decorator>
+  </extension>
+  <extension
+    id="org.eclipse.titan.designer.compilerErrorMarker"
+    name="Compiler's error markers"
+    point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <attribute name="compilerproblems"/>
+  </extension>
+  <extension
+    id="org.eclipse.titan.designer.compilerWarningMarker"
+    name="Compiler's warning markers"
+    point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <attribute name="compilerproblems"/>
+   </extension>
+   <extension
+    id="org.eclipse.titan.designer.compilerInfoMarker"
+    name="Compiler's info markers"
+    point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <attribute name="compilerproblems"/>
+  </extension>
+  <extension
+    id="org.eclipse.titan.designer.ontheflySyntacticMarker"
+    name="on-the-fly syntactic markers"
+    point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <attribute name="ontheflyproblems"/>
+  </extension>
+  <extension
+    id="org.eclipse.titan.designer.ontheflySemanticMarker"
+    name="on-the-fly semantic markers"
+    point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <attribute name="ontheflyproblems"/>
+  </extension>
+   <extension
+    id="org.eclipse.titan.designer.ontheflyMixedMarker"
+    name="on-the-fly mixed markers"
+    point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <attribute name="ontheflyproblems"/>
+  </extension>
+  <extension
+    id="org.eclipse.titan.designer.ontheflyTaskMarker"
+    name="on-the-fly task markers"
+    point="org.eclipse.core.resources.markers">
+    <super type="org.eclipse.core.resources.taskmarker"/>
+    <attribute name="ontheflyproblems"/>
+  </extension>
+  <extension
+    point="org.eclipse.ui.ide.markerSupport">
+    <markerTypeCategory name="TITAN compiler problems">
+      <markerTypeReference id="org.eclipse.titan.designer.compilerErrorMarker"/>
+      <markerTypeReference id="org.eclipse.titan.designer.compilerWarningMarker"/>
+      <markerTypeReference id="org.eclipse.titan.designer.compilerInfoMarker"/>
+    </markerTypeCategory>
+    <markerTypeCategory name="TITAN on-the-fly syntactic problems">
+      <markerTypeReference id="org.eclipse.titan.designer.ontheflySyntacticMarker"/>
+    </markerTypeCategory>
+    <markerTypeCategory name="TITAN on-the-fly semantic problems">
+      <markerTypeReference id="org.eclipse.titan.designer.ontheflySemanticMarker"/>
+    </markerTypeCategory>
+      <markerTypeCategory name="TITAN on-the-fly mixed problems">
+      <markerTypeReference id="org.eclipse.titan.designer.ontheflyMixedMarker"/>
+    </markerTypeCategory>
+    <markerGrouping
+      id="org.eclipse.titan.designer.markerGrouping"
+      label="TITAN problems"/>
+    <markerGroupingEntry
+      id="org.eclipse.titan.designer.TITANProblemsGroup"
+      label="TITAN problems"
+      markerGrouping="org.eclipse.titan.designer.markerGrouping"
+      priority="994"/>
+    <markerAttributeGrouping
+      attribute="compilerproblems"
+      defaultGroupingEntry="org.eclipse.titan.designer.TITANProblemsGroup"
+      markerType="org.eclipse.titan.designer.compilerErrorMarker"/>
+    <markerAttributeGrouping
+      attribute="compilerproblems"
+      defaultGroupingEntry="org.eclipse.titan.designer.TITANProblemsGroup"
+      markerType="org.eclipse.titan.designer.compilerWarningMarker"/>
+    <markerAttributeGrouping
+      attribute="compilerproblems"
+      defaultGroupingEntry="org.eclipse.titan.designer.TITANProblemsGroup"
+      markerType="org.eclipse.titan.designer.compilerInfoMarker"/>
+    <markerAttributeGrouping
+      attribute="ontheflyproblems"
+      defaultGroupingEntry="org.eclipse.titan.designer.TITANProblemsGroup"
+      markerType="org.eclipse.titan.designer.ontheflySyntacticMarker"/>
+    <markerAttributeGrouping
+      attribute="ontheflyproblems"
+      defaultGroupingEntry="org.eclipse.titan.designer.TITANProblemsGroup"
+      markerType="org.eclipse.titan.designer.ontheflySemanticMarker"/>
+    <markerAttributeGrouping
+      attribute="ontheflyproblems"
+      defaultGroupingEntry="org.eclipse.titan.designer.TITANProblemsGroup"
+      markerType="org.eclipse.titan.designer.ontheflyMixedMarker"/>
+  </extension>
+  <extension point="org.eclipse.ui.editors.annotationTypes">
+     <type
+         name="org.eclipse.titan.designer.compilerErrorMarkerAnnotationType"
+         super="org.eclipse.ui.workbench.texteditor.error" 
+         markerType="org.eclipse.titan.designer.compilerErrorMarker">
+     </type>
+     <type
+         name="org.eclipse.titan.designer.compilerWarningMarkerAnnotationType"
+         super="org.eclipse.ui.workbench.texteditor.warning" 
+         markerType="org.eclipse.titan.designer.compilerWarningMarker">
+     </type>
+     <type
+         name="org.eclipse.titan.designer.compilerInfoMarkerAnnotationType"
+         super="org.eclipse.ui.workbench.texteditor.info" 
+         markerType="org.eclipse.titan.designer.compilerInfoMarker">
+     </type>
+     <type
+         name="org.eclipse.titan.occurrences">
+     </type>
+     <type
+         name="org.eclipse.titan.inactive_code">
+     </type>
+  </extension>
+  <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+    <specification
+    	annotationType = "org.eclipse.titan.designer.compilerErrorMarkerAnnotationType"
+    	annotationImageProvider = "org.eclipse.titan.designer.editors.AnnotationImageProvider"
+    	verticalRulerPreferenceValue="true"
+        overviewRulerPreferenceValue="true">
+    </specification>
+    <specification
+    	annotationType = "org.eclipse.titan.designer.compilerWarningMarkerAnnotationType"
+    	annotationImageProvider = "org.eclipse.titan.designer.editors.AnnotationImageProvider"
+    	verticalRulerPreferenceValue="true"
+        overviewRulerPreferenceValue="true">
+    </specification>
+    <specification
+    	annotationType = "org.eclipse.titan.designer.compilerInfoMarkerAnnotationType"
+    	annotationImageProvider = "org.eclipse.titan.designer.editors.AnnotationImageProvider"
+    	verticalRulerPreferenceValue="true"
+        overviewRulerPreferenceValue="true">
+    </specification>
+    <specification
+      annotationType="org.eclipse.titan.occurrences"
+      label="Occurrences"
+      icon="icons/match.gif"
+      colorPreferenceKey="occurrenceMarkColor"
+      colorPreferenceValue="212,212,212"
+      overviewRulerPreferenceKey="occurrenceMarkOverviewRuler"
+      verticalRulerPreferenceKey="occurrenceMarkVerticalRuler"
+      overviewRulerPreferenceValue="true"
+      verticalRulerPreferenceValue="false"
+      textPreferenceKey="occurrenceMark"
+      highlightPreferenceKey="occurrenceHighlighting"
+      highlightPreferenceValue="true"
+      presentationLayer="4"
+      textPreferenceValue="false"
+      contributesToHeader="false"
+      showInNextPrevDropdownToolbarActionKey="occurrenceMarkInNextPrevDropdownToolbarAction"
+      showInNextPrevDropdownToolbarAction="true">
+    </specification>
+    <specification
+      annotationType="org.eclipse.titan.inactive_code"
+      label="Inactive code"
+      icon="icons/match.gif"
+      colorPreferenceKey="inactiveCodeMarkColor"
+      colorPreferenceValue="212,212,212"
+      overviewRulerPreferenceKey="inactiveCodeMarkOverviewRuler"
+      verticalRulerPreferenceKey="inactiveCodeMarkVerticalRuler"
+      overviewRulerPreferenceValue="true"
+      verticalRulerPreferenceValue="false"
+      textPreferenceKey="inactiveCodeMark"
+      highlightPreferenceKey="inactiveCodeHighlighting"
+      highlightPreferenceValue="true"
+      presentationLayer="4"
+      textPreferenceValue="false"
+      contributesToHeader="false"
+      showInNextPrevDropdownToolbarActionKey="inactiveCodeMarkInNextPrevDropdownToolbarAction"
+      showInNextPrevDropdownToolbarAction="true">
+    </specification>
+  </extension >
+  <extension
+    point="org.eclipse.ui.newWizards">
+    <wizard category="org.eclipse.titan.designer.wizards.NewTITANWizard"
+      class="org.eclipse.titan.designer.wizards.NewTITANProjectWizard"
+      icon="icons/titan.gif"
+      id="org.eclipse.titan.designer.wizards.NewTITANProjectWizard"
+      name="TITAN Project"
+      finalPerspective  = "org.eclipse.titan.designer.perspectives.EditingPerspective"
+      preferredPerspectives  = "org.eclipse.titan.designer.perspectives.EditingPerspective"
+      project="true" />
+    <wizard category="org.eclipse.titan.designer.wizards.NewTITANWizard"
+      class="org.eclipse.titan.designer.wizards.NewTTCN3ModuleWizard"
+      icon="icons/ttcn.gif"
+      id="org.eclipse.titan.designer.wizards.NewTTCN3ModuleWizard"
+      name="TTCN3 Module"
+      preferredPerspectives  = "org.eclipse.titan.designer.perspectives.EditingPerspective"
+      project="false" />
+    <wizard category="org.eclipse.titan.designer.wizards.NewTITANWizard"
+      class="org.eclipse.titan.designer.wizards.NewASN1ModuleWizard"
+      icon="icons/asn.gif"
+      id="org.eclipse.titan.designer.wizards.NewASN1ModuleWizard"
+      name="ASN1 Module"
+      preferredPerspectives  = "org.eclipse.titan.designer.perspectives.EditingPerspective"
+      project="false" />
+    <wizard
+      category="org.eclipse.titan.designer.wizards.NewTITANWizard"
+      class="org.eclipse.titan.designer.wizards.NewConfigFileWizard"
+      icon="icons/cfg.gif"
+      id="org.eclipse.titan.designer.wizards.NewConfigFileWizard"
+      name="Configuration file"
+      preferredPerspectives="org.eclipse.titan.designer.perspectives.EditingPerspective"
+      project="false"/>
+    <category id="org.eclipse.titan.designer.wizards.NewTITANWizard" name="TITAN" />
+  </extension>
+  <extension
+    point="org.eclipse.ui.importWizards">
+    <category
+      id="org.eclipse.titan.designer.wizards.TITANImportCategory"
+      name="TITAN">
+    </category>
+    <wizard
+      class="org.eclipse.titan.designer.wizards.TITANProjectImportWizard"
+      icon="icons/titan.gif"
+      id="org.eclipse.titan.designer.wizards.TITANProjectImportWizard"
+      name="Project from .prj file"
+      category="org.eclipse.titan.designer.wizards.TITANImportCategory"/>
+    <wizard
+      class="org.eclipse.titan.designer.wizards.projectFormat.NewTITANProjectImportWizard"
+      icon="icons/titan.gif"
+      id="org.eclipse.titan.designer.wizards.NewTITANProjectImportWizard"
+      name="Project from .tpd file"
+      category="org.eclipse.titan.designer.wizards.TITANImportCategory"/>
+  </extension>
+  <extension
+    point="org.eclipse.ui.exportWizards">
+    <category
+      id="org.eclipse.titan.designer.wizards.TITANExportCategory"
+      name="TITAN">
+    </category>
+    <wizard
+      class="org.eclipse.titan.designer.wizards.projectFormat.TITANProjectExportWizard"
+      icon="icons/titan.gif"
+      id="org.eclipse.titan.designer.wizards.NewTITANProjectExportWizard"
+      name="TITAN Project settings"
+      category="org.eclipse.titan.designer.wizards.TITANExportCategory">
+        <description>
+          Exports TITAN Designer related project information
+        </description>
+    </wizard>
+  </extension>
+  <extension
+    point="org.eclipse.ui.perspectives">
+    <perspective
+      class="org.eclipse.titan.designer.perspectives.EditingPerspective"
+      icon="icons/titan.gif"
+      id="org.eclipse.titan.designer.perspectives.EditingPerspective"
+      name="TITAN Editing"/>
+  </extension>
+  <extension point="org.eclipse.help.toc">
+    <toc file="toc.xml" primary="false"/>
+  </extension>
+  <extension
+    point="org.eclipse.ui.commands">
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Jumps to and back the first visible char"
+      id="org.eclipse.titan.designer.firstChar"
+      name="Line Start"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Jumps to and back the last visible char"
+      id="org.eclipse.titan.designer.lastChar"
+      name="Line End"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Opens a declaration"
+      id="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
+      name="Open Declaration"/>
+    <command
+          categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+          description="Finds references to a declaration/assignment"
+          id="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
+          name="Find References"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Rename refactoring"
+      id="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoring"
+      name="Rename refactoring"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Toggle Comment"
+      id="org.eclipse.titan.designer.editors.ttcn3editor.ToggleComment"
+      name="Toggle Comment"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Corrects the indentation"
+      id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Indentation"
+      name="Correct Indentation"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Go to Matching Bracket"
+      id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3GotoMatchingBracket"
+      name="Go to Matching Bracket"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Opens a declaration"
+      id="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
+      name="Open Declaration"/>
+   <command
+          categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+          description="Finds references to a declaration/assignment"
+          id="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
+          name="Find References"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Rename refactoring"
+      id="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoring"
+      name="Rename refactoring"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Corrects the indentation"
+      id="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPIndentation"
+      name="Correct Indentation"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Go to Matching Bracket"
+      id="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPGotoMatchingBracket"
+      name="Go to Matching Bracket"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Toggle Comment"
+      id="org.eclipse.titan.designer.editors.ttcnppeditor.ToggleComment"
+      name="Toggle Comment"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Opens a declaration"
+      id="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
+      name="Open Declaration"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Finds references to a declaration/assignment"
+      id="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
+      name="Find References"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Rename refactoring"
+      id="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoring"
+      name="Rename refactoring"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Corrects the indentation"
+      id="org.eclipse.titan.designer.editors.asn1editor.ASN1Indentation"
+      name="Correct Indentation"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Go to Matching Bracket"
+      id="org.eclipse.titan.designer.editors.asn1editor.ASN1GotoMatchingBracket"
+      name="Go to Matching Bracket"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Opens a declaration"
+      id="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
+      name="Open Declaration"/>
+    <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Corrects the indentation"
+      id="org.eclipse.titan.designer.editors.configeditor.ConfigIndentation"
+      name="Correct Indentation"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Go to Matching Bracket"
+      id="org.eclipse.titan.designer.editors.configeditor.ConfigGotoMatchingBracket"
+      name="Go to Matching Bracket"/>
+   <command
+      categoryId="org.eclipse.titan.designer.editors.TITANCommands"
+      description="Toggle Comment"
+      id="org.eclipse.titan.designer.editors.configeditor.ToggleComment"
+      name="Toggle Comment"/>
+    <category
+          id="org.eclipse.titan.designer.editors.TITANCommands"
+          name="TITAN Commands"/>
+  </extension>
+  <extension
+    point="org.eclipse.ui.bindings">
+    <key
+      commandId="org.eclipse.titan.designer.firstChar"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="HOME"/>
+    <key
+      commandId="org.eclipse.titan.designer.lastChar"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="END"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="F3"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="F4"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoringAction"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+F4"/>
+     <key
+      commandId="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3IndentAction"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+I"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3GotoMatchingBracketAction"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+SHIFT+P"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.ttcn3editor.ToggleComment"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+/"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.ttcn3editor.ToggleComment"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+Numpad_divide"/>
+    <key
+      commandId="org.eclipse.titan.designer.firstChar"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="HOME">
+    </key>
+    <key
+      commandId="org.eclipse.titan.designer.lastChar"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="END">
+    </key>
+    <key
+      commandId="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="F3"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="F4"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoring"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+F4"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.ttcnppeditor.IndentAction"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+I"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPGotoMatchingBracket"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+SHIFT+P"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.ttcnppeditor.ToggleComment"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+/"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.ttcnppeditor.ToggleComment"
+      contextId="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+Numpad_divide"/>
+    <key
+      commandId="org.eclipse.titan.designer.firstChar"
+      contextId="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="HOME">
+    </key>
+    <key
+      commandId="org.eclipse.titan.designer.lastChar"
+      contextId="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="END">
+    </key>
+    <key
+      commandId="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
+      contextId="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="F3"/>  
+    <key
+      commandId="org.eclipse.titan.designer.editors.configeditor.IndentAction"
+      contextId="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+I"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.configeditor.ConfigGotoMatchingBracket"
+      contextId="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+SHIFT+P"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.configeditor.ToggleComment"
+      contextId="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+/"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.configeditor.ToggleComment"
+      contextId="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+Numpad_divide"/>
+    <key
+      commandId="org.eclipse.titan.designer.firstChar"
+      contextId="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="HOME">
+    </key>
+    <key
+      commandId="org.eclipse.titan.designer.lastChar"
+      contextId="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="END">
+    </key>
+    <key
+      commandId="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
+      contextId="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="F3"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
+      contextId="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="F4"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoring"
+      contextId="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+F4"/>
+    <key
+      commandId="org.eclipse.titan.designer.editors.asn1editor.IndentAction"
+      contextId="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+I"/>
+   <key
+      commandId="org.eclipse.titan.designer.editors.asn1editor.ASN1GotoMatchingBracket"
+      contextId="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+SHIFT+P"/>
+   <key
+      commandId="org.eclipse.titan.designer.actions.FindDefinitionAction"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+SHIFT+T"/>
+  </extension>
+  <extension
+    point="org.eclipse.ui.contexts">
+    <context
+      description="%context.editingText.description.testtest"
+      id="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      name="Editing TTCN-3 Source"
+      parentId="org.eclipse.ui.textEditorScope"/>
+    <context
+      description="%context.editingText.description.testtest"
+      id="org.eclipse.titan.designer.editors.TTCN3PPEditorScope"
+      name="Editing TTCNPP Source"
+      parentId="org.eclipse.ui.textEditorScope">
+    </context>
+    <context
+      description="%context.editingText.description.testtest"
+      id="org.eclipse.titan.designer.editors.ConfigEditorScope"
+      name="TITAN Config File"
+      parentId="org.eclipse.ui.textEditorScope">
+    </context>
+    <context
+      description="%context.editingText.description.testtest"
+      id="org.eclipse.titan.designer.editors.ASN1EditorScope"
+      name="Editing ASN.1 Source"
+      parentId="org.eclipse.ui.textEditorScope">
+    </context>
+  </extension>
+
+  <extension
+        point="org.eclipse.ui.navigator.navigatorContent">
+        <commonWizard type = "new"  wizardId="org.eclipse.titan.designer.wizards.NewTITANProjectWizard" menuGroupId ="TITAN extension">
+        	<enablement>
+        		<or>
+        			<adapt type="org.eclipse.core.resources.IProject"/>
+        			<adapt type="org.eclipse.core.resources.IWorkspaceRoot"/>
+        		</or>
+        	</enablement>
+        </commonWizard>
+        <commonWizard type = "new"  wizardId="org.eclipse.titan.designer.wizards.NewTTCN3ModuleWizard" menuGroupId ="TITAN extension">
+        	<enablement>
+        		<and>
+        			<or>
+	        			<adapt type="org.eclipse.core.resources.IFolder"/>
+	        			<adapt type="org.eclipse.core.resources.IProject"/>
+	        			<adapt type="org.eclipse.core.resources.IWorkspaceRoot"/>
+	        		</or>
+		        	<test property="org.eclipse.core.resources.projectNature" 
+	    	           value="org.eclipse.titan.designer.core.TITANNature" />
+        		</and>
+        	</enablement>
+        </commonWizard>
+        <commonWizard type = "new"  wizardId="org.eclipse.titan.designer.wizards.NewASN1ModuleWizard" menuGroupId ="TITAN extension">
+        	<enablement>
+        		<and>
+        			<or>
+	        			<adapt type="org.eclipse.core.resources.IFolder"/>
+	        			<adapt type="org.eclipse.core.resources.IProject"/>
+	        			<adapt type="org.eclipse.core.resources.IWorkspaceRoot"/>
+	        		</or>
+		        	<test property="org.eclipse.core.resources.projectNature" 
+	    	           value="org.eclipse.titan.designer.core.TITANNature" />
+        		</and>
+        	</enablement>
+        </commonWizard>
+        <commonWizard type = "new"  wizardId="org.eclipse.titan.designer.wizards.NewConfigFileWizard" menuGroupId ="TITAN extension">
+        	<enablement>
+        		<and>
+        			<or>
+	        			<adapt type="org.eclipse.core.resources.IFolder"/>
+	        			<adapt type="org.eclipse.core.resources.IProject"/>
+	        			<adapt type="org.eclipse.core.resources.IWorkspaceRoot"/>
+	        		</or>
+		        	<test property="org.eclipse.core.resources.projectNature" 
+	    	           value="org.eclipse.titan.designer.core.TITANNature" />
+        		</and>
+        	</enablement>
+        </commonWizard>
+  </extension>
+  <extension
+        point="org.eclipse.ui.navigator.navigatorContent">
+        <commonFilter
+              activeByDefault="true"
+              class="org.eclipse.titan.designer.commonFilters.WorkingDirectoryFilter"
+              description="Hides the working directories of projects that have the TITAN nature too."
+              id="org.eclipse.titan.designer.commonFilters.WorkingDirectoryFilter"
+              name="TITAN working directory">
+        </commonFilter>
+        <commonFilter
+              activeByDefault="false"
+              class="org.eclipse.titan.designer.commonFilters.ExcludedResourceFilter"
+              description="Hides the excluded resources of projects that have the TITAN nature too."
+              id="org.eclipse.titan.designer.commonFilters.ExcludedResourceFilter"
+              name="TITAN excluded resources">
+        </commonFilter>
+  </extension>
+  <extension
+        point="org.eclipse.ui.navigator.viewer">
+     <viewerContentBinding
+           viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+        <includes>
+           <contentExtension
+                 pattern="org.eclipse.titan.designer.commonFilters.WorkingDirectoryFilter">
+           </contentExtension>
+           <contentExtension
+                 pattern="org.eclipse.titan.designer.commonFilters.ExcludedResourceFilter">
+           </contentExtension>
+         </includes>
+     </viewerContentBinding>
+  </extension>
+  <extension
+        id="org.eclipse.titan.designer.application.InvokeBuild"
+        point="org.eclipse.core.runtime.applications">
+     <application
+           cardinality="singleton-global"
+           thread="main"
+           visible="true">
+        <run
+              class="org.eclipse.titan.designer.application.InvokeBuild">
+        </run>
+     </application>
+  </extension>
+    <extension
+        id="org.eclipse.titan.designer.application.LoadFromTpd"
+        point="org.eclipse.core.runtime.applications">
+     <application
+           cardinality="singleton-global"
+           thread="main"
+           visible="true">
+        <run
+              class="org.eclipse.titan.designer.application.LoadFromTpd">
+        </run>
+     </application>
+  </extension>
+  <extension
+        id="org.eclipse.titan.designer.editors.ttcn3editor.referenceSearch.ReferenceSearchResultView"
+        point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+         id="org.eclipse.titan.designer.editors.ttcn3editor.referenceSearch.ReferenceSearchResultView"
+         searchResultClass="org.eclipse.titan.designer.editors.referenceSearch.ReferenceSearchResult"
+         class="org.eclipse.titan.designer.editors.referenceSearch.ReferenceSearchResultView">
+       </viewPage>
+   </extension>
+  <extension point="org.eclipse.ui.activities">
+  <activity id="org.eclipse.titan.designer.activities.debug"
+            description="Makes the debug preference page visible"
+            name="Titan debug activity" />
+  <activityPatternBinding
+        activityId="org.eclipse.titan.designer.activities.debug"
+        isEqualityPattern="true"
+        pattern="org.eclipse.titan.designer/org.eclipse.titan.designer.preferences.pages.DebugPreferencePage" />
+ </extension>
+  <extension-point
+    id="org.eclipse.titan.designer.extensions.post_analyze"
+    name="Post-analyze"
+    schema="schema/post_analyze.exsd"/>
+</plugin>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>Search</title>
+</head>
+<body>
+	<h1>Searching in TITAN Log files</h1>
+	<p>Using The TITAN Log Search funtionality the user can easily find the log records, matching the given search pattern. 
+		To open the search page select the menu option Search/TITAN Log files, or use the key combination: CTRL+H. The following window appears: </p>
+	<img src="images/search.png"> 
+	
+	<p class="subtitle">Defining the search criteria</p>
+	<ol>
+		<li>
+			<p class="subtitle">Search String</p>
+			<p>Enter the intended search string or regular expression. String/regular expressions of previous searches can be loaded using the drop-down menu of the textbox.
+				To search for regular expressions tick the "Regular expression" checkbox.
+				<a href="http://download.oracle.com/javase/1.5.0/docs/api/java/util/regex/Pattern.html">Information on regular expressions can be found on this site.</a></p>
+		</li>
+		<li>
+			<p class="subtitle">Search For</p>
+			<p>Select the events to search for.</p>
+		</li>
+		<li>
+			<p class="subtitle">Limit To</p>
+			<p>The "Source Info" and "Message" buttons specify which part of the log record will be matched. There is a logical OR relation between the two fields.</p>
+		</li>
+		<li>
+			<p class="subtitle">Scope</p>
+			<p>The scope of the search is defined as: </p>
+			<ul>
+				<li><b>Workspace</b> - all projects and files in the workspace are included in this search</li>
+				<li><b>Selected resources</b> - only the selected resources are included in this search</li>
+				<li><b>Enclosing Projects</b> - the projects enclosing the currently selected elements</li>
+				<li><b>Working Set</b> - only resources that belong to the chosen working set are included in this search</li>
+			</ul>
+		</li>
+	</ol>
+	
+	<p class="subtitle">The search result</p>
+	<p>The result will appear in the default search view. Clicking on a search match shows the selected record in the <a href="openTextTable.html">TextTableView</a> 
+		and <a href="viewDetails.html">Details View</a></p>
+	<img src="images/searchResult.png">
+	
+	<h3>Toolbar</h3>
+		The toolbar in the Search view contains the following buttons:<br>
+	<ul>
+		<li><b>Show Next Match</b> - This command shows the next match in the TextTableView, opens the view if required.</li>
+		<li><b>Show Previous Match</b> - This command shows the previous match in the TextTableView, opens the view if required.</li>
+		<li><b>Remove Selected Matches</b> - Removes all selected matches from the search results.</li>
+		<li><b>Remove All Matches</b> - Removes all search result form the search view.</li>
+		<li><b>Expand all</b> - Expands every tree item in the search view.</li>
+		<li><b>Collapse all</b> - Collapses every tree item in the search view.</li>
+		<li><b>Run the Current Search Again</b> - This command reruns the current search again, so that removed search results reappear or changes are reflected.</li>
+		<li><b>Cancel Current Search</b> - Cancels the current search.</li>
+		<li><b>Show Previous Searches</b> - This command allows you to browse previously conducted searches and repeat a previous search.  You can select a previous search from the drop-down menu or clear the search history.</li>
+		<li><b>Pin the Search view</b> - Pinning the search view means that subsequent searches will shown their results in another search view and that the pinned view remains unchanged.</li>
+	</ul>
+</p>
+
+
+</body>
+</html>

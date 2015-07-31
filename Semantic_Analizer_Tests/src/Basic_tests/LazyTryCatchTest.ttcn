@@ -1,0 +1,81 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module LazyTryCatchTest
+{
+
+type component MTCType
+{
+  var integer v_ci := 0;
+}
+
+
+function f_safe_str2int(in charstring pl_int_str, in integer pl_defval) return integer {
+//function safe_str2int(in charstring pl_int_str, in integer pl_defval) return integer {
+  @try {
+    log(pl_int_str);
+    return 12;
+    //return str2int(int_str);
+  }
+  @catch(vl_err) {
+    log(vl_err);
+    return pl_defval;
+  }
+}
+
+external function ef_throw(in charstring pl_msg);
+testcase tc_TCLazy(in integer pl_i) runs on MTCType {
+  @try {
+    pl_i := 10 / pl_i;
+    //somefunction(); // this function might cause other DTEs
+    setverdict(pass); // this line is reached only if there was no DTE
+  }
+  @catch(vl_err) {
+    if (match(vl_err, pattern "*division by zero*")) {
+      log("division by zero detected");
+      setverdict(fail); // the verdict is fail instead of error
+    } else {
+      ef_throw(vl_err); // external function used to re-throw the DTE
+    }
+  }
+}
+
+
+testcase tc_TClazy2() runs on MTCType {
+  @try {
+    for (var integer vl_i:=0; vl_i<100; vl_i:=vl_i+1) {
+      @try {
+	     log("statements that can cause DTEs");
+      }
+      @catch(vl_dte_str) {
+        if (match(vl_dte_str, pattern "*some pattern for minor errors*")) {
+          log("minor error ", vl_dte_str, " ignored, continuing load test...");
+        } else {
+          ef_throw(vl_dte_str);
+        }
+      }
+    }
+    setverdict(pass);
+  }
+  @catch(vl_dte_msg) {
+    log("Something went very wrong: ", vl_dte_msg);
+    setverdict(fail);
+  }
+}
+
+function f_MyFuncDieIfZero() runs on MTCType  return integer {
+  if (v_ci==0) { testcase.stop; } // die if the component variable is zero
+  return v_ci;
+}
+
+function f_MyLazyFunc(in @lazy integer pl_pi) runs on MTCType {
+  v_ci := 1;
+  log(pl_pi); // first use of pi -> it is evaluated, ci==1, 3*1=3 is logged
+  v_ci := 2;
+  log(pl_pi); // second use of pi -> not evaluated, the value 3 is used again
+}
+}

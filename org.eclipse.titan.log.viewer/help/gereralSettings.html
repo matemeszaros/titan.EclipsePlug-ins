@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>General Settings</title>
+</head>
+<body>
+<h1>General Settings</h1>
+<br>
+<p class="text">There are several general settings available for the TITAN Log Viewer.</p>
+<p> <img src="images/generalSettings.png"> 
+<ul>
+  <li> 
+    <p class="subtitle">Enable Console Printout</p>
+    <p class="text">The TITAN Log Viewer will produce a detailed output to the 
+      console view if this feature is enabled. Default is enabled (checked). <br>
+      <br>
+      <img src="images/console.png"></p>
+  </li>
+  <li> 
+    <p class="subtitle">The name of the <i>System Under Test</i></p>
+    <p class="text">The name of the component <i>System Under Test</i> in the 
+      Message Sequence Chart. By default empty (no name given).</p>
+  </li>
+  <li> 
+    <p class="subtitle">Display value content as</p>
+    <p class="text">Value contents can be displayed as a graphical tree or as 
+      text. Default is Graphical Tree. <br>
+    <ul>
+      <li> 
+        <p class="smalltitle">Graphical Tree</p>
+        <p class="text">The Graphical Tree presentation will look like following: 
+          <br>
+          <img src="images/detailsView.png"></p>
+      </li>
+      <li> 
+        <p class="smalltitle">Text</p>
+        <p class="text">The Text presentation will look like following: <br>
+          <img src="images/textValueView.png"></p>
+      </li>
+    </ul>
+  </li>
+  <li> 
+    <p class="subtitle">Principle when adding components</p>
+    <p class="text">The selected principle when adding components decides whether 
+      the extracted components should <i>replace</i> or be <i>appended</i> to 
+      the existing Visual Component Order list. If <i>replace</i> is chosen, any 
+      existing components will be removed from the Component Visual Order list 
+      and extracted components will be added. The added order is as found in the 
+      log file. If <i>append</i> is chosen, any existing components will remain 
+      in the Component Visual Order list and extracted components will be added 
+      if they do not already exist in the list. Extracted components are always 
+      added on project level (in properties of the project where the log file 
+      remains). The default value is <i>append</i>.</p>
+  </li>
+  <li> 
+    <p class="subtitle">Open properties after extracting components</p>
+    <p class="text">If the <i>Open properties after extracting components</i> 
+      option is enabled, the properties dialog will open after the components 
+      have been extracted. Default is enabled (checked).</p>
+  </li>
+  <li> 
+    <p class="subtitle">Start displaying the MSC view at</p>
+    <p class="text">The start of displaying the message sequence chart can be 
+      set to the top, the bottom or the first setverdict event when the test case 
+      is rendered. Default is top.</p>
+  </li>
+  <li> 
+    <p class="subtitle">Default behavior in Projects tab</p>
+    <p class="text">Sets default behavior when double clicking or pressing enter 
+      when a log file is selected in the Projects tab of the Navigator. Can be 
+      set to either <i><a href="extractTestCase.html">Extract Test Cases</a></i> 
+      or <i><a href="openTextTable.html">Open Text Table view</a></i>. Default 
+      is <i>Extract Test Cases</i>.</p>
+  </li>
+  <li> 
+    <p class="subtitle">Default behavior in Test Cases tab</p>
+    <p class="text">Sets default behavior when double clicking or pressing enter 
+      when a test case is selected in the Test Cases tab of the Navigator. Can 
+      be set to either <i><a href="viewMessageSequenceChart.html">Open MSC view</a></i> 
+      or <i><a href="openTextTable.html">Open Text Table view</a></i>. Default 
+      is <i>Open MSC View</i>.</p>
+  </li>
+  <li> 
+    <p class="subtitle">Default behavior in MSC view</p>
+    <p class="text">Sets default behavior when double clicking or pressing enter 
+      when an event is selected in the MSC view. Can be set to either <i><a href="viewDetails.html">Open 
+      Value View</a></i> or <i><a href="openTextTable.html">Open Text Table view</a></i>. 
+      Default is <i>Open Value View</i> </p>
+  </li>
+</ul>
+<br>
+<table cellspacing="0" border="1" width="75%" cellpadding="3" bordercolor="gray">
+  <tr> 
+    <td width="20%" align ="left"> 
+      <p class="subtitle">Button</p>
+    </td>
+    <td width="80%"> 
+      <p class="subtitle">Description</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="25%" align="left" valign="top"> 
+      <p class="smalltext">Restore Defaults</p>
+    </td>
+    <td width="75%" align="left" > 
+      <p class="smalltext">Restores the settings to default. Default setting are:<br>
+        <br>
+        <br>
+      <table border = "0">
+        <tr>
+          <td>
+          	<p class="smalltext"><i>Enable console printout</i></p></td>
+          <td>
+            <p class="smalltext"><i>checked</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>The name of the System Under Test</i></p>
+          </td>
+          <td>
+            <p class="smalltext"><i>empty</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>Display value content as</i></p>
+          </td>
+          <td>
+            <p class="smalltext">Graphical Tree</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>Principle when adding components</i></p>
+          </td>
+          <td>
+            <p class="smalltext">Append</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>Open properties after extracting components</i></p>
+          </td>
+          <td>
+            <p class="smalltext"><i>checked</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>Start displaying the MSC view at</i></p>
+          </td>
+          <td>
+            <p class="smalltext">Top</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>Default behavior in Project tab</i></p>
+          </td>
+          <td>
+            <p class="smalltext">Extract Test Cases</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>Default behavior in Test Cases tab</i></p>
+          </td>
+          <td> 
+            <p class="smalltext">Open MSC View</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p class="smalltext"><i>Default behavior in MSC view</i></p>
+          </td>
+          <td>
+            <p class="smalltext">Open Value View</p>
+          </td>
+        </tr>
+      </table>
+      <p></p>
+    </td>
+  </tr>
+</table>
+<br>
+</body>
+</html>

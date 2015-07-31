@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			class="org.eclipse.titan.executor.property.testers.CompilationModeProperty"
+			id="org.eclipse.titan.executor.property.testers.CompilationModeProperty"
+			namespace="org.eclipse.titan.executor.propertyTesters"
+			properties="SingleModeBuild, ParallelModeBuild"
+			type="org.eclipse.core.resources.IResource">
+		</propertyTester>
+	</extension>
+	<extension
+		point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+			name="TITAN Parallel launcher"
+			delegate="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationDelegate"
+			modes="run"
+			id="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationDelegate">
+		</launchConfigurationType>
+		<launchConfigurationType
+			name="TITAN Single Mode launcher"
+			delegate="org.eclipse.titan.executor.executors.single.LaunchConfigurationDelegate"
+			modes="run"
+ 			id="org.eclipse.titan.executor.executors.single.LaunchConfigurationDelegate">
+		</launchConfigurationType>
+		<launchConfigurationType
+			name="TITAN JNI launcher"
+			delegate="org.eclipse.titan.executor.executors.jni.LaunchConfigurationDelegate"
+			modes="run"
+			id="org.eclipse.titan.executor.executors.jni.LaunchConfigurationDelegate">
+		</launchConfigurationType>
+	</extension>
+	<extension
+		point="org.eclipse.debug.ui.launchShortcuts">
+		<shortcut
+			class="org.eclipse.titan.executor.executors.single.LaunchShortcut"
+			id="org.eclipse.titan.executor.executors.single.LaunchShortcut"
+			label="TITAN Single Mode launcher"
+			icon="icons/launch_single.gif"
+			description="Launch an execution in single mode"
+			modes="run">
+			<description
+				description="Runs a local TITAN application"
+				mode="run">
+			</description>
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<count value="1"/>
+						<iterate>
+							<instanceof value="org.eclipse.core.resources.IProject"/>
+							<test
+								value="org.eclipse.titan.designer.core.TITANNature"
+								property="org.eclipse.core.resources.projectNature"/>
+							<test property="org.eclipse.titan.executor.propertyTesters.SingleModeBuild" forcePluginActivation="true"/>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+			<configurationType id="org.eclipse.titan.executor.executors.single.LaunchConfigurationDelegate" />
+		</shortcut>
+		<shortcut
+			class="org.eclipse.titan.executor.executors.single.LaunchShortcutConfig"
+			description="Launch an execution in single mode"
+			icon="icons/launch_single.gif"
+			id="org.eclipse.titan.executor.executors.single.LaunchShortcutConfig"
+			label="TITAN Single Mode launcher"
+			modes="run">
+			<description
+				description="Runs a local TITAN application"
+				mode="run">
+			</description>
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<count value="1">
+						</count>
+						<iterate operator="and">
+							<instanceof value="org.eclipse.core.resources.IFile">
+							</instanceof>
+							<test
+								property="org.eclipse.core.resources.projectNature"
+								value="org.eclipse.titan.designer.core.TITANNature"/>
+							<test property="org.eclipse.core.resources.extension" value="cfg"/>
+							<test property="org.eclipse.titan.executor.propertyTesters.SingleModeBuild" forcePluginActivation="true"/>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+			<configurationType
+				id="org.eclipse.titan.executor.executors.single.LaunchConfigurationDelegate">
+			</configurationType>
+		</shortcut>
+		<shortcut
+			class="org.eclipse.titan.executor.executors.mctr.cli.LaunchShortcut"
+			id="org.eclipse.titan.executor.executors.mctr.cli.LaunchShortcut"
+			label="TITAN Parallel launcher"
+			icon="icons/launch_cli.gif"
+			description="Launch an execution in mctr_cli mode"
+			modes="run">
+			<description
+				description="Runs a local TITAN application"
+				mode="run">
+			</description>
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<count value="1"/>
+						<iterate>
+							<instanceof value="org.eclipse.core.resources.IProject"/>
+							<test
+								value="org.eclipse.titan.designer.core.TITANNature"
+								property="org.eclipse.core.resources.projectNature"/>
+							<test property="org.eclipse.titan.executor.propertyTesters.ParallelModeBuild" forcePluginActivation="true"/>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+			<configurationType id="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationDelegate" />
+		</shortcut>
+		<shortcut
+			class="org.eclipse.titan.executor.executors.mctr.cli.LaunchShortcutConfig"
+			description="Launch an execution in mctr_cli mode"
+			icon="icons/launch_cli.gif"
+			id="org.eclipse.titan.executor.executors.mctr.cli.LaunchShortcutConfig"
+			label="TITAN Parallel launcher"
+			modes="run">
+			<description
+				description="Runs a local TITAN application"
+				mode="run">
+			</description>
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<count value="1">
+						</count>
+						<iterate operator="and">
+							<instanceof value="org.eclipse.core.resources.IFile">
+							</instanceof>
+							<test
+								property="org.eclipse.core.resources.projectNature"
+								value="org.eclipse.titan.designer.core.TITANNature"/>
+							<test property="org.eclipse.core.resources.extension" value="cfg"/>
+							<test property="org.eclipse.titan.executor.propertyTesters.ParallelModeBuild" forcePluginActivation="true"/>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+			<configurationType
+				id="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationDelegate">
+			</configurationType>
+		</shortcut>
+		<shortcut
+			class="org.eclipse.titan.executor.executors.jni.LaunchShortcut"
+			id="org.eclipse.titan.executor.executors.jni.LaunchShortcut"
+			label="TITAN JNI launcher"
+			icon="icons/launch_jni.gif"
+			description="Launch an execution in jni mode"
+			modes="run">
+			<description
+				description="Runs a local TITAN application"
+				mode="run">
+			</description>
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<count value="1"/>
+						<iterate>
+							<instanceof value="org.eclipse.core.resources.IProject"/>
+							<test
+								value="org.eclipse.titan.designer.core.TITANNature"
+								property="org.eclipse.core.resources.projectNature"/>
+							<test property="org.eclipse.titan.executor.propertyTesters.ParallelModeBuild" forcePluginActivation="true"/>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+			<configurationType id="org.eclipse.titan.executor.executors.jni.LaunchConfigurationDelegate" />
+		</shortcut>
+		<shortcut
+			class="org.eclipse.titan.executor.executors.jni.LaunchShortcutConfig"
+			description="Launch an execution in jni mode"
+			icon="icons/launch_jni.gif"
+			id="org.eclipse.titan.executor.executors.jni.LaunchShortcutConfig"
+			label="TITAN JNI launcher"
+			modes="run">
+			<description
+				description="Runs a local TITAN application"
+				mode="run">
+			</description>
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<count value="1">
+						</count>
+						<iterate operator="and">
+							<instanceof value="org.eclipse.core.resources.IFile">
+							</instanceof>
+							<test
+								property="org.eclipse.core.resources.projectNature"
+								value="org.eclipse.titan.designer.core.TITANNature"/>
+							<test property="org.eclipse.core.resources.extension" value="cfg"/>
+							<test property="org.eclipse.titan.executor.propertyTesters.ParallelModeBuild" forcePluginActivation="true"/>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+			<configurationType
+				id="org.eclipse.titan.executor.executors.jni.LaunchConfigurationDelegate">
+			</configurationType>
+		</shortcut>
+	</extension>
+	<extension
+		point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			icon="icons/launch_cli.gif"
+			configTypeID="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationDelegate"
+			id="org.eclipse.titan.executor.executors.mctr.cli.uniquetypeImage">
+		</launchConfigurationTypeImage>
+		<launchConfigurationTypeImage
+			icon="icons/launch_single.gif"
+			configTypeID="org.eclipse.titan.executor.executors.single.LaunchConfigurationDelegate"
+			id="org.eclipse.titan.executor.executors.single.uniquetypeImage">
+		</launchConfigurationTypeImage>
+		<launchConfigurationTypeImage
+			icon="icons/launch_jni.gif"
+			configTypeID="org.eclipse.titan.executor.executors.jni.LaunchConfigurationDelegate"
+			id="org.eclipse.titan.executor.executors.jni.uniquetypeImage">
+		</launchConfigurationTypeImage>
+	</extension>
+	<extension
+		point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			type="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationDelegate"
+			class="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationTabGroup"
+			id="org.eclipse.titan.executor.executors.mctr.cli.LaunchConfigurationTabGroup">
+			<launchMode
+				mode="run"
+				perspective="org.eclipse.titan.executor.perspectives.ExecutingPerspective">
+			</launchMode>
+		</launchConfigurationTabGroup>
+		<launchConfigurationTabGroup
+			type="org.eclipse.titan.executor.executors.single.LaunchConfigurationDelegate"
+			class="org.eclipse.titan.executor.executors.single.LaunchConfigurationTabGroup"
+			id="org.eclipse.titan.executor.executors.single.LaunchConfigurationTabGroup">
+			<launchMode
+				mode="run"
+				perspective="org.eclipse.titan.executor.perspectives.ExecutingPerspective">
+			</launchMode>
+		</launchConfigurationTabGroup>
+		<launchConfigurationTabGroup
+			type="org.eclipse.titan.executor.executors.jni.LaunchConfigurationDelegate"
+			class="org.eclipse.titan.executor.executors.jni.LaunchConfigurationTabGroup"
+			id="org.eclipse.titan.executor.executors.jni.LaunchConfigurationTabGroup">
+			<launchMode
+				mode="run"
+				perspective="org.eclipse.titan.executor.perspectives.ExecutingPerspective">
+			</launchMode>
+		</launchConfigurationTabGroup>
+	</extension>
+	<extension
+		point="org.eclipse.ui.views">
+		<category
+			id="TITAN Monitor Category"
+			name="TITAN Monitors">
+		</category>
+		<view
+			id="org.eclipse.titan.executor.views.executorMonitor.ExecutorMonitorView"
+			name="TITAN Execution Controller"
+			category="TITAN Monitor Category"
+			class="org.eclipse.titan.executor.views.executormonitor.ExecutorMonitorView"
+			icon="icons/titan.gif">
+		</view>
+		<view
+			id="org.eclipse.titan.executor.views.testExecution.TestExecutionView"
+			name="TITAN  test results"
+			category="TITAN Monitor Category"
+			class="org.eclipse.titan.executor.views.testexecution.TestExecutionView"
+			icon="icons/titan.gif">
+		</view>
+		<view
+			id="org.eclipse.titan.executor.views.notification.NotificationView"
+			name="TITAN notifications"
+			category="TITAN Monitor Category"
+			class="org.eclipse.titan.executor.views.notification.NotificationView"
+			icon="icons/titan.gif">
+		</view>
+	</extension>
+	<extension
+		point="org.eclipse.ui.perspectives">
+		<perspective
+			class="org.eclipse.titan.executor.perspectives.ExecutingPerspective"
+			icon="icons/titan.gif"
+			id="org.eclipse.titan.executor.perspectives.ExecutingPerspective"
+			name="TITAN Executing"/>
+	</extension>
+	<extension point="org.eclipse.help.toc">
+ 		<toc file="toc.xml" primary="false"/>
+	</extension>
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer class="org.eclipse.titan.executor.preferences.PreferenceInitializer"/>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			id="org.eclipse.titan.executor.preferences.ExecutorPreferencePage"
+			class="org.eclipse.titan.executor.preferences.ExecutorPreferencePage"
+			name="TITAN Executor"/>
+	</extension>
+	<extension
+		point="org.eclipse.ui.propertyPages">
+		<page
+			class="org.eclipse.titan.executor.preferences.ExecutorPreferencePage"
+			id="org.eclipse.titan.executor.preferences.ExecutorPreferencePage"
+			name="TITAN Executor">
+		<filter
+			name="projectNature"
+			value="org.eclipse.titan.designer.core.TITANNature">
+		</filter>
+		<enabledWhen>
+			<instanceof value="org.eclipse.core.resources.IProject" />
+		</enabledWhen>
+		</page>
+	</extension>
+</plugin>

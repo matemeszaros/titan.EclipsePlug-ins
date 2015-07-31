@@ -1,0 +1,24 @@
+2014/Jun/25 01:58:59.123456 Some log message from LogFile1
+2014/Jun/25 01:59:59.123456 {
+    a = b,
+    c ="      "
+} Some log message from LogFile1
+2014/Jun/25 02:00:59.123456 "{ a = b}"
+2014/Jun/25 03:01:59.123456 {
+    a = b,
+    c ="      "
+}Some log message from LogFile1
+2014/Jun/25 03:05:59.123456 {
+    {
+        {
+            {
+                {
+                    {"" }
+                }
+            }
+        }
+    }
+}
+2014/Jun/25 03:06:59.123456 "\\   \\ \""
+2014/Jun/26 01:55:59.123456 Some log message from LogFile1
+2015/Jun/26 01:55:59.123456 Some log message from LogFile1

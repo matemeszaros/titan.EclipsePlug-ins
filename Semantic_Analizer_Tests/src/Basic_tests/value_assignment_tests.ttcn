@@ -1,0 +1,5062 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+/*
+//AUTHOR:
+//DATE:
+//VERSION:
+*/
+module assignment_tests
+{
+import from ASNTypes all;
+
+type enumerated enumeration
+{
+    item1(1),
+    item2(1),
+    item2(2),
+    item3(3)
+};
+
+//FIXME add tests for ispresent, ischoosen, valueof
+
+type enumerated myenum1 {xx1,xx2,xx3};
+type enumerated myenum2 {xx4,xx5,xx6};
+type default mydefault;
+type component mycomponent{};
+type record of integer myrecordofType;
+type set of integer mysetofType;
+type objid myObjID;
+
+type set mysetType
+{
+  integer field1,
+  charstring field2
+};
+
+type record myrecordType
+{
+  integer field1,
+  charstring field2,
+  integer field3 optional
+};
+
+type union myunionType
+{
+  integer field1,
+  charstring field2
+};
+
+const integer cg_integer := 5;
+const myrecordofType cg_recordof := {1};
+
+type component mycomponent2{};
+type function t_function();
+type function t_function2() runs on mycomponent;
+external function ef_c_ext_function();
+
+type altstep t_altstep() runs on mycomponent;
+type altstep t_altstep2();
+altstep as_c_altstep()
+runs on mycomponent
+{
+  [guard2] timerName.timeout
+    {}
+  [else]
+    {}
+}
+
+
+type testcase t_testcase() runs on mycomponent system mycomponent;
+testcase tc_c_testcase()
+runs on mycomponent
+system mycomponent
+{
+  //local declarations
+
+  //dynamic behaviour
+}
+
+
+function f_comp_return() return mycomponent{}
+
+function f_integerValueTest()
+{
+    timer TL_t := 5.0;
+    var integer vl_i := 5;
+
+    {	vl_i := 5+5; }
+    {	vl_i := 5-5; }
+    {	vl_i := 5*5; }
+    {	vl_i := 5/ 5; }
+    {	vl_i := vl_i;	}
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('00'H); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := pass; }
+    {	vl_i := not false; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'O; }
+    {	vl_i := '00'B; }
+    {	vl_i := '00'H; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5.5 * 5.5; }
+    {	vl_i := 5.5 + 5.5; }
+    {	vl_i := 5.5 - 5.5; }
+    {	vl_i := 5.5 / 5.5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'O; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := not4b '00'H; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'O and4b '00'O; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'O or4b '00'O; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'O xor4b '00'O; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'O << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'O >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'O <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'O @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := '00'O & '00'O; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_floatValueTests()
+{
+    timer TL_t := 5.0;
+    var float vl_i := 5.5;
+
+    {	vl_i := 5.5e1; }
+    {	vl_i := 5.5e+1; }
+    {	vl_i := 5.5E1; }
+    {	vl_i := 5.5E+1; }
+    {	vl_i := 5.5e-1; }
+    {	vl_i := 5.5E-1; }
+    {	vl_i := 5.5+5.5; }
+    {	vl_i := 5.5-5.5; }
+    {	vl_i := 5.5*5.5; }
+    {	vl_i := 5.5/5.5; }
+    {	vl_i := vl_i;	}
+    {	vl_i := int2float(5); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := TL_t.read; }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := pass; }
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'O; }
+    {	vl_i := '00'B; }
+    {	vl_i := '00'H; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'O; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := not4b '00'H; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'O and4b '00'O; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'O or4b '00'O; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'O xor4b '00'O; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'O << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'O >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'O <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'O @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := '00'O & '00'O; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5.5 == 5.5; }
+    {	vl_i := 5.5 != 5.5; }
+    {	vl_i := 5.5 < 5.5; }
+    {	vl_i := 5.5 > 5.5; }
+    {	vl_i := 5.5 <= 5.5; }
+    {	vl_i := 5.5 >= 5.5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_booleanValueTests()
+{
+    timer TL_t := 5.0;
+    var boolean vl_i := true;
+
+    {	vl_i := false; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not true; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := vl_i;	}
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := match(5,5); }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := pass; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'O; }
+    {	vl_i := '00'B; }
+    {	vl_i := '00'H; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := not4b 'aa'O; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := not4b '00'H; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'O and4b '00'O; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'O or4b '00'O; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'O xor4b '00'O; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'O << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'O >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'O <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'O @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := '00'O & '00'O; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_bitstringValueTests()
+{
+    timer TL_t := 5.0;
+    var bitstring vl_i := '00'B;
+
+    {	vl_i := vl_i;	}
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := int2bit(1,3); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := pass; }
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'O; }
+    {	vl_i := '00'H; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'O; }
+    {	vl_i := not4b '00'H; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'O and4b '00'O; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'O or4b '00'O; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'O xor4b '00'O; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'O << 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'O >> 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'O <@ 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'O @> 1; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := '00'O & '00'O; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+	{	vl_i[0] := '00'B;
+		vl_i[0][1] := '00'B; }
+}
+
+function f_hexstringValueTests()
+{
+    timer TL_t := 5.0;
+    var hexstring vl_i := '00'H;
+
+    {	vl_i := vl_i;	}
+    {	vl_i := not4b '00'H; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := int2hex(1,3); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := pass; }
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'O; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'O; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'O and4b '00'O; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'O or4b '00'O; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'O xor4b '00'O; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'O << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'O >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'O <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'O @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'O & '00'O; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+	{	vl_i[0] := '00'H;
+		vl_i[0][1] := '00'H; }
+}
+
+function f_octetstringValueTests()
+{
+    timer TL_t := 5.0;
+    var octetstring vl_i := 'aa'O;
+
+    {	vl_i := vl_i;	}
+    {	vl_i := not4b 'aa'O; }
+    {	vl_i := '00'O and4b '00'O; }
+    {	vl_i := '00'O or4b '00'O; }
+    {	vl_i := '00'O xor4b '00'O; }
+    {	vl_i := '00'O << 1; }
+    {	vl_i := '00'O >> 1; }
+    {	vl_i := '1100'O <@ 1; }
+    {	vl_i := '1100'O @> 1; }
+    {	vl_i := '00'O & '00'O; }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := int2oct(1,3); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := pass; }
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+	{	vl_i[0] := '0000'O;
+		vl_i[0][1] := '0000'O; }
+}
+
+function f_verdicttypeValueTests()
+{
+    timer TL_t := 5.0;
+    var verdicttype vl_i := pass;
+
+    {	vl_i := inconc; }
+    {	vl_i := error; }
+    {	vl_i := fail; }
+    {	vl_i := none; }
+    {	vl_i := vl_i;	}
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_enumeratedValueTests()
+{
+    timer TL_t := 5.0;
+    var myenum1 vl_i := xx1;
+
+    {	vl_i := xx2; }
+    {	vl_i := xx3; }
+    {	vl_i := vl_i;	}
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_defaultValueTests()
+{
+    timer TL_t := 5.0;
+    var mydefault vl_i := null;
+
+    {	vl_i := vl_i;	}
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+
+    {	vl_i := omit; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_charstringValueTests()
+{
+    timer TL_t := 5.0;
+    var charstring vl_i := "akarmi";
+
+    {	vl_i := vl_i;	}
+    {	vl_i := "akarmi\\akarmi"; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := __MODULE__; }
+	{	vl_i := __FILE__; }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+	{	vl_i[0] := "00";
+		vl_i[0][2] := "00"; }
+}
+
+function f_universalcharstringValueTests()
+{
+    timer TL_t := 5.0;
+    var universal charstring vl_i := "akarmi";
+
+    {	vl_i := vl_i;	}
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+	{	vl_i[0] := "00";
+		vl_i[0] := char(0,0,0,40) & char(0,0,0,40);
+		vl_i[0][2] := "00"; }
+}
+
+function f_componentValueTests()
+{
+    timer TL_t := 5.0;
+    var mycomponent vl_i := null;
+
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := vl_i;	}
+    {	vl_i := mycomponent.create; }
+
+    {	vl_i := omit; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_recordofValueTests()
+{
+    timer TL_t := 5.0;
+    var myrecordofType vl_i := {};
+
+    {	vl_i := {1,2,3,4}; }
+    {	vl_i[5] := 5;	}
+    {	vl_i := vl_i;	}
+
+    {	vl_i := omit; }
+    {	vl_i[5] := omit;	}
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_setofValueTests()
+{
+    timer TL_t := 5.0;
+    var mysetofType vl_i := {};
+
+    {	vl_i := {1,2,3,4}; }
+    {	vl_i[5] := 5;	}
+    {	vl_i := vl_i;	}
+
+    {	vl_i := omit; }
+    {	vl_i[5] := omit;	}
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_setValueTests()
+{
+    timer TL_t := 5.0;
+    var mysetType vl_i := {};
+
+    {	vl_i := {field1:=1, field2:="akarmi"}; }
+    {	vl_i := {field1:=1}; }
+    {	vl_i.field1 := 5;	}
+    {	vl_i := vl_i;	}
+
+	{	vl_i.field1 := omit;	}
+	{	vl_i.field1 := "akarmi";	}
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field3:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {1, "akarmi"}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_recordValueTests()
+{
+    timer TL_t := 5.0;
+	var myrecordType vl_i := {field1:=1, field2:="akarmi"};
+
+	{	vl_i := {field1:=1, field2:="akarmi", field3:=omit}; }
+	{	vl_i := {field1:=1}; }
+	{	vl_i.field1 := 1;	}
+	{	vl_i.field3 := omit;	}
+	{	vl_i := vl_i;	}
+
+	{	vl_i := {}; }
+	{	vl_i.field1 := omit;	}
+	{	vl_i.field1 := "akarmi";	}
+	{	vl_i := {1,"akarmi",3,4,5}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field4:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {field1:=omit, field2:=omit}; }
+	{	vl_i := {field2:="akarmi", field1:=1}; }
+	{	vl_i := {1}; }
+	{	vl_i := {1,2,3}; }
+	{	vl_i := {-,-}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_unionValueTests()
+{
+    timer TL_t := 5.0;
+	var myunionType vl_i;
+	{	vl_i := {field1:=1};	}
+	{	vl_i := {field2:="akarmi"};	}
+	{	vl_i := {field1:=1}; }
+	{	vl_i.field1 := 1;	}
+	{	vl_i.field2 := "akarmi";	}
+	{	vl_i := vl_i;	}
+
+	{	vl_i := {}; }
+	{	vl_i.field1 := omit;	}
+	{	vl_i.field1 := "akarmi";	}
+	{	vl_i := {1,"akarmi",3,4,5}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field4:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {field1:=omit, field2:=omit}; }
+	{	vl_i := {field2:="akarmi", field1:=1}; }
+	{	vl_i := {1}; }
+	{	vl_i := {1,2,3}; }
+	{	vl_i := {-,-}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+//FIXME add tests for array values
+
+function f_functiontypeValueTest() runs on mycomponent
+{
+	timer TL_t := 5.0;
+	var t_function vl_i := refers(ef_c_ext_function);
+
+	{	vl_i := null; }
+	{	vl_i := vl_i;	}
+
+	{	vl_i := {}; }
+	{	vl_i := {1,"akarmi",3,4,5}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field4:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {field1:=omit, field2:=omit}; }
+	{	vl_i := {field2:="akarmi", field1:=1}; }
+	{	vl_i := {1}; }
+	{	vl_i := {1,2,3}; }
+	{	vl_i := {-,-}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(tc_c_testcase); }
+    {	vl_i := refers(as_c_altstep); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+}
+
+function f_altsteptypeValueTest()
+{
+	timer TL_t := 5.0;
+
+	var t_altstep vl_i := refers(as_c_altstep);
+
+	{	vl_i := null; }
+	{	vl_i := vl_i;	}
+
+	{	vl_i := {}; }
+	{	vl_i := {1,"akarmi",3,4,5}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field4:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {field1:=omit, field2:=omit}; }
+	{	vl_i := {field2:="akarmi", field1:=1}; }
+	{	vl_i := {1}; }
+	{	vl_i := {1,2,3}; }
+	{	vl_i := {-,-}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_testcasetypeValueTest()
+{
+	timer TL_t := 5.0;
+	var t_testcase vl_i := refers(tc_c_testcase);
+
+	{	vl_i := null; }
+	{	vl_i := vl_i;	}
+
+	{	vl_i := {}; }
+	{	vl_i := {1,"akarmi",3,4,5}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field4:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {field1:=omit, field2:=omit}; }
+	{	vl_i := {field2:="akarmi", field1:=1}; }
+	{	vl_i := {1}; }
+	{	vl_i := {1,2,3}; }
+	{	vl_i := {-,-}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+}
+
+function f_ASNNullValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNNull vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNBMPstringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNBMPstring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNGeneralstringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNGeneralstring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNGraphicstringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNGraphicstring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNIA5stringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNIA5string vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNNumericstringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNNumericstring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNOctetStringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNOctetString vl_i;
+
+    {	vl_i := 'aa'O; }
+    {	vl_i := not4b 'aa'O; }
+    {	vl_i := '00'O and4b '00'O; }
+    {	vl_i := '00'O or4b '00'O; }
+    {	vl_i := '00'O xor4b '00'O; }
+    {	vl_i := '00'O << 1; }
+    {	vl_i := '00'O >> 1; }
+    {	vl_i := '1100'O <@ 1; }
+    {	vl_i := '1100'O @> 1; }
+    {	vl_i := '00'O & '00'O; }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := int2oct(1,3); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := pass; }
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNISO646StringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNISO646String vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNT61StringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNT61String vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNPrintablestringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNPrintablestring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNTeletexstringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNTeletexstring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNUniversalstringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNUniversalstring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNUTF8stringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNUTF8string vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNVideotexstringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNVideotexstring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNVisiblestringValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNVisiblestring vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNGeneralizedTimeValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNGeneralizedTime vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNUTCTimeValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNUTCTime vl_i;
+
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := {1,2,3}; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := int2float(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNSetValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNSetType vl_i;
+
+    {	vl_i := {field1:=1, field2:="akarmi"}; }
+    {	vl_i := {field1:=1}; }
+
+	{	vl_i := {}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field3:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {1, "akarmi"}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNSequenceValueTests()
+{
+    timer TL_t := 5.5;
+    var ASNSequenceType vl_i;
+
+	{	vl_i := {field1:=1, field2:="akarmi"}; }
+	{	vl_i := {field1:=1, field2:="akarmi", field3:=omit}; }
+	{	vl_i := {field1:=1}; }
+
+	{	vl_i := {}; }
+	{	vl_i := {1,"akarmi",3,4,5}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field4:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {field1:=omit, field2:=omit}; }
+	{	vl_i := {field2:="akarmi", field1:=1}; }
+	{	vl_i := {1}; }
+	{	vl_i := {1,2,3}; }
+	{	vl_i := {-,-}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_ASNChoiceValueTests()
+{
+    timer TL_t := 5.0;
+    var ASNChoiceType vl_i;
+
+	{	vl_i := {field1:=1}; }
+	{	vl_i := {field2:="akarmi"}; }
+
+	{	vl_i := {}; }
+	{	vl_i := {1,"akarmi",3,4,5}; }
+	{	vl_i := {field2:=1}; }
+	{	vl_i := {field4:=1}; }
+	{	vl_i := {field1:=1, field1:="akarmi"}; }
+	{	vl_i := {field1:=omit, field2:=omit}; }
+	{	vl_i := {field2:="akarmi", field1:=1}; }
+	{	vl_i := {1}; }
+	{	vl_i := {1,2,3}; }
+	{	vl_i := {-,-}; }
+	{	vl_i := {field1:='00'O, field2:='00'B}; }
+    {	vl_i := omit; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+}
+
+function f_objValueTests()
+{
+    timer TL_t := 5;
+    var myObjID vl_i;
+
+    {	vl_i := objid { 0 1 2}; }
+    {	vl_i := objid { itu_t (0) 1 2 }; }
+    {	vl_i := objid {  itu_t recommendation 0}; }
+    {	vl_i := objid {  itu_t(0) recommendation (0) 0}; }
+    {	vl_i := objid {  itu_t(0) question (1) 0}; }
+    {	vl_i := objid {  itu_t(0) administration (2) 0}; }
+    {	vl_i := objid {  itu_t(0) network_operator (3) 0}; }
+    {	vl_i := objid {  itu_t(0) identified_organization (4) 0}; }
+    {	vl_i := objid {  itu_t(0) r_recommendation (5) 0}; }
+    {	vl_i := objid {  ccitt recommendation 0}; }
+    {	vl_i := objid {  ccitt(0) recommendation (0) 0}; }
+    {	vl_i := objid {  ccitt(0) question (1) 0}; }
+    {	vl_i := objid {  ccitt(0) administration (2) 0}; }
+    {	vl_i := objid {  ccitt(0) network_operator (3) 0}; }
+    {	vl_i := objid {  ccitt(0) identified_organization (4) 0}; }
+    {	vl_i := objid {  ccitt(0) r_recommendation (5) 0}; }
+    {	vl_i := objid {  iso(1) standard (0) 0}; }
+    {	vl_i := objid {  iso(1) regisztration_authority (1) 0}; }
+    {	vl_i := objid {  iso(1) member_body (2) 0}; }
+    {	vl_i := objid {  iso(1) identified_organization (3) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) presentation (0) 0}; } //joint__iso__ccitt
+    {	vl_i := objid {  joint_iso_itu_t(2) asn1 (1) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) association_control (2) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) reliable_transfer (3) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) remote_operations (4) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) ds (5) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) directory (5) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) mhs (6) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) mhs_motis (6) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) ccr (7) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) oda (8) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) ms (9) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) osi_management (9) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) transaction_processing (10) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) dor (11) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) distinguished_object_reference (11) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) reference_data_transfer (12) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) network_layer (13) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) network_layer_management (13) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) transport_layer (14) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) transport_layer_management (14) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) datalink_layer (15) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) datalink_layer_management (15) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) datalink_layer_management_information (15) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) country (16) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) registration_procedures (17) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) registration_procedure (17) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) physiscal_layer (18) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) physical_layer_management (18) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) mheg (19) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) genericULS (20) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) generic_upper_layer_security (20) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) guls (20) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) transport_layer_security_protocol (21) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) network_layer_security_protocol (22) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) international_organisations (23) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) internationalRA (23) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) sios (24) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) uuid (25) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) odp (26) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(2) upu (40) 0}; }
+
+    {	vl_i := objid { itu_t(0) identified_organization (4) etsi(0) reserved(127)
+                             etsi_identified_organization(0) ericsson(5)
+                             testing (0) generic(0) sccp(1) v3(3) typeDefinitions(2) patchNo(3)
+                           }; }
+    {	vl_i := objid {iso(1) member_body(2) bsi(826) disc(0) ericsson(1249)}; }
+
+    {	vl_i := objid {  itu_r r_recommendation 0}; }
+    {	vl_i := objid {  joint_iso_itu_t presentation 0}; }
+    {	vl_i := objid {  itu_t(1) recommendation (0) 0}; }
+    {	vl_i := objid {  ccitt(1) recommendation (0) 0}; }
+    {	vl_i := objid {  iso(0) standard (0) 0}; }
+    {	vl_i := objid {  joint_iso_itu_t(0) presentation (0) 0}; }
+    {	vl_i := objid {  joint_iso_ccitt(0) presentation (0) 0}; }
+
+    {	vl_i := objid {  TL_t recommendation (0) 0}; }
+    {	vl_i := objid {  99999999999999999 recommendation (0) 0}; }
+    {	vl_i := objid {  3 recommendation (0) 0}; }
+    {	vl_i := objid {  itu_t(1) 39 0}; }
+    {	vl_i := objid {  iso(0) 39 0}; }
+    {	vl_i := omit; }
+    {	vl_i := {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; }
+    {	vl_i := {field1:=1, field1:="akarmi"}; }
+    {	vl_i := null; }
+    {	vl_i := xx4; }
+    {	vl_i := true;	}
+    {	vl_i := false;	}
+    {	vl_i := not false; }
+    {	vl_i := vl_i;	}
+    {	vl_i := 5; }
+    {	vl_i := 5.5; }
+    {	vl_i := "akarmi"; }
+    {	vl_i := char(0,0,0,0); }
+    {	vl_i := 'aa'H; }
+    {	vl_i := '00'B; }
+    {	vl_i := 5 * 5; }
+    {	vl_i := 5 + 5; }
+    {	vl_i := 5 - 5; }
+    {	vl_i := 5 / 5; }
+    {	vl_i := 5 mod 5; }
+    {	vl_i := 5 rem 5; }
+    {	vl_i := true and true; }
+    {	vl_i := true or true; }
+    {	vl_i := not4b 'aa'H; }
+    {	vl_i := not4b '00'B; }
+    {	vl_i := '00'B and4b '00'B; }
+    {	vl_i := '00'H and4b '00'H; }
+    {	vl_i := '00'B or4b '00'B; }
+    {	vl_i := '00'H or4b '00'H; }
+    {	vl_i := '00'B xor4b '00'B; }
+    {	vl_i := '00'H xor4b '00'H; }
+    {	vl_i := '00'B << 1; }
+    {	vl_i := '00'H << 1; }
+    {	vl_i := '00'B >> 1; }
+    {	vl_i := '00'H >> 1; }
+    {	vl_i := '00'B <@ 1; }
+    {	vl_i := '00'H <@ 1; }
+    {	vl_i := '00'B @> 1; }
+    {	vl_i := '00'H @> 1; }
+    {	vl_i := '00'B & '00'B; }
+    {	vl_i := '00'H & '00'H; }
+    {	vl_i := "akarmi" & "akarmi2"; }
+    {	vl_i := 5 == 5; }
+    {	vl_i := 5 != 5; }
+    {	vl_i := 5 < 5; }
+    {	vl_i := 5 > 5; }
+    {	vl_i := 5 <= 5; }
+    {	vl_i := 5 >= 5; }
+    {	vl_i := bit2hex('00'B); }
+    {	vl_i := bit2int('00'B); }
+    {	vl_i := bit2oct('00'B); }
+    {	vl_i := bit2str('00'B); }
+    {	vl_i := char2int("5"); }
+    {	vl_i := char2oct("akarmi"); }
+    {	vl_i := float2int( 5.5); }
+    {	vl_i := float2str(5.5); }
+    {	vl_i := hex2int('FF'H); }
+    {	vl_i := hex2oct('FF00'H); }
+    {	vl_i := hex2str('FF00'H); }
+    {	vl_i := int2char(5); }
+    {	vl_i := int2float(5); }
+    {	vl_i := int2str(5); }
+    {	vl_i := int2unichar(5); }
+    {	vl_i := oct2bit('00FF'O); }
+    {	vl_i := oct2char('0F'O); }
+    {	vl_i := oct2hex('0F'O); }
+    {	vl_i := oct2int('0F'O); }
+    {	vl_i := oct2str('0F'O); }
+    {	vl_i := str2bit("0101"); }
+    {	vl_i := str2float("5.5"); }
+    {	vl_i := str2hex("0101"); }
+    {	vl_i := str2int("5"); }
+    {	vl_i := str2oct("0101"); }
+    {	vl_i := unichar2int(char(0,0,0,0)); }
+    {	vl_i := unichar2char(char(0,0,0,0)); }
+    {	vl_i := int2bit(1,3); }
+    {	vl_i := int2hex(1,3); }
+    {	vl_i := int2oct(1,3); }
+    {	vl_i := rnd(); }
+    {	vl_i := rnd(5.5); }
+    {	vl_i := isbound(5.5); }
+    {	vl_i := isvalue(5.5); }
+    {	vl_i := lengthof("akarmi"); }
+    {	vl_i := sizeof(cg_recordof); }
+    {	vl_i := regexp("akarmi","akarmi", 0); }
+    {	vl_i := match(5,5); }
+    {	vl_i := mtc; }
+    {	vl_i := system; }
+    {	vl_i := self; }
+    {	vl_i := any component . running; }
+    {	vl_i := all component . running; }
+    {	vl_i := any component . alive; }
+    {	vl_i := all component . alive; }
+    {	vl_i := any timer . running; }
+    {	vl_i := f_comp_return().running; }
+    {	vl_i := f_comp_return().alive; }
+    {	vl_i := TL_t.read; }
+    {	vl_i := mycomponent.create; }
+    {	vl_i := activate(temp_altstep()); }
+    {	vl_i := activate(derefers(temp_altstep_pointer)()); }
+    {	vl_i := execute(temp_altstep(), 5); }
+    {	vl_i := execute(derefers(temp_altstep_pointer)(),5); }
+    {	vl_i := refers(f_functiontypeValueTest); }
+	{	vl_i := refers(ef_c_ext_function); }
+	{	vl_i := refers(as_c_altstep); }
+	{	vl_i := refers(tc_c_testcase); }
+	{	vl_i := {[TL_t] := 0, [-1] := 1, [1] := 1, [1] := 5, [99999999999999999] := 1}; }
+	{	vl_i := {[0] := 0, [1] := 1, [5] := 5} }
+}
+
+}  // end of module

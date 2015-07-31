@@ -1,0 +1,1127 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+/*
+//AUTHOR:
+//DATE:
+//VERSION:
+*/
+module subtype_tests
+{
+// boolean sub-typing tests
+function f_booleanFunction() return boolean
+{
+  return true;
+}
+
+type boolean GoodBool1 (true,false);
+type boolean GoodBool2 (true);
+
+type boolean FaultyBool1 (false..true);
+type boolean Bool;
+type Bool FaultyBool2 (false..true);
+type boolean FaultyBool3 (true..true);
+type boolean FaultyBool4 (true..false);
+type boolean FaultyBool5 (f_booleanFunction());
+
+type boolean FaultyBool6 length(1);
+type boolean Bool2;
+type Bool FaultyBool7 length(2 .. 3);
+type Bool FaultyBool8 length(3 .. 2);
+type Bool FaultyBool9 length(-4 .. -3);
+type Bool FaultyBool10 length(4444444444444444444 .. 88888888888888888888888);
+type Bool FaultyBool11 (-infinity .. infinity);
+
+type boolean FaultyBool12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+function f_functionName()
+{
+const GoodBool2 cl_bool1 := true;
+const GoodBool2 cl_bool2 := false;
+const GoodBool2 cl_bool3 := not true;
+const GoodBool2 cl_bool4 := true and false;
+const GoodBool2 cl_bool5 := false or false;
+const GoodBool2 cl_bool6 := false xor false;
+const GoodBool2 cl_bool7 := true == false;
+const GoodBool2 cl_bool8 := false != false;
+const GoodBool2 cl_bool9 := 5 < 5;
+const GoodBool2 cl_bool10 := 5 > 5;
+const GoodBool2 cl_bool11 := 6 <= 5;
+const GoodBool2 cl_bool12 := 4 >= 5;
+
+template GoodBool2 t_bool1 := true;
+template GoodBool2 t_bool2 := false;
+template GoodBool2 t_bool3 := not true;
+template GoodBool2 t_bool4 := true and false;
+template GoodBool2 t_bool5 := false or false;
+template GoodBool2 t_bool6 := false xor false;
+template GoodBool2 t_bool7 := true == false;
+template GoodBool2 t_bool8 := false != false;
+template GoodBool2 t_bool9 := 5 < 5;
+template GoodBool2 t_bool10 := 5 > 5;
+template GoodBool2 t_bool11 := 6 <= 5;
+template GoodBool2 t_bool12 := 4 >= 5;
+}
+
+// integer sub-typing tests
+type integer GoodInt1 (-4,-3,-2,-1,0,1,2,3,4);
+type integer GoodInt2 (-4 .. 4, 6 .. 8);
+type integer GoodInt3 (4 .. 4);
+type integer Int;
+type Int GoodInt4 (-infinity .. infinity);
+
+type integer FaultyInt1 (4,4);
+type integer FaultyInt2 (4 .. -4);
+type integer FaultyInt3 (-4 .. 4, 2 .. 6);
+
+type integer FaultyInt4 ( float2int(rnd()) .. 255 );
+type integer FaultyInt5 ( float2int(rnd()), 255 );
+type integer FaultyInt6 (-infinity .. infinity);
+type integer FaultyInt7 (infinity .. -infinity);
+
+type integer FaultyInt8 length(10);
+type Int FaultyInt9 length(4 .. 8);
+type integer FaultyInt10 length(8 .. 4);
+type integer FaultyInt11 length(-4 .. -3);
+type integer FaultyInt12 length(4444444444444444444 .. 88888888888888888888888);
+type integer Faultyint13 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodInt1 cg_int1 := 1;
+const GoodInt1 cg_int2 := 10;
+const GoodInt3 cg_int3 := +1;
+const GoodInt3 cg_int4 := -1;
+const GoodInt3 cg_int5 := 1*1;
+const GoodInt3 cg_int6 := 1+0;
+const GoodInt3 cg_int7 := 1-1;
+const GoodInt3 cg_int8 := 1/1;
+const GoodInt3 cg_int9 := 5 mod 5;
+const GoodInt3 cg_int10 := 5 rem 5;
+const GoodInt3 cg_int11 := bit2int('00'B);
+const GoodInt3 cg_int12 := char2int("0");
+const GoodInt3 cg_int13 := float2int(1.0);
+const GoodInt3 cg_int14 := hex2int('00'H);
+const GoodInt3 cg_int15 := oct2int('01'O);
+const GoodInt3 cg_int16 := str2int("0");
+const GoodInt3 cg_int17 := unichar2int(char(0,0,0,40));
+const GoodInt3 cg_int18 := unichar2int(char(1,0,0,40));
+const GoodInt3 cg_int19 := __LINE__;
+
+template GoodInt1 t_int1 := 1;
+template GoodInt1 t_int2 := 10;
+template GoodInt3 t_int3 := +1;
+template GoodInt3 t_int4 := -1;
+template GoodInt3 t_int5 := 1*1;
+template GoodInt3 t_int6 := 1+0;
+template GoodInt3 t_int7 := 1-1;
+template GoodInt3 t_int8 := 1/1;
+template GoodInt3 t_int9 := 5 mod 5;
+template GoodInt3 t_int10 := 5 rem 5;
+template GoodInt3 t_int11 := bit2int('00'B);
+template GoodInt3 t_int12 := char2int("0");
+template GoodInt3 t_int13 := float2int(1.0);
+template GoodInt3 t_int14 := hex2int('00'H);
+template GoodInt3 t_int15 := oct2int('01'O);
+template GoodInt3 t_int16 := str2int("0");
+template GoodInt3 t_int17 := unichar2int(char(0,0,0,40));
+template GoodInt3 t_int18 := unichar2int(char(1,0,0,40));
+template GoodInt3 t_int19 := __LINE__;
+
+
+// float sub-typing tests
+type float GoodFloat1 (-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0);
+type float GoodFloat2 (-4.0 .. 4.0, 6.0 .. 8.0);
+type float GoodFloat3 (4.0 .. 4.0);
+
+type float FaultyFloat1 (4.0,4.0);
+type float FaultyFloat2 (4.0 .. -4.0);
+type float FaultyFloat3 (-4.0 .. 4.0, 2.0 .. 6.0);
+
+type float FaultyFloat4 ( rnd() .. 255.0 );
+type float FaultyFloat5 ( rnd(), 255.0 );
+type float FaultyFloat6 (-infinity .. infinity);
+type float FaultyFloat7 (infinity .. -infinity);
+
+type float FaultyFloat8 length(10);
+type float Float;
+type Float FaultyFloat9 length(4 .. 8);
+type float FaultyFloat10 length(8 .. 4);
+type float FaultyFloat11 length(-4 .. -3);
+type float FaultyFloat12 length(4444444444444444444 .. 88888888888888888888888);
+type float FaultyFloat13 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodFloat1 cg_float1 := 1.0;
+const GoodFloat1 cg_float2 := 10.0;
+const GoodFloat3 cg_float3 := + 1.0;
+const GoodFloat3 cg_float4 := -1.0;
+const GoodFloat3 cg_float5 := 1.0*1.0;
+const GoodFloat3 cg_float6 := 1.0+0.0;
+const GoodFloat3 cg_float7 := 1.0-1.0;
+const GoodFloat3 cg_float8 := 1.0/1.0;
+const GoodFloat3 cg_float9 := int2float(1);
+const GoodFloat3 cg_float10 := str2float("00");
+
+template GoodFloat1 t_float1 := 1.0;
+template GoodFloat1 t_float2 := 10.0;
+template GoodFloat3 t_float3 := + 1.0;
+template GoodFloat3 t_float4 := -1.0;
+template GoodFloat3 t_float5 := 1.0*1.0;
+template GoodFloat3 t_float6 := 1.0+0.0;
+template GoodFloat3 t_float7 := 1.0-1.0;
+template GoodFloat3 t_float8 := 1.0/1.0;
+template GoodFloat3 t_float9 := int2float(1);
+template GoodFloat3 t_float10 := str2float("00");
+
+
+// bitstring sub-typing tests
+function f_bitstringFunction() return bitstring
+{
+  return '00'B;
+}
+
+type bitstring GoodBitstring1 ('00'B, '01'B, '10'B, '11'B);
+
+type bitstring GoodBitstring2 length(10);
+type bitstring Bitstring;
+type Bitstring GoodBitstring3 length(4 .. 8);
+
+type bitstring FaultyBitstring1 ('00'B, '00'B);
+type bitstring FaultyBitstring2 ('00'B .. '11'B);
+type bitstring FaultyBitstring3 ( f_bitstringFunction(), '00'B );
+type bitstring FaultyBitstring4 (-infinity .. infinity);
+type bitstring FaultyBitstring5 length(8 .. 4);
+type bitstring FaultyBitstring6 length(-4 .. -3);
+type bitstring FaultyBitstring7 length(4444444444444444444 .. 88888888888888888888888);
+
+type bitstring FaultyBitstring8 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodBitstring1 cg_bitstring1 := '00'B;
+const GoodBitstring1 cg_bitstring2 := '111'B;
+const GoodBitstring2 cg_bitstring3 := '111'B;
+const GoodBitstring1 cg_bitstring4 := not4b '000'B;
+const GoodBitstring1 cg_bitstring5 := '000'B and4b '000'B;
+const GoodBitstring1 cg_bitstring6 := '000'B or4b '000'B;
+const GoodBitstring1 cg_bitstring7 := '000'B xor4b '000'B;
+const GoodBitstring1 cg_bitstring8 := '00000'B << 1;
+const GoodBitstring1 cg_bitstring9 := '00000'B >> 1;
+const GoodBitstring1 cg_bitstring10 := '00000'B <@ 1;
+const GoodBitstring1 cg_bitstring11 := '00000'B @> 1;
+const GoodBitstring1 cg_bitstring12 := substr('00000'B, 1, 1);
+const GoodBitstring1 cg_bitstring13 := '000'B & '000'B;
+const GoodBitstring1 cg_bitstring14 := hex2bit('00000'H);
+const GoodBitstring1 cg_bitstring15 := oct2bit('000000'O);
+const GoodBitstring1 cg_bitstring16 := str2bit("000000");
+const GoodBitstring1 cg_bitstring17 := int2bit(0,1);
+const GoodBitstring1 cg_bitstring18 := replace('000000'B, 1, 1, '0'B);
+
+template GoodBitstring1 t_bitstring1 := '00'B;
+template GoodBitstring1 t_bitstring2 := '111'B;
+template GoodBitstring2 t_bitstring3 := '111'B;
+template GoodBitstring1 t_bitstring4 := not4b '000'B;
+template GoodBitstring1 t_bitstring5 := '000'B and4b '000'B;
+template GoodBitstring1 t_bitstring6 := '000'B or4b '000'B;
+template GoodBitstring1 t_bitstring7 := '000'B xor4b '000'B;
+template GoodBitstring1 t_bitstring8 := '00000'B << 1;
+template GoodBitstring1 t_bitstring9 := '00000'B >> 1;
+template GoodBitstring1 t_bitstring10 := '00000'B <@ 1;
+template GoodBitstring1 t_bitstring11 := '00000'B @> 1;
+template GoodBitstring1 t_bitstring12 := substr('00000'B, 1, 1);
+template GoodBitstring1 t_bitstring13 := '000'B & '000'B;
+template GoodBitstring1 t_bitstring14 := hex2bit('00000'H);
+template GoodBitstring1 t_bitstring15 := oct2bit('000000'O);
+template GoodBitstring1 t_bitstring16 := str2bit("000000");
+template GoodBitstring1 t_bitstring17 := int2bit(0,1);
+template GoodBitstring1 t_bitstring18 := replace('000000'B, 1, 1, '0'B);
+
+
+// hexstring sub-typing tests
+function f_hexstringFunction() return hexstring
+{
+  return '00'H;
+}
+
+type hexstring GoodHexstring1 ('00'H, '01'H, '10'H, '11'H);
+
+type hexstring GoodHexstring2 length(10);
+type hexstring Hexstring;
+type Hexstring GoodHexstring3 length(4 .. 8);
+
+type hexstring FaultyHexstring1 ('00'H, '00'H);
+type hexstring FaultyHexstring2 ('00'H .. '11'H);
+type hexstring FaultyHexstring3 ( f_hexstringFunction(), '00'H );
+type hexstring FaultyHexstring4 (-infinity .. infinity);
+type hexstring FaultyHexstring5 length(8 .. 4);
+type hexstring FaultyHexstring6 length(-4 .. -3);
+type hexstring FaultyHexstring7 length(4444444444444444444 .. 88888888888888888888888);
+type hexstring FaultyHexstring8 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodHexstring1 cg_hexstring1 := '00'H;
+const GoodHexstring1 cg_hexstring2 := '111'H;
+const GoodHexstring2 cg_hexstring3 := '111'H;
+const GoodHexstring1 cg_hexstring4 := not4b '000'H;
+const GoodHexstring1 cg_hexstring5 := '000'H and4b '000'H;
+const GoodHexstring1 cg_hexstring6 := '000'H or4b '000'H;
+const GoodHexstring1 cg_hexstring7 := '000'H xor4b '000'H;
+const GoodHexstring1 cg_hexstring8 := '00000'H << 1;
+const GoodHexstring1 cg_hexstring9 := '00000'H >> 1;
+const GoodHexstring1 cg_hexstring10 := '00000'H <@ 1;
+const GoodHexstring1 cg_hexstring11 := '00000'H @> 1;
+const GoodHexstring1 cg_hexstring12 := substr('00000'H, 1, 1);
+const GoodHexstring1 cg_hexstring13 := '000'H & '000'H;
+const GoodHexstring1 cg_hexstring14 := bit2hex('0'B);
+const GoodHexstring1 cg_hexstring15 := oct2hex('000000'O);
+const GoodHexstring1 cg_hexstring16 := str2hex("000000");
+const GoodHexstring1 cg_hexstring17 := int2hex(0,1);
+const GoodHexstring1 cg_hexstring18 := replace('000000'H, 1, 1, '0'H);
+
+template GoodHexstring1 t_hexstring1 := '00'H;
+template GoodHexstring1 t_hexstring2 := '111'H;
+template GoodHexstring2 t_hexstring3 := '111'H;
+template GoodHexstring1 t_hexstring4 := not4b '000'H;
+template GoodHexstring1 t_hexstring5 := '000'H and4b '000'H;
+template GoodHexstring1 t_hexstring6 := '000'H or4b '000'H;
+template GoodHexstring1 t_hexstring7 := '000'H xor4b '000'H;
+template GoodHexstring1 t_hexstring8 := '00000'H << 1;
+template GoodHexstring1 t_hexstring9 := '00000'H >> 1;
+template GoodHexstring1 t_hexstring10 := '00000'H <@ 1;
+template GoodHexstring1 t_hexstring11 := '00000'H @> 1;
+template GoodHexstring1 t_hexstring12 := substr('00000'H, 1, 1);
+template GoodHexstring1 t_hexstring13 := '000'H & '000'H;
+template GoodHexstring1 t_hexstring14 := bit2hex('0'B);
+template GoodHexstring1 t_hexstring15 := oct2hex('000000'O);
+template GoodHexstring1 t_hexstring16 := str2hex("000000");
+template GoodHexstring1 t_hexstring17 := int2hex(0,1);
+template GoodHexstring1 t_hexstring18 := replace('000000'H, 1, 1, '0'H);
+
+// octetstring sub-typing tests
+function f_octetstringFunction() return octetstring
+{
+  return '01'O;
+}
+
+type octetstring GoodOctetstring1 ('00'O, '01'O, '10'O, '11'O);
+
+type octetstring GoodOctetstring2 length(10);
+type octetstring Octetstring;
+type Octetstring GoodOctetstring3 length(4 .. 8);
+
+type octetstring FaultyOctetstring1 ('00'O, '00'O);
+type octetstring FaultyOctetstring2 ('00'O .. '11'O);
+
+type octetstring FaultyOctetstring3 ( f_octetstringFunction(), '01'O );
+type octetstring FaultyOctetstring4 (-infinity .. infinity);
+type octetstring FaultyOctetstring5 length(8 .. 4);
+type octetstring FaultyOctetstring6 length(-4 .. -3);
+type octetstring FaultyOctetstring7 length(4444444444444444444 .. 88888888888888888888888);
+type octetstring FaultyOctetstring8 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodOctetstring1 cg_octetstring1 := '00'O;
+const GoodOctetstring1 cg_octetstring2 := '1111'O;
+const GoodOctetstring2 cg_octetstring3 := '1111'O;
+const GoodOctetstring1 cg_octetstring4 := not4b '0000'O;
+const GoodOctetstring1 cg_octetstring5 := '0000'O and4b '0000'O;
+const GoodOctetstring1 cg_octetstring6 := '0000'O or4b '0000'O;
+const GoodOctetstring1 cg_octetstring7 := '0000'O xor4b '0000'O;
+const GoodOctetstring1 cg_octetstring8 := '000000'O << 1;
+const GoodOctetstring1 cg_octetstring9 := '000000'O >> 1;
+const GoodOctetstring1 cg_octetstring10 := '000000'O <@ 1;
+const GoodOctetstring1 cg_octetstring11 := '000000'O @> 1;
+const GoodOctetstring1 cg_octetstring12 := substr('000000'O, 1, 2);
+const GoodOctetstring1 cg_octetstring13 := '0000'O & '0000'O;
+const GoodOctetstring1 cg_octetstring14 := bit2oct(''B);
+const GoodOctetstring1 cg_octetstring15 := char2oct("0");
+const GoodOctetstring1 cg_octetstring16 := hex2oct(''H);
+const GoodOctetstring1 cg_octetstring17 := str2oct("000000");
+const GoodOctetstring1 cg_octetstring18 := int2oct(0,1);
+const GoodOctetstring1 cg_octetstring19 := replace('000000'O, 1, 1, '01'O);
+
+template GoodOctetstring1 t_octetstring1 := '00'O;
+template GoodOctetstring1 t_octetstring2 := '1111'O;
+template GoodOctetstring2 t_octetstring3 := '1111'O;
+template GoodOctetstring1 t_octetstring4 := not4b '0000'O;
+template GoodOctetstring1 t_octetstring5 := '0000'O and4b '0000'O;
+template GoodOctetstring1 t_octetstring6 := '0000'O or4b '0000'O;
+template GoodOctetstring1 t_octetstring7 := '0000'O xor4b '0000'O;
+template GoodOctetstring1 t_octetstring8 := '000000'O << 1;
+template GoodOctetstring1 t_octetstring9 := '000000'O >> 1;
+template GoodOctetstring1 t_octetstring10 := '000000'O <@ 1;
+template GoodOctetstring1 t_octetstring11 := '000000'O @> 1;
+template GoodOctetstring1 t_octetstring12 := substr('000000'O, 1, 2);
+template GoodOctetstring1 t_octetstring13 := '0000'O & '0000'O;
+template GoodOctetstring1 t_octetstring14 := bit2oct(''B);
+template GoodOctetstring1 t_octetstring15 := char2oct("0");
+template GoodOctetstring1 t_octetstring16 := hex2oct(''H);
+template GoodOctetstring1 t_octetstring17 := str2oct("000000");
+template GoodOctetstring1 t_octetstring18 := int2oct(0,1);
+template GoodOctetstring1 t_octetstring19 := replace('000000'O, 1, 1, '01'O);
+
+
+// charstring sub-typing tests
+function f_charstringFunction() return charstring
+{
+  return "something";
+}
+
+type charstring GoodCharstring1 ("a", "b", "c", "d", "something");
+
+type charstring GoodCharstring2 ("a" .. "k");
+type charstring GoodCharstring3 ("a" .. "a");
+type charstring GoodCharstring4 ("aa" .. "zz");
+
+type charstring GoodCharstring5 length(10);
+type charstring Charstring;
+type Charstring GoodCharstring6 length(4 .. 8);
+
+type charstring FaultyCharstring1 ("a", "a");
+type charstring FaultyCharstring2 ("z" .. "a");
+
+type charstring FaultyCharstring3 ( f_charstringFunction(), "" );
+type charstring FaultyCharstring4 (-infinity .. infinity);
+type charstring FaultyCharstring5 length(8 .. 4);
+type charstring FaultyCharstring6 length(-4 .. -3);
+type charstring FaultyCharstring7 length(4444444444444444444 .. 88888888888888888888888);
+type charstring FaultyCharstring8 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodCharstring1 cg_charstring1 := "something";
+const GoodCharstring1 cg_charstring2 := "error";
+const GoodCharstring2 cg_charstring3 := "z";
+const GoodCharstring1 cg_charstring12 := substr("akarmi", 1, 3);
+const GoodCharstring1 cg_charstring13 := "ab" & "c";
+const GoodCharstring1 cg_charstring14 := bit2str(''B);
+const GoodCharstring1 cg_charstring15 := float2str(5.5);
+const GoodCharstring1 cg_charstring16 := oct2char('01'O);
+const GoodCharstring1 cg_charstring17 := oct2str('01'O);
+const GoodCharstring1 cg_charstring18 := hex2str(''H);
+const GoodCharstring1 cg_charstring20 := int2char(5);
+const GoodCharstring1 cg_charstring21 := int2str(5);
+const GoodCharstring1 cg_charstring22 := replace("akarmi", 1, 1, "cbe");
+const GoodCharstring1 cg_charstring23 := unichar2char(char(0,0,0,40));
+const GoodCharstring1 cg_charstring24 := %moduleId;
+const GoodCharstring1 cg_charstring25 := %fileName;
+const GoodCharstring1 cg_charstring26 := __BFILE__;
+const GoodCharstring1 cg_charstring27 := %lineNumber;
+const GoodCharstring1 cg_charstring28 := __SCOPE__;
+const GoodCharstring1 cg_charstring29 := %definitionId;
+function f_charstringconstsubFunction()
+{
+const GoodCharstring1 cl_charstring30 := %definitionId;
+}
+
+
+template GoodCharstring1 t_charstring1 := "something";
+template GoodCharstring1 t_charstring2 := "error";
+template GoodCharstring2 t_charstring3 := "z";
+template GoodCharstring1 t_charstring12 := substr("akarmi", 1, 3);
+template GoodCharstring1 t_charstring13 := "ab" & "c";
+template GoodCharstring1 t_charstring14 := bit2str(''B);
+template GoodCharstring1 t_charstring15 := float2str(5.5);
+template GoodCharstring1 t_charstring16 := oct2char('01'O);
+template GoodCharstring1 t_charstring17 := oct2str('01'O);
+template GoodCharstring1 t_charstring18 := hex2str(''H);
+template GoodCharstring1 t_charstring20 := int2char(5);
+template GoodCharstring1 t_charstring21 := int2str(5);
+template GoodCharstring1 t_charstring22 := replace("akarmi", 1, 1, "cbe");
+template GoodCharstring1 t_charstring23 := unichar2char(char(0,0,0,40));
+template GoodCharstring1 t_charstring24 := %moduleId;
+template GoodCharstring1 t_charstring25 := %fileName;
+template GoodCharstring1 t_charstring26 := __BFILE__;
+template GoodCharstring1 t_charstring27 := %lineNumber;
+template GoodCharstring1 t_charstring28 := __SCOPE__;
+
+// universal charstring sub-typing tests
+function f_universalcharstringFunction() return universal charstring
+{
+  return "something";
+}
+
+type universal charstring GoodUniversalCharstring1 ("a", "b", "c", "d", "something", char(0,0,0,110));
+
+type universal charstring GoodUniversalCharstring2 ("a" .. "k");
+type universal charstring GoodUniversalCharstring3 ("a" .. "a");
+type universal charstring GoodUniversalCharstring4 (char(0,0,0,100) .. char(0,0,0,100));
+type universal charstring GoodUniversalCharstring5 (char(0,0,0,100) .. char(1,0,0,100));
+type universal charstring GoodUniversalCharstring6 (char(0,0,0,100) .. char(0,1,0,100));
+type universal charstring GoodUniversalCharstring7 (char(0,0,0,100) .. char(0,0,1,100));
+
+type universal charstring GoodUniversalCharstring8 length(10);
+type universal charstring UniversalCharstring;
+type UniversalCharstring GoodUniversalCharstring9 length(4 .. 8);
+
+type universal charstring FaultyUniversalCharstring1 ("a", "a");
+type universal charstring FaultyUniversalCharstring2 ("z" .. "a");
+type universal charstring FaultyUniversalCharstring3 ("aa" .. "zz");
+type universal charstring FaultyUniversalCharstring4 (char(1,0,0,0) .. char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring5 (char(0,1,0,0) .. char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring6 (char(0,0,1,0) .. char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring7 (char(0,0,0,1) .. char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring7 (char(0,0,0,0) & char(0,0,0,0) .. char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring7 (char(0,0,0,0) .. char(0,0,0,0) & char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring4 (char(1,0,0,0) & char(0,0,0,0) .. char(0,0,0,0) & char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring5 (char(0,1,0,0) & char(0,0,0,0) .. char(0,0,0,0) & char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring6 (char(0,0,1,0) & char(0,0,0,0) .. char(0,0,0,0) & char(0,0,0,0));
+type universal charstring FaultyUniversalCharstring7 (char(0,0,0,1) & char(0,0,0,0) .. char(0,0,0,0) & char(0,0,0,0));
+const universal charstring cg_universalChar := char(0,0,0,0);
+type universal charstring FaultyUniversalCharstring9 (cg_universalChar .. cg_universalChar);
+
+type universal charstring FaultyUniversalCharstring10 ( f_universalcharstringFunction(), char(50,0,0,0) );
+type universal charstring FaultyUniversalCharstring11 (-infinity .. infinity);
+type universal charstring FaultyUniversalCharstring12 length(8 .. 4);
+type universal charstring FaultyUniversalCharstring13 length(-4 .. -3);
+type universal charstring FaultyUniversalCharstring14 length(4444444444444444444 .. 88888888888888888888888);
+type universal charstring FaultyUniversalCharstring15 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodUniversalCharstring1 cg_universalcharstring1 := "something";
+const GoodUniversalCharstring1 cg_universalcharstring2 := "error";
+const GoodUniversalCharstring2 cg_universalcharstring3 := "z";
+const GoodUniversalCharstring1 cg_universalcharstring12 := substr("akarmi", 1, 3);
+const GoodUniversalCharstring1 cg_universalcharstring13 := "ab" & "c";
+const GoodUniversalCharstring1 cg_universalcharstring14 := bit2str(''B);
+const GoodUniversalCharstring1 cg_universalcharstring15 := float2str(5.5);
+const GoodUniversalCharstring1 cg_universalcharstring16 := oct2char('01'O);
+const GoodUniversalCharstring1 cg_universalcharstring17 := oct2str('01'O);
+const GoodUniversalCharstring1 cg_universalcharstring18 := hex2str(''H);
+const GoodUniversalCharstring1 cg_universalcharstring19 := int2char(5);
+const GoodUniversalCharstring1 cg_universalcharstring20 := int2unichar(5);
+const GoodUniversalCharstring1 cg_universalcharstring21 := int2str(5);
+const GoodUniversalCharstring1 cg_universalcharstring22 := replace("akarmi", 1, 1, "cbe");
+const GoodUniversalCharstring1 cg_universalcharstring23 := unichar2char(char(0,0,0,40));
+const GoodUniversalCharstring1 cg_universalcharstring24 := %moduleId;
+const GoodUniversalCharstring1 cg_universalcharstring25 := %fileName;
+const GoodUniversalCharstring1 cg_universalcharstring26 := __BFILE__;
+const GoodUniversalCharstring1 cg_universalcharstring27 := %lineNumber;
+const GoodUniversalCharstring1 cg_universalcharstring28 := __SCOPE__;
+const GoodUniversalCharstring1 cg_universalcharstring29 := %definitionId;
+function f_universalcharstringconstsubFunction()
+{
+const GoodUniversalCharstring1 cl_universalcharstring30 := %definitionId;
+}
+
+template GoodUniversalCharstring1 t_universalcharstring1 := "something";
+template GoodUniversalCharstring1 t_universalcharstring2 := "error";
+template GoodUniversalCharstring2 t_universalcharstring3 := "z";
+template GoodUniversalCharstring1 t_universalcharstring12 := substr("akarmi", 1, 3);
+template GoodUniversalCharstring1 t_universalcharstring13 := "ab" & "c";
+template GoodUniversalCharstring1 t_universalcharstring14 := bit2str(''B);
+template GoodUniversalCharstring1 t_universalcharstring15 := float2str(5.5);
+template GoodUniversalCharstring1 t_universalcharstring16 := oct2char('01'O);
+template GoodUniversalCharstring1 t_universalcharstring17 := oct2str('01'O);
+template GoodUniversalCharstring1 t_universalcharstring18 := hex2str(''H);
+template GoodUniversalCharstring1 t_universalcharstring19 := int2char(5);
+template GoodUniversalCharstring1 t_universalcharstring20 := int2unichar(5);
+template GoodUniversalCharstring1 t_universalcharstring21 := int2str(5);
+template GoodUniversalCharstring1 t_universalcharstring22 := replace("akarmi", 1, 1, "cbe");
+template GoodUniversalCharstring1 t_universalcharstring23 := unichar2char(char(0,0,0,40));
+template GoodUniversalCharstring1 t_universalcharstring24 := %moduleId;
+template GoodUniversalCharstring1 t_universalcharstring25 := %fileName;
+template GoodUniversalCharstring1 t_universalcharstring26 := __BFILE__;
+template GoodUniversalCharstring1 t_universalcharstring27 := %lineNumber;
+template GoodUniversalCharstring1 t_universalcharstring28 := __SCOPE__;
+
+
+// record sub-typing tests
+type record recordType
+{
+  integer field1,
+  integer field2
+};
+
+function f_recordFunction() return recordType
+{
+  var recordType vl_akarmi := {1,1};
+  return vl_akarmi;
+}
+
+type recordType GoodRecord1 ({1,1}, {1,2}, {2,1}, {2,2});
+
+type recordType FaultyRecord1 ({1,1}, {1,1});
+type recordType FaultyRecord2 ({1,10} .. {1,1});
+type recordType FaultyRecord3 ({1,1} .. {1,10});
+type recordType FaultyRecord4 ({1,1} .. {1,1});
+type recordType FaultyRecord5 ( f_recordFunction(), {1,1} );
+type recordType FaultyRecord6 (-infinity .. infinity);
+type recordType FaultyRecord7 length(10);
+type recordType Record;
+type Record FaultyRecord8 length(4 .. 8);
+type recordType FaultyRecord9 length(8 .. 4);
+type recordType FaultyRecord10 length(-4 .. -3);
+type recordType FaultyRecord11 length(4444444444444444444 .. 88888888888888888888888);
+type recordType FaultyRecord12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodRecord1 cg_record1 := {1,1};
+const GoodRecord1 cg_record2 := {1,3};
+
+template GoodRecord1 t_record1 := {1,1};
+template GoodRecord1 t_record2 := {1,3};
+
+
+// set sub-typing tests
+type set setType
+{
+  integer field1,
+  integer field2
+};
+
+function f_setFunction() return setType
+{
+  var setType vl_akarmi := {field1 := 1, field2 := 1};
+  return vl_akarmi;
+}
+
+type setType GoodSet1 ({field1 := 1, field2 := 1}, {field1 := 1, field2 := 2}
+	, {field1 := 2, field2 := 1}, {field1 := 2, field2 := 2});
+
+type setType FaultySet1 ({field1 := 1, field2 := 1}, {field1 := 1, field2 := 1});
+type setType FaultySet2 ({field1 := 1, field2 := 10} .. {field1 := 1, field2 := 1});
+type setType FaultySet3 ({field1 := 1, field2 := 1} .. {field1 := 1, field2 := 10});
+type setType FaultySet4 ({field1 := 1, field2 := 1} .. {field1 := 1, field2 := 1});
+type setType FaultySet5 ( f_setFunction(), {field1 := 1, field2 := 1} );
+type setType FaultySet6 (-infinity .. infinity);
+type setType FaultySet7 length(10);
+type setType Set;
+type Set FaultySet8 length(4 .. 8);
+type setType FaultySet9 length(8 .. 4);
+type setType FaultySet10 length(-4 .. -3);
+type setType FaultySet11 length(4444444444444444444 .. 88888888888888888888888);
+type setType FaultySet12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodSet1 cg_set1 := {field1 := 1, field2 := 1};
+const GoodSet1 cg_set2 := {field1 := 1, field2 := 3};
+
+template GoodSet1 t_set1 := {field1 := 1, field2 := 1};
+template GoodSet1 t_set2 := {field1 := 1, field2 := 3};
+
+
+// union sub-typing tests
+type union unionType
+{
+  integer field1,
+  charstring field2
+};
+
+function f_unionFunction() return unionType
+{
+  var unionType vl_akarmi := {field1 := 1};
+  return vl_akarmi;
+}
+
+type unionType GoodUnion1 ({field1 := 1}, {field1 := 2}, {field1 := 3}, {field1 := 4});
+
+type unionType FaultyUnion1 ({field1 := 1}, {field1 := 1});
+type unionType FaultyUnion2 ({field1 := 10} .. {field1 := 1});
+type unionType FaultyUnion3 ({field1 := 1} .. {field1 := 10});
+type unionType FaultyUnion4 ({field1 := 1} .. {field1 := 1});
+type unionType FaultyUnion5 ( f_unionFunction(), {field1 := 1} );
+type unionType FaultyUnion6 (-infinity .. infinity);
+type unionType FaultyUnion7 length(10);
+type unionType Union;
+type Union FaultyUnion8 length(4 .. 8);
+type unionType FaultyUnion9 length(8 .. 4);
+type unionType FaultyUnion10 length(-4 .. -3);
+type unionType FaultyUnion11 length(4444444444444444444 .. 88888888888888888888888);
+type unionType FaultyUnion12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodUnion1 cg_union1 := {field1 := 1};
+const GoodUnion1 cg_union2 := {field1 := 10};
+
+template GoodUnion1 t_union1 := {field1 := 1};
+template GoodUnion1 t_union2 := {field1 := 10};
+
+
+// record of sub-typing tests
+type record of integer recordofType;
+
+function f_recordofFunction() return recordofType
+{
+  var recordofType vl_akarmi := {1 ,2};
+  return vl_akarmi;
+}
+
+type recordofType GoodRecordof1 ({1 ,1}, {1 ,2}, {1 ,3}, {1 ,4}, {1 ,5});
+
+type recordofType GoodRecordof2 length(10);
+type recordofType Recordof;
+type Recordof GoodRecordof3 length(4 .. 8);
+
+type recordofType FaultyRecordof1 ({1 ,1}, {1 ,1});
+type recordofType FaultyRecordof2 ({1 ,10} .. {1 ,1});
+type recordofType FaultyRecordof3 ({1 ,1} .. {1 ,10});
+type recordofType FaultyRecordof4 ({1 ,1} .. {1 ,1});
+type recordofType FaultyRecordof5 ( f_recordofFunction(), {1 ,1} );
+type recordofType FaultyRecordof6 (-infinity .. infinity);
+type recordofType FaultyRecordof7 length(8 .. 4);
+type recordofType FaultyRecordof8 length(-4 .. -3);
+type recordofType FaultyRecordof9 length(4444444444444444444 .. 88888888888888888888888);
+type recordofType FaultyRecordof10 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodRecordof1 cg_recordof1 := {1 ,1};
+const GoodRecordof1 cg_recordof2 := {1 ,10};
+const GoodRecordof3 cg_recordof3 := {1 ,1};
+
+template GoodRecordof1 t_recordof1 := {1 ,1};
+template GoodRecordof1 t_recordof2 := {1 ,10};
+template GoodRecordof3 t_recordof3 := {1 ,1};
+
+
+// set of sub-typing tests
+type set of integer setofType;
+
+function f_setofFunction() return setofType
+{
+  var setofType vl_akarmi := {1 ,2};
+  return vl_akarmi;
+}
+
+type setofType GoodSetof1 ({1 ,1}, {1 ,2}, {1 ,3}, {1 ,4}, {1 ,5});
+
+type setofType GoodSetof2 length(10);
+type setofType Setof;
+type Setof GoodSetof3 length(4 .. 8);
+
+type setofType FaultySetof1 ({1 ,1}, {1 ,1});
+type setofType FaultySetof2 ({1 ,10} .. {1 ,1});
+type setofType FaultySetof3 ({1 ,1} .. {1 ,10});
+type setofType FaultySetof4 ({1 ,1} .. {1 ,1});
+type setofType FaultySetof5 ( f_setofFunction(), {1 ,1} );
+type setofType FaultySetof6 (-infinity .. infinity);
+type setofType FaultySetof7 length(8 .. 4);
+type setofType FaultySetof8 length(-4 .. -3);
+type setofType FaultySetof9 length(4444444444444444444 .. 88888888888888888888888);
+type setofType FaultySetof10 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodSetof1 cg_setof1 := {1 ,1};
+const GoodSetof1 cg_setof2 := {1 ,10};
+const GoodSetof3 cg_setof3 := {1 ,1};
+
+template GoodSetof1 t_setof1 := {1 ,1};
+template GoodSetof1 t_setof2 := {1 ,10};
+template GoodSetof3 t_setof3 := {1 ,1};
+
+
+// verdict type sub-typing tests
+function f_verdictFunction() return verdicttype
+{
+  var verdicttype vl_akarmi := error;
+  return vl_akarmi;
+}
+
+type verdicttype GoodVerdict1 (pass, error, fail);
+type verdicttype GoodVerdict2 (none);
+
+type verdicttype FaultyVerdict1 (pass, pass);
+type verdicttype FaultyVerdict2 (error .. pass);
+type verdicttype FaultyVerdict3 (pass .. error);
+type verdicttype FaultyVerdict4 (pass .. pass);
+type verdicttype FaultyVerdict5 ( f_verdictFunction(), pass );
+type verdicttype FaultyVerdict6 (-infinity .. infinity);
+type verdicttype FaultyVerdict7 length(10);
+type verdicttype Verdict;
+type Verdict FaultyVerdict8 length(4 .. 8);
+type verdicttype FaultyVerdict9 length(8 .. 4);
+type verdicttype FaultyVerdict10 length(-4 .. -3);
+type verdicttype FaultyVerdict11 length(4444444444444444444 .. 88888888888888888888888);
+type verdicttype FaultyVerdict12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodVerdict1 cg_verdict1 := pass;
+const GoodVerdict1 cg_verdict2 := none;
+const GoodVerdict2 cg_verdict3 := pass;
+const GoodVerdict2 cg_verdict4 := error;
+const GoodVerdict2 cg_verdict5 := fail;
+const GoodVerdict2 cg_verdict6 := inconc;
+const GoodVerdict2 cg_verdict7 := getverdict;
+
+template GoodVerdict1 t_verdict1 := pass;
+template GoodVerdict1 t_verdict2 := none;
+template GoodVerdict2 t_verdict3 := pass;
+template GoodVerdict2 t_verdict4 := error;
+template GoodVerdict2 t_verdict5 := fail;
+template GoodVerdict2 t_verdict6 := inconc;
+
+
+// enum type sub-typing tests
+type enumerated enumerationType
+{
+  item1(1),
+  item2(2),
+  item3(3),
+  item4(4)
+};
+
+function f_enumFunction() return enumerationType
+{
+  var enumerationType vl_akarmi := item1;
+  return vl_akarmi;
+}
+
+type enumerationType GoodEnumeration1 (item1, item2, item3);
+
+type enumerationType FaultyEnumeration1 (item1, item1);
+type enumerationType FaultyEnumeration2 (item3 .. item1);
+type enumerationType FaultyEnumeration3 (item1 .. item3);
+type enumerationType FaultyEnumerationt4 (item1 .. item1);
+type enumerationType FaultyEnumeration5 ( f_enumFunction(), item3 );
+type enumerationType FaultyEnumeration6 (-infinity .. infinity);
+type enumerationType FaultyEnumeration7 length(10);
+type enumerationType Enumeration;
+type Enumeration FaultyEnumeration8 length(4 .. 8);
+type enumerationType FaultyEnumeration9 length(8 .. 4);
+type enumerationType FaultyEnumeration10 length(-4 .. -3);
+type enumerationType FaultyEnumeration11 length(4444444444444444444 .. 88888888888888888888888);
+type enumerationType FaultyEnumeration12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodEnumeration1 cg_enumeration1 := item1;
+const GoodEnumeration1 cg_enumeration2 := item10;
+const GoodEnumeration1 cg_enumeration3 := item4;
+
+template GoodEnumeration1 t_enumeration1 := item1;
+template GoodEnumeration1 t_enumeration2 := item10;
+template GoodEnumeration1 t_enumeration3 := item4;
+
+// function type sub-typing tests
+type function functionType();
+
+function f_first() {}
+function f_second() {}
+function f_third() {}
+function f_forth() {}
+
+function f_functionTypeFunction() return functionType
+{
+  var functionType vl_akarmi := refers(f_first);
+  return vl_akarmi;
+}
+
+type functionType GoodFunctionType1 (refers(f_first), refers(f_second), refers(f_third));
+
+type functionType FaultyFunctionType1 (refers(f_first), refers(f_first));
+type functionType FaultyFunctionType2 (refers(f_third) .. refers(f_first));
+type functionType FaultyFunctionType3 (refers(f_first) .. refers(f_third));
+type functionType FaultyFunctionType4 (refers(f_first) .. refers(f_first));
+type functionType FaultyFunctionType5 ( f_functionTypeFunction(), refers(f_third) );
+type functionType FaultyFunctionType6 (-infinity .. infinity);
+type functionType FaultyFunctionType7 length(10);
+type functionType FunctionType;
+type FunctionType FaultyFunctionType8 length(4 .. 8);
+type functionType FaultyFunctionType9 length(8 .. 4);
+type functionType FaultyFunctionType10 length(-4 .. -3);
+type functionType FaultyFunctionType11 length(4444444444444444444 .. 88888888888888888888888);
+type functionType FaultyFunctionType12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodFunctionType1 cg_functiontype1 := refers(f_first);
+const GoodFunctionType1 cg_functiontype2 := refers(f_forth);
+
+template GoodFunctionType1 t_functiontype1 := refers(f_first);
+template GoodFunctionType1 t_functiontype2 := refers(f_forth);
+
+
+// altstep type sub-typing tests
+type altstep altstepType();
+
+altstep as_first(){ [else]{} }
+altstep as_second(){ [else]{} }
+altstep as_third(){ [else]{} }
+altstep as_forth(){ [else]{} }
+
+function f_altstepTypeFunction() return altstepType
+{
+  var altstepType vl_akarmi := refers(as_first);
+  return vl_akarmi;
+}
+
+type altstepType GoodAltstepType1 (refers(as_first), refers(as_second), refers(as_third));
+
+type altstepType FaultyAltstepType1 (refers(as_first), refers(as_first));
+type altstepType FaultyAltstepType2 (refers(as_third) .. refers(as_first));
+type altstepType FaultyAltstepType3 (refers(as_first) .. refers(as_third));
+type altstepType FaultyAltstepType4 (refers(as_first) .. refers(as_first));
+type altstepType FaultyAltstepType5 ( f_altstepTypeFunction(), refers(as_third) );
+type altstepType FaultyAltstepType6 (-infinity .. infinity);
+type altstepType FaultyAltstepType7 length(10);
+type altstepType AltstepType;
+type AltstepType FaultyAltstepType8 length(4 .. 8);
+type altstepType FaultyAltstepType9 length(8 .. 4);
+type altstepType FaultyAltstepType10 length(-4 .. -3);
+type altstepType FaultyAltstepType11 length(4444444444444444444 .. 88888888888888888888888);
+type altstepType FaultyAltstepType12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodAltstepType1 cg_altsteptype1 := refers(as_first);
+const GoodAltstepType1 cg_altsteptype2 := refers(as_forth);
+
+template GoodAltstepType1 t_altsteptype1 := refers(as_first);
+template GoodAltstepType1 t_altsteptype2 := refers(as_forth);
+
+
+// testcase type sub-typing tests
+type component Empty_CT { }
+
+type testcase testcaseType() runs on Empty_CT system Empty_CT;
+
+testcase tc_first() runs on Empty_CT system Empty_CT{ }
+testcase tc_second() runs on Empty_CT system Empty_CT{ }
+testcase tc_third() runs on Empty_CT system Empty_CT{ }
+testcase tc_forth() runs on Empty_CT system Empty_CT{ }
+
+function f_testcaseTypeFunction() return testcaseType
+{
+  var testcaseType vl_akarmi := refers(tc_first);
+  return vl_akarmi;
+}
+
+type testcaseType GoodTestcaseType1 (refers(tc_first), refers(tc_second), refers(tc_third));
+
+type testcaseType FaultyTestcaseType1 (refers(tc_first), refers(tc_first));
+type testcaseType FaultyTestcaseType2 (refers(tc_third) .. refers(tc_first));
+type testcaseType FaultyTestcaseType3 (refers(tc_first) .. refers(tc_third));
+type testcaseType FaultyTestcaseType4 (refers(tc_first) .. refers(tc_first));
+type testcaseType FaultyTestcaseType5 ( f_testcaseTypeFunction(), refers(tc_third) );
+type testcaseType FaultyTestcaseType6 (-infinity .. infinity);
+type testcaseType FaultyTestcaseType7 length(10);
+type testcaseType TestcaseType;
+type TestcaseType FaultyTestcaseType8 length(4 .. 8);
+type testcaseType FaultyTestcaseType9 length(8 .. 4);
+type testcaseType FaultyTestcaseType10 length(-4 .. -3);
+type testcaseType FaultyTestcaseType11 length(4444444444444444444 .. 88888888888888888888888);
+type testcaseType FaultyTestcaseType12 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodTestcaseType1 cg_testcasetype1 := refers(tc_first);
+const GoodTestcaseType1 cg_testcasetype2 := refers(tc_forth);
+
+template GoodTestcaseType1 t_testcasetype1 := refers(tc_first);
+template GoodTestcaseType1 t_testcasetype2 := refers(tc_forth);
+
+
+/// embeddedness tests
+type port testPortName_PT message
+{  inout integer; }
+signature S_signature_good(
+  inout integer pl_parameterName )
+return integer;
+signature S_signature_bad(
+  inout testPortName_PT parameter1, inout S_signature_good parameter2, inout default parameter3 )
+return testPortName_PT
+exception( testPortName_PT, S_signature_good, default );
+signature S_signature_bad2(
+  inout testPortName_PT parameter1, inout S_signature_good parameter2, inout default parameter3 )
+return S_signature_good
+exception( testPortName_PT, S_signature_good, default );
+signature S_signature_bad3(
+  inout testPortName_PT parameter1, inout S_signature_good parameter2, inout default parameter3 )
+return default
+exception( testPortName_PT, S_signature_good, default );
+
+type record recordName
+{
+  testPortName_PT field1,
+  S_signature_good field2,
+  default field3
+};
+
+//objid tests
+type objid myObjID;
+
+function f_objidFunction() return myObjID
+{
+  var myObjID vl_akarmi := objid {  itu_t(0) recommendation (0) 0};
+  return vl_akarmi;
+}
+
+type myObjID GoodObjid1 (objid {  itu_t(0) recommendation (0) 0}, objid {  itu_t(0) recommendation (0) 1}, objid {  itu_t(0) recommendation (0) 2});
+
+type myObjID GoodObjid2 length(10);
+type myObjID Objid;
+type Objid GoodObjid3 length(4 .. 8);
+
+type myObjID FaultyObjid1 (objid {  itu_t(0) recommendation (0) 0}, objid {  itu_t(0) recommendation (0) 0});
+type myObjID FaultyObjid2 (objid {  itu_t(0) recommendation (0) 10} .. objid {  itu_t(0) recommendation (0) 0});
+type myObjID FaultyObjid3 (objid {  itu_t(0) recommendation (0) 0} .. objid {  itu_t(0) recommendation (0) 10});
+type myObjID FaultyObjid4 (objid {  itu_t(0) recommendation (0) 0} .. objid {  itu_t(0) recommendation (0) 0});
+type myObjID FaultyObjid5 ( f_objidFunction(), objid {  itu_t(0) recommendation (0) 0} );
+type myObjID FaultyObjid6 (-infinity .. infinity);
+type myObjID FaultyObjid7 length(8 .. 4);
+type myObjID FaultyObjid8 length(-4 .. -3);
+type myObjID FaultyObjid9 length(4444444444444444444 .. 88888888888888888888888);
+type myObjID FaultyObjid10 (null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(50,0,0,0));
+
+const GoodObjid1 cg_objid1 := objid {  itu_t(0) recommendation (0) 0};
+const GoodObjid1 cg_objid2 := objid {  itu_t(0) recommendation (0) 10};
+const GoodObjid3 cg_objid3 := objid {  iso(1) standard (0) 0};
+
+template GoodObjid1 t_objid1 := objid {  itu_t(0) recommendation (0) 0};
+template GoodObjid1 t_objid2 := objid {  itu_t(0) recommendation (0) 10};
+template GoodObjid3 t_objid3 := objid {  iso(1) standard (0) 0};
+
+type integer FaultyInt44 ( 11.0 .. 255 );
+
+
+type union myu1 {
+    integer f1,
+    charstring f2
+}
+type myu1 myu2 ({f1 := 0}, {f2 := ""})
+const myu2 cg_myu1 := {f1 := 1}
+
+
+type integer i1 (1..2)
+type i1 i2 (f_f1())
+function f_f1() return integer { return 1; }
+
+
+type integer MYARRAY[3..5];
+type MYARRAY MYARR2 ( {3,4,5}, {5,6,7} );
+
+
+type octetstring myo1 (mycomp2)
+type record of myo1 myo1o
+type port myport message {
+    inout myo1o
+}
+type component mycomp1 {
+    port myport port1_PT
+}
+type mycomp1 mycomp2
+
+
+type bitstring BST ('00'B, '01'B, '10'B, '11'B, '0'B, '1'B, '1111111111111'B);
+type BST BST2 length(0..2);
+const BST cg_cbst := ''B;
+
+
+type integer MyInt1 (1..20,25,26,30..40,5);
+type MyInt1 MyInt2 (11..22);
+
+
+const integer cg_EPTF_LGenBase_tcStateIdle := 0;
+const integer cg_EPTF_LGenBase_tcStateRunning := 1;
+const integer cg_EPTF_LGenBase_tcStateStopping := 2;
+const integer cg_EPTF_LGenBase_tcStateStopped := 3;
+const integer cg_EPTF_LGenBase_tcStateAborting := 4;
+const integer cg_EPTF_LGenBase_tcStateAborted := 5;
+const integer cg_EPTF_LGenBase_tcStateFinished := 6;
+const integer cg_EPTF_LGenBase_tcStatePaused := 7;
+const integer cg_EPTF_LGenBase_tcStateTerminated := 8;
+type integer EPTF_LGenBase_tcState (
+    cg_EPTF_LGenBase_tcStateIdle,
+    cg_EPTF_LGenBase_tcStateRunning,
+    cg_EPTF_LGenBase_tcStatePaused,
+    cg_EPTF_LGenBase_tcStateStopping,
+    cg_EPTF_LGenBase_tcStateStopped,
+    cg_EPTF_LGenBase_tcStateAborting,
+    cg_EPTF_LGenBase_tcStateAborted,
+    cg_EPTF_LGenBase_tcStateFinished,
+    cg_EPTF_LGenBase_tcStateTerminated
+);
+const EPTF_LGenBase_tcState cg_EPTF_szar := 11;
+
+
+type charstring MyStr1 ("abc","efg");
+type charstring MyStr2 length (5..6);
+type charstring MyStr3 ("xy","zw","haha");
+type charstring MyStr4 length (8);
+type charstring MyStrX (MyStr1, MyStr2, MyStr3, MyStr4);
+const MyStrX cg_my_str := "huhu";
+
+
+type record RRR { boolean b (false), integer i (1..3) }
+type RRR RRR1 ({false,1},{false,2});
+type RRR RRR2 (RRR1.bread);
+
+
+type hexstring   MYHEXSTR_1 (''H, '0'H, '1'H, '2'H, '3'H, '4'H, '5'H, '6'H, '7'H, '8'H, '9'H, 'E'H, 'B'H, 'C'H, 'D'H);
+const MYHEXSTR_1 cg_myhexstr1 := 'ABCD'H;
+
+
+type bitstring MYBSTR1 (''B,'1'B,'0'B)
+type bitstring MYBSTR2 ('00'B,'01'B,'10'B)
+type bitstring MYBSTRX (MYBSTR1,MYBSTR2,'000'B,'001'B,'010'B,'011'B,'100'B,'101'B,'110'B)
+const MYBSTRX cg_cmybstrx := '10101010101'B
+
+
+type charstring SINF ("a"..infinity);
+
+
+type integer II1 (11,II2);
+type integer II2 (22,II1);
+
+
+type octetstring MYOCTSTR_1 ( ''O,
+    '00'O, '10'O, '20'O, '30'O, '40'O, '50'O, '60'O, '70'O, '80'O, '90'O, 'A0'O, 'B0'O, 'C0'O, 'D0'O, 'E0'O, 'F0'O,
+    '01'O, '11'O, '21'O, '31'O, '41'O, '51'O, '61'O, '71'O, '81'O, '91'O, 'A1'O, 'B1'O, 'C1'O, 'D1'O, 'E1'O, 'F1'O,
+    '02'O, /*'12'O,*/ '22'O, '32'O, '42'O, '52'O, '62'O, '72'O, '82'O, '92'O, 'A2'O, 'B2'O, 'C2'O, 'D2'O, 'E2'O, 'F2'O,
+    '03'O, '13'O, '23'O, '33'O, '43'O, '53'O, '63'O, '73'O, '83'O, '93'O, 'A3'O, 'B3'O, 'C3'O, 'D3'O, 'E3'O, 'F3'O,
+    '04'O, '14'O, '24'O, '34'O, '44'O, '54'O, '64'O, '74'O, '84'O, '94'O, 'A4'O, 'B4'O, 'C4'O, 'D4'O, 'E4'O, 'F4'O,
+    '05'O, '15'O, '25'O, '35'O, '45'O, '55'O, '65'O, '75'O, '85'O, '95'O, 'A5'O, 'B5'O, 'C5'O, 'D5'O, 'E5'O, 'F5'O,
+    '06'O, '16'O, '26'O, /*'36'O,*/ '46'O, '56'O, '66'O, '76'O, '86'O, '96'O, 'A6'O, 'B6'O, 'C6'O, 'D6'O, 'E6'O, 'F6'O,
+    '07'O, '17'O, '27'O, '37'O, '47'O, '57'O, '67'O, '77'O, '87'O, '97'O, 'A7'O, 'B7'O, 'C7'O, 'D7'O, 'E7'O, 'F7'O,
+    '08'O, '18'O, '28'O, '38'O, '48'O, '58'O, '68'O, '78'O, '88'O, '98'O, 'A8'O, 'B8'O, 'C8'O, 'D8'O, 'E8'O, 'F8'O,
+    '09'O, '19'O, '29'O, '39'O, '49'O, '59'O, '69'O, '79'O, '89'O, '99'O, 'A9'O, 'B9'O, 'C9'O, 'D9'O, 'E9'O, 'F9'O,
+    '0A'O, '1A'O, '2A'O, '3A'O, '4A'O, '5A'O, '6A'O, '7A'O, '8A'O, '9A'O, 'AA'O, 'BA'O, 'CA'O, 'DA'O, 'EA'O, 'FA'O,
+    '0B'O, '1B'O, '2B'O, '3B'O, '4B'O, '5B'O, '6B'O, '7B'O, '8B'O, '9B'O, 'AB'O, 'BB'O, 'CB'O, 'DB'O, 'EB'O, 'FB'O,
+    '0C'O, '1C'O, '2C'O, '3C'O, '4C'O, '5C'O, '6C'O, '7C'O, '8C'O, '9C'O, 'AC'O, 'BC'O, 'CC'O, 'DC'O, 'EC'O, 'FC'O,
+    '0D'O, '1D'O, '2D'O, '3D'O, '4D'O, '5D'O, '6D'O, '7D'O, '8D'O, '9D'O, 'AD'O, 'BD'O, 'CD'O, 'DD'O, 'ED'O, 'FD'O,
+    '0E'O, '1E'O, '2E'O, '3E'O, '4E'O, '5E'O, '6E'O, '7E'O, '8E'O, '9E'O, 'AE'O, 'BE'O, 'CE'O, 'DE'O, 'EE'O, 'FE'O,
+    '0F'O, '1F'O, '2F'O, '3F'O, '4F'O, '5F'O, '6F'O, '7F'O, '8F'O, '9F'O, 'AF'O, 'BF'O, 'CF'O, 'DF'O, 'EF'O, 'FF'O
+) length(0..10);
+const MYOCTSTR_1 cg_myoctstr1 := 'ABCD'O;
+
+
+type integer INT1 (1..3);
+type integer INT2 (10..11);
+type integer III;
+type III III1 (1..3)
+type III III2 (10..11)
+function f_fv()
+{
+    var INT1 vl_int1 := 1;
+    var INT2 vl_int2 := 10;
+    vl_int1 := vl_int2;
+    var III1 vl_iii1 := 1;
+    var III2 vl_iii2 := 10;
+    vl_iii1 := vl_iii2;
+}
+
+const float cg_f_pinf := infinity;
+const float cg_f_minf := -infinity;
+const float cg_f_nan  := not_a_number;
+type float MyFlt1 (-infinity..infinity);
+type float MyFlt2 (not_a_number);
+function f_float_test_fn() {
+    var MyFlt1 vl_f1;
+    var MyFlt2 vl_f2;
+    vl_f1 := not_a_number;
+    vl_f2 := 1.0;
+    vl_f2 := vl_f1;
+}
+
+type integer MyInt3 (!-infinity..!10);
+type integer MyInt4 (!-10..!infinity);
+type integer MyInt5 (!1..!2);
+type integer MyInt6 (!1..!10,!10..!20);
+const MyInt6 cg_myint6 := 10;
+type MyInt6 MyInt7 (2..19);
+type integer MyInt8 (MyInt4,10);
+const MyInt8 cg_myint8a := 10;
+const MyInt8 cg_myint8b := 20;
+
+type charstring MyStr5 (!"a".."a");
+type charstring MyStr6 (!"a"..!"b");
+type charstring MyStr7 (!"a"..!"c",!"c"..!"z");
+const MyStr7 cg_mystr7 := "c";
+type charstring MyStr8 ("c".."c",!"0".."9");
+type charstring MyStr9 (MyStr7, MyStr8);
+const MyStr9 cg_mystr9a := "c";
+const MyStr9 cg_mystr9b := "0";
+
+type float MyFlt3 (!-infinity..!-infinity);
+type float MyFlt4 (!infinity..!infinity);
+type float MyFlt5 (not_a_number..!infinity);
+type float MyFlt6 (!-infinity..!infinity);
+const MyFlt6 cg_myflt6a := -infinity;
+const MyFlt6 cg_myflt6b := infinity;
+const MyFlt6 cg_myflt6c := not_a_number;
+type float MyFlt7 (MyFlt6, -infinity, infinity, not_a_number);
+type float MyFlt8 (-infinity..!0.0,!0.0..infinity);
+const MyFlt8 cg_myflt8 := 0.0;
+
+}

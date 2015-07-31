@@ -1,0 +1,35 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module altguard {
+import from types all;
+
+altstep as_1(test_port pl_1, integer i) {
+  // might transform
+  [] pl_1.receive(t1:*) {
+    if (true) {}
+  }
+  
+  // might transform
+  [i>3] pl_1.receive(t2:*) {
+    if (true) {}
+  }
+  
+  // no marker here
+  [] any port.receive {
+    i := 32;
+    if (true) {}
+
+    alt {
+      // might transform
+      [] any port.receive {
+        if (true) {}
+      }
+    }
+  } 
+}
+}

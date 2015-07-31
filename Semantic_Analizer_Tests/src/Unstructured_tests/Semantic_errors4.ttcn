@@ -1,0 +1,31 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module Semantic_errors2
+{
+  type record myrec(integer y){};
+
+  type record myrec2
+    {
+    integer z
+    }
+    with {encode (group all) "akarmi"}
+
+   type charstring mycharstring (pattern "12*");
+
+   function myf(integer z)
+   {
+        var myrec(h) akarmi;
+   		//var mychar v_charstring := "12345";
+        x.anytype := akarmi.aka();
+
+        myport.send(x) to all component;
+
+        disconnect;
+        unmap;
+   }
+}

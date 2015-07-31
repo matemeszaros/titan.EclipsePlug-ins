@@ -1,0 +1,81 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+/*
+//AUTHOR:
+//DATE:
+//VERSION:
+*/
+module namingConvention
+{
+type component empty_CT {}
+
+const integer cg_good := 0;
+const integer cbad := 0;
+external const integer ec_good;
+external const integer e_bad;
+
+modulepar integer tsp_good := 0;
+modulepar integer bad_modulepar := 0;
+
+type port goodtestport_PT message { in integer; }
+
+template integer t_good := 5;
+template integer bad_template := 5;
+
+type integer good_type;
+
+type component good_CT
+{
+  const integer c_good := 0;
+  const integer bad_const := 0;
+  var integer v_good;
+  var integer bad_var;
+  timer T_good;
+  timer bad_timer;
+  port goodtestport_PT p_good_PT;
+  port goodtestport_PT pbad;
+};
+
+
+group G_good {}
+group g_bad {}
+
+function f_good(){}
+function fbad(){}
+external function ef_good()
+external function ebad()
+
+function f_parameters(in integer pl_good, in integer badParameter){}
+
+altstep as_good() runs on empty_CT
+{
+  [else] { }
+}
+
+altstep altstep_bad() runs on empty_CT
+{
+  [else] { }
+}
+
+
+testcase tc_good() runs on empty_CT system empty_CT {}
+testcase bad_testcase() runs on empty_CT system empty_CT {}
+
+control {
+  const integer cl_good := 0;
+  const integer c_bad := 0;
+  var integer vl_good;
+  var integer v_bad;
+  template integer t_localgood := 0;
+  template integer bad_localtemplate := 0;
+  var template integer vt_good;
+  var template integer bad_vartemplate;
+  timer TL_good := 5.0;
+  timer T_bad := 5.0;
+}
+}  // end of module

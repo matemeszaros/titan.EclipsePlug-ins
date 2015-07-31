@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+    point="org.eclipse.ui.popupMenus">
+    <objectContribution
+      objectClass="org.eclipse.core.resources.IProject"
+      adaptable = "true"
+      id="org.eclipse.titan.debug.actions.ProjectReAnalyzer">
+      <menu
+        id = "TITAN_popup_Menu"
+        label = "Titan debug">
+        <separator name = "group1"/>
+        <separator name = "group2"/>
+      </menu>
+      <action
+        label="Force Re-Analysis of projects"
+        class="org.eclipse.titan.debug.actions.ProjectReAnalyzer"
+        menubarPath = "TITAN_popup_Menu/group1"
+        enablesFor="1"
+        id="org.eclipse.titan.debug.actions.ProjectReAnalyzer">
+      </action>
+      <action
+        label="Force Semantic Re-Analysis of projects"
+        class="org.eclipse.titan.debug.actions.ProjectSemanticReAnalyzer"
+        menubarPath = "TITAN_popup_Menu/group1"
+        enablesFor="1"
+        id="org.eclipse.titan.debug.actions.ProjectSemanticReAnalyzer">
+      </action>
+      <action
+        label="Export debug info of AST"
+        class="org.eclipse.titan.debug.actions.Export_Debug_AST_Action"
+        menubarPath = "TITAN_popup_Menu/group1"
+        enablesFor="1"
+        id="org.eclipse.titan.debug.actions.Export_Debug_AST_Action">
+      </action>
+    </objectContribution>
+    <viewerContribution
+      id="org.eclipse.titan.designer.editors.popup"
+      targetID="org.eclipse.titan.designer.editors.ttcn3editor.context">
+      <menu
+        id="org.eclipse.titan.debug.menu.ContextMenu"
+        label="Titan Debug">
+        <separator name="organize"/>
+      </menu>
+      <action
+	        id="org.eclipse.titan.debug.commands.Export_Debug_AST"
+	        definitionId="org.eclipse.titan.debug.commands.Export_Debug_ASTCommand"
+	        label="Export Debug AST"
+	        icon="icons/titan.gif"
+	        menubarPath="org.eclipse.titan.debug.menu.ContextMenu/organize"
+	        class="org.eclipse.titan.debug.actions.Export_Debug_AST">
+	      </action>
+      <action
+        id="org.eclipse.titan.debug.commands.ProjectReanalyzer"
+        definitionId="org.eclipse.titan.debug.commands.ProjectReanalyzer"
+        label="Force Re-Analysis of projects"
+        icon="icons/titan.gif"
+        menubarPath="org.eclipse.titan.debug.menu.ContextMenu/organize"
+        class="org.eclipse.titan.debug.actions.ProjectReAnalyzerEditor"/>
+      </viewerContribution>
+    </extension>
+    <extension
+      point="org.eclipse.ui.editorActions">
+      <editorContribution
+      id="org.eclipse.titan.designer.editors.ttcn3editor.actions"
+      targetID="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Editor">
+	      <action
+	        id="org.eclipse.titan.debug.actions.Export_Debug_AST"
+	        definitionId="org.eclipse.titan.debug.actions.Export_Debug_AST"
+	        label="Export Debug AST"
+	        icon="icons/titan.gif"
+	        class="org.eclipse.titan.debug.actions.Export_Debug_AST">
+	      </action>
+      </editorContribution>
+    </extension>
+      <extension
+    point="org.eclipse.ui.commands">
+    <category
+	  id="org.eclipse.titan.debug.commands.Commands"
+      name="Titan Debug commands"/>
+            <command
+      categoryId="org.eclipse.titan.debug.commands.Commands"
+      description="Export debug information to console"
+      id="org.eclipse.titan.debug.commands.Export_Debug_ASTCommand"
+      name="Export Debug AST"/>
+      <command
+      categoryId="org.eclipse.titan.debug.commands.Commands"
+      description="Check a module for code smells"
+      id="org.eclipse.titan.debug.commands.ProjectReanalyzer"
+      name="Re-Analyze projects"/>
+   </extension>
+     <extension
+    point="org.eclipse.ui.editorActions">
+    <editorContribution
+      id="org.eclipse.titan.designer.editors.ttcn3editor.actions"
+      targetID="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Editor">
+      <action
+	        id="org.eclipse.titan.debug.actions.Export_Debug_AST"
+	        definitionId="org.eclipse.titan.debug.commands.Export_Debug_ASTCommand"
+	        label="Export Debug AST"
+	        icon="icons/titan.gif"
+	        class="org.eclipse.titan.debug.actions.Export_Debug_AST">
+	      </action>
+	      <action
+        id="org.eclipse.titan.debug.commands.ProjectReanalyzer"
+        definitionId="org.eclipse.titan.debug.commands.ProjectReanalyzer"
+        label="Force Re-Analysis of projects"
+        class="org.eclipse.titan.debug.actions.ProjectReAnalyzerEditor"/>
+	      </editorContribution>
+	</extension>
+
+  <extension
+    point="org.eclipse.ui.menus">
+    <menuContribution
+      allPopups="false"
+      locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+      <toolbar
+            id="org.eclipse.ttian.debug.toolbar"
+            label="Titan debug toolbar">
+        <command
+          commandId="org.eclipse.titan.debug.commands.ProjectReanalyzer"
+          icon="icons/titan.gif"
+          label="Re-Analysis"
+          style="push"
+          tooltip="Force Re-Analysis of projects">
+        </command>
+      </toolbar>
+    </menuContribution>
+  </extension>
+  <extension
+    point="org.eclipse.ui.bindings">
+    <key
+      commandId="org.eclipse.titan.debug.commands.ProjectReanalyzer"
+      contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+SHIFT+R"/>
+  </extension>
+</plugin>

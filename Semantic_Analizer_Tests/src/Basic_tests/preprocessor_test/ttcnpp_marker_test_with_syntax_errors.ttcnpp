@@ -1,0 +1,689 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module ttcnpp_marker_test_with_syntax_errors {
+//This file is generally excluded from build
+type component My_CT1 {}
+
+//TODO: 15 level nested #include
+//TODO: 4095 macro
+//TODO: nesting flevel of #if is 63
+//TODO: Levels of parenthesized expressions within a full expression:63
+//TODO: Number of parameters in a macro definition and arguments in a macro call:127
+//TODO: Number of characters on a logical source line:4096
+//TODO: macros defined in Makefile by -D
+#warning this \
+test is ready \
+-already
+
+#error this\
+ is a wrong line \
+ what will be signed by a\
+ marker
+
+#line 1 "blabla"
+#pragma anything
+
+testcase tc_macro1() runs on My_CT1 {
+
+#define ZERO 0
+#define ONE 1
+#define TWO 2
+#define THREE 3
+
+#if 0
+ xxx //error marker not expected
+#endif
+
+
+#ifndef ZERO
+error_marker_not_expected //this is not inserted
+error_marker_not_expected //this is not inserted
+#endif
+
+#ifndef ZERO
+error_marker_not_expected //this is not inserted
+error_marker_not_expected //this is not inserted
+#else
+error_marker_expected
+#endif
+
+//not too big:
+#if 21474836488
+  error_marker_expected
+#endif
+
+//too big number:
+#if 214748364888888888888
+  error_marker_not_expected
+#endif
+
+#if 1
+xxx;  //error expected, pass
+#else
+xxx; //commented out
+#endif
+//verdict:pass
+
+#if 100
+x1;  //error expected, pass
+#elif -2
+x2
+#else //commented out
+xxx
+#endif
+//verdict:pass
+
+#if 0
+x1;  //commented out, error not expected
+#elif -2
+x2; //error expected
+#else //commented out
+xxx  //commented out, error not expected
+#endif
+//verdict:pass
+
+
+#if 0
+x1;  //error expected, fail
+#elif 0
+x2; 
+#else //commented out
+xxx; //error expected, pass
+#endif
+//verdict:pass
+
+#if ((ONE+ONE)*THREE==6)
+xxxx; //error expected, fail
+#else
+xxx; //commented out
+#endif
+//verdict:fail
+
+#if(THREE-TWO==ONE)
+xxxy  //error expected
+#endif
+//verict: fail
+
+#if(THREE>TWO)
+xxxz  //error expected
+#endif
+
+}//tc_macro1
+
+#line 6 "First marker"
+#define A_IMPORTED
+#if defined A_IMPORTED
+import from ttcnpp_test_imported_A all;
+#endif
+#line 24 "Second Marker"
+#define B_IMPORTED
+#if defined B_IMPORTED
+import from ttcnpp_test_imported_B all;
+#endif
+
+//==================================================================
+// From this point the code is mapping of ttcnpp_test_main.ttcnpp
+// Just the evaluation is not at runtime but at preprocessing time
+//==================================================================
+
+type component My_CT {}
+
+//=========================================================================
+// Functions
+//=========================================================================
+function f_include_test() runs on My_CT {
+  var integer vl_i:=1;
+  #include "ttcnpp_test_incl1.ttcnin"
+  log(vl_i);
+  if(vl_i==124){setverdict(pass);} else {setverdict(fail)}
+  
+  #if defined VL_I
+  error_expected
+  #else
+  error_notexpected
+  #endif
+}
+//=========================================================================
+// Testcases for #if, #ifdef, #ifndef #define, #undefine
+//=========================================================================
+testcase tc_if_and_macro_expr() runs on My_CT {
+  #define ZERO 0
+  #define ONE 1
+  #define TWO 2
+  #define THREE 3
+  #define FOUR 4
+
+  // #if false constructs
+  #if 0
+  error_marker_not_expected
+  #endif
+  //verdict:pass (because its background is grey )
+
+  #if 0
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+
+  #if 0
+  error_marker_not_expected
+  #elif -3
+  error_marker_expected
+  #else //commented out
+  error_marker_not_expected
+  #endif
+  //verdict:pass
+
+  #if 0
+  error_marker_not_expected
+  #elif 0
+  error_marker_not_expected
+  #elif ZERO
+  error_marker_not_expected
+  #else 
+  error_marker_expected
+  #endif
+  //verdict:pass
+
+  //#if true constructs
+  #if 1
+  error_marker_expected
+  #endif
+
+  #if 2147483647
+  error_marker_expected
+  #endif
+
+  #if -2147483647
+  error_marker_expected
+  #endif  
+
+  #if -1
+  error_marker_expected
+  #endif
+
+  //verdict:pass
+  #if 1
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+  //verdict:pass
+
+  #if 100
+  error_marker_expected
+  #elif -2
+  error_marker_not_expected
+  #else //commented out
+  error_marker_not_expected
+  #endif
+  //verdict:pass
+
+  #if 100
+  error_marker_expected
+  #elif 0
+  error_marker_not_expected
+  #else //commented out
+  error_marker_not_expected
+  #endif
+  //verdict:pass
+
+  #if ((ONE+ONE)*THREE==6)
+  error_marker_expected
+  #endif
+  //verdict:pass
+
+  #if ((ONE+ONE)*THREE==6)
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+  //verdict:pass
+
+  #if (ONE+TWO*THREE==7)
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+  //verdict:pass
+
+  #if(THREE-TWO==ONE)
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+  //verict: fail
+
+  #if(THREE>TWO)
+  error_marker_expected
+  #endif
+
+}//tc_if
+
+testcase tc_define_ifdef() runs on My_CT {
+  //************** define and ifdef************************************/
+  error_marker_expected//wrong highlighting, if */ removed from the prev line
+
+  #define MYMACRO1
+
+  #ifdef MYMACRO1
+  error_marker_expected
+  #endif
+
+  #ifdef MYMACRO1
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+  #ifdef MYMACRO1
+  error_marker_expected
+  #elif 12
+  error_marker_not_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+  #ifdef MYMACRO1
+  error_marker_expected
+  #define MYMACRO2
+  #ifdef MYMACRO2
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+  error_marker_expected
+  #else
+  setverdict(false);
+  #endif
+
+  #ifdef MYMACRO
+  error_marker_expected
+  #endif
+
+  #undef MYMACRO1
+  #ifdef MYMACRO1
+  error_marker_not_expected
+  #endif
+
+  #ifdef MYMACRO1
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+
+  #ifdef MYMACRO1
+  error_marker_not_expected
+  #elif 12
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+
+  #undef MYMACRO1
+  #undef MYMACRO2
+}
+
+testcase tc_define_ifndef() runs on My_CT {
+
+  #define MYMACRO1
+  #ifndef MYMACRO1
+  error_marker_not_expected
+  #endif
+
+  #ifndef MYMACRO1
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+
+  #ifndef MYMACRO1
+  error_marker_not_expected
+  #elif 12
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+  #ifndef MYMACRO1
+  error_marker_not_expected
+  #define MYMACRO2
+  #ifdef MYMACRO2
+  error_marker_not_expected
+  #else
+  error_marker_not_expected
+  #endif
+  error_marker_expected
+  #else
+  error_marker_expected
+  #define MYMACRO2
+  #ifndef MYMACRO2
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+  #endif
+}
+
+
+
+testcase tc_undef_ifndef() runs on My_CT {  
+  #undef MYMACRO1
+
+  #ifndef MYMACRO1
+  error_marker_expected
+  #endif
+
+  #ifndef MYMACRO1
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+  #ifndef MYMACRO1
+  error_marker_expected
+  #elif 12
+  error_marker_not_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+}
+
+testcase tc_undef_ifdef() runs on My_CT {  
+  #undef MYMACRO1
+
+  #ifdef MYMACRO1
+  error_marker_not_expected
+  #endif
+
+  #ifdef MYMACRO1
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+
+  #ifdef MYMACRO1
+  error_marker_not_expected
+  #elif 12
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+}
+
+testcase tc_embedded_ifs() runs on My_CT {
+  #if 1 && -1
+  error_marker_expected
+  #if 0 
+  setvedict(fail)
+  #else
+  error_marker_expected
+  #endif
+  #else
+  error_marker_not_expected
+  #if 0 
+  setvedict(fail)
+  #else
+  error_marker_not_expected
+  #endif
+  #endif
+
+  #if 0
+  error_marker_not_expected
+  #if 0 
+  setvedict(fail)
+  #else
+  error_marker_not_expected
+  #endif
+  #else
+  error_marker_expected
+  #if 0 
+  setvedict(fail)
+  #else
+  error_marker_expected
+  #endif
+  #endif
+}
+
+testcase tc_cascade() runs on My_CT {
+  #define TWENTY 20
+  #define TWENTY2 TWENTY
+  #define TWENTY3 TWENTY2
+  #define TWENTY4 TWENTY3
+  #define TWENTY5 TWENTY4
+  
+  #if TWENTY2 == 20
+   error_marker_expected
+  #else
+   error_marker_not_expected
+  #endif  
+  
+  #if TWENTY5 == 20
+   error_marker_expected
+  #else
+   error_marker_not_expected
+  #endif
+  
+  #if TWENTY5 != 20
+   error_marker_not_expected
+  #else
+   error_marker_expected
+  #endif
+  
+}
+
+testcase tc_three_operands() runs on My_CT {
+  #define AAA 1
+  #if AAA ? 0 : 1
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+  
+  #define AAA 1
+  #if AAA ? 1 : 0
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+   
+  #define AAA 0
+  #if AAA ? 1 : 0
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif 
+  
+  #define AAA 0
+  #if AAA ? 0 : 1
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif 
+}
+//=========================================================================
+// Testcases for #defined - import
+//=========================================================================
+testcase tc_A() runs on My_CT {
+  #if defined A_IMPORTED
+  var integer vl_i:=cg_A_i;
+  log(vl_i);
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+}
+
+testcase tc_B() runs on My_CT {
+  #if defined B_IMPORTED
+  var integer vl_i:=cg_B_i;
+  log(vl_i);
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+}
+
+#if defined A_IMPORTED
+#if defined B_IMPORTED
+#define A_AND_B_DEFINED
+#endif
+#endif
+
+testcase tc_AandB() runs on My_CT {
+  #if defined  A_AND_B_DEFINED 
+  var integer vl_i:=cg_A_i+cg_B_i;
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+  log(vl_i);
+}
+
+#undef A_IMPORTED
+testcase tc_if_defined() runs on My_CT {
+  #if defined A_IMPORTED
+  var integer vl_i:=c_A_i;
+  log(vl_i);
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+}
+
+#undef A_IMPORTED
+//this line inserts: #define A_IMPORTED
+#include "ttcnpp_test_incl2.ttcnin"
+testcase tc_include_ttcnin() runs on My_CT {
+  #if defined A_IMPORTED
+  var integer vl_i:=cg_A_i;
+  log(vl_i);
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+}
+
+testcase tc_bitoperands() runs on My_CT{
+  #define A 0xFF
+  #define B 0x00
+
+  #if (A & B == B)
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+  #if ((A & B) == A)
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+
+  #if (A|B == B)
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+  #if (A|B == A)
+  error_marker_expected
+  #else
+  error_marker_not_expected
+  #endif
+
+  #define A 0x03
+  #define B 0x04
+
+  //0000 0011 && 0000 0100
+  #if ((A & B) == B)
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+
+  #if ((A | B)  == A)
+  error_marker_not_expected
+  #else
+  error_marker_expected
+  #endif
+
+}
+
+testcase tc_wrap() runs on My_CT{
+
+#define FO\
+O 10\
+20
+#if FOO == 1020
+error_marker_expected
+#else
+error_marker_not_expected
+#endif
+}
+
+//none of these macros is defined
+#undef GENAPP_COMPILE_SIP
+testcase tc_defined_or_defined1() runs on My_CT{
+setverdict(pass)
+#if defined GENAPP_COMPILE_MWIAS
+#define GENAPP_COMPILE_SIP //MWIAS=SIP
+error_marker_not_expected
+}
+#endif //#if defined GENAPP_COMPILE_MWIAS
+
+#if defined GENAPP_COMPILE_ALL || defined GENAPP_COMPILE_SIP || defined GENAPP_COMPILE_COMBINED_SIP
+error_marker_not_expected
+#endif //#if defined GENAPP_COMPILE_ALL || defined GENAPP_COMPILE_SIP || defined GENAPP_COMPILE_COMBINED_SIP
+}
+
+//none of these macros is defined
+#undef GENAPP_COMPILE_SIP
+testcase tc_defined_or_defined2() runs on My_CT{
+setverdict(pass)
+#if defined GENAPP_COMPILE_MWIAS
+#define GENAPP_COMPILE_SIP //MWIAS=SIP
+error_marker_not_expected
+#endif
+
+#if defined GENAPP_COMPILE_ALL || defined GENAPP_COMPILE_SIP || defined GENAPP_COMPILE_COMBINED_SIP
+ setverdict(fail);
+ error_marker_not_expected
+#else
+ setverdict(pass);
+ error_marker_expected
+#endif
+}
+
+//=========================================================================
+// Control
+//=========================================================================
+
+control{
+  execute(tc_if_and_macro_expr());
+  execute(tc_define_ifdef());
+  execute(tc_define_ifndef());
+  execute(tc_undef_ifndef());
+  execute(tc_undef_ifdef());
+  execute(tc_embedded_ifs());
+  execute(tc_cascade());
+  execute(tc_three_operands());
+  execute(tc_A());
+  execute(tc_B());
+  execute(tc_AandB());
+  execute(tc_if_defined());
+  execute(tc_include_ttcnin());
+  execute(tc_bitoperands());
+  execute(tc_wrap());
+  execute(tc_macro1());
+}
+
+}

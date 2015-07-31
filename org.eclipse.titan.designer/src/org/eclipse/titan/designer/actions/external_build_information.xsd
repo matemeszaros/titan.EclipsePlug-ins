@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" id="TITAN_External_Builder_Information">
+  <xs:element name="TITAN_External_Builder_Information">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Makefile_settings">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="useAbsolutePath" type="xs:boolean"/>
+              <xs:element name="GNUMake" type="xs:boolean"/>
+              <xs:element name="incrementalDependencyRefresh" type="xs:boolean"/>
+              <xs:element name="dynamicLinking" type="xs:boolean"/>
+              <xs:element name="singleMode" type="xs:boolean"/>
+              <xs:element name="codeSplitting">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="none|type"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="projectName" type="xs:string"/>
+              <xs:element name="projectRoot" type="xs:anyURI"/>
+              <xs:element name="workingDirectory" type="xs:anyURI"/>
+              <xs:element name="targetExecutable" type="xs:anyURI"/>
+              <xs:element name="MakefileScript" type="xs:anyURI"/>
+              <xs:element name="MakefileFlags" type="xs:string"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ReferencedProjects">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="ReferencedProject">
+                <xs:complexType>
+                  <xs:attribute name="location" type="xs:anyURI" use="required"/>
+                  <xs:attribute name="name" type="xs:string" use="required"/>
+                  <xs:attribute name="cygwinPath" type="xs:anyURI"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Files">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="File">
+                <xs:complexType>
+                  <xs:attribute name="path" type="xs:anyURI" use="required"/>
+                  <xs:attribute name="relativePath" type="xs:anyURI" use="required"/>
+                  <xs:attribute name="centralStorage" type="xs:boolean"/>
+                  <xs:attribute name="fromProject" type="xs:string"/>
+                  <xs:attribute name="cygwinPath" type="xs:anyURI"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

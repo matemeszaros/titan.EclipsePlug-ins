@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Titanium Help">
+  <topic label="Titanium userguide" href="docs/Titanium-1551.doc" />
+  <topic label="Titanium Release Notes" href="docs/Titanium_Release_Notes.doc" />
+  <topic label="Titanium Product Revision Information" href="docs/Titanium_CRL119192_PRI.doc" />
+</toc>

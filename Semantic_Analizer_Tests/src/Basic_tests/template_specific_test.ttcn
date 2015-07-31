@@ -1,0 +1,275 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+/*
+//AUTHOR:
+//DATE:
+//VERSION:
+*/
+module template_specific_test
+// [.objid{ itu_t(0) identified_organization(4) etsi(0)
+// identified_organization(127) ericsson(5) testing(0)
+// <put further nodes here if needed>}]
+{
+type set of integer mysetofType;
+type record of integer myrecordofType;
+type integer Array[2 .. 4][3 .. 5];
+
+type record myrecordType {
+    integer field1,
+    integer field2
+};
+type set mysetType {
+    integer field1,
+    integer field2
+};
+type union myunionType
+{
+  integer field1,
+  charstring field2
+};
+
+type objid myObjID;
+type component mycomponent{};
+type port testPort message
+{
+  inout integer;
+}
+signature S_ProvedureSignatureID( )
+return integer;
+
+type function t_function();
+type altstep t_altstep();
+type testcase t_testcase() runs on mycomponent system mycomponent;
+
+template integer t_recursiveTemplate1 := t_recursiveTemplate1;
+template myrecordType t_recursiveTemplate2 := {field1 := t_recursiveTemplate2.field1, field2 := 2};
+template mysetType t_recursiveTemplate3 := {field1 := t_recursiveTemplate3.field1, field2 := 2};
+template myrecordofType t_recursiveTemplate4 := {t_recursiveTemplate4[0]};
+template myrecordofType t_recursiveTemplate5 := { [0] := t_recursiveTemplate5[0]};
+template myrecordofType t_recursiveTemplate6 := { [0] := t_recursiveTemplate5[1]};
+
+function f_valuerangeTemplateTest()
+{
+	{	template integer t_i := (1 .. 2); }
+	{	template integer t_i := (-infinity .. infinity); }
+	{	template float t_i := (1.0 .. 2.0); }
+	{	template float t_i := (-infinity .. infinity); }
+	{	template charstring t_i := ("a" .. "b"); }
+	{	template universal charstring t_i := ("a" .. "b"); }
+
+	{	template integer t_i := (9999999999 .. 9999999999); }
+	{	template integer t_i := ("akarmi".."barmi"); }
+	{	template float t_i := ("akarmi".."barmi"); }
+	{	template charstring t_i := (1 .. 2); }
+	{	template universal charstring t_i := (1 .. 2); }
+
+	{	template integer t_i := (1..-2); }
+	{	template integer t_i := (infinity .. -infinity); }
+	{	template float t_i := (1.0 .. -2.0); }
+	{	template float t_i := (infinity .. -infinity); }
+	{	template charstring t_i := ("b" .. "a"); }
+	{	template universal charstring t_i := ("b" .. "a"); }
+	{	template charstring t_i := ("aa" .. "bb"); }
+	{	template universal charstring t_i := ("aa" .. "bb"); }
+	{	template charstring t_i := (-infinity .. infinity); }
+	{	template universal charstring t_i := (-infinity .. infinity); }
+}
+
+function f_lengthrestrictionTemplateTest()
+{
+{	template bitstring t_i := ''B length(4 .. 5); }
+{	template bitstring t_i := '0011'B length(1 .. 2); }
+{	template hexstring t_i := ''H length(4 .. 5); }
+{	template hexstring t_i := '0011'H length(1 .. 2); }
+{	template octetstring t_i := ''O length(4 .. 5); }
+{	template octetstring t_i := '001122'O length(1 .. 2); }
+{	template charstring t_i := "" length(4 .. 5); }
+{	template charstring t_i := "akarmi" length(1 .. 2); }
+
+{	template boolean t_i := true length(4 .. 5); }
+{	template integer t_i := 5 length(4 .. 5); }
+{	template float t_i := 5.0 length(4 .. 5); }
+{	template t_function t_i := null length(4 .. 5); }
+{	template t_altstep t_i := null length(4 .. 5); }
+{	template t_testcase t_i := null length(4 .. 5); }
+{	template mycomponent t_i := null length(4 .. 5); }
+{	template default t_i := null length(4 .. 5); }
+{	template myObjID t_i := objid { 0 1 2} length(4 .. 5); }
+{	template testPort t_i := * length(4 .. 5); }
+{	template S_ProvedureSignatureID t_i := * length(4 .. 5); }
+{	template verdicttype t_i := pass length(4 .. 5); }
+}
+
+function f_stringpatternTests(){
+    {	template bitstring t_i := '0*'B;}
+    {	template hexstring t_i := '00'H;}
+    {	template octetstring t_i := '00'O;}
+    {	template charstring t_i := "akarmi";}
+}
+
+function f_template_indexing_test( )
+{
+template charstring t_charstring_good := "temp";
+template charstring t_charstring_bad := t_charstring_good[1];
+
+template mysetofType t_setof_good := subset(1, 2);
+template mysetofType t_setof_good2 := {1, 2};
+template integer t_setof_good3 := t_setof_good2[1];
+template integer t_setof_bad := t_setof_good[""];
+template integer t_setof_bad2 := t_setof_good[1];
+template integer t_setof_bad3 := t_setof_good2[-1];
+template integer t_setof_bad4 := t_setof_good2[10];
+
+template myrecordofType t_recordof_good := {1, 2, permutation(3,4)};
+template myrecordofType t_recordof_good2 := {1, 2};
+template integer t_recordof_good3 := t_recordof_good2[1];
+template integer t_recordof_bad := t_recordof_good2[""];
+template integer t_recordof_bad2 := t_recordof_good2[-1];
+template integer t_recordof_bad3 := t_recordof_good2[10];
+
+template Array t_array_good := {{3,4,5}, {3,4,5}, {3,4,5}};
+template integer t_array_bad := t_array_good[""][""];
+template integer t_array_bad2 := t_array_good[0][0];
+template integer t_array_bad3 := t_array_good[10][10];
+}
+
+function f_template_fieldreference_test( )
+{
+template charstring t_charstring_good := "temp";
+template charstring t_charstring_bad2 := t_charstring_good.field1;
+
+template myrecordType t_record_good := {1, 2};
+template integer t_record_good2 := t_record_good.field1;
+template integer t_record_bad := t_record_good.field3;
+
+template mysetType t_set_good := { field1 := 1, field2 := 2};
+template integer t_set_good2 := t_set_good.field1;
+template integer t_set_bad := t_set_good.field3;
+
+template myunionType t_union_good := { field1 := 1};
+template integer t_union_good2 := t_union_good.field1;
+template integer t_union_bad := t_union_good.field3;
+template charstring t_union_bad2 := t_union_good.field2;
+}
+
+type record LValueTestHelper
+{
+  integer field1,
+  integer field2
+};
+
+
+template LValueTestHelper t_LValueTest (
+in integer pl_parameter1,
+in template integer pl_parameter2) :=
+{
+  field1 := f_templateParameterTestHelper(pl_parameter1, pl_parameter1, pl_parameter1),
+  field2 := f_templateParameterTestHelper(pl_parameter2, pl_parameter2, pl_parameter2)
+}
+
+function f_templateParameterTestHelper (in template integer pl_par1, out template integer pl_par2, inout template integer pl_par3) return integer {
+	return 5;
+}
+
+// test for TR HL65533
+function f_HL65533( )
+return template myrecordType
+{
+  template myrecordType t_i := f_HL65533();
+  template myrecordType t_i2 := {t_i.field1, t_i.field2};
+  return t_i;
+}
+
+type record rec_HM93170 {
+integer f1,
+float f2,
+charstring f3,
+integer f4,
+integer f5
+}
+
+template rec_HM93170 temp_HM93170_1:= { f1:= temp_HM93170_2.f1, f2:= 1.1, f3:= "ERIXON", f4:= 1, f5:= temp_HM93170_1.f1 };
+template rec_HM93170 temp_HM93170_2:= { f1:= temp_HM93170_2.f4, f2:= 1.1, f3:= "ERIXON", f4:= temp_HM93170_1.f5, f5:= 2 };
+
+template charstring tcs := "doggee"
+template bitstring tbs := '11001100'B
+template hexstring ths := 'AABBCCDDEEFF'H
+template octetstring tos := 'AABBCCDD'O
+template universal charstring tus := char(0, 0, 0, 75) & char(0, 0, 0, 65)
+
+function fsi_charstrings(in template charstring vtc) {}
+function fsi_bitstrings(in template bitstring vtb) {}
+function fsi_hexstrings(in template hexstring vth) {}
+function fsi_octetstrings(in template octetstring vto) {}
+function fsi_universal_charstrings(in template universal charstring vtu) {}
+
+function f_CR_TR00018474()
+{
+  {
+  // charstrings
+  var template charstring vtc := "fisherman"
+  vtc[0] := vtc[1]
+  vtc[0] := tcs[1]
+  tcs[0] := "D"
+  vtc[0] := *
+  vtc[0] := ?
+  fsi_charstrings(vtc[0])
+  }
+
+  {
+  // bitstrings
+  var template bitstring vtb := '0011110000'B
+  vtb[0] := vtb[1]
+  vtb[0] := tbs[1]
+  tbs[0] := '1'B
+  vtb[0] := *
+  vtb[0] := ?
+  vtb[0] := '*'B
+  vtb[1] := '?'B
+  fsi_bitstrings(vtb[0])
+  }
+
+  {
+  // hexstrings
+  var template hexstring vth := 'AABBCCDDEE'H
+  vth[0] := vth[1]
+  vth[0] := ths[1]
+  ths[0] := 'B'H
+  vth[0] := *
+  vth[0] := ?
+  vth[0] := '*'H
+  vth[1] := '?'H
+  fsi_hexstrings(vth[0])
+  }
+
+  {
+  // octetstrings
+  var template octetstring vto := 'ABBAABBA'O
+  vto[0] := vto[1]
+  vto[0] := tos[1]
+  tos[0] := 'BB'O
+  vto[0] := *
+  vto[0] := ?
+  vto[0] := '*'O
+  vto[1] := '?'O
+  fsi_octetstrings(vto[0])
+  }
+
+  {
+  // universal charstrings
+  var template universal charstring vtu := "fisherman"
+  vtu[0] := vtu[1]
+  vtu[0] := tus[1]
+  tus[0] := "F"
+  vtu[0] := *
+  vtu[0] := ?
+  fsi_universal_charstrings(vtu[0])
+  }
+}
+
+}  // end of module

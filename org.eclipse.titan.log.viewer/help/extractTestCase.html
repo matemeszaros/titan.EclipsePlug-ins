@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>Extract Test Cases</title>
+</head>
+<body>
+<h1>Extract Test Cases</h1>
+<br>
+<p class="text">The action Extract Test Cases is used to extract the log file 
+  and find all test cases and verdicts included in the file. Each test case will 
+  be displayed in the Test Case tab in the Navigator with a verdict 
+  indicator and an associated name</p>
+<ol>
+  <li> 
+    <p class="subtitle">Select a file with the extension log in the Navigator.</p>
+  </li>
+  <li> 
+    <p class="subtitle">Select the action <i> TITAN Log Viewer - Extract Test Cases</i> in the pop-up 
+      menu.<br>
+      Double click or Enter can be used if the <i>Default behaviour in Project 
+      Tab </i> in <a href="userConfiguration.html">User Configuration</a><a href="gereralSettings.html"> - General Settings</a> is set to<i> 
+      Extract Test Cases</i>.</p>
+    <p class="text">The log file is processed and the test cases are extracted. <br>
+      The test cases will be displayed in the Test Case tab in the TITAN Log Viewer 
+      Navigator with a verdict indicator and an associated name.</p>
+  </li>
+</ol>
+<br>
+<p class="text">
+  The log file timestamp format must be one of the following formats, &quot;yyyy/mm/dd 
+  hh:mm:ss.SSSSSS&quot;, &quot;hh:mm:ss.SSSSSS&quot; or &quot;s.SSSSSS&quot;<a href="gereralSettings.html"></a>.<br>
+  <br>
+  A test case starts when a record in the log file contains the strings "Test 
+  Case&quot; and &quot;started" and ends when a record contains the strings 
+  "Test case&quot; and &quot;finished". <br>
+  <br>
+  The name of the test case is the first token in the start record after the 
+  string &quot;Test Case&quot;. A test case name can occur several times in 
+  the same log file so each instance is unique identified with the date and 
+  time stamp of the start event. <br>
+  <br>
+  The verdict of the test case is the overall verdict of the test case and 
+  is included in the finish record of the test case and is the first token 
+  after the string "Verdict: ". If no verdict can be defined for the test 
+  case the verdict indication will be set to <img src="images/testnone.gif"> 
+  <i>None</i>. <br>
+  <br>
+  The verdicts are: <br>
+  <br>
+<table cellspacing="0" border="1" width="20%" cellpadding="3" bordercolor="gray">
+  <tr> 
+    <td width="25%" align ="center">Image</td>
+    <td width="75%">Description</td>
+  </tr>
+  <tr> 
+    <td width="25%" align ="center"><img src="images/testerr.gif"></td>
+    <td width="75%" align="left">Error</td>
+  </tr>
+  <tr> 
+    <td align="center"><img src="images/testfail.gif"></td>
+    <td align="left">Fail</td>
+  </tr>
+  <tr> 
+    <td align="center"><img src="images/testincon.gif"></td>
+    <td align="left">Inconclusive</td>
+  </tr>
+  <tr> 
+    <td align="center"><img src="images/testnone.gif"></td>
+    <td align="left">None</td>
+  </tr>
+  <tr> 
+    <td align="center"><img src="images/testpass.gif"></td>
+    <td align="left">Pass</td>
+  </tr>
+</table>
+<br>
+<p class="text">If an error occurrs during extracting the file, the extracting 
+  will stop. All test cases that was extracted is shown in the Test Case tab and 
+  an indication, <i>Interrupted</i>, is added to the list.
+  <br><br>
+  <img src="images/extractionInterrupted.png">
+  <br><br>
+  
+  <b>Sorting test cases</b><br>
+  The test cases found in a log file can be sorted by time, name and verdict in the Test Cases tab. 
+  To sort the test cases select the prefered sort type in the <i>Sort</i> menu group in the drop-down menu.
+  The drop-down menu is found in the Navigator at the upper right corner, when the Test Cases tab is selected.
+  <br><br>
+  <img src="images/sortTestCases.png">
+  <br><br>
+  
+  <b>Filtering test cases</b><br>
+  The test cases listed in the test cases tab of the Navigator can be filtered. 
+  Each type (error/fail/inconc/none/pass) can be filtered.
+  To filter the test cases select the prefered filter type in the <i>Filter</i> menu group in the drop-down menu.
+  The drop-down menu is found in the Navigator at the upper right corner, when the Test Cases tab is selected.
+</p>
+<br><img src="images/filterTestCase.png"><br>
+<br>
+</body>
+</html>

@@ -1,0 +1,249 @@
+-- these tests are copied and modified version of the TTCNv3/function_test/Semantic_Analyzer ASN.1 tests
+-- most of the semantic errors are currently not detected by the low level on-the-fly checker
+-- as the checker will be improved more and more errors will be detected in this file
+
+SemanticErrors1 { nonexi(7) } DEFINITIONS ::=
+BEGIN
+   EXPORTS A, Nonexi, Duplicate-symbol, Duplicate-symbol;
+   IMPORTS B FROM Module-B {0 Nonexi 0}
+           Duplicate-symbol-2, Duplicate-symbol-2 FROM SemanticErrors2;
+   A ::= SEQUENCE { f1 INTEGER }
+   X1 ::= BOOLEAN ( nonexi )
+   X2 ::= BOOLEAN ( NONEXI )
+   X3 ::= NULL ( nonexi )
+   X4 ::= NULL ( NONEXI )
+   X5 ::= INTEGER { mchalls(-767), thisistheone(nonexi) }
+   X6 ::= INTEGER (NONEXI)
+   X7 ::= INTEGER (666..nonexi)
+   X8 ::= ENUMERATED { my-hero (0), is-a-great(1), comedy(nonexi) }
+   X9 ::= ENUMERATED { my-hero (0), is-a-great(1), comedy(9999) } (nonexi)
+   X10 ::= ENUMERATED { my-hero (0), is-a-great(1), comedy(9999) } (NONEXI)
+   X11 ::= REAL (nonexi)
+--   X12 ::= REAL ({mantissa 10, base 10, exponent nonexi})
+--   X13 ::= REAL ({mantissa 10, base 10, exponent 1, nonexi 1})
+   X14 ::= REAL (NONEXI)
+   X15 ::= REAL ({mantissa 10, base 10, exponent 1} ..nonexi)
+   X16 ::= REAL ({mantissa 10, base nonexi, exponent 1}..{mantissa 10, base 10, exponent 1})
+   Y1 ::= X11 ((WITH COMPONENT (1000..nonexi)))
+   X17 ::= SEQUENCE SIZE (6) OF SEQUENCE SIZE (6) OF REAL
+   Y2 ::= X17 (WITH COMPONENT (WITH COMPONENT (-100..nonexi)))
+   X18 ::= REAL
+   Y3 ::= X18 (WITH COMPONENTS { mantissa (-65535..65536), base (10), exponent (-127..nonexi) })
+   X19 ::= REAL
+   Y4 ::= X19 (WITH COMPONENTS { ..., exponent (-127..nonexi) })
+   X20 ::= BIT STRING { nullbit(0), non-null-bit(1), it-s-tricky(nonexi) }
+   X21 ::= BIT STRING (nonexi)
+   X22 ::= BIT STRING (NONEXI)
+   X23 ::= BIT STRING (SIZE(nonexi))
+   X24 ::= BIT STRING (SIZE(10..nonexi))
+   X25 ::= BIT STRING (SIZE(1|2|3|10..nonexi))
+   obj-id OBJECT IDENTIFIER ::= {0 4 0}
+   X26 ::= BIT STRING (CONTAINING Nonexi ENCODED BY obj-id)
+   X27 ::= BIT STRING (CONTAINING INTEGER ENCODED BY nonexi)
+   X28 ::= OCTET STRING (nonexi)
+   X29 ::= OCTET STRING (NONEXI)
+   X30 ::= OCTET STRING (SIZE(nonexi))
+   X31 ::= OCTET STRING (SIZE(9999..nonexi))
+   X32 ::= OCTET STRING (SIZE(0|100|107|9999..nonexi))
+   X33 ::= OCTET STRING (CONTAINING NONEXI ENCODED BY {0 4 0})
+   X34 ::= OCTET STRING (CONTAINING INTEGER ENCODED BY nonexi)
+   X35 ::= OBJECT IDENTIFIER (nonexi)
+--   X36 ::= OBJECT IDENTIFIER ({0 4 nonexi})
+   X37 ::= OBJECT IDENTIFIER (NONEXI)
+   X38 ::= RELATIVE-OID -- {0 4 0 } -- (nonexi)
+/*   X39 ::= RELATIVE-OID -- {0 4 0 } -- ({0 4 nonexi}) */
+   X40 ::= RELATIVE-OID -- {0 4 0 } -- (NONEXI)
+   X41 ::= NumericString (SIZE(nonexi))
+   X42 ::= NumericString (SIZE(88..nonexi))
+   X43 ::= NumericString (SIZE(7|13|88..nonexi))
+   X44 ::= NumericString (nonexi)
+   X45 ::= NumericString ("getting"|"more"|"tricky"|nonexi)
+   X46 ::= NumericString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X47 ::= NumericString (PATTERN nonexi)
+   X48 ::= PrintableString (SIZE(nonexi))
+   X49 ::= PrintableString (SIZE(88..nonexi))
+   X50 ::= PrintableString (SIZE(7|13|88..nonexi))
+   X51 ::= PrintableString (nonexi)
+   X52 ::= PrintableString ("getting"|"more"|"tricky"|nonexi)
+   X53 ::= PrintableString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X54 ::= PrintableString (PATTERN nonexi)
+   X55 ::= VisibleString (SIZE(nonexi))
+   X56 ::= VisibleString (SIZE(88..nonexi))
+   X57 ::= VisibleString (SIZE(7|13|88..nonexi))
+   X58 ::= VisibleString (nonexi)
+   X59 ::= VisibleString ("getting"|"more"|"tricky"|nonexi)
+   X60 ::= VisibleString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X61 ::= VisibleString (PATTERN nonexi)
+   X62 ::= ISO646String (SIZE(nonexi))
+   X63 ::= ISO646String (SIZE(88..nonexi))
+   X64 ::= ISO646String (SIZE(7|13|88..nonexi))
+   X65 ::= ISO646String (nonexi)
+   X66 ::= ISO646String ("getting"|"more"|"tricky"|nonexi)
+   X67 ::= ISO646String (FROM ("0".."9"|"*"|"#"|nonexi))
+   X68 ::= ISO646String (PATTERN nonexi)
+   X69 ::= IA5String (SIZE(nonexi))
+   X70 ::= IA5String (SIZE(88..nonexi))
+   X71 ::= IA5String (SIZE(7|13|88..nonexi))
+   X72 ::= IA5String (nonexi)
+   X73 ::= IA5String ("getting"|"more"|"tricky"|nonexi)
+   X74 ::= IA5String (FROM ("0".."9"|"*"|"#"|nonexi))
+   X75 ::= IA5String (PATTERN nonexi)
+   X76 ::= TeletexString (SIZE(nonexi))
+   X77 ::= TeletexString (SIZE(88..nonexi))
+   X78 ::= TeletexString (SIZE(7|13|88..nonexi))
+   X79 ::= TeletexString (nonexi)
+   X80 ::= TeletexString ("getting"|"more"|"tricky"|nonexi)
+   X81 ::= TeletexString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X82 ::= TeletexString (PATTERN nonexi)
+   X83 ::= T61String (SIZE(nonexi))
+   X84 ::= T61String (SIZE(88..nonexi))
+   X85 ::= T61String (SIZE(7|13|88..nonexi))
+   X86 ::= T61String (nonexi)
+   X87 ::= T61String ("getting"|"more"|"tricky"|nonexi)
+   X88 ::= T61String (FROM ("0".."9"|"*"|"#"|nonexi))
+   X89 ::= T61String (PATTERN nonexi)
+   --X90 ::= VideotexString (SIZE(nonexi))
+   --X91 ::= VideotexString (SIZE(88..nonexi))
+   --X92 ::= VideotexString (SIZE(7|13|88..nonexi))
+   --X93 ::= VideotexString (nonexi)
+   --X94 ::= VideotexString ("getting"|"more"|"tricky"|nonexi)
+   --X95 ::= VideotexString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X96 ::= GraphicString (SIZE(nonexi))
+   X97 ::= GraphicString (SIZE(88..nonexi))
+   X98 ::= GraphicString (SIZE(7|13|88..nonexi))
+   X99 ::= GraphicString (nonexi)
+   X100 ::= GraphicString ("getting"|"more"|"tricky"|nonexi)
+   X101 ::= GraphicString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X102 ::= GraphicString (PATTERN nonexi)
+   X103 ::= GeneralString (SIZE(nonexi))
+   X104 ::= GeneralString (SIZE(88..nonexi))
+   X105 ::= GeneralString (SIZE(7|13|88..nonexi))
+   X106 ::= GeneralString (nonexi)
+   X107 ::= GeneralString ("getting"|"more"|"tricky"|nonexi)
+   X108 ::= GeneralString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X109 ::= GeneralString (PATTERN nonexi)
+   X110 ::= UniversalString (SIZE(nonexi))
+   X111 ::= UniversalString (SIZE(88..nonexi))
+   X112 ::= UniversalString (SIZE(7|13|88..nonexi))
+   X113 ::= UniversalString (nonexi)
+   X114 ::= UniversalString ({0 0 0 65}|nonexi)
+   X115 ::= UniversalString ({0 0 0 65}|{0 0 0 nonexi})
+   X116 ::= UniversalString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X117 ::= UniversalString (PATTERN nonexi)
+   X118 ::= BMPString (SIZE(nonexi))
+   X119 ::= BMPString (SIZE(88..nonexi))
+   X120 ::= BMPString (SIZE(7|13|88..nonexi))
+   X121 ::= BMPString (nonexi)
+   X122 ::= BMPString ({0 0 0 65}|nonexi)
+   X123 ::= BMPString ({0 0 0 65}|{0 0 0 nonexi})
+   X124 ::= BMPString (FROM ("0".."9"|"*"|"#"|nonexi))
+   X125 ::= BMPString (PATTERN nonexi)
+   X126 ::= UTF8String (SIZE(nonexi))
+   X127 ::= UTF8String (SIZE(88..nonexi))
+   X128 ::= UTF8String (SIZE(7|13|88..nonexi))
+   X129 ::= UTF8String (nonexi)
+   X130 ::= UTF8String ("getting"|"more"|"tricky"|nonexi)
+   X131 ::= UTF8String (FROM ("0".."9"|"*"|"#"|nonexi))
+   X132 ::= UTF8String (PATTERN nonexi)
+   X133 ::= ObjectDescriptor (SIZE(nonexi))
+   X134 ::= ObjectDescriptor (SIZE(88..nonexi))
+   X135 ::= ObjectDescriptor (SIZE(7|13|88..nonexi))
+   X136 ::= ObjectDescriptor (nonexi)
+   X137 ::= ObjectDescriptor ("getting"|"more"|"tricky"|nonexi)
+   X138 ::= ObjectDescriptor (FROM ("0".."9"|"*"|"#"|nonexi))
+   X139 ::= ObjectDescriptor (PATTERN nonexi)
+   X140 ::= GeneralizedTime (SIZE(nonexi))
+   X141 ::= GeneralizedTime (SIZE(88..nonexi))
+   X142 ::= GeneralizedTime (SIZE(7|13|88..nonexi))
+   X143 ::= GeneralizedTime (nonexi)
+   X144 ::= GeneralizedTime ("getting"|"more"|"tricky"|nonexi)
+   X145 ::= GeneralizedTime (FROM ("0".."9"|"*"|"#"|nonexi))
+   X146 ::= GeneralizedTime (PATTERN nonexi)
+   X147 ::= UTCTime (SIZE(nonexi))
+   X148 ::= UTCTime (SIZE(88..nonexi))
+   X149 ::= UTCTime (SIZE(7|13|88..nonexi))
+   X150 ::= UTCTime (nonexi)
+   X151 ::= UTCTime ("getting"|"more"|"tricky"|nonexi)
+   X152 ::= UTCTime (FROM ("0".."9"|"*"|"#"|nonexi))
+   X153 ::= UTCTime (PATTERN nonexi)
+
+   X154 ::= SEQUENCE { f1 BOOLEAN, f2 NONEXI }
+   X155 ::= SEQUENCE { f1 BOOLEAN, f2 INTEGER DEFAULT nonexi }
+   X156 ::= SEQUENCE { COMPONENTS OF NONEXI, f2 X156 OPTIONAL }
+--   X157 ::= SEQUENCE { f1 X157 OPTIONAL } ( { f1 { f1 { f1 - } } } )
+   X158 ::= SEQUENCE { f1 X158 OPTIONAL } (NONEXI)
+   Y159 ::= SEQUENCE { f1 BOOLEAN, f2 INTEGER, f3 OCTET STRING }
+   X159 ::= Y159 (WITH COMPONENTS{ ..., f2 (2|4|5|10), f3 (SIZE(2..nonexi)) })
+
+   X160 ::= SET { f1 BOOLEAN, f2 NONEXI }
+   X161 ::= SET { f1 BOOLEAN, f2 INTEGER DEFAULT nonexi }
+   X162 ::= SET { COMPONENTS OF NONEXI, f2 X162 OPTIONAL }
+--   X163 ::= SET { f1 X163 OPTIONAL } ( { f1 { f1 { f1 - } } } )
+   X164 ::= SET { f1 X164 OPTIONAL } (NONEXI)
+
+   Y165 ::= SET { f1 BOOLEAN, f2 INTEGER, f3 OCTET STRING }
+   X165 ::= Y165 (WITH COMPONENTS{ ..., f2 (2|4|5|10), f3 (SIZE(2..nonexi)) })
+
+   X166 ::= SEQUENCE OF INTEGER ({0, 0, 17, 18, nonexi})
+   X167 ::= SEQUENCE OF INTEGER (nonexi)
+   X168 ::= SEQUENCE OF INTEGER (NONEXI)
+   X169 ::= SEQUENCE OF INTEGER (SIZE(nonexi))
+   X170 ::= SEQUENCE OF INTEGER (SIZE(88..nonexi))
+   X171 ::= SEQUENCE OF INTEGER (SIZE(88|17|nonexi))
+
+   Y172 ::= SEQUENCE OF INTEGER
+   X172 ::= Y172 (WITH COMPONENT(-100..nonexi))
+
+   X173 ::= SET OF INTEGER ({0, 0, 17, 18, nonexi})
+   X174 ::= SET OF INTEGER (nonexi)
+   X175 ::= SET OF INTEGER (NONEXI)
+   X176 ::= SET OF INTEGER (SIZE(nonexi))
+   X177 ::= SET OF INTEGER (SIZE(88..nonexi))
+   X178 ::= SET OF INTEGER (SIZE(88|17|nonexi))
+
+   Y179 ::= SET OF INTEGER
+   X179 ::= Y179 (WITH COMPONENT(-100..nonexi))
+
+   X180 ::= CHOICE { f1 BOOLEAN, f2 INTEGER, f3 X180 } (nonexi)
+   X181 ::= CHOICE { f1 BOOLEAN, f2 INTEGER, f3 X181 } (f2:nonexi)
+   X182 ::= CHOICE { f1 BOOLEAN, f2 INTEGER, f3 X182 } (NONEXI)
+   Y183 ::= CHOICE { f1 BOOLEAN, f2 INTEGER, f3 X183 }
+   X183 ::= Y183 (WITH COMPONENTS {..., f2 (100..200), f3 (nonexi))})
+   Y184 ::= CHOICE { f1 BOOLEAN, f2 INTEGER } my-value f2 < NONEXI ::= 10
+
+   X185 ::= SEQUENCE {f1 INTEGER, f2 ANY DEFINED BY nonexi}
+   Dimensions1 ::= SET { x INTEGER, y BOOLEAN, ... !NONEXI:"dimension error"}
+   Dimensions2 ::= SET { x INTEGER, y BOOLEAN, ... !IA5String:nonexi}
+
+   X186 ::= INTEGER (1|2|3|nonexi)
+   X187 ::= INTEGER (0..200 ^ 100..nonexi)
+   X188 ::= INTEGER (0..200 EXCEPT nonexi)
+   X189 ::= INTEGER (ALL EXCEPT nonexi)
+   X190 ::= INTEGER (1|2|3,...!NONEXI:"Fatal")
+   X191 ::= INTEGER (1|2|3,...!IA5String:nonexi)
+
+   X192{PARAM} ::= BIT STRING (CONSTRAINED BY {NONEXI} !Error192:securityViolation)
+   Error192 ::= ENUMERATED {securityViolation}
+
+   Y193 ::= BIT STRING (SIZE(2))
+   X193{PARAM} ::= BIT STRING (CONSTRAINED BY {PARAM} !NONEXI:securityViolation)
+   Error193 ::= ENUMERATED {securityViolation}
+
+   Y194 ::= BIT STRING (SIZE(2))
+   X194{PARAM} ::= BIT STRING (CONSTRAINED BY {PARAM} !Error194:nonexi)
+   Error194 ::= ENUMERATED {securityViolation}
+
+   Y195 ::= EMBEDDED PDV
+   X195 ::= Y195 (nonexi)
+
+   Y196 ::= EMBEDDED PDV
+   X196 ::= Y196 (WITH COMPONENTS {..., fixed nonexi})
+
+   X197 ::= CHARACTER STRING (nonexi)
+   X198 ::= CHARACTER STRING (WITH COMPONENTS {..., fixed nonexi})
+
+   --
+
+   Duplicate-symbol ::= BOOLEAN  -- used for exporting error
+
+END

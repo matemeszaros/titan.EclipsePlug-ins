@@ -1,0 +1,32 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module no_comment {
+import from types all;
+
+// the below function/testcase/altstep definitions should have a comment
+const integer comment_separation_1 := 0;
+
+function f1() {}
+
+testcase t1() runs on c1_CT {}
+
+altstep a1() {
+  [] any port.receive {}
+}
+
+const integer comment_separation_2 := 0;
+
+// fine, as it has a comment
+function f2() {}
+// fine, as it has a comment
+testcase t2() runs on c1_CT {}
+// fine, as it has a comment
+altstep a2() {
+  [] any port.receive {}
+}
+}

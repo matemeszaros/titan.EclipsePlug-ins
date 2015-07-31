@@ -1,0 +1,583 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+/*
+//AUTHOR:
+//DATE:
+//VERSION:
+*/
+module attribute_tests
+{
+type component empty_CT
+{ }
+
+/**
+* Tests for extension attributes
+**/
+group extension_attributes {
+    function f_emptyfunction()
+    { }
+
+    // prototype checks
+    // functions good
+    function f_convert_good(in float f) return charstring
+    {
+        return float2str(f);
+    } with { extension "prototype(convert)" }
+
+    function f_fast_good(in integer i, out charstring cs)
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+    function f_fast_good2(in integer i, out octetstring cs)
+    { cs := int2oct(i,10);
+    } with { extension "prototype(fast)" }
+
+    function f_sliding_good(inout octetstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_good2(inout charstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+
+    function f_backtrack_good(in octetstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(backtrack)" }
+    function f_backtrack_good2(in charstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(backtrack)" }
+
+    // function/convert bad
+    function f_convert_bad() return charstring
+    {
+        return "";
+    } with { extension "prototype(convert)" }
+    function f_convert_bad2(in float f, in float f2) return charstring
+    {
+        return float2str(f);
+    } with { extension "prototype(convert)" }
+    function f_convert_bad3(out float f) return charstring
+    {
+        return float2str(f);
+    } with { extension "prototype(convert)" }
+    function f_convert_bad4(inout float f) return charstring
+    {
+        return float2str(f);
+    } with { extension "prototype(convert)" }
+    function f_convert_bad5(in float f)
+    { } with { extension "prototype(convert)" }
+    function f_convert_bad6(in float f) return template charstring
+    { return float2str(f);
+    } with { extension "prototype(convert)" }
+    function f_convert_bad7(in float f) runs on empty_CT return charstring
+    { return float2str(f);
+    } with { extension "prototype(convert)" }
+
+    // function/fast bad
+    function f_fast_bad(in integer i)
+    {} with { extension "prototype(fast)" }
+    function f_fast_bad2(in integer i, out charstring cs, out charstring cs2)
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+    function f_fast_bad3(out integer i, out charstring cs)
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+    function f_fast_bad4(inout integer i, out charstring cs)
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+    function f_fast_bad5(in integer i, charstring cs)
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+    function f_fast_bad6(in integer i, in charstring cs)
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+    function f_fast_bad7(in integer i, inout charstring cs)
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+    function f_fast_bad8(in integer i, out charstring cs) return integer
+    { return i;
+    } with { extension "prototype(fast)" }
+    function f_fast_bad9(in integer i, out charstring cs) runs on empty_CT
+    { cs := int2str(i);
+    } with { extension "prototype(fast)" }
+
+    // function/sliding bad
+    function f_sliding_bad(inout octetstring i) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad2(inout octetstring i, out charstring cs, out charstring cs2) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad3(octetstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad4(in octetstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad5(out octetstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad6(inout integer i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad7(inout octetstring i, out charstring cs)
+    { } with { extension "prototype(sliding)" }
+    function f_sliding_bad8(inout octetstring i, out charstring cs) return template integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad9(inout octetstring i, out charstring cs) return charstring
+    { return "";
+    } with { extension "prototype(sliding)" }
+    function f_sliding_bad10(inout octetstring i, out charstring cs) runs on empty_CT return integer
+    { return 1;
+    } with { extension "prototype(sliding)" }
+
+    // function/backtrack bad
+    function f_backtrack_bad(in octetstring i) return integer
+    { return 1;
+    } with { extension "prototype(backtrack)" }
+    function f_backtrack_bad2(in octetstring i, out charstring cs, out charstring cs2) return integer
+    { return 1;
+    } with { extension "prototype(backtrack)" }
+    function f_backtrack_bad3(out octetstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(backtrack)" }
+    function f_backtrack_bad4(inout octetstring i, out charstring cs) return integer
+    { return 1;
+    } with { extension "prototype(backtrack)" }
+    function f_backtrack_bad5(in octetstring i, out charstring cs)
+    {} with { extension "prototype(backtrack)" }
+    function f_backtrack_bad6(in octetstring i, out charstring cs) return template integer
+    { return 1;
+    } with { extension "prototype(backtrack)" }
+    function f_backtrack_bad7(in octetstring i, out charstring cs) return charstring
+    { return "";
+    } with { extension "prototype(backtrack)" }
+
+    // external function encodings checks
+    // external functions good
+    external function f_encode_good(in charstring pdu) return octetstring
+    with { extension "prototype(convert) encode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING)" }
+
+    external function f_decode_good(in octetstring os, out charstring pdu) return integer
+    with { extension "prototype(backtrack) decode(BER:BER_ACCEPT_ALL) errorbehavior(ALL:WARNING)" }
+
+    // external functions bad
+    external function f_encode_bad(in charstring pdu) return octetstring
+    with { extension "prototype(convert) prototype(convert) encode(BER:BER_ENCODE_DER)" }
+    external function f_encode_bad2(in charstring pdu) return octetstring
+    with { extension "prototype(convert) encode(BER:BER_ENCODE_DER) encode(BER:BER_ENCODE_DER)" }
+    external function f_encode_bad3(in charstring pdu) return octetstring
+    with { extension "prototype(convert) errorbehavior(ALL:WARNING)" }
+    external function f_encode_bad4(in charstring pdu) return octetstring
+    with { extension "encode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING)" }
+    external function f_encode_bad5(in charstring pdu, out charstring cs) return integer
+    with { extension "prototype(backtrack) encode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING)" }
+    external function f_encode_bad6(inout charstring pdu, out charstring cs) return integer
+    with { extension "prototype(sliding) encode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING)" }
+
+    external function f_decode_bad(in octetstring os, out charstring pdu) return integer
+    with { extension "prototype(backtrack) decode(BER:BER_ACCEPT_ALL) decode(BER:BER_ACCEPT_ALL)" }
+    external function f_decode_bad2(in octetstring os, out charstring pdu) return integer
+    with { extension "prototype(backtrack) encode(BER:BER_ENCODE_DER) decode(BER:BER_ACCEPT_ALL)" }
+    external function f_decode_bad3(in charstring pdu) return octetstring
+    with { extension "prototype(convert) errorbehavior(ALL:WARNING)" }
+    external function f_decode_bad4(in charstring pdu) return octetstring
+    with { extension "decode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING)" }
+
+    /**
+    * Tests for implicit message encoding: dual faced ports
+    **/
+    type charstring address;
+    external function f_encode_good(in charstring pdu) return octetstring
+    with { extension "prototype(convert) encode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING)" }
+
+    type port internal_port_good message
+    { inout integer } with { extension "internal" };
+    type port address_port_good message
+    { inout integer } with { extension "address" };
+    type port provider_port_good message
+    { inout integer } with { extension "provider" };
+    type port user_port_good message
+    { inout integer
+    } with { extension "user provider_port_good
+        in(integer -> integer : simple)
+        out(integer -> integer : simple)" };
+    type port user_port_good2 message
+    { inout integer
+    } with { extension "user provider_port_good in(integer -> - : discard)
+        out(integer -> - : discard)" };
+    type port user_port_good3 message
+    { inout integer
+    } with { extension "user provider_port_good in(integer -> integer : encode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING))
+        out(integer -> integer : decode(BER:BER_ENCODE_DER) errorbehavior(ALL:WARNING))" };
+    type port user_port_good4 message
+    { in octetstring
+    } with { extension "user provider_port_good in(integer -> octetstring : function(f_encode_good))" };
+
+    // bad ports
+    type port internal_port_bad message
+    { inout integer } with { extension "internal" extension "internal" };
+    type port internal_port_bad2 message
+    { inout integer } with { extension "internal" extension "address" };
+    type port internal_port_bad3 message
+    { inout integer } with { extension "address" extension "internal" };
+
+    type port address_port_bad message
+    { inout integer } with { extension "address" extension "address"};
+
+    type port provider_port_bad message
+    { inout integer } with { extension "provider" extension "provider" };
+
+    type port user_port_bad message
+    { in integer
+    } with { extension "user address_port_nonExi in(integer -> integer : simple)" };
+    type port user_port_bad2 message
+    { in integer
+    } with { extension "user address_port_good in(integer -> integer : simple)" };
+    type port user_port_bad3 message
+    { in integer
+    } with { extension "user f_encode_good in(integer -> integer : simple)" };
+    type port user_port_bad4 message
+    { in integer
+    } with { extension "user internal_port_good in(integer -> integer : simple)" };
+    type port user_port_bad5 message
+    { in integer
+    } with { extension "user provider_port_good in(integer -> integer : simple)
+        user provider_port_good in(integer -> integer : simple)" };
+    type port user_port_bad6 message
+    { in integer
+    } with { extension "provider user provider_port_good in(integer -> integer : simple)" };
+    type port user_port_bad7 message
+    { in integer
+    } with { extension "user provider_port_good in(integer -> integer : simple) provider" };
+    type port user_port_bad8 message
+    { in integer, charstring
+    } with { extension "user provider_port_good in(integer -> charstring : simple)" };
+    type port user_port_bad9 message
+    { in integer, charstring
+    } with { extension "user provider_port_good in(charstring -> integer : simple)" };
+    type port user_port_bad10 message
+    { in integer, charstring
+    } with { extension "user provider_port_good in(octetstring -> octetstring : simple)" };
+    type port user_port_bad11 message
+    { out integer, charstring
+    } with { extension "user provider_port_good in(octetstring -> octetstring : simple)" };
+    type port user_port_bad12 message
+    { in integer, charstring
+    } with { extension "user provider_port_good out(octetstring -> octetstring : simple)" };
+    type port user_port_bad13 message
+    { out charstring
+    } with { extension "user provider_port_good out(octetstring -> charstring : simple)" };
+    type port user_port_bad14 message
+    { in octetstring
+    } with { extension "user provider_port_good in(charstring_nonExi -> octetstring_nonExi : function(f_nonExi))" };
+    type port user_port_bad15 message
+    { in octetstring
+    } with { extension "user provider_port_good in(integer -> octetstring : function(f_emptyfunction))" };
+    type port user_port_bad16 message
+    { in octetstring
+    } with { extension "user provider_port_good in(integer -> octetstring : function(user_port_good))" };
+    type port user_port_bad17 message
+    { in octetstring
+    } with { extension "user provider_port_good in(hexstring -> octetstring : function(f_fast_good))" };
+    type port user_port_bad18 message
+    { in octetstring
+    } with { extension "user provider_port_good in(integer -> octetstring : function(f_fast_good2))" };
+    type port user_port_bad19 message
+    { in octetstring
+    } with { extension "user provider_port_good in(integer -> octetstring : function(f_fast_good2),
+        charstring : function(f_fast_good)
+    )" };
+
+	/**
+    * Tests for component extension
+    **/
+	type component Attr_A { var integer i; var integer i2; var integer i3; private var integer v_private_int_A; }
+	type component A {var integer pub_A; private var integer priv_A;};
+	type component B extends A
+	{ var integer i2; 
+	  private var integer v_private_int_B;
+	}
+	type component C extends B {
+		var integer i; // definitions of A must be repeated
+		var octetstring o; // new definitions may be added
+		private var integer v_private_int_A; // inherited from A
+		private var integer v_private_int_in_C;
+	} with {
+		extension "extends Attr_A"
+	}
+
+	function f_use_inherited_member() runs on C {
+		i := 41;
+		i2 := 42;
+		v_private_int_in_C := 43;
+		v_private_int_A := 44;
+		v_private_int_B := 45;
+		pub_A := 46;
+		priv_A := 47;
+	} 
+    type port extendedPort message
+    {
+        inout integer
+    }
+    type port extendedPort2 message
+    {
+        inout integer
+    }
+    type component original
+    {
+        const integer c1 := 0;
+        const integer c2 := 0;
+        const integer c3 := 0;
+        var integer v1;
+        var integer v2;
+        var integer v3;
+        var integer v4 := 0;
+        var integer v5 := 0;
+        var template integer vt1;
+        var template integer vt2;
+        var template integer vt3;
+        var template integer vt4;
+        var template integer vt5 := 0;
+        var template integer vt6 := 0;
+        timer t1;
+        timer t2;
+        timer t3;
+        timer t4[2];
+        timer t5[2];
+        timer t6;
+        timer t7 := 0.0;
+        timer t8;
+        timer t9 := 0.0;
+        timer t10 := 0.0;
+        port extendedPort p1;
+        port extendedPort p2;
+        port extendedPort p3;
+        port extendedPort p4[2];
+        port extendedPort p5;
+        port extendedPort p6[2];
+    }
+    type component extended
+    {
+        var integer c1 := 1;
+        const integer c2 := 1;
+        const charstring c3 := "";
+        const integer v1 := 0;
+        var charstring v2 := "";
+        var integer v3 := 0;
+        var integer v4;
+        var integer v5 := 1;
+        var integer vt1;
+        var template charstring vt2;
+        var template integer vt3;
+        var template integer vt4 := 0;
+        var template integer vt5;
+        var template integer vt6 := 1;
+        const integer t1 := 0;
+        timer t2;
+        timer t3[2];
+        timer t4;
+        timer t5[2];
+        timer t6;
+        timer t7;
+        timer t8 := 0.0;
+        timer t9 := 0.0;
+        timer t10 := 1.0;
+        var integer p1;
+        port extendedPort2 p2;
+        port extendedPort p3;
+        port extendedPort p4;
+        port extendedPort p5[2];
+        port extendedPort p6[2];
+    } with {
+        extension "extends original"
+    }
+}
+
+// qualifier usage related tests
+type record qualifierHelper
+{
+  integer field1,
+  integer field2
+};
+
+
+type record qualifierRecord
+{
+	record of integer attr,
+	record of integer elem_list
+}
+with {
+encode "XML";
+variant "XSD:anyType";
+variant (attr) "anyAttributes";
+variant (attr[-]) "anyAttributes";
+variant (elem_list) "anyElement";
+variant (attr2, attr3) "anyAttributes";
+variant ([1]) "anyAttributes";
+variant ([-]) "anyAttributes";
+extension (attr) "prototype(convert)";
+extension ([-]) "prototype(convert)"
+};
+
+type record of qualifierHelper qualifierRecordOf
+with {
+encode "XML";
+variant "XSD:anyType";
+variant (attr) "anyAttributes";
+variant (elem_list) "anyElement";
+variant (attr2) "anyAttributes";
+variant ([1]) "anyAttributes";
+variant ([-]) "anyAttributes";
+variant ([-].field1) "anyAttributes";
+variant ([-].field2) "anyAttributes";
+extension (attr) "prototype(convert)";
+extension ([-]) "prototype(convert)"
+};
+
+type set of integer qualifierSetOf
+with {
+encode "XML";
+variant "XSD:anyType";
+variant (attr) "anyAttributes";
+variant (elem_list) "anyElement";
+variant (attr2) "anyAttributes";
+variant ([1]) "anyAttributes";
+variant ([-]) "anyAttributes";
+extension (attr) "prototype(convert)";
+extension ([-]) "prototype(convert)"
+};
+
+function f_qualiferFunction()
+{} with {
+variant "XSD:anyType";
+variant (attr) "anyAttributes";
+variant (elem_list) "anyElement";
+variant ([1]) "anyAttributes";
+variant ([-]) "anyAttributes";
+};
+
+function f_qualifierFunction2(in float f) return charstring
+{
+    return float2str(f);
+} with {
+extension (attr) "prototype(convert)";
+extension ([-]) "prototype(convert)"
+}
+
+type integer attributeQualifierTester1
+ with {
+ extension (a, [1], [0], [-],
+ a.a, a.boolean, a.bitstring, a.hexstring, a.octetstring, a.charstring, a.integer, a.float, a.verdicttype, a.anytype,
+ a[1].b, a[0].b, a[-].b,
+ group all, group all except {a, a.b},
+ type all, type all except {a, b},
+ template all, template all except {a, b},
+ const all, const all except {a, b},
+ testcase all, testcase all except {a, b},
+ function all, function all except {a, b},
+ altstep all, altstep all except {a, b},
+ signature all, signature all except {a, b},
+ modulepar all, modulepar all except {a, b}) "freetext"
+ display "freeDisplay"
+ optional "implicit omit"
+ optional "explicit omit"
+ }
+
+type record attributeQualifierTester2 {
+    integer field1,
+    integer field2
+}
+ with {
+ extension (a, [1], [0], [-],
+ a.a, a.boolean, a.bitstring, a.hexstring, a.octetstring, a.charstring, a.integer, a.float, a.verdicttype, a.anytype,
+ a[1].b, a[0].b, a[-].b,
+ group all, group all except {a, a.b},
+ type all, type all except {a, b},
+ template all, template all except {a, b},
+ const all, const all except {a, b},
+ testcase all, testcase all except {a, b},
+ function all, function all except {a, b},
+ altstep all, altstep all except {a, b},
+ signature all, signature all except {a, b},
+ modulepar all, modulepar all except {a, b}) "freetext"
+ display "freeDisplay"
+ optional "implicit omit"
+ optional "explicit omit"
+ }
+
+type record of integer attributeQualifierTester3
+ with {
+ extension (a, [1], [0], [-],
+ a.a, a.boolean, a.bitstring, a.hexstring, a.octetstring, a.charstring, a.integer, a.float, a.verdicttype, a.anytype,
+ a[1].b, a[0].b, a[-].b,
+ group all, group all except {a, a.b},
+ type all, type all except {a, b},
+ template all, template all except {a, b},
+ const all, const all except {a, b},
+ testcase all, testcase all except {a, b},
+ function all, function all except {a, b},
+ altstep all, altstep all except {a, b},
+ signature all, signature all except {a, b},
+ modulepar all, modulepar all except {a, b}) "freetext"
+ display "freeDisplay"
+ optional "implicit omit"
+ optional "explicit omit"
+ }
+
+} with { extension "version <RnXnn>"
+extension "version R8B"
+extension "version R8B1"
+extension "version <Rn>"
+extension "version K8B"
+extension "version R8"
+extension "version R8B1K"
+extension "version R2147483648B"
+extension "version R8B2147483648"
+extension "version CNL 113 300 R8B"
+extension "version CNL 113 300/1 R8B"
+extension "version CRL 113 300 R8B"
+extension "version CRL 113 300/1 R8B"
+extension "version CN 113 300 R8B"
+extension "version CNL 113 300 R8"
+extension "requires nonExi R8B1"
+extension "requires nonExi CNL 113 300 R8B"
+extension "requires nonExi CNL 113 300/1 R8B"
+extension "requires nonExi CRL 113 300 R8B"
+extension "requires nonExi CRL 113 300/1 R8B"
+extension "requires nonExi CN 113 300 R8B"
+extension "requires nonExi CNL 113 300 R8"
+extension "requiresTITAN R8B"
+extension "requiresTITAN R8B1"
+extension "requiresTITAN R80B1"
+extension "requiresTITAN K8B"
+extension "requiresTITAN R8"
+extension "requiresTITAN R8B1K"
+extension "requiresTITAN R2147483648B"
+extension "requiresTITAN R8B2147483648"
+extension "requiresTITAN CNL 113 300 R8B"
+extension "requiresTITAN CNL 113 300/1 R8B"
+extension "requiresTITAN CRL 113 300 R8B"
+extension "requiresTITAN CRL 113 300/1 R8B"
+extension "requiresTITAN CN 113 300 R8B"
+extension "requiresTITAN CNL 113 300 R8"
+extension (a, [1], [0], [-],
+ a.a, a.boolean, a.bitstring, a.hexstring, a.octetstring, a.charstring, a.integer, a.float, a.verdicttype, a.anytype,
+ a[1].b, a[0].b, a[-].b,
+ group all, group all except {a, a.b},
+ type all, type all except {a, b},
+ template all, template all except {a, b},
+ const all, const all except {a, b},
+ testcase all, testcase all except {a, b},
+ function all, function all except {a, b},
+ altstep all, altstep all except {a, b},
+ signature all, signature all except {a, b},
+ modulepar all, modulepar all except {a, b}) "freetext"
+ display "freeDisplay"
+ optional "implicit omit"
+ optional "explicit omit"
+}

@@ -1,0 +1,1113 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+//* @author RZ/ETHBAAT A
+//* ETH/RZ A
+//* @desc This module is T3doc_Test_Types_explicitDoc_negativeTest.ttcn A
+//* is part of TITAN regression test. State: passed A
+//* All tagged comments are invalid except @author and @desc
+//* @purpose This module is for negative testing explicit T3Doc tagging A
+//* @config  This tag is not supported A
+//* @desc <BR/>this is a delimiter between two not supported tag
+//* @exception This tag is not supported A
+//* @desc this is a delimiter between two not supported tag
+//* @member This tag is not supported A
+//* @desc this is a delimiter between two not supported tag
+//* @param This tag is not supported A
+//* @desc this is a delimiter between two not supported tag
+//* @priority This tag is not supported A
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported A
+//* @desc this is a delimiter between two not supported tag
+//* @dummy this is an unknown tag
+module t3doc_explicit_negative_test
+{
+
+//* @author Anreas L B
+//* @desc modulepar integer tsp_i B
+//* @config  This tag is not supported B
+//* @desc this is a delimiter between two not supported tag B
+//* @exception This tag is not supported B
+//* @desc this is a delimiter between two not supported tag B
+//* @param This tag "param" is not supported B
+//* @desc this is a delimiter between two not supported tag B
+//* @priority This tag is not supported B
+//* @desc this is a delimiter between two not supported tag B
+//* @purpose This tag is not supported B
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported B
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported B
+//* @desc this is a delimiter between two not supported tag B
+//* @verdict This tag is not supported B
+//* @desc this is a delimiter between two not supported tag B
+modulepar integer tsp_i;
+
+//* @author Anreas L C
+//* @desc this is a modulepar block test C
+//* @config  This tag is not supported C
+//* @desc this is a delimiter between two not supported tag C
+//* @exception This tag is not supported C
+//* @desc this is a delimiter between two not supported tag C
+//* @param This tag "param" is not supported C
+//* @desc this is a delimiter between two not supported tag C
+//* @priority This tag is not supported C
+//* @desc this is a delimiter between two not supported tag C
+//* @purpose This tag is not supported C
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported C
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported C
+//* @desc this is a delimiter between two not supported tag C
+//* @verdict This tag is not supported C
+//* @desc this is a delimiter between two not supported tag C
+modulepar {
+  integer tsp_i2 := 1; 
+  //* @desc this is unvisible
+  charstring tsp_ch:="hyppo";
+}
+
+//* @author ETHBAAT D
+//* @desc This is the T3Doc test for groups D <BR/>
+//* @config  This tag is not supported D
+//* @desc this is a delimiter between two not supported tag D
+//* @exception This tag is not supported D
+//* @desc this is a delimiter between two not supported tag D 
+//* @member This tag is not supported D
+//* @desc this is a delimiter between two not supported tag D
+//* @param This tag "param" is not supported D
+//* @desc this is a delimiter between two not supported tag D
+//* @priority This tag is not supported D
+//* @desc this is a delimiter between two not supported tag D
+//* @purpose This tag is not supported D
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported D
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported D
+//* @desc this is a delimiter between two not supported tag D
+//* @verdict This tag is not supported D
+//* @desc this is a delimiter between two not supported tag D
+group G {
+  const integer cg_ig1:=1;
+  const integer cg_ig2:=2;
+}
+
+//* @author cg_i_Author E
+//* and nobody else 
+//* @desc cg_i global const integer E <BR/>
+//* @config  This tag is not supported E
+//* @desc this is a delimiter between two not supported tag E
+//* @exception This tag is not supported E
+//* @desc this is a delimiter between two not supported tag E
+//* @member This tag "member" is not supported E
+//* @desc this is a delimiter between two not supported tag E
+//* @param This tag "param" is not supported E
+//* @desc this is a delimiter between two not supported tag E
+//* @priority This tag is not supported E
+//* @desc this is a delimiter between two not supported tag E
+//* @purpose This tag is not supported E
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported E
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported E
+//* @desc this is a delimiter between two not supported tag E
+//* @verdict This tag is not supported E
+//* @desc this is a delimiter between two not supported tag E
+const integer cg_i:=1;
+
+//* @author CGI_Author F
+//* and nobody else 
+//* @desc cg_f global const charstring F
+//* @config  This tag is not supported F
+//* @desc this is a delimiter between two not supported tag F
+//* @exception This tag is not supported F
+//* @desc this is a delimiter between two not supported tag F
+//* @param This tag "param" is not supported F
+//* @desc this is a delimiter between two not supported tag F
+//* @priority This tag is not supported F
+//* @desc this is a delimiter between two not supported tag F
+//* @purpose This tag is not supported F
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported F
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported F
+//* @desc this is a delimiter between two not supported tag F
+//* @verdict This tag is not supported F
+//* @desc this is a delimiter between two not supported tag F
+const float cg_f:=1.0;
+
+
+//* @author cg_f_Author G
+//* and nobody else G
+//* @desc cg_v global const verdicttype G
+//* @config  This tag is not supported G
+//* @desc this is a delimiter between two not supported tag G
+//* @exception This tag is not supported G
+//* @desc this is a delimiter between two not supported tag G
+//* @member This tag "member" is not supported G
+//* @desc this is a delimiter between two not supported tag G
+//* @param This tag "param" is not supported G
+//* @desc this is a delimiter between two not supported tag G
+//* @priority This tag is not supported G
+//* @desc this is a delimiter between two not supported tag G
+//* @purpose This tag is not supported G
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported G
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported G
+//* @desc this is a delimiter between two not supported tag G
+//* @verdict This tag is not supported G
+//* @desc this is a delimiter between two not supported tag G
+const verdicttype cg_v:=fail;
+
+//* @author bitstring_Author H
+//* and nobody else H
+//* @desc cg_bs global const bitstring H <BR/>
+//* @config  This tag is not supported H
+//* @desc this is a delimiter between two not supported tag H
+//* @exception This tag is not supported H
+//* @desc this is a delimiter between two not supported tag H
+//* @member This tag "member" is not supported H
+//* @desc this is a delimiter between two not supported tag H
+//* @param This tag "param" is not supported H
+//* @desc this is a delimiter between two not supported tag H
+//* @priority This tag is not supported H
+//* @desc this is a delimiter between two not supported tag H
+//* @purpose This tag is not supported H
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported H
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported H
+//* @desc this is a delimiter between two not supported tag H
+//* @verdict This tag is not supported H
+//* @desc this is a delimiter between two not supported tag H
+const bitstring cg_bs:='101'B;
+
+//* @author hexstring_Author I
+//* and nobody else I
+//* @desc cg_hs global const hextring I
+//* @config  This tag is not supported I
+//* @desc this is a delimiter between two not supported tag I
+//* @exception This tag is not supported I
+//* @desc this is a delimiter between two not supported tag I
+//* @member This tag "member" is not supported I
+//* @desc this is a delimiter between two not supported tag I
+//* @param This tag "param" is not supported I
+//* @desc this is a delimiter between two not supported tag I
+//* @priority This tag is not supported I
+//* @desc this is a delimiter between two not supported tag I
+//* @purpose This tag is not supported I
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported I
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported I
+//* @desc this is a delimiter between two not supported tag I
+//* @verdict This tag is not supported I
+//* @desc this is a delimiter between two not supported tag I
+const hexstring cg_hs:='AFC'H;
+
+//* @author octetstring_Author J
+//* and nobody else J
+//* @desc cg_os global const hextring J
+//* @config  This tag is not supported J
+//* @desc this is a delimiter between two not supported tag J
+//* @exception This tag is not supported J
+//* @desc this is a delimiter between two not supported tag J
+//* @param This tag "param" is not supported J
+//* @member This tag "member" is not supported J
+//* @desc this is a delimiter between two not supported tag J
+//* @desc this is a delimiter between two not supported tag J
+//* @priority This tag is not supported J
+//* @desc this is a delimiter between two not supported tag J
+//* @purpose This tag is not supported J
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported J
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported J
+//* @desc this is a delimiter between two not supported tag J
+//* @verdict This tag is not supported J
+//* @desc this is a delimiter between two not supported tag J
+
+const octetstring cg_os:='AFC1'O;
+
+//* @author charstring_Author K
+//* and nobody else K
+//* @desc cg_cs global const charstring K
+//* @config  This tag is not supported K
+//* @desc this is a delimiter between two not supported tag K
+//* @exception This tag is not supported K
+//* @desc this is a delimiter between two not supported tag K
+//* @member This tag "member" is not supported K
+//* @desc this is a delimiter between two not supported tag K
+//* @param This tag "param" is not supported K
+//* @desc this is a delimiter between two not supported tag K
+//* @priority This tag is not supported K
+//* @desc this is a delimiter between two not supported tag K
+//* @purpose This tag is not supported K
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported K
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported K
+//* @desc this is a delimiter between two not supported tag K
+//* @verdict This tag is not supported K
+//* @desc this is a delimiter between two not supported tag K
+
+const charstring cg_cs:="Snowhite and the Smurfs"
+
+//* @author u_charstring_Author L
+//* and nobody else L
+//* @config  This tag is not supported L
+//* @desc this is a delimiter between two not supported tag L
+//* @exception This tag is not supported L
+//* @desc this is a delimiter between two not supported tag L
+//* @member This tag "member" is not supported L
+//* @desc this is a delimiter between two not supported tag L
+//* @param This tag "param" is not supported L
+//* @desc this is a delimiter between two not supported tag L
+//* @priority This tag is not supported L
+//* @desc this is a delimiter between two not supported tag L
+//* @purpose This tag is not supported L
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported L
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported L
+//* @desc this is a delimiter between two not supported tag L
+//* @verdict This tag is not supported L
+//* @desc this is a delimiter between two not supported tag L
+
+const universal charstring cg_ucs := int2unichar (367)
+
+//* @author IntegerList_Author M
+//* and nobody else M
+//* @desc cg_i global const integer M
+//* @config  This tag is not supported M
+//* @desc this is a delimiter between two not supported tag M
+//* @exception This tag is not supported M
+//* @desc this is a delimiter between two not supported tag M
+//* @param This tag "param" is not supported M
+//* @desc this is a delimiter between two not supported tag M
+//* @priority This tag is not supported M
+//* @desc this is a delimiter between two not supported tag M
+//* @purpose This tag is not supported M
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported M
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported M
+//* @desc this is a delimiter between two not supported tag M
+//* @verdict This tag is not supported M
+//* @desc this is a delimiter between two not supported tag M
+
+const IntegerList cg_il:={1,2,3};
+
+//* @author MyRec_Author N
+//* and nobody else N
+//* @desc cg_myRec global const MyRec N
+//* @config  This tag is not supported N
+//* @desc this is a delimiter between two not supported tag N
+//* @exception This tag is not supported N
+//* @desc this is a delimiter between two not supported tag N
+//* @param This tag "param" is not supported N
+//* @desc this is a delimiter between two not supported tag N
+//* @priority This tag is not supported N
+//* @desc this is a delimiter between two not supported tag N
+//* @purpose This tag is not supported N
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N
+//* @desc this is a delimiter between two not supported tag N
+//* @verdict This tag is not supported N
+//* @desc this is a delimiter between two not supported tag N
+const MyRec cg_myRec:={1,true}
+
+//* @author cg_myFL_Author N1
+//* and nobody else N1
+//* @desc cg_i global const integer N1
+//* @config  This tag is not supported N1
+//* @desc this is a delimiter between two not supported tag N1
+//* @exception This tag is not supported N1
+//* @desc this is a delimiter between two not supported tag N1
+//* @param This tag "param" is not supported N1
+//* @desc this is a delimiter between two not supported tag N1
+//* @priority This tag is not supported N1
+//* @desc this is a delimiter between two not supported tag N1
+//* @purpose This tag is not supported N1
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N1
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N1
+//* @desc this is a delimiter between two not supported tag N1
+//* @verdict This tag is not supported N1
+//* @desc this is a delimiter between two not supported tag N1
+const FloatList cg_myFL:={1.0,2.2}
+
+//* @author cg_myVL_Author N2
+//* and nobody else N2
+//* @config  This tag is not supported N2
+//* @desc this is a delimiter between two not supported tag N2
+//* @exception This tag is not supported N2
+//* @desc this is a delimiter between two not supported tag N2
+//* @param This tag "param" is not supported N2
+//* @desc this is a delimiter between two not supported tag N2
+//* @priority This tag is not supported N2
+//* @desc this is a delimiter between two not supported tag N2
+//* @purpose This tag is not supported N2
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N2
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N2
+//* @desc this is a delimiter between two not supported tag N2
+//* @verdict This tag is not supported N2
+//* @desc this is a delimiter between two not supported tag N2
+const VerdictList cg_myVL:={pass,pass}
+
+//* @author cg_myBS_Author N3
+//* and nobody else N3
+//* @desc global const BSList cg_myBSL N3
+//* @config  This tag is not supported N3
+//* @desc this is a delimiter between two not supported tag N3
+//* @exception This tag is not supported N3
+//* @desc this is a delimiter between two not supported tag N3
+//* @param This tag "param" is not supported N3
+//* @desc this is a delimiter between two not supported tag N3
+//* @priority This tag is not supported N3
+//* @desc this is a delimiter between two not supported tag N3
+//* @purpose This tag is not supported N3
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N3
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N3
+//* @desc this is a delimiter between two not supported tag N3
+//* @verdict This tag is not supported N3
+//* @desc this is a delimiter between two not supported tag N3
+const BSList cg_myBSL:={'0000'B,'0001'B,'0010'B,'0011'B,'0100'B}
+
+//* @author cg_myHS_Author N4
+//* and nobody else N4
+//* @desc global const HSList cg_myHSL N4
+//* @config  This tag is not supported N4
+//* @desc this is a delimiter between two not supported tag N4
+//* @exception This tag is not supported N4
+//* @desc this is a delimiter between two not supported tag N4
+//* @param This tag "param" is not supported N4
+//* @desc this is a delimiter between two not supported tag N4
+//* @priority This tag is not supported N4
+//* @desc this is a delimiter between two not supported tag N4
+//* @purpose This tag is not supported N4
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N4
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N4
+//* @desc this is a delimiter between two not supported tag N4
+//* @verdict This tag is not supported N4
+//* @desc this is a delimiter between two not supported tag N4 
+const HSList cg_myHSL:={'AFC'H, 'DC6'H};
+
+//* @author cg_myOS_Author N5
+//* and nobody else N5
+//* @desc cg_i global const integer N5
+//* @config  This tag is not supported N5
+//* @desc this is a delimiter between two not supported tag N5
+//* @exception This tag is not supported N5
+//* @desc this is a delimiter between two not supported tag N5
+//* @param This tag "param" is not supported N5
+//* @desc this is a delimiter between two not supported tag N5
+//* @priority This tag is not supported N5
+//* @desc this is a delimiter between two not supported tag N5
+//* @purpose This tag is not supported N5
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N5
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N5
+//* @desc this is a delimiter between two not supported tag N5
+//* @verdict This tag is not supported N5
+//* @desc this is a delimiter between two not supported tag N5 
+const OSList cg_myOSL:={'AFCD'O, 'DC66'O}
+
+//* @author cg_myCS_Author N6
+//* and nobody else N6
+//* @desc cg_i global const integer N6
+//* @config  This tag is not supported N6
+//* @desc this is a delimiter between two not supported tag N6
+//* @exception This tag is not supported N6
+//* @desc this is a delimiter between two not supported tag N6
+//* @param This tag "param" is not supported N6
+//* @desc this is a delimiter between two not supported tag N6
+//* @priority This tag is not supported N6
+//* @desc this is a delimiter between two not supported tag N6
+//* @purpose This tag is not supported N6
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N6
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N6
+//* @desc this is a delimiter between two not supported tag N6
+//* @verdict This tag is not supported N6
+//* @desc this is a delimiter between two not supported tag N6 
+const CSList cg_myCSL:={"Hello ", "World!"}
+
+//* @author cg_myUCS_Author N7
+//* and nobody else N7
+//* @config  This tag is not supported N7
+//* @desc this is a delimiter between two not supported tag N7
+//* @exception This tag is not supported N7
+//* @desc this is a delimiter between two not supported tag N7
+//* @param This tag "param" is not supported N7
+//* @desc this is a delimiter between two not supported tag N7
+//* @priority This tag is not supported N7
+//* @desc this is a delimiter between two not supported tag N7
+//* @purpose This tag is not supported N7
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported N7
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported N7
+//* @desc this is a delimiter between two not supported tag N7
+//* @verdict This tag is not supported N7
+//* @desc this is a delimiter between two not supported tag N7 
+const UCSList cg_myUCSL:={int2unichar (367), int2unichar (368), int2unichar (369)}
+
+//===== Types =====
+
+//==== Structured data types =====
+ 
+// T3Doc block d2)
+
+//* @author IntegerList_Author O
+//* and nobodyElse O
+//* on the Earth O
+//* @desc IntegerList O
+//* @config  This tag is not supported O
+//* @desc this is a delimiter between two not supported tag O
+//* @exception This tag is not supported O
+//* @desc this is a delimiter between two not supported tag O
+//* @member This tag "member is not supported or it is ambiguous O
+//* @desc this is a delimiter between two not supported tag O
+//* @param This tag "param" is not supported O
+//* @desc this is a delimiter between two not supported tag O
+//* @priority This tag is not supported O
+//* @desc this is a delimiter between two not supported tag O
+//* @purpose This tag is not supported O
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O
+//* @desc this is a delimiter between two not supported tag O
+//* @verdict This tag is not supported O
+//* @desc this is a delimiter between two not supported tag O 
+type record of integer IntegerList;
+
+
+//* @author FloatList_Author O1
+//* and nobodyElse O1
+//* on the Earth O1
+//* @desc FloatList O1
+//* only
+//* @config  This tag is not supported O1
+//* @desc this is a delimiter between two not supported tag O1
+//* @exception This tag is not supported O1
+//* @desc this is a delimiter between two not supported tag O1
+//* @member This tag "member is not supported or it is ambiguous O1
+//* @desc this is a delimiter between two not supported tag O1
+//* @param This tag "param" is not supported O1
+//* @desc this is a delimiter between two not supported tag O1
+//* @priority This tag is not supported O1
+//* @desc this is a delimiter between two not supported tag O1
+//* @purpose This tag is not supported O1
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O1
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O1
+//* @desc this is a delimiter between two not supported tag O1
+//* @verdict This tag is not supported O1
+//* @desc this is a delimiter between two not supported tag O1 
+type record of float FloatList;
+
+//* @author VerdictList_Author O2
+//* and nobodyElse O2
+//* on the Earth O2
+//* @desc VerdictList O2
+//* only O2
+//* @config  This tag is not supported O2
+//* @desc this is a delimiter between two not supported tag O2
+//* @exception This tag is not supported O2
+//* @desc this is a delimiter between two not supported tag O2
+//* @member This tag "member is not supported or it is ambiguous O2
+//* @desc this is a delimiter between two not supported tag O2
+//* @param This tag "param" is not supported O2
+//* @desc this is a delimiter between two not supported tag O2
+//* @priority This tag is not supported O2
+//* @desc this is a delimiter between two not supported tag O2
+//* @purpose This tag is not supported O2
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O2
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O2
+//* @desc this is a delimiter between two not supported tag O2
+//* @verdict This tag is not supported O2
+//* @desc this is a delimiter between two not supported tag O2 
+type record of verdicttype VerdictList;
+
+
+//* @author BSList_Author O2A
+//* @desc BSList O2A
+//* only O2A
+//* @config  This tag is not supported O2A
+//* @desc this is a delimiter between two not supported tag O2A
+//* @exception This tag is not supported O2A
+//* @desc this is a delimiter between two not supported tag O2A
+//* @member This tag "member is not supported or it is ambiguous O2A
+//* @desc this is a delimiter between two not supported tag O2A
+//* @param This tag "param" is not supported O2A
+//* @desc this is a delimiter between two not supported tag O2A
+//* @priority This tag is not supported O2A
+//* @desc this is a delimiter between two not supported tag O2A
+//* @purpose This tag is not supported O2A
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O2A
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O2A
+//* @desc this is a delimiter between two not supported tag O2A
+//* @verdict This tag is not supported O2A
+//* @desc this is a delimiter between two not supported tag O2A 
+type record of bitstring BSList;
+
+
+//* @author HSList_Author O3
+//* @desc HSList O3
+//* only O3
+//* @config  This tag is not supported O3
+//* @desc this is a delimiter between two not supported tag O3
+//* @exception This tag is not supported O3
+//* @desc this is a delimiter between two not supported tag O3
+//* @member This tag "member is not supported or it is ambiguous O3
+//* @desc this is a delimiter between two not supported tag O3
+//* @param This tag "param" is not supported O3
+//* @desc this is a delimiter between two not supported tag O3
+//* @priority This tag is not supported O3
+//* @desc this is a delimiter between two not supported tag O3
+//* @purpose This tag is not supported O3
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O3
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O3
+//* @desc this is a delimiter between two not supported tag O3
+//* @verdict This tag is not supported O3
+//* @desc this is a delimiter between two not supported tag O3 
+type record of hexstring HSList;
+ 
+//* @author CSList_Author O3A
+//* and nobodyElse O3A
+//* on the Earth O3A
+//* @desc CSList O3A
+//* only O3A
+//* @config  This tag is not supported O3A
+//* @desc this is a delimiter between two not supported tag O3A
+//* @exception This tag is not supported O3A
+//* @desc this is a delimiter between two not supported tag O3A
+//* @member This tag "member is not supported or it is ambiguous O3A
+//* @desc this is a delimiter between two not supported tag O3A
+//* @param This tag "param" is not supported O3A
+//* @desc this is a delimiter between two not supported tag O3A
+//* @priority This tag is not supported O3A
+//* @desc this is a delimiter between two not supported tag O3A
+//* @purpose This tag is not supported O3A
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O3A
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O3A
+//* @desc this is a delimiter between two not supported tag O3A
+//* @verdict This tag is not supported O3A
+//* @desc this is a delimiter between two not supported tag O3A 
+type record of charstring CSList;
+
+//* @author UCSList_Author O3B
+//* and nobodyElse O3B
+//* on the Earth O3B
+//* @desc UCSList O3B
+//* only O3B
+//* @config  This tag is not supported O3B
+//* @desc this is a delimiter between two not supported tag O3B
+//* @exception This tag is not supported O3B
+//* @desc this is a delimiter between two not supported tag O3B
+//* @member This tag "member is not supported or it is ambiguous O3B
+//* @desc this is a delimiter between two not supported tag O3B
+//* @param This tag "param" is not supported O3B
+//* @desc this is a delimiter between two not supported tag O3B
+//* @priority This tag is not supported O3B
+//* @desc this is a delimiter between two not supported tag O3B
+//* @purpose This tag is not supported O3B
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O3B
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O3B
+//* @desc this is a delimiter between two not supported tag O3B
+//* @verdict This tag is not supported O3B
+//* @desc this is a delimiter between two not supported tag O3B 
+type record of universal charstring UCSList;
+
+//* @author OSList_Author O3C
+//* and nobodyElse O3C
+//* on the Earth O3C
+//* @desc OSList O3C
+//* only O3C
+//* @config  This tag is not supported O3C
+//* @desc this is a delimiter between two not supported tag O3C
+//* @exception This tag is not supported O3C
+//* @desc this is a delimiter between two not supported tag O3C
+//* @member This tag "member is not supported or it is ambiguous O3C
+//* @desc this is a delimiter between two not supported tag O3C
+//* @param This tag "param" is not supported O3C
+//* @desc this is a delimiter between two not supported tag O3C
+//* @priority This tag is not supported O3C
+//* @desc this is a delimiter between two not supported tag O3C
+//* @purpose This tag is not supported O3C
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O3C
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O3C
+//* @desc this is a delimiter between two not supported tag O3C
+//* @verdict This tag is not supported O3C
+//* @desc this is a delimiter between two not supported tag O3C 
+type record of octetstring OSList;
+
+
+//* @author BoolList_Author O3D
+//* and nobodyElse O3D
+//* on the Earth O3D
+//* @desc BoolList O3D
+//* only O3D
+//* @config  This tag is not supported O3D
+//* @desc this is a delimiter between two not supported tag O3D
+//* @exception This tag is not supported O3D
+//* @desc this is a delimiter between two not supported tag O3D
+//* @member This tag "member is not supported or it is ambiguous O3D
+//* @desc this is a delimiter between two not supported tag O3D
+//* @param This tag "param" is not supported O3D
+//* @desc this is a delimiter between two not supported tag O3D
+//* @priority This tag is not supported O3D
+//* @desc this is a delimiter between two not supported tag O3D
+//* @purpose This tag is not supported O3D
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O3D
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O3D
+//* @desc this is a delimiter between two not supported tag O3D
+//* @verdict This tag is not supported O3D
+//* @desc this is a delimiter between two not supported tag O3D 
+type record of boolean BoolList;
+
+//* @author MyEnum_Author O3E
+//* and nobodyElse O3E
+//* on the Earth O3E
+//* @desc MyEnum O3E
+//* only O3E
+//* @config  This tag is not supported O3E
+//* @desc this is a delimiter between two not supported tag O3E
+//* @exception This tag is not supported O3E
+//* @desc this is a delimiter between two not supported tag O3E
+//* @member This tag "member is not supported or it is ambiguous O3E
+//* @desc this is a delimiter between two not supported tag O3E
+//* @param This tag "param" is not supported O3E
+//* @desc this is a delimiter between two not supported tag O3E
+//* @priority This tag is not supported O3E
+//* @desc this is a delimiter between two not supported tag O3E
+//* @purpose This tag is not supported O3E
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O3E
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O3E
+//* @desc this is a delimiter between two not supported tag O3E
+//* @verdict This tag is not supported O3E
+//* @desc this is a delimiter between two not supported tag O3E 
+type enumerated MyEnum2 {first, second, third, fourth};
+
+//* @author EnumList_Author O3F
+//* and nobodyElse O3F
+//* on the Earth O3F
+//* @desc EnumList O3F
+//* only O3F
+//* @config  This tag is not supported O3F
+//* @desc this is a delimiter between two not supported tag O3F
+//* @exception This tag is not supported O3F
+//* @desc this is a delimiter between two not supported tag O3F
+//* @member This tag "member is not supported or it is ambiguous O3F
+//* @desc this is a delimiter between two not supported tag O3F
+//* @param This tag "param" is not supported O3F
+//* @desc this is a delimiter between two not supported tag O3F
+//* @priority This tag is not supported O3F
+//* @desc this is a delimiter between two not supported tag O3F
+//* @purpose This tag is not supported O3F
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported O3F
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported O3F
+//* @desc this is a delimiter between two not supported tag O3F
+//* @verdict This tag is not supported O3F
+//* @desc this is a delimiter between two not supported tag O3F 
+type record of MyEnum2 EnumList;
+
+// T3Doc block d3
+
+//* @author MyRec_Author
+//* @desc This record used to test record tooltip P
+//* @config  This tag is not supported P
+//* @desc this is a delimiter between two not supported tag P
+//* @exception This tag is not supported P
+//* @desc this is a delimiter between two not supported tag P
+//* @param This tag "param" is not supported P
+//* @desc this is a delimiter between two not supported tag P
+//* @priority This tag is not supported P
+//* @desc this is a delimiter between two not supported tag P
+//* @purpose This tag is not supported P
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported P
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported P
+//* @desc this is a delimiter between two not supported tag P
+//* @verdict This tag is not supported P
+//* @desc this is a delimiter between two not supported tag P 
+type record MyRec {
+  integer i,
+  boolean b
+};
+  
+
+//* @author MyUnion_Author is the
+//* authhhhor Q
+//* @desc This record used to test record tooltip Q
+//* @config  This tag is not supported Q
+//* @desc this is a delimiter between two not supported tag Q
+//* @exception This tag is not supported Q
+//* @desc this is a delimiter between two not supported tag Q
+//* @param This tag "param" is not supported Q
+//* @desc this is a delimiter between two not supported tag Q
+//* @priority This tag is not supported Q
+//* @desc this is a delimiter between two not supported tag Q
+//* @purpose This tag is not supported Q
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported Q
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported Q
+//* @desc this is a delimiter between two not supported tag Q
+//* @verdict This tag is not supported Q
+//* @desc this is a delimiter between two not supported tag Q 
+type union MyUnion {
+  integer i,
+  boolean b,
+  float f
+}
+
+
+//* @author MySet_Author is the
+//* authhhhor R
+//* @desc This record used to test record tooltip R
+//* @config  This tag is not supported R
+//* @desc this is a delimiter between two not supported tag R
+//* @exception This tag is not supported R
+//* @desc this is a delimiter between two not supported tag R
+//* @param This tag "param" is not supported R
+//* @desc this is a delimiter between two not supported tag R
+//* @priority This tag is not supported R
+//* @desc this is a delimiter between two not supported tag R
+//* @purpose This tag is not supported R
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported R
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported R
+//* @desc this is a delimiter between two not supported tag R
+//* @verdict This tag is not supported R
+//* @desc this is a delimiter between two not supported tag R 
+type set MySet {
+  integer i,
+  boolean b,
+  float f
+}
+
+//* @desc MyEnum
+//* @desc This record used to test record tooltip R1
+//* @config  This tag is not supported R1
+//* @desc this is a delimiter between two not supported tag R1
+//* @exception This tag is not supported R1
+//* @desc this is a delimiter between two not supported tag R1
+//* @param This tag "param" is not supported R1
+//* @desc this is a delimiter between two not supported tag R1
+//* @priority This tag is not supported R1
+//* @desc this is a delimiter between two not supported tag R1
+//* @purpose This tag is not supported R1
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported R1
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported R1
+//* @desc this is a delimiter between two not supported tag R1
+//* @verdict This tag is not supported R1
+//* @desc this is a delimiter between two not supported tag R1 
+type enumerated MyEnum1 { e1,e2 }
+
+
+//===== Templates ======
+
+//* @desc This template "t_myrec" used to test template documentation
+//* @author t_myrec_Author is the
+//* authhhhor S
+//* @desc This record used to test record tooltip S
+//* @config  This tag is not supported S
+//* @desc this is a delimiter between two not supported tag S
+//* @exception This tag is not supported S
+//* @desc this is a delimiter between two not supported tag S
+//
+//* @desc this is a delimiter between two not supported tag S
+//* @priority This tag is not supported S
+//* @desc this is a delimiter between two not supported tag S
+//* @purpose This tag is not supported S
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported S
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported S
+//* @desc this is a delimiter between two not supported tag S
+//* @verdict This tag is not supported S
+//* @desc this is a delimiter between two not supported tag S 
+template MyRec t_myrec :=  {
+  1,
+  true
+}
+
+//* @desc This template "t_myrec1" used to test template documentation T
+//* @author t_myrec_Author is the
+//* authhhhor T
+//* @config  This tag is not supported T
+//* @desc this is a delimiter between two not supported tag T
+//* @exception This tag is not supported T
+//* @desc this is a delimiter between two not supported tag T
+//
+//* @desc this is a delimiter between two not supported tag T
+//* @priority This tag is not supported T
+//* @desc this is a delimiter between two not supported tag T
+//* @purpose This tag is not supported T
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported T
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported T
+//* @desc this is a delimiter between two not supported tag T
+//* @verdict This tag is not supported T
+//* @desc this is a delimiter between two not supported tag T
+template MyRec t_myrec1(integer pl_i, boolean pl_b):={
+  i:= pl_i,
+  b:=pl_b
+}
+
+//* @desc MyPort_PT
+//* <P>This is a paragraph<BR/>in the description</P><BR/>
+//* @config  This tag is not supported T1
+//* @desc this is a delimiter between two not supported tag T1
+//* @exception This tag is not supported T1
+//* @desc this is a delimiter between two not supported tag T1
+//* @param This tag "param" is not supported T1
+//* @desc this is a delimiter between two not supported tag T1
+//* @priority This tag is not supported T1
+//* @desc this is a delimiter between two not supported tag T1
+//* @purpose This tag is not supported T1
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported T1
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported T1
+//* @desc this is a delimiter between two not supported tag T1
+//* @verdict This tag is not supported T1
+//* @desc this is a delimiter between two not supported tag T1
+type port MyPort_PT message {
+  inout MyRec;
+} with { extension "internal" }
+
+
+//* @author My_CT_Author is the
+//* @desc My_CT U
+//* <P>This is a paragraph<BR/>in the description</P><BR/>  U
+//* @config  This tag is not supported U
+//* @desc this is a delimiter between two not supported tag U
+//* @exception This tag is not supported U
+//* @desc this is a delimiter between two not supported tag U
+//* @param This tag "param" is not supported U
+//* @desc this is a delimiter between two not supported tag U
+//* @priority This tag is not supported U
+//* @desc this is a delimiter between two not supported tag U
+//* @purpose This tag is not supported U
+//* @desc this is a delimiter between two not supported tag U
+//* @requirement This tag is not supported U
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported U
+//* @desc this is a delimiter between two not supported tag U
+//* @verdict This tag is not supported U
+//* @desc this is a delimiter between two not supported tag U
+type component My_CT {
+  //* @author myPort_author U1
+  //* @desc This is the first component local definition U1
+//* @config  This tag is not supported U1
+//* @desc this is a delimiter between two not supported tag U1
+//* @exception This tag is not supported U1
+//* @desc this is a delimiter between two not supported tag U1
+//* @param This tag "param" is not supported U1
+//* @desc this is a delimiter between two not supported tag U1
+//* @priority This tag is not supported U1
+//* @desc this is a delimiter between two not supported tag U1
+//* @purpose This tag is not supported U1
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported U1
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported U1
+//* @desc this is a delimiter between two not supported tag U1
+//* @verdict This tag is not supported U1
+//* @desc this is a delimiter between two not supported tag U1
+  port MyPort_PT myPort_PT;
+  //* @author myComponentvar_author U2
+  //* @desc This is the second component local definition U2
+ //* @config  This tag is not supported U2
+//* @desc this is a delimiter between two not supported tag U2
+//* @exception This tag is not supported U2
+//* @desc this is a delimiter between two not supported tag U2
+//* @param This tag "param" is not supported U2
+//* @desc this is a delimiter between two not supported tag U2
+//* @priority This tag is not supported U2
+//* @desc this is a delimiter between two not supported tag U2
+//* @purpose This tag is not supported U2
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported U2
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported U2
+//* @desc this is a delimiter between two not supported tag U2
+//* @verdict This tag is not supported U2
+//* @desc this is a delimiter between two not supported tag U2
+  var integer v_myComponentVar;
+  //* @desc This is a default variable
+  //* @config  This tag is not supported U3
+//* @desc this is a delimiter between two not supported tag U3
+//* @exception This tag is not supported U3
+//* @desc this is a delimiter between two not supported tag U3
+//* @param This tag "param" is not supported U3
+//* @desc this is a delimiter between two not supported tag U3
+//* @priority This tag is not supported U3
+//* @desc this is a delimiter between two not supported tag U3
+//* @purpose This tag is not supported U3
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported U3
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported U3
+//* @desc this is a delimiter between two not supported tag U3
+//* @verdict This tag is not supported U3
+//* @desc this is a delimiter between two not supported tag U3
+  var default v_myDefault1:=null;
+  timer T_T;
+}
+
+// T3Doc i1
+
+//* @author mySignature_Author Z
+//* @desc mySignature is a blocking signature Z
+//* @config  This tag is not supported Z
+//* @desc this is a delimiter between two not supported tag Z
+//* @member This tag is not supported Z
+//* @desc this is a delimiter between two not supported tag Z
+//* @priority This tag is not supported Z
+//* @desc this is a delimiter between two not supported tag Z
+//* @purpose This tag is not supported Z
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported Z
+//* @desc this is a delimiter between two not supported tag
+//* @verdict This tag is not supported Z
+//* @desc this is a delimiter between two not supported tag Z
+signature mySignature(in integer pl_i, in float pl_f) 
+return integer
+exception(
+  integer,
+  boolean);
+
+//* T3Doc i2
+//* @author Function_author AA
+//* @desc This is the description of the function
+//* @config  This tag is not supported AA
+//* @desc this is a delimiter between two not supported tag AA
+//* @exception This tag is not supported AA
+//* @desc this is a delimiter between two not supported tag AA
+//* @member This tag is not supported AA
+//* @desc this is a delimiter between two not supported tag AA
+//* @priority This tag is not supported AA
+//* @desc this is a delimiter between two not supported tag AA
+//* @purpose This tag is not supported AA
+//* @desc this is a delimiter between two not supported tag AA
+function f_myfuncF(
+  in charstring pl_firstArg1,
+  out boolean pl_success1
+) runs on My_CT return integer
+{ 
+  //* @desc This is a default variable
+  var default vl_myDefault2:=null;
+  log(vl_myDefault2);
+  pl_success1:=true;
+  log("First arg: ", pl_firstArg1," second arg: ", pl_success1)
+  T_T.start(3.0);
+  as_myAltstep("trial",true);
+  return 1
+}
+
+//* @author Altstep_author AA1
+//* @desc This is the description of the altstep
+//* @config  This tag is not supported AA1
+//* @desc this is a delimiter between two not supported tag AA1
+//* @exception This tag is not supported AA1
+//* @desc this is a delimiter between two not supported tag AA1
+//* @member This tag is not supported AA1
+//* @desc this is a delimiter between two not supported tag AA1
+//* @priority This tag is not supported AA1
+//* @desc this is a delimiter between two not supported tag AA1
+//* @purpose This tag is not supported AA1
+//* @desc this is a delimiter between two not supported tag AA1
+//* @return This tag is not supported AA1
+//* @desc this is a delimiter between two not supported tag AA1
+altstep as_myAltstep(  
+  in charstring pl_firstArg2,
+  in boolean pl_success2
+  )runs on My_CT {
+  [] myPort_PT.receive {log("Hi, these are the args:",pl_firstArg2,pl_success2); repeat;}
+  [] T_T.timeout {}  
+}
+
+//* @author tc_author AB
+//* @desc This is the description of the testcase AB
+//* @exception This tag is not supported AB
+//* @desc this is a delimiter between two not supported tag AB
+//* @member This tag is not supported AB
+//* @desc this is a delimiter between two not supported tag AB
+//* @return This tag is not supported AB
+//* @desc this is a delimiter between two not supported tag AB
+testcase tc_explicit1(charstring pl_what) runs on My_CT {
+  var boolean vl_succ;
+  var integer vl_result:= f_myfuncF(pl_what,vl_succ);
+  log(vl_result);
+  setverdict(pass);
+}
+
+//* @config  This tag is not supported AC
+//* @desc this is a delimiter between two not supported tag AC
+//* @exception This tag is not supported AC
+//* @desc this is a delimiter between two not supported tag AC
+//* @member This tag "member" is not supported AC
+//* @desc this is a delimiter between two not supported tag AC
+//* @param This tag "param" is not supported AC
+//* @desc this is a delimiter between two not supported tag AC
+//* @priority This tag is not supported AC
+//* @desc this is a delimiter between two not supported tag AC
+//* @purpose This tag is not supported AC
+//* @desc this is a delimiter between two not supported tag
+//* @requirement This tag is not supported AC
+//* @desc this is a delimiter between two not supported tag
+//* @return This tag is not supported AC
+//* @desc this is a delimiter between two not supported tag AC
+//* @verdict This tag is not supported AC
+//* @desc this is a delimiter between two not supported tag AC
+control{
+  execute(tc_explicit1("ANY"));
+}
+
+}  // end of module
+

@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<project basedir="." default="updatesite.experimental" name="build_main" xmlns:ac="antlib:net.sf.antcontrib">
+	
+	<import file="build_import.xml"/>
+
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${result.dir}"/>
+		<mkdir dir="${log.dir}"/>
+		<mkdir dir="${log.dir}/error"/>
+
+			<echo message="LD_LIBRARY_PATH: ${env.LD_LIBRARY_PATH}"/>
+			<echo message="JAVA_HOME: ${env.JAVA_HOME}"/>
+			<exec executable="ldd" failonerror="true">
+				<arg value="/usr/bin/xsltproc"/>
+			</exec>
+		
+	</target>
+
+	<!-- Macro which builds a plugin -->
+	<macrodef name="build.plugin">
+		<attribute name="name"/>
+		<sequential>
+			<timestamp.echo message="Building plugin @{name} started" />
+			<record name="${log.dir}/plugin_@{name}.txt" action="start"/>
+			<ant dir="${build.dir}/@{name}"
+				 antfile="${base.dir}/build_@{name}.xml"
+				 target="build.jars">
+				<property name="build.config" value="${build.config}"/>
+			</ant>
+			<record name="${log.dir}/plugin_@{name}.txt" action="stop"/>
+			<timestamp.echo message="Building plugin @{name} finished" />
+		</sequential>
+	</macrodef>
+
+	<target name="common.plugin" depends="init">
+		<build.plugin name="${common.name}"/>
+	</target>
+
+	<target name="designer.plugin" depends="init, common.plugin">
+		<build.plugin name="${designer.name}"/>
+	</target>
+
+	<target name="executor.plugin" depends="init, common.plugin">
+		<build.plugin name="${executor.name}"/>
+	</target>
+
+	<target name="help.plugin" depends="init, common.plugin">
+		<build.plugin name="${help.name}"/>
+	</target>
+
+	<target name="logviewer.plugin" depends="init, common.plugin">
+		<build.plugin name="${logviewer.name}"/>
+	</target>
+
+	<target name="debug.plugin" depends="init, common.plugin, designer.plugin">
+		<build.plugin name="${debug.name}"/>
+	</target>
+
+	<target name="regressiontests.plugin" depends="init, common.plugin, designer.plugin">
+		<build.plugin name="${regressiontests.name}"/>
+	</target>
+
+	<target name="titanium.plugin" depends="init, common.plugin, designer.plugin">
+		<build.plugin name="${titanium.name}"/>
+	</target>
+
+	<target name="titanium.regressiontests.plugin" depends="init, titanium.plugin">
+		<build.plugin name="${titanium.regressiontests.name}"/>
+	</target>
+
+	<!-- Macro which builds a feature -->
+	<macrodef name="build.feature">
+		<attribute name="dir"/>
+		<attribute name="name"/>
+		<attribute name="updatesite.name"/>
+		<attribute name="updatesite.url"/>
+		<sequential>
+			<record name="${log.dir}/feature_@{name}.txt" action="start"/>
+            <!--
+			<cvs cvsRoot="${cvsRoot}"
+				 command="get -d ${build.dir}/@{dir} ${cvs.module}/@{dir}"
+				 failonerror="true"/>
+                 -->
+
+			<!-- Updating the version qualifier in the feature.xml file -->
+			<echo message="Creating ${build.dir}/@{dir}/feature.xml"/>
+			<apply executable="xsltproc" output="${build.dir}/@{dir}/feature.xml_unformatted"
+				   verbose="true" error="${log.dir}/error/error_@{dir}.log" logError="true" failonerror="true"
+				   timeout="60000">
+				<arg value="--stringparam"/>
+					<arg value="version"/> <arg value="${version.qualifier}"/>
+				<arg value="--stringparam"/>
+					<arg value="update_site_name"/> <arg value="@{updatesite.name}"/>
+				<arg value="--stringparam"/>
+					<arg value="update_site_url"/> <arg value="@{updatesite.url}"/>
+				<arg value="${base.dir}/feature_xml_transformer.xsl"/>
+				<fileset dir="${build.dir}/@{dir}">
+					<include name="feature.xml"/>
+				</fileset>
+			</apply>
+
+			<!-- Formatting the feature.xml file (also checks if the file is valid) -->
+			<apply executable="xmllint" output="${build.dir}/@{dir}/feature.xml" failonerror="true"
+				error="${log.dir}/error/error_@{dir}_xmllint.log" verbose="true">
+				<arg value="--format"/>
+				<fileset dir="${build.dir}/@{dir}">
+					<include name="feature.xml_unformatted"/>
+				</fileset>
+			</apply>
+
+	<!-- see https://bugzilla.novell.com/show_bug.cgi?id=485299
+			<xslt in="${build.dir}/@{dir}/feature.xml"
+				  out="${build.dir}/@{dir}/feature.xml"
+				  style="${base.dir}/transform.xsl">
+				  <param name="version" expression="${version.qualifier}"/>
+				  <param name="update_site_name" expression="@{updatesite.name}"/>
+				  <param name="update_site_url" expression="@{updatesite.url}"/>
+			</xslt>
+	-->
+			<mkdir dir="${result.dir}/features"/>
+			<jar
+				destfile="${result.dir}/features/@{name}_${version.qualifier}.jar"
+				basedir="${build.dir}/@{dir}"/>
+			<record name="${log.dir}/feature_@{name}.txt" action="stop"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="build.features">
+		<attribute name="updatesite.name"/>
+		<attribute name="updatesite.url"/>
+		<sequential>
+
+			<build.feature  dir="TITAN_Designer_feature"
+							name="TITAN_Designer"
+							updatesite.name="@{updatesite.name}"
+							updatesite.url="@{updatesite.url}"/>
+			<build.feature  dir="TITAN_Executor_feature"
+							name="TITAN_Executor"
+							updatesite.name="@{updatesite.name}"
+							updatesite.url="@{updatesite.url}"/>
+			<build.feature  dir="TITAN_Log_Viewer_Feature"
+							name="TITAN_Log_Viewer"
+							updatesite.name="@{updatesite.name}"
+							updatesite.url="@{updatesite.url}"/>
+			<build.feature  dir="Titanium_feature"
+							name="Titanium"
+							updatesite.name="@{updatesite.name}"
+							updatesite.url="@{updatesite.url}"/>
+		</sequential>
+	</macrodef>
+
+	<!-- update sites -->
+	<macrodef name="build.updatesite">
+		<attribute name="site.name"/>
+		<attribute name="location"/>
+		<attribute name="url"/>
+		
+		<sequential>
+			<!-- Create the directories for the update site. -->
+			<mkdir dir="@{location}/features"/>
+			<mkdir dir="@{location}/plugins"/>
+
+			<!-- Replace the whitespaces with underscores -->
+			<ac:propertyregex property="tmp.dir.name"
+						   input="@{site.name}"
+						   regexp=" "
+						   replace="_"
+						   global="true"/>
+			<record name="${log.dir}/updatesite_@{site.name}.txt" action="start"/>
+
+			<!-- build every feature -->
+			<build.features
+				updatesite.name="@{site.name}"
+				updatesite.url="@{url}"/>
+
+			<local name="this.updatesite.tmp.location" />
+			<property name="this.updatesite.tmp.location" value="${updatesites.tmp.location}/${tmp.dir.name}" />
+
+			<!-- 
+				The update site will be created in the ${result.dir}/update_site_${logname}_tmp location.
+				If the build fails, the real update site will not be affected.
+			-->
+			<timestamp.echo message="Starting to copy the original update site" />
+			<create.updatesite.tmp
+				site.name="@{site.name}"
+				location="@{location}"
+				url="@{url}"
+				tmp.location="${this.updatesite.tmp.location}"/>
+
+			<timestamp.echo message="Original update site copied" />
+			
+			<timestamp.echo message="Copying generated plugins and features started" />
+			<copy todir="${this.updatesite.tmp.location}/plugins" failonerror="true">
+				<fileset dir="${result.dir}/plugins">
+					<include name="*"/>
+				</fileset>
+			</copy>
+
+			<copy todir="${this.updatesite.tmp.location}/features" failonerror="true">
+				<fileset dir="${result.dir}/features">
+					<include name="*"/>
+				</fileset>
+			</copy>
+			<timestamp.echo message="Copying generated plugins and features finished" />
+
+			<move file="${this.updatesite.tmp.location}/site.xml" tofile="${this.updatesite.tmp.location}/site.xml_old"
+				failonerror="true" />
+			<!-- Add the new features to the site.xml file -->
+			<apply executable="xsltproc" failonerror="true"
+				output="${this.updatesite.tmp.location}/site.xml_unformatted"
+				error="${log.dir}/error/error_site_xml.log" verbose="true">
+				<arg value="--verbose"/>
+				<arg value="--stringparam"/>
+				<arg value="version"/>
+				<arg value="${version.qualifier}"/>
+				<arg value="${base.dir}/site_xml_transformer.xsl"/>
+				<fileset dir="${this.updatesite.tmp.location}">
+					<include name="site.xml_old"/>
+				</fileset>
+			</apply>
+
+			<echo>Formatting site.xml</echo>
+			<apply executable="xmllint" output="${this.updatesite.tmp.location}/site.xml" failonerror="true"
+				error="${log.dir}/error/error_site_xml_xmllint.log" verbose="true">
+				<arg value="--format"/>
+				<fileset dir="${this.updatesite.tmp.location}">
+					<include name="site.xml_unformatted"/>
+				</fileset>
+			</apply>
+
+			<!-- Find the launcher -->
+			<fileset id="launcher.fileset" dir="${ECLIPSE_HOME}/plugins">
+				<include name="org.eclipse.equinox.launcher_*.jar"/>
+			</fileset>
+			<property name="launcher.file" refid="launcher.fileset"/>
+
+			<!-- Create metadata using the eclipse publisher -->
+			<timestamp.echo message="Running eclipse update site publisher started" />
+			<exec executable="java" failonerror="true">
+			 	<arg value="-jar"/>
+					<arg value="${ECLIPSE_HOME}/plugins/${launcher.file}"/> 
+				<arg value="-application"/>
+					<arg value="org.eclipse.equinox.p2.publisher.UpdateSitePublisher"/>
+				<arg value="-metadataRepository"/>
+					<arg value="file:${this.updatesite.tmp.location}"/>
+				<arg value="-artifactRepository"/>
+					<arg value="file:${this.updatesite.tmp.location}"/>
+				<arg value="-repositoryName"/>
+					<arg value="@{site.name}"/>
+				<arg value="-source"/>
+					<arg value="${this.updatesite.tmp.location}"/>
+				<arg value="-append"/>
+				<arg value="-publishArtifacts"/>
+				<arg value="-compress"/>
+			</exec>
+			<timestamp.echo message="Running eclipse update site publisher finished" />
+
+			<!-- Copy the temporal update site to its final location. -->
+			<timestamp.echo message="Copying the temporal updatesite to its final location started" />
+			<sync todir="@{location}"
+					verbose="true"
+					failonerror="true"
+					overwrite="false"
+					includeEmptyDirs="true">
+				<fileset dir="${this.updatesite.tmp.location}" />
+			</sync>
+			<timestamp.echo message="Copying the temporal updatesite to its final location finished" />
+
+			<!-- Add the download stats collecting stuff-->
+			<!--
+			<exec executable="${compiler.location}/etc/download_stats/addDownloadStats.sh"
+					dir="@{location}"
+					failonerror="true">
+					<arg value="@{location}"/>
+			</exec>
+			-->
+
+			<record name="${log.dir}/updatesite_${tmp.dir.name}.txt" action="stop"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="create.updatesite.tmp">
+		<attribute name="site.name"/>
+		<attribute name="location"/>
+		<attribute name="url"/>
+		<attribute name="tmp.location"/>
+		<sequential>
+			<!-- 
+				The update site will be created in the ${result.dir}/update_site_${logname}_tmp location.
+				If the build fails, the real update site will not be affected.
+			-->
+			<timestamp.echo message="Starting to copy the original update site" />
+			<ac:if>
+				<available file="@{location}/site.xml"/>
+				<then>
+					<echo message="@{location}/site.xml exists.(updatesite already exists)"/>
+					<sync todir="@{tmp.location}"
+							verbose="true"
+							failonerror="true"
+							overwrite="false"
+							includeEmptyDirs="true">
+						<fileset dir="@{location}" />
+					</sync>
+				</then>
+				<else>
+				<!-- Here we have to create a new updatesite from the scrach
+					Create the initial site.xml file -->
+					<mkdir dir="@{tmp.location}/plugins" />
+					<mkdir dir="@{tmp.location}/features" />
+					<echo file="@{tmp.location}/site.xml"
+							message=
+					"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+					&lt;site&gt;
+						&lt;description url=&quot;@{url}&quot;&gt;
+							TITAN on Eclipse update site
+						&lt;/description&gt;/&gt;
+						&lt;category-def name=&quot;TITAN_on_Eclipse&quot; label=&quot;TITAN_on_Eclipse&quot;/&gt;
+					&lt;/site&gt;"/>
+				</else>
+			</ac:if>
+		</sequential>
+	</macrodef>
+
+	<target name="updatesite.release"
+			depends="common.plugin, designer.plugin, executor.plugin, help.plugin, logviewer.plugin, debug.plugin, regressiontests.plugin, titanium.plugin, titanium.regressiontests.plugin">
+		<build.updatesite
+			site.name="${updatesite.release.name}"
+			location="${updatesite.release.location}"
+			url="${updatesite.release.url}"/>
+
+	</target>
+
+	<target name="updatesite.FOA"
+			depends="common.plugin, designer.plugin, executor.plugin, help.plugin, logviewer.plugin, debug.plugin, regressiontests.plugin, titanium.plugin, titanium.regressiontests.plugin">
+		<build.updatesite
+			site.name="${updatesite.FOA.name}"
+			location="${updatesite.FOA.location}"
+			url="${updatesite.FOA.url}"/>
+	</target>
+
+	<target name="updatesite.experimental"
+			depends="common.plugin, designer.plugin, executor.plugin, help.plugin, logviewer.plugin, debug.plugin, regressiontests.plugin, titanium.plugin, titanium.regressiontests.plugin">
+		<build.updatesite
+			site.name="${updatesite.experimental.name}"
+			location="${updatesite.experimental.location}"
+			url="${updatesite.experimental.url}"/>
+	</target>
+
+	<target name="updatesite.testing"
+			depends="common.plugin, designer.plugin, executor.plugin, help.plugin, logviewer.plugin, debug.plugin, regressiontests.plugin, titanium.plugin, titanium.regressiontests.plugin">
+		<build.updatesite
+			site.name="${updatesite.testing.name}"
+			location="${updatesite.testing.location}"
+			url="${updatesite.testing.url}"/>
+	</target>
+
+	<target name="zip"
+			depends="common.plugin, designer.plugin, executor.plugin, help.plugin, logviewer.plugin, debug.plugin, regressiontests.plugin, titanium.plugin, titanium.regressiontests.plugin">
+		<build.updatesite
+			site.name="${updatesite.release.name}"
+			location="${result.dir}/zip/${version.qualifier}/"
+			url="${updatesite.release.url}"/>
+		<mkdir dir="${zip.dir}"/>
+		<property name="dest.zip" location="${zip.dir}/TITAN_on_Eclipse_${version.qualifier}.zip"/>
+		<delete file="${dest.zip}" quiet="true" />
+		<zip
+			destfile="${dest.zip}"
+			basedir="${result.dir}/zip/${version.qualifier}"/>
+	</target>
+
+    <target name="clean">
+		<clean.plugin name="${common.name}"/>
+		<clean.plugin name="${designer.name}"/>
+		<clean.plugin name="${executor.name}"/>
+		<clean.plugin name="${help.name}"/>
+		<clean.plugin name="${logviewer.name}"/>
+		<clean.plugin name="${debug.name}"/>
+		<clean.plugin name="${regressiontests.name}"/>
+		<clean.plugin name="${titanium.name}"/>
+		<clean.plugin name="${titanium.regressiontests.name}"/>
+		<delete dir="${result.dir}" failonerror="false"/>
+    </target>
+
+	<target name="clean-all" depends="clean">
+		<delete dir="${build.dir}" failonerror="false"/>
+	</target>
+
+	<macrodef name="clean.plugin">
+		<attribute name="name"/>
+		<sequential>
+			<ac:if>
+				<available file="${build.dir}/@{name}"/>
+				<then>
+					<echo message="Calling ant: dir:'${build.dir}/@{name}'${line.separator}
+												antfile:'${base.dir}/build_@{name}.xml'${line.separator}
+												target: clean"/>
+					<ant dir="${build.dir}/@{name}"
+						 antfile="${base.dir}/build_@{name}.xml"
+						 target="clean">
+						<property name="build.config" value="${build.config}"/>
+					</ant>
+				</then>
+			</ac:if>
+		</sequential>
+	</macrodef>
+</project>
+
+

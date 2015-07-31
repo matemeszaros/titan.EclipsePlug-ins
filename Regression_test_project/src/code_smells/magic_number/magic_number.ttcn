@@ -1,0 +1,19 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module magic_number {
+control {
+  // 6, 6, 43, 123... are magic numbers
+  var integer i := 6;
+  for (i := -6; i< -43; i := i * 1234567898765432123456789) {}
+  
+  // 2345, 5, 0 are not magic numbers
+  const integer c := -2345;  
+  i := 5 * (-5) + 0;
+  
+}
+}

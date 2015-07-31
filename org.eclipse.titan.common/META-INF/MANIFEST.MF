@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.0
+Created-By: 23.6-b04 (Oracle Corporation)
+Bundle-ManifestVersion: 2
+Bundle-Name: Common TITAN on Eclipse Plug-in
+Bundle-SymbolicName: org.eclipse.titan.common;singleton:=true
+Bundle-Version: 5.3.0.CRL_113_200_5_R3A_20150630-1100
+Bundle-Activator: org.eclipse.titan.common.Activator
+Bundle-Vendor: Eclipse Titan Project
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.console,
+ org.eclipse.core.resources,
+ org.eclipse.debug.core,
+ org.eclipse.core.filesystem,
+ org.eclipse.ui.ide,
+ org.antlr.runtime;bundle-version="4.3.0"
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Eclipse-LazyStart: true
+Export-Package: org.eclipse.titan.common,
+ org.eclipse.titan.common.actions,
+ org.eclipse.titan.common.fieldeditors,
+ org.eclipse.titan.common.logging,
+ org.eclipse.titan.common.parsers,
+ org.eclipse.titan.common.parsers.cfg,
+ org.eclipse.titan.common.parsers.cfg.indices,
+ org.eclipse.titan.common.path,
+ org.eclipse.titan.common.product,
+ org.eclipse.titan.common.utils,
+ org.eclipse.titan.common.utils.preferences
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+

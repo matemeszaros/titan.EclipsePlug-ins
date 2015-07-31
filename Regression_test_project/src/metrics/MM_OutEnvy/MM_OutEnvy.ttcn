@@ -1,0 +1,15 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module MM_OutEnvy {
+import from types all;
+
+// this module reference 3 outside entities, t1, t2, and c1_CT
+private function f(t1 i, t2 b) {}
+
+private testcase t() runs on c1_CT {}
+}

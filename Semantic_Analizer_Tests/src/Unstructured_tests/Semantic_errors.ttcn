@@ -1,0 +1,132 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module Semantic_errors
+{
+  import from Syntax_warnings all;
+  import from nonexiModule all;
+  import from Syntax_warnings all;
+  import from Semantic_errors3 all;
+
+import from nonExistent1.objid{0 0 0 1 1 1} language "unsupported language" recursive all;
+import from nonExistent2 {modulepar m1, m2; modulepar all; modulepar all except m1, m2;
+    group g1, g2; group all; group all except g1, g2;
+    type t1, t2; type all; type all except t1, t2;
+    template t1, t2; template all; template all except t1, t2;
+    const c1, c2; const all; const all except c1, c2;
+    function f1, f2; function all; function all except f1, f2;
+    altstep a1, a2; altstep all; altstep all except a1, a2;
+    testcase t1, t2; testcase all; testcase all except t1, t2;
+    signature s1, s2; signature all; signature all except s1, s2;
+};
+import from nonExistent3 all except {modulepar m1, m2; modulepar all;
+    group g1, g2; group all;
+    type t1, t2; type all;
+    template t1, t2; template all;
+    const c1, c2; const all;
+    function f1, f2; function all;
+    altstep a1, a2; altstep all;
+    testcase t1, t2; testcase all;
+    signature s1, s2; signature all;
+};
+
+  type barmi1 akarmi1;
+
+  type record myrec1
+  {
+    integer x,
+    integer y,
+    integer x
+  }
+
+  type function myfuncref1(integer h, myf b);
+
+  type enumerated myenum
+  {
+     enum_val1(0),
+     enum_val2(2),
+     enum_val1(3)
+  }
+
+  type component mycomp1 //extends mycomp3
+  {
+		var integer cx1;
+		var integer Semantic_errors3;
+  }
+
+  type xx yy;
+  type yy xx;
+
+  type function myfuncref() runs on self;
+  type function myfuncref() runs on self;
+
+  function myfunc1(octetstring par,
+                   integer par)
+  {
+  	var integer Syntax_warnings;
+  	var integer x, x;
+
+    for(var integer nonexiModule; x>1; x:=10 )
+    {
+
+    }
+
+
+  }
+
+type union no_choice {
+  no_choice n1,
+  no_choice n2
+}
+
+type union MyUnion0 {
+  MyUnion1 u1
+}
+
+type union MyUnion1 {
+  MyUnion0 u0
+}
+
+type record nestingRecord {
+  record {
+    integer field1
+  } nestedRecord,
+  set {
+      integer field1,
+      integer field2
+  } nestedSet,
+  record of integer nestedRecordOf,
+  set of integer nestedRecordof,
+  union {
+      integer field1,
+      integer field2
+  } nestedUnion,
+  enumerated {elso, masodik(2)} nestedEnum,
+  function () runs on self return integer nestedFunctionType,
+  altstep () runs on self nestedAltstepType,
+  testcase () runs on nonExistent system nonExistent nestedTestcase
+}
+
+} with { extension "version <RnXnn>"
+extension "version R8B"
+extension "version R8B1"
+extension "version <Rn>"
+extension "version K8B"
+extension "version R8"
+extension "version R8B1K"
+extension "version R2147483648B"
+extension "version R8B2147483648"
+extension "requires nonExi R8B1"
+extension "requiresTITAN R8B"
+extension "requiresTITAN R8B1"
+extension "requiresTITAN R80B1"
+extension "requiresTITAN K8B"
+extension "requiresTITAN R8"
+extension "requiresTITAN R8B1K"
+extension "requiresTITAN R2147483648B"
+extension "requiresTITAN R8B2147483648"
+}

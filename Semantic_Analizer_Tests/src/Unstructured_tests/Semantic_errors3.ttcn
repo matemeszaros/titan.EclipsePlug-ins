@@ -1,0 +1,80 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module Semantic_errors3
+{
+    import from Semantic_errors all;
+
+    type port myport1 message
+    {
+    	in octetstring
+    	out integer
+    }
+
+    type port cx1 message
+	{
+	 inout octetstring
+	}
+
+
+    type component mycomp2
+	{
+	   var integer cx1;
+	}
+
+	type component mycomp3 extends mycomp1, mycomp2
+	{
+
+	}
+
+	type component mycomp4 {var integer xc1;}
+	type component mycomp5 {var integer xc1;}
+	type component mycomp6 extends mycomp4, mycomp5{}
+
+	type component mycomp7 extends mycomp1
+	{
+		port cx1 myport;
+	}
+
+
+
+    type integer myInt (0..14);
+	type akarmi barmi;
+
+    type myfunc valami;
+
+	type record myrecc
+	{
+		integer field1,
+		octetstring field2
+	}
+
+	function myfunc(in myport1 param1, out myport1 cool) runs on mycomp2
+	{
+      var ccc cc;
+      var nonexiModule.random mytype;
+      var Semantic_errors.myInt myInteger;
+      var Semantic_errors3.ccc hehe;
+      var param1 partt;
+
+      var myport1 ehhh;
+
+      var myrecc.field1 huhhhuhuh;
+
+
+      for(var integer iter := 0, iter := 9; iter < 10; iter := iter + 1)
+      {
+
+      }
+	}
+
+	testcase myTC1()runs on mycomp1 system myfunc {}
+	testcase myTC2()runs on mycomp1 system myInt {}
+
+
+
+}

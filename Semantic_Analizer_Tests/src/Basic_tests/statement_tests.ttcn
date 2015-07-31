@@ -1,0 +1,1790 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module statement_tests
+{
+
+type integer my_int;
+type integer my_int2;
+signature S_ProvedureSignatureID(in integer par1) exception( integer, charstring );
+signature S_ProvedureSignatureID2(in charstring par1);
+signature S_ProvedureSignatureID3(in integer par1) noblock exception( integer, charstring );
+signature S_ProvedureSignatureID4(in charstring par1) return integer;
+signature S_ProvedureSignatureID5() return integer;
+signature S_ProvedureSignatureID6(out integer par1) exception( integer, charstring );
+
+external function ef_c_ext_function();
+
+type component mycomponent{};
+
+type function t_function() return integer;
+function f_comp_return() return mycomponent{
+    return mycomponent.create;
+}
+type altstep t_altstep() runs on mycomponent;
+
+type testcase t_testcase() runs on mycomponent system mycomponent;
+testcase tc_c_testcase()
+runs on mycomponent
+system mycomponent
+{}
+
+type altstep t_altstep2(inout integer pl_parameterName) runs on componentName_CT2;
+type altstep t_altstep3(inout integer pl_parameterName) runs on self;
+altstep as_altstepName1(inout integer pl_parameterName)
+runs on componentName_CT2
+{
+  [] compTimer.timeout { }
+  [else] { }
+}
+altstep as_c_altstep()
+runs on mycomponent
+{
+  [guard2] timerName.timeout
+    {}
+  [else]
+    {}
+}
+
+type port testPortName_PT message
+{
+  in S_ProvedureSignatureID, my_int, my_int, my_int2, boolean;
+  out S_ProvedureSignatureID, my_int, my_int;
+  inout S_ProvedureSignatureID, my_int, my_int;
+}
+
+type port testPortName2_PT procedure
+{
+  in my_int, S_ProvedureSignatureID, S_ProvedureSignatureID;
+  out my_int, S_ProvedureSignatureID, S_ProvedureSignatureID;
+  inout my_int, S_ProvedureSignatureID, S_ProvedureSignatureID, S_ProvedureSignatureID5, S_ProvedureSignatureID6;
+}
+
+type port testPortName3_PT procedure
+{
+  in S_ProvedureSignatureID, S_ProvedureSignatureID3, S_ProvedureSignatureID4;
+}
+
+type port reply_PT procedure
+{
+  inout S_ProvedureSignatureID3;
+}
+
+type port testPortonlyOut message
+{
+  out my_int;
+}
+
+type port testPortonlyOut2 procedure
+{
+  out S_ProvedureSignatureID;
+}
+
+type port testPortonlyOut3 procedure
+{
+  out S_ProvedureSignatureID4;
+}
+
+type port testPortonlyIn message
+{
+  in my_int;
+}
+
+type port testPortonlyIn2 procedure
+{
+  in S_ProvedureSignatureID;
+}
+
+type component componentName_CT
+{
+  var integer v_variable;
+  port testPortName_PT portname_PT;
+  port testPortName2_PT portname2_PT;
+  port testPortName3_PT portname3_PT;
+  port testPortonlyOut portnameOut_PT;
+  port testPortonlyOut2 portnameOut2_PT;
+  port testPortonlyOut3 portnameOut3_PT;
+  port testPortonlyIn portnameIn_PT;
+  port testPortonlyIn2 portnameIn2_PT;
+  port reply_PT replyport_PT;
+}
+
+type component componentName_CT2
+{
+    var integer v_variable;
+}
+
+altstep as_dummyAltstep( )
+{
+  [true] timerName.timeout{}
+  [else]{}
+}
+
+function f_runsonothercomponent() runs on componentName_CT2 return template integer
+{}
+
+function f_forloopStatementTests( ){
+  for ( var integer vl_i := 1; vl_i < 5 ; vl_i := vl_i+1 ){}
+  { var integer vl_i; for (vl_i := 1; vl_i < 5 ; vl_i := vl_i+1 ){} }
+
+  for ( var integer vl_i := 1; true ; vl_i := vl_i+1 ){}
+  for ( var integer vl_i := 1; false ; vl_i := vl_i+1 ){}
+  { var integer vl_i; for (vl_i := 1; true ; vl_i := vl_i+1 ){} }
+  { var integer vl_i; for (vl_i := 1; false ; vl_i := vl_i+1 ){} }
+
+  for ( var integer vl_i := 1; vl_i1 < vl_i2 ; vl_i3 := vl_i+1 ){}
+  for ( var integer vl_i := 1; vl_i < 5 ; vl_i := vl_i4+1 ){}
+  for ( var integer vl_i := true; vl_i < 5 ; vl_i := true ){}
+  for ( var integer vl_i := vl_i2, vl_i2 := 1; vl_i < 5 ; vl_i := vl_i+1 ){}
+  { var integer vl_i; for (vl_i := 1; vl_i1 < vl_i2 ; vl_i3 := vl_i+1 ){}	}
+  { var integer vl_i; for (vl_i := 1; vl_i < 5 ; vl_i := vl_i4+1 ){}	}
+  { var integer vl_i; for (vl_i := true; vl_i < 5 ; vl_i := true ){}	}
+}
+
+function f_ifStatementTests(){
+  {	var integer vl_i; if(vl_i < vl_i+1){}	}
+
+  if(true){}
+  if(false){}
+  if(false){
+  }else if(true){
+  }else if(true){
+  }else{}
+
+  if(vl_i < vl_i+1){}
+}
+
+function f_whileStatementTests(){
+  {	var integer vl_i; while(vl_i < vl_i+1){}	}
+
+  while(true){}
+  while(false){}
+
+  while(vl_i < vl_i+1){}
+}
+
+function f_dowhileStatementTests(){
+  {	var integer vl_i; do{}while(vl_i < vl_i+1)	}
+
+  do{}while(true)
+  do{}while(false)
+
+  do{}while(vl_i < vl_i+1)
+}
+
+function f_setverdictTests(){
+	setverdict ( pass );
+	setverdict ( fail );
+	setverdict ( inconc );
+	setverdict ( none );
+
+	setverdict ( error );
+
+	setverdict ( omit );
+    setverdict ( null );
+    setverdict ( {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)} );
+    setverdict ( {field1:=1, field1:="akarmi"} );
+    setverdict ( true );
+    setverdict ( false );
+    setverdict ( not false );
+    setverdict ( i );
+    setverdict ( 5 );
+    setverdict ( 5.5 );
+    setverdict ( "akarmi" );
+    setverdict ( char(0,0,0,0) );
+    setverdict ( 'aa'H );
+    setverdict ( '00'B );
+    setverdict ( {1,2,3} );
+    setverdict ( 5 * 5 );
+    setverdict ( 5 + 5 );
+    setverdict ( 5 - 5 );
+    setverdict ( 5 / 5 );
+    setverdict ( 5 mod 5 );
+    setverdict ( 5 rem 5 );
+    setverdict ( true and true );
+    setverdict ( true or true );
+    setverdict ( not4b 'aa'H );
+    setverdict ( not4b '00'B );
+    setverdict ( '00'B and4b '00'B );
+    setverdict ( '00'H and4b '00'H );
+    setverdict ( '00'B or4b '00'B );
+    setverdict ( '00'H or4b '00'H );
+    setverdict ( '00'B xor4b '00'B );
+    setverdict ( '00'H xor4b '00'H );
+    setverdict ( '00'B << 1 );
+    setverdict ( '00'H << 1 );
+    setverdict ( '00'B >> 1 );
+    setverdict ( '00'H >> 1 );
+    setverdict ( '00'B <@ 1 );
+    setverdict ( '00'H <@ 1 );
+    setverdict ( '00'B @> 1 );
+    setverdict ( '00'H @> 1 );
+    setverdict ( '00'B & '00'B );
+    setverdict ( '00'H & '00'H );
+    setverdict ( "akarmi" & "akarmi2" );
+    setverdict ( 5 == 5 );
+    setverdict ( 5 != 5 );
+    setverdict ( 5 < 5 );
+    setverdict ( 5 > 5 );
+    setverdict ( 5 <= 5 );
+    setverdict ( 5 >= 5 );
+    setverdict ( bit2hex('00'B) );
+    setverdict ( bit2int('00'B) );
+    setverdict ( bit2oct('00'B) );
+    setverdict ( bit2str('00'B) );
+    setverdict ( char2int("5") );
+    setverdict ( char2oct("akarmi") );
+    setverdict ( float2int( 5.5) );
+    setverdict ( float2str(5.5) );
+    setverdict ( hex2int('FF'H) );
+    setverdict ( hex2oct('FF00'H) );
+    setverdict ( hex2str('FF00'H) );
+    setverdict ( int2char(5) );
+    setverdict ( int2float(5) );
+    setverdict ( int2str(5) );
+    setverdict ( int2unichar(5) );
+    setverdict ( oct2bit('00FF'O) );
+    setverdict ( oct2char('0F'O) );
+    setverdict ( oct2hex('0F'O) );
+    setverdict ( oct2int('0F'O) );
+    setverdict ( oct2str('0F'O) );
+    setverdict ( str2bit("0101") );
+    setverdict ( str2float("5.5") );
+    setverdict ( str2hex("0101") );
+    setverdict ( str2int("5") );
+    setverdict ( str2oct("0101") );
+    setverdict ( unichar2int(char(0,0,0,0)) );
+    setverdict ( unichar2char(char(0,0,0,0)) );
+    setverdict ( int2bit(1,3) );
+    setverdict ( int2hex(1,3) );
+    setverdict ( int2oct(1,3) );
+    setverdict ( rnd() );
+    setverdict ( rnd(5.5) );
+    setverdict ( isbound(5.5) );
+    setverdict ( isvalue(5.5) );
+    setverdict ( lengthof("akarmi") );
+    setverdict ( sizeof(c_integer) );
+    setverdict ( regexp("akarmi","akarmi", 0) );
+    setverdict ( match(5,5) );
+    setverdict ( mtc );
+    setverdict ( system );
+    setverdict ( self );
+    setverdict ( any component . running );
+    setverdict ( all component . running );
+    setverdict ( any component . alive );
+    setverdict ( all component . alive );
+    setverdict ( any timer . running );
+    setverdict ( f_comp_return().running );
+    setverdict ( f_comp_return().alive );
+    setverdict ( t.read );
+    setverdict ( mycomponent.create );
+    setverdict ( activate(temp_altstep()) );
+    setverdict ( activate(derefers(temp_altstep_pointer)()) );
+    setverdict ( refers(f_functiontypeValueTest) );
+	setverdict ( refers(ef_c_ext_function) );
+	setverdict ( refers(as_c_altstep) );
+	setverdict ( refers(tc_c_testcase) );
+}
+
+function f_altguradsTests(){
+    alt
+    { [true] as_dummyAltstep();
+      [true] as_dummyAltstep();
+      [else] {}
+    };
+
+    alt
+    { [else] {repeat;}
+      [true] fakeOperation();
+      [true] f_altguradsTests();
+    };
+}
+
+function f_invokedAltguardTests() runs on componentName_CT2 return integer
+{
+  const t_altstep2 cl_altstep2 := refers (as_altstepName1);
+  const t_altstep2 cl_altstep3 := null;
+  const t_function cl_function := null;
+  var integer vl_i;
+  alt
+  {
+    [] cl_altstep2.apply(vl_i) { return 5;}
+
+    [nonExi] cl_altstep2.apply(vl_i) { }
+    [5] cl_altstep2.apply(vl_i) { }
+    [] cl_function.apply(vl_i) { }
+    [] cl_altstep3.apply() { }
+    [] cl_altstep3.apply(5) { }
+    [] cl_altstep3.apply(vl_i, 5) { }
+  };
+
+  alt { [] cl_altstep2.apply(vl_i) { } };
+  alt { [] cl_altstep2.apply(vl_i) {}
+        [] cl_altstep2.apply(vl_i) { return 5} };
+  alt { [] cl_altstep2.apply(vl_i) { return 5}
+        [] cl_altstep2.apply(vl_i) {} };
+  alt { [] cl_altstep2.apply(vl_i) { return 5}
+        [] cl_altstep2.apply(vl_i) { return 5} };
+  alt { [] cl_altstep2.apply(vl_i) { return 5} };
+  alt { [] cl_altstep2.apply(vl_i) { return 5}
+        [else] { return 5} };
+}
+
+function f_selectTests( )
+{
+  var integer vl_akarmi;
+
+  select( vl_akarmi )
+  { case ( 1 ){}
+    case else {}
+  }
+
+  select( vl_akarmi )
+  { case ( 1 ){}
+    case else {}
+    case ( 1 ){}
+  }
+
+  select( barmi )
+  { case ( 1 ){}
+    case else {}
+  }
+
+  select( vl_akarmi )
+  { case ( "akarmi" ){}
+    case else {}
+  }
+}
+
+//FIXME only syntactical tests, the semantic validation is not yet implemented
+function f_actionTests(){
+	action ();
+	action ( pass );
+	action ( fail );
+	action ( inconc );
+	action ( none );
+	action ( error );
+	action ( omit );
+    action ( null );
+    action ( {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)} );
+    action ( {field1:=1, field1:="akarmi"} );
+    action ( true );
+    action ( false );
+    action ( not false );
+    action ( i );
+    action ( 5 );
+    action ( 5.5 );
+    action ( "akarmi" );
+    action ( char(0,0,0,0) );
+    action ( 'aa'H );
+    action ( '00'B );
+    action ( {1,2,3} );
+    action ( 5 * 5 );
+    action ( 5 + 5 );
+    action ( 5 - 5 );
+    action ( 5 / 5 );
+    action ( 5 mod 5 );
+    action ( 5 rem 5 );
+    action ( true and true );
+    action ( true or true );
+    action ( not4b 'aa'H );
+    action ( not4b '00'B );
+    action ( '00'B and4b '00'B );
+    action ( '00'H and4b '00'H );
+    action ( '00'B or4b '00'B );
+    action ( '00'H or4b '00'H );
+    action ( '00'B xor4b '00'B );
+    action ( '00'H xor4b '00'H );
+    action ( '00'B << 1 );
+    action ( '00'H << 1 );
+    action ( '00'B >> 1 );
+    action ( '00'H >> 1 );
+    action ( '00'B <@ 1 );
+    action ( '00'H <@ 1 );
+    action ( '00'B @> 1 );
+    action ( '00'H @> 1 );
+    action ( '00'B & '00'B );
+    action ( '00'H & '00'H );
+    action ( "akarmi" & "akarmi2" );
+    action ( 5 == 5 );
+    action ( 5 != 5 );
+    action ( 5 < 5 );
+    action ( 5 > 5 );
+    action ( 5 <= 5 );
+    action ( 5 >= 5 );
+    action ( bit2hex('00'B) );
+    action ( bit2int('00'B) );
+    action ( bit2oct('00'B) );
+    action ( bit2str('00'B) );
+    action ( char2int("5") );
+    action ( char2oct("akarmi") );
+    action ( float2int( 5.5) );
+    action ( float2str(5.5) );
+    action ( hex2int('FF'H) );
+    action ( hex2oct('FF00'H) );
+    action ( hex2str('FF00'H) );
+    action ( int2char(5) );
+    action ( int2float(5) );
+    action ( int2str(5) );
+    action ( int2unichar(5) );
+    action ( oct2bit('00FF'O) );
+    action ( oct2char('0F'O) );
+    action ( oct2hex('0F'O) );
+    action ( oct2int('0F'O) );
+    action ( oct2str('0F'O) );
+    action ( str2bit("0101") );
+    action ( str2float("5.5") );
+    action ( str2hex("0101") );
+    action ( str2int("5") );
+    action ( str2oct("0101") );
+    action ( unichar2int(char(0,0,0,0)) );
+    action ( unichar2char(char(0,0,0,0)) );
+    action ( int2bit(1,3) );
+    action ( int2hex(1,3) );
+    action ( int2oct(1,3) );
+    action ( rnd() );
+    action ( rnd(5.5) );
+    action ( isbound(5.5) );
+    action ( isvalue(5.5) );
+    action ( lengthof("akarmi") );
+    action ( sizeof(c_integer) );
+    action ( regexp("akarmi","akarmi", 0) );
+    action ( match(5,5) );
+    action ( mtc );
+    action ( system );
+    action ( self );
+    action ( any component . running );
+    action ( all component . running );
+    action ( any component . alive );
+    action ( all component . alive );
+    action ( any timer . running );
+    action ( f_comp_return().running );
+    action ( f_comp_return().alive );
+    action ( t.read );
+    action ( mycomponent.create );
+    action ( activate(temp_altstep()) );
+    action ( activate(derefers(temp_altstep_pointer)()) );
+    action ( refers(f_functiontypeValueTest) );
+	action ( refers(ef_c_ext_function) );
+	action ( refers(as_c_altstep) );
+	action ( refers(tc_c_testcase) );
+}
+
+function f_logTests(){
+	log ();
+	log ( "long", "parameter", "list");
+	log ( pass );
+	log ( fail );
+	log ( inconc );
+	log ( none );
+	log ( error );
+	log ( omit );
+    log ( null );
+    log (__LINE__);
+    log (%moduleId);
+    log ( {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)} );
+    log ( {field1:=1, field1:="akarmi"} );
+    log ( true );
+    log ( false );
+    log ( not false );
+    log ( i );
+    log ( 5 );
+    log (integer : 5);
+    log (?);
+    log ( 5.5 );
+    log ( "akarmi" );
+    log ( char(0,0,0,0) );
+    log ( 'aa'H );
+    log ( '00'B );
+    log ( {1,2,3} );
+    log ( nonExi : {1,2,3});
+    log ( 5 * 5 );
+    log ( 5 + 5 );
+    log ( 5 - 5 );
+    log ( 5 / 5 );
+    log ( 5 mod 5 );
+    log ( 5 rem 5 );
+    log ( true and true );
+    log ( true or true );
+    log ( not4b 'aa'H );
+    log ( not4b '00'B );
+    log ( '00'B and4b '00'B );
+    log ( '00'H and4b '00'H );
+    log ( '00'B or4b '00'B );
+    log ( '00'H or4b '00'H );
+    log ( '00'B xor4b '00'B );
+    log ( '00'H xor4b '00'H );
+    log ( '00'B << 1 );
+    log ( '00'H << 1 );
+    log ( '00'B >> 1 );
+    log ( '00'H >> 1 );
+    log ( '00'B <@ 1 );
+    log ( '00'H <@ 1 );
+    log ( '00'B @> 1 );
+    log ( '00'H @> 1 );
+    log ( '00'B & '00'B );
+    log ( '00'H & '00'H );
+    log ( "akarmi" & "akarmi2" );
+    log ( 5 == 5 );
+    log ( 5 != 5 );
+    log ( 5 < 5 );
+    log ( 5 > 5 );
+    log ( 5 <= 5 );
+    log ( 5 >= 5 );
+    log ( bit2hex('00'B) );
+    log ( bit2int('00'B) );
+    log ( bit2oct('00'B) );
+    log ( bit2str('00'B) );
+    log ( char2int("5") );
+    log ( char2oct("akarmi") );
+    log ( float2int( 5.5) );
+    log ( float2str(5.5) );
+    log ( hex2int('FF'H) );
+    log ( hex2oct('FF00'H) );
+    log ( hex2str('FF00'H) );
+    log ( int2char(5) );
+    log ( int2float(5) );
+    log ( int2str(5) );
+    log ( int2unichar(5) );
+    log ( oct2bit('00FF'O) );
+    log ( oct2char('0F'O) );
+    log ( oct2hex('0F'O) );
+    log ( oct2int('0F'O) );
+    log ( oct2str('0F'O) );
+    log ( str2bit("0101") );
+    log ( str2float("5.5") );
+    log ( str2hex("0101") );
+    log ( str2int("5") );
+    log ( str2oct("0101") );
+    log ( unichar2int(char(0,0,0,0)) );
+    log ( unichar2char(char(0,0,0,0)) );
+    log ( int2bit(1,3) );
+    log ( int2hex(1,3) );
+    log ( int2oct(1,3) );
+    log ( rnd() );
+    log ( rnd(5.5) );
+    log ( isbound(5.5) );
+    log ( isvalue(5.5) );
+    log ( lengthof("akarmi") );
+    log ( sizeof(c_integer) );
+    log ( regexp("akarmi","akarmi", 0) );
+    log ( match(5,5) );
+    log ( mtc );
+    log ( system );
+    log ( self );
+    log ( any component . running );
+    log ( all component . running );
+    log ( any component . alive );
+    log ( all component . alive );
+    log ( any timer . running );
+    log ( f_comp_return().running );
+    log ( f_comp_return().alive );
+    log ( t.read );
+    log ( mycomponent.create );
+    log ( activate(temp_altstep()) );
+    log ( activate(derefers(temp_altstep_pointer)()) );
+    log ( refers(f_functiontypeValueTest) );
+	log ( refers(ef_c_ext_function) );
+	log ( refers(as_c_altstep) );
+	log ( refers(tc_c_testcase) );
+}
+
+const charstring cg_c := log2str(cg_c);
+
+function f_log2strTests(){
+	var charstring vl_i;
+	{	vl_i := log2str (); }
+	{	vl_i := log2str ( pass ); }
+	{	vl_i := log2str ( fail ); }
+	{	vl_i := log2str ( inconc ); }
+	{	vl_i := log2str ( none ); }
+	{	vl_i := log2str ( error ); }
+	{	vl_i := log2str ( omit ); }
+    {	vl_i := log2str ( null ); }
+    {	vl_i := log2str ( {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)} ); }
+    {	vl_i := log2str ( {field1:=1, field1:="akarmi"} ); }
+    {	vl_i := log2str ( true ); }
+    {	vl_i := log2str ( false ); }
+    {	vl_i := log2str ( not false ); }
+    {	vl_i := log2str ( j ); }
+    {	vl_i := log2str ( 5 ); }
+    {	vl_i := log2str ( 5.5 ); }
+    {	vl_i := log2str ( "akarmi" ); }
+    {	vl_i := log2str ( char(0,0,0,0) ); }
+    {	vl_i := log2str ( 'aa'H ); }
+    {	vl_i := log2str ( '00'B ); }
+    {	vl_i := log2str ( {1,2,3} ); }
+    {	vl_i := log2str ( 5 * 5 ); }
+    {	vl_i := log2str ( 5 + 5 ); }
+    {	vl_i := log2str ( 5 - 5 ); }
+    {	vl_i := log2str ( 5 / 5 ); }
+    {	vl_i := log2str ( 5 mod 5 ); }
+    {	vl_i := log2str ( 5 rem 5 ); }
+    {	vl_i := log2str ( true and true ); }
+    {	vl_i := log2str ( true or true ); }
+    {	vl_i := log2str ( not4b 'aa'H ); }
+    {	vl_i := log2str ( not4b '00'B ); }
+    {	vl_i := log2str ( '00'B and4b '00'B ); }
+    {	vl_i := log2str ( '00'H and4b '00'H ); }
+    {	vl_i := log2str ( '00'B or4b '00'B ); }
+    {	vl_i := log2str ( '00'H or4b '00'H ); }
+    {	vl_i := log2str ( '00'B xor4b '00'B ); }
+    {	vl_i := log2str ( '00'H xor4b '00'H ); }
+    {	vl_i := log2str ( '00'B << 1 ); }
+    {	vl_i := log2str ( '00'H << 1 ); }
+    {	vl_i := log2str ( '00'B >> 1 ); }
+    {	vl_i := log2str ( '00'H >> 1 ); }
+    {	vl_i := log2str ( '00'B <@ 1 ); }
+    {	vl_i := log2str ( '00'H <@ 1 ); }
+    {	vl_i := log2str ( '00'B @> 1 ); }
+    {	vl_i := log2str ( '00'H @> 1 ); }
+    {	vl_i := log2str ( '00'B & '00'B ); }
+    {	vl_i := log2str ( '00'H & '00'H ); }
+    {	vl_i := log2str ( "akarmi" & "akarmi2" ); }
+    {	vl_i := log2str ( 5 == 5 ); }
+    {	vl_i := log2str ( 5 != 5 ); }
+    {	vl_i := log2str ( 5 < 5 ); }
+    {	vl_i := log2str ( 5 > 5 ); }
+    {	vl_i := log2str ( 5 <= 5 ); }
+    {	vl_i := log2str ( 5 >= 5 ); }
+    {	vl_i := log2str ( bit2hex('00'B) ); }
+    {	vl_i := log2str ( bit2int('00'B) ); }
+    {	vl_i := log2str ( bit2oct('00'B) ); }
+    {	vl_i := log2str ( bit2str('00'B) ); }
+    {	vl_i := log2str ( char2int("5") ); }
+    {	vl_i := log2str ( char2oct("akarmi") ); }
+    {	vl_i := log2str ( float2int( 5.5) ); }
+    {	vl_i := log2str ( float2str(5.5) ); }
+    {	vl_i := log2str ( hex2int('FF'H) ); }
+    {	vl_i := log2str ( hex2oct('FF00'H) ); }
+    {	vl_i := log2str ( hex2str('FF00'H) ); }
+    {	vl_i := log2str ( int2char(5) ); }
+    {	vl_i := log2str ( int2float(5) ); }
+    {	vl_i := log2str ( int2str(5) ); }
+    {	vl_i := log2str ( int2unichar(5) ); }
+    {	vl_i := log2str ( oct2bit('00FF'O) ); }
+    {	vl_i := log2str ( oct2char('0F'O) ); }
+    {	vl_i := log2str ( oct2hex('0F'O) ); }
+    {	vl_i := log2str ( oct2int('0F'O) ); }
+    {	vl_i := log2str ( oct2str('0F'O) ); }
+    {	vl_i := log2str ( str2bit("0101") ); }
+    {	vl_i := log2str ( str2float("5.5") ); }
+    {	vl_i := log2str ( str2hex("0101") ); }
+    {	vl_i := log2str ( str2int("5") ); }
+    {	vl_i := log2str ( str2oct("0101") ); }
+    {	vl_i := log2str ( unichar2int(char(0,0,0,0)) ); }
+    {	vl_i := log2str ( unichar2char(char(0,0,0,0)) ); }
+    {	vl_i := log2str ( int2bit(1,3) ); }
+    {	vl_i := log2str ( int2hex(1,3) ); }
+    {	vl_i := log2str ( int2oct(1,3) ); }
+    {	vl_i := log2str ( rnd() ); }
+    {	vl_i := log2str ( rnd(5.5) ); }
+    {	vl_i := log2str ( isbound(5.5) ); }
+    {	vl_i := log2str ( isvalue(5.5) ); }
+    {	vl_i := log2str ( lengthof("akarmi") ); }
+    {	vl_i := log2str ( sizeof(c_integer) ); }
+    {	vl_i := log2str ( regexp("akarmi","akarmi", 0) ); }
+    {	vl_i := log2str ( match(5,5) ); }
+    {	vl_i := log2str ( mtc ); }
+    {	vl_i := log2str ( system ); }
+    {	vl_i := log2str ( self ); }
+    {	vl_i := log2str ( any component . running ); }
+    {	vl_i := log2str ( all component . running ); }
+    {	vl_i := log2str ( any component . alive ); }
+    {	vl_i := log2str ( all component . alive ); }
+    {	vl_i := log2str ( any timer . running ); }
+    {	vl_i := log2str ( f_comp_return().running ); }
+    {	vl_i := log2str ( f_comp_return().alive ); }
+    {	vl_i := log2str ( t.read ); }
+    {	vl_i := log2str ( mycomponent.create ); }
+    {	vl_i := log2str ( activate(temp_altstep()) ); }
+    {	vl_i := log2str ( activate(derefers(temp_altstep_pointer)()) ); }
+    {	vl_i := log2str ( refers(f_functiontypeValueTest) ); }
+	{	vl_i := log2str ( refers(ef_c_ext_function) ); }
+	{	vl_i := log2str ( refers(as_c_altstep) ); }
+	{	vl_i := log2str ( refers(tc_c_testcase) ); }
+}
+
+//FIXME add more tests
+function f_labelTests(){
+	label akarmi
+	label akarmi;
+	label akarmi2;
+
+	var integer vl_i;
+
+	goto akarmi;
+	goto akarmi3;
+	goto akarmi4;
+
+	var integer vl_i2;
+
+	label akarmi3;
+}
+
+function f_labelTests2() return integer
+{
+	label akarmi
+	goto akarmi;
+	return 1;
+}
+
+function f_mapTests(){
+    var componentName_CT vl_comp, vl_comp2;
+	map(vl_comp:portname_PT, vl_comp:portname_PT);
+
+	map(vl_comp:portname1_PT, vl_comp:portname2_PT);
+	map(vl_comp:v_variable, vl_comp:v_variable);
+	map(comp1:portname_PT, vl_comp2:portname_PT);
+	map(mtc:portname1_PT, mtc:portname2_PT);
+	map(self:portname1_PT, self:portname2_PT);
+	map(system:portname1_PT, system:portname2_PT);
+	map(vl_comp:portname_PT, vl_comp2:portnameOut_PT);
+	map(vl_comp:portnameOut_PT, vl_comp2:portname_PT);
+}
+
+function f_unmapTests(){
+    var componentName_CT vl_comp, vl_comp2;
+	unmap(vl_comp:portname_PT, vl_comp:portname_PT);
+
+	unmap(vl_comp:portname1_PT, vl_comp:portname2_PT);
+	unmap(vl_comp:v_variable, vl_comp:v_variable);
+	unmap(comp1:portname, vl_comp2:portname_PT);
+	unmap(mtc:portname1_PT, mtc:portname2_PT);
+	unmap(self:portname1_PT, self:portname2_PT);
+	unmap(system:portname1_PT, system:portname2_PT);
+	unmap(vl_comp:portname_PT, vl_comp2:portnameOut_PT);
+	unmap(vl_comp:portnameOut_PT, vl_comp2:portname_PT);
+}
+
+function f_connectTests(){
+    var componentName_CT vl_comp, vl_comp2;
+	connect(vl_comp:portname_PT, vl_comp:portname_PT);
+
+	connect(vl_comp:portname1_PT, vl_comp:portname2_PT);
+	connect(vl_comp:v_variable, vl_comp:v_variable);
+	connect(comp1:portname, vl_comp2:portname_PT);
+	connect(mtc:portname1, mtc:portname2);
+	connect(self:portname1, self:portname2);
+	connect(system:portname1, system:portname2);
+	connect(vl_comp:portname_PT, vl_comp2:portnameOut_PT);
+	connect(vl_comp:portnameOut_PT, vl_comp2:portname_PT);
+}
+
+function f_disconnectTests(){
+    var componentName_CT vl_comp, vl_comp2;
+	disconnect(vl_comp:portname_PT, vl_comp:portname_PT);
+
+	disconnect(vl_comp:portname1_PT, vl_comp:portname2_PT);
+	disconnect(vl_comp:v_variable, vl_comp:v_variable);
+	disconnect(comp1:portname, vl_comp2:portname_PT);
+	disconnect(mtc:portname1, mtc:portname2);
+	disconnect(self:portname1, self:portname2);
+	disconnect(system:portname1, system:portname2);
+	disconnect(vl_comp:portname_PT, vl_comp2:portnameOut_PT);
+	disconnect(vl_comp:portnameOut_PT, vl_comp2:portname_PT);
+}
+
+function f_portTests(testPortName_PT pl_port_par) runs on componentName_CT{
+    var componentName_CT vl_comp;
+	all port.clear;
+	portname_PT.clear;
+	pl_port_par.clear;
+
+	akarmi.clear;
+	vl_comp.clear;
+}
+
+function f_porthaltTests(testPortName_PT pl_port_par) runs on componentName_CT{
+    var componentName_CT vl_comp;
+	all port.halt;
+	portname_PT.halt;
+	pl_port_par.halt;
+
+	akarmi.halt;
+	vl_comp.halt;
+}
+
+function f_startTests2() {}
+function f_startTests3(out integer pl_par1, out template integer pl_par2) runs on componentName_CT {}
+function f_startTests4(in testPortName_PT pl_par1) runs on componentName_CT return testPortName_PT {}
+
+type function t_functionstartTests2();
+type function t_functionstartTests3(out integer pl_par1, out template integer pl_par2) runs on componentName_CT;
+type function t_functionstartTests4(in testPortName_PT pl_par1) runs on componentName_CT return testPortName_PT;
+type function t_functionstartTests5() runs on self;
+type function t_functionrunsonothercomponent() runs on componentName_CT2 return template integer;
+
+function f_startTests(testPortName_PT pl_port_par) runs on componentName_CT {
+    var componentName_CT vl_comp;
+    timer TL_timervar1 := 5.0;
+    timer TL_timervar2;
+    timer TL_timervar3[2] := {5.0, -};
+
+	all port.start;
+	portname_PT.start;
+	pl_port_par.start;
+	vl_comp.start(f_startTests(pl_port_par));
+	vl_comp.start(f_startTests2());
+	var integer vl_akarmi;
+	var template integer vt_akarmit;
+	vl_comp.start(f_startTests3(vl_akarmi, vt_akarmit));
+	vl_comp.start(f_startTests4(vl_akarmi));
+	TL_timervar1.start;
+	TL_timervar1.start( 5.0 );
+	TL_timervar3[0].start;
+
+	TL_timervar2.start;
+	TL_timervar3[1].start;
+	TL_timervar1.start( -5.0 );
+	TL_timervar1.start( -5 );
+	TL_timervar1.start( "akarmi" ); //FIXME add more tests
+	vl_comp.start(f_runsonothercomponent());
+	vl_akarmi.start;
+	f_startTests.start;
+	f_startTests.start(5.0);
+}
+
+function f_referencedStartTests(testPortName_PT pl_port_par) runs on componentName_CT {
+    var componentName_CT vl_comp;
+    var t_functionstartTests2 vl_function2;
+    var t_functionstartTests3 vl_function3;
+    var t_functionstartTests4 vl_function4;
+    var t_functionrunsonothercomponent vl_functionOther;
+
+	vl_comp.start(derefers(vl_function2)());
+
+	var integer vl_akarmi;
+	var template integer vt_akarmit;
+	vl_comp.start(derefers(refers(f_startTests2))());
+	vl_comp.start(derefers(null)());
+	vl_comp.start(derefers(vl_function3)(vl_akarmi, vt_akarmit));
+	vl_comp.start(derefers(vl_function4)(vl_akarmi));
+	vl_comp.start(derefers(nonExi)());
+	vl_comp.start(derefers(vl_akarmi)());
+	vl_comp.start(derefers(vl_function2)(nonExi));
+	vl_comp.start(derefers(functionOther)());
+}
+
+function f_stopTests(testPortName_PT pl_port_par) runs on componentName_CT{
+    var componentName_CT vl_comp;
+    timer TL_timervar;
+
+	all port.stop;
+	all timer.stop;
+	portname_PT.stop;
+	pl_port_par.stop;
+	vl_comp.stop;
+	TL_timervar.stop;
+	mtc.stop;
+
+	akarmi.stop;
+	f_stopTests.stop;
+}
+
+function f_stopexecutionTest(){
+	stop;
+}
+
+function f_killedTests(){
+    var componentName_CT vl_comp;
+
+    vl_comp.killed;
+    any component.killed;
+    all component.killed;
+
+    akarmi.killed;
+	f_killedTests.killed;
+
+}
+
+function f_killTests(){
+    var componentName_CT vl_comp;
+
+    vl_comp.kill;
+    all component.kill;
+    mtc.kill;
+
+    akarmi.kill;
+	f_killTests.kill;
+}
+
+type integer doneInteger
+with {
+extension "done"
+}
+
+function f_doneTests(){
+    var componentName_CT vl_comp;
+    var integer vl_i;
+
+    vl_comp.done;
+    all component.done;
+    any component.done;
+    vl_comp.done(doneInteger : ?);
+    vl_comp.done(doneInteger : ?) -> value vl_i;
+
+    vl_comp.done -> value akarmi;
+}
+
+function f_timeoutTests(){
+    timer TL_timervar;
+
+    TL_timervar.timeout;
+
+    akarmi.timeout;
+    f_timeoutTests.timeout;
+}
+
+function f_triggerPortTests(testPortName_PT pl_port_par)runs on componentName_CT{
+    any port.trigger;
+
+	portname_PT.trigger;
+	portname_PT.trigger( integer:* );
+	pl_port_par.trigger;
+
+	portname2_PT.trigger;
+	portnameOut_PT.trigger;
+	portname_PT.trigger( charstring:* );
+	portname_PT.trigger -> value myVar;
+	portname_PT.trigger -> value myVar sender myPeer;
+	any port.trigger( templateInstance ) -> value myVar;
+}
+
+function f_receivePortTests(testPortName_PT pl_port_par)runs on componentName_CT{
+	var integer vl_myIntVar := 5;
+	var float vl_myFloatVar := 5.0;
+
+    any port.receive;
+
+	portname_PT.receive;
+	portname_PT.receive( integer:* );
+	pl_port_par.receive;
+	portname_PT.receive(?) -> value vl_myIntVar;
+
+	portname2_PT.receive;
+	portnameOut_PT.receive;
+	portname_PT.receive( charstring:* );
+	portname_PT.receive(?);
+	portname_PT.receive(?) -> value vl_myFloatVar;
+	portname_PT.receive -> value myVar;
+	portname_PT.receive -> value myVar sender myPeer;
+	any port.receive( templateInstance ) -> value myVar;
+}
+
+function f_checkreceivePortTests(testPortName_PT pl_port_par)runs on componentName_CT{
+    any port.check( receive );
+
+	portname_PT.check( receive );
+	portname_PT.check( receive( integer:* ));
+	pl_port_par.check( receive );
+
+	portname2_PT.check( receive );
+	portnameOut_PT.check( receive );
+	portname_PT.check( receive( charstring:* ));
+	any port.check( receive( templateInstance ));
+}
+
+function f_sendPortTests(testPortName_PT pl_port_par)runs on componentName_CT{
+ 	portname_PT.send(5);
+	portname_PT.send ( 5 * 5 );
+    portname_PT.send ( 5 + 5 );
+    portname_PT.send ( 5 - 5 );
+    portname_PT.send ( 5 / 5 );
+    portname_PT.send ( 5 mod 5 );
+    portname_PT.send ( 5 rem 5 );
+    portname_PT.send ( bit2int('00'B) );
+    portname_PT.send ( char2int("5") );
+    portname_PT.send ( hex2int('FF'H) );
+    portname_PT.send ( float2int( 5.5) );
+    portname_PT.send ( str2int("5") );
+    portname_PT.send ( oct2int('0F'O) );
+    portname_PT.send ( unichar2int(char(0,0,0,0)) );
+ 	portname_PT.send ( lengthof("akarmi") );
+    portname_PT.send ( sizeof(c_integer) );
+  	portname_PT.send ( omit );
+
+	portname_PT.send(5) to all component;
+
+	portname2_PT.send(5);
+	portnameIn_PT.send(5);
+	portname_PT.send( "akarmi" );
+
+	portname_PT.send ( pass );
+	portname_PT.send ( fail );
+	portname_PT.send ( inconc );
+	portname_PT.send ( none );
+	portname_PT.send ( error );
+    portname_PT.send ( null );
+    portname_PT.send ( {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)} );
+    portname_PT.send ( {field1:=1, field1:="akarmi"} );
+    portname_PT.send ( true );
+    portname_PT.send ( false );
+    portname_PT.send ( not false );
+    portname_PT.send ( i );
+    portname_PT.send ( 5.5 );
+    portname_PT.send ( "akarmi" );
+    portname_PT.send ( char(0,0,0,0) );
+    portname_PT.send ( 'aa'H );
+    portname_PT.send ( '00'B );
+    portname_PT.send ( {1,2,3} );
+    portname_PT.send ( true and true );
+    portname_PT.send ( true or true );
+    portname_PT_PT.send ( not4b 'aa'H );
+    portname_PT.send ( not4b '00'B );
+    portname_PT.send ( '00'B and4b '00'B );
+    portname_PT.send ( '00'H and4b '00'H );
+    portname_PT.send ( '00'B or4b '00'B );
+    portname_PT.send ( '00'H or4b '00'H );
+    portname_PT.send ( '00'B xor4b '00'B );
+    portname_PT.send ( '00'H xor4b '00'H );
+    portname_PT.send ( '00'B << 1 );
+    portname_PT.send ( '00'H << 1 );
+    portname_PT.send ( '00'B >> 1 );
+    portname_PT.send ( '00'H >> 1 );
+    portname_PT.send ( '00'B <@ 1 );
+    portname_PT.send ( '00'H <@ 1 );
+    portname_PT.send ( '00'B @> 1 );
+    portname_PT.send ( '00'H @> 1 );
+    portname_PT.send ( '00'B & '00'B );
+    portname_PT.send ( '00'H & '00'H );
+    portname_PT.send ( "akarmi" & "akarmi2" );
+    portname_PT.send ( 5 == 5 );
+    portname_PT.send ( 5 != 5 );
+    portname_PT.send ( 5 < 5 );
+    portname_PT.send ( 5 > 5 );
+    portname_PT.send ( 5 <= 5 );
+    portname_PT.send ( 5 >= 5 );
+    portname_PT.send ( bit2hex('00'B) );
+    portname_PT.send ( bit2oct('00'B) );
+    portname_PT.send ( bit2str('00'B) );
+    portname_PT.send ( char2oct("akarmi") );
+    portname_PT.send ( float2str(5.5) );
+    portname_PT.send ( hex2oct('FF00'H) );
+    portname_PT.send ( hex2str('FF00'H) );
+    portname_PT.send ( int2char(5) );
+    portname_PT.send ( int2float(5) );
+    portname_PT.send ( int2str(5) );
+    portname_PT.send ( int2unichar(5) );
+    portname_PT.send ( oct2bit('00FF'O) );
+    portname_PT.send ( oct2char('0F'O) );
+    portname_PT.send ( oct2hex('0F'O) );
+    portname_PT.send ( oct2str('0F'O) );
+    portname_PT.send ( str2bit("0101") );
+    portname_PT.send ( str2float("5.5") );
+    portname_PT.send ( str2hex("0101") );
+    portname_PT.send ( str2oct("0101") );
+    portname_PT.send ( unichar2char(char(0,0,0,0)) );
+    portname_PT.send ( int2bit(1,3) );
+    portname_PT.send ( int2hex(1,3) );
+    portname_PT.send ( int2oct(1,3) );
+    portname_PT.send ( rnd() );
+    portname_PT.send ( rnd(5.5) );
+    portname_PT.send ( isbound(5.5) );
+    portname_PT.send ( isvalue(5.5) );
+    portname_PT.send ( regexp("akarmi","akarmi", 0) );
+    portname_PT.send ( match(5,5) );
+    portname_PT.send ( mtc );
+    portname_PT.send ( system );
+    portname_PT.send ( self );
+    portname_PT.send ( any component . running );
+    portname_PT.send ( all component . running );
+    portname_PT.send ( any component . alive );
+    portname_PT.send ( all component . alive );
+    portname_PT.send ( any timer . running );
+    portname_PT.send ( f_comp_return().running );
+    portname_PT.send ( f_comp_return().alive );
+    portname_PT.send ( t.read );
+    portname_PT.send ( mycomponent.create );
+    portname_PT.send ( activate(temp_altstep()) );
+    portname_PT.send ( activate(derefers(temp_altstep_pointer)()) );
+    portname_PT.send ( refers(f_sendPortTests) );
+	portname_PT.send ( refers(ef_c_ext_function) );
+	portname_PT.send ( refers(as_c_altstep) );
+	portname_PT.send ( refers(tc_c_testcase) );
+	portname_PT.send ( integer:? );
+}
+
+function f_replyPortTests(testPortName_PT pl_port_par)runs on componentName_CT{
+ 	portname2_PT.reply( { 1 } );
+  	portname2_PT.reply ( omit );
+
+	portname2_PT.reply( { 1 } ) to all component;
+
+	portname_PT.reply({ 1 });
+	portnameOut2_PT.reply({ 1 });
+
+	portname2_PT.reply ( 5 );
+	portname2_PT.reply ( 5 * 5 );
+    portname2_PT.reply ( 5 + 5 );
+    portname2_PT.reply ( 5 - 5 );
+    portname2_PT.reply ( 5 / 5 );
+    portname2_PT.reply ( 5 mod 5 );
+    portname2_PT.reply ( 5 rem 5 );
+    portname2_PT.reply ( bit2int('00'B) );
+    portname2_PT.reply ( char2int("5") );
+    portname2_PT.reply ( hex2int('FF'H) );
+    portname2_PT.reply ( float2int( 5.5) );
+    portname2_PT.reply ( str2int("5") );
+    portname2_PT.reply ( oct2int('0F'O) );
+    portname2_PT.reply ( unichar2int(char(0,0,0,0)) );
+ 	portname2_PT.reply ( lengthof("akarmi") );
+    portname2_PT.reply ( sizeof(c_integer) );
+	portname2_PT.reply ( pass );
+	portname2_PT.reply ( fail );
+	portname2_PT.reply ( inconc );
+	portname2_PT.reply ( none );
+	portname2_PT.reply ( error );
+    portname2_PT.reply ( null );
+    portname2_PT.reply ( {null, omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)} );
+    portname2_PT.reply ( {field1:=1, field1:="akarmi"} );
+    portname2_PT.reply ( true );
+    portname2_PT.reply ( false );
+    portname2_PT.reply ( not false );
+    portname2_PT.reply ( i );
+    portname2_PT.reply ( 5.5 );
+    portname2_PT.reply ( "akarmi" );
+    portname2_PT.reply ( char(0,0,0,0) );
+    portname2_PT.reply ( 'aa'H );
+    portname2_PT.reply ( '00'B );
+    portname2_PT.reply ( {1,2,3} );
+    portname2_PT.reply ( true and true );
+    portname2_PT.reply ( true or true );
+    portname2_PT.reply ( not4b 'aa'H );
+    portname2_PT.reply ( not4b '00'B );
+    portname2_PT.reply ( '00'B and4b '00'B );
+    portname2_PT.reply ( '00'H and4b '00'H );
+    portname2_PT.reply ( '00'B or4b '00'B );
+    portname2_PT.reply ( '00'H or4b '00'H );
+    portname2_PT.reply ( '00'B xor4b '00'B );
+    portname2_PT.reply ( '00'H xor4b '00'H );
+    portname2_PT.reply ( '00'B << 1 );
+    portname2_PT.reply ( '00'H << 1 );
+    portname2_PT.reply ( '00'B >> 1 );
+    portname2_PT.reply ( '00'H >> 1 );
+    portname2_PT.reply ( '00'B <@ 1 );
+    portname2_PT.reply ( '00'H <@ 1 );
+    portname2_PT.reply ( '00'B @> 1 );
+    portname2_PT.reply ( '00'H @> 1 );
+    portname2_PT.reply ( '00'B & '00'B );
+    portname2_PT.reply ( '00'H & '00'H );
+    portname2_PT.reply ( "akarmi" & "akarmi2" );
+    portname2_PT.reply ( 5 == 5 );
+    portname2_PT.reply ( 5 != 5 );
+    portname2_PT.reply ( 5 < 5 );
+    portname2_PT.reply ( 5 > 5 );
+    portname2_PT.reply ( 5 <= 5 );
+    portname2_PT.reply ( 5 >= 5 );
+    portname2_PT.reply ( bit2hex('00'B) );
+    portname2_PT.reply ( bit2oct('00'B) );
+    portname2_PT.reply ( bit2str('00'B) );
+    portname2_PT.reply ( char2oct("akarmi") );
+    portname2_PT.reply ( float2str(5.5) );
+    portname2_PT.reply ( hex2oct('FF00'H) );
+    portname2_PT.reply ( hex2str('FF00'H) );
+    portname2_PT.reply ( int2char(5) );
+    portname2_PT.reply ( int2float(5) );
+    portname2_PT.reply ( int2str(5) );
+    portname2_PT.reply ( int2unichar(5) );
+    portname2_PT.reply ( oct2bit('00FF'O) );
+    portname2_PT.reply ( oct2char('0F'O) );
+    portname2_PT.reply ( oct2hex('0F'O) );
+    portname2_PT.reply ( oct2str('0F'O) );
+    portname2_PT.reply ( str2bit("0101") );
+    portname2_PT.reply ( str2float("5.5") );
+    portname2_PT.reply ( str2hex("0101") );
+    portname2_PT.reply ( str2oct("0101") );
+    portname2_PT.reply ( unichar2char(char(0,0,0,0)) );
+    portname2_PT.reply ( int2bit(1,3) );
+    portname2_PT.reply ( int2hex(1,3) );
+    portname2_PT.reply ( int2oct(1,3) );
+    portname2_PT.reply ( rnd() );
+    portname2_PT.reply ( rnd(5.5) );
+    portname2_PT.reply ( isbound(5.5) );
+    portname2_PT.reply ( isvalue(5.5) );
+    portname2_PT.reply ( regexp("akarmi","akarmi", 0) );
+    portname2_PT.reply ( match(5,5) );
+    portname2_PT.reply ( mtc );
+    portname2_PT.reply ( system );
+    portname2_PT.reply ( self );
+    portname2_PT.reply ( any component . running );
+    portname2_PT.reply ( all component . running );
+    portname2_PT.reply ( any component . alive );
+    portname2_PT.reply ( all component . alive );
+    portname2_PT.reply ( any timer . running );
+    portname2_PT.reply ( f_comp_return().running );
+    portname2_PT.reply ( f_comp_return().alive );
+    portname2_PT.reply ( t.read );
+    portname2_PT.reply ( mycomponent.create );
+    portname2_PT.reply ( activate(temp_altstep()) );
+    portname2_PT.reply ( activate(derefers(temp_altstep_pointer)()) );
+    portname2_PT.reply ( refers(f_sendPortTests) );
+	portname2_PT.reply ( refers(ef_c_ext_function) );
+	portname2_PT.reply ( refers(as_c_altstep) );
+	portname2_PT.reply ( refers(tc_c_testcase) );
+
+  	portname3_PT.reply ( S_ProvedureSignatureID3 : {2});
+  	portname3_PT.reply ( S_ProvedureSignatureID : {2} value 5);
+  	portname3_PT.reply ( S_ProvedureSignatureID4 : {2});
+  	portname3_PT.reply ( integer : "akarmi");
+  	portname3_PT.reply ( S_ProvedureSignatureID : {2} value nonExi);
+}
+
+function f_raisePortTests(testPortName_PT pl_port_par)runs on componentName_CT{
+	portname2_PT.raise( S_ProvedureSignatureID, 5 );
+	portname2_PT.raise( S_ProvedureSignatureID, "akarmi" );
+
+	portname_PT.raise( S_ProvedureSignatureID, 5 );
+	portnameOut2_PT.raise( S_ProvedureSignatureID, 5 );
+	portname2_PT.raise( S_ProvedureSignatureID2, 5 );
+}
+
+function f_getcallPortTests(testPortName2_PT pl_port_par2)runs on componentName_CT{
+    var componentName_CT vl_myPeer, vl_myPeer2;
+    var integer vl_gainedParam, vl_gainedParam2;
+
+    any port.getcall;
+
+	portname2_PT.getcall;
+	portname2_PT.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam := par1) sender vl_myPeer2;
+	pl_port_par2.getcall;
+
+	any port.getcall -> param (akarmi);
+	any port.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam) sender vl_myPeer2;
+	any port.getcall( S_ProvedureSignatureID:{?} );
+	portname_PT.getcall;
+	portnameOut2_PT.getcall;
+	portname_PT.getcall( S_ProvedureSignatureID:{?} );
+	portnameOut2_PT.getcall( S_ProvedureSignatureID:{?} );
+	portname2_PT.getcall( S_ProvedureSignatureID2:{?} );
+	portname2_PT.getcall( charstring:* );
+	portname2_PT.getcall from nonExi -> param (nonExi) sender nonExi;
+	portname2_PT.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam, vl_gainedParam2) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_myPeer) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID5:{?} ) from vl_myPeer -> param (vl_gainedParam) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam := par1, vl_gainedParam2 := par2) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam := par1, vl_gainedParam2 := par1) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID6:{?} ) from vl_myPeer -> param (vl_gainedParam := par1) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_myPeer := par1) sender vl_myPeer2;
+	portname2_PT.getcall( S_ProvedureSignatureID5:{?} ) from vl_myPeer -> param (vl_gainedParam := par1) sender vl_myPeer2;
+	any port.getcall( templateInstance ) from myVar;
+}
+
+function f_checkgetcallPortTests(testPortName_PT pl_port_par2)runs on componentName_CT{
+    any port.check(getcall);
+
+	portname2_PT.check(getcall);
+	portname2_PT.check(getcall( S_ProvedureSignatureID:{?} ) from myVar -> param (akarmi) sender myPeer);
+	pl_port_par2.check(getcall);
+
+	any port.check(getcall -> param (akarmi));
+	any port.check(getcall( S_ProvedureSignatureID:{?} ));
+	portname_PT.check(getcall);
+	portnameOut2_PT.check(getcall);
+	portname_PT.check(getcall( S_ProvedureSignatureID:{?} ));
+	portnameOut2_PT.check(getcall( S_ProvedureSignatureID:{?} ));
+	portname2_PT.check(getcall( S_ProvedureSignatureID2:{?} ));
+	portname2_PT.check(getcall( charstring:* ));
+	portname2_PT.check(getcall from myVar -> param (akarmi) sender myPeer);
+	any port.check(getcall( templateInstance ) from myVar);
+}
+
+function f_getreplyPortTests(reply_PT pl_port_par2)runs on componentName_CT{
+    var componentName_CT vl_myPeer, vl_myPeer2;
+    var integer vl_gainedParam, vl_gainedParam2;
+
+    any port.getreply;
+
+	portname2_PT.getreply;
+	portname2_PT.getreply( S_ProvedureSignatureID6:{?} ) from vl_myPeer -> param (vl_gainedParam) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID6:{?} ) from vl_myPeer -> param (vl_gainedParam := par1) sender vl_myPeer2;
+	portname2_PT.getreply;
+
+	any port.getreply -> param (akarmi);
+	any port.getreply -> value akarmi;
+	any port.getreply( S_ProvedureSignatureID:{?} );
+	any port.getreply( S_ProvedureSignatureID4:{?} value S_ProvedureSignatureID4:{?} );
+	portname_PT.getreply;
+	portname_PT.getreply( S_ProvedureSignatureID:{?} );
+	portname2_PT.getreply;
+	portname2_PT.getreply( S_ProvedureSignatureID:{?} );
+	portnameOut2_PT.getreply;
+	replyport_PT.getreply( S_ProvedureSignatureID:{?} );
+	replyport_PT.getreply( charstring:* );
+	portname2_PT.getreply from nonExi -> param (nonExi) sender nonExi;
+	portname2_PT.getreply( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam, vl_gainedParam2) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_myPeer) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID5:{?} ) from vl_myPeer -> param (vl_gainedParam) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID:{?} ) from vl_myPeer -> param (vl_gainedParam := par1, vl_gainedParam2 := par2) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID6:{?} ) from vl_myPeer -> param (vl_gainedParam := par1, vl_gainedParam2 := par2) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID6:{?} ) from vl_myPeer -> param (vl_gainedParam := par1, vl_gainedParam2 := par1) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID6:{?} ) from vl_myPeer -> param (vl_myPeer := par1) sender vl_myPeer2;
+	portname2_PT.getreply( S_ProvedureSignatureID5:{?} ) from vl_myPeer -> param (vl_gainedParam := par1) sender vl_myPeer2;
+	any port.getreply( templateInstance ) from myVar;
+}
+
+function f_checkgetreplyPortTests(reply_PT pl_port_par)runs on componentName_CT{
+	any port.check(getreply);
+
+	replyport_PT.check(getreply);
+	replyport_PT.check(getreply( S_ProvedureSignatureID3:{?} ) from myVar -> param (akarmi) sender myPeer);
+	pl_port_par.check(getreply);
+
+	any port.check(getreply -> param (akarmi));
+	any port.check(getreply -> value akarmi);
+	any port.check(getreply( S_ProvedureSignatureID:{?} ));
+	any port.check(getreply( S_ProvedureSignatureID4:{?} value S_ProvedureSignatureID4:{?} ));
+	portname_PT.check(getreply);
+	portname_PT.check(getreply( S_ProvedureSignatureID:{?} ));
+	portname2_PT.check(getreply);
+	portname2_PT.check(getreply( S_ProvedureSignatureID:{?} ));
+	portnameOut2_PT.check(getreply);
+	replyport_PT.check(getreply( S_ProvedureSignatureID:{?} ));
+	replyport_PT.check(getreply( charstring:* ));
+	replyport_PT.check(getreply from myVar -> param (akarmi) sender myPeer);
+	any port.check(getreply( templateInstance ) from myVar);
+}
+
+function f_checkPortTests(reply_PT pl_port_par)runs on componentName_CT{
+	any port.check;
+
+	replyport_PT.check;
+	replyport_PT.check( from myVar -> sender myPeer);
+	pl_port_par.check;
+
+	portnameOut_PT.check;
+}
+
+function f_catchPortTests(reply_PT pl_port_par2)runs on componentName_CT{
+    any port.catch;
+
+	replyport_PT.catch;
+	replyport_PT.catch from myVar -> sender myPeer;
+	replyport_PT.catch( S_ProvedureSignatureID3, integer:* ) from myVar -> value akarmi sender myPeer;
+	replyport_PT.catch( S_ProvedureSignatureID3, charstring:* );
+	pl_port_par2.catch;
+
+	any port.catch(timeout);
+	portname_PT.catch(timeout);
+	portnameIn2_PT.catch(timeout);
+	replyport_PT.catch(timeout) from myVar -> value akarmi sender myPeer;
+
+	any port.catch from myVar -> value akarmi sender myPeer;
+	any port.catch( S_ProvedureSignatureID3, integer:* ) from myVar -> value akarmi sender myPeer;
+	portname_PT.catch;
+	portnameIn2_PT.catch;
+	portname_PT.catch( S_ProvedureSignatureID3, integer:* );
+	portnameIn2_PT.catch( S_ProvedureSignatureID3, integer:* );
+	portname2_PT.catch( S_ProvedureSignatureID2, integer:* );
+	portnameOut3_PT.catch;
+	portnameOut3_PT.catch( S_ProvedureSignatureID2, integer:* );
+	replyport_PT.catch( S_ProvedureSignatureID3, boolean:* );
+	replyport_PT.catch( S_ProvedureSignatureID3, S_ProvedureSignatureID3:* );
+	replyport_PT.catch( S_ProvedureSignatureID3, reply_PT:* );
+	replyport_PT.catch( S_ProvedureSignatureID3, default:* );
+	replyport_PT.catch from myVar -> value akarmi sender myPeer;
+}
+
+signature callTest_MyProc(in integer Par1,inout charstring Par2,out float Par3)
+return boolean
+exception(integer);
+
+signature s_t_callTest_StopPTC();
+signature s_callTest_incoming();
+signature s_callTest_extra();
+signature s_callTest_nonblocking() noblock;
+
+template s_t_callTest_StopPTC t_callTest_StopPTC := { }
+
+template callTest_MyProc t_callTest_MyProcTemplate:= {
+    Par1:=44,
+    Par2:="Q",
+    Par3:=324.664
+}
+
+type port callTest_ProcPort1 procedure
+{
+    inout callTest_MyProc,s_t_callTest_StopPTC, s_callTest_nonblocking;
+    in s_callTest_incoming;
+} with {extension "internal"}
+type port callTest_ProcPort2 procedure
+{
+    in s_callTest_incoming;
+} with {extension "internal"}
+type port callTest_MessagePort1 message
+{
+    inout integer;
+} with {extension "internal"}
+
+type component callTest_ProcComponent
+{
+    port callTest_ProcPort1 Port0_PT;
+    port callTest_ProcPort2 Port2_PT;
+    port callTest_MessagePort1 Port1_PT;
+}
+
+function f_callTests( ) runs on callTest_ProcComponent
+{
+    var boolean vl_b:=false;
+    Port0_PT.call(t_callTest_MyProcTemplate,nowait);
+    alt {
+        []Port0_PT.getreply(t_callTest_MyProcTemplate) -> value vl_b {
+        }
+    }
+    Port0_PT.call(t_callTest_StopPTC,0.5) {
+        []Port0_PT.getreply(t_callTest_StopPTC) { }
+        []Port0_PT.catch(timeout) { }
+    }
+
+	nonExi.call(t_callTest_MyProcTemplate,nowait);
+	Port1_PT.call(t_callTest_MyProcTemplate,nowait);
+	Port0_PT.call(nonExi,nowait);
+	Port0_PT.call(s_callTest_extra : {},nowait);
+	Port0_PT.call(integer : 5,nowait);
+	Port2_PT.call(t_callTest_MyProcTemplate,nowait);
+	nonExi.call(s_callTest_extra : {},nowait);
+	Port0_PT.call(s_callTest_nonblocking : {},5.0);
+	Port0_PT.call(s_callTest_nonblocking : {},nowait);
+	Port0_PT.call(s_callTest_nonblocking : {}) {
+        []Port0_PT.catch(timeout) { }
+    }
+    Port0_PT.call(t_callTest_MyProcTemplate,nowait) {
+        []Port0.getreply(t_callTest_MyProcTemplate) { }
+    }
+    Port0_PT.call(t_callTest_MyProcTemplate);
+    Port0_PT.call(t_callTest_MyProcTemplate, 5) {
+        []Port0_PT.catch(timeout) { }
+    }
+    Port0_PT.call(t_callTest_MyProcTemplate, -5.0) {
+        []Port0_PT.catch(timeout) { }
+    }
+    Port0_PT.call(t_callTest_MyProcTemplate,nowait) to nonExi;
+    Port0_PT.call(t_callTest_MyProcTemplate,nowait) to vl_b;
+    Port0_PT.call(t_callTest_MyProcTemplate, 5.0) {
+        []Port0_PT.getreply(t_callTest_MyProcTemplate) { }
+        []Port2_PT.getreply(t_callTest_MyProcTemplate) { }
+        []any port.getreply(t_callTest_MyProcTemplate) { }
+        []Port0_PT.getreply(t_callTest_StopPTC) { }
+        []Port0_PT.catch(callTest_MyProc, integer : 5) { }
+        []Port2_PT.catch(callTest_MyProc, integer : 5) { }
+        []any port.catch(callTest_MyProc, integer : 5) { }
+        []Port0_PT.catch(s_t_callTest_StopPTC, integer : 5) { }
+    }
+}
+
+testcase tc_testcaseName( )
+runs on componentName_CT
+system componentName_CT
+{
+	{ execute(tc_testcaseName(), 5.0);}
+}
+
+altstep as_altstepName()
+runs on componentName_CT
+{
+    timer TL_timerName;
+  [] TL_timerName.timeout
+    {
+		{ return;}
+
+      { execute(tc_testcaseName(), 5.0);}
+      { return akarmi;}
+    }
+  [else]
+    {
+
+    }
+}
+
+
+function f_executeTests(){
+	{ execute(tc_testcaseName(), 5.0);}
+
+	{ execute(tc_testcaseName(), -5.0);}
+	{ execute(tc_testcaseName(), 5);}
+	{ execute(tc_testcaseName2(), 5.0);}
+	{ execute(f_catchPortTests(), 5.0);}
+	{ execute(tc_testcaseName(), infinity);}
+	{ execute(tc_testcaseName(), -infinity);}
+	{ return akarmi;}
+}
+
+function f_executedereferedTests(){
+	var t_testcase vl_akarmi;
+	var t_altstep vl_akarmi2;
+
+	{ execute(derefers( vl_akarmi ) ( parameters ), 5.0);}
+
+	{ execute(derefers( vl_akarmi ) ( parameters ), -5.0);}
+	{ execute(derefers( vl_akarmi ) ( parameters ), 5);}
+	{ execute(derefers( akarmi3 ) ( parameters ), -5.0);}
+	{ execute(derefers( vl_akarmi2 ) ( parameters ), -5.0);}
+	{ execute(derefers( vl_akarmi ) ( parameters ), infinity);}
+	{ execute(derefers( vl_akarmi ) ( parameters ), -infinity);}
+}
+
+function f_functionwith_return()
+return integer
+{
+	{ return 5;}
+
+	{ return;}
+	{ return *;}
+	{ return "akarmi";}
+}
+
+function f_functionwith_returntemplate()
+return template integer
+{
+	{ return 5;}
+	{ return *;}
+
+	{ return; }
+	{ return "akarmi";}
+}
+
+external function ef_f_externalfunction();
+external function ef_f_externalfunctionwith_return() return integer;
+external function ef_f_externalfunctionwith_returntemplate() return template integer;
+
+function f_function_altstep_instanceTests(){
+    f_executeTests();
+    as_altstepName();
+    ef_f_externalfunction();
+
+    f_functionwith_return();
+    f_functionwith_returntemplate();
+    ef_f_externalfunctionwith_return();
+    ef_f_externalfunctionwith_returntemplate();
+
+    timer TL_timerName;
+    TL_timerName();
+}
+
+function f_activateTest() runs on componentName_CT2 {
+    var integer vl_parameter := 1;
+    activate(as_altstepName(vl_parameter));
+
+	activate(nonExi());
+	activate(vl_parameter());
+	activate(as_altstepName());
+	activate(as_altstepName(1));
+	activate(as_altstepName(1, 1));
+}
+
+function f_activateTests2() {
+    var integer vl_parameter := 1;
+    var t_altstep2 vl_altstep1;
+    activate(as_altstepName(vl_parameter));
+}
+
+function f_activate_referredTests() runs on componentName_CT2 {
+    var integer vl_parameter := 1;
+    var t_altstep2 vl_altstep1;
+    var t_altstep3 vl_altstep3;
+    activate(derefers(vl_altstep1)(vl_parameter));
+
+	activate(derefers(nonExi)(vl_parameter));
+	activate(derefers(parameter)(vl_parameter));
+	activate(derefers(vl_altstep1)());
+	activate(derefers(vl_altstep1)(1));
+	activate(derefers(vl_altstep1)(1, 1));
+	activate(derefers(vl_altstep3)(vl_parameter));
+}
+
+function f_deactivateTest(){
+	var default vl_akarmi;
+
+	deactivate(vl_akarmi);
+	// add more checks as they are implemented
+}
+
+function f_applyTests(){
+    var t_function vl_functionVar;
+    var t_altstep vl_altstepVar;
+
+    vl_functionVar.apply();
+    vl_altstepVar.apply();
+
+    //add more checks as they are implemented
+}
+
+function f_interleaveTests() runs on componentName_CT
+{
+interleave
+{
+  [] portname_PT.receive(1)
+    {
+      label akarmi
+      repeat;
+      continue;
+      return;
+      goto akarmi
+      as_altstepName();
+    }
+};
+}
+
+function f_returnTest1() return integer {
+    return 5;
+    return "akarmi";
+}
+function f_returnTest2() return integer {
+    var integer vl_var1;
+    //no return
+    if (vl_var1 == 0) {
+        return 5;
+    } else if (vl_var1 == 1) {
+    } else {
+    }
+}
+function f_returnTest3() return integer {
+    var integer vl_var1;
+    //no return
+    if (vl_var1 == 0) {
+    } else if (vl_var1 == 1) {
+    } else {
+    }
+    //almost return
+    if (vl_var1 == 0) {
+    } else if (vl_ar1 == 1) {
+    } else {
+        return 5;
+    }
+    if (vl_var1 == 0) {
+    } else if (vl_var1 == 1) {
+        return 5;
+    } else {
+    }
+    if (vl_var1 == 0) {
+        return 5;
+    } else if (vl_var1 == 1) {
+    } else {
+    }
+    if (vl_var1 == 0) {
+        return 5;
+    } else if (vl_var1 == 1) {
+    } else {
+        return 5;
+    }
+    if (vl_var1 == 0) {
+        return 5;
+    } else if (vl_var1 == 1) {
+        return 5;
+    } else {
+    }
+    if (vl_var1 == 0) {
+    } else if (vl_var1 == 1) {
+        return 5;
+    } else {
+        return 5;
+    }
+    // all return
+    if (vl_var1 == 0) {
+        return 5;
+    } else if (vl_var1 == 1) {
+        return 5;
+    } else {
+        return 5;
+    }
+}
+
+function f_returnTest4() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {}
+        case (2) {}
+        case else {}
+    }
+}
+
+function f_returnTest5() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {return 5;}
+        case (2) {}
+        case else {}
+    }
+}
+
+function f_returnTest6() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {}
+        case (2) {return 5;}
+        case else {}
+    }
+}
+
+function f_returnTest7() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {}
+        case (2) {}
+        case else {return 5;}
+    }
+}
+
+function f_returnTest8() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {}
+        case (2) {return 5;}
+        case else {return 5;}
+    }
+}
+
+function f_returnTest9() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {return 5;}
+        case (2) {}
+        case else {return 5;}
+    }
+}
+
+function f_returnTest10() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {return 5;}
+        case (2) {return 5;}
+        case else {}
+    }
+}
+
+function f_returnTest11() return integer {
+    var integer vl_var1;
+    select (vl_var1) {
+        case (1) {return 5;}
+        case (2) {return 5;}
+        case else {return 5;}
+    }
+}
+
+control{
+	{ execute(tc_testcaseName(), 5.0);}
+
+	{	setverdict ( pass );    }
+	{   map(akarmi:barmi, akarmi:barmi);   }
+	{   unmap(akarmi:barmi, akarmi:barmi);   }
+	{   connect(akarmi:barmi, akarmi:barmi);   }
+	{   disconnect(akarmi:barmi, akarmi:barmi);   }
+	{	all port.clear;}
+	{	akarmi.clear;}
+	{	akarmi.halt;}
+	{	akarmi.trigger;}
+/*	{	akarmi.start;}
+	{	akarmi.stop;}*/
+	{ 	execute(tc_testcaseName(), -5.0);}
+	{ 	execute(tc_testcaseName2(), 5.0);}
+	{ 	execute(f_catchPortTests(), 5.0);}
+	{	return;}
+	{	return akarmi;}
+}
+
+}  // end of module

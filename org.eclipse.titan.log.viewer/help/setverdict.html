@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>Setverdict</title>
+</head>
+<body>
+<h1>Setverdict</h1>
+<br>
+<p class="text">The user can configure which setverdict events to display in the 
+  message sequence chart and if an icon of the verdict shall be displayed in the 
+  Text table view, and define strings that caused the event, e.g. all messages 
+  since last setverdict event that contains the specified strings. The specified 
+  strings are ( case sensitive).<br>
+  <br>
+  <img src="images/setverdictPrefPage.png"><br>
+</p>
+<p></p>
+<br>
+<table cellspacing="0" border="1" width="75%" cellpadding="3" bordercolor="gray">
+  <tr> 
+    <td width="20%" align ="left"><p class="subtitle">Button</p></td>
+    <td width="80%"><p class="subtitle">Description</p></td>
+  </tr>
+  <tr> 
+    <td width="20%" align ="left"><p class="text">Add...</p></td>
+    <td width="80%" align="left">
+      <p class="text">Opens a input dialog where the user enters the string that 
+        should be added to the list.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20%" align ="left"><p class="text">Remove</p></td>
+    <td width="80%" align="left">
+      <p class="text">Removes the selected string from the list.</p>
+    </td>
+  </tr>
+  <tr> 
+    <td width="20%" align ="left">
+      <p class="text">Restore Defaults</p>
+    </td>
+    <td width="80%" align="left" > 
+      <p class="text">Restores the settings to default. <br>
+        Default settings is</p>
+      <table border = "0" width="386">
+        <tr>
+          <td width="209"> 
+            <p class="smalltext"><i>Error</i></p>
+          </td>
+          <td width="167"> 
+            <p class="smalltext"><i>checked</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209">
+            <p class="smalltext"><i>Fail</i></p>
+          </td>
+          <td width="167"> 
+            <p class="smalltext"><i>checked</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209">
+            <p class="smalltext"><i>Inconc</i></p>
+          </td>
+          <td width="167"> 
+            <p class="smalltext"><i>checked</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209">
+            <p class="smalltext"><i>None</i></p>
+          </td>
+          <td width="167"> 
+            <p class="smalltext"><i>checked</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209">
+            <p class="smalltext"><i>Pass</i></p>
+          </td>
+          <td width="167"> 
+            <p class="smalltext"><i>checked</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209">
+            <p class="smalltext">&nbsp;</p>
+		  </td>
+          <td width="167"> 
+            <p class="smalltext">&nbsp;</p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209">
+            <p class="smalltext"><i>Setverdict(error) event caused by</i></p>
+          </td>
+          <td width="167"> 
+            <p class="smalltext"><i>Dynamic test case error</i></p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209">
+            <p class="smalltext">&nbsp;</p>
+          </td>
+          <td width="167"> 
+            <p class="smalltext">&nbsp;</p>
+          </td>
+        </tr>
+        <tr>
+          <td width="209"> 
+            <p class="smalltext"><i>Setverdict(fail) event caused by</i></p>
+            </td>
+          <td width="167"> 
+            <p class="smalltext"><i>check failed<br>
+              problems<br>
+              nothing received (fail)<br>
+              failed VP<br>
+              is done.<br>
+              does not match<br>
+              Setting verdict to fail<br>
+              Incorrect result checking<br>
+              mismatch<br>
+              No match<br>
+              unmatched</i></p>
+          </td>
+        </tr>
+      </table>
+      <p></p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

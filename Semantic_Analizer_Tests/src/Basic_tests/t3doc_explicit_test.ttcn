@@ -1,0 +1,876 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+//* @author RZ/ETHBAAT
+//* ETH/RZ
+//* @author Jack Kent, Peggy Parish, Crockett Johnson,
+//* A.A. Milne, Marjorie Weinman Sharmat,
+//* Mary Shelley, and Madeleine L'Engle
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn
+//* @desc This module is T3doc_Test_Types_explicitDoc.ttcn 
+//* is part of TITAN regression test
+//* @purpose This module is for positive testing explicit T3Doc tagging
+//* @version 1.7
+//* @remark This is not the final version
+//* @requirement RS999
+//* @reference ETSI ES 201 873-10 V4.3.1
+//* @see http://www.ttcn-3.org/OpenSourceTools.htm
+//* @since 2012-04-11 A
+//* @status Test Finished A
+//* @verdict passed A
+//* @config This is the only line not accepted
+module t3doc_explicit_test
+{
+
+//* @author Anreas L
+//* @desc modulepar integer tsp_i
+//* @remark it is for testing single line modulepar
+//* @reference this is a dummy ref
+//* @see BalticSee B
+//* @since 2012-04-02 B
+//* @status Ready B
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn B
+//* @version 0.2 B
+modulepar integer tsp_i;
+
+//* @author Anreas L C
+//* @desc this is a modulepar block test
+//* @remark it is for testing single line modulepar
+//* @reference this is a dummy ref C
+//* @see BalticSee C
+//* @since 2012-04-02 C
+//* @status Ready C
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn C
+//* @version 0.2 C
+//* @member integer tsp_i2 is equal to 1
+//* @member charstring tsp_ch is initialized for "hyppo"
+modulepar {
+  integer tsp_i2 := 1;
+  //* @desc this is unvisible
+  charstring tsp_ch:="hyppo";
+}
+
+//* @author ETHBAAT D
+//* @desc This is the T3Doc test for groups D
+//* @remark This part is ambigous a  little bit D
+//* @reference this is a dummy ref D
+//* @see also documentation D
+//* @since 2012-04-02 D
+//* @status Ready D
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn D
+//* @version 0.2 D
+group G {
+  const integer cg_ig1:=1;
+  const integer cg_ig2:=2;
+}
+
+//* @author CGI_Author E
+//* and nobody else 
+//* @desc cg_i global const integer E
+//* @remark this is a new part E
+//* @reference this is a dummy ref E
+//* @see also documentation E
+//* @since 2012-04-02 E
+//* @status Ready E
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn E
+//* @version 0.2 E
+const integer cg_i:=1;
+
+//* @author CGI_Author F
+//* and nobody else 
+//* @desc cg_f global const charstring F
+//* @remark this is a new part F
+//* @reference this is a dummy ref F
+//* @see also documentation F
+//* @since 2012-04-02 F
+//* @status Ready F
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn F
+//* @version 0.2 F
+const float cg_f:=1.0;
+
+
+//* @author CGI_Author G
+//* and nobody else G
+//* @desc cg_v global const verdicttype G
+//* @remark this is a new part G
+//* @reference this is a dummy ref G
+//* @see also documentation G
+//* @since 2012-04-02 G
+//* @status Ready G
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn G
+//* @version 0.2 G
+const verdicttype cg_v:=fail;
+
+
+//* @author bitstring_Author H
+//* and nobody else H
+//* @desc cg_bs global const bitstring H
+//* @remark this is a new part H
+//* @reference this is a dummy ref H
+//* @see also documentation H
+//* @since 2012-04-02 H
+//* @status Ready H
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn H
+//* @version 0.2 H
+const bitstring cg_bs:='101'B;
+
+//* @author hexstring_Author I
+//* and nobody else I
+//* @desc cg_hs global const hextring I
+//* @remark this is a new part I
+//* @reference this is a dummy ref I
+//* @see also documentation I
+//* @since 2012-04-02 I
+//* @status Ready I
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn I
+//* @version 0.2 I
+const hexstring cg_hs:='AFC'H;
+
+//* @author octetstring_Author J
+//* and nobody else J
+//* @desc cg_os global const hextring J
+//* @remark this is a new part J
+//* @reference this is a dummy ref J
+//* @see also documentation J
+//* @since 2012-04-02 J
+//* @status Ready J
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn J
+//* @version 0.2 J
+
+const octetstring cg_os:='AFC1'O;
+
+//* @author charstring_Author K
+//* and nobody else K
+//* @desc cg_cs global const charstring K
+//* @remark this is a new part K
+//* @reference this is a dummy ref K
+//* @see also documentation K
+//* @since 2012-04-02 K
+//* @status Ready K
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn K
+//* @version 0.2 K
+const charstring cg_cs:="Snowhite and the Smurfs"
+
+//* @author u_charstring_Author L
+//* and nobody else L
+//* @desc cg_hs global const hextring L
+//* @remark this is a new part L
+//* @reference this is a dummy ref L
+//* @see also documentation L
+//* @since 2012-04-02 L
+//* @status Ready L
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn L
+//* @version 0.2 L
+const universal charstring cg_ucs := int2unichar (367)
+
+//* @author IntegerList_Author M
+//* and nobody else M
+//* @desc cg_i global const integer M
+//* @remark this is a new part M
+//* @reference this is a dummy ref M
+//* @see also documentation M
+//* @since 2012-04-02 M
+//* @status Ready M
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn M
+//* @version 0.2 M
+const IntegerList cg_il:={1,2,3};
+
+//* @author MyRec_Author N
+//* and nobody else N
+//* @desc cg_i global const integer N
+//* @member 1 N
+//* @member true N
+//* @remark this is a new part N
+//* @reference this is a dummy ref N
+//* @see also documentation N
+//* @since 2012-04-02 N
+//* @status Ready N
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N
+//* @version 0.2 N
+const MyRec cg_myRec:={1,true}
+
+
+//* @author cg_myFL_Author N1
+//* and nobody else N1
+//* @desc cg_i global const integer N1
+//* @member 1 N1
+//* @member true N1
+//* @remark this is a new part N1
+//* @reference this is a dummy ref N1
+//* @see also documentation N1
+//* @since 2012-04-02 N1
+//* @status Ready N1
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N1
+//* @version 0.2 N1
+const FloatList cg_myFL:={1.0,2.2}
+
+//* @author cg_myVL_Author N2
+//* and nobody else N2
+//* @desc cg_i global const integer N2
+//* @member 1 N2
+//* @member true N2
+//* @remark this is a new part N2
+//* @reference this is a dummy ref N2
+//* @see also documentation N2
+//* @since 2012-04-02 N2
+//* @status Ready N2
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N2
+//* @version 0.2 N2
+ const VerdictList cg_myVL:={pass,pass}
+
+//* @author cg_myBS_Author N3
+//* and nobody else N3
+//* @desc cg_i global const integer N3
+//* @member 1 N3
+//* @member true N3
+//* @remark this is a new part N3
+//* @reference this is a dummy ref N3
+//* @see also documentation N3
+//* @since 2012-04-02 N3
+//* @status Ready N3
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N3
+//* @version 0.2 N3
+const BSList cg_myBSL:={'0000'B,'0001'B,'0010'B,'0011'B,'0100'B}
+
+//* @author cg_myHS_Author N4
+//* and nobody else N4
+//* @desc cg_i global const integer N4
+//* @member 1 N4
+//* @member true N4
+//* @remark this is a new part N4
+//* @reference this is a dummy ref N4
+//* @see also documentation N4
+//* @since 2012-04-02 N4
+//* @status Ready N4
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N4
+//* @version 0.2 N4
+const HSList cg_myHSL:={'AFC'H, 'DC6'H}
+
+//* @author cg_myOS_Author N5
+//* and nobody else N5
+//* @desc cg_i global const integer N5
+//* @member 1 N5
+//* @member true N5
+//* @remark this is a new part N5
+//* @reference this is a dummy ref N5
+//* @see also documentation N5
+//* @since 2012-04-02 N5
+//* @status Ready N5
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N5
+//* @version 0.2 N5
+const OSList cg_myOSL:={'AFCD'O, 'DC66'O}
+
+//* @author cg_myCS_Author N6
+//* and nobody else N6
+//* @desc cg_i global const integer N6
+//* @member 1 N6
+//* @member true N6
+//* @remark this is a new part N6
+//* @reference this is a dummy ref N6
+//* @see also documentation N6
+//* @since 2012-04-02 N6
+//* @status Ready N6
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N6
+//* @version 0.2 N6
+const CSList cg_myCSL:={"Hello ", "World!"}
+
+//* @author cg_myUCS_Author N7
+//* and nobody else N7
+//* @desc cg_i global const integer N7
+//* @member 1 N7
+//* @member true N7
+//* @remark this is a new part N7
+//* @reference this is a dummy ref N7
+//* @see also documentation N7
+//* @since 2012-04-02 N7
+//* @status Ready N7
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn N7
+//* @version 0.2 N7
+const UCSList cg_myUCSL:={int2unichar (367), int2unichar (368), int2unichar (369)}
+
+//===== Types =====
+
+//==== Structured data types =====
+
+// T3Doc block d2)
+
+//* @author IntegerList_Author O
+//* and nobodyElse O
+//* on the Earth O
+//* @desc IntegerList O
+//* only
+//* @remark this is a new part O
+//* @reference this is a dummy ref O
+//* @see also documentation O
+//* @since 2012-04-02 O
+//* @status Ready O
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O
+//* @version 0.2 O
+type record of integer IntegerList;
+
+
+//* @author FloatList_Author O1
+//* and nobodyElse O1
+//* on the Earth O1
+//* @desc FloatList O1
+//* only
+//* @remark this is a new part O1
+//* @reference this is a dummy ref O1
+//* @see also documentation O1
+//* @since 2012-04-02 O1
+//* @status Ready O1
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O1
+//* @version 0.2 O1
+type record of float FloatList;
+
+//* @author VerdictList_Author O2
+//* and nobodyElse O2
+//* on the Earth O2
+//* @desc VerdictList O2
+//* only O2
+//* @remark this is a new part O2
+//* @reference this is a dummy ref O2
+//* @see also documentation O2
+//* @since 2012-04-02 O2
+//* @status Ready O2
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O2
+//* @version 0.2 O2
+type record of verdicttype VerdictList;
+
+
+//* @author BSList_Author O2A
+//* and nobodyElse O2A
+//* on the Earth O2A
+//* @desc BSList O2A
+//* only O2A
+//* @remark this is a new part O2A
+//* @reference this is a dummy ref O2A
+//* @see also documentation O2A
+//* @since 2012-04-02 O2A
+//* @status Ready O2A
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O2A
+//* @version 0.2 O2A
+type record of bitstring BSList;
+
+
+//* @author HSList_Author O3
+//* and nobodyElse O3
+//* on the Earth O3
+//* @desc HSList O3
+//* only O3
+//* @remark this is a new part O3
+//* @reference this is a dummy ref O3
+//* @see also documentation O3
+//* @since 2012-04-02 O3
+//* @status Ready O3
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O3
+//* @version 0.2 O3
+type record of hexstring HSList;
+
+//* @author CSList_Author O3A
+//* and nobodyElse O3A
+//* on the Earth O3A
+//* @desc CSList O3A
+//* only O3A
+//* @remark this is a new part O3A
+//* @reference this is a dummy ref O3A
+//* @see also documentation O3A
+//* @since 2012-04-02 O3A
+//* @status Ready O3A
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O3A
+//* @version 0.2 O3A
+type record of charstring CSList;
+
+//* @author UCSList_Author O3B
+//* and nobodyElse O3B
+//* on the Earth O3B
+//* @desc UCSList O3B
+//* only O3B
+//* @remark this is a new part O3B
+//* @reference this is a dummy ref O3B
+//* @see also documentation O3B
+//* @since 2012-04-02 O3B
+//* @status Ready O3B
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O3B
+//* @version 0.2 O3B
+type record of universal charstring UCSList;
+
+//* @author OSList_Author O3C
+//* and nobodyElse O3C
+//* on the Earth O3C
+//* @desc OSList O3C
+//* only O3C
+//* @remark this is a new part O3C
+//* @reference this is a dummy ref O3C
+//* @see also documentation O3C
+//* @since 2012-04-02 O3C
+//* @status Ready O3C
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O3C
+//* @version 0.2 O3C
+type record of octetstring OSList;
+
+
+//* @author BoolList_Author O3C
+//* and nobodyElse O3C
+//* on the Earth O3C
+//* @desc BoolList O3C
+//* only O3C
+//* @remark this is a new part O3C
+//* @reference this is a dummy ref O3C
+//* @see also documentation O3C
+//* @since 2012-04-02 O3C
+//* @status Ready O3C
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O3C
+//* @version 0.2 O3C
+type record of boolean BoolList;
+
+//* @author MyEnum_Author O3D
+//* and nobodyElse O3D
+//* on the Earth O3D
+//* @desc MyEnum O3D
+//* only O3D
+//* @remark this is a new part O3D
+//* @reference this is a dummy ref O3D
+//* @see also documentation O3D
+//* @since 2012-04-02 O3D
+//* @status Ready O3D
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O3D
+//* @version 0.2 O3D
+type enumerated MyEnum2 {first, second, third, fourth};
+
+//* @author EnumList_Author O3E
+//* and nobodyElse O3E
+//* on the Earth O3E
+//* @desc EnumList O3E
+//* only O3E
+//* @remark this is a new part O3E
+//* @reference this is a dummy ref O3E
+//* @see also documentation O3E
+//* @since 2012-04-02 O3E
+//* @status Ready O3E
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn O3E
+//* @version 0.2 O3E
+type record of MyEnum2 EnumList;
+
+// T3Doc block d3
+
+//* @author MyRec_Author is the
+//* authhhhor P
+//* @desc This record used to test record tooltip P
+//* @member i the first field 
+//* but this text is too short for test thus I'm trying to write something longer P
+//* @member b the second field but
+//* this text is too short for test thus I'm trying to write something longer P
+//* @remark this is a new part P
+//* @reference this is a dummy ref P
+//* @see also documentation P
+//* @since 2012-04-02 P
+//* @status Ready P
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn P
+//* @version 0.2 P
+type record MyRec {
+  integer i,
+  boolean b
+};
+
+//* @author MyUnion_Author is the
+//* authhhhor Q
+//* @desc This record used to test record tooltip Q
+//* @member i integer is the first choice 
+//* but this text is too short for test thus I'm trying to write something longer Q
+//* @member b boolean is the second field 
+//* @member f float is the third field but
+//* this text is too short for test thus I'm trying to write something longer Q
+//* @remark this is a new part Q
+//* @reference this is a dummy ref Q
+//* @see also documentation Q
+//* @since 2012-04-02 Q
+//* @status Ready Q
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn Q
+//* @version 0.2 Q
+type union MyUnion {
+  integer i,
+  boolean b,
+  float f
+}
+
+
+//* @author MySet_Author is the
+//* authhhhor R
+//* @desc This record used to test record tooltip R
+//* @member i integer is the first element  R
+//* but this text is too short for test thus I'm trying to write something longer R
+//* @member b boolean is the second element R
+//* @member f float is the third element but R
+//* this text is too short for test thus I'm trying to write something longer R
+//* @remark this is a new part R
+//* @reference this is a dummy ref R
+//* @see also documentation R
+//* @since 2012-04-02 R
+//* @status Ready R
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn R
+//* @version 0.2 R
+type set MySet {
+  integer i,
+  boolean b,
+  float f
+}
+
+//* @desc MyEnum
+//* @member e1
+//* @member e2
+//* @desc <P>This is a paragraph<BR/>in the description</P>
+//* <I>This is an italic line</I>
+//* <E>This is an emphasis line</E>
+//* <I><E> This is italic and emphasis</E></I>
+//* <E><I> This is emphasis and italic</I></E>
+//* <CODE>This is a code fragment</CODE>
+//* <PRE>Preformatted text</PRE>
+//* <UL>
+//*   <LI>UnorderedListElement1</LI>
+//*   <LI>UnorderedListElement2</LI>
+//*   <LI>UnorderedListElement3</LI>
+//*</UL>
+//* <OL>
+//*   <LI>OrderedListElement1</LI>
+//*   <LI>OrderedListElement2</LI>
+//*   <LI>OrderedListElement3</LI>
+//*</OL>
+//* 
+type enumerated MyEnum1 { e1,e2 }
+
+//* @author MyEnum_Author V
+//* @desc MyEnum V
+//* <P>This is a paragraph<BR/>in the description</P><BR/>  V
+//* @member e1 - first enum value V
+//* @member e2 - second enum value  V
+//* but this text is too short for test thus I'm trying to write something longer V
+//* @remark form tag params there was not warning !!! V
+//* @reference this is a dummy ref1 V
+//* @see also documentation V
+//* @since 2012-04-04 V
+//* @status Ready V
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn V
+//* @version 0.2 V
+//* @reference this is a dummy ref2 V
+type enumerated MyEnum { e1,e2 }
+
+//===== Templates ======
+
+//* @desc This template "t_myrec" used to test template documentation
+//* @author t_myrec_Author is the
+//* authhhhor S
+//* @desc This record used to test record tooltip S
+//* @member i integer is the first element  S
+//* but this text is too short for test thus I'm trying to write something longer S
+//* @member b boolean is the second element S
+//* this text is too short for test thus I'm trying to write something longer S
+//* @param It has no parameter
+//* @remark this is a new part S
+//* @reference this is a dummy ref S
+//* @see also documentation S
+//* @since 2012-04-02 S
+//* @status Ready S
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn S
+//* @version 0.2 S
+template MyRec t_myrec :=  {
+  1,
+  true
+}
+
+//* @desc This template "t_myrec1" used to test template documentation T
+//* @author t_myrec_Author is the
+//* authhhhor T
+//* @desc This record used to test record tooltip T
+//* @member i integer is the first element  T
+//* but this text is too short for test thus I'm trying to write something longer T
+//* @member b boolean is the second element T
+//* this text is too short for test thus I'm trying to write something longer T
+//* @param pl_i is the first param T
+//* @param pl_b is the second param T
+//* @remark this is a new part T
+//* @reference this is a dummy ref T
+//* @see also documentation T
+//* @since 2012-04-02 T
+//* @status Ready T
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn T
+//* @version 0.2 T
+
+template MyRec t_myrec1(integer pl_i, boolean pl_b):={
+  i:= pl_i,
+  b:=pl_b
+}
+
+//* @desc MyPort_PT
+//* <P>This is a paragraph<BR/>in the description</P><BR/>
+//* @member inout MyRec
+//* @remark This is an internal port;
+//* @author MyPort_PT_Author is the
+//* author T
+//* @desc This record used to test record tooltip T
+//* @member inout MyRec  T
+//* but this text is too short for test thus I'm trying to write something longer T
+//* @remark form tag params there was not warning !!! T
+//* @reference this is a dummy ref T
+//* @see also documentation T
+//* @since 2012-04-04 T
+//* @status Ready T
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn T
+//* @version 0.2 T
+type port MyPort_PT message {
+  inout MyRec;
+} with { extension "internal" }
+
+//* T3Doc f1)
+//* @desc The component My_CT is created for testcases
+//* @remark This is a remark to My_CT
+//* @desc <P>This is a paragraph<BR/>in the description</P>
+//* <I>This is an italic line</I>
+//* <E>This is an emphasis line</E>
+//* <I><E> This is italic and emphasis</E></I>
+//* <E><I> This is emphasis and italic</I></E>
+//* <CODE>This is a code fragment</CODE>
+//* <PRE>Preformatted text</PRE>
+//* <UL>
+//*   <LI>UnorderedListElement1</LI>
+//*   <LI>UnorderedListElement2</LI>
+//*   <LI>UnorderedListElement3</LI>
+//*</UL>
+//* <OL>
+//*   <LI>OrderedListElement1</LI>
+//*   <LI>OrderedListElement2</LI>
+//*   <LI>OrderedListElement3</LI>
+//*</OL>
+type component My_CT1 {
+  //* T3Doc f2)
+  port MyPort_PT myPort_PT;
+}
+
+//* @author My_CT_Author is the
+//* @desc My_CT U
+//* <P>This is a paragraph<BR/>in the description</P><BR/>  U
+//* @member port MyPort myPort - is the only port U
+//*  This is an internal port and this member should be accepted !!!
+//* @member var integer v_myComponentVar  U 
+//* but this text is too short for test thus I'm trying to write something longer U 
+//* @remark form tag params there was not warning !!! U
+//* @reference this is a dummy ref U
+//* @see also documentation U
+//* @since 2012-04-04 U
+//* @status Ready U
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn U
+//* @version 0.2 U
+type component My_CT {
+  //* @author myPort_author U1
+  //* @desc This is the first component local definition U1
+  //* @remark This is just a remark U1
+  port MyPort_PT myPort_PT;
+  //* @author myComponentvar_author U2
+  //* @desc This is the second component local definition U2
+  //* @remark This is just a remark U2
+  //* @reference This is a ref
+  var integer v_myComponentVar;
+  //* @desc This is a default variable
+  var default v_myDefault1:=null;
+  timer T_T;
+}
+
+// T3Doc i1
+//* @desc mySignature is an example for nonblocking signature
+//* @exception integer the type of the exception
+//* @exception boolean true if normal else false
+//* @status ready
+//* @desc <P>This is a paragraph<BR/>in the description</P>
+//* <I>This is an italic line</I>
+//* <E>This is an emphasis line</E>
+//* <I><E> This is italic and emphasis</E></I>
+//* <E><I> This is emphasis and italic</I></E>
+//* <CODE>This is a code fragment</CODE>
+//* <PRE>Preformatted text</PRE>
+//* <UL>
+//*   <LI>UnorderedListElement1</LI>
+//*   <LI>UnorderedListElement2</LI>
+//*   <LI>UnorderedListElement3</LI>
+//*</UL>
+//* <OL>
+//*   <LI>OrderedListElement1</LI>
+//*   <LI>OrderedListElement2</LI>
+//*   <LI>OrderedListElement3</LI>
+//*</OL>
+//* 
+signature mySignature1 () 
+noblock
+exception(
+  integer,
+  boolean);
+  
+//* @author mySignature_Author Z
+//* @desc mySignature is a blocking signature Z
+//* <P>This is a paragraph<BR/>in the description</P><BR/>  Z
+//* @param in integer pl_i is the first argument Z
+//* @param in float pl_f is the second argument Z 
+//* @exception integer: this execption is enabled only for signatures Z <BR/>
+//* @exception boolean: this is the second exeption Z
+//* @remark form tag params there was not warning !!! Z
+//* @reference this is a dummy ref Z
+//* @return integer (has no name) Z
+//* @see also documentation Z
+//* @since 2012-04-04 Z
+//* @status Ready Z
+//* @url file:///home/ethbaat/T3DocTest/T3doc_Test_Types_explicitDoc.ttcn Z
+//* @version 0.2 Z
+signature mySignature(in integer pl_i, in float pl_f) 
+return integer
+exception(
+  integer,
+  boolean);
+
+//====== HTML first test case ============
+
+//* T3Doc i2
+//* @author Function_author AA
+//* @desc This is the description of the function
+//* f_myfuncE 
+//* @desc <P>This is a paragraph<BR/>in the description</P>
+//* <I>This is an italic line</I>
+//* <E>This is an emphasis line</E>
+//* <I><E> This is italic and emphasis</E></I>
+//* <E><I> This is emphasis and italic</I></E>
+//* <CODE>This is a code fragment</CODE>
+//* <PRE>Preformatted text</PRE>
+//* <UL>
+//*   <LI>UnorderedListElement1</LI>
+//*   <LI>UnorderedListElement2</LI>
+//*   <LI>UnorderedListElement3</LI>
+//*</UL>
+//* <OL>
+//*   <LI>OrderedListElement1</LI>
+//*   <LI>OrderedListElement2</LI>
+//*   <LI>OrderedListElement3</LI>
+//*</OL>
+//* 
+//* @param pl_firstArg1 this is the first arg AA
+//* @param pl_success1 this is the output parameter AA
+//* @return integer this function always returns 1  AA
+//* @reference This function is used by tc_1 - This is an unrecommended ref AA
+//* @remark this function doesn't perform any useful calculation just logs a line AA
+//* @requirement This feature required by XY AA
+//* @see in T3 documentation AA
+//* @since R9B AA
+//* @status under construction AA
+//* @url blabla AA
+//* @verdict This fuction does not modify verdict AA
+//* @version 0.2 AA
+function f_myfuncE(
+  in charstring pl_firstArg1,
+  out boolean pl_success1
+) return integer
+{ 
+  //* @desc This is a default variable
+  var default vl_myDefault2:=null;
+  log(vl_myDefault2);
+  pl_success1:=true;
+  log("First arg: ", pl_firstArg1," second arg: ", pl_success1)
+  
+  return 1
+}
+
+
+//* T3Doc i2
+//* @author Function_author AA
+//* @desc This is the description of the function
+//* f_myfuncF
+//* @param pl_firstArg1 this is the first arg AA
+//* @param pl_success1 this is the output parameter AA
+//* @return integer this function always returns 1  AA
+//* @reference This function is used by tc_1 - This is an unrecommended ref AA
+//* @remark this function doesn't perform any useful calculation just logs a line AA
+//* @requirement This feature required by XY AA
+//* @see in T3 documentation AA
+//* @since R9B AA
+//* @status under construction AA
+//* @url blabla AA
+//* @verdict This fuction does not modify verdict AA
+//* @version 0.2 AA
+function f_myfuncF(
+  in charstring pl_firstArg1,
+  out boolean pl_success1
+) runs on My_CT return integer
+{ 
+  //* @desc This is a default variable
+  var default vl_myDefault2 :=null;
+  log(vl_myDefault2);
+  pl_success1:=true;
+  log("First arg: ", pl_firstArg1," second arg: ", pl_success1)
+  T_T.start(3.0);
+  as_myAltstep("trial",true);
+  return 1
+}
+
+
+//* @author Altstep_author AA1
+//* @desc This is the description of the altstep
+//* as_myAltstep
+//* @param pl_firstArg2 this is the first arg AA1
+//* @param pl_success2 this is the output parameter AA1
+//
+//* @reference This function is used by tc_1 - This is an unrecommended ref AA1
+//* @remark this function doesn't perform any useful calculation just logs a line AA1
+//* @requirement This feature required by XY AA1
+//* @see in T3 documentation AA1
+//* @since R9B AA1
+//* @status under construction AA1
+//* @url blabla AA1
+//* @verdict This fuction does not modify verdict AA1
+//* @version 0.2 AA1
+altstep as_myAltstep(  
+  in charstring pl_firstArg2,
+  in boolean pl_success2
+  )runs on My_CT {
+  [] myPort_PT.receive {log("Hi, these are the args:",pl_firstArg2,pl_success2); var integer vl_i:= 3;vl_i := vl_i + 1;repeat;}
+  [] T_T.timeout {}  
+}
+
+//* @author tc_author AB
+//* @desc This is the description of the testcase AB
+//* @config This testcase does not require config set AB
+//* special configuration no neededAB
+//* @param charstring pl_what: what should  pass to the func AB
+//* @param this is dummy par text AB
+//* @priority high
+//* @purpose To test the t3 doc behavior fro testcases AB
+//* @remark T3doc functionality has not been working yet for prority and purpose AB
+//* @reference This is the ref of a testcase AB
+//* @requirement RS999 AB
+//* @see in T3 documentation AB
+//* @since R9B AB
+//* @status ready AB
+//* @url blabla AB
+//* @verdict This testcase sets verdict for pass AB
+//* @version 0.2 AB
+testcase tc_explicit1(charstring pl_what) runs on My_CT {
+  var boolean vl_succ;
+  var integer vl_result:= f_myfuncE(pl_what,vl_succ);
+  log(vl_result);
+  setverdict(pass);
+}
+
+//* @author ControlAuthor AC
+//* @desc This is the description of the testcase AC
+//* @remark T3doc functionality has not been working yet AC
+//* @reference This is the ref of a testcase AC
+//* @see in T3 documentation AC
+//* @since R9B AC
+//* @status ready AC
+//* @url blabla AC
+//* @version 0.2 AC
+control{
+  execute(tc_explicit1("ANY"));
+}
+
+}  // end of module
+

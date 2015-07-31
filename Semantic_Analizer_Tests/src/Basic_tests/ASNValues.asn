@@ -1,0 +1,102 @@
+ASNValues DEFINITIONS
+
+-- [(AUTOMATIC|EXPLICIT|IMPLICIT) TAGS]
+-- the default is EXPLICIT TAGS
+  AUTOMATIC TAGS ::=
+
+BEGIN
+IMPORTS ASNSequenceType, ASNSetType, ASNSequenceOf, ASNSetOf
+    FROM ASNTypes;
+
+c-ASNboolean1 BOOLEAN ::= TRUE
+c-ASNboolean2 BOOLEAN ::= FALSE
+
+c-ASNinteger1 INTEGER ::= 1
+NamedNumberType ::= INTEGER { firstvalue(-100), secondvalue(0), othervalue(100) } -- named numbers
+c-ASNInteger2 NamedNumberType ::= firstvalue
+
+c-ASNreal1 REAL ::= {mantissa 314159,base 10, exponent -10}
+c-ASNreal2 REAL ::= {mantissa 1234,base 2, exponent 1}
+c-ASNreal3 REAL ::= PLUS-INFINITY
+c-ASNreal4 REAL ::= MINUS-INFINITY
+
+ASNEnumeratedType ::= ENUMERATED {a(2),b(1),..., c(0)}
+c-ASNenum ASNEnumeratedType ::= a
+
+c-ASNbitstring1 BIT STRING ::= '0101010101010101'B
+c-ASNbitstring2 BIT STRING ::= '01234567890ABCDEF'H
+ASNBitstringType ::= BIT STRING{ first(0), second (1), last-in-first-octet(7) }
+c-ASNbitstring3 ASNBitstringType ::= {first, last-in-first-octet}
+
+c-ASNoctetstring1 OCTET STRING ::= '1234567890ABCDEF'H
+c-ASNoctetstring2 OCTET STRING ::= '01010101'B
+
+c-ASNnull NULL ::= NULL
+
+c-ASNobjid OBJECT IDENTIFIER ::= { itu-t(0) identified-organization(4) etsi(0) reserved(127)
+etsi-identified-organization(0) ericsson(5) }
+c-roid   RELATIVE-OID ::= {iso(1) member-body(2) bsi(826) disc(0) ericsson(1249)}
+c-etsi-objid RELATIVE-OID ::= {itu-t(0) identified-organization(4) etsi(0)}
+c-etsi-ericsson RELATIVE-OID ::= {reserved(127) etsi-identified-organization(0)
+                                ericsson(5) 3 4}
+c11-21b T11 ::= f21 : {etsi-objid etsi-ericsson}
+T21 ::= RELATIVE-OID
+T11 ::= [APPLICATION 1] CHOICE {
+  f21 T21
+}
+
+c-etsi-desc ObjectDescriptor ::= "European Telecommunications Standards Institute"
+
+c-ASNBMPString1 BMPString ::= "0123456789"
+c-ASNGeneralString1 GeneralString ::= "0123456789"
+c-ASNGraphicString1 GraphicString ::= "0123456789"
+c-ASNTeletexString1 TeletexString ::= "0123456789"
+c-ASNT61String1 T61String ::= "0123456789"
+c-ASNIA5String1 IA5String ::= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 add the control characters too"
+c-ASNIA5String2 IA5String ::= {3,4}           -- tuple format
+c-ASNIA5String3 IA5String ::= {1, 1, 1, 1 }   -- quadruple format
+c-ASNIA5String4 IA5String ::= { "qwerty", {0 , 1}, { 0 , 0 , 0 , 0}, "uiop"  }  --character string list
+c-ASNISO646String1 ISO646String ::= "       "
+c-ASNNumericString1 NumericString ::= "0123456789  "
+c-ASNPrintableString1 PrintableString ::= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '()+,-./:=? "
+c-ASNCharacterString1 CHARACTER STRING ::= {
+  identification syntaxes :
+  {
+    abstract {qw(0) er(0) ty(3)},
+    transfer myObjectIdentifierValue1
+  },
+  string-value '0123456789ABCDEF'H
+}
+
+c-ASNGeneralizedTime1 GeneralizedTime ::= "20030529151410.4"
+c-ASNGeneralizedTime2 GeneralizedTime ::= "20030529151410.4Z"
+c-ASNGeneralizedTime3 GeneralizedTime ::= "20030529151410.4 -0500"
+
+c-ASNUTCTime1 UTCTime ::= "0305291514Z"
+c-ASNUTCTime2 UTCTime ::= "0305291514-0500"
+
+/*ASNSequenceType2 ::= SEQUENCE {
+	field1 INTEGER,
+	field2 GeneralString}*/
+c-ASNSequence1 ASNSequenceType ::= { field1 1, field2 "akarmi"}
+
+/*ASNSetType2 ::= SET {
+	field1 INTEGER,
+	field2 GeneralString}*/
+c-ASNSet1 ASNSetType ::= { field1 1, field2 "akarmi"}
+
+--ASNSequenceOf ::= SEQUENCE OF INTEGER
+c-ASNSequenceOf ASNSequenceOf ::= { 1, 2, 3}
+--ASNSetOf ::= SET OF INTEGER
+c-ASNSetOf ASNSetOf ::= { 1, 2, 3}
+
+c-epdv1 EMBEDDED PDV ::= {
+  identification fixed : NULL,
+  data-value 'BABEFACE'H
+}
+c-external1 EXTERNAL ::= {
+  identification fixed : NULL,
+  data-value 'BABEFACE'H
+}
+
+END

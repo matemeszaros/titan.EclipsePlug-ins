@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<project basedir="." default="build" name="org.eclipse.titan.regressiontests">
+	<property environment="env"/>
+	<!-- The qualifier of the features -->
+	<property name="version" value="3.2.0.CRL_113_200_3_R2A"/>
+	<tstamp/>
+	<property name="timestamp" value="${DSTAMP}-${TSTAMP}"/>
+	<property name="version.qualifier" value="${version}_${timestamp}"/>
+
+	<property name="JAVA_HOME" value="/app/jdk/1.7.0_25/LMWP3/"/>
+	<property name="ECLIPSE_HOME" value="/home/titanrt/eclipse_installed/eclipse-SDK-4.2-linux-gtk-x86_64"/>
+
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.6"/>
+	<property name="source" value="1.6"/>
+	<path id="PDE.classpath">
+		<fileset dir="${ECLIPSE_HOME}/plugins">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<path id="org.eclipse.titan.regressiontests.classpath">
+		<pathelement location="bin"/>
+		<path refid="PDE.classpath"/>
+		<pathelement location="../../titan_playground/jar/org.junit_4.11.0.v201303080030/junit.jar"/>
+	</path>
+
+	<macrodef name="update.manifest">
+		<attribute name="file"/>
+		<sequential>
+			<manifest file="@{file}" mode="update">
+				<attribute name="Bundle-Version" value="${version.qualifier}"/>
+			</manifest>
+		</sequential>
+	</macrodef>
+	
+	<target name="init">
+		<mkdir dir="bin"/>
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.g"/>
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="bin"/>
+		<delete dir="result"/>
+	</target>
+	<target depends="clean" name="cleanall"/>
+	<target depends="build-subprojects,build-project" name="build"/>
+	<target name="build-subprojects"/>
+	<target depends="init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}"/>
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+			<src path="src"/>
+			<classpath refid="org.eclipse.titan.regressiontests.classpath"/>
+		</javac>
+	</target>
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+
+	<target name="build.jars" depends="build">
+		<copy file="fragment.xml" todir="bin" />
+		<mkdir dir="result"/>
+		<update.manifest file="META-INF/MANIFEST.MF"/>
+		<jar destfile="result/org.eclipse.titan.regressiontests_${version.qualifier}.jar"
+			manifest="META-INF/MANIFEST.MF">
+			<fileset dir="bin"/>
+		</jar>
+	</target>
+</project>

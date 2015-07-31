@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<project basedir="." default="build" name="org.eclipse.titan.help"
+	xmlns:ac="antlib:net.sf.antcontrib">
+
+	<import file="build_import.xml"/>
+
+	<target name="build" depends="build.pdf,build.online.help,build.standards" />
+
+	<target name="build.jars" depends="build">
+		<mkdir dir="${result.dir}/plugins"/>
+		<update.manifest file="${build.dir}/${help.name}/META-INF/MANIFEST.MF"/>
+		<jar destfile="${result.dir}/plugins/org.eclipse.titan.help_${version.qualifier}.jar"
+			 manifest="${build.dir}/${help.name}/META-INF/MANIFEST.MF">
+			<fileset dir="." />
+		</jar>
+	</target>
+
+	<target name="check.doc2pdf.jar">
+		<available file="${doc2pdf.jar}" property="doc2pdf.jar.present"/>
+	</target>
+
+	<target name="build.pdf" depends="check.doc2pdf.jar" if="doc2pdf.jar.present">
+		<build.usrguide usrguide.dir="${usrguide.eclipse.dir}"/>
+		<build.usrguide usrguide.dir="${usrguide.compiler.dir}"/>
+	</target>
+	
+	<target name="build.standards">
+		<copy todir="${build.dir}/${help.name}/docs">
+			<fileset dir="${online.help.dir}/docs">
+				<include name="*.pdf"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="build.online.help">
+		<copy todir="${build.dir}/${help.name}">
+			<fileset dir="${online.help.dir}">
+				<include name="*.html"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dir}/${help.name}/images">
+			<fileset dir="${online.help.dir}/images">
+				<include name="**/*"/>
+				<exclude name="**/.gitignore"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dir}/${help.name}/info">
+			<fileset dir="${online.help.dir}/info">
+				<include name="**/*"/>
+				<exclude name="**/.gitignore"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<macrodef name="build.usrguide">
+		<attribute name="usrguide.dir"/>
+		<sequential>
+			<ac:if>
+				<equals arg1="${build.help}" arg2="true"/>
+				<then>
+					<echo message="Creating userguide pdfs from dir: @{usrguide.dir}"/>
+
+					<fileset id="@{usrguide.dir}.docFiles" dir="@{usrguide.dir}">
+						<include name="*.doc"/>
+					</fileset>
+
+					<pathconvert property="@{usrguide.dir}.usrguide.list" refid="@{usrguide.dir}.docFiles" targetos="unix"/>
+
+					<ac:for list="${@{usrguide.dir}.usrguide.list}" parallel="false" keepgoing="true" param="docFile" delimiter=":">
+						<sequential>
+							<ac:propertyregex property="@{docFile}.pdfFileName"
+										input="@{docFile}"
+										regexp="([.]*)(\.doc)"
+										replace="\1.pdf" />
+							<!--
+                                                        Set this option below to mark build as failed, if the doc2pdf comes back with an error message:
+                                                        jvm="${java6}" failonerror="true">
+                                                        -->
+							<java jar="${doc2pdf.jar}" timeout="180000" fork="true"
+								jvm="${java6}" failonerror="false">
+								<arg value="@{docFile}"/>
+								<arg value="${@{docFile}.pdfFileName}"/>
+							</java>
+						</sequential>
+					</ac:for>
+
+					<copy todir="${build.dir}/${help.name}/docs">
+						<fileset dir="@{usrguide.dir}">
+							<include name="*.pdf"/>
+						</fileset>
+					</copy>
+				</then>
+			</ac:if>
+		</sequential>
+	</macrodef>
+
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+</project>

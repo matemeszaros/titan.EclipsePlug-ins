@@ -1,0 +1,3258 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+/*
+//AUTHOR:
+//DATE:
+//VERSION:
+*/
+module expression_tests
+{
+import from ASNValues all;
+
+external const integer ec_ext_integer;
+modulepar integer tsppar_integer;
+
+type enumerated myenum1 {xx1,xx2,xx3};
+type enumerated TTCN3EnumeratedType { item1(0), item2, item3 (2), item4 (1) };
+
+const boolean cg_boolean := true;
+const integer cg_integer := 5;
+const float cg_float := 5.5;
+const bitstring cg_bitstring := '00'B;
+const hexstring cg_hexstring := '00'H;
+const octetstring cg_octetstring := '00'O;
+const charstring cg_charstring := "akarmi";
+const universal charstring cg_universalchar := char(0,0,0,0);
+const universal charstring cg_universalcharstring := char(0,0,0,40) & char(0,0,0,40);
+/* RECORDS ******************************************************************/
+type record myrec1 { integer f1 }
+type record myrec2 { integer f1 }
+type record myrec3 { integer f1 optional }
+type record myrec4 { integer f1, integer f2 }
+type record myrec5 { integer f1 optional, integer f2 }
+type record myrec6 { integer f1, integer f2 optional }
+type record myrec7 { integer f1 optional, integer f2 optional }
+
+type record recordInner {integer f1, integer f2};
+type record recordOuter {recordInner f1, integer f2};
+
+/* RECORDOFS ****************************************************************/
+type record of integer myrecof1
+type record of integer myrecof2
+type record of charstring myCharstringRecof;
+type record of myrec1 myrecof3;
+
+/* ARRAYS *******************************************************************/
+type integer myarr1[1]
+type integer myarr2[1]
+type integer myarr3[4]
+
+/* SETS *********************************************************************/
+type set myset1 { integer f1 }
+type set myset2 { integer f1 }
+type set myset3 { integer f1 optional }
+type set myset4 { integer f1, integer f2 }
+type set myset5 { integer f1 optional, integer f2 }
+type set myset6 { integer f1, integer f2 optional }
+type set myset7 { integer f1 optional, integer f2 optional }
+
+/* SETOFS *******************************************************************/
+type set of integer mysetof1
+type set of integer mysetof2
+
+/* CHOICES ******************************************************************/
+type union myuni {
+  integer f1,
+  integer f2
+}
+
+type union myuni1 {
+  myrec1 f1,
+  myrec2 f2
+}
+
+type union myuni2 {
+  myrec2 f1,
+  myrec1 f2
+}
+
+type union myuni3 {
+  myrecof3 f1
+}
+
+type component componentName_CT {}
+type component componentName_CT2
+{
+  const integer c_const1 := 1;
+  timer T_compTimer;
+}
+
+type testcase t_testcase() runs on componentName_CT system componentName_CT;
+testcase tc_c_testcase() runs on componentName_CT system componentName_CT {}
+type function t_function();
+type function t_function2() return integer;
+type function t_function3() runs on componentName_CT return integer;
+type function t_function4() return template integer;
+function f_functionName() {}
+type altstep t_altstep() runs on componentName_CT;
+type altstep t_altstep2(inout integer pl_parameterName) runs on componentName_CT2;
+altstep as_altstepName(inout integer pl_parameterName)
+runs on componentName_CT2
+{
+  [] T_compTimer.timeout { }
+  [else] { }
+}
+
+
+
+function f_notExpression()
+{
+  {	const boolean cl_i := not cg_boolean; }
+
+  {	const boolean cl_i := not true;
+  	if (cl_i == false) {}
+  }
+
+  {	var boolean vl_i := not omit; }
+  {	var boolean vl_i := not 5; }
+  {	var boolean vl_i := not 5.5; }
+  {	var boolean vl_i := not "akarmi"; }
+  {	var boolean vl_i := not char(0,0,0,0); }
+  {	var boolean vl_i := not 'aa'O; }
+  {	var boolean vl_i := not '00'B; }
+  {	var boolean vl_i := not '00'H; }
+  {	var boolean vl_i := not pass; }
+  {	var boolean vl_i := not xx1; }
+  {	var boolean vl_i := not null; }
+  {	var boolean vl_i := not cg_integer; }
+  {	var boolean vl_i := not cg_float; }
+  {	var boolean vl_i := not cg_bitstring; }
+  {	var boolean vl_i := not cg_hexstring; }
+  {	var boolean vl_i := not cg_octetstring; }
+  {	var boolean vl_i := not cg_charstring; }
+  {	var boolean vl_i := not cg_universalchar; }
+}
+
+function f_unaryPlusExpression()
+{
+  {	const integer cl_i := + cg_integer; }
+  {	var float vl_i := + cg_float; }
+
+  {	var integer vl_i := + omit; }
+  {	var integer vl_i := + true; }
+  {	var integer vl_i := + false; }
+  {	var integer vl_i := + "akarmi"; }
+  {	var integer vl_i := + char(0,0,0,0); }
+  {	var integer vl_i := + 'aa'O; }
+  {	var integer vl_i := + '00'B; }
+  {	var integer vl_i := + '00'H; }
+  {	var integer vl_i := + pass; }
+  {	var integer vl_i := + xx1; }
+  {	var integer vl_i := + null; }
+  {	var integer vl_i := + cg_boolean; }
+  {	var integer vl_i := + cg_bitstring; }
+  {	var integer vl_i := + cg_hexstring; }
+  {	var integer vl_i := + cg_octetstring; }
+  {	var integer vl_i := + cg_charstring; }
+  {	var integer vl_i := + cg_universalchar; }
+}
+
+function f_unaryMinusExpression()
+{
+  {	const integer cl_i := - cg_integer; }
+  {	var float vl_i   := - cg_float; }
+
+  {	const integer cl_i := - (5);
+  	if (cl_i == -5) {}
+  }
+  {	const float cl_i := - (5.5);
+  	if (cl_i == -5.5) {}
+  }
+
+  {	var integer vl_i := - omit; }
+  {	var integer vl_i := - true; }
+  {	var integer vl_i := - false; }
+  {	var integer vl_i := - "akarmi"; }
+  {	var integer vl_i := - char(0,0,0,0); }
+  {	var integer vl_i := - 'aa'O; }
+  {	var integer vl_i := - '00'B; }
+  {	var integer vl_i := - '00'H; }
+  {	var integer vl_i := - pass; }
+  {	var integer vl_i := - xx1; }
+  {	var integer vl_i := - null; }
+  {	var integer vl_i := - cg_boolean; }
+  {	var integer vl_i := - cg_bitstring; }
+  {	var integer vl_i := - cg_hexstring; }
+  {	var integer vl_i := - cg_octetstring; }
+  {	var integer vl_i := - cg_charstring; }
+  {	var integer vl_i := - cg_universalchar; }
+}
+
+function f_multiplyOperationTests()
+{
+  {const integer cl_i := 5 * 5; }
+  {var integer vl_i := cg_integer * cg_integer; }
+  {var float   vl_i := 5.5 * 5.5; }
+  {var float   vl_i := cg_float * cg_float; }
+
+  {const integer cl_i := 5 * 5;
+  	if (cl_i == 25) {}
+  }
+  {const float cl_i := 5.0 * 5.0;
+  	if (cl_i == 25.0) {}
+  }
+
+  {var integer vl_i := 5.5 * 5; }
+  {var integer vl_i := 5 * 5.5; }
+  {var float   vl_i := 5.5 * 5; }
+  {var float   vl_i := 5 * 5.5; }
+  {var float   vl_i := "akarmi" * char(0,0,0,0); }
+  {var integer vl_i := ''B * ''H; }
+  {var integer vl_i := true * true; }
+  {var integer vl_i := false * true; }
+  {var integer vl_i := none * pass; }
+  {var integer vl_i := xx1 * xx1; }
+  {var integer vl_i := null * null; }
+  {var integer vl_i := cg_integer * cg_float; }
+  {var integer vl_i := cg_integer * cg_bitstring; }
+  {var integer vl_i := 5 * cg_octetstring; }
+  {var integer vl_i := 5 * cg_hexstring; }
+  {var integer vl_i := 5 * cg_charstring; }
+  {var integer vl_i := 5 * cg_universalchar; }
+  {var float vl_i := infinity * 1.0;}
+  {var float vl_i := -infinity * 1.0;}
+  {var float vl_i := 1.0 * infinity;}
+  {var float vl_i := 1.0 * -infinity;}
+}
+
+function f_addOperationTests()
+{
+  {const integer cl_i := 5 + 5; }
+  {var integer vl_i := cg_integer + cg_integer; }
+  {var float   vl_i := 5.5 + 5.5; }
+  {var float   vl_i := cg_float + cg_float; }
+
+  {const integer cl_i := 5 + 5;
+  	if (cl_i == 10) {}
+  }
+  {const float cl_i := 5.0 + 5.0;
+  	if (cl_i == 10.0) {}
+  }
+
+  {var integer vl_i := 5.5 + 5; }
+  {var integer vl_i := 5 + 5.5; }
+  {var float   vl_i := 5.5 + 5; }
+  {var float   vl_i := 5 + 5.5; }
+  {var float   vl_i := "akarmi" + char(0,0,0,0); }
+  {var integer vl_i := ''B + ''H; }
+  {var integer vl_i := true + true; }
+  {var integer vl_i := false + true; }
+  {var integer vl_i := none + pass; }
+  {var integer vl_i := xx1 + xx1; }
+  {var integer vl_i := null + null; }
+  {var integer vl_i := cg_integer + cg_float; }
+  {var integer vl_i := cg_integer + cg_bitstring; }
+  {var integer vl_i := 5 + cg_octetstring; }
+  {var integer vl_i := 5 + cg_hexstring; }
+  {var integer vl_i := 5 + cg_charstring; }
+  {var integer vl_i := 5 + cg_universalchar; }
+  {var float vl_i := infinity + 1.0;}
+  {var float vl_i := -infinity + 1.0;}
+  {var float vl_i := 1.0 + infinity;}
+  {var float vl_i := 1.0 + -infinity;}
+}
+
+function f_substractOperationTests()
+{
+  {const integer cl_i := 5 - 5; }
+  {var integer vl_i := cg_integer - cg_integer; }
+  {var float   vl_i := 5.5 - 5.5; }
+  {var float   vl_i := cg_float - cg_float; }
+
+  {const integer cl_i := 5 - 5;
+  	if (cl_i == 0) {}
+  }
+  {const float cl_i := 5.0 - 5.0;
+  	if (cl_i == 0.0) {}
+  }
+
+  {var integer vl_i := 5.5 - 5; }
+  {var integer vl_i := 5 - 5.5; }
+  {var float   vl_i := 5.5 - 5; }
+  {var float   vl_i := 5 - 5.5; }
+  {var float   vl_i := "akarmi" - char(0,0,0,0); }
+  {var integer vl_i := ''B - ''H; }
+  {var integer vl_i := true - true; }
+  {var integer vl_i := false - true; }
+  {var integer vl_i := pass - none; }
+  {var integer vl_i := xx1 - xx1; }
+  {var integer vl_i := null - null; }
+  {var integer vl_i := cg_integer - cg_float; }
+  {var integer vl_i := cg_integer - cg_bitstring; }
+  {var integer vl_i := 5 - cg_octetstring; }
+  {var integer vl_i := 5 - cg_hexstring; }
+  {var integer vl_i := 5 - cg_charstring; }
+  {var integer vl_i := 5 - cg_universalchar; }
+  {var float vl_i := infinity - 1.0;}
+  {var float vl_i := -infinity - 1.0;}
+  {var float vl_i := 1.0 - infinity;}
+  {var float vl_i := 1.0 - -infinity;}
+}
+
+function f_divideOperationTests()
+{
+  {const integer cl_i := 5 / 5; }
+  {var integer vl_i := cg_integer / cg_integer; }
+  {var float   vl_i := 5.5 / 5.5; }
+  {var float   vl_i := cg_float / cg_float; }
+
+  {const integer cl_i := 5 / 5;
+  	if (cl_i == 1) {}
+  }
+  {const float cl_i := 5.5 / 5.5;
+  	if (cl_i == 1.0) {}
+  }
+
+  {var integer vl_i := 5.5 / 5; }
+  {var integer vl_i := 5 / 5.5; }
+  {var integer vl_i := "akarmi" / char(0,0,0,0); }
+  {var integer vl_i := 5 / 0; }
+  {var integer vl_i := 5 / (5-5); }
+  {var float   vl_i := 5.5 / 5; }
+  {var float   vl_i := 5.5 / 0; }
+  {var float   vl_i := 5.5 / (5.5-5.5); }
+  {var float   vl_i := 5 / 5.5; }
+  {var integer vl_i := ''B / ''H; }
+  {var integer vl_i := true / true; }
+  {var integer vl_i := false / true; }
+  {var integer vl_i := pass / none; }
+  {var integer vl_i := xx1 / xx1; }
+  {var integer vl_i := null / null; }
+  {var integer vl_i := cg_integer / cg_float; }
+  {var integer vl_i := cg_integer / cg_bitstring; }
+  {var integer vl_i := 5 / cg_octetstring; }
+  {var integer vl_i := 5 / cg_hexstring; }
+  {var integer vl_i := 5 / cg_charstring; }
+  {var integer vl_i := 5 / cg_universalchar; }
+  {var float vl_i := infinity / 1.0;}
+  {var float vl_i := -infinity / 1.0;}
+  {var float vl_i := 1.0 / infinity;}
+  {var float vl_i := 1.0 / -infinity;}
+}
+
+function f_moduloOperationTests()
+{
+  {const integer cl_i := 5 mod 5; }
+  {var integer vl_i := cg_integer mod cg_integer; }
+
+  {const integer cl_i := 1 mod 5;
+  	if (cl_i == 1) {}
+  }
+  {const integer cl_i := -4 mod 5;
+  	if (cl_i == 1) {}
+  }
+
+  {var integer vl_i := 5.5 mod 5; }
+  {var integer vl_i := 5 mod 5.5; }
+  {var integer vl_i := 5 mod 0; }
+  {var integer vl_i := 5 mod (5-5); }
+  {var integer vl_i := "akarmi" mod char(0,0,0,0); }
+  {var integer vl_i := ''B mod ''H; }
+  {var integer vl_i := true mod true; }
+  {var integer vl_i := false mod true; }
+  {var integer vl_i := pass mod pass; }
+  {var integer vl_i := xx1 mod xx1; }
+  {var integer vl_i := null mod null; }
+  {var integer vl_i := cg_boolean mod cg_float; }
+  {var integer vl_i := cg_charstring mod cg_bitstring; }
+  {var integer vl_i := cg_hexstring mod cg_octetstring; }
+  {var integer vl_i := cg_universalchar mod cg_universalchar; }
+}
+
+function f_remainderOperationTests()
+{
+  {const integer cl_i := 5 rem 5; }
+  {var integer vl_i := cg_integer rem cg_integer; }
+
+  {const integer cl_i := 1 rem 5;
+  	if (cl_i == 1) {}
+  }
+  {const integer cl_i := -4 rem 5;
+  	if (cl_i == -4) {}
+  }
+
+  {var integer vl_i := 5.5 rem 5; }
+  {var integer vl_i := 5 rem 5.5; }
+  {var integer vl_i := 5 rem 0; }
+  {var integer vl_i := 5 rem (5-5); }
+  {var integer vl_i := "akarmi" rem char(0,0,0,0); }
+  {var integer vl_i := ''B rem ''H; }
+  {var integer vl_i := true rem true; }
+  {var integer vl_i := false rem true; }
+  {var integer vl_i := pass rem pass; }
+  {var integer vl_i := xx1 rem xx1; }
+  {var integer vl_i := null rem null; }
+  {var integer vl_i := cg_boolean rem cg_float; }
+  {var integer vl_i := cg_charstring rem cg_bitstring; }
+  {var integer vl_i := cg_hexstring rem cg_octetstring; }
+  {var integer vl_i := cg_universalchar rem cg_universalchar; }
+}
+
+function f_andOperationTests()
+{
+  {const boolean cl_i := true and false; }
+  {var boolean vl_i := cg_boolean and cg_boolean; }
+
+  {const boolean cl_i := true and false;
+  	if (cl_i == false) {}
+  	if ((false and false) == false) {}
+  	if ((true and true) == true) {}
+  	if ((true and false) == false) {}
+  	if ((false and true) == false) {}
+  }
+
+  {var boolean vl_i := 5.5 and false; }
+  {var boolean vl_i := true and 5.5; }
+  {var boolean vl_i := 5.5 and 5.5; }
+  {var boolean vl_i := "akarmi" and char(0,0,0,0); }
+  {var boolean vl_i := pass and pass; }
+  {var boolean vl_i := xx1 and xx1; }
+  {var boolean vl_i := null and null; }
+  {var integer vl_i := cg_integer and cg_float; }
+  {var integer vl_i := cg_charstring and cg_bitstring; }
+  {var integer vl_i := cg_hexstring and cg_octetstring; }
+  {var integer vl_i := cg_universalchar and cg_universalchar; }
+}
+
+function f_orOperationTests()
+{
+  {const boolean cl_i := true or false; }
+  {var boolean vl_i := true or false; }
+  {var boolean vl_i := false or true; }
+  {var boolean vl_i := cg_boolean or cg_boolean; }
+
+  {const boolean cl_i := true or false;
+  	if (cl_i == true) {}
+  	if ((false or false) == false) {}
+  	if ((true or true) == true) {}
+  	if ((true or false) == true) {}
+  	if ((false or true) == true) {}
+  }
+
+  {var boolean vl_i := 5.5 or false; }
+  {var boolean vl_i := "akarmi" or char(0,0,0,0); }
+  {var boolean vl_i := true or 5.5; }
+  {var boolean vl_i := 5.5 or 5.5; }
+  {var boolean vl_i := pass or pass; }
+  {var boolean vl_i := xx1 or xx1; }
+  {var boolean vl_i := null or null; }
+  {var integer vl_i := cg_integer or cg_float; }
+  {var integer vl_i := cg_charstring or cg_bitstring; }
+  {var integer vl_i := cg_hexstring or cg_octetstring; }
+  {var integer vl_i := cg_universalchar or cg_universalchar; }
+  {var integer vl_i := cl_myrecof[true or false];}
+}
+
+function f_xorOperationTests()
+{
+  {const boolean cl_i := true xor false; }
+  {var boolean vl_i := cg_boolean xor cg_boolean; }
+
+  {const boolean cl_i := true xor false;
+  	if (cl_i == true) {}
+  	if ((false xor false) == false) {}
+  	if ((true xor true) == false) {}
+  	if ((true xor false) == true) {}
+  	if ((false xor true) == true) {}
+  }
+
+  {var boolean vl_i := 5.5 xor false; }
+  {var boolean vl_i := "akarmi" xor char(0,0,0,0); }
+  {var boolean vl_i := true xor 5.5; }
+  {var boolean vl_i := 5.5 xor 5.5; }
+  {var boolean vl_i := pass xor pass; }
+  {var boolean vl_i := xx1 xor xx1; }
+  {var boolean vl_i := null xor null; }
+  {var integer vl_i := cg_integer xor cg_float; }
+  {var integer vl_i := cg_charstring xor cg_bitstring; }
+  {var integer vl_i := cg_hexstring xor cg_octetstring; }
+  {var integer vl_i := cg_universalchar xor cg_universalchar; }
+}
+
+function f_not4bOperationTests()
+{
+  {const bitstring 	cl_i := not4b '00'B;}
+  {var bitstring 	vl_i := not4b cg_bitstring;}
+  {var hexstring 	vl_i := not4b '00'H;}
+  {var hexstring 	vl_i := not4b cg_hexstring;}
+  {var octetstring 	vl_i := not4b '00'O;}
+  {var octetstring 	vl_i := not4b cg_octetstring;}
+
+  {const bitstring cl_i := not4b '00'B;
+  	if (cl_i == '11'B) {}
+  	if (not4b '11'B == '00'B) {}
+  	if (not4b '00'B == '11'B) {}
+  	if (not4b '10'B == '01'B) {}
+  	if (not4b '01'B == '10'B) {}
+  	if (not4b 'F'H == '0'H) {}
+  	if (not4b '00'H == 'FF'H) {}
+  	if (not4b 'F0'H == '0F'H) {}
+  	if (not4b '0F'H == 'F0'H) {}
+  	if (not4b 'FF'O == '00'O) {}
+  	if (not4b '00'O == 'FF'O) {}
+  	if (not4b 'F0'O == '0F'O) {}
+  	if (not4b '0F'O == 'F0'O) {}
+  }
+
+  {var bitstring 	vl_i := not4b omit;}
+  {var bitstring 	vl_i := not4b true;}
+  {var bitstring 	vl_i := not4b false;}
+  {var bitstring 	vl_i := not4b "akarmi";}
+  {var bitstring 	vl_i := not4b char(0,0,0,0);}
+  {var bitstring 	vl_i := not4b 5;}
+  {var bitstring 	vl_i := not4b 5.5;}
+  {var bitstring 	vl_i := not4b pass;}
+  {var bitstring 	vl_i := not4b xx1;}
+  {var bitstring 	vl_i := not4b null;}
+  {var bitstring 	vl_i := not4b cg_boolean;}
+  {var bitstring 	vl_i := not4b cg_integer;}
+  {var bitstring 	vl_i := not4b cg_float;}
+  {var bitstring 	vl_i := not4b cg_charstring;}
+  {var bitstring 	vl_i := not4b cg_universalchar;}
+}
+
+function f_and4bOperationTests()
+{
+  {const bitstring	cl_i := '1001'B and4b '0101'B;}
+  {var bitstring	vl_i := cg_bitstring and4b cg_bitstring;}
+  {var hexstring	vl_i := 'B'H  and4b  '5'H;}
+  {var hexstring	vl_i := cg_hexstring  and4b  cg_hexstring;}
+  {var octetstring	vl_i := 'FB'O  and4b  '15'O;}
+  {var octetstring	vl_i := cg_octetstring  and4b  cg_octetstring;}
+
+  {const bitstring cl_i := '1001'B and4b '1010'B;
+  	if (cl_i == '1000'B) {}
+  	if ('1001'B and4b '1010'B == '1000'B) {}
+  	if ('1001'H and4b '1010'H == '1000'H) {}
+  	if ('1001'O and4b '1010'O == '1000'O) {}
+  }
+
+  {var bitstring	vl_i := '1001'B and4b omit;}
+  {var bitstring	vl_i := omit and4b '0101'B;}
+  {var bitstring	vl_i := '1001'B and4b true;}
+  {var bitstring	vl_i := '1001'B and4b false;}
+  {var bitstring	vl_i := "akarmi" and4b char(0,0,0,0);}
+  {var bitstring	vl_i := 5.5 and4b 5;}
+  {var bitstring	vl_i := '1001'B and4b '0101'H;}
+  {var bitstring	vl_i := '1001'B and4b '0101'O;}
+  {var bitstring	vl_i := '1001'H and4b '0101'B;}
+  {var bitstring	vl_i := '1001'H and4b '0101'O;}
+  {var bitstring	vl_i := '1001'O and4b '0101'B;}
+  {var bitstring	vl_i := '1001'O and4b '0101'H;}
+  {var bitstring	vl_i := '1001'B and4b '010101'B;}
+  {var bitstring	vl_i := '100001'B and4b '0101'B;}
+  {var bitstring	vl_i := '100001'H and4b '0101'H;}
+  {var bitstring	vl_i := '100001'O and4b '0101'O;}
+  {var bitstring	vl_i := pass and4b pass;}
+  {var bitstring	vl_i := xx1 and4b xx1;}
+  {var bitstring	vl_i := null and4b null;}
+  {var bitstring	vl_i := cg_integer and4b cg_float;}
+  {var bitstring	vl_i := cg_charstring and4b cg_boolean;}
+  {var bitstring	vl_i := cg_universalchar and4b cg_universalchar;}
+}
+
+function f_or4bOperationTests()
+{
+  {const bitstring	cl_i := '1001'B or4b '0101'B;}
+  {var bitstring	vl_i := cg_bitstring or4b cg_bitstring;}
+  {var hexstring	vl_i := 'B'H  or4b  '5'H;}
+  {var hexstring	vl_i := cg_hexstring  or4b  cg_hexstring;}
+  {var octetstring	vl_i := 'FB'O  or4b  '15'O;}
+  {var octetstring	vl_i := cg_octetstring  or4b  cg_octetstring;}
+
+  {const bitstring cl_i := '1001'B or4b '1010'B;
+  	if (cl_i == '1011'B) {}
+  	if ('1001'B or4b '1010'B == '1011'B) {}
+  	if ('1001'H or4b '1010'H == '1011'H) {}
+  	if ('1001'O or4b '1010'O == '1011'O) {}
+  }
+
+  {var bitstring	vl_i := '1001'B or4b omit;}
+  {var bitstring	vl_i := omit or4b '0101'B;}
+  {var bitstring	vl_i := '1001'B or4b true;}
+  {var bitstring	vl_i := '1001'B or4b false;}
+  {var bitstring	vl_i := "akarmi" or4b char(0,0,0,0);}
+  {var bitstring	vl_i := 5.5 or4b 5;}
+  {var bitstring	vl_i := '1001'B or4b '0101'H;}
+  {var bitstring	vl_i := '1001'B or4b '0101'O;}
+  {var bitstring	vl_i := '1001'H or4b '0101'B;}
+  {var bitstring	vl_i := '1001'H or4b '0101'O;}
+  {var bitstring	vl_i := '1001'O or4b '0101'B;}
+  {var bitstring	vl_i := '1001'O or4b '0101'H;}
+  {var bitstring	vl_i := '1001'B or4b '010101'B;}
+  {var bitstring	vl_i := '100001'B or4b '0101'B;}
+  {var bitstring	vl_i := '100001'H or4b '0101'H;}
+  {var bitstring	vl_i := '100001'O or4b '0101'O;}
+  {var bitstring	vl_i := pass or4b pass;}
+  {var bitstring	vl_i := xx1 or4b xx1;}
+  {var bitstring	vl_i := null or4b null;}
+  {var bitstring	vl_i := cg_integer or4b cg_float;}
+  {var bitstring	vl_i := cg_charstring or4b cg_boolean;}
+  {var bitstring	vl_i := cg_universalchar or4b cg_universalchar;}
+}
+
+function f_xor4bOperationTests()
+{
+  {const bitstring	cl_i := '1001'B xor4b '0101'B;}
+  {var bitstring	vl_i := cg_bitstring xor4b cg_bitstring;}
+  {var hexstring	vl_i := 'B'H  xor4b  '5'H;}
+  {var hexstring	vl_i := cg_hexstring  xor4b  cg_hexstring;}
+  {var octetstring	vl_i := 'FB'O  xor4b  '15'O;}
+  {var octetstring	vl_i := cg_octetstring  xor4b  cg_octetstring;}
+
+  {const bitstring cl_i := '1001'B xor4b '1010'B;
+  	if (cl_i == '0011'B) {}
+  	if ('1001'B xor4b '1010'B == '0011'B) {}
+  	if ('1001'H xor4b '1010'H == '0011'H) {}
+  	if ('1001'O xor4b '1010'O == '0011'O) {}
+  }
+
+  {var bitstring	vl_i := '1001'B xor4b omit;}
+  {var bitstring	vl_i := omit xor4b '0101'B;}
+  {var bitstring	vl_i := '1001'B xor4b true;}
+  {var bitstring	vl_i := '1001'B xor4b false;}
+  {var bitstring	vl_i := "akarmi" xor4b char(0,0,0,0);}
+  {var bitstring	vl_i := 5.5 xor4b 5;}
+  {var bitstring	vl_i := '1001'B xor4b '0101'H;}
+  {var bitstring	vl_i := '1001'B xor4b '0101'O;}
+  {var bitstring	vl_i := '1001'H xor4b '0101'B;}
+  {var bitstring	vl_i := '1001'H xor4b '0101'O;}
+  {var bitstring	vl_i := '1001'O xor4b '0101'B;}
+  {var bitstring	vl_i := '1001'O xor4b '0101'H;}
+  {var bitstring	vl_i := '1001'B xor4b '010101'B;}
+  {var bitstring	vl_i := '100001'B xor4b '0101'B;}
+  {var bitstring	vl_i := '100001'H xor4b '0101'H;}
+  {var bitstring	vl_i := '100001'O xor4b '0101'O;}
+  {var bitstring	vl_i := pass xor4b pass;}
+  {var bitstring	vl_i := xx1 xor4b xx1;}
+  {var bitstring	vl_i := null xor4b null;}
+  {var bitstring	vl_i := cg_integer xor4b cg_float;}
+  {var bitstring	vl_i := cg_charstring xor4b cg_boolean;}
+  {var bitstring	vl_i := cg_universalchar xor4b cg_universalchar;}
+}
+
+function f_shift_leftOperationTests()
+{
+  const integer cl_small_int := 1;
+
+  {const bitstring	cl_i := '1001'B << 1;}
+  {var bitstring	vl_i := cg_bitstring << cl_small_int;}
+  {var hexstring	vl_i := 'B'H  << 1;}
+  {var hexstring	vl_i := cg_hexstring  << cl_small_int;}
+  {var octetstring	vl_i := 'FB'O  << 1;}
+  {var octetstring	vl_i := cg_octetstring  << cl_small_int;}
+
+  {const bitstring cl_i := '1001'B << 1;
+  	if (cl_i == '0010'B) {}
+  	if ('1001'B << 1 == '0010'B) {}
+  	if ('1001'H << 1 == '0010'H) {}
+  	if ('1001'O << 1 == '0100'O) {}
+  }
+
+  {var bitstring	vl_i := '1001'B << -1;}
+  {var hexstring	vl_i := 'B'H  << -1;}
+  {var octetstring	vl_i := 'FB'O  << -1;}
+  {var bitstring	vl_i := '1001'B << 0;}
+  {var hexstring	vl_i := 'B'H  << 0;}
+  {var octetstring	vl_i := 'FB'O  << 0;}
+  {var bitstring	vl_i := '1001'B << 5;}
+  {var hexstring	vl_i := 'B'H  << 5;}
+  {var octetstring	vl_i := 'FB'O  << 5;}
+
+  {var bitstring	vl_i := omit << 1;}
+  {var bitstring	vl_i := '1001'B << omit;}
+  {var bitstring	vl_i := 5.5 << 1;}
+  {var bitstring	vl_i := '1001'H << 1;}
+  {var bitstring	vl_i := '1001'O << 1;}
+  {var bitstring	vl_i := '1001'B << 1.1;}
+  {var bitstring	vl_i := "akarmi" << 1;}
+  {var bitstring	vl_i := char(0,0,0,0) << 1;}
+  {var bitstring	vl_i := pass << pass;}
+  {var bitstring	vl_i := xx1 << xx1;}
+  {var bitstring	vl_i := null << null;}
+  {var bitstring	vl_i := cg_bitstring << cg_hexstring;}
+  {var bitstring	vl_i := cg_octetstring << cg_charstring;}
+  {var bitstring	vl_i := cg_boolean << cg_universalchar;}
+  {var bitstring	vl_i := cg_float << 5;}
+}
+
+function f_shift_rightOperationTests()
+{
+  const integer cl_small_int := 1;
+
+  {const bitstring	cl_i := '1001'B >> 1;}
+  {var bitstring	vl_i := cg_bitstring >> cl_small_int;}
+  {var hexstring	vl_i := 'B'H  >> 1;}
+  {var hexstring	vl_i := cg_hexstring  >> cl_small_int;}
+  {var octetstring	vl_i := 'FB'O  >> 1;}
+  {var octetstring	vl_i := cg_octetstring  >> cl_small_int;}
+
+  {const bitstring cl_i := '1001'B >> 1;
+  	if (cl_i == '0100'B) {}
+  	if ('1001'B >> 1 == '0100'B) {}
+  	if ('1001'H >> 1 == '0100'H) {}
+  	if ('1001'O >> 1 == '0010'O) {}
+  }
+
+  {var bitstring	vl_i := '1001'B >> -1;}
+  {var hexstring	vl_i := 'B'H  >> -1;}
+  {var octetstring	vl_i := 'FB'O  >> -1;}
+  {var bitstring	vl_i := '1001'B >> 0;}
+  {var hexstring	vl_i := 'B'H  >> 0;}
+  {var octetstring	vl_i := 'FB'O  >> 0;}
+  {var bitstring	vl_i := '1001'B >> 5;}
+  {var hexstring	vl_i := 'B'H  >> 5;}
+  {var octetstring	vl_i := 'FB'O  >> 5;}
+
+  {var bitstring	vl_i := omit >> 1;}
+  {var bitstring	vl_i := '1001'B >> omit;}
+  {var bitstring	vl_i := 5.5 >> 1;}
+  {var bitstring	vl_i := '1001'H >> 1;}
+  {var bitstring	vl_i := '1001'O >> 1;}
+  {var bitstring	vl_i := '1001'B >> 1.1;}
+  {var bitstring	vl_i := "akarmi" >> 1;}
+  {var bitstring	vl_i := char(0,0,0,0) >> 1;}
+  {var bitstring	vl_i := pass >> pass;}
+  {var bitstring	vl_i := xx1 >> xx1;}
+  {var bitstring	vl_i := null >> null;}
+  {var bitstring	vl_i := cg_bitstring >> cg_hexstring;}
+  {var bitstring	vl_i := cg_octetstring >> cg_charstring;}
+  {var bitstring	vl_i := cg_boolean >> cg_universalchar;}
+  {var bitstring	vl_i := cg_float >> 5;}
+}
+
+function f_rotate_leftOperationTests()
+{
+  const integer cl_small_int := 1;
+  const myrecof1 cl_myrecof := {1,2,3,4};
+  const mysetof1 cl_mysetof := {1,2,3,4};
+  const myarr1 cl_myarray := {1};
+
+  {const bitstring	cl_i := '1001'B <@ 1;}
+  {var bitstring	vl_i := cg_bitstring <@ cl_small_int;}
+  {var hexstring	vl_i := 'BB'H  <@ 1;}
+  {var hexstring	vl_i := cg_hexstring  <@ cl_small_int;}
+  {var octetstring	vl_i := 'FABABA'O  <@ 1;}
+  {const octetstring	cl_i := cg_octetstring  @> cl_small_int;}
+  {const charstring	cl_i := "akarmi" <@ 1;}
+  {const charstring	cl_i := cg_charstring <@ cl_small_int;}
+  {const universal charstring	cl_i := "akarmi" <@ 1;}
+  {const universal charstring	cl_i := cg_universalcharstring <@ cl_small_int;}
+  {var myrecof1		vl_i := cl_myrecof <@ 1;}
+  {var mysetof1		vl_i := cl_mysetof <@ 1;}
+
+  {const bitstring cl_i := '1001'B <@ 1;
+  	if (cl_i == '0011'B) {}
+  	if ('1001'B <@ 1 == '0011'B) {}
+  	if ('1001'H <@ 1 == '0011'H) {}
+  	if ('1001'O <@ 1 == '0110'O) {}
+  }
+
+  {var bitstring	vl_i := ''B <@ 1;}
+  {var bitstring	vl_i := '1'B <@ 1;}
+  {var bitstring	vl_i := '1001'B <@ -1;}
+  {var hexstring	vl_i := 'B'H  <@ -1;}
+  {var octetstring	vl_i := 'FB'O  <@ -1;}
+  {var charstring	vl_i := "akarmi"  <@ -1;}
+  {var universal charstring	vl_i := cg_universalcharstring  <@ -1;}
+  {var bitstring	vl_i := '1001'B <@ 0;}
+  {var hexstring	vl_i := 'B'H  <@ 0;}
+  {var octetstring	vl_i := 'FB'O  <@ 0;}
+  {var charstring	vl_i := "akarmi"  <@ 0;}
+  {var universal charstring	vl_i := cg_universalcharstring  <@ 0;}
+  {var bitstring	vl_i := '1001'B <@ 5;}
+  {var hexstring	vl_i := 'B'H  <@ 5;}
+  {var octetstring	vl_i := 'FB'O  <@ 5;}
+  {var octetstring	vl_i := cg_octetstring  <@ cl_small_int;}
+  {var charstring	vl_i := "akarmi"  <@ 10;}
+  {var universal charstring	vl_i := cg_universalcharstring  <@ 10;}
+  {var myarr1		vl_i := cl_myarray <@ 1;}
+  {var myrecof1		vl_i := cl_myrecof <@ 5;}
+  {var mysetof1		vl_i := cl_mysetof <@ 5;}
+  {var myrecof1		vl_i := cl_myrecof <@ -1;}
+  {var mysetof1		vl_i := cl_mysetof <@ -1;}
+  {var myarr1		vl_i := cl_myarray <@ -1;}
+
+  {var bitstring	vl_i := omit <@ 1;}
+  {var bitstring	vl_i := '1001'B <@ omit;}
+  {var bitstring	vl_i := 5.5 <@ 1;}
+  {var bitstring	vl_i := '1001'H <@ 1;}
+  {var bitstring	vl_i := '1001'O <@ 1;}
+  {var bitstring	vl_i := '1001'B <@ 1.1;}
+  {var bitstring	vl_i := "akarmi" <@ 1;}
+  {var bitstring	vl_i := char(0,0,0,0) <@ 1;}
+  {var bitstring	vl_i := pass <@ pass;}
+  {var bitstring	vl_i := xx1 <@ xx1;}
+  {var bitstring	vl_i := null <@ null;}
+  {var bitstring	vl_i := cg_bitstring <@ cg_hexstring;}
+  {var bitstring	vl_i := cg_octetstring <@ cg_charstring;}
+  {var bitstring	vl_i := cg_boolean <@ cg_universalchar;}
+  {var bitstring	vl_i := cg_float <@ 5;}
+  {var bitstring	vl_i := '1001'B <@ 9999999999999;}
+}
+
+function f_rotate_rightOperationTests()
+{
+  const integer cl_small_int := 1;
+  const myrecof1 cl_myrecof := {1,2,3,4};
+  const mysetof1 cl_mysetof := {1,2,3,4};
+  const myarr1 cl_myarray := {1};
+
+  {const bitstring	cl_i := '1001'B @> 1;}
+  {const bitstring	cl_i := cg_bitstring @> cl_small_int;}
+  {const hexstring	cl_i := 'BB'H  @> 1;}
+  {const hexstring	cl_i := cg_hexstring  @> cl_small_int;}
+  {const octetstring	cl_i := 'DEADBEAF'O  @> 1;}
+  {const octetstring	cl_i := cg_octetstring  @> cl_small_int;}
+  {const charstring	cl_i := "akarmi" @> 1;}
+  {const charstring	cl_i := cg_charstring @> cl_small_int;}
+  {const universal charstring	cl_i := "akarmi" @> 1;}
+  {const universal charstring	cl_i := cg_universalcharstring @> cl_small_int;}
+  {const myrecof1		cl_i := cl_myrecof @> 1;}
+  {const mysetof1		cl_i := cl_mysetof @> 1;}
+
+  {const bitstring cl_i := '1001'B @> 1;
+  	if (cl_i == '1100'B) {}
+  	if ('1001'B @> 1 == '1100'B) {}
+  	if ('1001'H @> 1 == '1100'H) {}
+  	if ('1001'O @> 1 == '0110'O) {}
+  }
+
+  {var bitstring	vl_i := ''B @> 1;}
+  {var bitstring	vl_i := '1'B @> 1;}
+  {var bitstring	vl_i := '1001'B @> -1;}
+  {var hexstring	vl_i := 'B'H  @> -1;}
+  {var octetstring	vl_i := 'FB'O  @> -1;}
+  {var charstring	vl_i := "akarmi"  @> -1;}
+  {var universal charstring	vl_i := cg_universalcharstring  @> -1;}
+  {var bitstring	vl_i := '1001'B @> 0;}
+  {var hexstring	vl_i := 'B'H  @> 0;}
+  {var octetstring	vl_i := 'FB'O  @> 0;}
+  {var charstring	vl_i := "akarmi"  @> 0;}
+  {var universal charstring	vl_i := cg_universalcharstring  @> 0;}
+  {var bitstring	vl_i := '1001'B @> 5;}
+  {var hexstring	vl_i := 'B'H  @> 5;}
+  {var octetstring	vl_i := 'FB'O  @> 5;}
+  {var charstring	vl_i := "akarmi"  @> 10;}
+  {var universal charstring	vl_i := cg_universalcharstring  @> 10;}
+  {var myarr1		vl_i := cl_myarray @> 1;}
+  {var myrecof1		vl_i := cl_myrecof @> 5;}
+  {var mysetof1		vl_i := cl_mysetof @> 5;}
+  {var myrecof1		vl_i := cl_myrecof @> -1;}
+  {var mysetof1		vl_i := cl_mysetof @> -1;}
+  {var myarr1		vl_i := cl_myarray @> -1;}
+
+  {var bitstring	vl_i := omit @> 1;}
+  {var bitstring	vl_i := '1001'B @> omit;}
+  {var bitstring	vl_i := 5.5 @> 1;}
+  {var bitstring	vl_i := '1001'H @> 1;}
+  {var bitstring	vl_i := '1001'O @> 1;}
+  {var bitstring	vl_i := '1001'B @> 1.1;}
+  {var bitstring	vl_i := "akarmi" @> 1;}
+  {var bitstring	vl_i := char(0,0,0,0) @> 1;}
+  {var bitstring	vl_i := pass @> pass;}
+  {var bitstring	vl_i := xx1 @> xx1;}
+  {var bitstring	vl_i := null @> null;}
+  {var bitstring	vl_i := cg_bitstring @> cg_hexstring;}
+  {var bitstring	vl_i := cg_octetstring @> cg_charstring;}
+  {var bitstring	vl_i := cg_boolean @> cg_universalchar;}
+  {var bitstring	vl_i := cg_float @> 5;}
+  {var bitstring	vl_i := '1001'B @> 9999999999999;}
+}
+
+function f_substrOperationTests()
+{
+  const integer cl_small_int := 1;
+  const myrecof1 cl_myrecof := {1,2,3,4};
+  const mysetof1 cl_mysetof := {1,2,3,4};
+  const myarr1 cl_myarray := {1};
+  var integer vl_int;
+
+  {const bitstring	cl_i := substr('1001'B, 1, 1);}
+  {var bitstring	vl_i := substr(cg_bitstring,1 ,cl_small_int);}
+  {var hexstring	vl_i := substr('BB'H, 1, 1);}
+  {var hexstring	vl_i := substr(cg_hexstring,1 ,cl_small_int);}
+  {var octetstring	vl_i := substr('DEADBEAF'O, 1, 1);}
+  {var octetstring	vl_i := substr(cg_octetstring,0 ,cl_small_int);}
+  {var charstring	vl_i := substr("akarmi", 1, 1);}
+  {var charstring	vl_i := substr(cg_charstring, 1, 1);}
+  {var universal charstring	vl_i := substr("akarmi", 1, 1);}
+  {var universal charstring	vl_i := substr(cg_universalchar, 0, 1);}
+  {var myrecof1		vl_i := substr(cl_myrecof,1 ,cl_small_int);}
+  {var mysetof1		vl_i := substr(cl_mysetof,1 ,cl_small_int);}
+
+  {const bitstring cl_i := substr('1001'B, 1, 1);
+  	if (cl_i == '0'B) {}
+  	if (substr('1001'B, 1, 1) == '0'B) {}
+  	if (substr('1F01'H, 1, 1) == 'F'H) {}
+  	if (substr('1001'O, 1, 1) == '01'O) {}
+  }
+
+  {var bitstring	vl_i := substr(5, 1, 1);}
+  {var bitstring	vl_i := substr(cl_myrecof, 1, 1);}
+  {var bitstring	vl_i := substr('1001'B, nonExi, nonExi);}
+  {var bitstring	vl_i := substr('1001'B, -4, -1);}
+  {var bitstring	vl_i := substr('1001'B, 6, 1);}
+  {var bitstring	vl_i := substr('1001'B, 6, vl_int);}
+  {var bitstring	vl_i := substr('1001'B, vl_int, 6);}
+  {var bitstring	vl_i := substr('1001'B, 2, 6);}
+  {var bitstring	vl_i := substr('1001'B, 99999999999999999999999, 99999999999999999999999);}
+  {var charstring	vl_i := substr(cg_charstring, 6, 1);}
+  {var charstring	vl_i := substr(cg_charstring, 2, 6);}
+  {var universal charstring	vl_i := substr(cg_universalchar, 6, 1);}
+  {var universal charstring	vl_i := substr(cg_universalchar, 2, 6);}
+  {var bitstring	vl_i := substr(cl_myrecof, 6, 1);}
+  {var bitstring	vl_i := substr(cl_myrecof, 2, 6);}
+  {var bitstring	vl_i := substr(cl_mysetof, 6, 1);}
+  {var bitstring	vl_i := substr(cl_mysetof, 2, 6);}
+}
+
+
+function f_concatenationOperationTests()
+{
+  const myrecof1 cl_myrecof := {1,2,3,4};
+  const mysetof1 cl_mysetof := {1,2,3,4};
+  const myrecof1 cl_myrecof2 := {[0] := 1, [1] := 2, [2] := 3, [3] := 4};
+  const mysetof1 cl_mysetof2 := {[0] := 1, [1] := 2, [2] := 3, [3] := 4};
+
+  {const bitstring	cl_i := '1001'B & '1001'B;}
+  {var bitstring	vl_i := cg_bitstring & cg_bitstring;}
+  {var hexstring	vl_i := '1001'H & '1001'H;}
+  {var hexstring	vl_i := cg_hexstring & cg_hexstring;}
+  {var octetstring	vl_i := '1001'O & '1001'O;}
+  {var octetstring	vl_i := cg_octetstring & cg_octetstring;}
+  {var charstring	vl_i := "akarmi" & "akarmi";}
+  {var charstring	vl_i := cg_charstring & cg_charstring;}
+  {var universal charstring	vl_i := "akarmi" & "akarmi";}
+  {var charstring	vl_i := "akarmi" & char(0,0,0,0);}
+  {var universal charstring	vl_i := char(0,0,0,0) & "akarmi";}
+  {var universal charstring	vl_i := char(0,0,0,0) & cg_charstring;}
+  {var universal charstring	vl_i := char(0,0,0,0) & cg_universalchar;}
+  {var universal charstring	vl_i := cg_universalchar & char(0,0,0,0);}
+  {const myrecof1 cl_i := cl_myrecof & cl_myrecof;}
+  {const mysetof1 cl_i := cl_mysetof & cl_mysetof;}
+  {const myrecof1 cl_i := cl_myrecof2 & cl_myrecof2;}
+  {const mysetof1 cl_i := cl_mysetof2 & cl_mysetof2;}
+  {var charstring	vl_i := %moduleId & %fileName;}
+
+  {const bitstring cl_i := '1001'B & '1001'B;
+  	if (cl_i == '10011001'B) {}
+  	if ('1001'B & '1001'B == '10011001'B) {}
+  	if ('1001'H & '1001'H == '10011001'H) {}
+  	if ('1001'O & '1001'O == '10011001'O) {}
+  }
+
+  {var bitstring	vl_i := omit & 5;}
+  {var bitstring	vl_i := 5.5 & 5.5;}
+  {var bitstring	vl_i := '1001'B & '1001'H;}
+  {var bitstring	vl_i := '1001'H & '1001'B;}
+  {var bitstring	vl_i := '1001'B & '1001'O;}
+  {var bitstring	vl_i := '1001'O & '1001'B;}
+  {var bitstring	vl_i := '1001'B & "akarmi";}
+  {var hexstring	vl_i := '1001'H & '1001'O;}
+  {var hexstring	vl_i := '1001'O & '1001'H;}
+  {var hexstring	vl_i := '1001'H & "akarmi";}
+  {var octetstring	vl_i := '1001'O & '1001'B;}
+  {var octetstring	vl_i := '1001'O & '1001'H;}
+  {var octetstring	vl_i := '1001'O & "akarmi";}
+  {var charstring	vl_i := "akarmi" & '1001'B;}
+  {var charstring	vl_i := "akarmi" & '1001'H;}
+  {var charstring	vl_i := "akarmi" & '1001'O;}
+  {var universal charstring	vl_i := "akarmi" & '1001'B;}
+  {var universal charstring	vl_i := "akarmi" & '1001'H;}
+  {var universal charstring	vl_i := "akarmi" & '1001'O;}
+  {var universal charstring	vl_i := pass & pass;}
+  {var universal charstring	vl_i := xx1 & xx1;}
+  {var universal charstring	vl_i := null & null;}
+  {var charstring	vl_i := cg_bitstring & cg_hexstring;}
+  {var charstring	vl_i := cg_octetstring & cg_integer;}
+  {var charstring	vl_i := cg_float & cg_charstring;}
+  {var charstring	vl_i := cg_boolean & cg_universalchar;}
+  {var charstring	vl_i := cg_charstring & char(0,0,0,0);}
+  {var myrecof1 vl_i := cg_charstring & cl_myrecof;}
+  {var myrecof1 vl_i := cl_myrecof & cg_charstring;}
+  {var mysetof1 vl_i := cg_charstring & cl_mysetof;}
+  {var mysetof1 vl_i := cl_mysetof & cg_charstring;}
+}
+
+/* RECURSIVE ****************************************************************/
+type record of recR recofR
+type record recR { recofR rof optional }
+type record c1   { recR f1 }
+type record c11  { c1 f1 }
+type record c2   { recofR f1 }
+type record c22  { c2 f1 }
+
+type record A {
+  integer f1,
+  B f2 optional
+}
+
+type record B {
+  A f1 optional,
+  integer f2
+}
+
+function f_recursionTestsCompat()
+{
+  // Make sure that we don't stuck in an infinite recursion.
+  var recofR vl_rof := { { omit } }
+  var recR vl_r := { rof := omit }
+  var c11 vl_cc1 := { f1 := { { omit } } }
+  var c22 vl_cc2 := { f1 := { { { omit } } } }
+  vl_cc1 := vl_cc2
+  if (vl_cc1 == vl_cc2) { }
+  vl_r := vl_rof
+  if (vl_r.rof == omit) { }
+  vl_rof := vl_r
+  if (vl_cc1 == vl_r or vl_rof == vl_cc2) { }  // Just to get an error...
+  var A vl_a := { f1 := 1, f2 := { f1 := { 1, omit }, f2 := 11 } }
+  var B vl_b := { f1 := vl_a, f2 := 1 }
+  if (vl_a == vl_b and not vl_b != vl_a) { }
+}
+
+function f_equalsNotEqualsOperationTestsCompat()
+{
+  var myrec1 vl_rec1     := { 1 }
+  var myrec2 vl_rec2     := { 1 }
+  var myrec3 vl_rec3     := { 1 }
+  var myrec4 vl_rec4     := { 1, 2 }
+  var myrecof1 vl_recof1 := { 1, 2 }
+  var myrecof2 vl_recof2 := { 1, 2 }
+  var myarr1 vl_arr1     := { 1 }
+  var myarr2 vl_arr2     := { 1 }
+  var myset1 vl_set1     := { f1 := 1 }
+  var myset2 vl_set2     := { f1 := 1 }
+  var myset3 vl_set3     := { f1 := 1 }
+  var myset4 vl_set4     := { f1 := 1, f2 := 2 }
+  var mysetof1 vl_setof1 := { 1, 2 }
+  var mysetof2 vl_setof2 := { 1, 2 }
+  var myuni1 vl_uni1     := { f1 := { 1 } }
+  var myuni2 vl_uni2     := { f1 := { 1 } }
+  var anytype vl_any1    := { myrec1 := { 1 } }
+  var anytype vl_any2    := { myrec2 := { 1 } }
+
+  const myrecof1 cl_recof1		:= { 1, 2, 3, 4}
+  const myrecof1 cl_recof2		:= { 1, 2, 3, 4}
+  const myrecof1 cl_recof3		:= { 4, 1, 3, 2}
+  const myrecof1 cl_recof4		:= { 1, 2, 3}
+  const myrecof1 cl_recof5		:= {}
+  const myrecof1 cl_recof_ind1	:= { [0]:=1, [1]:=2, [2]:=3 ,[3]:=4}
+  const myrecof1 cl_recof_ind2	:= { [0]:=1, [1]:=2, [2]:=3 ,[3]:=4}
+  const myrecof1 cl_recof_ind3	:= { [1]:=2, [0]:=1, [2]:=3 ,[3]:=4}
+  const myrecof1 cl_recof_ind4	:= { [0]:=1, [1]:=2, [2]:=3 ,[3]:=4, [4]:=5}
+  const myrecof1 cl_recof_ind5	:= { [0]:=2, [1]:=1, [2]:=3 ,[3]:=4}
+
+  const mysetof1 cl_setof1		:= { 1, 2, 3, 4}
+  const mysetof1 cl_setof2		:= { 1, 2, 3, 4}
+  const mysetof1 cl_setof3		:= { 3, 2, 1, 4}
+  const mysetof1 cl_setof4		:= { 1, 2, 3, 4, 5}
+  const mysetof1 cl_setof5		:= {}
+  const mysetof1 cl_setof_ind1	:= { [0]:=1, [1]:=2, [2]:=3, [3]:=4}
+  const mysetof1 cl_setof_ind2	:= { [0]:=1, [1]:=2, [2]:=3, [3]:=4}
+  const mysetof1 cl_setof_ind3	:= { [3]:=4, [1]:=2, [2]:=3, [0]:=1}
+  const mysetof1 cl_setof_ind4	:= { [3]:=1, [1]:=2, [2]:=3, [0]:=4}
+  const mysetof1 cl_setof_ind5	:= { [0]:=1, [1]:=2, [2]:=3, [3]:=4, [4]:= 5}
+  const mysetof1 cl_setof_ind6	:= { [0]:=1, [1]:=2, [2]:=3, [3]:=5}
+
+  const myarr3 cl_array1		:= { 1, 2, 3, 4}
+  const myarr3 cl_array2		:= { 1, 2, 3, 4}
+  const myarr3 cl_array3		:= { 4, 1, 3, 2}
+  const myarr1 cl_array4		:= { 1 }
+  const myarr3 cl_array_ind1	:= { [0]:=1, [1]:=2, [2]:=3 ,[3]:=4}
+  const myarr3 cl_array_ind2	:= { [0]:=1, [1]:=2, [2]:=3 ,[3]:=4}
+  const myarr3 cl_array_ind3	:= { [1]:=2, [0]:=1, [2]:=3 ,[3]:=4}
+  const myarr3 cl_array_ind4	:= { [2]:=1, [1]:=2, [0]:=3 ,[3]:=4}
+  const myarr1 cl_array_ind5	:= { [0]:=1 }
+
+  if(cl_array1 == cl_array2 and cl_array2 == cl_array1) {}
+  if(cl_array1 != cl_array3 and cl_array3 != cl_array1) {}
+  if(cl_array1 == cl_array_ind1 and cl_array_ind1 == cl_array1) {}
+  if(cl_array1 == cl_array_ind3 and cl_array_ind3 == cl_array1) {}
+  if(cl_array1 != cl_array_ind4 and cl_array_ind4 != cl_array1) {}
+
+  if(cl_array_ind1 == cl_array_ind2 and cl_array_ind2 == cl_array_ind1) {}
+  if(cl_array_ind1 == cl_array_ind3 and cl_array_ind3 == cl_array_ind1) {}
+  if(cl_array_ind1 != cl_array_ind4 and cl_array_ind4 != cl_array_ind1) {}
+
+  // constant folding of setof
+  if(cl_setof1 == cl_setof2 and cl_setof2 == cl_setof1){}
+  if(cl_setof1 == cl_setof3 and cl_setof3 == cl_setof1){}
+  if(cl_setof1 != cl_setof4 and cl_setof4 != cl_setof1 ){}
+  if(cl_setof1 != cl_setof5 and cl_setof5 != cl_setof1){}
+  if(cl_setof1 == cl_setof_ind1 and cl_setof_ind1 == cl_setof1){}
+  if(cl_setof1 == cl_setof_ind3 and cl_setof_ind3 == cl_setof1){}
+  if(cl_setof1 == cl_setof_ind4 and cl_setof_ind4 == cl_setof1){}
+  if(cl_setof1 != cl_setof_ind5 and cl_setof_ind5 != cl_setof1){}
+  if(cl_setof1 != cl_setof_ind6 and cl_setof_ind6 != cl_setof1){}
+  if(cl_setof3 == cl_setof_ind1 and cl_setof_ind1 == cl_setof3){}
+  if(cl_setof_ind1 == cl_setof_ind2 and cl_setof_ind2 == cl_setof_ind1){}
+  if(cl_setof_ind1 == cl_setof_ind3 and cl_setof_ind3 == cl_setof_ind1){}
+  if(cl_setof_ind1 == cl_setof_ind4 and cl_setof_ind4 == cl_setof_ind1){}
+  if(cl_setof_ind1 != cl_setof_ind5 and cl_setof_ind5 != cl_setof_ind1){}
+  if(cl_setof_ind1 != cl_setof_ind6 and cl_setof_ind6 != cl_setof_ind1){}
+
+  // constant folding of record of
+  if(cl_recof1 == cl_recof2 and cl_recof2 == cl_recof1){}
+  if(cl_recof1 != cl_recof3 and cl_recof3 != cl_recof1){}
+  if(cl_recof1 != cl_recof4 and cl_recof4 != cl_recof1){}
+  if(cl_recof1 != cl_recof5 and cl_recof5 != cl_recof1){}
+  if(cl_recof1 == cl_recof_ind1 and cl_recof_ind1 == cl_recof1){}
+  if(cl_recof1 == cl_recof_ind3 and cl_recof_ind3 == cl_recof1){}
+  if(cl_recof1 != cl_recof_ind4 and cl_recof_ind4 != cl_recof1){}
+  if(cl_recof1 != cl_recof_ind5 and cl_recof_ind5 != cl_recof1){}
+  if(cl_recof_ind1 == cl_recof_ind2 and cl_recof_ind2 == cl_recof_ind1){}
+  if(cl_recof_ind1 == cl_recof_ind3 and cl_recof_ind3 == cl_recof_ind1){}
+  if(cl_recof_ind1 != cl_recof_ind4 and cl_recof_ind4 != cl_recof_ind1){}
+  if(cl_recof_ind1 != cl_recof_ind5 and cl_recof_ind5 != cl_recof_ind1){}
+
+  { const boolean cl_b := vl_rec1 == vl_rec2 and vl_rec2 == vl_rec1 }  // 2xW
+  { var boolean vl_b := vl_rec1 != vl_rec2 and vl_rec2 != vl_rec1 }  // 2xW
+  { var boolean vl_b := vl_recof1 == vl_recof2 and vl_recof2 == vl_recof1 }  // 2xW
+  { var boolean vl_b := vl_recof1 != vl_recof2 and vl_recof2 != vl_recof1 }  // 2xW
+  { var boolean vl_b := vl_arr1 == vl_arr2 and vl_arr2 == vl_arr1 }  // 2xW
+  { var boolean vl_b := vl_arr1 != vl_arr2 and vl_arr2 != vl_arr1 }  // 2xW
+  { var boolean vl_b := vl_set1 == vl_set2 and vl_set2 == vl_set1 }  // 2xW
+  { var boolean vl_b := vl_set1 != vl_set2 and vl_set2 != vl_set1 }  // 2xW
+  { var boolean vl_b := vl_setof1 == vl_setof2 and vl_setof2 == vl_setof1 }  // 2xW
+  { var boolean vl_b := vl_setof1 != vl_setof2 and vl_setof2 != vl_setof1 }  // 2xW
+  { var boolean vl_b := vl_uni1 == vl_uni2 and vl_uni2 == vl_uni1 }  // 2xW
+  { var boolean vl_b := vl_uni1 != vl_uni2 and vl_uni2 != vl_uni1 }  // 2xW
+  { var boolean vl_b := vl_any1 == vl_any2 and vl_any2 == vl_any1 }  // 2xW
+  { var boolean vl_b := vl_any1 != vl_any2 and vl_any2 != vl_any1 }  // 2xW
+
+  { var boolean vl_b := vl_rec1 == vl_set1 and vl_set1 == vl_rec1 }  // 2xE
+  { var boolean vl_b := vl_rec1 != vl_set1 and vl_set1 != vl_rec1 }  // 2xE
+  { var boolean vl_b := vl_rec1 == vl_setof1 and vl_setof1 == vl_rec1 }  // 2xE
+  { var boolean vl_b := vl_rec1 != vl_setof1 and vl_setof1 != vl_rec1 }  // 2xE
+  { var boolean vl_b := vl_recof1 == vl_set1 and vl_set1 == vl_recof1 }  // 2xE
+  { var boolean vl_b := vl_recof1 != vl_set1 and vl_set1 != vl_recof1 }  // 2xE
+  { var boolean vl_b := vl_recof1 == vl_setof1 and vl_setof1 == vl_recof1 }  // 2xE
+  { var boolean vl_b := vl_recof1 != vl_setof1 and vl_setof1 != vl_recof1 }  // 2xE
+  { var boolean vl_b := vl_arr1 == vl_set1 and vl_set1 == vl_arr1 }  // 2xE
+  { var boolean vl_b := vl_arr1 != vl_set1 and vl_set1 != vl_arr1 }  // 2xE
+  { var boolean vl_b := vl_arr1 == vl_setof1 and vl_setof1 == vl_arr1 }  // 2xE
+  { var boolean vl_b := vl_arr1 != vl_setof1 and vl_setof1 != vl_arr1 }  // 2xE
+  { var boolean vl_b := vl_uni1 == vl_set1 and vl_set1 == vl_uni1 }  // 2xE
+  { var boolean vl_b := vl_uni1 != vl_set1 and vl_set1 != vl_uni1 }  // 2xE
+  { var boolean vl_b := vl_uni1 == vl_setof1 and vl_setof1 == vl_uni1 }  // 2xE
+  { var boolean vl_b := vl_uni1 != vl_setof1 and vl_setof1 != vl_uni1 }  // 2xE
+  { var boolean vl_b := vl_any1 == vl_set1 and vl_set1 == vl_any1 }  // 2xE
+  { var boolean vl_b := vl_any1 != vl_set1 and vl_set1 != vl_any1 }  // 2xE
+  { var boolean vl_b := vl_any1 == vl_setof1 and vl_setof1 == vl_any1 }  // 2xE
+  { var boolean vl_b := vl_any1 != vl_setof1 and vl_setof1 != vl_any1 }  // 2xE
+
+  { var boolean vl_b := vl_rec3 == vl_rec1 and vl_rec1 == vl_rec3 }  // 2xE
+  { var boolean vl_b := vl_rec3 != vl_rec1 and vl_rec1 != vl_rec3 }  // 2xE
+  { var boolean vl_b := vl_rec3 == vl_uni1 and vl_uni1 == vl_rec3 }  // 2xE
+  { var boolean vl_b := vl_rec3 != vl_uni1 and vl_uni1 != vl_rec3 }  // 2xE
+  { var boolean vl_b := vl_rec3 == vl_any1 and vl_any1 == vl_rec3 }  // 2xE
+  { var boolean vl_b := vl_rec3 != vl_any1 and vl_any1 != vl_rec3 }  // 2xE
+
+  { var boolean vl_b := vl_set3 == vl_set1 and vl_set1 == vl_set3 }  // 2xE
+  { var boolean vl_b := vl_set3 != vl_set1 and vl_set1 != vl_set3 }  // 2xE
+
+  { var boolean vl_b := vl_rec4 == vl_rec1 and vl_rec1 == vl_rec4 }  // 2xE
+  { var boolean vl_b := vl_rec4 != vl_rec1 and vl_rec1 != vl_rec4 }  // 2xE
+  { var boolean vl_b := vl_rec4 == vl_uni1 and vl_uni1 == vl_rec4 }  // 2xE
+  { var boolean vl_b := vl_rec4 != vl_uni1 and vl_uni1 != vl_rec4 }  // 2xE
+  { var boolean vl_b := vl_rec4 == vl_any1 and vl_any1 == vl_rec4 }  // 2xE
+  { var boolean vl_b := vl_rec4 != vl_any1 and vl_any1 != vl_rec4 }  // 2xE
+
+  { var boolean vl_b := vl_set4 == vl_set1 and vl_set1 == vl_set4 }  // 2xE
+  { var boolean vl_b := vl_set4 != vl_set1 and vl_set1 != vl_set4 }  // 2xE
+
+  { var boolean vl_b := cl_array1 == cl_array4 and cl_array4 == cl_array1 }  // 2xE
+  { var boolean vl_b := cl_array_ind1 == cl_array4 and cl_array4 == cl_array_ind1 }  // 2xE
+  { var boolean vl_b := cl_array_ind1 == cl_array_ind5 and cl_array_ind5 == cl_array_ind1 }  // 2xE
+}
+
+function f_replaceConcatenationOperationTestsCompat()
+{
+  var myrecof1 vl_recof1 := { 1, 2 }
+  var myrecof2 vl_recof2 := { 1, 2 }
+  var mysetof1 vl_setof1 := { 1, 2 }
+  var mysetof2 vl_setof2 := { 1, 2 }
+
+  { var myrecof1 vl_r := replace(vl_recof1, 1, 1, vl_recof2) & replace(vl_recof2, 1, 1, vl_recof1) }  // 4xW
+  { var mysetof1 vl_r := replace(vl_setof1, 1, 1, vl_setof2) & replace(vl_setof2, 1, 1, vl_setof1) }  // 4xW
+  { var myrecof1 vl_r := vl_recof1 & vl_recof2 }  // 2xW
+  { var myrecof1 vl_r := vl_recof2 & vl_recof1 }  // 2xW
+
+  { var myrecof1 vl_r := replace(vl_recof1, 1, 1, vl_setof1) & replace(vl_setof1, 1, 1, vl_recof1) }  // 4xE
+  { var mysetof1 vl_r := replace(vl_recof1, 1, 1, vl_setof1) & replace(vl_recof1, 1, 1, vl_setof1) }  // 4xE
+  { var myrecof1 vl_r := vl_recof1 & vl_setof1 }  // 2xE
+  { var mysetof1 vl_r := vl_recof1 & vl_setof1 }  // 2xE
+}
+
+function f_equalsOperationTests()
+{
+  {const boolean cl_i := true == false; }
+  {const boolean cl_i := cg_boolean == cg_boolean; }
+  {const boolean cl_i := 5 == 5; }
+  {const boolean cl_i := cg_integer == cg_integer; }
+  {const boolean cl_i := 5.5 == 5.5; }
+  {const boolean cl_i := cg_float == cg_float; }
+  {const boolean cl_i := "akarmi" == "akarmi"; }
+  {const boolean cl_i := cg_charstring == cg_charstring; }
+  {const boolean cl_i := '00'B == '00'B; }
+  {const boolean cl_i := cg_bitstring == cg_bitstring; }
+  {const boolean cl_i := '00'H == '00'H; }
+  {const boolean cl_i := cg_hexstring == cg_hexstring; }
+  {const boolean cl_i := '00'O == '00'O; }
+  {const boolean cl_i := cg_octetstring == cg_octetstring; }
+  {const boolean cl_i := char(0,0,0,0) == char(0,0,0,0); }
+  {const boolean cl_i := cg_universalchar == cg_universalchar; }
+  {const boolean cl_i := char(0,0,0,48) == "0"; }
+  {const boolean cl_i := "0" == char(0,0,0,48); }
+  {const boolean cl_i := cg_universalcharstring == cg_universalcharstring; }
+  {const myenum1 cl_j := xx1; var boolean vl_i := j == xx1; }
+  {const myenum1 cl_j := xx1; var boolean vl_i := xx1 == j; }
+  {const boolean cl_i := pass == pass; }
+  {const boolean cl_i := null == null; }
+  {const boolean cl_i := omit == omit; }
+  {const t_function cl_i1 := refers(f_functionName);
+   const t_function cl_i2 := refers(f_functionName);
+   const boolean cl_i := cl_i1 == cl_i2;
+  }
+  {const t_altstep2 cl_i1 := refers(as_altstepName);
+   const t_altstep2 cl_i2 := refers(as_altstepName);
+   const boolean cl_i := cl_i1 == cl_i2;
+  }
+  {const t_testcase cl_i1 := refers(tc_c_testcase);
+   const t_testcase cl_i2 := refers(tc_c_testcase);
+   const boolean cl_i := cl_i1 == cl_i2;
+  }
+
+  { const myrec1 cl_rec1 := {1};
+    const myrec1 cl_rec2 := {1};
+    const myrec1 cl_rec3 := {2};
+    if (cl_rec1 == cl_rec2) {}
+    if (cl_rec1 == cl_rec3) {}
+  }
+
+  { const myset1 cl_set1 := {f1 := 1};
+    const myset1 cl_set2 := {f1 := 1};
+    const myset1 cl_set3 := {f1 := 2};
+    if (cl_set1 == cl_set2) {}
+    if (cl_set1 == cl_set3) {}
+  }
+
+  { const myrecof1 cl_recof1 := { [0]:=11, [1]:=22 }
+    const myrecof1 cl_recof2 := { 11, 22 }
+    const myrecof1 cl_recof3 := { [1]:=22, [0]:=11 }
+    const myrecof1 cl_recof4 := { [1]:=22, [0]:=10 }
+    if (cl_recof1 == cl_recof2) { } else { }
+    if (cl_recof2 == cl_recof1) { } else { }
+    if (cl_recof1 == cl_recof3) { } else { }
+    if (cl_recof3 == cl_recof1) { } else { }
+
+    if (cl_recof1 == cl_recof4) { } else { }
+    if (cl_recof4 == cl_recof1) { } else { }
+  }
+
+  { const mysetof1 cl_setof1 := {1};
+    const mysetof1 cl_setof2 := {1};
+    const mysetof1 cl_setof3 := {2};
+    if (cl_setof1 == cl_setof2) {}
+    if (cl_setof1 == cl_setof3) {}
+  }
+
+  { const myarr1 cl_arr1 := {1};
+    const myarr1 cl_arr2 := {1};
+    const myarr1 cl_arr3 := {2};
+    if (cl_arr1 == cl_arr2) {}
+    if (cl_arr1 == cl_arr3) {}
+  }
+
+  { const myuni cl_uni1 := {f1 := 1};
+    const myuni cl_uni2 := {f1 := 1};
+    const myuni cl_uni3 := {f1 := 2};
+    if (cl_uni1 == cl_uni2) {}
+    if (cl_uni1 == cl_uni3) {}
+  }
+
+  {var boolean vl_i := 5.5 == false; }
+  {var boolean vl_i := true == 5.5; }
+  {var boolean vl_i := true == omit; }
+  {var boolean vl_i := true == '00'B; }
+  {var boolean vl_i := true == '11'H; }
+  {var boolean vl_i := true == '00'O; }
+  {var boolean vl_i := true == "akarmi"; }
+  {var boolean vl_i := true == char(0,0,0,0); }
+  {var boolean vl_i := true == 5.5; }
+  {var boolean vl_i := pass == 5.5; }
+  {var boolean vl_i := null == null; }
+  {var boolean vl_i := cg_boolean == cg_integer; }
+  {var boolean vl_i := cg_bitstring == cg_hexstring; }
+  {var boolean vl_i := cg_octetstring == cg_charstring; }
+  {var boolean vl_i := cg_float == cg_boolean; }
+  {var boolean vl_i := cg_universalchar == cg_boolean; }
+}
+
+function f_notequalsOperationTests()
+{
+  {const boolean cl_i := true != false; }
+  {const boolean cl_i := cg_boolean != cg_boolean; }
+  {const boolean cl_i := 5 != 5; }
+  {const boolean cl_i := cg_integer != cg_integer; }
+  {const boolean cl_i := 5.5 != 5.5; }
+  {const boolean cl_i := cg_float != cg_float; }
+  {const boolean cl_i := "akarmi" != "akarmi"; }
+  {const boolean cl_i := cg_charstring != cg_charstring; }
+  {const boolean cl_i := '00'B != '00'B; }
+  {const boolean cl_i := cg_bitstring != cg_bitstring; }
+  {const boolean cl_i := '00'H != '00'H; }
+  {const boolean cl_i := cg_hexstring != cg_hexstring; }
+  {const boolean cl_i := '00'O != '00'O; }
+  {const boolean cl_i := cg_octetstring != cg_octetstring; }
+  {const boolean cl_i := char(0,0,0,0) != char(0,0,0,0); }
+  {const boolean cl_i := char(0,0,0,48) != "0"; }
+  {const boolean cl_i := "0" != char(0,0,0,48); }
+  {const boolean cl_i := cg_universalchar != cg_universalchar; }
+  {const myenum1 cl_j := xx1; var boolean vl_i := j != xx1; }
+  {const myenum1 cl_j := xx1; var boolean vl_i := xx1 != j; }
+  {const boolean cl_i := pass != pass; }
+  {const boolean cl_i := null != null; }
+  {const boolean cl_i := omit != omit; }
+  {const t_function cl_i1 := refers(f_functionName);
+   const t_function cl_i2 := refers(f_functionName);
+   const boolean cl_i := i1 != i2;
+  }
+  {const t_altstep2 cl_i1 := refers(as_altstepName);
+   const t_altstep2 cl_i2 := refers(as_altstepName);
+   const boolean cl_i := i1 != i2;
+  }
+  {const t_testcase cl_i1 := refers(tc_c_testcase);
+   const t_testcase cl_i2 := refers(tc_c_testcase);
+   const boolean cl_i := i1 != i2;
+  }
+
+  {var boolean vl_i := 5.5 != false; }
+  {var boolean vl_i := true != 5.5; }
+  {var boolean vl_i := true != omit; }
+  {var boolean vl_i := true != '00'B; }
+  {var boolean vl_i := true != '11'H; }
+  {var boolean vl_i := true != '00'O; }
+  {var boolean vl_i := true != "akarmi"; }
+  {var boolean vl_i := true != char(0,0,0,0); }
+  {var boolean vl_i := true != 5.5; }
+  {var boolean vl_i := pass != 5.5; }
+  {var boolean vl_i := null != null; }
+  {var boolean vl_i := cg_boolean != cg_integer; }
+  {var boolean vl_i := cg_bitstring != cg_hexstring; }
+  {var boolean vl_i := cg_octetstring != cg_charstring; }
+  {var boolean vl_i := cg_float != cg_boolean; }
+  {var boolean vl_i := cg_universalchar != cg_boolean; }
+}
+
+function f_lessThanOperationTests()
+{
+  {const boolean cl_i := 5 < 5; }
+  {var boolean vl_i := cg_integer < cg_integer; }
+  {var boolean vl_i := 5.5 < 5.5; }
+  {var boolean vl_i := cg_float < cg_float; }
+
+  {const boolean cl_i := 3 < 5;
+  	if (cl_i) {}
+  	if (3 < 5) {}
+  	if (3.0 < 5.0) {}
+  }
+
+  {var boolean vl_i := true < false; }
+  {var boolean vl_i := "akarmi" < "akarmi"; }
+  {var boolean vl_i := '00'B < '00'B; }
+  {var boolean vl_i := '00'H < '00'H; }
+  {var boolean vl_i := '00'O < '00'O; }
+  {var boolean vl_i := 5.5 < false; }
+  {var boolean vl_i := true < 5.5; }
+  {var boolean vl_i := true < omit; }
+  {var boolean vl_i := true < '00'B; }
+  {var boolean vl_i := true < '11'H; }
+  {var boolean vl_i := true < '00'O; }
+  {var boolean vl_i := true < "akarmi"; }
+  {var boolean vl_i := true < char(0,0,0,0); }
+  {var boolean vl_i := true < 5.5; }
+  {var boolean vl_i := pass < pass; }
+  {var boolean vl_i := xx1 < xx2; }
+  {var boolean vl_i := null < null; }
+  {var boolean vl_i := cg_boolean < cg_boolean; }
+  {var boolean vl_i := cg_bitstring < cg_hexstring; }
+  {var boolean vl_i := cg_octetstring < cg_charstring; }
+}
+
+function f_moreThanOperationTests()
+{
+  {const boolean cl_i := 5 > 5; }
+  {var boolean vl_i := cg_integer > cg_integer; }
+  {var boolean vl_i := 5.5 > 5.5; }
+  {var boolean vl_i := cg_float > cg_float; }
+
+  {const boolean cl_i := 5 > 3;
+  	if (cl_i) {}
+  	if (5 > 3) {}
+  	if (5.0 > 3.0) {}
+  }
+
+  {var boolean vl_i := true > false; }
+  {var boolean vl_i := "akarmi" > "akarmi"; }
+  {var boolean vl_i := '00'B > '00'B; }
+  {var boolean vl_i := '00'H > '00'H; }
+  {var boolean vl_i := '00'O > '00'O; }
+  {var boolean vl_i := 5.5 > false; }
+  {var boolean vl_i := true > 5.5; }
+  {var boolean vl_i := true > omit; }
+  {var boolean vl_i := true > '00'B; }
+  {var boolean vl_i := true > '11'H; }
+  {var boolean vl_i := true > '00'O; }
+  {var boolean vl_i := true > "akarmi"; }
+  {var boolean vl_i := true > char(0,0,0,0); }
+  {var boolean vl_i := true > 5.5; }
+  {var boolean vl_i := pass > pass; }
+  {var boolean vl_i := xx1 > xx2; }
+  {var boolean vl_i := null > null; }
+  {var boolean vl_i := cg_boolean > cg_boolean; }
+  {var boolean vl_i := cg_bitstring > cg_hexstring; }
+  {var boolean vl_i := cg_octetstring > cg_charstring; }
+}
+
+function f_lessThanOrEqualsOperationTests()
+{
+  {const boolean cl_i := 5 <= 5; }
+  {var boolean vl_i := cg_integer <= cg_integer; }
+  {var boolean vl_i := 5.5 <= 5.5; }
+  {var boolean vl_i := cg_float <= cg_float; }
+
+  {const boolean cl_i := 3 <= 5;
+  	if (cl_i) {}
+  	if (3 <= 5) {}
+  	if (3.0 <= 5.0) {}
+  }
+
+  {var boolean vl_i := true <= false; }
+  {var boolean vl_i := "akarmi" <= "akarmi"; }
+  {var boolean vl_i := '00'B <= '00'B; }
+  {var boolean vl_i := '00'H <= '00'H; }
+  {var boolean vl_i := '00'O <= '00'O; }
+  {var boolean vl_i := 5.5 <= false; }
+  {var boolean vl_i := true <= 5.5; }
+  {var boolean vl_i := true <= omit; }
+  {var boolean vl_i := true <= '00'B; }
+  {var boolean vl_i := true <= '11'H; }
+  {var boolean vl_i := true <= '00'O; }
+  {var boolean vl_i := true <= "akarmi"; }
+  {var boolean vl_i := true <= char(0,0,0,0); }
+  {var boolean vl_i := true <= 5.5; }
+  {var boolean vl_i := pass <= pass; }
+  {var boolean vl_i := xx1 <= xx2; }
+  {var boolean vl_i := null <= null; }
+  {var boolean vl_i := cg_boolean <= cg_boolean; }
+  {var boolean vl_i := cg_bitstring <= cg_hexstring; }
+  {var boolean vl_i := cg_octetstring <= cg_charstring; }
+}
+
+function f_moreThanOrEqualsOperationTests()
+{
+  {const boolean cl_i := 5 >= 5; }
+  {var boolean vl_i := cg_integer >= cg_integer; }
+  {var boolean vl_i := 5.5 >= 5.5; }
+  {var boolean vl_i := cg_float >= cg_float; }
+
+  {const boolean cl_i := 5 >= 3;
+  	if (cl_i) {}
+  	if (5 >= 3) {}
+  	if (5.0 >= 3.0) {}
+  }
+
+  {var boolean vl_i := true >= false; }
+  {var boolean vl_i := "akarmi" >= "akarmi"; }
+  {var boolean vl_i := '00'B >= '00'B; }
+  {var boolean vl_i := '00'H >= '00'H; }
+  {var boolean vl_i := '00'O >= '00'O; }
+  {var boolean vl_i := 5.5 >= false; }
+  {var boolean vl_i := true >= 5.5; }
+  {var boolean vl_i := true >= omit; }
+  {var boolean vl_i := true >= '00'B; }
+  {var boolean vl_i := true >= '11'H; }
+  {var boolean vl_i := true >= '00'O; }
+  {var boolean vl_i := true >= "akarmi"; }
+  {var boolean vl_i := true >= char(0,0,0,0); }
+  {var boolean vl_i := true >= 5.5; }
+  {var boolean vl_i := pass >= pass; }
+  {var boolean vl_i := xx1 >= xx2; }
+  {var boolean vl_i := null >= null; }
+  {var boolean vl_i := cg_boolean >= cg_boolean; }
+  {var boolean vl_i := cg_bitstring >= cg_hexstring; }
+  {var boolean vl_i := cg_octetstring >= cg_charstring; }
+}
+
+function f_bit2hexOperationTests()
+{
+  {const hexstring 	cl_i := bit2hex('00'B);}
+  {var hexstring 	vl_i := bit2hex(cg_bitstring);}
+
+  {const hexstring cl_i := bit2hex('01'B);
+  	if (cl_i == '1'H) {}
+  	if (bit2hex('0111'B) == '7'H) {}
+  }
+
+  {var hexstring 	vl_i := bit2hex( omit );}
+  {var hexstring 	vl_i := bit2hex( true );}
+  {var hexstring 	vl_i := bit2hex( false );}
+  {var hexstring 	vl_i := bit2hex( "akarmi" );}
+  {var hexstring 	vl_i := bit2hex( char(0,0,0,0) );}
+  {var hexstring 	vl_i := bit2hex( 5 );}
+  {var hexstring 	vl_i := bit2hex( 5.5 );}
+  {var hexstring 	vl_i := bit2hex( pass );}
+  {var hexstring 	vl_i := bit2hex( xx1 );}
+  {var hexstring 	vl_i := bit2hex( null );}
+  {var hexstring 	vl_i := bit2hex( cg_boolean );}
+  {var hexstring 	vl_i := bit2hex( cg_integer );}
+  {var hexstring 	vl_i := bit2hex( cg_float );}
+  {var hexstring 	vl_i := bit2hex( cg_hexstring );}
+  {var hexstring 	vl_i := bit2hex( cg_octetstring );}
+  {var hexstring 	vl_i := bit2hex( cg_charstring );}
+  {var hexstring 	vl_i := bit2hex( cg_universalchar );}
+}
+
+function f_bit2intOperationTests()
+{
+  {const integer 	cl_i := bit2int('00'B);}
+  {var integer 	vl_i := bit2int(cg_bitstring);}
+
+  {const integer cl_i := bit2int('10'B);
+  	if (cl_i == 2) {}
+  	if (bit2int('0111'B) == 7) {}
+  }
+
+  {var integer 	vl_i := bit2int( omit );}
+  {var integer 	vl_i := bit2int( true );}
+  {var integer 	vl_i := bit2int( false );}
+  {var integer 	vl_i := bit2int( "akarmi" );}
+  {var integer 	vl_i := bit2int( char(0,0,0,0) );}
+  {var integer 	vl_i := bit2int( 5 );}
+  {var integer 	vl_i := bit2int( 5.5 );}
+  {var integer 	vl_i := bit2int( pass );}
+  {var integer 	vl_i := bit2int( xx1 );}
+  {var integer 	vl_i := bit2int( null );}
+  {var integer 	vl_i := bit2int( cg_boolean );}
+  {var integer 	vl_i := bit2int( cg_integer );}
+  {var integer 	vl_i := bit2int( cg_float );}
+  {var integer 	vl_i := bit2int( cg_hexstring );}
+  {var integer 	vl_i := bit2int( cg_octetstring );}
+  {var integer 	vl_i := bit2int( cg_charstring );}
+  {var integer 	vl_i := bit2int( cg_universalchar );}
+  {	var integer vl_i := bit2int('111111111111111111111111111111111'B); }
+}
+
+function f_bit2octOperationTests()
+{
+  {const octetstring 	cl_i := bit2oct('00'B);}
+  {var octetstring 	vl_i := bit2oct(cg_bitstring);}
+
+  {const octetstring cl_i := bit2oct('0001'B);
+  	if (cl_i == '01'O) {}
+  	if (bit2oct('0111'B) == '07'O) {}
+  }
+
+  {var octetstring 	vl_i := bit2oct( omit );}
+  {var octetstring 	vl_i := bit2oct( true );}
+  {var octetstring 	vl_i := bit2oct( false );}
+  {var octetstring 	vl_i := bit2oct( "akarmi" );}
+  {var octetstring 	vl_i := bit2oct( char(0,0,0,0) );}
+  {var octetstring 	vl_i := bit2oct( 5 );}
+  {var octetstring 	vl_i := bit2oct( 5.5 );}
+  {var octetstring 	vl_i := bit2oct( pass );}
+  {var octetstring 	vl_i := bit2oct( xx1 );}
+  {var octetstring 	vl_i := bit2oct( null );}
+  {var octetstring 	vl_i := bit2oct( cg_boolean );}
+  {var octetstring 	vl_i := bit2oct( cg_integer );}
+  {var octetstring 	vl_i := bit2oct( cg_float );}
+  {var octetstring 	vl_i := bit2oct( cg_hexstring );}
+  {var octetstring 	vl_i := bit2oct( cg_octetstring );}
+  {var octetstring 	vl_i := bit2oct( cg_charstring );}
+  {var octetstring 	vl_i := bit2oct( cg_universalchar );}
+}
+
+function f_bit2strOperationTests()
+{
+  {const charstring 	cl_i := bit2str('00'B);}
+  {var charstring 	vl_i := bit2str(cg_bitstring);}
+
+  {const charstring cl_i := bit2str('0001'B);
+  	if (cl_i == "0001") {}
+  	if (bit2str('0111'B) == "0111") {}
+  }
+
+  {var charstring 	vl_i := bit2str( omit );}
+  {var charstring 	vl_i := bit2str( true );}
+  {var charstring 	vl_i := bit2str( false );}
+  {var charstring 	vl_i := bit2str( "akarmi" );}
+  {var charstring 	vl_i := bit2str( char(0,0,0,0) );}
+  {var charstring 	vl_i := bit2str( 5 );}
+  {var charstring 	vl_i := bit2str( 5.5 );}
+  {var charstring 	vl_i := bit2str( pass );}
+  {var charstring 	vl_i := bit2str( xx1 );}
+  {var charstring 	vl_i := bit2str( null );}
+  {var charstring 	vl_i := bit2str( cg_boolean );}
+  {var charstring 	vl_i := bit2str( cg_integer );}
+  {var charstring 	vl_i := bit2str( cg_float );}
+  {var charstring 	vl_i := bit2str( cg_hexstring );}
+  {var charstring 	vl_i := bit2str( cg_octetstring );}
+  {var charstring 	vl_i := bit2str( cg_charstring );}
+  {var charstring 	vl_i := bit2str( cg_universalchar );}
+}
+
+function f_char2intOperationTests()
+{
+  {const integer 	cl_i := char2int("5");}
+  {var integer 	vl_i := char2int(cg_charstring);}
+
+  {const integer cl_i := char2int("5");
+  	if (cl_i == 53) {}
+  	if (char2int("5") == 53) {}
+  }
+
+  {var integer 	vl_i := char2int( omit );}
+  {var integer 	vl_i := char2int( true );}
+  {var integer 	vl_i := char2int( false );}
+  {var integer 	vl_i := char2int( '00'B );}
+  {var integer 	vl_i := char2int("5555");}
+  {var integer 	vl_i := char2int( char(0,0,0,0) );}
+  {var integer 	vl_i := char2int( 5 );}
+  {var integer 	vl_i := char2int( 5.5 );}
+  {var integer 	vl_i := char2int( pass );}
+  {var integer 	vl_i := char2int( xx1 );}
+  {var integer 	vl_i := char2int( null );}
+  {var integer 	vl_i := char2int( cg_boolean );}
+  {var integer 	vl_i := char2int( cg_integer );}
+  {var integer 	vl_i := char2int( cg_float );}
+  {var integer 	vl_i := char2int( cg_bitstring );}
+  {var integer 	vl_i := char2int( cg_hexstring );}
+  {var integer 	vl_i := char2int( cg_octetstring );}
+  {var integer 	vl_i := char2int( cg_universalchar );}
+}
+
+function f_char2octOperationTests()
+{
+  {const octetstring 	cl_i := char2oct("00FF");}
+  {var octetstring 	vl_i := char2oct(cg_charstring);}
+
+  {const octetstring cl_i := char2oct("Tinky-Winky");
+  	if (cl_i == '54696E6B792D57696E6B79'O) {}
+  	if (char2oct("T") == '54'O) {}
+  	if (char2oct("Tinky-Winky") == '54696E6B792D57696E6B79'O) {}
+  }
+
+  {var octetstring 	vl_i := char2oct( omit );}
+  {var octetstring 	vl_i := char2oct( true );}
+  {var octetstring 	vl_i := char2oct( false );}
+  {var octetstring 	vl_i := char2oct( "akarmi" );}
+  {var octetstring 	vl_i := char2oct( char(0,0,0,0) );}
+  {var octetstring 	vl_i := char2oct( 5 );}
+  {var octetstring 	vl_i := char2oct( 5.5 );}
+  {var octetstring 	vl_i := char2oct( pass );}
+  {var octetstring 	vl_i := char2oct( xx1 );}
+  {var octetstring 	vl_i := char2oct( null );}
+  {var octetstring 	vl_i := char2oct( cg_boolean );}
+  {var octetstring 	vl_i := char2oct( cg_integer );}
+  {var octetstring 	vl_i := char2oct( cg_float );}
+  {var octetstring 	vl_i := char2oct( cg_bitstring );}
+  {var octetstring 	vl_i := char2oct( cg_hexstring );}
+  {var octetstring 	vl_i := char2oct( cg_octetstring );}
+  {var octetstring 	vl_i := char2oct( cg_universalchar );}
+}
+
+function f_float2intOperationTests()
+{
+  {const integer 	cl_i := float2int(5.5);}
+  {var integer 	vl_i := float2int(cg_float);}
+
+  {const integer cl_i := float2int(5.5);
+  	if (cl_i == 5) {}
+  	if (float2int(5.5) == 5) {}
+  }
+
+  {var integer 	vl_i := float2int( omit );}
+  {var integer 	vl_i := float2int( true );}
+  {var integer 	vl_i := float2int( false );}
+  {var integer 	vl_i := float2int( '00'B );}
+  {var integer 	vl_i := float2int("5555");}
+  {var integer 	vl_i := float2int( char(0,0,0,0) );}
+  {var integer 	vl_i := float2int( 5 );}
+  {var integer 	vl_i := float2int( pass );}
+  {var integer 	vl_i := float2int( xx1 );}
+  {var integer 	vl_i := float2int( null );}
+  {var integer 	vl_i := float2int( cg_boolean );}
+  {var integer 	vl_i := float2int( cg_integer );}
+  {var integer 	vl_i := float2int( cg_bitstring );}
+  {var integer 	vl_i := float2int( cg_hexstring );}
+  {var integer 	vl_i := float2int( cg_octetstring );}
+  {var integer 	vl_i := float2int( cg_charstring );}
+  {var integer 	vl_i := float2int( cg_universalchar );}
+  {var integer 	vl_i := float2int(infinity);}
+  {var integer 	vl_i := float2int(-infinity);}
+}
+
+function f_float2strOperationTests()
+{
+  {const charstring 	cl_i := float2str(5.5);}
+  {var charstring 	vl_i := float2str(cg_float);}
+
+   {const charstring cl_i := float2str(5.5);
+  	if (cl_i == "5.5") {}
+  	if (float2str(5.5) == "5.5") {}
+  }
+
+  {var charstring 	vl_i := float2str( omit );}
+  {var charstring 	vl_i := float2str( true );}
+  {var charstring 	vl_i := float2str( false );}
+  {var charstring 	vl_i := float2str( "akarmi" );}
+  {var charstring 	vl_i := float2str( char(0,0,0,0) );}
+  {var charstring 	vl_i := float2str( 5 );}
+  {var charstring 	vl_i := float2str( pass );}
+  {var charstring 	vl_i := float2str( xx1 );}
+  {var charstring 	vl_i := float2str( null );}
+  {var charstring 	vl_i := float2str( cg_boolean );}
+  {var charstring 	vl_i := float2str( cg_integer );}
+  {var charstring 	vl_i := float2str( cg_hexstring );}
+  {var charstring 	vl_i := float2str( cg_octetstring );}
+  {var charstring 	vl_i := float2str( cg_charstring );}
+  {var charstring 	vl_i := float2str( cg_universalchar );}
+}
+
+function f_hex2bitOperationTests()
+{
+  {const bitstring 	cl_i := hex2bit('00'H);}
+  {var bitstring 	vl_i := hex2bit(cg_hexstring);}
+  {var bitstring	vl_i := hex2bit('FFFFFFFFFF'H); }
+
+   {const bitstring cl_i := hex2bit('10'H);
+  	if (cl_i == '00010000'B) {}
+  	if (hex2bit('10'H) == '00010000'B) {}
+  }
+
+  {var bitstring 	vl_i := hex2bit( omit );}
+  {var bitstring 	vl_i := hex2bit( true );}
+  {var bitstring 	vl_i := hex2bit( false );}
+  {var bitstring 	vl_i := hex2bit( "akarmi" );}
+  {var bitstring 	vl_i := hex2bit( char(0,0,0,0) );}
+  {var bitstring 	vl_i := hex2bit( 5 );}
+  {var bitstring 	vl_i := hex2bit( 5.5 );}
+  {var bitstring 	vl_i := hex2bit( pass );}
+  {var bitstring 	vl_i := hex2bit( xx1 );}
+  {var bitstring 	vl_i := hex2bit( null );}
+  {var bitstring 	vl_i := hex2bit( cg_boolean );}
+  {var bitstring 	vl_i := hex2bit( cg_integer );}
+  {var bitstring 	vl_i := hex2bit( cg_float );}
+  {var bitstring 	vl_i := hex2bit( cg_bitstring );}
+  {var bitstring 	vl_i := hex2bit( cg_octetstring );}
+  {var bitstring 	vl_i := hex2bit( cg_charstring );}
+  {var bitstring 	vl_i := hex2bit( cg_universalchar );}
+}
+
+function f_hex2intOperationTests()
+{
+  {const integer 	cl_i := hex2int('00'H);}
+  {var integer 	vl_i := hex2int(cg_hexstring);}
+
+  {const integer cl_i := hex2int('00'H);
+  	if (cl_i == 0) {}
+  	if (hex2int('10'H) == 16) {}
+  }
+
+  {var integer 	vl_i := hex2int( omit );}
+  {var integer 	vl_i := hex2int( true );}
+  {var integer 	vl_i := hex2int( false );}
+  {var integer 	vl_i := hex2int( "akarmi" );}
+  {var integer 	vl_i := hex2int( char(0,0,0,0) );}
+  {var integer 	vl_i := hex2int( 5 );}
+  {var integer 	vl_i := hex2int( 5.5 );}
+  {var integer 	vl_i := hex2int( pass );}
+  {var integer 	vl_i := hex2int( xx1 );}
+  {var integer 	vl_i := hex2int( null );}
+  {var integer 	vl_i := hex2int( cg_boolean );}
+  {var integer 	vl_i := hex2int( cg_integer );}
+  {var integer 	vl_i := hex2int( cg_float );}
+  {var integer 	vl_i := hex2int( cg_octetstring );}
+  {var integer 	vl_i := hex2int( cg_charstring );}
+  {var integer 	vl_i := hex2int( cg_universalchar );}
+  {var integer	vl_i := hex2int('FFFFFFFFFF'H); }
+}
+
+function f_hex2octOperationTests()
+{
+  {const octetstring 	cl_i := hex2oct('00FF'H);}
+  {var octetstring 	vl_i := hex2oct(cg_hexstring);}
+
+  {const octetstring 	cl_i := hex2oct('00FF'H);
+  	if (cl_i == '00FF'O) {}
+  	if (hex2oct('00FF'H) == '00FF'O) {}
+  }
+
+  {var octetstring 	vl_i := hex2oct( omit );}
+  {var octetstring 	vl_i := hex2oct( true );}
+  {var octetstring 	vl_i := hex2oct( false );}
+  {var octetstring 	vl_i := hex2oct( "akarmi" );}
+  {var octetstring 	vl_i := hex2oct( char(0,0,0,0) );}
+  {var octetstring 	vl_i := hex2oct( 5 );}
+  {var octetstring 	vl_i := hex2oct( 5.5 );}
+  {var octetstring 	vl_i := hex2oct( pass );}
+  {var octetstring 	vl_i := hex2oct( xx1 );}
+  {var octetstring 	vl_i := hex2oct( null );}
+  {var octetstring 	vl_i := hex2oct( cg_boolean );}
+  {var octetstring 	vl_i := hex2oct( cg_integer );}
+  {var octetstring 	vl_i := hex2oct( cg_float );}
+  {var octetstring 	vl_i := hex2oct( cg_bitstring );}
+  {var octetstring 	vl_i := hex2oct( cg_octetstring );}
+  {var octetstring 	vl_i := hex2oct( cg_charstring );}
+  {var octetstring 	vl_i := hex2oct( cg_universalchar );}
+}
+
+function f_hex2strOperationTests()
+{
+  {const charstring 	cl_i := hex2str('00FF'H);}
+  {var charstring 	vl_i := hex2str(cg_hexstring);}
+
+  {const charstring 	cl_i := hex2str('00FF'H);
+  	if (cl_i == "00FF") {}
+  	if (hex2str('00FF'H) == "00FF") {}
+  }
+
+  {var charstring 	vl_i := hex2str( omit );}
+  {var charstring 	vl_i := hex2str( true );}
+  {var charstring 	vl_i := hex2str( false );}
+  {var charstring 	vl_i := hex2str( "akarmi" );}
+  {var charstring 	vl_i := hex2str( char(0,0,0,0) );}
+  {var charstring 	vl_i := hex2str( 5 );}
+  {var charstring 	vl_i := hex2str( 5.5 );}
+  {var charstring 	vl_i := hex2str( pass );}
+  {var charstring 	vl_i := hex2str( xx1 );}
+  {var charstring 	vl_i := hex2str( null );}
+  {var charstring 	vl_i := hex2str( cg_boolean );}
+  {var charstring 	vl_i := hex2str( cg_integer );}
+  {var charstring 	vl_i := hex2str( cg_float );}
+  {var charstring 	vl_i := hex2str( cg_bitstring );}
+  {var charstring 	vl_i := hex2str( cg_octetstring );}
+  {var charstring 	vl_i := hex2str( cg_charstring );}
+  {var charstring 	vl_i := hex2str( cg_universalchar );}
+}
+
+function f_int2charOperationTests()
+{
+  {const charstring 	cl_i := int2char(5);}
+  {var charstring 	vl_i := int2char(cg_integer);}
+
+  {const charstring cl_i := int2char(53);
+  	if (cl_i == "5") {}
+  	if (int2char(53) == "5") {}
+  }
+
+  {var charstring 	vl_i := int2char( omit );}
+  {var charstring 	vl_i := int2char( true );}
+  {var charstring 	vl_i := int2char( false );}
+  {var charstring 	vl_i := int2char( "akarmi" );}
+  {var charstring 	vl_i := int2char( char(0,0,0,0) );}
+  {var charstring 	vl_i := int2char( 5.5 );}
+  {var charstring 	vl_i := int2char( '00FF'H );}
+  {var charstring 	vl_i := int2char( pass );}
+  {var charstring 	vl_i := int2char( xx1 );}
+  {var charstring 	vl_i := int2char( null );}
+  {var charstring 	vl_i := int2char( cg_boolean );}
+  {var charstring 	vl_i := int2char( cg_float );}
+  {var charstring 	vl_i := int2char( cg_bitstring );}
+  {var charstring 	vl_i := int2char( cg_hexstring );}
+  {var charstring 	vl_i := int2char( cg_octetstring );}
+  {var charstring 	vl_i := int2char( cg_charstring );}
+  {var charstring 	vl_i := int2char( cg_universalchar );}
+  {var charstring 	vl_i := int2char( -5 );}
+  {var charstring 	vl_i := int2char( 500 );}
+}
+
+function f_int2floatOperationTests()
+{
+  {const float 	cl_i := int2float(5);}
+  {var float 	vl_i := int2float(cg_integer);}
+
+  {const float cl_i := int2float(5);
+  	if (cl_i == 5.0) {}
+  	if (int2float(5) == 5.0) {}
+  }
+
+  {var float 	vl_i := int2float( omit );}
+  {var float 	vl_i := int2float( true );}
+  {var float 	vl_i := int2float( false );}
+  {var float 	vl_i := int2float( "akarmi" );}
+  {var float 	vl_i := int2float( char(0,0,0,0) );}
+  {var float 	vl_i := int2float( 5.5 );}
+  {var float 	vl_i := int2float( '00FF'H );}
+  {var float 	vl_i := int2float( pass );}
+  {var float 	vl_i := int2float( xx1 );}
+  {var float 	vl_i := int2float( null );}
+  {var float 	vl_i := int2float( cg_boolean );}
+  {var float 	vl_i := int2float( cg_float );}
+  {var float 	vl_i := int2float( cg_bitstring );}
+  {var float 	vl_i := int2float( cg_hexstring );}
+  {var float 	vl_i := int2float( cg_octetstring );}
+  {var float 	vl_i := int2float( cg_charstring);}
+  {var float 	vl_i := int2float( cg_universalchar );}
+}
+
+function f_int2strOperationTests()
+{
+  {const charstring 	cl_i := int2str(5);}
+  {var charstring 	vl_i := int2str(cg_integer);}
+
+  {const charstring cl_i := int2str(5);
+  	if (cl_i == "5") {}
+  	if (int2str(5) == "5") {}
+  }
+
+  {var charstring 	vl_i := int2str( omit );}
+  {var charstring 	vl_i := int2str( true );}
+  {var charstring 	vl_i := int2str( false );}
+  {var charstring 	vl_i := int2str( "akarmi" );}
+  {var charstring 	vl_i := int2str( char(0,0,0,0) );}
+  {var charstring 	vl_i := int2str( 5.5 );}
+  {var charstring 	vl_i := int2str( '00FF'H );}
+  {var charstring 	vl_i := int2str( pass );}
+  {var charstring 	vl_i := int2str( xx1 );}
+  {var charstring 	vl_i := int2str( null );}
+  {var charstring 	vl_i := int2str( cg_boolean );}
+  {var charstring 	vl_i := int2str( cg_float );}
+  {var charstring 	vl_i := int2str( cg_bitstring );}
+  {var charstring 	vl_i := int2str( cg_hexstring );}
+  {var charstring 	vl_i := int2str( cg_octetstring );}
+  {var charstring 	vl_i := int2str( cg_charstring);}
+  {var charstring 	vl_i := int2str( cg_universalchar );}
+}
+
+function f_int2unicharOperationTests()
+{
+  {const charstring 	cl_i := int2unichar(5);}
+  {var universal charstring 	vl_i := int2unichar(5);}
+  {var universal charstring 	vl_i := int2unichar(cg_integer);}
+
+  {const universal charstring cl_i := int2unichar(5);
+  	if (cl_i == char(0,0,0,5)) {}
+  	if (int2unichar(5) == char(0,0,0,5)) {}
+  }
+
+  {var universal charstring 	vl_i := int2unichar( omit );}
+  {var universal charstring 	vl_i := int2unichar( true );}
+  {var universal charstring 	vl_i := int2unichar( false );}
+  {var universal charstring 	vl_i := int2unichar( "akarmi" );}
+  {var universal charstring 	vl_i := int2unichar( char(0,0,0,0) );}
+  {var universal charstring 	vl_i := int2unichar( 5.5 );}
+  {var universal charstring 	vl_i := int2unichar( '00FF'H );}
+  {var universal charstring 	vl_i := int2unichar( pass );}
+  {var universal charstring 	vl_i := int2unichar( xx1 );}
+  {var universal charstring 	vl_i := int2unichar( null );}
+  {var universal charstring 	vl_i := int2unichar( cg_boolean );}
+  {var universal charstring 	vl_i := int2unichar( cg_float );}
+  {var universal charstring 	vl_i := int2unichar( cg_bitstring );}
+  {var universal charstring 	vl_i := int2unichar( cg_hexstring );}
+  {var universal charstring 	vl_i := int2unichar( cg_octetstring );}
+  {var universal charstring 	vl_i := int2unichar( cg_charstring);}
+  {var universal charstring 	vl_i := int2unichar( cg_universalchar );}
+  {var universal charstring 	vl_i := int2unichar(55555555555);}
+}
+
+function f_oct2bitOperationTests()
+{
+  {const bitstring 	cl_i := oct2bit('00FF'O);}
+  {var bitstring 	vl_i := oct2bit(cg_octetstring);}
+
+  {const bitstring cl_i := oct2bit('00FF'O);
+  	if (cl_i == '0000000011111111'B) {}
+  	if (oct2bit('00FF'O) == '0000000011111111'B) {}
+  }
+
+  {var bitstring 	vl_i := oct2bit( omit );}
+  {var bitstring 	vl_i := oct2bit( true );}
+  {var bitstring 	vl_i := oct2bit( false );}
+  {var bitstring 	vl_i := oct2bit( "akarmi" );}
+  {var bitstring 	vl_i := oct2bit( char(0,0,0,0) );}
+  {var bitstring 	vl_i := oct2bit( 5 );}
+  {var bitstring 	vl_i := oct2bit( 5.5 );}
+  {var bitstring 	vl_i := oct2bit( pass );}
+  {var bitstring 	vl_i := oct2bit( xx1 );}
+  {var bitstring 	vl_i := oct2bit( null );}
+  {var bitstring 	vl_i := oct2bit( cg_boolean );}
+  {var bitstring 	vl_i := oct2bit( cg_integer );}
+  {var bitstring 	vl_i := oct2bit( cg_float );}
+  {var bitstring 	vl_i := oct2bit( cg_bitstring );}
+  {var bitstring 	vl_i := oct2bit( cg_hexstring );}
+  {var bitstring 	vl_i := oct2bit( cg_charstring );}
+  {var bitstring 	vl_i := oct2bit( cg_universalchar );}
+}
+
+function f_oct2charOperationTests()
+{
+  {const charstring 	cl_i := oct2char('0F'O);}
+  {var charstring 	vl_i := oct2char(cg_octetstring);}
+
+  {const charstring cl_i := oct2char('44'O);
+  	if (cl_i == "D") {}
+  	if (oct2char('44'O) == "D") {}
+  	if (oct2char('4469707379'O) == "Dipsy") {}
+  }
+
+  {var charstring 	vl_i := oct2char( omit );}
+  {var charstring 	vl_i := oct2char( true );}
+  {var charstring 	vl_i := oct2char( false );}
+  {var charstring 	vl_i := oct2char( "akarmi" );}
+  {var charstring 	vl_i := oct2char( char(0,0,0,0) );}
+  {var charstring 	vl_i := oct2char( 5 );}
+  {var charstring 	vl_i := oct2char( 5.5 );}
+  {var charstring 	vl_i := oct2char( pass );}
+  {var charstring 	vl_i := oct2char( xx1 );}
+  {var charstring 	vl_i := oct2char( null );}
+  {var charstring 	vl_i := oct2char( cg_boolean );}
+  {var charstring 	vl_i := oct2char( cg_integer );}
+  {var charstring 	vl_i := oct2char( cg_float );}
+  {var charstring 	vl_i := oct2char( cg_bitstring );}
+  {var charstring 	vl_i := oct2char( cg_hexstring );}
+  {var charstring 	vl_i := oct2char( cg_charstring );}
+  {var charstring 	vl_i := oct2char( cg_universalchar );}
+  {var charstring 	vl_i := oct2char('FF'O);}
+}
+
+function f_oct2hexOperationTests()
+{
+  {const hexstring 	cl_i := oct2hex('0F'O);}
+  {var hexstring 	vl_i := oct2hex(cg_octetstring);}
+
+  {const hexstring cl_i := oct2hex('0F'O);
+  	if (cl_i == '0F'H) {}
+  	if (oct2hex('0F'O) == '0F'H) {}
+  }
+
+  {var hexstring 	vl_i := oct2hex( omit );}
+  {var hexstring 	vl_i := oct2hex( true );}
+  {var hexstring 	vl_i := oct2hex( false );}
+  {var hexstring 	vl_i := oct2hex( "akarmi" );}
+  {var hexstring 	vl_i := oct2hex( char(0,0,0,0) );}
+  {var hexstring 	vl_i := oct2hex( 5 );}
+  {var hexstring 	vl_i := oct2hex( 5.5 );}
+  {var hexstring 	vl_i := oct2hex( pass );}
+  {var hexstring 	vl_i := oct2hex( xx1 );}
+  {var hexstring 	vl_i := oct2hex( null );}
+  {var hexstring 	vl_i := oct2hex( cg_boolean );}
+  {var hexstring 	vl_i := oct2hex( cg_integer );}
+  {var hexstring 	vl_i := oct2hex( cg_float );}
+  {var hexstring 	vl_i := oct2hex( cg_bitstring );}
+  {var hexstring 	vl_i := oct2hex( cg_hexstring );}
+  {var hexstring 	vl_i := oct2hex( cg_charstring );}
+  {var hexstring 	vl_i := oct2hex( cg_universalchar );}
+}
+
+function f_oct2intOperationTests()
+{
+  {const integer 	cl_i := oct2int('0F'O);}
+  {var integer 	vl_i := oct2int(cg_octetstring);}
+  {var integer 	vl_i := oct2int('FFFFFFFFFF'O);}
+
+  {const integer cl_i := oct2int('0F'O);
+  	if (cl_i == 15) {}
+  	if (oct2int('0F'O) == 15) {}
+  }
+
+  {var integer 	vl_i := oct2int( omit );}
+  {var integer 	vl_i := oct2int( true );}
+  {var integer 	vl_i := oct2int( false );}
+  {var integer 	vl_i := oct2int( "akarmi" );}
+  {var integer 	vl_i := oct2int( char(0,0,0,0) );}
+  {var integer 	vl_i := oct2int( 5 );}
+  {var integer 	vl_i := oct2int( 5.5 );}
+  {var integer 	vl_i := oct2int( pass );}
+  {var integer 	vl_i := oct2int( xx1 );}
+  {var integer 	vl_i := oct2int( null );}
+  {var integer 	vl_i := oct2int( cg_boolean );}
+  {var integer 	vl_i := oct2int( cg_integer );}
+  {var integer 	vl_i := oct2int( cg_float );}
+  {var integer 	vl_i := oct2int( cg_bitstring );}
+  {var integer 	vl_i := oct2int( cg_hexstring );}
+  {var integer 	vl_i := oct2int( cg_charstring );}
+  {var integer 	vl_i := oct2int( cg_universalchar );}
+}
+
+function f_oct2strOperationTests()
+{
+  {const charstring 	cl_i := oct2str('0F'O);}
+  {var charstring 	vl_i := oct2str(cg_octetstring);}
+
+  {const charstring cl_i := oct2str('0F'O);
+  	if (cl_i == "0F") {}
+  	if (oct2str('0F'O) == "0F") {}
+  }
+
+  {var charstring 	vl_i := oct2str( omit );}
+  {var charstring 	vl_i := oct2str( true );}
+  {var charstring 	vl_i := oct2str( false );}
+  {var charstring 	vl_i := oct2str( "akarmi" );}
+  {var charstring 	vl_i := oct2str( char(0,0,0,0) );}
+  {var charstring 	vl_i := oct2str( 5 );}
+  {var charstring 	vl_i := oct2str( 5.5 );}
+  {var charstring 	vl_i := oct2str( pass );}
+  {var charstring 	vl_i := oct2str( xx1 );}
+  {var charstring 	vl_i := oct2str( null );}
+  {var charstring 	vl_i := oct2str( cg_boolean );}
+  {var charstring 	vl_i := oct2str( cg_integer );}
+  {var charstring 	vl_i := oct2str( cg_float );}
+  {var charstring 	vl_i := oct2str( cg_bitstring );}
+  {var charstring 	vl_i := oct2str( cg_hexstring );}
+  {var charstring 	vl_i := oct2str( cg_charstring );}
+  {var charstring 	vl_i := oct2str( cg_universalchar );}
+}
+
+function f_str2bitOperationTests()
+{
+  const charstring cl_charstring_bit := "0101";
+
+  {const bitstring 	cl_i := str2bit("0101");}
+  {var bitstring 	vl_i := str2bit(cl_charstring_bit);}
+
+  {const bitstring cl_i := str2bit("0101");
+  	if (cl_i == '0101'B) {}
+  	if (str2bit("0101") == '0101'B) {}
+  }
+
+  {var bitstring 	vl_i := str2bit( omit );}
+  {var bitstring 	vl_i := str2bit( true );}
+  {var bitstring 	vl_i := str2bit( false );}
+  {var bitstring 	vl_i := str2bit( char(0,0,0,0) );}
+  {var bitstring 	vl_i := str2bit( 5 );}
+  {var bitstring 	vl_i := str2bit( 5.5 );}
+  {var bitstring 	vl_i := str2bit( pass );}
+  {var bitstring 	vl_i := str2bit( xx1 );}
+  {var bitstring 	vl_i := str2bit( null );}
+  {var bitstring 	vl_i := str2bit( cg_boolean );}
+  {var bitstring 	vl_i := str2bit( cg_integer );}
+  {var bitstring 	vl_i := str2bit( cg_float );}
+  {var bitstring 	vl_i := str2bit( cg_bitstring );}
+  {var bitstring 	vl_i := str2bit( cg_hexstring );}
+  {var bitstring 	vl_i := str2bit( cg_universalchar );}
+  {var bitstring 	vl_i := str2bit("akarmi");}
+}
+
+function f_str2floatOperationTests()
+{
+  const charstring cl_charstring1 := "0101";
+  const charstring cl_charstring2 := "5.5";
+  const charstring cl_charstring3 := "+5.5";
+  const charstring cl_charstring4 := "-5.5";
+  const charstring cl_charstring5 := "-0.0";
+  const charstring cl_charstring6 := "5.5e2";
+  const charstring cl_charstring7 := " INF ";
+  const charstring cl_charstring8 := " -INF ";
+
+  {const float	cl_i := str2float("0101");}
+  {const float	cl_i := str2float("5.5");}
+  {const float	cl_i := str2float("+5.5");}
+  {const float	cl_i := str2float("-5.5");}
+  {const float	cl_i := str2float("-0.0");}
+  {const float	cl_i := str2float("5.5e2");}
+  {const float	cl_i := str2float(" INF ");}
+  {const float	cl_i := str2float(" -INF ");}
+  {const float	cl_i := str2float("1");}
+  {const float	cl_i := str2float("-1");}
+  {const float	cl_i := str2float("-1.");}
+  {const float	cl_i := str2float("+1");}
+  {const float	cl_i := str2float("+1.");}
+  {const float	cl_i := str2float("+001");}
+  {const float	cl_i := str2float("-001");}
+  {const float	cl_i := str2float("-0");}
+  {const float	cl_i := str2float("-0.");}
+  {const float	cl_i := str2float("-0.0");}
+  {const float	cl_i := str2float("+0");}
+  {const float	cl_i := str2float("+0.");}
+  {const float	cl_i := str2float("+0.0");}
+  {const float	cl_i := str2float(cl_charstring1);}
+  {const float	cl_i := str2float(cl_charstring2);}
+  {const float	cl_i := str2float(cl_charstring3);}
+  {const float	cl_i := str2float(cl_charstring4);}
+  {const float	cl_i := str2float(cl_charstring5);}
+  {const float	cl_i := str2float(cl_charstring6);}
+  {const float	cl_i := str2float(cl_charstring7);}
+  {const float	cl_i := str2float(cl_charstring8);}
+
+  {if (str2float("0101") == 101.0) {}
+   if (str2float("5.5") == 5.5) {}
+   if (str2float("5.") == 5.0) {}
+   if (str2float("+5.5") == 5.5) {}
+   if (str2float("-5.5") == -5.5) {}
+   if (str2float("INF") == infinity) {}
+   if (str2float("-INF") == -infinity) {}
+  }
+
+  {var float 	vl_i := str2float( omit );}
+  {var float 	vl_i := str2float( true );}
+  {var float 	vl_i := str2float( false );}
+  {var float 	vl_i := str2float( char(0,0,0,0) );}
+  {var float 	vl_i := str2float( 5 );}
+  {var float 	vl_i := str2float( 5.5 );}
+  {var float 	vl_i := str2float( pass );}
+  {var float 	vl_i := str2float( xx1 );}
+  {var float 	vl_i := str2float( null );}
+  {var float 	vl_i := str2float( cg_boolean );}
+  {var float 	vl_i := str2float( cg_integer );}
+  {var float 	vl_i := str2float( cg_float );}
+  {var float 	vl_i := str2float( cg_bitstring );}
+  {var float 	vl_i := str2float( cg_hexstring );}
+  {var float 	vl_i := str2float( cg_universalchar );}
+  {var float 	vl_i := str2float( "akarmi" );}
+}
+
+function f_str2hexOperationTests()
+{
+  const charstring cl_charstring1 := "0101";
+  const charstring cl_charstring2 := "ABBA";
+
+  {const hexstring 	cl_i := str2hex("0101");}
+  {var hexstring 	vl_i := str2hex("ABBA");}
+  {var hexstring 	vl_i := str2hex(cl_charstring1);}
+  {var hexstring 	vl_i := str2hex(cl_charstring2);}
+
+  {const hexstring cl_i := str2hex("0101");
+  	if (cl_i == '0101'H) {}
+  	if (str2hex("0101") == '0101'H) {}
+  }
+
+  {var hexstring 	vl_i := str2hex( omit );}
+  {var hexstring 	vl_i := str2hex( true );}
+  {var hexstring 	vl_i := str2hex( false );}
+  {var hexstring 	vl_i := str2hex( char(0,0,0,0) );}
+  {var hexstring 	vl_i := str2hex( 5 );}
+  {var hexstring 	vl_i := str2hex( 5.5 );}
+  {var hexstring 	vl_i := str2hex( pass );}
+  {var hexstring 	vl_i := str2hex( xx1 );}
+  {var hexstring 	vl_i := str2hex( null );}
+  {var hexstring 	vl_i := str2hex( cg_boolean );}
+  {var hexstring 	vl_i := str2hex( cg_integer );}
+  {var hexstring 	vl_i := str2hex( cg_float );}
+  {var hexstring 	vl_i := str2hex( cg_bitstring );}
+  {var hexstring 	vl_i := str2hex( cg_hexstring );}
+  {var hexstring 	vl_i := str2hex( cg_universalchar );}
+  {var hexstring 	vl_i := str2hex("akarmi");}
+}
+
+function f_str2intOperationTests()
+{
+  const charstring cl_charstring1 := "5";
+  const charstring cl_charstring2 := "-5";
+
+  {const integer 	cl_i := str2int("5");}
+  {var integer 	vl_i := str2int("-5");}
+  {var integer 	vl_i := str2int(cl_charstring1);}
+  {var integer 	vl_i := str2int(cl_charstring2);}
+
+  {const integer cl_i := str2int("5");
+  	if (cl_i == 5) {}
+  	if (str2int("5") == 5) {}
+  }
+
+  {var integer 	vl_i := str2int( omit );}
+  {var integer 	vl_i := str2int( true );}
+  {var integer 	vl_i := str2int( false );}
+  {var integer 	vl_i := str2int( "akarmi" );}
+  {var integer 	vl_i := str2int( char(0,0,0,0) );}
+  {var integer 	vl_i := str2int( 5 );}
+  {var integer 	vl_i := str2int( 5.5 );}
+  {var integer 	vl_i := str2int( pass );}
+  {var integer 	vl_i := str2int( xx1 );}
+  {var integer 	vl_i := str2int( null );}
+  {var integer 	vl_i := str2int( cg_boolean );}
+  {var integer 	vl_i := str2int( cg_integer );}
+  {var integer 	vl_i := str2int( cg_float );}
+  {var integer 	vl_i := str2int( cg_bitstring );}
+  {var integer 	vl_i := str2int( cg_hexstring );}
+  {var integer 	vl_i := str2int( cg_octetstring );}
+  {var integer 	vl_i := str2int( cg_universalchar );}
+  {var integer 	vl_i := str2int("akarmi");}
+}
+
+function f_str2octOperationTests()
+{
+  const charstring cl_charstring1 := "55";
+  const charstring cl_charstring2 := "ABBA";
+
+  {const octetstring 	cl_i := str2oct("55");}
+  {var octetstring 	vl_i := str2oct("ABBA");}
+  {var octetstring 	vl_i := str2oct(cl_charstring1);}
+  {var octetstring 	vl_i := str2oct(cl_charstring2);}
+
+  {const octetstring cl_i := str2oct("55");
+  	if (cl_i == '55'O) {}
+  	if (str2oct("55") == '55'O) {}
+  }
+
+  {var octetstring 	vl_i := str2oct( omit );}
+  {var octetstring 	vl_i := str2oct( true );}
+  {var octetstring 	vl_i := str2oct( false );}
+  {var octetstring 	vl_i := str2oct( "akarmi" );}
+  {var octetstring 	vl_i := str2oct( char(0,0,0,0) );}
+  {var octetstring 	vl_i := str2oct( 5 );}
+  {var octetstring 	vl_i := str2oct( 5.5 );}
+  {var octetstring 	vl_i := str2oct( pass );}
+  {var octetstring 	vl_i := str2oct( xx1 );}
+  {var octetstring 	vl_i := str2oct( null );}
+  {var octetstring 	vl_i := str2oct( cg_boolean );}
+  {var octetstring 	vl_i := str2oct( cg_integer );}
+  {var octetstring 	vl_i := str2oct( cg_float );}
+  {var octetstring 	vl_i := str2oct( cg_bitstring );}
+  {var octetstring 	vl_i := str2oct( cg_hexstring );}
+  {var octetstring 	vl_i := str2oct( cg_octetstring );}
+  {var octetstring 	vl_i := str2oct( cg_universalchar );}
+  {var octetstring 	vl_i := str2oct("5");}
+  {var octetstring 	vl_i := str2oct("akarmi");}
+}
+
+function f_unichar2intOperationTests()
+{
+  {var integer 	vl_i := unichar2int(char(0,0,0,0));}
+  {var integer 	vl_i := unichar2int(cg_universalchar);}
+
+  {const integer cl_i := unichar2int(char(0,0,0,0));
+  	if (cl_i == 0) {}
+  	if (unichar2int(char(0,0,0,0)) == 0) {}
+  }
+
+  {const integer 	cl_i := unichar2int( omit );}
+  {var integer 	vl_i := unichar2int( true );}
+  {var integer 	vl_i := unichar2int( false );}
+  {var integer 	vl_i := unichar2int( "akarmi" );}
+  {var integer 	vl_i := unichar2int( 5 );}
+  {var integer 	vl_i := unichar2int( 5.5 );}
+  {var integer 	vl_i := unichar2int( pass );}
+  {var integer 	vl_i := unichar2int( xx1 );}
+  {var integer 	vl_i := unichar2int( null );}
+  {var integer 	vl_i := unichar2int( cg_boolean );}
+  {var integer 	vl_i := unichar2int( cg_integer );}
+  {var integer 	vl_i := unichar2int( cg_float );}
+  {var integer 	vl_i := unichar2int( cg_bitstring );}
+  {var integer 	vl_i := unichar2int( cg_hexstring );}
+  {var integer 	vl_i := unichar2int( cg_octetstring );}
+  {var integer 	vl_i := unichar2int( cg_charstring );}
+  {var integer 	vl_i := unichar2int(char(0,0,0,0) & char(0,0,0,0));}
+}
+
+function f_unichar2charOperationTests()
+{
+  {var charstring 	vl_i := unichar2char(char(0,0,0,0));}
+  {var charstring 	vl_i := unichar2char(cg_universalchar);}
+
+  {const charstring cl_i := unichar2char(char(0,0,0,53));
+  	if (cl_i == "5") {}
+  	if (unichar2char(char(0,0,0,53)) == "5") {}
+  }
+
+  {const charstring 	cl_i := unichar2char( omit );}
+  {var charstring 	vl_i := unichar2char( true );}
+  {var charstring 	vl_i := unichar2char( false );}
+  {var charstring 	vl_i := unichar2char( "akarmi" );}
+  {var charstring 	vl_i := unichar2char( 5 );}
+  {var charstring 	vl_i := unichar2char( 5.5 );}
+  {var charstring 	vl_i := unichar2char( pass );}
+  {var charstring 	vl_i := unichar2char( xx1 );}
+  {var charstring 	vl_i := unichar2char( null );}
+  {var charstring 	vl_i := unichar2char( cg_boolean );}
+  {var charstring 	vl_i := unichar2char( cg_integer );}
+  {var charstring 	vl_i := unichar2char( cg_float );}
+  {var charstring 	vl_i := unichar2char( cg_bitstring );}
+  {var charstring 	vl_i := unichar2char( cg_hexstring );}
+  {var charstring 	vl_i := unichar2char( cg_octetstring );}
+  {var charstring 	vl_i := unichar2char( cg_charstring );}
+  {var charstring 	vl_i := unichar2char(char(1,0,0,0));}
+  {var charstring 	vl_i := unichar2char(char(0,1,0,0));}
+  {var charstring 	vl_i := unichar2char(char(0,0,1,0));}
+  {var charstring 	vl_i := unichar2char(char(0,0,0,128));}
+}
+
+function f_int2bitOperationTests()
+{
+  {var bitstring 	vl_i := int2bit(5, 5);}
+  {var bitstring 	vl_i := int2bit(cg_integer, cg_integer);}
+
+  {const bitstring cl_i := int2bit(5, 5);
+  	if (cl_i == '00101'B) {}
+  	if (int2bit(5, 5) == '00101'B) {}
+  }
+
+  {const bitstring 	cl_i := int2bit( omit , omit );}
+  {var bitstring 	vl_i := int2bit( true , true);}
+  {var bitstring 	vl_i := int2bit( false , false );}
+  {var bitstring 	vl_i := int2bit( char(0,0,0,0) , char(0,0,0,0) );}
+  {var bitstring 	vl_i := int2bit( 5.5 , 5.5);}
+  {var bitstring 	vl_i := int2bit( pass , pass );}
+  {var bitstring 	vl_i := int2bit( xx1 , xx1 );}
+  {var bitstring 	vl_i := int2bit( null , null);}
+  {var bitstring 	vl_i := int2bit( cg_boolean , cg_boolean );}
+  {var bitstring 	vl_i := int2bit( cg_float , cg_float );}
+  {var bitstring 	vl_i := int2bit( cg_bitstring , cg_bitstring );}
+  {var bitstring 	vl_i := int2bit( cg_hexstring , cg_hexstring );}
+  {var bitstring 	vl_i := int2bit( cg_octetstring , cg_octetstring );}
+  {var bitstring 	vl_i := int2bit( cg_charstring , cg_charstring );}
+  {var bitstring 	vl_i := int2bit( cg_universalchar , cg_universalchar );}
+  {var bitstring 	vl_i := int2bit("akarmi", "akarmi" );}
+  {var bitstring 	vl_i := int2bit( 5 , 1 );}
+  {var bitstring 	vl_i := int2bit( -5 , -1 );}
+}
+
+function f_int2hexOperationTests()
+{
+  {var hexstring 	vl_i := int2hex(5, 5);}
+  {var hexstring 	vl_i := int2hex(cg_integer, cg_integer);}
+
+  {const hexstring cl_i := int2hex(5, 5);
+  	if (cl_i == '00005'H) {}
+  	if (int2hex(5, 5) == '00005'H) {}
+  }
+
+  {const hexstring 	cl_i := int2hex( omit , omit );}
+  {var hexstring 	vl_i := int2hex( true , true);}
+  {var hexstring 	vl_i := int2hex( false , false );}
+  {var hexstring 	vl_i := int2hex( char(0,0,0,0) , char(0,0,0,0) );}
+  {var hexstring 	vl_i := int2hex( 5.5 , 5.5);}
+  {var hexstring 	vl_i := int2hex( pass , pass );}
+  {var hexstring 	vl_i := int2hex( xx1 , xx1 );}
+  {var hexstring 	vl_i := int2hex( null , null);}
+  {var hexstring 	vl_i := int2hex( cg_boolean , cg_boolean );}
+  {var hexstring 	vl_i := int2hex( cg_float , cg_float );}
+  {var hexstring 	vl_i := int2hex( cg_bitstring , cg_bitstring );}
+  {var hexstring 	vl_i := int2hex( cg_hexstring , cg_hexstring );}
+  {var hexstring 	vl_i := int2hex( cg_octetstring, cg_octetstring );}
+  {var hexstring 	vl_i := int2hex( cg_charstring , cg_charstring );}
+  {var hexstring 	vl_i := int2hex( cg_universalchar , cg_universalchar );}
+  {var hexstring 	vl_i := int2hex("akarmi", "akarmi" );}
+  {var hexstring 	vl_i := int2hex( 50 , 1 );}
+  {var hexstring 	vl_i := int2hex( -5 , -1 );}
+}
+
+function f_int2octOperationTests()
+{
+  {var octetstring 	vl_i := int2oct(5, 5);}
+  {var octetstring 	vl_i := int2oct(cg_integer, cg_integer);}
+
+  {const octetstring cl_i := int2oct(5, 2);
+  	if (cl_i == '0005'O) {}
+  	if (int2oct(5, 5) == '0005'O) {}
+  }
+
+  {const octetstring 	cl_i := int2oct( omit , omit );}
+  {var octetstring 	vl_i := int2oct( true , true);}
+  {var octetstring 	vl_i := int2oct( false , false );}
+  {var octetstring 	vl_i := int2oct( char(0,0,0,0) , char(0,0,0,0) );}
+  {var octetstring 	vl_i := int2oct( 5.5 , 5.5);}
+  {var octetstring 	vl_i := int2oct( pass , pass );}
+  {var octetstring 	vl_i := int2oct( xx1 , xx1 );}
+  {var octetstring 	vl_i := int2oct( null , null);}
+  {var octetstring 	vl_i := int2oct( cg_boolean , cg_boolean );}
+  {var octetstring 	vl_i := int2oct( cg_float , cg_float );}
+  {var octetstring 	vl_i := int2oct( cg_bitstring , cg_bitstring );}
+  {var octetstring 	vl_i := int2oct( cg_hexstring , cg_hexstring );}
+  {var octetstring 	vl_i := int2oct( cg_octetstring , cg_octetstring );}
+  {var octetstring 	vl_i := int2oct( cg_charstring , cg_charstring );}
+  {var octetstring 	vl_i := int2oct( cg_universalchar , cg_universalchar );}
+  {var octetstring 	vl_i := int2oct("akarmi", "akarmi" );}
+  {var octetstring 	vl_i := int2oct( 500 , 1 );}
+  {var octetstring 	vl_i := int2oct( -5 , -1 );}
+}
+
+function f_decompOperationTests()
+{
+    {	const objid cl_i := decomp(objid {  itu_t(0) recommendation (0) 0}, 1, 1); }
+
+    {	const objid cl_i := decomp(1, 1, 1); }
+    {	const integer cl_i := decomp(1,1,1); }
+}
+
+function f_replaceOperationTests()
+{
+  const integer cl_small_int := 1;
+  const myrecof1 cl_myrecof := {1,2,3,4};
+  const mysetof1 cl_mysetof := {1,2,3,4};
+  const myarr1 cl_myarray := {1};
+  var integer vl_int;
+
+  {const bitstring	cl_i := replace('1001'B, 1, 1, ''B);}
+  {var bitstring	vl_i := replace(cg_bitstring,1 ,cl_small_int, ''B);}
+  {var hexstring	vl_i := replace('BB'H, 1, 1, ''H);}
+  {var hexstring	vl_i := replace(cg_hexstring,1 ,cl_small_int, ''H);}
+  {var octetstring	vl_i := replace('DEADBEAF'O, 1, 1, ''O);}
+  {var octetstring	vl_i := replace(cg_octetstring,0 ,cl_small_int, ''O);}
+  {var charstring	vl_i := replace("akarmi", 1, 1, "");}
+  {var charstring	vl_i := replace(cg_charstring, 1, 1, "");}
+  {var universal charstring	vl_i := replace("akarmi", 1, 1, "");}
+  {var universal charstring	vl_i := replace(cg_universalchar, 0, 1, cg_universalchar);}
+  {var myrecof1		vl_i := replace(cl_myrecof,1 ,cl_small_int, cl_myrecof);}
+  {var mysetof1		vl_i := replace(cl_mysetof,1 ,cl_small_int, cl_mysetof);}
+
+  {const bitstring cl_i := replace('1001'B, 1, 1, '1'B);
+  	if (cl_i == '1101'B) {}
+  	if (replace('1001'B, 1, 1, '1'B) == '1101'B) {}
+  	if (replace('BB'H, 1, 1, ''H) == 'B'H) {}
+  	if (replace('DEADBEAF'O, 1, 1, ''O) == 'DEBEAF'O) {}
+  	if (replace("akarmi", 1, 1, "") == "aarmi") {}
+  	const myrecof1 cl_emptyrecof := {};
+  	if (replace(cl_myrecof,1 ,1, cl_emptyrecof) != cl_emptyrecof) {}
+  	const mysetof1 cl_emptysetof := {};
+  	if (replace(cl_mysetof,1 ,1, cl_emptysetof) != cl_emptysetof) {}
+  }
+
+  {var bitstring	vl_i := replace(nonExi, nonExi, nonExi, nonExi);}
+  {var bitstring	vl_i := replace(5, 1, 1, 9);}
+  {var bitstring	vl_i := replace(cl_myrecof, 1, 1, cl_myrecof);}
+  {var bitstring	vl_i := replace('1001'B, -4, -1, ''B);}
+  {var bitstring	vl_i := replace('1001'B, 6, 1, ''B);}
+  {var bitstring	vl_i := replace('1001'B, 6, vl_int, ''B);}
+  {var bitstring	vl_i := replace('1001'B, vl_int, 6, ''B);}
+  {var bitstring	vl_i := replace('1001'B, 2, 6, ''B);}
+  {var bitstring	vl_i := replace('1001'B, 99999999999999999999999, 99999999999999999999999, ''B);}
+  {var charstring	vl_i := replace(cg_charstring, 6, 1, "");}
+  {var charstring	vl_i := replace(cg_charstring, 2, 6, "");}
+  {var universal charstring	vl_i := replace(cg_universalchar, 6, 1, cg_universalchar);}
+  {var universal charstring	vl_i := replace(cg_universalchar, 2, 6, cg_universalchar);}
+  {var bitstring	vl_i := replace(cl_myrecof, 6, 1, cl_myrecof);}
+  {var bitstring	vl_i := replace(cl_myrecof, 2, 6, cl_myrecof);}
+  {var bitstring	vl_i := replace(cl_mysetof, 6, 1, cl_mysetof);}
+  {var bitstring	vl_i := replace(cl_mysetof, 2, 6, cl_mysetof);}
+}
+
+function f_rndOperationTests()
+{
+  {var float 	vl_i := rnd();}
+  {var float 	vl_i := rnd(5.5);}
+  {var float 	vl_i := rnd(cg_float);}
+
+  {var float 	vl_i := rnd( omit );}
+  {var float 	vl_i := rnd( true );}
+  {var float 	vl_i := rnd( false );}
+  {var float 	vl_i := rnd( "akarmi" );}
+  {var float 	vl_i := rnd( 5 );}
+  {var float 	vl_i := rnd( '00'B );}
+  {var float 	vl_i := rnd( '00'H );}
+  {var float 	vl_i := rnd( '00'O );}
+  {var float 	vl_i := rnd( char(0,0,0,0) );}
+  {var float 	vl_i := rnd( pass );}
+  {var float 	vl_i := rnd( xx1 );}
+  {var float 	vl_i := rnd( null );}
+  {var float 	vl_i := rnd( cg_boolean );}
+  {var float 	vl_i := rnd( cg_integer );}
+  {var float 	vl_i := rnd( cg_bitstring );}
+  {var float 	vl_i := rnd( cg_hexstring );}
+  {var float 	vl_i := rnd( cg_octetstring );}
+  {var float 	vl_i := rnd( cg_charstring );}
+  {var float 	vl_i := rnd( cg_universalchar );}
+  {var float 	vl_i := rnd(infinity);}
+  {var float 	vl_i := rnd(-infinity);}
+}
+
+function f_isboundTests(){
+    const myrecof1 cl_i := {-, 5};
+    const boolean cl_i2 := isbound(cl_i);
+    if (cl_i2 == true) {} else {}
+
+    const recordOuter cl_rec := {f2 := 5};
+    if(isbound(cl_rec.f1.f1)) {} else {}
+    if(isbound(cl_rec.f2)) {} else {}
+    if(isbound(cl_rec.f3.f1)) {} else {}
+    if(isbound(cl_rec.f1.f4)) {} else {}
+
+    template recordOuter t_rec := {f2 := 5};
+    if (isbound(t_rec.f1.f1)) {} else {}
+    if (isbound(t_rec.f2)) {} else {}
+    if (isbound(t_rec.f3.f1)) {} else {}
+    if (isbound(t_rec.f1.f4)) {} else {}
+
+    const myuni cl_uni := {f2 := 5};
+    if (isbound(cl_uni.f2)) {} else {}
+    if (isbound(cl_uni.f1)) {} else {}
+
+    const myrecof1 cl_roi := { [1] := 5};
+    if (isbound(cl_roi[1])) {} else {}
+    if (isbound(cl_roi[0])) {} else {}
+    if (isbound(cl_roi[10])) {} else {}
+    //FIXME implement
+}
+
+function f_isvalueTests(){
+    const myrecof1 cl_i := {-, 5};
+    const boolean cl_i2 := isvalue(cl_i);
+    if (cl_i2 == true) {}
+    //FIXME implement
+}
+
+function f_lengthofTests(){
+    if (1 == lengthof('1'B)) {}
+    if (1 == lengthof('1'H)) {}
+    if (1 == lengthof('11'O)) {}
+    if (6 == lengthof("akarmi")) {}
+    if (5 == lengthof(charstring : "HELLO")) {}
+    if (1 == lengthof('1'B length(1))) {}
+
+    const myrecof1 cl_myrecof1 := {1,2,3};
+    if (3 == lengthof(cl_myrecof1)) {}
+    const mysetof1 cl_mysetof1 := {1,2,3};
+    if (3 == lengthof(cl_mysetof1)) {}
+    const myarr1 cl_myarr1 := {1};
+    if (1 == lengthof(cl_myarr1)) {}
+
+    if (8 == lengthof(universal charstring : ? length(8))) {}
+    if (3 == lengthof(myrecof1 : {1,2,3})) {}
+    if (3 == lengthof(mysetof1 : {1,2,3})) {}
+    if (1 == lengthof(myarr1 : {1})) {}
+
+    {	var integer vl_i := lengthof(nonExi); }
+    {	var integer vl_i := lengthof(1); }
+}
+
+function f_ispresentTests(){
+    const myrec5 cl_i := {f1 := 5, f2 := 1};
+    const myrec5 cl_i2 := { f1 := omit, f2 := 1};
+    template myrec5 t_i := {f1 := 5,  f2 := 1};
+    template myrec5 t_i2 := { f1 := omit, f2 := 1};
+    const integer cl_wrongType := 5;
+
+    {	const boolean cll_i := ispresent(cl_i.f1);}
+    {	const boolean cll_i := ispresent(cl_i2.f1);}
+    {	var boolean vl_i := ispresent(t_i.f1);}
+    {	var boolean vl_i := ispresent(t_i2.f1);}
+
+  {if (ispresent(cl_i.f1)) {}
+   if (not ispresent(cl_i2.f1)) {}
+   if (ispresent(t_i.f1)) {}
+   if (not ispresent(t_i2.f1)) {}
+  }
+
+    {	const boolean cll_i := ispresent(t_i.f1);}
+    {	const boolean cll_i := ispresent(t_i2.f1);}
+    {	const boolean cll_i := ispresent(myrec3.f1);}
+    {	const boolean cll_i := ispresent(cl_i.nonExi);}
+    {	const boolean cll_i := ispresent(cl_wrongType.f1);}
+    {	const boolean cll_i := ispresent(cl_i.f2);}
+}
+
+function f_ischoosenTests(){
+    const myuni cl_i := {f1 := 5};
+    const myuni cl_i2 := { f2 := 1};
+    template myuni t_i := {f1 := 5};
+    template myuni t_i2 := { f2 := 1};
+    const integer cl_wrongType := 5;
+
+    {	const boolean cll_i := ischosen(cl_i.f1);}
+    {	const boolean cll_i := ischosen(cl_i2.f2);}
+    {	var boolean vl_i := ischosen(t_i.f1);}
+    {	var boolean vl_i := ischosen(t_i2.f2);}
+
+  {if (ischosen(cl_i.f1)) {}
+   if (not ischosen(cl_i2.f1)) {}
+   if (ischosen(t_i.f1)) {}
+   if (not ischosen(t_i2.f1)) {}
+  }
+
+    {	const boolean cll_i := ischosen(t_i.f1);}
+    {	const boolean cll_i := ischosen(t_i2.f2);}
+    {	const boolean cll_i := ischosen(myrec3.f1);}
+    {	const boolean cll_i := ischosen(cl_i.nonExi);}
+    {	const boolean cll_i := ischosen(cl_wrongType.f1);}
+}
+
+function f_sizeofHelper() return charstring {
+  return "ab";
+}
+
+function f_sizeofHelper2() return template charstring {
+  return "ab";
+}
+
+function f_sizeof(in integer pl_par1 := sizeof(f_sizeofHelper()), in template integer pl_par2){
+    {	const myrec1 cl_i := {f1 := 1};
+        if(sizeof(cl_i) == 1) {};}
+    {	const myrecof1 cl_i := {1};
+        if(sizeof(cl_i) == 1) {};}
+    {	const myset1 cl_i := {f1 := 1};
+        if(sizeof(cl_i) == 1) {};}
+    {	const mysetof1 cl_i := {1};
+        if(sizeof(cl_i) == 1) {};}
+    {	const myarr1 cl_i := {1};
+        if(sizeof(cl_i) == 1) {};}
+    {	template myrec1 t_i := {f1 := 1};
+        if(sizeof(t_i) == 1) {};}
+    {	template myrecof1 t_i := {1};
+        if(sizeof(t_i) == 1) {};}
+    {	template myset1 t_i := {f1 := 1};
+        if(sizeof(t_i) == 1) {};}
+    {	template mysetof1 t_i := {1};
+        if(sizeof(t_i) == 1) {};}
+    {	template myarr1 t_i := {1};
+        if(sizeof(t_i) == 1) {};}
+    {	template myrecof1 t_i := {*, 1} length(5);
+        if(sizeof(t_i) == 5) {};}
+    {	template myrecof1 t_i := {*, 1} length(5 .. 5);
+        if(sizeof(t_i) == 5) {};}
+
+    // inline templates
+    {	if (sizeof(myrec1:{1}) == 1 ) {};}
+    {	if (sizeof(myrec6:{1, omit}) == 1 ) {};}
+    {	if (sizeof(myrecof1:{1, 2, 3}) == 3 ) {};}
+    {	if (sizeof(myset1:{f1 := 1}) == 1) {};}
+    {	if (sizeof(myset6:{f1 := 1, f2 := omit}) == 1 ) {};}
+    {	if (sizeof(mysetof1:{1, 2, 3}) == 3 ) {};}
+
+    // inline modified templates
+    {	template myrec1 t_i := {f1 := 1};
+        if(sizeof(modifies t_i := {2}) == 1) {};}
+    {	template myrecof1 t_i := {1, 2, 3};
+        if(sizeof(modifies t_i := {2, 3, 4, 5}) == 4) {};}
+    {	template myset1 t_i := {f1 := 1};	// set templ
+        if(sizeof(modifies t_i := {f1 := 2}) == 1) {};}
+    {	template mysetof1 t_i := {1, 2, 3};
+        if(sizeof(modifies t_i := {2, 3, 4, 5}) == 4) {};}
+
+
+	{	const myrecof1 cl_i := {[0] := 1};
+        if(sizeof(cl_i) == 1) {};}
+    {	const mysetof1 cl_i := {[0] := 1};
+        if(sizeof(cl_i) == 1) {};}
+    {	const integer cl_i[2] := {[0] := 1, [1] := 2};
+        const integer cl_i2 := sizeof(cl_i);}
+
+    {	var myuni3 vl_myuni3:= {f1 := {}};
+        if (sizeof(vl_myuni3.f1) == 42) {};}
+
+	{	template myrecof1 t_i := {*, 1};
+        if(sizeof(t_i) == 1) {};}
+    {	template myrecof1 t_i := {*, 1} length(1 .. 5);
+        if(sizeof(t_i) == 1) {};}
+    {	template myrecof1 t_i := {*, 1} length(1 .. infinity);
+        if(sizeof(t_i) == 1) {};}
+    {	timer TL_i[1] := 5.0;
+    	const integer cl_i2 := sizeof(TL_i);}
+    {	var integer vl_i := sizeof(ec_ext_integer);}
+    {	var integer vl_i := sizeof(tsppar_integer);}
+    {	var integer vl_i := sizeof(pl_par1);}
+    {	var integer vl_i := sizeof(pl_par2);}
+    {	var integer vl_i := sizeof(f_sizeofHelper());}
+    {	template integer t_i := sizeof(f_sizeofHelper2());}
+
+	{	const integer cl_i := sizeof(f_sizeofHelper());}
+    {	const integer cl_i := sizeof(ec_ext_integer);}
+    {	const integer cl_i := sizeof(tsppar_integer);}
+    {	const integer cl_i := sizeof(pl_par1);}
+    {	const integer cl_i := sizeof(pl_par2);}
+    {	const integer cl_i := sizeof(componentName_CT);}
+    {	template integer t_i := sizeof(componentName_CT);}
+    {	const integer cl_i := sizeof(f_sizeofHelper2());}
+    {	timer TL_i := 5.0;
+    	const integer cl_i2 := sizeof(TL_i);}
+    {	timer TL_i[1] := {5.0};
+    	const integer cl_i2 := sizeof(TL_i[0]);}
+    {	timer TL_i[1][1] := {{5.0}};
+    	const integer cl_i2 := sizeof(TL_i);}
+    {	template integer t_i := ?;
+    	const integer cl_i2 := sizeof(t_i);}
+    {	template mysetof1 t_i := *;
+        if(sizeof(t_i) == 1) {};}
+}
+
+type component empty { }
+testcase tc_testcasenameTests() runs on empty {
+  {const charstring cl_i := testcasename()}
+  {var charstring vl_i := substr(testcasename(), 0, 1)}
+}
+
+function f_testcasenameTests() {
+  {const charstring cl_i := testcasename()}
+  {var charstring vl_i := substr(testcasename(), 0, 1)}
+}
+
+function f_regexpOperationTests()
+{
+  {const charstring 	cl_i := regexp("akarmi","akarmi", 0);}
+  {var charstring 	vl_i := regexp(cg_charstring,"akarmi", 0);}
+  {var universal charstring 	vl_i := regexp("akarmi","akarmi", 0);}
+  {var universal charstring 	vl_i := regexp(cg_universalchar,"akarmi", 0);}
+
+  {var charstring 	vl_i := regexp( omit ,omit, omit );}
+  {var charstring 	vl_i := regexp( true ,true, true);}
+  {var charstring 	vl_i := regexp( false , false, false);}
+  {var charstring 	vl_i := regexp( 5 , 5, 5);}
+  {var charstring 	vl_i := regexp( '00'B , '00'B, '00'B);}
+  {var charstring 	vl_i := regexp( '00'H , '00'H, '00'H);}
+  {var charstring 	vl_i := regexp( '00'O , '00'O, '00'O);}
+  {var charstring 	vl_i := regexp( char(0,0,0,0) , char(0,0,0,0), char(0,0,0,0));}
+  {var charstring 	vl_i := regexp( pass , pass, pass);}
+  {var charstring 	vl_i := regexp( xx1 ,"akarm", 0);}
+  {var charstring 	vl_i := regexp( null , null, null);}
+  {var charstring 	vl_i := regexp( cg_boolean , cg_boolean, cg_boolean);}
+  {var charstring 	vl_i := regexp( cg_integer , cg_integer, cg_integer);}
+  {var charstring 	vl_i := regexp( cg_float , cg_float, cg_float);}
+  {var charstring 	vl_i := regexp( cg_bitstring , cg_bitstring, cg_bitstring);}
+  {var charstring 	vl_i := regexp( cg_hexstring , cg_hexstring, cg_hexstring);}
+  {var charstring 	vl_i := regexp( cg_octetstring , cg_octetstring, cg_octetstring);}
+  {var charstring 	vl_i := regexp( cg_charstring, cg_charstring, cg_charstring);}
+  {var charstring 	vl_i := regexp( cg_universalchar , cg_universalchar, cg_universalchar);}
+  //TODO add regexp specific tests once they are implemented
+}
+
+function f_valueofTests(){
+    //FIXME implement
+
+	var template myCharstringRecof vt_akarmi := {"elso", "masodik"};
+ 	const charstring cl_ize := valueof(vt_akarmi[0]);
+}
+
+function f_matchTests(){
+    { const boolean cl_i := match(5, 5);}
+
+	{ const boolean cl_i := match(nonExi, 5);}
+	{ const boolean cl_i := match(5, nonExi);}
+	{ const boolean cl_i := match(nonExi, nonExi);}
+}
+
+function f_mtcTests(){
+    const componentName_CT cl_comp := mtc;
+}
+
+testcase tc_mtcTests()
+runs on componentName_CT
+system componentName_CT
+{
+const componentName_CT2 cl_comp := mtc;
+}
+
+function f_systemTests(){
+    const componentName_CT cl_comp := system;
+}
+
+testcase tc_systemTests()
+runs on componentName_CT
+system componentName_CT
+{
+const componentName_CT2 cl_comp := system;
+}
+
+function f_selfTests(){
+    const componentName_CT cl_comp := self;
+}
+
+testcase tc_selfTests()
+runs on componentName_CT
+system componentName_CT
+{
+var componentName_CT2 vl_comp := self;
+}
+
+function f_componentRunningTests() {
+	var componentName_CT vl_comp := componentName_CT.create;
+	const componentName_CT cl_comp2 := mtc;
+	const componentName_CT cl_comp3 := system;
+	const componentName_CT cl_comp4 := null;
+
+	{var boolean vl_i := vl_comp.running;}
+
+	{var boolean vl_i := nonExi.running;}
+	{var boolean vl_i := cg_integer.running;}
+	{var boolean vl_i := cl_comp2.running;}
+	{var boolean vl_i := cl_comp3.running;}
+	{var boolean vl_i := cl_comp4.running;}
+}
+
+function f_componentAliveTests() {
+	var componentName_CT vl_comp := componentName_CT.create;
+	const componentName_CT cl_comp2 := mtc;
+	const componentName_CT cl_comp3 := system;
+	const componentName_CT cl_comp4 := null;
+
+	{var boolean vl_i := vl_comp.alive;}
+
+	{var boolean vl_i := nonExi.alive;}
+	{var boolean vl_i := cg_integer.alive;}
+	{var boolean vl_i := cl_comp2.alive;}
+	{var boolean vl_i := cl_comp3.alive;}
+	{var boolean vl_i := cl_comp4.alive;}
+}
+
+function f_anycomponentrunningTests(){
+	{	var boolean vl_i := any component . running; }
+
+	{	const boolean cl_i := any component . running; }
+}
+
+function f_allcomponentrunningTests(){
+    {	var boolean vl_i := all component . running; }
+
+    {	const boolean cl_i := all component . running; }
+}
+
+function f_anycomponentaliveTests(){
+    {	var boolean vl_i := any component . alive; }
+
+    {	const boolean cl_i := any component . alive; }
+}
+
+function f_allcomponentaliveTests(){
+    {	var boolean vl_i := all component . alive; }
+
+    {	const boolean cl_i := all component . alive; }
+}
+
+function f_anytimerrunningTests(){
+	{	var boolean vl_i := any timer . running; }
+
+	{	const boolean cl_i := any timer . running; }
+}
+
+function f_referredcomponentrunningTests(){
+    //FIXME implement
+}
+
+function f_referredcomponentaliveTests(){
+    //FIXME implement
+}
+
+function f_referredtimerreadTests(){
+    //FIXME implement
+}
+
+function f_componentcreateTests(){
+	var componentName_CT vl_comp1 := componentName_CT.create;
+	var componentName_CT vl_comp2 := componentName_CT.create("name", "location");
+
+	const componentName_CT cl_compbad1 := componentName_CT.create;
+	const componentName_CT cl_compbad2 := componentName_CT.create("name", "location");
+	const componentName_CT cl_compbad3 := componentName_CT.create(5, 6);
+	var componentName_CT vl_compbad4 := nonExi.create;
+	var componentName_CT vl_compbad5 := cg_boolean.create;
+	var componentName_CT vl_compbad6 := componentName_CT.nonExi.create;
+	var componentName_CT vl_compbad7 := myrecof1.create;
+	var componentName_CT2 vl_compbad8 := componentName_CT.create;
+}
+
+function f_activateTests() runs on componentName_CT2{
+    var integer vl_parameter := 1;
+    var default vl_defaultgood1 := activate(as_altstepName(vl_parameter));
+
+	var default vl_defaultbad1 := activate(nonExi());
+	var default vl_defaultbad2 := activate(vl_parameter());
+	var default vl_defaultbad3 := activate(as_altstepName());
+	var default vl_defaultbad4 := activate(as_altstepName(1));
+	var default vl_defaultbad5 := activate(as_altstepName(1, 1));
+}
+
+function f_activateTests2() {
+    var integer vl_parameter := 1;
+    var default vl_defaultgood1 := activate(as_altstepName(vl_parameter));
+
+
+	var default vl_defaultbad3 := activate(as_altstepName(1));
+}
+
+function f_activate_referredTests(){
+    var integer vl_parameter := 1;
+    var t_altstep2 vl_altstep1;
+    var default vl_defaultgood1 := activate(derefers(vl_altstep1)(vl_parameter));
+
+	var default vl_defaultbad1 := activate(derefers(nonExi)(vl_parameter));
+	var default vl_defaultbad2 := activate(derefers(vl_parameter)(vl_parameter));
+	var default vl_defaultbad3 := activate(derefers(vl_altstep1)());
+	var default vl_defaultbad4 := activate(derefers(vl_altstep1)(1));
+	var default vl_defaultbad5 := activate(derefers(vl_altstep1)(1, 1));
+}
+
+function f_executeTests(){
+	var verdicttype vl_verdict := execute(tc_c_testcase(), 5.0);
+
+	const verdicttype cl_verdict2 := execute(tc_c_testcase(), 5);
+	vl_verdict := execute(tc_c_testcase(), -5.0);
+	vl_verdict := execute(f_functionName(), 5.0);
+	vl_verdict := execute(tc_c_testcase(1), 5.0);
+	vl_verdict := execute(tc_c_testcase(), infinity);
+	vl_verdict := execute(tc_c_testcase(), -infinity);
+}
+
+function f_execute_referredTests(){
+	var t_testcase vl_test;
+	var t_function vl_test2;
+	var verdicttype vl_verdict := execute(derefers(vl_test)(), 5.0);
+
+	vl_verdict := execute(derefers(vl_test)(), 5);
+	vl_verdict := execute(derefers(vl_test)(), -5.0);
+	vl_verdict := execute(derefers(vl_test2)(), 5.0);
+	const verdicttype cl_verdict2 := execute(derefers(vl_test)(1), 5.0);
+	vl_verdict := execute(derefers(vl_test)(), infinity);
+	vl_verdict := execute(derefers(vl_test)(), -infinity);
+}
+
+function f_timerrunningTests(timer pl_par_temp){
+    timer TL_temp := 5.0;
+    timer TL_temp2[1..3] := {5.0, 5.0};
+    {	const boolean cl_i := TL_temp.running;}
+    {	const boolean cl_i := pl_par_temp.running;}
+    {	const boolean cl_i := TL_temp2[1].running;}
+
+    {	const boolean cl_i := tem[0].running;}
+    {	const boolean cl_i := TL_temp[0].running;}
+    {	const boolean cl_i := TL_temp2.running;}
+    {	const boolean cl_i := TL_temp2[2][1].running;}
+    {	const boolean cl_i := TL_temp2[0].running;}
+    {	const boolean cl_i := TL_temp2[5].running;}
+    {	const boolean cl_i := pl_par_temp[0].running;}
+    {	const boolean cl_i := pl_par_temp[0].running;}
+}
+
+function f_timerreadTests(timer pl_par_temp){
+    timer TL_temp := 5.0;
+    timer TL_temp2[1..3] := {5.0, 5.0};
+    {	const float cl_i := TL_temp.read;}
+    {	const float cl_i := pl_par_temp.read;}
+    {	const float cl_i := TL_temp2[1].read;}
+
+    {	timer TL_i := "akarmi";}
+    {	timer TL_i := -5.0;}
+    {	const float cl_i := nonExi[0].read;}
+    {	const float cl_i := TL_temp[0].read;}
+    {	const float cl_i := TL_temp2.read;}
+    {	const float cl_i := TL_temp2[2][1].read;}
+    {	const float cl_i := TL_temp2[0].read;}
+    {	const float cl_i := TL_temp2[5].read;}
+    {	const float cl_i := pl_par_temp[0].read};
+}
+
+type float 		encdec_MyFloat 		with { encode "BER:2002" variant "length accept short" };
+type integer 	encdec_MyInt 		with { encode "TEXT" };
+type bitstring 	encdec_MyBitstring 	with { encode "RAW" };
+
+const bitstring cg_decvalue_i := ''B;
+template bitstring t_decvalue_ti := ''B;
+const integer cg_decvalue_i2 := decvalue(cg_decvalue_i, decvalue_i2);
+const integer cg_decvalue_ti2 := decvalue(t_decvalue_ti, decvalue_ti2);
+
+function f_encvalueTests(bitstring pl_val, in bitstring pl_in
+	, out bitstring pl_out, inout bitstring pl_inout)
+{
+	{ // checking the parameters
+		const encdec_MyInt cl_encdecConst := 42;
+		var integer vl_1 := decvalue(pl_val, cl_encdecConst);
+		var integer vl_2 := decvalue(pl_in, cl_encdecConst);
+		var integer vl_3 := decvalue(pl_out, cl_encdecConst);
+		var integer vl_4 := decvalue(pl_inout, cl_encdecConst);
+	}
+
+	const encdec_MyFloat cl_encdecConst1 := 23E-25;
+	const encdec_MyInt   cl_encdecConst2 := 2345;
+	const encdec_MyBitstring cl_encdecConst3 := '01010101'B;
+	template encdec_MyBitstring t_encdecTemp1 := '01010101'B;
+	template encdec_MyBitstring t_encdecTemp2 := *;
+	var encdec_MyFloat 		vl_encdecres1;
+	var encdec_MyInt   		vl_encdecres2;
+	var encdec_MyBitstring 	vl_encdecres3;
+
+	{const bitstring cl_encdecvar_bs1 := encvalue(cl_encdecConst1);
+	 const integer cl_j := decvalue(cl_encdecvar_bs1, vl_encdecres1);
+	}
+	{const bitstring cl_encdecvar_bs2 := encvalue(cl_encdecConst2);
+	 var integer vl_i := decvalue(cl_encdecvar_bs2, vl_encdecres2);
+	}
+	{const bitstring cl_encdecvar_bs3 := encvalue(cl_encdecConst3);
+	 var integer vl_i := decvalue(cl_encdecvar_bs3, vl_encdecres3);
+	}
+	{var integer vl_i := decvalue(t_encdecTemp1, t_encdecTemp1);}
+
+	{const bitstring cl_encdecvar_bsbad1 := encvalue(nonExi);}
+	{const bitstring cl_encdecvar_bsbad2 := encvalue(null);}
+	{const bitstring cl_encdecvar_bsbad3 := encvalue(pass);}
+	{var integer vl_i := decvalue(f_encvalueTests, vl_encdecres3);}
+	{var integer vl_i := decvalue(cl_encdecConst1, vl_encdecres3);}
+	{var integer vl_i := decvalue(t_encdecTemp2, t_encdecTemp2);}
+	{var integer vl_i := decvalue(t_encdecTemp1, t_function);}
+
+	var integer vl_i := decvalue(vl_i, encdecres1);
+	var componentName_CT vl_comp;
+	vl_i := decvalue(t_encdecvar3, vl_comp);
+}
+
+type component staticValueExpected_CT
+{
+  var integer v_variable := rnd();
+  var boolean v_variabl2 := getverdict;
+}
+
+function f_getverdictTests() {
+	var verdittype vl_i := getverdict;
+}
+
+function f_applyTests(){
+    var t_function vl_functionVar;
+    var t_function2 vl_functionVar2;
+    var t_function3 vl_functionVar3;
+    var t_function4 vl_functionVar4;
+    var integer vl_variable;
+
+    {	var integer vl_i := functionVar2.apply(); }
+    {	var integer vl_i := nonExi.apply(); }
+    {	var integer vl_i := t_function.apply(); }
+    {	var integer vl_i := variable.apply(); }
+    {	var integer vl_i := vl_functionVar3.apply(); }
+    {	const integer cl_i := vl_functionVar.apply(); }
+    {	log(vl_functionVar2.apply()); }
+    {	var integer vl_i := vl_functionVar4.apply(); }
+}
+
+function f_applyTests2() runs on componentName_CT2 {
+    var t_function3 vl_functionVar3;
+
+{	var integer vl_i := vl_functionVar3.apply(); }
+
+}
+
+function f_enumTests() {
+    const TTCN3EnumeratedType cl_TTCN3Enum := item3;
+    const integer cl_ASNNamedInteger := c_ASNInteger2;
+
+    if (2 == enum2int(cl_TTCN3Enum)) {}
+	if (2 == enum2int(c_ASNenum) ) {}
+	if (enum2int(cl_TTCN3Enum) == enum2int(c_ASNenum) ) {}
+	if (enum2int(c_ASNenum) == enum2int(cl_TTCN3Enum) ) {}
+	if (cl_TTCN3Enum == item3 ) {}
+	if (c_ASNenum == a ) {}
+	if (cl_TTCN3Enum != item1 ) {}
+	if (c_ASNenum != b ) {}
+	if (cl_TTCN3Enum > item1 ) {}
+	if (cl_TTCN3Enum >= item1 ) {}
+	if (cl_TTCN3Enum < item2 ) {}
+	if (cl_TTCN3Enum <= item2 ) {}
+	if (cl_ASNNamedInteger == -100) {}
+	if (cl_ASNNamedInteger != 100) {}
+	if (cl_ASNNamedInteger < 100) {}
+	if (cl_ASNNamedInteger <= 100) {}
+	if (cl_ASNNamedInteger > -200) {}
+	if (cl_ASNNamedInteger >= -200) {}
+
+	if (cl_TTCN3Enum == item1 ) {}
+	if (c_ASNenum == b ) {}
+	if (cl_TTCN3Enum < item1 ) {}
+	if (cl_TTCN3Enum <= item1 ) {}
+	if (cl_TTCN3Enum > item2 ) {}
+	if (cl_TTCN3Enum >= item2 ) {}
+	const integer cl_i := enum2int(cl_TTCN3Enum) + enum2int(c_ASNenum);
+	if (cl_i == 4) {}
+	if (cl_ASNNamedInteger == 100) {}
+	if (cl_ASNNamedInteger != -100) {}
+	if (cl_ASNNamedInteger > 100) {}
+	if (cl_ASNNamedInteger >= 100) {}
+	if (cl_ASNNamedInteger < -200) {}
+	if (cl_ASNNamedInteger <= -200) {}
+}
+
+testcase tc_FloatComparison() runs on empty {
+  var float minus_zero := -0.0;
+  var float plus_zero  :=  0.0;
+
+  //----------------
+
+  if (minus_zero == -0.0) { } else { }
+  if (minus_zero <=  0.0) { } else { }
+  if (minus_zero <   0.0) { } else { }
+  if (minus_zero <=  plus_zero) { } else { }
+  if (minus_zero <   plus_zero) { } else { }
+  if (plus_zero >=  minus_zero) { } else { }
+  if (plus_zero >   minus_zero) { } else { }
+
+  if (-infinity <  minus_zero ) { } else { }
+  if (-infinity <= minus_zero ) { } else { }
+  if (minus_zero <  infinity) { } else { }
+  if (minus_zero <= infinity) { } else { }
+  if (minus_zero <  not_a_number) { } else { }
+  if (minus_zero <= not_a_number) { } else { }
+  if (not_a_number >  minus_zero) { } else { }
+  if (not_a_number >= minus_zero) { } else { }
+
+  //----------------
+
+  var float plus_inf := infinity;
+  if (plus_inf == infinity) { } else { }
+  if (-infinity <  plus_inf ) { } else { }
+  if (-infinity <= plus_inf ) { } else { }
+  if (plus_inf <  not_a_number) { } else { }
+  if (plus_inf <= not_a_number) { } else { }
+
+  //----------------
+
+  var float minus_inf := -infinity;
+  if (minus_inf == -infinity) { } else { }
+  if (minus_inf < not_a_number) { } else { }
+  if (minus_inf <= not_a_number) { } else { }
+
+  //----------------
+
+  var float NaN := not_a_number;
+  if (NaN == not_a_number) { } else { }
+}
+
+testcase tc_constFloatComparison() runs on empty {
+  const float minus_zero := -0.0;
+  const float plus_zero  :=  0.0;
+
+  //----------------
+
+  if (minus_zero == -0.0) { } else { }
+  if (minus_zero <=  0.0) { } else { }
+  if (minus_zero <   0.0) { } else { }
+  if (minus_zero <=  plus_zero) { } else { }
+  if (minus_zero <   plus_zero) { } else { }
+  if (plus_zero >=  minus_zero) { } else { }
+  if (plus_zero >   minus_zero) { } else { }
+
+  if (-infinity <  minus_zero ) { } else { }
+  if (-infinity <= minus_zero ) { } else { }
+  if (minus_zero <  infinity) { } else { }
+  if (minus_zero <= infinity) { } else { }
+  if (minus_zero <  not_a_number) { } else { }
+  if (minus_zero <= not_a_number) { } else { }
+  if (not_a_number >  minus_zero) { } else { }
+  if (not_a_number >= minus_zero) { } else { }
+
+  //----------------
+
+  const float plus_inf := infinity;
+  if (plus_inf == infinity) { } else { }
+  if (-infinity <  plus_inf ) { } else { }
+  if (-infinity <= plus_inf ) { } else { }
+  if (plus_inf <  not_a_number) { } else { }
+  if (plus_inf <= not_a_number) { } else { }
+
+  //----------------
+
+  const float minus_inf := -infinity;
+  if (minus_inf == -infinity) { } else { }
+  if (minus_inf < not_a_number) { } else { }
+  if (minus_inf <= not_a_number) { } else { }
+
+  //----------------
+
+  const float NaN := not_a_number;
+  if (NaN == not_a_number) { } else { }
+}
+
+control {
+    var verdicttype vl_i := getverdict;
+}
+
+} with { extension "anytype myrec1, myrec2" }

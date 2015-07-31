@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?eclipse version="3.4"?>
+<fragment>
+   <!--<extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.titanium.regressiontests.tools.ChecklistGenerator"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="org.eclipse.titanium.menu.ProjectMenu"
+               label="Titanium testing"
+               path="additions">
+            <separator
+                  name="group2">
+            </separator>
+         </menu>
+         <action
+               class="org.eclipse.titanium.regressiontests.tools.ChecklistGenerator"
+               enablesFor="+"
+               id="org.eclipse.titanium.regressiontests.tools.ChecklistGenerator"
+               label="Generate checklist from file"
+               menubarPath="org.eclipse.titanium.menu.ProjectMenu/group2">
+         </action>
+      </objectContribution>
+   </extension>-->
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               commandId="org.eclipse.titanium.regressiontests.GenerateChecklist"
+               id="org.eclipse.titanium.menu.testing"
+               label="Titanium testing">
+            <command
+                  commandId="org.eclipse.titanium.regressiontests.GenerateChecklist"
+                  label="Generate checklist from file"
+                  mode="FORCE_TEXT">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="selection">
+                     <iterate
+                           operator="or">
+                        <instanceof
+                              value="org.eclipse.core.resources.IFile">
+                        </instanceof>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.titanium.regressiontests.tools.ChecklistGenerator"
+            id="org.eclipse.titanium.regressiontests.GenerateChecklist"
+            name="GenerateChecklist">
+      </command>
+   </extension>
+
+</fragment>

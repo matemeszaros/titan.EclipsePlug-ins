@@ -1,0 +1,100 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+/*
+//AUTHOR:
+//DATE:
+//VERSION:
+*/
+module template_formalparlist_tests {
+
+type component Empty { timer T_T := 1.0 }
+
+type record MyRec {
+  integer f1,
+  integer f2
+}
+
+const integer cg_int := 5;
+
+template integer t_integer_descriptiveName(integer pl_x, integer pl_y, integer pl_z) := *;
+
+template integer t_integer_descriptiveName2
+modifies cg_int := *;
+
+template integer t_integer_descriptiveName3(template boolean pl_z)
+modifies t_integer_descriptiveName := *;
+
+template integer t_integer_descriptiveName4
+modifies t_integer_descriptiveName4 := *;
+
+///////////////////
+// For ETSI CR5091.
+///////////////////
+template MyRec t_MyTemp1(integer pl_p1, integer pl_p2 := 1) := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+// Correct.
+template MyRec t_MyTemp(integer pl_p1, integer pl_p2 := -) modifies t_MyTemp1 := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+// No default parameter for "p1" in the base template.
+template MyRec t_MyTemp2(integer pl_p1 := -, integer pl_p2 := -) modifies t_MyTemp1 := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+// Too many parameters.
+template MyRec t_MyTemp3(integer pl_p1, integer pl_p2, integer pl_p3 := -) modifies t_MyTemp1 := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+// Base templates.
+template MyRec t_MyTemp4(integer pl_p1 := -, integer pl_p2 := -) := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+template MyRec t_MyTTemp1(template integer pl_p1, template integer pl_p2 := 1) := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+template MyRec t_MyTTemp2(template integer pl_p1 := -, template integer pl_p2 := -) modifies t_MyTTemp1 := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+template MyRec t_MyTTemp3(template integer pl_p1, template integer pl_p2, template integer pl_p3 := -) modifies t_MyTTemp1 := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+template MyRec t_MyTTemp4(template integer pl_p1 := -, template integer pl_p2 := -) := {
+  f1 := pl_p1,
+  f2 := pl_p2
+}
+template MyRec t_MyT_all_default(template integer pl_1 := 0, template integer pl_2 := 1) := {
+  f1 := pl_1,
+  f2 := pl_2
+}
+
+testcase TC1(in integer pl_p1 := -) runs on Empty { }
+testcase TC2(in template integer pl_p1 := -) runs on Empty { }
+
+function Func1(in integer pl_p1 := -) { }
+function Func2(in template integer pl_p1 := -) { }
+
+altstep Alt1(in integer pl_p1 := -) runs on Empty { [1 > 2] T.timeout { } }
+altstep Alt2(in template integer pl_p1 := -) runs on Empty { [1 > 2] T.timeout { } }
+
+function f_parenthesisLessTests() {
+    {var template MyRec vt := t_MyT_all_default(1,2);}
+    {var template MyRec vt := t_MyT_all_default();}
+    {var template MyRec vt := t_MyT_all_default;}
+
+	{var template MyRec vt := t_MyTTemp1();}
+	{var template MyRec vt := t_MyTTemp1;}
+}
+}  // end of module

@@ -1,0 +1,109 @@
+SemanticErrors3 DEFINITIONS ::=
+BEGIN
+    EXPORTS A;
+    A ::= INTEGER
+
+    BERPDU ::= [0] EXPLICIT BOOLEAN
+    BERPDU2 ::= [PRIVATE 1] EXPLICIT BOOLEAN
+    BERPDU3 ::= [APPLICATION 2] EXPLICIT BOOLEAN
+    BERPDU4 ::= [0] IMPLICIT BOOLEAN
+
+    b BERPDU ::= 5
+    b BERPDU ::= "haha"
+    b BERPDU ::= FALSE
+
+    Bearerservicecode2 ::= INTEGER {ize(1), ize2(1), ize(1)}
+    Bearerservicecode3 ::= BIT STRING {ize(1), ize2(1), ize(1)}
+    Bearerservicecode3-1 ::= BIT STRING
+    Bearerservicecode3-2 ::= BIT STRING {first(0), second(1), third(2)}
+    c-Bearerservicecode3-1 Bearerservicecode3-1 ::= {first}
+    c-Bearerservicecode3-2 Bearerservicecode3-2 ::= {first, forth, first}
+    Bearerservicecode4 ::= ENUMERATED {ize(1), ize2(1), ize(1), ize2, ... , ize}
+
+    Bearerservicecode5 ::= CHOICE {
+      map-open        [0] INTEGER,
+      map-open  [1] INTEGER,
+      map-open       [2] INTEGER,
+      map-refuse  [3] INTEGER,
+      map-userAbort   [4] INTEGER,
+      map-providerAbort   [5] INTEGER
+    }
+
+    Bearerservicecode6 ::= SEQUENCE {
+      eventTypeBCSM                       [0] INTEGER,
+      eventTypeBCSM                         [1] INTEGER,
+      legID                               [2] INTEGER OPTIONAL,
+      dpSpecificCriteria                  [30] INTEGER OPTIONAL,
+      automaticRearm                      [50] NULL OPTIONAL,
+      ...
+    }
+
+    Bearerservicecode7 ::= SET {
+      eventTypeBCSM                       [0] INTEGER,
+      eventTypeBCSM                         [1] INTEGER,
+      legID                               [2] INTEGER OPTIONAL,
+      dpSpecificCriteria                  [30] INTEGER OPTIONAL,
+      automaticRearm                      [50] NULL OPTIONAL,
+      ...
+    }
+
+    Bearerservicecode8 ::= SET {
+        COMPONENTS OF Bearerservicecode6
+    }
+
+    Bearerservicecode9 ::= SEQUENCE {
+        COMPONENTS OF Bearerservicecode7
+    }
+
+    Bearerservicecode10 ::= SET {
+      COMPONENTS OF Bar-mi.Bearerservicecode2,
+      COMPONENTS OF BearerServiceCode-1,
+      COMPONENTS OF Non-exi.Bearerservicecode2,
+      COMPONENTS OF Bearerservicecode11
+    }
+    Bearerservicecode11 ::= SET {
+      COMPONENTS OF Bearerservicecode10,
+      COMPONENTS OF Bearerservicecode10
+    }
+
+    MyMessage { INTEGER : maxSize, INTEGER : minSize} ::= SEQUENCE {
+      asp INTEGER,
+      pdu OCTET STRING( SIZE( minSize.. maxSize))
+      -- limit size to be within bounds
+    }
+
+    Nonpard ::= Bearerservicecode10{0}
+    ToFew ::= MyMessage{0}
+    ToMany ::= MyMessage{1,2,3}
+    ToFew2 ::= NON-EXI{0}
+
+    MyLargeMessage ::= MyMessage{10000, 1}
+    MySmallMessage ::= MyMessage{10, 1}
+
+    tempValue  INTEGER ::= 9
+
+ASNSequenceType ::= SEQUENCE {
+	field1 INTEGER,
+	field2 GeneralString}
+c-ASNSequence1 ASNSequenceType ::= { field1 1, field2 "akarmi"}
+c-ASNSequence2 ASNSequenceType ::= { field1 "akarmi", field2 5}
+c-ASNSequence3 ASNSequenceType ::= { field1 "akarmi"}
+c-ASNSequence4 ASNSequenceType ::= { field1 1, field2 "akarmi", field3 6}
+
+ASNSetType ::= SET {
+	field1 INTEGER,
+	field2 GeneralString}
+c-ASNSet1 ASNSetType ::= { field1 1, field2 "akarmi"}
+c-ASNSet2 ASNSetType ::= { field1 "akarmi", field2 5}
+c-ASNSet3 ASNSetType ::= { field1 "akarmi"}
+c-ASNSet4 ASNSetType ::= { field1 1, field2 "akarmi", field3 6}
+
+c-ASNreal1 REAL ::= {mantissa 314159,base 10, exponent -10}
+c-ASNreal2 REAL ::= {mantissa 1234,base 2, exponent 1}
+c-ASNreal3 REAL ::= PLUS-INFINITY
+c-ASNreal4 REAL ::= MINUS-INFINITY
+c-ASNreal5 REAL ::= {mantissa 99999999999999,base 10, exponent -10}
+c-ASNreal6 REAL ::= {mantissa 314159,base 9, exponent -10}
+c-ASNreal7 REAL ::= {mantissa 314159,base 10, exponent 9999999999999999}
+
+END

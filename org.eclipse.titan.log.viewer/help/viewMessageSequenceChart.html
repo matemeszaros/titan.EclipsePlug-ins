@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>View Message Sequence Chart</title>
+</head>
+<body>
+<h1>View Message Sequence Chart</h1>
+<ol>
+  <li> 
+    <p class="subtitle">Select a test case in the Test Case tab.</p>
+  </li>
+  <li> 
+    <p class="subtitle"> Select the action <i>Open MSC view</i> in the pop-up 
+      menu or double click on the test case.</p>
+    <p class="text">A sequence chart containing the extracted components and events 
+      in the test case are rendered in a separate window with the name of the 
+      test case as the title. The start of displaying the message sequence chart 
+      is set in the <a href="gereralSettings.html">User Configuration - General 
+      Settings.</a><br>
+      Details about the test case are shown in the console view.<br>
+      <br>
+      Tooltips exists and displays component name, if can be determined, and reference 
+      number when the mouse is placed over the component's life line and event 
+      type and message when the mouse is placed over a silent event.<br>
+      <br>
+      <img src="images/MSCView.png"> </p>
+  </li>
+  <br>
+  <p class="subtitle">Toolbar buttons:</p><br>
+    In the toolbar of the MSC view there are eleven buttons.<br>
+    <br>
+  <table cellspacing="0" border="1" width="80%" cellpadding="3" bordercolor="gray">
+    <tr> 
+      <td width="20%" align ="left"> 
+        <p class="subtitle">Button</p>
+      </td>
+      <td width="80%"> 
+        <p class="subtitle">Description</p>
+      </td>
+    </tr>
+    <tr> 
+      <td width="20%" align ="center"><img src="images/arrow_up.gif"> and <img src="images/arrow_down.gif"></td>
+      <td width="80%" align="left"> 
+        <p class="text">Navigates to the previous or next setverdict(fail/error/inconc) 
+          event in the Message Sequence Chart from the selected row. Enabled when 
+          setverdict(fail/error/inconc) event exists previous/next to the selected 
+          row.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/refresh.gif"></td>
+      <td align="left">
+        <p class="text">Reloads the Messeage Sequence Chart using the current 
+          project/workspace settings.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/delete.gif"></td>
+      <td align="left">
+        <p class="text">Closes all open Message Sequence Charts.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/home_nav.gif"></td>
+      <td align="left">
+        <p class="text">Resets the zoom to the default zoom value.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/move.gif"></td>
+      <td align="left">
+        <p class="text">Enables the mouse pointer moce mode. Default mode which 
+          enables mouse navigation.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/zoomin_nav.gif"></td>
+      <td align="left">
+        <p class="text">Enables zoom in mode. Clicking in the Message Sequence 
+          Chart during zoom in mode increases the size of all objects in the Message 
+          Sequence Chart.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/zoomout_nav.gif"></td>
+      <td align="left">
+        <p class="text">Enables zoom out mode. Clicking in the Message Sequence 
+          Chart during zoom out mode decreases the size of all objects in the 
+          Message Sequence Chart.</p>
+      </td>
+    </tr>
+	 <tr> 
+      <td align="center"><img src="images/filter2.gif"></td>
+      <td align="left">
+        <p class="text">Opens a dialog to set the <a href="filter.html">filtering</a> rule.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/table_view.gif"></td>
+      <td align="left">
+        <p class="text">Shows the selected record in the <a href="openTextTable.html">table view.</a></p>
+      </td>
+    </tr>
+    <tr> 
+      <td align="center"><img src="images/deciphering.gif"></td>
+      <td align="left">
+        <p class="text">Opens the dialog to select the deciphering rule set</p>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <p class="subtitle">Overview:</p><br>
+  <p class="text">To get an overview of the Message Sequence Chart by clicking the overview button 
+  <img src="images/overview.gif">, which is located in the lower right corner 
+  of the Message Sequence Chart. When the overview is shown it is possible to 
+  navigate using the keyboard or mouse. To slow down the navigation speed, CTRL 
+  and/or SHIFT can be used.<br>
+  <br>
+  <img src="images/overview.png"><br>
+  <br>
+  </p>
+  <p class="subtitle">Re-ordering of components</p><br>
+  <p class="text">It is possible to re-order the components (columns) by clicking one of the component 
+  headers and draging it to the new prefered position. When the mouse button is 
+  released the Message Sequence Chart is redrawn with the new component order. </p>
+  <p></p>
+  <br>
+  <p class="text">The user has the option to change the layout in the Message 
+    Sequence Chart by changing the settings in the <a href="userConfiguration.html">User 
+    Configurations.</a> The changes in the User Configuration will not affect 
+    already opened views.</p>
+  <p class="subtitle">Filtering:</p>
+  <p class="smalltext">It is possible to set filtering on <a href="filteredComponents.html">component</a> 
+    , <a href="filteredSignals.html">signals</a>, <a href="filteredFunctions.html">functions</a>, 
+    <a href="filteredPorts.html">mapping/connecting ports</a> and/or <a href="filteredSilentEvents.html">silent 
+    event types</a> in the User Configuration.</p>
+  <p class="smalltext">View specific filtering rule can also be applied. For more information about filtering please read the <a href="help/filter.html">relevant help page</a>.</p>
+  <p class="subtitle">Visual presentation of the layout:</p>
+  <p class="smalltext">It is possible for the user to decide in which order the 
+    components should be displayed in the message sequence chart in the <a href="componentsVisualOrder.html">User 
+    Configuration - Components Visual Order</a>.</p>
+  <p class="subtitle">Date Format:</p>
+  <p class="smalltext">Each events timestamp is display in the format &quot;hh:mm:ss.SSSSSS&quot; 
+    or &quot;s.SSSSSS&quot; depending on the format in the file<a href="gereralSettings.html"></a>. 
+    <br>
+    For timestamps in dateTime format the date is displayed after the test case 
+    name in test case started.</p>
+  <br>
+  <p class="subtitle">Events displayed in the sequence chart:</p>
+  <ul>
+    <li> 
+      <p class="smalltitle">Start Test Case</p>
+      <p class="smalltext">At the start of the test case the name and date is 
+        displayed. </p>
+    </li>
+    <li> 
+      <p class="smalltitle">End Test Case</p>
+      <p class="smalltext">At the end of the test case the overall verdict is 
+        displayed.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Component creation</p>
+      <p class="smalltext">When a component is created a rectangle is displayed 
+        with the name in the rectangle if the name can be determined and the reference 
+        number/string of the component.<br>
+        As long as the component is alive a vertical line for that component is 
+        displayed.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Component termination</p>
+      <p class="smalltext">When the component is terminated the vertical line 
+        is ended and a coloured rectangle is displayed with the name if it can 
+        be determined and the reference number/string. <br>
+        The colour of the rectangle is set depending on the verdict on the component.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Send/Recieve message</p>
+      <p class="smalltext">Messages are displayed as arrows in the direction the 
+        message was sent. The name of the message is displayed above the message 
+        arrow.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Enqueued message</p>
+      <p class="smalltext">Engueued messages are displayed as arrows with broken 
+        lines in the direction the message was sent. The type and name of the 
+        enqueued message is displayed above the message arrow.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Function invocation</p>
+      <p class="smalltext">Function invocation events are drawn as lines with 
+        small filled squares. The function name is displayed above the line.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Function Termination</p>
+      <p class="smalltext">Function terminations are drawn as lines with small 
+        empty squares.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Port Map/Unmap</p>
+      <p class="smalltext">Port map/unmap events are drawn as lines with small 
+        filled/empty diamonds. The port name(s) and the direction are displayed 
+        above the line.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Port Connect/Disconnect</p>
+      <p class="smalltext">Port connect/disconnect events are drawn as lines with 
+        small filled/empty circles. The port name(s) and the direction are displayed 
+        above the line.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Setverdict(error/fail/inconc/none/pass)</p>
+      <p class="smalltext">The setverdict(error) and setverdict(fail) events are 
+        drawn as a red X over the component's life line. The setverdict(inconc) 
+        event is drawn as a white X, setverdict(none) is drawn as a grey X and 
+        finally setverdict(pass) is drawn as a green X.<br>
+        If no connected component can be determined the <i>setverdict(error/fail/inconc/none/pass)</i> 
+        events are drawn as a filled rectangle with the corresponding color across 
+        all life lines in the Message Sequence Chart.</p>
+    </li>
+    <li> 
+      <p class="smalltitle">Silent Event</p>
+      <p class="smalltext">A silent event is a log message without own graphical 
+        representation, i.e. do not result in any of the above events, and can 
+        be associated with a test component. It is presented on the life line 
+        of the associated component as a box colored depending on the log event. 
+        <br>
+        <br>
+        <b>Silent events has the following color mapping:</b> <br>
+        <br>
+        <img src="images/silentEventColors.png"> </p>
+    </li>
+  </ul>
+</ol>
+<br>
+</body>
+</html>

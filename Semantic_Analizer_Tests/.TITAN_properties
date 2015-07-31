@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TITAN_Designer_Properties>
+  <ProjectProperties>
+    <MakefileSettings>
+      <generateMakefile>false</generateMakefile>
+      <targetExecutable>workingdir\Semantic_analizer_Tests.exe</targetExecutable>
+      <buildLevel>Level0-SemanticCheck</buildLevel>
+    </MakefileSettings>
+    <LocalBuildSettings>
+      <MakefileScript/>
+      <workingDirectory>workingdir</workingDirectory>
+    </LocalBuildSettings>
+  </ProjectProperties>
+  <ActiveConfiguration>Default</ActiveConfiguration>
+</TITAN_Designer_Properties>

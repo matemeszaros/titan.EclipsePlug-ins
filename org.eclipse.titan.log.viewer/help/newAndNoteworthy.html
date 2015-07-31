@@ -1,0 +1,682 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>New and Noteworthy</title>
+</head>
+<body>
+<a name="top"></a> 
+<p class="title">New and Noteworthy</p>
+<ul>
+  <li><a href="#MsgNameDeciph">Message name deciphering</a></li>
+  <li><a href="#Search">Searching in TITAN Log files</a></li>
+  <li><a href="#Filter">Filtering the displayed log records</a></li>
+  <li><a href="#Statistical View">Statistical View</a></li>
+  <li><a href="#MCS view">Message Sequence Chart</a></li>
+  <li><a href="#Text table">Text Table</a></li>
+  <li><a href="#UserConfiguration">User Configurations</a></li>
+  <li><a href="#ProjectTab">Navigator view - Project tab</a></li>
+  <li><a href="#TestCaseTab">Navigator view - Test case tab</a></li>
+  <li><a href="#Known Issues">Known Issues</a></li>
+  <li><a href="#FAQ">FAQ</a></li>
+</ul>
+
+<br>
+<p class ="Subtitle">R11A</p>
+
+<table cellpadding="10" cellspacing="0" width="600"  >
+  <colgroup> <col width="20%"> <col width="70%"> <col width="10%"></colgroup> 
+  <tbody> 
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center" ><a name="MsgNameDeciph"></a> 
+      <h3>Message name deciphering</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td> 
+      <p class="text">
+      	By default, in the MSC view messages are identified by the name of the TTCN-3 type, instance of which is actually sent or received, 
+      	using the schema @&lt;modulename&gt;.&lt;typename&gt;. In most cases this name is meaningless, as protocol messages are amassed to one top-level 
+      	TTCN-3 type for more efficient message decoding or, in other cases, the meaninful name are contained in an inner field of the message (like in the SIP protocol). 
+      	The <a href="decipheringPreferencePage.html">message name deciphering</a> feature allows the user to select a field for each message to be shown as the message name in the MSC view.
+      </p>
+      <p><br>
+        <img src="images/decipheringPreferencePage.png"></p>
+      <p>&nbsp;</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  </tbody> 
+</table>
+<br>
+<br>
+
+<p class ="Subtitle">R8G(1.8)</p>
+
+<table cellpadding="10" cellspacing="0" width="600"  >
+  <colgroup> <col width="20%"> <col width="70%"> <col width="10%"></colgroup> 
+  <tbody> 
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center" ><a name="Search"></a> 
+      <h3>Searching in TITAN Log files</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td> 
+      <p class="text">Using The <a href="search.html">TITAN Log Search</a> funtionality the user can easily find the log records, matching the given search pattern. 
+		To open the search page select the menu option Search/TITAN Log files, or use the key combination: CTRL+H.</p>
+      <p><br>
+        <img src="images/search.png"></p>
+      <p>&nbsp;</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center" ><a name="Filter"></a> 
+      <h3>Filtering the displayed log records</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+   <tr> 
+    <td> 
+      <p>The displayed log records can be <a href="filter.html">filtered</a> in the <a href="openTextTable.html">TextTableView</a> and in the <a href="viewMessageSequenceChart.html">MSCView</a>.
+		To set the filtering rule, click on the <img src="images/filter2.gif"> button on the toolbar of an opened TexTableView or MSC view.</p>
+      <p><br>
+        <img src="images/filterDialog.png"></p>
+      <p>&nbsp;</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  </tbody> 
+</table>
+<br>
+<br>
+
+
+
+
+<p class ="Subtitle">R4A (1.3)</p>
+<p class="text">The main purpose of the 1.3 version was to implement support for 
+  zoom and keyboard navigation in the message sequence chart, creation of a new 
+  statistical view. </p>
+<!-- <table cellpadding="10" cellspacing="0" width="600"  frame="hsides"> -->
+<table cellpadding="10" cellspacing="0" width="600"  >
+  <colgroup> <col width="20%"> <col width="70%"> <col width="10%"></colgroup> 
+  <tbody> 
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center" ><a name="Statistical View"></a> 
+      <h3>Statistical View</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle" valign ="top">New view</p>
+      <p align="right">&nbsp;</p>
+    </td>
+    <td> 
+      <p class="text">A new view is added that displays tables over all included 
+        testcases and their verdicts of the selected log files. The Statistical 
+        view can be opened for one or several log files.</p>
+      <p><br>
+        <img src="images/statisticalView.png"></p>
+      <p>&nbsp;</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center" ><a name="MCS view"></a> 
+      <h3>Message Sequence Chart</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">New layout of the message sequence chart</p>
+    </td>
+    <td> 
+      <p class="text">The layout of the message sequence has been changed to the 
+        following.<br>
+        <br>
+        <img src="images/MSCView.png"></p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Component name at the top of the sequence chart</p>
+    </td>
+    <td> 
+      <p class="text">The component name is displayed at the top of the message 
+        sequence chart.</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Zoom</p>
+    </td>
+    <td> 
+      <p class="text">Zoom in mode <img src="images/zoomin_nav.gif">. Clicking 
+        in the Message Sequence Chart during zoom in mode increases the size of 
+        all objects in the Message Sequence Chart.</p>
+      <br>
+      <p class="text">Zoom out mode <img src="images/zoomout_nav.gif">. Clicking 
+        in the Message Sequence Chart during zoom out mode decreases the size 
+        of all objects in the Message Sequence Chart.</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Overview</p>
+    </td>
+    <td> 
+      <p class="text"> An overview of the Message Sequence Chart can be opened 
+        by clicking the overview button <img src="images/overview.gif"> , which 
+        is located in the lower right corner of the Message Sequence Chart. When 
+        the overview is shown it is possible to navigate using the keyboard or 
+        mouse. To slow down the navigation speed, CTRL and/or SHIFT can be used.<br>
+        <br>
+        <img src="images/overview.png"><br>
+      </p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Re-ordering component</p>
+    </td>
+    <td> 
+      <p class="text">It is possible to re-order the components (columns) by clicking 
+        one of the component headers and draging it to the new prefered position. 
+        When the mouse button is released the Message Sequence Chart is redrawn 
+        with the new component order.</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Refresh</p>
+    </td>
+    <td> 
+      <p class="text">Reloads the Messeage Sequence Chart using the current project/workspace 
+        settings.</p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center" ><a name="Text table"></a> 
+      <h3>Text table view</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr> 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">A message in Text table can be displayed in Value 
+        view.</p>
+    </td>
+    <td> 
+      <p class="text">A message in the text table can be displayed in the Value 
+        view and displayed as graphical tree or text.</p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Close All open text views</p>
+    </td>
+    <td> 
+      <p class="text">All opened text views can be closed at once by using the 
+        <img src="images/delete.gif"> button in the toolbar. </p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center" ><a name="UserConfiguration"></a> 
+      <h3>User Configurations</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">User configuration for setverdict events</p>
+    </td>
+    <td> 
+      <p class="text">The user can configure what type of setverdict events that 
+        will be displayed in the message sequence chart. The strings defining 
+        the caused by messages for setverdict(error) and setverdict(fail) can 
+        configured.<br>
+        <img src="images/setverdictPrefPage.png"></p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr> 
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">User configuration of coloring keywords in Value view.</p>
+    </td>
+    <td> 
+      <p class="text">The user can configure colors of keywords in a message displayed 
+        in the Value view as text. <br>
+        <img src="images/colorKeywordsPrefPage.png"> <br>
+        <br>
+        The following is an example of how the Value view may look when coloring 
+        of keywords is used. <img src="images/coloredKeywordsInValueView.png"> 
+      </p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr> 
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">User configuration of displaying mapping/unmapping 
+        and connecting/disconnecting events</p>
+    </td>
+    <td> 
+      <p class="text">The user can configure if mapping and connecting events 
+        should be displayed in the message sequence chart. <br>
+        <img src="images/filteredPorts.png"></p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center"><a name="ProjectTab"></a> 
+      <h3>Navigator view - Project tab</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Close all connected views</p>
+    </td>
+    <td> 
+      <p class="text">The action <i>Close all connected views</i> will close all 
+        associated views to the selected log file. </p>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center"><a name="TestCaseTab"></a> 
+      <h3>Navigator view - Test case tab</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Sorting test cases</p>
+    </td>
+    <td> 
+      <p class="text">The test cases extracted from the log file displayed in 
+        the test case tab can be sorted by time, name or verdict, ascending or 
+        descending, in the Test Cases tab. To sort the test cases select the prefered 
+        sort type in the Sort menu group in the drop-down menu.</p>
+      <br>
+      <img src="images/sortTestCases.png"><br>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Filtering test cases</p>
+    </td>
+    <td> 
+      <p class="text">The test cases extracted from the log displayed in the test 
+        case tab can be filtered on verdict type. Test cases with verdict error, 
+        fail, inconc, none and/or pass can be filtered.To filter the test cases 
+        select the prefered verdict type in the Filter menu group in the drop-down 
+        menu. </p>
+		<br><img src="images/filterTestCase.png"><br>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center"><a name="Known Issues"></a> 
+      <h3>Known Issues</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Message Sequence Chart</p>
+    </td>
+    <td> 
+      <p class="text">The cursor may flickering when opening large messages in 
+        Value view in Tree mode.</p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Message Sequence Chart</p>
+    </td>
+    <td> 
+      <p class="text">The "Input Methods" menu item is shown in the context menu 
+        of the MSC view in Solaris and Linux. This is due to GTK and can not be 
+        removed within Eclipse.</p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Eclipse 3.3.* and Solaris</p>
+    </td>
+    <td> 
+      <p class="text">Open large files and folders in Solaris may cause out of 
+        memory.</p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" align="center"><a name="FAQ"></a> 
+      <h3>FAQ</h3>
+    </td>
+    <td align="right"><a href="#top"> 
+      <h3>Top</h3>
+      </a> </td>
+  </tr>
+  <tr > 
+    <td colspan ="3" > 
+      <hr>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle">Log event needed for TITAN R/B and R7C generated log 
+        files</p>
+    </td>
+    <td> 
+      <p class="text">For a log file generated by TITAN R7B and R7C the event 
+        &quot;TTCN Logger v2.n options...&quot; must be included for the Log Viewer 
+        to be able to determine what log formats that the new TITAN log formats 
+        should be used.</p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  <tr> 
+    <td valign="top"> 
+      <p class="smalltitle"><b>Problem with not getting any send and/or receive 
+        signal</b></p>
+    </td>
+    <td> 
+      <p class="text">The Log Viewer is using the messages <i>"Mapping port 'component:port' 
+        to 'component:port'.</i> or <i>Connecting ports 'component:port' and 'component:port'</i> 
+        for setting up the reference between a component and a port. Theese messages 
+        will occurr if the FileMask includes "TTCN_PARALLEL</p>
+    </td>
+    <td>&nbsp;</td>
+  <tr> 
+  </tbody> 
+</table>
+<br>
+<p class ="Subtitle">&nbsp;</p>
+<p class ="Subtitle">&nbsp;</p>
+<p class ="Subtitle">R3B (1.2.1)</p>
+<ol>
+  <li> 
+    <p class="subtitle">Component name including . and :.</p>
+    <p class="text">The rendering has been corrected, so component names including 
+      : and . will give the right component reference in the message sequence 
+      chart.</p>
+  </li>
+</ol>
+<br>
+<p class ="Subtitle">R3A (1.2)</p>
+<ol>
+  <li> 
+    <p class="subtitle">Source information displayed in the Value View.</p>
+    <p class="text">The source information for the event is displayed first in 
+      the Value view.</p>
+    <br>
+  </li>
+  <li> 
+    <p class="subtitle">Message displayed for setverdict(error)/setverdict(fail) 
+      in the Value view.</p>
+    <p class="text">For setverdict(error) and setverdict(fail) the message displayed 
+      in the Value view is the selected event and any event the caused the setverdict(fail/error) 
+      event, e.g. a check of earlier messages including any of the predefined 
+      string. See the predefined strings in <a href="viewDetails.html#predefinedStrings">View 
+      Message details</a>. <br>
+      The check on the predefined strings is case sensitive.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Date displayed for timestamps with dateTime format in 
+      the MSC view.</p>
+    <p class="text">When the timestamp is of dateTime format the date is displayed 
+      after test case name.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Setverdict(inconc) displayed in the MSC view.</p>
+    <p class="text">Setverdict(inconc) event is displayed in the MSC view as a 
+      black X on the connected component's life line. If no component can be determined 
+      the string<i> setverdict(inconc)</i> is displayed over all life lines. <br>
+      The setverdict(inconc) is included in the actions <i>Jump to Next/Previous</i>.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Tooltips for Silent Events displayed in the MSC view.</p>
+    <p class="text">All silent events that are displayed in the MSC view have 
+      tooltips. The tooltip includes the silent event type and the first 500 characters 
+      of the message.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Improved filtering in the MSC view.</p>
+    <p class="text">Added filtering of functions.<br>
+      Added support for using wildcards when filtering components, functions and 
+      signals.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Textual representation of log added.</p>
+    <p class="text">The Text Table view enables a textual representation of the 
+      log file. All log records in the log file are devided into; timestamp, component 
+      reference, user message, event type, source info and message. The Text Table 
+      view can be opened from a log file in the Projects tab or from a test case 
+      in the Test Cases tab or from an event in the message sequence chart.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Improved test case extraction.</p>
+    <p class="text">If the extraction of test cases is interrupted due to the 
+      log file not fulfilling the requirements, all test cases that were extracted 
+      before the interruption will be visible in the Test Cases tab including 
+      an indication of that the extraction was interrupted.</p>
+  </li>
+</ol>
+<br>
+<p class="subtitle">Known Issues</p>
+<p class="text">The "Input Methods" menu item is shown in the context menu of 
+  the MSC view in Solaris and Linux. This is due to GTK and can not be removed 
+  within Eclipse.<br>
+</p>
+<p class="subtitle"> FAQ</p>
+<ol>
+  <li> 
+    <p class="text"><b>Log event needed for TITAN R/B and R7C generated log files</b></p>
+    <p class="text">For a log file generated by TITAN R7B and R7C the event &quot;TTCN 
+      Logger v2.n options...&quot; must be included for the Log Viewer to be able 
+      to determine what log formats that the new TITAN log formats should be used.</p>
+  </li>
+  <li> 
+    <p class="text"><b>Problem with not getting any send and/or receive signals</b>: 
+      <br>
+      The Log Viewer is using the messages <i>"Mapping port 'component:port' to 
+      'component:port'.</i> or <i>Connecting ports 'component:port' and 'component:port'</i> 
+      for setting up the reference between a component and a port. Theese messages 
+      will occurr if the FileMask includes "TTCN_PARALLEL.</p>
+  </li>
+</ol>
+<br>
+<p class ="Subtitle">R2A (1.1)</p>
+<ol>
+  <li> 
+    <p class="subtitle">Log formats.</p>
+    <p class="text">The TITAN Log Viewer R2A supports TITAN R7A, R7B and R7C log 
+      formats.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Enqueued messages.</p>
+    <p class="text">Enqueued messages are displayed as arrows with broken lines.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Filtering on silent events.</p>
+    <p class="text">The filtering on silent events can be done on either log event 
+      category or subcategory. For log files generated by TITAN TTCN-3 R7A the 
+      filtering will be on the log event category if any subcategory is selected.<br>
+    </p>
+  </li>
+  <li> 
+    <p class="subtitle">Display of the selected line in the MSCView.</p>
+    <p class="text">The selected line in the message is marked with a light grey 
+      background.<br>
+    </p>
+  </li>
+</ol>
+<p class ="Subtitle">R1A (1.0)</p>
+<ol>
+  <li> 
+    <p class="subtitle">Setverdict events.</p>
+    <p class="text">Only the setverdict(fail) and setverdict(error) events are 
+      displayed in the MSC view as a red X or the string <i>setverdict(fail/error)</i> 
+      over all life lines if no connected component can be defined.<br>
+      In the toolbar of the MSC view two buttons have been added for automatically 
+      jump to the next or previous setverdict(fail/error) event.</p>
+  </li>
+</ol>
+</body>
+</html>

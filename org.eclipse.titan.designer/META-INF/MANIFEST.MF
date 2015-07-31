@@ -1,0 +1,66 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.0
+Created-By: 23.6-b04 (Oracle Corporation)
+Bundle-ManifestVersion: 2
+Bundle-Name: TITAN_Designer Plug-in
+Bundle-SymbolicName: org.eclipse.titan.designer;singleton:=true
+Bundle-Version: 5.3.0.CRL_113_200_5_R3A_20150630-1100
+Bundle-Activator: org.eclipse.titan.designer.Activator
+Bundle-Vendor: Eclipse Titan Project
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.console,
+ org.eclipse.ui.forms,
+ org.eclipse.ui.navigator,
+ org.eclipse.ui.views,
+ org.eclipse.debug.ui,
+ org.eclipse.ui.navigator.resources,
+ org.eclipse.core.filesystem,
+ org.eclipse.debug.core,
+ org.eclipse.titan.common;bundle-version="5.3.0",
+ org.antlr.runtime;bundle-version="4.3.0"
+Bundle-ActivationPolicy: lazy
+Eclipse-LazyStart: true
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.ltk.core.refactoring,org.eclipse.ltk.ui.re
+ factoring,org.eclipse.search.ui,org.eclipse.search.ui.text
+Export-Package: org.eclipse.titan.designer,
+ org.eclipse.titan.designer.AST,
+ org.eclipse.titan.designer.AST.ASN1,
+ org.eclipse.titan.designer.AST.ASN1.Object,
+ org.eclipse.titan.designer.AST.ASN1.definitions,
+ org.eclipse.titan.designer.AST.ASN1.types,
+ org.eclipse.titan.designer.AST.ASN1.values,
+ org.eclipse.titan.designer.AST.TTCN3,
+ org.eclipse.titan.designer.AST.TTCN3.attributes,
+ org.eclipse.titan.designer.AST.TTCN3.definitions,
+ org.eclipse.titan.designer.AST.TTCN3.statements,
+ org.eclipse.titan.designer.AST.TTCN3.templates,
+ org.eclipse.titan.designer.AST.TTCN3.types,
+ org.eclipse.titan.designer.AST.TTCN3.types.subtypes,
+ org.eclipse.titan.designer.AST.TTCN3.values,
+ org.eclipse.titan.designer.AST.TTCN3.values.expressions,
+ org.eclipse.titan.designer.commonFilters,
+ org.eclipse.titan.designer.consoles,
+ org.eclipse.titan.designer.core,
+ org.eclipse.titan.designer.editors,
+ org.eclipse.titan.designer.editors.asn1editor,
+ org.eclipse.titan.designer.editors.ttcn3editor,
+ org.eclipse.titan.designer.editors.ttcnppeditor,
+ org.eclipse.titan.designer.extensions,
+ org.eclipse.titan.designer.graphics,
+ org.eclipse.titan.designer.parsers,
+ org.eclipse.titan.designer.parsers.ttcn3parser,
+ org.eclipse.titan.designer.preferences,
+ org.eclipse.titan.designer.preferences.pages,
+ org.eclipse.titan.designer.productUtilities,
+ org.eclipse.titan.designer.properties.data,
+ org.eclipse.titan.designer.wizards,
+ org.eclipse.titan.designer.wizards.projectFormat
+

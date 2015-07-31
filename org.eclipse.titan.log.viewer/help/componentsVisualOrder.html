@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>Components Visual Order</title>
+</head>
+<body>
+<h1>Components Visual Order</h1>
+<br>
+<p class="text">Configuration of the order in which the components will be displayed 
+  in the message sequence chart.<br>
+  <br>
+  The components are viewed in descending order. The user can change the order 
+  of the components, using up and down, add new component name to the list and 
+  remove an existing component name from the list. The name of the component must 
+  be entered case-sensitive, e.g. exact match the component name in the log file. 
+  The component names are not validated.<br>
+  <br>
+  <img src="images/componentVisualOrder.png"> </p>
+<br>
+
+<table cellspacing="0" border="1" width="75%" cellpadding="3" bordercolor="gray">
+  <tr> 
+        <td width="20%" align ="left"><p class="subtitle">Button</p></td>
+        
+    <td width="80%"><p class="subtitle">Description</p></td>
+      </tr>
+      
+      <tr> 
+        <td width="25%" align ="left"><p class="text">Add...</p></td>
+	    <td width="75%" align="left">
+      <p class="text">Opens a input dialog where the user enters the name of the 
+        component that should be added to the list.</p>
+    </td>
+      </tr>
+
+      <tr> 
+        <td width="25%" align ="left"><p class="text">Remove</p></td>
+        <td width="75%" align="left"><p class="text">Removes the selected component from the list<br>
+        <i>System Under Test</i> and <i>Main Test Component</i> components are 
+        mandatory and can not be removed from the list. </p>
+  	</td>
+      </tr>
+
+      
+      <tr> 
+        <td width="25%" align ="left"><p class="text">Up</p></td>
+        <td width="75%" align="left"><p class="text">The selected component is moved up in the list.</p></td>
+      </tr>
+      
+       <tr> 
+        <td width="25%" align ="left"><p class="text">Down</p></td>
+        <td width="75%" align="left"><p class="text">The selected component is moved down in the list.</p></td>
+      </tr>
+     
+     <tr> 
+        <td width="25%" align ="left"><p class="text">Restore Defaults</p></td>
+        <td width="75%" align="left">
+      <p class="text">Restores the settings to default. The default setting is 
+        a list only including <i>Main Test Component</i> and <i>System Under Test</i> 
+        .</p>
+      </td>
+      </tr>
+    
+    </table>
+</body>
+</html>

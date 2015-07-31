@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="TITAN Help" topic="titan_main.html">
+   <topic href="http://www.blukaktus.com/TTCN3QRC_viewme.pdf" label="TTCN-3 Quick Reference">
+   </topic>
+	<topic label="Keywords"  href="titan_index.html">
+		<topic label="A" href="titan_index.html#a">
+			<topic label="action" href="info/action.html"/>
+			<topic label="activate" href="info/activate.html"/>
+			<topic label="address" href="info/address.html"/>
+			<topic label="alive" href="info/alive.html"/>
+			<topic label="all" href="info/all.html"/>
+			<topic label="alt" href="info/alt.html"/>
+			<topic label="altstep" href="info/altstep.html"/>
+			<topic label="and" href="info/and.html"/>
+			<topic label="and4b" href="info/and4b.html"/>
+			<topic label="any" href="info/any.html"/>
+			<topic label="anytype" href="info/anytype.html"/>
+		</topic>
+		<topic label="B" href="titan_index.html#b">
+			<topic label="bit2hex" href="info/bit2hex.html"/>
+			<topic label="bit2int" href="info/bit2int.html"/>
+			<topic label="bit2oct" href="info/bit2oct.html"/>
+			<topic label="bit2str" href="info/bit2str.html"/>
+			<topic label="bitstring" href="info/bitstring.html"/>
+			<topic label="boolean" href="info/boolean.html"/>
+			<topic label="break" href="info/break.html"/>
+		</topic>
+		<topic label="C" href="titan_index.html#c">
+			<topic label="call" href="info/call.html"/>
+			<topic label="case" href="info/case.html"/>
+			<topic label="catch" href="info/catch.html"/>
+			<topic label="char" href="info/char.html"/>
+			<topic label="char2int" href="info/char2int.html"/>
+			<topic label="char2oct" href="info/char2oct.html"/>
+			<topic label="charstring" href="info/charstring.html"/>
+			<topic label="check" href="info/check.html"/>
+			<topic label="clear" href="info/clear.html"/>
+			<topic label="complement" href="info/complement.html"/>
+			<topic label="component" href="info/component.html"/>
+			<topic label="connect" href="info/connect.html"/>
+			<topic label="const" href="info/const.html"/>
+			<topic label="continue" href="info/continue.html"/>
+			<topic label="control" href="info/control.html"/>
+			<topic label="create" href="info/create.html"/>
+		</topic>
+		<topic label="D" href="titan_index.html#d">
+			<topic label="deactivate" href="info/deactivate.html"/>
+			<topic label="decode_base64" href="info/decode_base_64.html"/>
+			<topic label="decvalue" href="info/decvalue.html"/>
+			<topic label="default" href="info/default.html"/>
+			<topic label="disconnect" href="info/disconnect.html"/>
+			<topic label="display" href="info/display.html"/>
+			<topic label="do" href="info/do.html"/>
+			<topic label="done" href="info/done.html"/>
+		</topic>
+		<topic label="E" href="titan_index.html#e">
+			<topic label="else" href="info/else.html"/>
+			<topic label="encode" href="info/encode.html"/>
+			<topic label="encode_base64" href="info/encode_base64.html"/>
+			<topic label="encvalue" href="info/encvalue.html"/>
+			<topic label="enumerated" href="info/enumerated.html"/>
+			<topic label="error" href="info/error.html"/>
+			<topic label="except" href="info/except.html"/>
+			<topic label="exception" href="info/exception.html"/>
+			<topic label="execute" href="info/execute.html"/>
+			<topic label="extension" href="info/extension.html"/>
+			<topic label="external" href="info/external.html"/>
+		</topic>
+		<topic label="F" href="titan_index.html#f">
+			<topic label="fail" href="info/fail.html"/>
+			<topic label="false" href="info/false.html"/>
+			<topic label="float" href="info/float.html"/>
+			<topic label="float2int" href="info/float2int.html"/>
+			<topic label="float2str" href="info/float2str.html"/>
+			<topic label="for" href="info/for.html"/>
+			<topic label="friend" href="info/friend.html"/>
+			<topic label="from" href="info/from.html"/>
+			<topic label="function" href="info/function.html"/>
+		</topic>
+		<topic label="G" href="titan_index.html#g">
+			<topic label="get_stringencoding" href="info/get_stringencoding.html"/>
+			<topic label="getcall" href="info/getcall.html"/>
+			<topic label="getreply" href="info/getreply.html"/>
+			<topic label="getverdict" href="info/getverdict.html"/>
+			<topic label="goto" href="info/goto.html"/>
+			<topic label="group" href="info/group.html"/>
+		</topic>
+		<topic label="H" href="titan_index.html#h">
+			<topic label="hex2bit" href="info/hex2bit.html"/>
+			<topic label="hex2int" href="info/hex2int.html"/>
+			<topic label="hex2oct" href="info/hex2oct.html"/>
+			<topic label="hex2str" href="info/hex2str.html"/>
+			<topic label="hexstring" href="info/hexstring.html"/>
+		</topic>
+		<topic label="I" href="titan_index.html#i">
+			<topic label="if" href="info/if.html"/>
+			<topic label="ifpresent" href="info/ifpresent.html"/>
+			<topic label="import" href="info/import.html"/>
+			<topic label="in" href="info/in.html"/>
+			<topic label="inconc" href="info/inconc.html"/>
+			<topic label="infinity" href="info/infinity.html"/>
+			<topic label="inout" href="info/inout.html"/>
+			<topic label="int2bit" href="info/int2bit.html"/>
+			<topic label="int2char" href="info/int2char.html"/>
+			<topic label="int2float" href="info/int2float.html"/>
+			<topic label="int2hex" href="info/int2hex.html"/>
+			<topic label="int2oct" href="info/int2oct.html"/>
+			<topic label="int2str" href="info/int2str.html"/>
+			<topic label="int2unichar" href="info/int2unichar.html"/>
+			<topic label="integer" href="info/integer.html"/>
+			<topic label="interleave" href="info/interleave.html"/>
+			<topic label="isbound" href="info/isbound.html"/>
+			<topic label="ischosen" href="info/ischosen.html"/>
+			<topic label="ispresent" href="info/ispresent.html"/>
+			<topic label="isvalue" href="info/isvalue.html"/>
+		</topic>
+		<topic label="K" href="titan_index.html#k">
+			<topic label="kill" href="info/kill.html"/>
+			<topic label="killed" href="info/killed.html"/>
+		</topic>
+		<topic label="L" href="titan_index.html#l">
+			<topic label="language" href="info/language.html"/>
+			<topic label="length" href="info/length.html"/>
+			<topic label="lengthof" href="info/lengthof.html"/>
+			<topic label="log" href="info/log.html"/>
+		</topic>
+		<topic label="M" href="titan_index.html#m">
+			<topic label="map" href="info/map.html"/>
+			<topic label="match" href="info/match.html"/>
+			<topic label="message" href="info/message.html"/>
+			<topic label="mixed" href="info/mixed.html"/>
+			<topic label="mod" href="info/mod.html"/>
+			<topic label="modifies" href="info/modifies.html"/>
+			<topic label="module" href="info/module.html"/>
+			<topic label="modulepar" href="info/modulepar.html"/>
+			<topic label="mtc" href="info/mtc.html"/>
+		</topic>
+		<topic label="N" href="titan_index.html#n">
+			<topic label="noblock" href="info/noblock.html"/>
+			<topic label="none" href="info/none.html"/>
+			<topic label="not" href="info/not.html"/>
+			<topic label="not4b" href="info/not4b.html"/>
+			<topic label="nowait" href="info/nowait.html"/>
+			<topic label="null" href="info/null.html"/>
+		</topic>
+		<topic label="O" href="titan_index.html#o">
+			<topic label="objid" href="info/objid.html"/>
+			<topic label="oct2bit" href="info/oct2bit.html"/>
+			<topic label="oct2char" href="info/oct2char.html"/>
+			<topic label="oct2hex" href="info/oct2hex.html"/>
+			<topic label="oct2int" href="info/oct2int.html"/>
+			<topic label="oct2str" href="info/oct2str.html"/>
+			<topic label="oct2unichar" href="info/oct2unichar.html"/>
+			<topic label="octetstring" href="info/octetstring.html"/>
+			<topic label="of" href="info/of.html"/>
+			<topic label="omit" href="info/omit.html"/>
+			<topic label="on" href="info/on.html"/>
+			<topic label="operators" href="info/operators.html"/>
+			<topic label="optional" href="info/optional.html"/>
+			<topic label="or" href="info/or.html"/>
+			<topic label="or4b" href="info/or4b.html"/>
+			<topic label="out" href="info/out.html"/>
+			<topic label="override" href="info/override.html"/>
+		</topic>
+		<topic label="P" href="titan_index.html#p">
+			<topic label="param" href="info/param.html"/>
+			<topic label="pass" href="info/pass.html"/>
+			<topic label="pattern" href="info/pattern.html"/>
+			<topic label="permutation" href="info/permutation.html"/>
+			<topic label="port" href="info/port.html"/>
+			<topic label="private" href="info/private.html"/>
+			<topic label="procedure" href="info/procedure.html"/>
+			<topic label="profiler" href="info/profiler.html"/>
+			<topic label="public" href="info/public.html"/>
+		</topic>
+		<topic label="R" href="titan_index.html#r">
+			<topic label="raise" href="info/raise.html"/>
+			<topic label="read" href="info/read.html"/>
+			<topic label="receive" href="info/receive.html"/>
+			<topic label="record" href="info/record.html"/>
+			<topic label="recursive" href="info/recursive.html"/>
+			<topic label="regexp" href="info/regexp.html"/>
+			<topic label="rem" href="info/rem.html"/>
+			<topic label="remove_bom" href="info/remove_bom.html"/>
+			<topic label="repeat" href="info/repeat.html"/>
+			<topic label="replace" href="info/replace.html"/>
+			<topic label="reply" href="info/reply.html"/>
+			<topic label="return" href="info/return.html"/>
+			<topic label="rnd" href="info/rnd.html"/>
+			<topic label="running" href="info/running.html"/>
+			<topic label="runs" href="info/runs.html"/>
+		</topic>
+		<topic label="S" href="titan_index.html#s">
+			<topic label="self" href="info/self.html"/>
+			<topic label="select" href="info/select.html"/>
+			<topic label="send" href="info/send.html"/>
+			<topic label="sender" href="info/sender.html"/>
+			<topic label="set" href="info/set.html"/>
+			<topic label="setverdict" href="info/setverdict.html"/>
+			<topic label="signature" href="info/signature.html"/>
+			<topic label="sizeof" href="info/sizeof.html"/>
+			<topic label="start" href="info/start.html"/>
+			<topic label="stop" href="info/stop.html"/>
+			<topic label="str2bit" href="info/str2bit.html"/>
+			<topic label="str2float" href="info/str2float.html"/>
+			<topic label="str2hex" href="info/str2hex.html"/>
+			<topic label="str2int" href="info/str2int.html"/>
+			<topic label="str2oct" href="info/str2oct.html"/>
+			<topic label="subset" href="info/subset.html"/>
+			<topic label="substr" href="info/substr.html"/>
+			<topic label="superset" href="info/superset.html"/>
+			<topic label="system" href="info/system.html"/>
+		</topic>
+		<topic label="T" href="titan_index.html#t">
+			<topic label="template" href="info/template.html"/>
+			<topic label="testcase" href="info/testcase.html"/>
+			<topic label="testcasename" href="info/testcasename.html"/>
+			<topic label="timeout" href="info/timeout.html"/>
+			<topic label="timer" href="info/timer.html"/>
+			<topic label="to" href="info/to.html"/>
+			<topic label="trigger" href="info/trigger.html"/>
+			<topic label="true" href="info/true.html"/>
+			<topic label="type" href="info/type.html"/>
+		</topic>
+		<topic label="U" href="titan_index.html#u">
+			<topic label="unichar2char" href="info/unichar2char.html"/>
+			<topic label="unichar2int" href="info/unichar2int.html"/>
+			<topic label="unichar2oct" href="info/unichar2oct.html"/>
+			<topic label="union" href="info/union.html"/>
+			<topic label="universal" href="info/universal.html"/>
+			<topic label="unmap" href="info/unmap.html"/>
+		</topic>
+		<topic label="V" href="titan_index.html#v">
+			<topic label="value" href="info/value.html"/>
+			<topic label="valueof" href="info/valueof.html"/>
+			<topic label="var" href="info/var.html"/>
+			<topic label="variant" href="info/variant.html"/>
+			<topic label="verdicttype" href="info/verdicttype.html"/>
+		</topic>
+		<topic label="W" href="titan_index.html#w">
+			<topic label="while" href="info/while.html"/>
+			<topic label="with" href="info/with.html"/>
+		</topic>
+		<topic label="X" href="titan_index.html#x">
+			<topic label="xor" href="info/xor.html"/>
+			<topic label="xor4b" href="info/xor4b.html"/>
+		</topic>
+		<topic label="@" href="titan_index.html#@">
+			<topic label="@profiler" href="info/profiler.html"/>
+		</topic>
+	</topic>
+	
+	<topic label="TTCN-3 standards" href="http://www.ttcn3.org/StandardSuite.htm">
+		<topic label="ETSI ES 201 873-1 v4.1.2: TTCN-3 Core Language"
+			href="http://www.etsi.org/deliver/etsi_es\201800_201899\20187301\04.02.01_60\es_20187301v040201p.pdf">
+			<topic label="BNF  of the TTCN-3 Core Language v4.2.1" 
+				href="http://www.trex.informatik.uni-goettingen.de/trac/wiki/ttcn-3_4.2.1"/>
+		</topic>
+		<topic label="ETSI ES 201 873-4 v4.1.1: TTCN-3 Operational Semantics"
+			href="http://www.etsi.org/deliver/etsi_es\201800_201899\20187304\04.01.01_60\es_20187304v040101p.pdf"/>
+		<topic label="ETSI ES 201 873-7 v4.1.1: Using ASN.1 with TTCN-3"
+			href="http://www.etsi.org/deliver/etsi_es\201800_201899\20187307\04.01.01_60\es_20187307v040101p.pdf"/>
+		<topic label="ETSI ES 201 873-8 v3.2.1: The IDL to TTCN-3 Mapping"
+			href="http://www.etsi.org/deliver/etsi_es\201800_201899\20187308\03.02.01_60\es_20187308v030201p.pdf"/>
+		<topic label="ETSI ES 201 873-9 v4.1.1: Using XML schema with TTCN-3"
+			href="http://www.etsi.org/deliver/etsi_es\201800_201899\20187309\04.01.01_60\es_20187309v040101p.pdf"/>
+		<topic label="ETSI ES 201 873-10 v3.4.1: TTCN-3 Documentation Comment Specification"
+			href="http://www.etsi.org/deliver/etsi_es\201800_201899\20187310\03.04.01_60\es_20187310v030401p.pdf"/>
+		<topic label="ETSI ES 202 785 v1.1.1: Package Behaviour Types" 
+			href="http://www.etsi.org/deliver/etsi_es\202700_202799\202785\01.01.01_60\es_202785v010101p.pdf"/>
+	</topic>
+	<topic label="ASN.1 Recommendations" href="https://www.itu.int/ITU-T/studygroups/com17/languages/index.html">
+		<topic href="https://www.itu.int/rec/T-REC-X.660" label="X.660 (08/1997): General procedures for the operation of OSI Registration Authorities"/>
+		<topic label="X.680 (05/2001): Specification of basic notation"
+			href="https://www.itu.int/rec/T-REC-X.680"/>
+		<topic label="X.681 (06/1999): Information object specification"
+			href="https://www.itu.int/rec/T-REC-X.681"/>
+		<topic label="X.682 (03/2001): Constraint specification"
+			href="https://www.itu.int/rec/T-REC-X.682"/>
+		<topic label="X.683 (06/1999):  Parameterization of ASN.1 specifications"
+			href="https://www.itu.int/rec/T-REC-X.683"/>
+		<topic label="X.690 (02/2001):  Specification of BER, CER and DER"
+			href="https://www.itu.int/rec/T-REC-X.690"/>
+	</topic>
+ <topic label="XML Schema Specifications">
+    <topic href="http://www.w3.org/TR/xmlschema-0/" label="XML Schema Part 0: Primer Second Edition">
+    </topic>
+    <topic href="http://www.w3.org/TR/xmlschema-1/" label="XML Schema Part 1: Structures Second Edition">
+    </topic>
+    <topic href="http://www.w3.org/TR/xmlschema-2/" label="XML Schema Part 2: Datatypes Second Edition">
+    </topic>
+ </topic>
+    <topic label="JSON Specifications">
+       <topic href="http://tools.ietf.org/pdf/rfc7159.pdf" label="RFC7159: The JavaScript Object Notation (JSON) Data Interchange Format">
+       </topic>
+       <topic href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf" label="ECMA-404: The JSON Data Interchange Format">
+       </topic>
+    </topic>
+	<topic label="TITAN documentation" href="docs/userguide.pdf">
+		<topic label="TITAN User Guide" href="docs/userguide.pdf"/>
+		<topic label="TITAN Installation Guide" href="docs/installationguide.pdf"/>
+		<topic label="TITAN Designer and TITAN Executor for the Eclipse IDE Installation Guide" href="docs/Eclipse_installationguide.pdf"/>
+		<topic label="Programmer's Technical Reference for TITAN TTCN-3 Test Executor" href="docs/referenceguide.pdf"/>
+		<topic label="API Technical Reference for TITAN TTCN-3 Test Executor" href="docs/apiguide.pdf"/>
+		<topic label="Release Notes for TITAN" href="docs/releasenotes.pdf"/>
+		<topic label="TITAN Executor for the Eclipse IDE User Guide" href="docs/Eclipse_Executor_userguide.pdf"/>
+		<topic label="TITAN Designer for the Eclipse IDE User Guide" href="docs/Eclipse_Designer_userguide.pdf"/>
+		<anchor id="TITAN_documentation"/>
+	</topic>
+	
+	<topic href="docs/naming.pdf" label="Naming convention proposed for TTCN-3 modules"/>
+</toc>

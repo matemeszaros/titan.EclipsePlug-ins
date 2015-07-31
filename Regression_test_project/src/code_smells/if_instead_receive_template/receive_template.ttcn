@@ -1,0 +1,28 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module receive_template {
+import from types all;
+
+altstep as_1(test_int_port pl_1) {
+  var integer rec, i;
+
+  [] pl_1.receive(1) -> value rec {
+	while (rec > 4) {
+	  // no problem with this match
+	  if (match(i, 43)) {}
+	}
+  }
+
+  [] pl_1.receive(*) -> value rec {
+    {
+      // uses the redirected value, a receive template would be better
+      if (match(rec, 43)) {}
+    }
+  }
+}
+}

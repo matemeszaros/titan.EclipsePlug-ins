@@ -1,0 +1,92 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module negativeTesting
+{
+   group TEXT_grp {
+   type record MYREC
+   {
+     integer i,
+     boolean b,
+     MYREC r optional
+   }
+   type record of integer MYROFI;
+   type union MYU {
+     integer i,
+     boolean b,
+     MYREC r
+   }
+   }
+   with { encode "TEXT" variant "" }
+   type record MYREC2 { integer i }
+
+   const MYREC cg_myrec1 := {i:=1}
+   with {
+     erroneous "value := 2"
+     erroneous (x) "value := 2"
+     erroneous (i, r.i, r.r.i) "value := 2"
+   }
+   const MYREC cg_myrec2 := {i:=1} with { erroneous (b) "after := omit" }
+   const MYREC cg_myrec3 := {i:=1} with { erroneous (b) "before := omit" }
+   const MYREC cg_myrec4 := {i:=1} with { erroneous (b) "value := omit all" }
+   const MYREC cg_myrec5 := {i:=1} with { erroneous (b) "value := 123 all" }
+   const MYREC cg_myrec6 := {i:=1} with { erroneous (b) "value := {1,2,3}" }
+   const MYREC cg_myrec7 := {i:=1} with { erroneous (b) "value := nonexi" }
+   const MYREC cg_myrec8 := {i:=1} with { erroneous (b) "value(raw) := 123" }
+   const MYREC cg_myrec9 := {i:=1} with { erroneous (b) "value := MYROFI:'A'H" }
+   const MYREC cg_myrec10 := {i:=1} with { erroneous (b) "value := MYROFI:{1,2,*}" }
+
+   const MYREC cg_myrec11 := {i:=1} with {
+
+     erroneous (b) "after := omit all"
+     erroneous (r) "value := 0"
+   }
+   const MYREC cg_myrec12 := {i:=1} with {
+     erroneous (r) "before := omit all"
+     erroneous (b) "value := 0"
+   }
+   const MYU cg_myu13 := {i:=1} with { erroneous (b) "after := omit all" erroneous (r) "value:=12" }
+   const MYU cg_myu14 := {i:=1} with { erroneous (b) "value := omit" }
+   const MYREC cg_myrec15 := {i:=1} with {
+     erroneous (r) "after := omit all"
+     erroneous (i) "before := omit all"
+   }
+   const MYREC cg_myrec16 := {i:=1} with {
+     erroneous (b,b) "value := 1"
+     erroneous (b,b) "after := 1"
+     erroneous (b,b) "before := 1"
+   }
+   const MYREC cg_myrec17 := {i:=1} with {
+     erroneous (r.b) "value := 1"
+     erroneous (r) "value := 1"
+   }
+   const MYREC cg_myrec18 := {i:=1} with {
+     erroneous (b) "before := omit all"
+     erroneous (r) "before := omit all"
+   }
+   const MYREC cg_myrec19 := {i:=1} with {
+     erroneous (b) "value := 1"
+     erroneous (r) "before := omit all"
+   }
+   const MYREC cg_myrec20 := {i:=1} with {
+     erroneous (b) "after := omit all"
+     erroneous (i) "after := omit all"
+   }
+   const MYREC cg_myrec21 := {i:=1} with {
+     erroneous (r) "value := 1"
+     erroneous (b) "after := omit all"
+   }
+   const MYREC cg_myrec22 := {i:=1} with {
+     erroneous (r) "value := omit"
+     erroneous (r.i) "value := 1"
+   }
+   const MYREC cg_myrec23 := {i:=1} with { erroneous (b) "value(raw) := ""proba""" }
+   const MYREC cg_myrec24 := {i:=1} with { erroneous (b) "value(raw) := universal charstring:""proba""" }
+
+   function f_fv() {} with{erroneous ""}
+control {} with{erroneous ""}
+} with{erroneous ""}

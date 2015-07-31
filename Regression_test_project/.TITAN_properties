@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TITAN_Designer_Properties>
+  <ActiveConfiguration>Default</ActiveConfiguration>
+  <ProjectProperties>
+    <MakefileSettings>
+      <generateMakefile>false</generateMakefile>
+      <generateInternalMakefile>true</generateInternalMakefile>
+      <symboliclinklessBuild>true</symboliclinklessBuild>
+      <targetExecutable>bin\Regression_test_project.exe</targetExecutable>
+    </MakefileSettings>
+    <LocalBuildSettings>
+      <MakefileScript/>
+      <workingDirectory>bin</workingDirectory>
+    </LocalBuildSettings>
+  </ProjectProperties>
+</TITAN_Designer_Properties>

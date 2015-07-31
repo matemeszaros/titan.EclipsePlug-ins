@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<?eclipse version="3.2"?>
+<fragment>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="TITAN_popup_Menu"
+               label="TITAN"
+               path="additions">
+            <separator
+                  name="group2">
+            </separator>
+         </menu>
+         <action
+               class="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
+               enablesFor="+"
+               id="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
+               label="Generate checklist from file"
+               menubarPath="TITAN_popup_Menu/group2">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         id="org.eclipse.titan.regressiontests.HeadlessRunner"
+         name="Headless runner"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+              class="org.eclipse.titan.regressiontests.HeadlessRunner">
+        </run>
+      </application>
+   </extension>
+
+</fragment>

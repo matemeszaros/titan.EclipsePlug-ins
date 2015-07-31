@@ -1,0 +1,59 @@
+ASNTypes DEFINITIONS
+
+-- [(AUTOMATIC|EXPLICIT|IMPLICIT) TAGS]
+-- the default is EXPLICIT TAGS
+  AUTOMATIC TAGS ::=
+
+BEGIN
+-- EXPORTS <exports clause>;
+IMPORTS;
+-- MODULE-BODY
+ASNNull ::= NULL
+ASNInteger ::= INTEGER
+ASNReal ::= REAL
+ASNBoolean ::= BOOLEAN
+
+ASNBitstring ::= BIT STRING
+ASNBMPstring ::= BMPString
+ASNGeneralstring ::= GeneralString
+ASNGraphicstring ::= GraphicString
+ASNIA5string ::= IA5String
+ASNNumericstring ::= NumericString
+ASNOctetString ::= OCTET STRING
+ASNISO646String ::= ISO646String
+ASNT61String ::= T61String
+ASNPrintablestring ::= PrintableString
+ASNTeletexstring ::= TeletexString
+ASNUniversalstring ::= UniversalString
+ASNUnrestrictedstring ::= CHARACTER STRING
+ASNUTF8string ::= UTF8String
+ASNVideotexstring ::= VideotexString
+ASNVisiblestring ::= VisibleString
+
+ASNGeneralizedTime ::= GeneralizedTime
+ASNUTCTime ::= UTCTime
+ASNObjectdescriptor ::= ObjectDescriptor
+
+ASNSequenceType ::= SEQUENCE {
+	field1 INTEGER,
+	field2 GeneralString}
+
+ASNSetType ::= SET {
+	field1 INTEGER,
+	field2 GeneralString}
+
+ASNChoiceType ::= CHOICE {
+	field1 INTEGER,
+	field2 GeneralString}
+
+ASNEnumType ::= ENUMERATED {
+	item1	(0),
+	item2	(1),
+	item3	(2) }
+
+ASNSequenceOf ::= SEQUENCE OF INTEGER
+
+ASNSetOf ::= SET OF INTEGER
+
+ASNEmbeddedPDV ::= EMBEDDED PDV
+END

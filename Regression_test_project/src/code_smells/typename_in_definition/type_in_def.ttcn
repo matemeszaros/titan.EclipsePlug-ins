@@ -1,0 +1,22 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module type_in_def {
+
+// containing their type
+function integer_f() return integer {return 0;}
+external function integer_ef() return integer;
+external const integer integer_2;
+const integer integer_1 := 0;
+
+// no problem
+function f() return integer {return 0;}
+external function ef() return integer;
+external const integer i_2;
+const integer i_1 := 0;
+
+}

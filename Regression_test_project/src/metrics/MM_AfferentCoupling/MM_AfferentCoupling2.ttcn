@@ -1,0 +1,21 @@
+/******************************************************************************
+ * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+module MM_AfferentCoupling2 {
+import from types all;
+import from MM_AfferentCoupling all;
+
+// it uses 4 definitions from MM_AfferentCoupling: aff_int, aff_bool, aff_int and aff_int
+control {
+  var aff_int i := 32;
+  var aff_bool b := i > 23;
+  if (b) {
+    var aff_int j := i;
+    var aff_int k := j;
+  }
+}
+}

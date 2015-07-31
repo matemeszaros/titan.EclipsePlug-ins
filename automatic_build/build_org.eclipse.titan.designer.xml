@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (c) 2000-2014 Ericsson Telecom AB
+
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ -->
+<project basedir="." default="build" name="org.eclipse.titan.designer">
+
+
+	<import file="build_import.xml" />
+	<property name="antlr.src.dir" location="src/org/eclipse/titan/designer/parsers"/>
+	<property name="antlr.src.dir.ttcn3" location="src/org/eclipse/titan/designer/parsers/ttcn3parser"/>
+	<property name="antlr.src.dir.asn1" location="src/org/eclipse/titan/designer/parsers/asn1parser"/>
+	<property name="antlr.src.dir.extensionattribute" location="src/org/eclipse/titan/designer/parsers/extensionattributeparser"/>
+	<property name="antlr.src.dir.log" location="src/org/eclipse/titan/designer/parsers/logparser"/>
+
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.g4"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir=".">
+                <include name="toc.xml"/>
+                <include name="icons/*"/>
+            	<include name="lib/*"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+
+
+	<target name="build.jars" depends="build">
+		<copy file="plugin.xml" todir="bin" />
+		<mkdir dir="bin/schema" />
+        <copy file="${tpd.xsd}" todir="bin/schema" />
+		<mkdir dir="${result.dir}/plugins"/>
+		<update.manifest file="META-INF/MANIFEST.MF"/>
+		<jar destfile="${result.dir}/plugins/org.eclipse.titan.designer_${version.qualifier}.jar" manifest="META-INF/MANIFEST.MF">
+			<fileset dir="bin" />
+		</jar>
+	</target>
+
+    <target name="build" depends="init, antlr4" >
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="${javac.debug}" debuglevel="${javac.debuglevel}"
+				encoding="${javac.encoding}"
+				destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="PDE.classpath"/>
+            <classpath refid="common.classpath"/>
+			<classpath refid="ANTLR4.classpath"/>
+        </javac>
+    </target>
+
+	<target name="antlr4" depends="init">
+		<apply executable="java" parallel="false" verbose="true" timeout="60000" failonerror="true">
+			<arg value="-classpath" />
+			<arg value="${antlr4.jar.location}" />
+			<arg value="org.antlr.v4.Tool" />
+			<srcfile/>
+			<arg value="-no-listener" />
+			<arg value="-no-visitor" />
+			<arg value="-encoding" />
+			<arg value="UTF-8" />
+			<arg value="-package" />
+			<arg value="org.eclipse.titan.designer.parsers.extensionattributeparser" />
+			<!--
+			  Parsers are dependent to the *.token files (these are generated from  lexer),
+			  so the directory of the *.token file is added as lib
+			  NOTE: If parser g4 compilation is made from that directory, then -lib is not needed
+			-->
+			<arg value="-lib" />
+			<arg value="${antlr.src.dir.extensionattribute}" />
+
+			<fileset dir="${antlr.src.dir}" >
+				<include name="extensionattributeparser/ExtensionAttributeLexer2.g4" />
+				<include name="extensionattributeparser/ExtensionAttributeParser2.g4" />
+				<!-- TODO: add new g4 files here -->
+			</fileset>
+		</apply>
+		<apply executable="java" parallel="false" verbose="true" timeout="60000" failonerror="true">
+			<arg value="-classpath" />
+			<arg value="${antlr4.jar.location}" />
+			<arg value="org.antlr.v4.Tool" />
+			<srcfile/>
+			<arg value="-no-listener" />
+			<arg value="-no-visitor" />
+			<arg value="-encoding" />
+			<arg value="UTF-8" />
+			<arg value="-package" />
+			<arg value="org.eclipse.titan.designer.parsers.asn1parser" />
+			<!--
+			  Parsers are dependent to the *.token files (these are generated from  lexer),
+			  so the directory of the *.token file is added as lib
+			  NOTE: If parser g4 compilation is made from that directory, then -lib is not needed
+			-->
+			<arg value="-lib" />
+			<arg value="${antlr.src.dir.asn1}" />
+
+			<fileset dir="${antlr.src.dir}" >
+				<include name="asn1parser/ASN1Lexer2.g4" />
+				<include name="asn1parser/ASN1Parser2.g4" />
+				<!-- TODO: add new g4 files here -->
+			</fileset>
+		</apply>
+		<apply executable="java" parallel="false" verbose="true" timeout="60000" failonerror="true">
+			<arg value="-classpath" />
+			<arg value="${antlr4.jar.location}" />
+			<arg value="org.antlr.v4.Tool" />
+			<srcfile/>
+			<arg value="-no-listener" />
+			<arg value="-no-visitor" />
+			<arg value="-encoding" />
+			<arg value="UTF-8" />
+			<arg value="-package" />
+			<arg value="org.eclipse.titan.designer.parsers.ttcn3parser" />
+			<!--
+			  Parsers are dependent to the *.token files (these are generated from  lexer),
+			  so the directory of the *.token file is added as lib
+			  NOTE: If parser g4 compilation is made from that directory, then -lib is not needed
+			-->
+			<arg value="-lib" />
+			<arg value="${antlr.src.dir.ttcn3}" />
+
+			<fileset dir="${antlr.src.dir}" >
+				<include name="ttcn3parser/TTCN3BaseLexer4.g4" />
+				<include name="ttcn3parser/TTCN3Lexer4.g4" />
+				<include name="ttcn3parser/TTCN3KeywordLessLexer4.g4" />
+				<include name="ttcn3parser/TTCN3Parser4.g4" />
+				<!-- TODO: add new g4 files here -->
+			</fileset>
+		</apply>
+		<apply executable="java" parallel="false" verbose="true" timeout="60000" failonerror="true">
+			<arg value="-classpath" />
+			<arg value="${antlr4.jar.location}" />
+			<arg value="org.antlr.v4.Tool" />
+			<srcfile/>
+			<arg value="-no-listener" />
+			<arg value="-no-visitor" />
+			<arg value="-encoding" />
+			<arg value="UTF-8" />
+			<arg value="-package" />
+			<arg value="org.eclipse.titan.designer.parsers.ttcn3parser" />
+			<!--
+			  Parsers are dependent to the *.token files (these are generated from  lexer),
+			  so the directory of the *.token file is added as lib
+			  NOTE: If parser g4 compilation is made from that directory, then -lib is not needed
+			-->
+			<arg value="-lib" />
+			<arg value="${antlr.src.dir.ttcn3}" />
+
+			<fileset dir="${antlr.src.dir}" >
+				<include name="ttcn3parser/PreprocessorDirectiveLexer4.g4" />
+				<include name="ttcn3parser/PreprocessorDirectiveParser4.g4" />
+				<!-- TODO: add new g4 files here -->
+			</fileset>
+		</apply>
+
+		<!--
+			TODO: add new apply here for other g4 directory, where different parts are:
+			<arg value="-package" />
+			<arg value="..." />
+			<arg value="-lib" />
+			<arg value="${...}" />
+			<fileset dir="${antlr.src.dir}" >
+				<include name="....g4" />
+			</fileset>
+		-->
+	</target>
+</project>
+

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="logviewer.css" charset="ISO-8859-1" type="text/css">
+<title>View Message Details</title>
+</head>
+<body>
+<h1>View Message Details</h1>
+<ol>
+  <li> 
+    <p class="subtitle"> Select the action <i>Open Value View</i>.<br>
+      Double click or Enter can be used if the <i>Default behaviour in MSC view 
+      </i> in <a href="gereralSettings.html">User Configuration - General Settings</a> 
+      is set to<i> Open Value View</i>. </p>
+    <p class="text">Details about the event are shown in the Value view. The source 
+      information in the log record is displayed first and then the message.<br>
+      <br>
+      The representation is either as a graphical tree view or as indented text, 
+      depending on the settings in the <a href="gereralSettings.html">General 
+      Settings</a>. It is possible to switch between the two different representations 
+      using the <img src="images/tree_view.gif"> button for Graphical Tree and 
+      <img src="images/text_view.gif"> button for Text in the top of the Value 
+      view. <br>
+      The graphical tree is expanded when the Value view is opened. The content 
+      of the Value view is empty, when no details about the event exists.<br>
+      Only one message detail window can be opened at a single time.<br>
+      <br>
+      For setverdict(error) and setverdict(fail) events the text displayed in 
+      the Value view includes the message the caused the event, e.g. all messages 
+      since last setverdict event that contains a predefined string. The predefined 
+      strings are user configurable in the <a href="setverdict.html">Setverdict</a> 
+      preference page.<br>
+      <br>
+    <ul>
+    </ul>
+    <ul>
+      <li> 
+        <p class="subtitle">Graphical Tree<br>
+        </p>
+        <p class="smalltext">The message is decoded and displayed in a graphical 
+          tree view with the decoded message presented in a hierarchal structure. 
+          A tree value is either a composite with child values or a parameter 
+          value with no children. Each type in the tree has a corresponding icon 
+          that represents its content.</p>
+        <br>
+        <p class="smalltitle">Functions:</p>
+        <ul>
+          <li> 
+            <p class="smalltext">You can expand and collapse tree entries that 
+              have child values.</p>
+          </li>
+          <li> 
+            <p class="smalltext">The root value of the tree is the message name 
+              and the connecting port name in the form: message name (port name).</p>
+          </li>
+        </ul>
+        <p> <br>
+          <img src="images/detailsView.png"></p>
+      </li>
+      <li> 
+        <p class="subtitle">Text<br>
+        </p>
+        <p class="smalltext"> The message is formatted and displayed in as text.<br>
+        </p>
+        <p class="smalltitle">Functions:</p>
+        <ul>
+          <li> 
+            <p class="smalltext">The first row in the text is the message name 
+              and the connecting port name in the form: message name (port name).</p>
+          </li>
+        </ul>
+        <p class="smalltext"><br>
+          <img src="images/textValueView.png"></p>
+      </li>
+      <li> 
+        <p class="subtitle">Setverdict(error/fail)<br>
+        </p>
+        <p class="smalltext">The message in the Value view also include the event 
+          that caused the setverdict(fail/error) event.</p>
+        <p class="smalltext"><br>
+          <img src="images/setverdictValueView.png"></p>
+      </li>
+    </ul>
+</ol>
+</body>
+</html>

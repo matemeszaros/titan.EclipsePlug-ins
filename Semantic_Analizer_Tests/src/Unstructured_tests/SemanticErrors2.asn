@@ -1,0 +1,16 @@
+SemanticErrors2 { nonexi } DEFINITIONS ::=
+BEGIN
+   IMPORTS nonexi FROM SemanticErrors2
+            A, X10 FROM SemanticErrors1
+            myInt FROM Semantic_errors3
+            A FROM SemanticErrors1
+            A FROM SemanticErrors3;
+
+    Duplicate-symbol-2 ::= BOOLEAN
+
+    Duplicate-symbol-3 ::= BOOLEAN
+    Duplicate-symbol-3 ::= INTEGER
+
+    My-A ::= A
+
+END
