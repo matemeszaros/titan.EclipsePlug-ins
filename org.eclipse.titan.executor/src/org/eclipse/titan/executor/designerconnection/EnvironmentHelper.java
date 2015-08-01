@@ -168,7 +168,8 @@ public final class EnvironmentHelper {
 				try {
 					final String workingdirectory = tempProject.getPersistentProperty(
 							new QualifiedName(DesignerHelper.PROJECT_BUILD_PROPERTYPAGE_QUALIFIER, DesignerHelper.WORKINGDIR_PROPERTY));
-					workingDirectories.append(':').append(PathConverter.convert(workingdirectory, true, TITANDebugConsole.getConsole()));
+					final String projectPath = actualProject.getLocation().toString();
+					workingDirectories.append(':').append(PathConverter.convert(projectPath + "/" + workingdirectory, true, TITANDebugConsole.getConsole()));
 				} catch (CoreException e) {
 					ErrorReporter.logError("The working directory of project " + tempProject.getName() + " could not be determined");
 				}
@@ -177,7 +178,8 @@ public final class EnvironmentHelper {
 			String libraryPath = env.get(LD_LIBRARY_PATH);
 			libraryPath = libraryPath == null ? "" : libraryPath;
 			final String titanPath = getTitanPath(env);
-			env.put(LD_LIBRARY_PATH, libraryPath + workingDirectories.toString() + (titanPath.length() > 0 ? (":" + titanPath + "/lib") : ""));
+			final String newLibraryPath = libraryPath + workingDirectories.toString() + (titanPath.length() > 0 ? (":" + titanPath + "/lib") : "");
+			env.put(LD_LIBRARY_PATH, newLibraryPath);
 		}
 
 		return env;

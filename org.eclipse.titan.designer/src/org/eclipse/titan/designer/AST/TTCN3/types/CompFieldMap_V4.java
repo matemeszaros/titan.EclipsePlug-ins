@@ -7,7 +7,12 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.TTCN3.types;
 
+import java.util.List;
+
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase_V4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater_V4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Reparser4;
 
 /**
  * Map of component fields.
@@ -22,7 +27,17 @@ public final class CompFieldMap_V4 extends CompFieldMap {
 
 	@Override
 	protected int reparse(TTCN3ReparseUpdater aReparser) {
-		//TODO: implement
-		return 0;
+		return ((TTCN3ReparseUpdater_V4)aReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				List<CompField> tempFields = parser.pr_reparse_StructFieldDefs().fields;
+				lastUniquenessCheck = null;
+				if ( parser.isErrorListEmpty() ) {
+					if (tempFields != null) {
+						addFieldsOrdered(tempFields);
+					}
+				}
+			}
+		});
 	}
 }

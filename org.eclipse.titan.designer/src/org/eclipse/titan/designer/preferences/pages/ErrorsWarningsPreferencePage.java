@@ -85,7 +85,7 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 			+ " shift and rotation sizes.";
 	private static final String REPORT_IF_WITHOUT_ELSE = "Report conditional statements without else block";
 	private static final String REPORT_IF_WITHOUT_ELSE_TOOLTIP = "All possible execution paths should be handled,"
-			+ " atleast on the level of logging information in case of unexpected events";
+			+ " at least on the level of logging information in case of unexpected events";
 	private static final String REPORT_SETVERDICT_WITHOUT_REASON = "Report setverdict without reason";
 	private static final String REPORT_SETVERDICT_WITHOUT_REASON_TOOLTIP = "Setting any other verdict reason then pass,"
 			+ " should be accompanied with a reason, with details for the verdict";

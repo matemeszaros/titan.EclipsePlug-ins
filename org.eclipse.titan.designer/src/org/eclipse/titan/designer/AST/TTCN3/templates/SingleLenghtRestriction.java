@@ -172,7 +172,7 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 			if (compareResult == -1 && !more_allowed) {
 				final String message = MessageFormat.format(
 						"There are more ({0} {1}) elements than it is allowed by the length restriction ({2})",
-						has_anyornone ? "atleast" : "", nofElements, length);
+						has_anyornone ? "at least" : "", nofElements, length);
 				locatable.getLocation().reportSemanticError(message);
 			} else if (compareResult == 1 && !lessAllowed) {
 				locatable.getLocation().reportSemanticError(

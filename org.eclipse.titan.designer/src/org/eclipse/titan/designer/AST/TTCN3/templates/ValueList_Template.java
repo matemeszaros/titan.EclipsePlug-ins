@@ -73,6 +73,9 @@ public final class ValueList_Template extends CompositeTemplate {
 	@Override
 	public void checkThisTemplateGeneric(final CompilationTimeStamp timestamp, final IType type, final boolean isModified,
 			final boolean allowOmit, final boolean allowAnyOrOmit, final boolean subCheck, final boolean implicitOmit) {
+		if(type == null){
+			return;
+		}
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			ITemplateListItem component = templates.getTemplateByIndex(i);
 			component.setMyGovernor(type);

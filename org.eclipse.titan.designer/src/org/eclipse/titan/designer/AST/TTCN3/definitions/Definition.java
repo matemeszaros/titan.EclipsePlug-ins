@@ -26,21 +26,21 @@ import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
-import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ErroneousAttributeSpecification;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.ErroneousAttributeSpecification.Indicator_Type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ErroneousAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.Qualifier;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.Qualifiers;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute;
-import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
-import org.eclipse.titan.designer.AST.TTCN3.attributes.ErroneousAttributeSpecification.Indicator_Type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
@@ -49,7 +49,7 @@ import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3LexerTokenTypes;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -496,7 +496,7 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>();
-			result.add(TTCN3LexerTokenTypes.WITH);
+			result.add(TTCN3Lexer4.WITH);
 			return result;
 		}
 
@@ -507,16 +507,16 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	public List<Integer> getPossiblePrefixTokens() {
 		if (isLocal()) {
 			List<Integer> result = new ArrayList<Integer>(2);
-			result.add(TTCN3LexerTokenTypes.CONST);
-			result.add(TTCN3LexerTokenTypes.VAR);
+			result.add(TTCN3Lexer4.CONST);
+			result.add(TTCN3Lexer4.VAR);
 			return result;
 		}
 
 		if (visibilityModifier == null) {
 			List<Integer> result = new ArrayList<Integer>(3);
-			result.add(TTCN3LexerTokenTypes.PUBLIC);
-			result.add(TTCN3LexerTokenTypes.FRIEND);
-			result.add(TTCN3LexerTokenTypes.PRIVATE);
+			result.add(TTCN3Lexer4.PUBLIC);
+			result.add(TTCN3Lexer4.FRIEND);
+			result.add(TTCN3Lexer4.PRIVATE);
 			return result;
 		}
 

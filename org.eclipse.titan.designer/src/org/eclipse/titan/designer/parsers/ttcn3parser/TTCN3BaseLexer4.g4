@@ -34,18 +34,9 @@ import org.eclipse.titan.designer.AST.Location;
 }
 
 @members {
-  protected int offset = 0;
   protected boolean isTTCNPP = false;
   private int tokenCounter = 0;
 
-  public int getOffset() {
-    return offset;
-  }
-  
-  public void setOffset(int offset) {
-  	this.offset = offset;
-  }
-  
   public void setTTCNPP() {
   	isTTCNPP = true;
   }

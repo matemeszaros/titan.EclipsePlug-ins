@@ -25,6 +25,7 @@
 			<topic label="and4b" href="info/and4b.html"/>
 			<topic label="any" href="info/any.html"/>
 			<topic label="anytype" href="info/anytype.html"/>
+			<topic label="apply" href="info/apply.html"/>
 		</topic>
 		<topic label="B" href="titan_index.html#b">
 			<topic label="bit2hex" href="info/bit2hex.html"/>
@@ -58,6 +59,7 @@
 			<topic label="decode_base64" href="info/decode_base_64.html"/>
 			<topic label="decvalue" href="info/decvalue.html"/>
 			<topic label="default" href="info/default.html"/>
+			<topic label="derefers" href="info/derefers.html"/>
 			<topic label="disconnect" href="info/disconnect.html"/>
 			<topic label="display" href="info/display.html"/>
 			<topic label="do" href="info/do.html"/>
@@ -129,6 +131,7 @@
 			<topic label="killed" href="info/killed.html"/>
 		</topic>
 		<topic label="L" href="titan_index.html#l">
+			<topic label="label" href="info/label.html"/>
 			<topic label="language" href="info/language.html"/>
 			<topic label="length" href="info/length.html"/>
 			<topic label="lengthof" href="info/lengthof.html"/>
@@ -189,6 +192,7 @@
 			<topic label="receive" href="info/receive.html"/>
 			<topic label="record" href="info/record.html"/>
 			<topic label="recursive" href="info/recursive.html"/>
+			<topic label="refers" href="info/refers.html"/>
 			<topic label="regexp" href="info/regexp.html"/>
 			<topic label="rem" href="info/rem.html"/>
 			<topic label="remove_bom" href="info/remove_bom.html"/>

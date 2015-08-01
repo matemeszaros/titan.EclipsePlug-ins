@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.titan.designer.Activator;
+import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
@@ -79,5 +80,9 @@ class ModuleDeclaration extends Declaration {
 		// No reference finder present, guard with null
 		return null;
 	}
-
+	
+	@Override
+	public Assignment getAssignment() {
+		return null;
+	}
 }

@@ -391,7 +391,13 @@
     </target>
 
 	<target name="clean-all" depends="clean">
-		<delete dir="${build.dir}" failonerror="false"/>
+		<delete dir="${result.dir}" failonerror="false"/>
+		<delete dir="${updatesites.tmp.location}" failonerror="false"/>
+		<delete dir="${updatesite.release.location}" failonerror="false"/>
+		<delete dir="${updatesite.FOA.location}" failonerror="false"/>
+		<delete dir="${updatesite.experimental.location}" failonerror="false"/>
+		<delete dir="${updatesite.testing.location}" failonerror="false"/>
+		<delete dir="${zip.dir}" failonerror="false"/>
 	</target>
 
 	<macrodef name="clean.plugin">

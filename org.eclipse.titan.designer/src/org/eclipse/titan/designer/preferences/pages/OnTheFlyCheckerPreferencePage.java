@@ -68,7 +68,7 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 		Composite composite = new Composite(tempParent, SWT.NONE);
 
 		reconcilerTimeout = new IntegerFieldEditor(PreferenceConstants.RECONCILERTIMEOUT, RECONCILER_TIMEOUT, composite);
-		reconcilerTimeout.setValidRange(1, 10);
+		reconcilerTimeout.setValidRange(0, 10);
 		reconcilerTimeout.setTextLimit(2);
 		addField(reconcilerTimeout);
 

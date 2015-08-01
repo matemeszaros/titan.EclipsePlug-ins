@@ -10,10 +10,11 @@
 1. VERSION REQUIREMENTS
 
 Java 1.6 or higher, recommended: 1.7
-ANTLR UI 4.1.3 with ANTLR 2.7.6 or 2.7.7
-Ant 1.9.2 or higher
+ANTLR 4 SDK 0.3.5
+ANTLR Runtime 4.3 or higher, recommended: 4.3, available at Eclipse Orbit
+Ant 1.9.2 or higher 
   NOTE: Build will not work below 1.8 for sure!
-Eclipse Standard or Java 3.6 (Helios) or higher, recommended 4.4 (Luna)
+Eclipse Standard or Java 3.6 (Helios) or higher, recommended: 4.4 (Luna)
 
 ----------------------
 2. SETTING UP ECLIPSE FOR TITAN DEVELOPMENT
@@ -63,11 +64,51 @@ It modifies the source, you need to rebuild org.eclipse.titan.common plug-in pro
 ----------------------
 4. BUILDING AND INSTALLING TITAN PLUG-INS FROM COMMAND LINE WITH ANT
 
-4.1. BUILDING TITAN PLUG-INS FROM COMMAND LINE WITH ANT
-cd <git repository>/titan_eclipse/automatic_build
-ant -f build_main.xml -lib <antlr plugin path>/antlr.jar <target>
+4.1. EXTERNAL JAR DEPENDENCIES
 
-antlr.jar is installed in this directory: <eclipse_dir>/plugins/org.antlr_2.7....
+  antlr-4.3-complete.jar 
+    available at Eclipse Orbit
+    http://download.eclipse.org/tools/orbit/downloads/drops/S20150519210750/
+    NOTE: The drop version changes very often.
+  junit.jar (JUnit4)
+
+  These jars are needed by help.plugin to create pdf documentation
+    PDF documentation can be created only inside Ericcson network
+    doc2pdf.jar (optional, pdf will not be created if file not found at this location)
+      For Ericsson users only: Download the plugin from http://ttcn.ericsson.se/download/third_party/ OR write to any contact person at Project Titan
+    ant-contrib.jar (mandatory if doc2pdf.jar exists)
+
+  These jars are needed by titanium.plugin
+    org.apache.commons.collections15/collections-generic-4.01.jar
+      Download Commons-Collections from http://commons.apache.org/proper/commons-collections/
+      OR for Ericsson users only: Download the Jung plugin from  http://ttcn.ericsson.se/download/third_party/commons.collections.zip 
+      OR for users outside Ericsson: Write to any contact person on site https://projects.eclipse.org/projects/tools.titan and ask the commons.collections.zip .
+    edu.uci.ics.jung/jung-graph-impl-2.0.1.jar
+    edu.uci.ics.jung/jung-visualization-2.0.1.jar
+    edu.uci.ics.jung/jung-algorithms-2.0.1.jar
+    edu.uci.ics.jung/jung-io-2.0.1.jar
+      For Ericsson users only: Download the Jung plugin from http://ttcn.ericsson.se/download/third_party/edu.uci.ics.jung.zip 
+      OR for users outside Ericsson: Write to any contact person on site https://projects.eclipse.org/projects/tools.titan and ask the jung.zip  
+    org.apache.poi_3.9.0.v201405241750.jar
+      available at Eclipse Orbit
+      http://download.eclipse.org/tools/orbit/downloads/drops/S20150519210750/
+      NOTE: The drop version changes very often.
+
+4.2. BUILDING TITAN PLUG-INS FROM COMMAND LINE WITH ANT
+
+Building must be run from git/titan_eclipse/automatic_build
+
+In general
+ant \
+-f build_main.xml \
+-D<environment value definition 1> \
+...
+-D<environment value definition n> \
+-lib <JAR dependency 1> \
+...
+-lib <JAR dependency n> \
+<target>
+
 target can be one of the following:
   common.plugin
   designer.plugin
@@ -78,6 +119,11 @@ target can be one of the following:
   regressiontests.plugin
   titanium.plugin
   titanium.regressiontests.plugin
+  updatesite.release
+  updatesite.FOA
+  updatesite.experimental
+  updatesite.testing
+  zip
 
 Make sure, that the following environment variables are set to a valid directory/file:
 
@@ -90,25 +136,109 @@ updatesites.tmp.location: temporary output directory for experimental update sit
 zip.dir: output directory for zip package that contains all the plug-ins (optional)
 
 These variables can be set by editing <git repository>/titan_eclipse/automatic_build/build_config.xml
-and also in the command, here is a working example:
+and also in the command.
 
-ant -f build_main.xml \
--lib $HOME/eclipse/plugins/org.antlr_2.7.6.20140628-1000/antlr.jar \
+4.2.1. A working example with all of the dependencies (if all the values are set corretly, it will work with any target):
+
+LIB_DIR_LOCAL=$HOME/lib
+LIB_DIR_GIT=$HOME/git/titan_playground/jar
+ant \
+-f build_main.xml \
 -DJAVA_HOME=$HOME/jdk/ \
 -DECLIPSE_HOME=$HOME/eclipse/ \
 -Dcompiler.location=$HOME/git/titan/ \
+-Dantlr4.jar.location=${LIB_DIR_LOCAL}/antlr-4.3-complete.jar \
+-Ddoc2pdf.jar=${LIB_DIR_GIT}/doc2pdf.jar \
+-Dant-contrib.location=$HOME/git/titan_playground/jar/ant-contrib/lib/ant-contrib.jar \
 -Djava6=$HOME/jdk/bin/java \
+-lib ${LIB_DIR_GIT}/edu.uci.ics.jung/jung-graph-impl-2.0.1.jar \
+-lib ${LIB_DIR_GIT}/edu.uci.ics.jung/jung-visualization-2.0.1.jar \
+-lib ${LIB_DIR_GIT}/edu.uci.ics.jung/jung-algorithms-2.0.1.jar \
+-lib ${LIB_DIR_GIT}/edu.uci.ics.jung/jung-io-2.0.1.jar \
+-lib ${LIB_DIR_GIT}/org.apache.commons.collections15/collections-generic-4.01.jar \
+-lib ${LIB_DIR_LOCAL}/org.apache.poi_3.9.0.v201405241750.jar \
+-lib ${LIB_DIR_GIT}/org.junit_4.11.0.v201303080030/junit.jar \
+-Dupdatesite.release.location=result/update_site \
+-Dupdatesite.FOA.location=result/FOA_update_site \
+-Dupdatesite.experimental.location=result/experimental_update_site \
+-Dupdatesite.testing.location=result/testing_update_site \
+-Dupdatesites.tmp.location=result/eclipse_automatic_build/tmp_update_sites \
+-Dzip.dir=result/zips/4.2.0.CRL_113_200_4_R2A \
+zip
+
+4.2.2. A working example with minimal requirements, with a target with few dependencies
+
+ant \
+-f build_main.xml \
+-DJAVA_HOME=$HOME/jdk/ \
+-DECLIPSE_HOME=$HOME/eclipse/ \
+-Dantlr4.jar.location=$HOME/lib/antlr-4.3-complete.jar \
+-Dcompiler.location=$HOME/git/titan/ \
 designer.plugin
 
-4.2. INSTALLING PLUG-INS TO ECLIPSE
+4.3. INSTALLING PLUG-INS TO ECLIPSE
 The plug-in jars are created in result/plugins/ directory.
 Copy these *.jar files to $ECLIPSE_HOME/plugins/ directory.
 
 ----------------------
-5. BUILDING PLUG-INS WITH ONLY ANTLR 4 DEPENDENCIES
+5. RUNNING REGRESSION TEST
 
-cd automatic_build
-./setv4.sh
+5.1. Prerequisites:
+  5.1.1. org.eclipse.titan.titanium plug-in is built
+  5.1.2. The following plug-ins are present in eclipse/plugins directory in this structure
+           edu.uci.ics.jung/
+             jung-graph-impl-2.0.1.jar
+             jung-visualization-2.0.1.jar
+             jung-algorithms-2.0.1.jar
+             jung-io-2.0.1.jar
+           org.apache.commons.collections15/
+             collections-generic-4.01.jar
+           org.antlr.runtime_4.3.0.v201502022030.jar
+           org.apache.poi_3.9.0.v201405241750.jar
+  5.1.3. Titan jars are also copied to eclipse/plugins
+         cp -f result/plugins/* ${ECLIPSE_INSTALLED}/plugins
+  5.1.4. The folowing environemnt variables are set
+         JAVA_HOME
+         WORKSPACE
+         TTCN3_LICENSE_FILE
+         TEST_PROJ
+         TARGET_WS
 
-This script sets the project to use only ANTLR 4 dependent parsers, and removes source files with unnecessary dependencies
-After this step plug-ins can be built and installed as it is described in chapter 4.
+5.2. Running regression tests:
+  Tests must be run from titan_eclipse/automatic_build
+  This is a content of a script, that runs the tests
+  
+#!/bin/bash
+
+# USAGE: run from git/titan_eclipse/automatic_build/
+# Prerequisites: build_titan_eclipse_regressiontests_plugin.sh
+
+set -e
+set -o pipefail
+
+JAVA_HOME=$HOME/jdk/
+WORKSPACE=$HOME/git
+TTCN3_LICENSE_FILE=$HOME/license.dat
+TEST_PROJ=file://${WORKSPACE}/titan_eclipse
+TARGET_WS=${WORKSPACE}/ws_test
+echo "eclipse_ws: ${TEST_PROJ}"
+ECLIPSE_INSTALLED=eclipse
+
+# extract a fresh eclipse
+tar -zxvf $HOME/install/eclipse-rcp-luna-SR2-linux-gtk.tar.gz ${ECLIPSE_INSTALLED}/
+
+# copy required jars (5.1.2.)
+cp -f -r $HOME/install/eclipse_plugins/* ${ECLIPSE_INSTALLED}/plugins
+
+# copy titan jars to eclipse/plugins (5.1.3.)
+cp -f result/plugins/* ${ECLIPSE_INSTALLED}/plugins
+
+${ECLIPSE_INSTALLED}/eclipse \
+-debug \
+-noSplash \
+-data ${TARGET_WS} \
+-clean \
+-application org.eclipse.titan.regressiontests.HeadlessRunner \
+-workspace ${TEST_PROJ} \
+-license ${TTCN3_LICENSE_FILE} \
+-xml_out result.xml

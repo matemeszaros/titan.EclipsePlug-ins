@@ -144,10 +144,10 @@ group Attila_group {
   template SoI t_i11sup     := superset(all from t_SoI1, complement(all from t_SoI5)) length (4);
   template SoI t_i11sup_eq  := superset(1,2,(6..9), complement(1,2)) length (4);
 
-  // compile error (correct behaviour):
-  // template SoI t_i7sup_err := superset(all from t_SoI1) length (2); 
-  // There are more (at least 3) elements in the template than it is allowed by the length restriction (2)
-  //template SoI t_i9sup_err := superset(complement(all from t_SoI1)) length (2);
+  // compile error (correct behaviour) -- fixed
+  template SoI t_i7sup_err := superset(all from t_SoI1) length (2); 
+  // fixed: There are more (at least 3) elements in the template than it is allowed by the length restriction (2)
+  template SoI t_i9sup_err := superset(complement(all from t_SoI1)) length (2);
   //There are more (at least 4) elements in the template than it is allowed by the length restriction (2) <== correct 4 for 7
   // It is ready, see tc_superset_i7
 
@@ -570,7 +570,7 @@ group Attila_group {
     var template SoI tl_i3sup      := superset(-1,0,all from t_SoI1, all from t_SoI3, 100);
     var RoSoI vl_goodValues := {{20,21,22,-1,0,1,2,6,7,8,9,100},{20,21,22,1,-1,2,0,3,4,5,6,20,21,22,7,8,9,100}, {1,20,21,22,2,3,4,5,6,7,8,9,100,-1,0}}; 
     var RoSoI vl_badValues := {{0},{1},{-1},{1000},{1,19},{},{20},{21},{22},{20,21},{22,20},{22,21,100}, {2,6,7,8,9,20,21,22,100},{20,21,22,1,6,7,8,9,100}};
-    f_checkSoITemplate(t_i3sup,vl_goodValues,vl_badValues);
+    f_checkSoITemplate(tl_i3sup,vl_goodValues,vl_badValues);
   }
   
   testcase tc_superset_i3_2dyn() runs on A {
@@ -579,7 +579,7 @@ group Attila_group {
     var template SoI tl_i3sup  := superset(-1,0,all from tl_SoI1, all from tl_SoI3, 100);
     var RoSoI vl_goodValues := {{20,21,22,-1,0,1,2,6,7,8,9,100},{20,21,22,1,-1,2,0,3,4,5,6,20,21,22,7,8,9,100}, {1,20,21,22,2,3,4,5,6,7,8,9,100,-1,0}}; 
     var RoSoI vl_badValues := {{0},{1},{-1},{1000},{1,19},{},{20},{21},{22},{20,21},{22,20},{22,21,100}, {2,6,7,8,9,20,21,22,100},{20,21,22,1,6,7,8,9,100}};
-    f_checkSoITemplate(t_i3sup,vl_goodValues,vl_badValues);
+    f_checkSoITemplate(tl_i3sup,vl_goodValues,vl_badValues);
   }
 
 
@@ -941,7 +941,7 @@ group Attila_group {
   }
   testcase tc_superset_i10_2dyn() runs on A {
     var template SoI tl_SoI1 := {1, 2, (6..9)};
-    var template SoI tl_i10sup     := superset(all from t_SoI1, complement(all from t_SoI1)) length (4);
+    var template SoI tl_i10sup     := superset(all from tl_SoI1, complement(all from tl_SoI1)) length (4);
     var RoSoI vl_goodValues := {       
       {1,2,6,10},{1,2,7,11},{1,2,8,-1},{1,2,9,0},{1,2,9,1000}
     };

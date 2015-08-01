@@ -136,7 +136,9 @@
 				<include name="ttcn3parser/TTCN3BaseLexer4.g4" />
 				<include name="ttcn3parser/TTCN3Lexer4.g4" />
 				<include name="ttcn3parser/TTCN3KeywordLessLexer4.g4" />
+				<include name="ttcn3parser/TTCN3CharstringLexer4.g4" />
 				<include name="ttcn3parser/TTCN3Parser4.g4" />
+				<include name="ttcn3parser/TTCN3Reparser4.g4" />
 				<!-- TODO: add new g4 files here -->
 			</fileset>
 		</apply>

@@ -60,18 +60,22 @@ public abstract class CompositeTemplate extends TTCN3Template {
 	/**
 	 * Calculates the number of list members which are not the any or none
 	 * symbol.
-	 * 
+	 *
 	 * @return the number calculated.
 	 * */
-	public int getNofTemplatesNotAnyornone() {
+	public int getNofTemplatesNotAnyornone(CompilationTimeStamp timestamp) {
 		int result = 0;
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			ITTCN3Template template = templates.getTemplateByIndex(i);
-			switch (template.getTemplatetype()) {
+			Template_type ttype = template.getTemplatetype();
+			switch (ttype) {
 			case ANY_OR_OMIT:
 				break;
 			case PERMUTATION_MATCH:
-				result += ((PermutationMatch_Template) template).getNofTemplatesNotAnyornone();
+				result += ((PermutationMatch_Template) template).getNofTemplatesNotAnyornone(timestamp);
+				break;
+			case ALLELEMENTSFROM:
+				result += ((AllElementsFrom) template).getNofTemplatesNotAnyornone(timestamp);
 				break;
 			default:
 				result++;
@@ -83,7 +87,7 @@ public abstract class CompositeTemplate extends TTCN3Template {
 	}
 
 	/**
-	 * Checks if the list of templates has atleast one any or none symbol.
+	 * Checks if the list of templates has at least one any or none symbol.
 	 * 
 	 * @return true if an any or none symbol was found, false otherwise.
 	 * */

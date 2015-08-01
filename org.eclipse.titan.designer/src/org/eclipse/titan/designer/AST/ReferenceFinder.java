@@ -14,8 +14,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.titan.designer.AST.ASN1.Undefined_Assignment;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
+import org.eclipse.titan.designer.AST.ASN1.Undefined_Assignment;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Altstep;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.For_Loop_Definitions;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.FormalParameterList;
@@ -23,6 +23,8 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.RunsOnScope;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 import org.eclipse.titan.designer.AST.TTCN3.types.ComponentTypeBody;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
+import org.eclipse.titan.designer.declarationsearch.Declaration;
+import org.eclipse.titan.designer.declarationsearch.IdentifierFinderVisitor;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.ui.IEditorPart;
@@ -104,16 +106,17 @@ public final class ReferenceFinder {
 			return false;
 		}
 
-		// detect which TTCN-3 or ASN.1 definition/assignment we are in,
-		// change the scope to the one which contains
-		// the found definition
-		while (scope != null) {
-			assignment = scope.getEnclosingAssignment(offset);
-			if (assignment != null) {
-				break;
-			}
-			scope = scope.getParentScope();
+		final IdentifierFinderVisitor visitor = new IdentifierFinderVisitor(offset);
+		module.accept(visitor);
+
+		Declaration declaration = visitor.getReferencedDeclaration();
+
+		if (declaration == null) {
+			return false;
 		}
+
+		assignment = declaration.getAssignment();
+
 		if (scope == null || assignment == null) {
 			if (reportErrors) {
 				targetEditor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(NORECOGNISABLEASSIGNMENT);

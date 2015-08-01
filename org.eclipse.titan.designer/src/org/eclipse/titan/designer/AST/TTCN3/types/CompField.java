@@ -17,17 +17,17 @@ import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IOutlineElement;
 import org.eclipse.titan.designer.AST.IReferencingElement;
 import org.eclipse.titan.designer.AST.IType;
+import org.eclipse.titan.designer.AST.IType.ValueCheckingOptions;
 import org.eclipse.titan.designer.AST.ITypeWithComponents;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Type;
 import org.eclipse.titan.designer.AST.Value;
-import org.eclipse.titan.designer.AST.IType.ValueCheckingOptions;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
@@ -37,7 +37,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3LexerTokenTypes;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
@@ -240,13 +240,13 @@ public final class CompField extends ASTNode
 		}
 
 		List<Integer> result = new ArrayList<Integer>();
-		result.add(TTCN3LexerTokenTypes.OPTIONAL);
+		result.add(TTCN3Lexer4.OPTIONAL);
 
-		result.add(TTCN3LexerTokenTypes.LPAREN);
-		result.add(TTCN3LexerTokenTypes.LENGTH);
+		result.add(TTCN3Lexer4.LPAREN);
+		result.add(TTCN3Lexer4.LENGTH);
 
 		// any array dimension can be added at this point
-		result.add(TTCN3LexerTokenTypes.SQUAREOPEN);
+		result.add(TTCN3Lexer4.SQUAREOPEN);
 
 		return result;
 	}

@@ -41,7 +41,7 @@ public class ReadOnlyLocal {
 					CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
 					if (initialValue != null && !initialValue.getIsErroneous(ct) && !initialValue.isUnfoldable(ct)) {
 						String msg = MessageFormat.format(READONLY, s.getDescription());
-						problems.report(s.getLocation(), msg);
+						problems.report(s.getIdentifier().getLocation(), msg);
 					}
 				}
 			}
@@ -68,7 +68,7 @@ public class ReadOnlyLocal {
 				Def_Var_Template s = (Def_Var_Template) node;
 				if (!s.getWritten()) {
 					String msg = MessageFormat.format(READONLY, s.getDescription());
-					problems.report(s.getLocation(), msg);
+					problems.report(s.getIdentifier().getLocation(), msg);
 				}
 			}
 		}

@@ -128,7 +128,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	}
 
 	private void titanActions(final IPreferenceStore preferenceStore) {
-		preferenceStore.setDefault(PreferenceConstants.TITANACTIONS_PROCESSEXCLUDEDRESOURCES, true);
+		preferenceStore.setDefault(PreferenceConstants.TITANACTIONS_PROCESSEXCLUDEDRESOURCES, false);
 		preferenceStore.setDefault(PreferenceConstants.TITANACTIONS_DEFAULT_AS_OMIT, false);
 	}
 

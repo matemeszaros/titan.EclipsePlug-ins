@@ -61,4 +61,9 @@ class DefinitionDeclaration extends Declaration {
 	public Identifier getIdentifier() {
 		return ass.getIdentifier();
 	}
+	
+	@Override
+	public Assignment getAssignment() {
+		return ass;
+	}
 }

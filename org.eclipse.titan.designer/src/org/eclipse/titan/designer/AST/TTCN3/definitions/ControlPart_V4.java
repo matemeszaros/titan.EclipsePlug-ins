@@ -7,9 +7,13 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.TTCN3.definitions;
 
+import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock_V4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase_V4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater_V4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Reparser4;
 
 /**
  * The ControlPart class represents the control parts of TTCN3 modules.
@@ -34,7 +38,18 @@ public final class ControlPart_V4 extends ControlPart {
 
 	@Override
 	protected int reparse( final TTCN3ReparseUpdater aReparser ) {
-		//TODO: implement
-		return 0;
+		return ((TTCN3ReparseUpdater_V4)aReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath.setWithAttributes(attributes);
+					if (attributes != null) {
+						getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+					}
+				}
+			}
+		});
 	}
 }

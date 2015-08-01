@@ -9,7 +9,12 @@ package org.eclipse.titan.designer.AST.TTCN3.definitions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.titan.designer.AST.Identifier;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase_V4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater_V4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Reparser4;
 
 /**
  * Represents a Module.
@@ -28,14 +33,36 @@ public final class TTCN3Module_V4 extends TTCN3Module {
 	}
 
 	@Override
-	protected int reparseAfterModule(TTCN3ReparseUpdater aReparser) {
-		//TODO: implement
-		return 0;
+	protected int reparseAfterModule(final TTCN3ReparseUpdater aReparser) {
+		return ((TTCN3ReparseUpdater_V4)aReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				aReparser.fullAnalysysNeeded = true;
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath = new WithAttributesPath();
+					withAttributesPath.setWithAttributes(attributes);
+					if (attributes != null) {
+						getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+					}
+				}
+			}
+		});
 	}
 
 	@Override
 	protected int reparseInsideAttributelist(TTCN3ReparseUpdater aReparser) {
-		//TODO: implement
-		return 0;
+		return ((TTCN3ReparseUpdater_V4)aReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath.setWithAttributes(attributes);
+					getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+				}
+			}
+		});
 	}
 }

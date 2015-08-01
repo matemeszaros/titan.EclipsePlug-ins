@@ -19,14 +19,32 @@ public class IdentifierReparser_V4 implements IIdentifierReparser {
 	
 	@Override
 	public int parse() {
-		//TODO: implement
-		return 0;
+		return ((TTCN3ReparseUpdater_V4)mReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				Identifier identifier2 = parser.pr_Identifier().identifier;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					mIdentifier = identifier2;
+				}
+			}
+		});
 	}
 	
 	@Override
 	public int parseAndSetNameChanged() {
-		//TODO: implement
-		return 0;
+		return ((TTCN3ReparseUpdater_V4)mReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				Identifier identifier2 = parser.pr_Identifier().identifier;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					mIdentifier = identifier2;
+					// default behaviour
+					mReparser.setNameChanged(true);
+				}
+			}
+		});
 	}
 	
 	@Override

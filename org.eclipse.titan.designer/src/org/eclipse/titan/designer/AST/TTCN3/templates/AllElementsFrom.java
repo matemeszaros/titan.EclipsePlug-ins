@@ -11,10 +11,11 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Reference;
+import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Template;
 import org.eclipse.titan.designer.AST.TTCN3.types.SequenceOf_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.SetOf_Type;
-import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Sequence_Type;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -146,4 +147,54 @@ public class AllElementsFrom extends TemplateBody {
 	public boolean isValue(CompilationTimeStamp timestamp) {
 		return false;
 	}
+
+	/**
+	 * Calculates the number of list members which are not the any or none
+	 * symbol.
+	 *
+	 * @return the number calculated.
+	 * */
+	public int getNofTemplatesNotAnyornone(CompilationTimeStamp timestamp) {
+		if (template == null) {
+			ErrorReporter.INTERNAL_ERROR();
+			return 0;
+		}
+
+		if (!Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype())) {
+			template.getLocation().reportSemanticError(REFERENCEEXPECTED);
+			template.setIsErroneous(true);
+			return 0;
+		}
+
+		if (!((SpecificValue_Template) template).isReference()) {
+			template.getLocation().reportSemanticError(REFERENCEEXPECTED);
+			template.setIsErroneous(true);
+			return 0;
+		}
+
+		// isReference branch:
+		Reference reference = ((SpecificValue_Template) template).getReference();
+		Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		if (assignment == null) {
+			template.getLocation().reportSemanticError("Assignment not found");
+			template.setIsErroneous(true);
+			return 0;
+		}
+
+		if (!Assignment_type.A_TEMPLATE.equals(assignment.getAssignmentType())) {
+			return 0;
+		}
+
+		ITTCN3Template body = ((Def_Template)assignment).getTemplate(timestamp);
+
+		if (!Template_type.TEMPLATE_LIST.equals(body.getTemplatetype())) {
+			template.getLocation().reportSemanticError("Template must be a record of or a set of values");
+			template.setIsErroneous(true);
+			return 0;
+		}
+
+		return ((Template_List)body).getNofTemplatesNotAnyornone(timestamp);
+
+	}
+
 }

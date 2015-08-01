@@ -4331,7 +4331,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `template_assignment_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (atleast 2)",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 26;
@@ -4354,7 +4354,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `template_assignment_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (atleast 2)",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 27;
@@ -4377,7 +4377,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `template_assignment_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (atleast 2)",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 15;
@@ -4468,7 +4468,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `template_assignment_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (atleast 2)",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 24;
@@ -4494,7 +4494,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `template_assignment_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (atleast 2)",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 16;
@@ -4542,7 +4542,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for component `4' and `2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The index should be an integer value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (atleast 2)",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 23;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
@@ -4569,9 +4569,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The index should be an integer value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (atleast 2)", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)", lineNum++, IMarker.SEVERITY_ERROR)); }
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There are more (atleast 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are more (at least 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
 		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Field `field1' is missing from template for set type `@template_assignment_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
@@ -5383,13 +5383,13 @@ public class AST_tests {
 		lineNum += 1;
 		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (atleast 4)",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (at least 4)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 4) elements than it is allowed by the length restriction (2)",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (atleast 4)",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (at least 4)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 4) elements than it is allowed by the length restriction (2)",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (atleast 4)",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (at least 4)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 3) elements than it is allowed by the length restriction (2)",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (atleast 4)",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There are fewer (0) elements than it is allowed by the length restriction (at least 4)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (2)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Length restriction cannot be used in template of type `boolean'",  lineNum, IMarker.SEVERITY_ERROR));

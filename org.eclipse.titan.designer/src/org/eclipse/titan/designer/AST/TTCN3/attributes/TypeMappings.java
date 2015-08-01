@@ -134,7 +134,8 @@ public final class TypeMappings extends ASTNode implements ILocateableNode {
 			TypeMapping mapping = mappings.get(i);
 			mapping.check(timestamp);
 			Type sourceType = mapping.getSourceType();
-			if (!sourceType.getTypeRefdLast(timestamp).getIsErroneous(timestamp)) {
+
+			if (sourceType != null && !sourceType.getTypeRefdLast(timestamp).getIsErroneous(timestamp)) {
 				String sourceName = sourceType.getTypename();
 				if (mappingsMap.containsKey(sourceName)) {
 					sourceType.getLocation().reportSemanticError(

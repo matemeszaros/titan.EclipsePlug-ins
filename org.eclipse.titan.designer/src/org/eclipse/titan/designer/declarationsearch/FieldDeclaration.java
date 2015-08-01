@@ -61,4 +61,9 @@ class FieldDeclaration extends Declaration {
 			return null;
 		}
 	}
+
+	@Override
+	public Assignment getAssignment() {
+		return ass;
+	}
 }

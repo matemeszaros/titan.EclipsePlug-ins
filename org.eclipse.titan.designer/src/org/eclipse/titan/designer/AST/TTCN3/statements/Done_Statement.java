@@ -19,13 +19,13 @@ import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Value;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TemplateInstance;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3LexerTokenTypes;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
@@ -164,13 +164,13 @@ public final class Done_Statement extends Statement {
 		}
 
 		List<Integer> result = new ArrayList<Integer>();
-		result.add(TTCN3LexerTokenTypes.PORTREDIRECTSYMBOL);
+		result.add(TTCN3Lexer4.PORTREDIRECTSYMBOL);
 
 		if (doneMatch != null) {
 			return result;
 		}
 
-		result.add(TTCN3LexerTokenTypes.LPAREN);
+		result.add(TTCN3Lexer4.LPAREN);
 
 		return result;
 	}

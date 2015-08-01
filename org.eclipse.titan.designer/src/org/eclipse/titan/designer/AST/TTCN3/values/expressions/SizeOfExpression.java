@@ -458,7 +458,7 @@ public final class SizeOfExpression extends Expression_Value {
 					}
 
 					if (Value_type.INTEGER_VALUE.equals(upper.getValuetype())) {
-						int nofComponents = temp.getNofTemplatesNotAnyornone();
+						int nofComponents = temp.getNofTemplatesNotAnyornone(timestamp);
 						if (nofComponents == ((Integer_Value) upper).intValue()) {
 							return nofComponents;
 						}

@@ -74,7 +74,7 @@ public final class PreprocessorOptionsPage implements IOptionsPage {
 		if (mainComposite == null) {
 			return;
 		}
-
+		
 		label.setEnabled(true);
 	}
 

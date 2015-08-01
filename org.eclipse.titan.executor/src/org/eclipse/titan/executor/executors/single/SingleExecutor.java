@@ -7,6 +7,18 @@
  ******************************************************************************/
 package org.eclipse.titan.executor.executors.single;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -29,7 +41,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.CfgParserFactory;
-import org.eclipse.titan.common.parsers.cfg.CFGParserTokenTypes;
+import org.eclipse.titan.common.parsers.cfg.CFGLexer2;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
 import org.eclipse.titan.common.path.PathConverter;
 import org.eclipse.titan.executor.Activator;
@@ -49,18 +61,6 @@ import org.eclipse.titan.executor.views.testexecution.ExecutedTestcase;
 import org.eclipse.titan.executor.views.testexecution.TestExecutionView;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Kristof Szabados
@@ -190,12 +190,12 @@ public final class SingleExecutor extends BaseExecutor {
 			}
 			
 			List<Integer> disallowedNodes = new ArrayList<Integer>(6);
-			disallowedNodes.add(CFGParserTokenTypes.MAIN_CONTROLLER_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.DEFINE_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.INCLUDE_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.COMPONENTS_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.GROUPS_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.EXECUTE_SECTION);
+			disallowedNodes.add(CFGLexer2.MAIN_CONTROLLER_SECTION);
+			disallowedNodes.add(CFGLexer2.DEFINE_SECTION);
+			disallowedNodes.add(CFGLexer2.INCLUDE_SECTION);
+			disallowedNodes.add(CFGLexer2.COMPONENTS_SECTION);
+			disallowedNodes.add(CFGLexer2.GROUPS_SECTION);
+			disallowedNodes.add(CFGLexer2.EXECUTE_SECTION);
 
 			builder = configHandler.toStringResolved(disallowedNodes);
 			builder.append("\n[EXECUTE]\n");

@@ -118,8 +118,10 @@ public final class MatchExpression extends Expression_Value {
 			return;
 		}
 
+		templateInstance.getTemplateBody().checkThisTemplateGeneric(timestamp, templateInstance.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE), false,	false, false, true,	false);
+
 		try {
-			ExpressionUtilities.checkExpressionOperatorCompatibility(timestamp, this, referenceChain, expectedValue, value, templateInstance);
+			ExpressionUtilities.checkExpressionOperatorCompatibility(timestamp, this, referenceChain, Expected_Value_type.EXPECTED_TEMPLATE, value, templateInstance);
 		} catch (StackOverflowError e) {
 			ErrorReporter.logExceptionStackTrace("Stack overflow was detected while analysing `" + getFullName() + "'", e.getCause());
 			getLocation().reportSemanticError("Titan was unable to analyse this statement");

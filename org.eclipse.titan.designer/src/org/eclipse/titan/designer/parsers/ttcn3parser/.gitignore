@@ -31,8 +31,12 @@
 /TTCN3BaseLexer4.tokens
 /TTCN3Lexer4.java
 /TTCN3Lexer4.tokens
+/TTCN3CharstringLexer4.java
+/TTCN3CharstringLexer4.tokens
 /TTCN3Parser4.java
 /TTCN3Parser4.tokens
+/TTCN3Reparser4.java
+/TTCN3Reparser4.tokens
 /TTCN3KeywordLessLexer4.java
 /TTCN3KeywordLessLexer4.tokens
 /TTCN3Parser4BaseListener.java

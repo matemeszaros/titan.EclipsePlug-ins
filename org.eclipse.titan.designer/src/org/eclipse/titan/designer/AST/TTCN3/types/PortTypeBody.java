@@ -481,7 +481,13 @@ public final class PortTypeBody extends ASTNode implements ILocateableNode, IInc
 					// check if all source types are present on the `in' list of the provider
 					for (int i = 0, size = inMappings.getNofMappings(); i < size; i++) {
 						Type sourceType = inMappings.getMappingByIndex(i).getSourceType();
-						if (!providerBody.inMessages.hasType(timestamp, sourceType)) {
+//						if(sourceType == null) {
+//							inMappings.getMappingByIndex(i).getLocation().reportSemanticError(MessageFormat.format(
+//							"Source type of the `in'' mapping is unknown"
+//							 + " on the list of incoming messages in provider port type `{0}''", providerType.getTypename() ));
+//							continue;
+//						}
+						if (sourceType != null && !providerBody.inMessages.hasType(timestamp, sourceType)) {
 							sourceType.getLocation().reportSemanticError(MessageFormat.format(
 											"Source type `{0}'' of the `in'' mapping is not present "
 											+ "on the list of incoming messages in provider port type `{1}''",
@@ -530,7 +536,7 @@ public final class PortTypeBody extends ASTNode implements ILocateableNode, IInc
 				// check if all source types are present on the `in' list of the provider
 				for (int i = 0, size = outMappings.getNofMappings(); i < size; i++) {
 					Type sourceType = outMappings.getMappingByIndex(i).getSourceType();
-					if (!outMessages.hasType(timestamp, sourceType)) {
+					if (sourceType != null && !outMessages.hasType(timestamp, sourceType)) {
 						sourceType.getLocation().reportSemanticError(MessageFormat.format(
 								"Source type `{0}'' of the `out'' mapping is not present on the list of outgoing messages in user port type `{1}''",
 								sourceType.getTypename(), myType.getTypename()));
@@ -867,7 +873,7 @@ public final class PortTypeBody extends ASTNode implements ILocateableNode, IInc
 
 	/**
 	 * Checks if the port of this port type body has a queue or not. A queue is
-	 * only used if there is atleast one blocking signature, or at least one
+	 * only used if there is at least one blocking signature, or at least one
 	 * signature with exceptions.
 	 *
 	 * @param timestamp the timestamp of the actual semantic check cycle.

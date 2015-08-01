@@ -90,5 +90,7 @@ public abstract class Declaration {
 	 * @return The identifier of the declaration.
 	 */
 	public abstract Identifier getIdentifier();
+	
+	public abstract Assignment getAssignment();
 
 }

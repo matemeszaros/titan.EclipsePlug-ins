@@ -10,7 +10,10 @@ package org.eclipse.titan.designer.AST.TTCN3.definitions;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Type;
 import org.eclipse.titan.designer.AST.Value;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase_V4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater_V4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Reparser4;
 
 /**
  * The Def_Const class represents TTCN3 constant definitions.
@@ -27,7 +30,17 @@ public final class Def_Const_V4 extends Def_Const {
 
 	@Override
 	protected int reparse(TTCN3ReparseUpdater aReparser) {
-		//TODO: implement
-		return 0;
+		return ((TTCN3ReparseUpdater_V4)aReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				Value newValue = parser.pr_Expression().value;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					if (newValue != null) {
+						value = newValue;
+					}
+				}
+			}
+		});
 	}
 }

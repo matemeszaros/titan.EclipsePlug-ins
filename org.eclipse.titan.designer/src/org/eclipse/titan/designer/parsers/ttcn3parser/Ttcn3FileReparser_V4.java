@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 
 /**
@@ -38,7 +39,26 @@ public class Ttcn3FileReparser_V4 implements ITtcn3FileReparser {
 	
 	@Override
 	public boolean parse() {
-		//TODO: implement
-		return false;
+		((TTCN3ReparseUpdater_V4)mReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				parser.pr_TTCN3File();
+				if ( parser.isErrorListEmpty() ) {
+					TTCN3Module actualTtc3Module = parser.getModule();
+					if (actualTtc3Module != null && actualTtc3Module.getIdentifier() != null) {
+						if (mSourceParser.getSemanticAnalyzer().addModule(actualTtc3Module)) {
+							mFileMap.put(mFile, actualTtc3Module.getName());
+							mUptodateFiles.put(mFile, actualTtc3Module.getName());
+						} else {
+							mSyntacticallyOutdated = true;
+						}
+					}
+				} else {
+					mSyntacticallyOutdated = true;
+					mHighlySyntaxErroneousFiles.add(mFile);
+				}
+			}
+		});
+		return mSyntacticallyOutdated;
 	}
 }

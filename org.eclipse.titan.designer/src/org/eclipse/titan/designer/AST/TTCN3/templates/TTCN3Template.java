@@ -934,10 +934,16 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	@Override
 	public void checkThisTemplateGeneric(final CompilationTimeStamp timestamp, final IType type, final boolean isModified,
 			final boolean allowOmit, final boolean allowAnyOrOmit, final boolean subCheck, final boolean implicitOmit) {
+		
+		if(type == null) { 
+			return;
+		}
+		
 		if (!getIsErroneous(timestamp)) {
+			
 			if( !(ITTCN3Template.Template_type.TEMPLATE_NOTUSED.equals(this.getTemplatetype())) ) {
-			  type.checkThisTemplate(timestamp, this, isModified, implicitOmit);
-			}
+				  type.checkThisTemplate(timestamp, this, isModified, implicitOmit);
+			} 
 
 			if (getLengthRestriction() != null) {
 				checkLengthRestriction(timestamp, type);

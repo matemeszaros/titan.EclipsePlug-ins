@@ -8,7 +8,11 @@
 package org.eclipse.titan.designer.AST.TTCN3.definitions;
 
 import org.eclipse.titan.designer.AST.Identifier;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase_V4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater_V4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Reparser4;
 
 /**
  * The ImportModule class represents a TTCN3 import statement. This class is
@@ -27,7 +31,18 @@ public final class ImportModule_V4 extends ImportModule {
 
 	@Override
 	protected int reparse(TTCN3ReparseUpdater aReparser) {
-		//TODO: implement
-		return 0;
+		return ((TTCN3ReparseUpdater_V4)aReparser).parse(new ITTCN3ReparseBase_V4() {
+			@Override
+			public void reparse(final TTCN3Reparser4 parser) {
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath.setWithAttributes(attributes);
+					if (attributes != null) {
+						getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+					}
+				}
+			}
+		});
 	}
 }

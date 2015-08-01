@@ -244,7 +244,7 @@ public final class Template_List extends CompositeTemplate {
 	@Override
 	protected void checkTemplateSpecificLengthRestriction(final CompilationTimeStamp timestamp, final Type_type typeType) {
 		if (Type_type.TYPE_SEQUENCE_OF.equals(typeType) || Type_type.TYPE_SET_OF.equals(typeType)) {
-			int nofTemplatesGood = getNofTemplatesNotAnyornone();
+			int nofTemplatesGood = getNofTemplatesNotAnyornone(timestamp);
 			boolean hasAnyOrNone = nofTemplatesGood != getNofTemplates();
 
 			lengthRestriction.checkNofElements(timestamp, nofTemplatesGood, hasAnyOrNone, false, hasAnyOrNone, this);

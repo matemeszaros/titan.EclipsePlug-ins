@@ -281,7 +281,7 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 				BigInteger length = ((Integer_Value) last).getValueValue();
 				if (length.compareTo(BigInteger.valueOf(nofElements)) == 1) {
 					final String message = MessageFormat.format(
-							"There are fewer ({0}) elements than it is allowed by the length restriction (atleast {1})",
+							"There are fewer ({0}) elements than it is allowed by the length restriction (at least {1})",
 							nofElements, length);
 					locatable.getLocation().reportSemanticError(message);
 				}
@@ -301,7 +301,7 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 			if (length.compareTo(BigInteger.valueOf(nofElements)) == -1 && !more_allowed) {
 				final String message = MessageFormat.format(
 						"There are more ({0} {1}) elements than it is allowed by the length restriction ({2})",
-						has_anyornone ? "atleast" : "", nofElements, length);
+						has_anyornone ? "at least" : "", nofElements, length);
 				locatable.getLocation().reportSemanticError(message);
 			}
 		}

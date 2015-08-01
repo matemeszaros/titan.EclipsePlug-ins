@@ -413,6 +413,7 @@ public class PreprocessedTokenStream4 extends BufferedTokenStream {
 			reader = new StringReader(code);
 			charStream = new UnbufferedCharStream(reader);
 			lexer = new TTCN3Lexer4(charStream);
+			lexer.setTokenFactory( new CommonTokenFactory( true ) );
 			rootInt = code.length();
 		} else {
 			try {
@@ -436,6 +437,7 @@ public class PreprocessedTokenStream4 extends BufferedTokenStream {
 			}
 			charStream = new UnbufferedCharStream(reader);
 			lexer = new TTCN3Lexer4(charStream);
+			lexer.setTokenFactory( new CommonTokenFactory( true ) );
 			lexerListener = new TitanListener();
 			lexer.removeErrorListeners(); // remove ConsoleErrorListener
 			lexer.addErrorListener(lexerListener);

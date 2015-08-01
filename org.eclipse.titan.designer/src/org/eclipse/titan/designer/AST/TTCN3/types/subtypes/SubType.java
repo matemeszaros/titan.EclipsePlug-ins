@@ -1146,7 +1146,7 @@ public final class SubType implements IIncrementallyUpdateable {
 				SizeLimit minLimit = (SizeLimit) lengthRestriction.getMinimal();
 				SizeLimit maxLimit = (SizeLimit) lengthRestriction.getMaximal();
 				Template_List list = (Template_List) template;
-				int fixComponents = list.getNofTemplatesNotAnyornone();
+				int fixComponents = list.getNofTemplatesNotAnyornone(timestamp);
 				if (!list.templateContainsAnyornone() && (fixComponents < minLimit.getSize().intValue())) {
 					template.getLocation().reportSemanticError(
 							MessageFormat.format("At least {0} elements must be present in the list", minLimit.getSize()

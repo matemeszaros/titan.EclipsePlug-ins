@@ -27,7 +27,7 @@ public final class ReparseUtilities {
 	public static List<Integer> getAllValidTokenTypes() {
 		List<Integer> result = new ArrayList<Integer>();
 		
-		for (int i = TTCN3LexerTokenTypes.EOF + 1; i < TTCN3LexerTokenTypes.LEXERPLACEHOLDER; i++) {
+		for (int i = TTCN3Lexer4.EOF + 1; i < TTCN3Lexer4.LEXERPLACEHOLDER; i++) {
 			result.add(Integer.valueOf(i));
 		}
 		

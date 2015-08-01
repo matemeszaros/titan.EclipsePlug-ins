@@ -85,7 +85,6 @@
         </run>
      </application>
   </extension>
-  <!--
   <extension
     id="org.eclipse.titanium.applications.ExportAllCodeSmells"
     point="org.eclipse.core.runtime.applications">
@@ -98,7 +97,6 @@
       </run>
       </application>
   </extension>
-  -->
   <extension
     id="org.eclipse.titanium.applications.ExportAllCodeSmellsToCSV"
     point="org.eclipse.core.runtime.applications">
@@ -111,7 +109,6 @@
     </run>
   </application>
   </extension>
-  <!--
   <extension
     id="org.eclipse.titanium.applications.MergeExportedMarkerTables"
     point="org.eclipse.core.runtime.applications">
@@ -124,7 +121,6 @@
       </run>
     </application>
   </extension>
-  -->
   <extension
     id="org.eclipse.titanium.applications.ExportDataForSonar"
     point="org.eclipse.core.runtime.applications">
@@ -278,13 +274,11 @@ Export preferences of Titanium, including setting of
           id="org.eclipse.titanium.actions.ComponentGraphAction"
           name="GenerateComponentGraph">
     </command>
-    <!--
     <command
           defaultHandler="org.eclipse.titanium.actions.ExportProblems"
           id="org.eclipse.titanium.actions.ExportProblems"
           name="ExportMarkers">
     </command>
-    -->
     <command
           defaultHandler="org.eclipse.titanium.actions.ExportDataForSonarAction"
           id="org.eclipse.titanium.actions.ExportDataForSonarAction"
@@ -499,7 +493,6 @@ Export preferences of Titanium, including setting of
                  name="marker"
                  visible="true">
            </separator>
-           <!--
            <command
                  commandId="org.eclipse.titanium.actions.ExportProblems"
                  label="Export problem markers to xls"
@@ -521,7 +514,6 @@ Export preferences of Titanium, including setting of
                  </with>
               </visibleWhen>
            </command>
-           -->
            <command
                  commandId="org.eclipse.titanium.actions.ExportDataForSonarAction"
                  label="Export data for SonarQube"

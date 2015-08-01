@@ -14,12 +14,12 @@ import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
-import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TemplateInstance;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3LexerTokenTypes;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
@@ -136,25 +136,25 @@ public final class Check_Getcall_Statement extends Statement {
 		}
 
 		List<Integer> result = new ArrayList<Integer>();
-		result.add(TTCN3LexerTokenTypes.SENDER);
+		result.add(TTCN3Lexer4.SENDER);
 
 		if (redirect != null) {
 			return result;
 		}
 
-		result.add(TTCN3LexerTokenTypes.PORTREDIRECTSYMBOL);
+		result.add(TTCN3Lexer4.PORTREDIRECTSYMBOL);
 
 		if (fromClause != null) {
 			return result;
 		}
 
-		result.add(TTCN3LexerTokenTypes.FROM);
+		result.add(TTCN3Lexer4.FROM);
 
 		if (parameter != null) {
 			return result;
 		}
 
-		result.add(TTCN3LexerTokenTypes.LPAREN);
+		result.add(TTCN3Lexer4.LPAREN);
 
 		return result;
 	}

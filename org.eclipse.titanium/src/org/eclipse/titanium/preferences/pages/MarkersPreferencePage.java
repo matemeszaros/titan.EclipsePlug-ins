@@ -96,7 +96,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 						+ " it might be a better idea to split to multiple branch,"
 						+ " each with different template matching in the receive statements.");
 		m.put(ProblemTypePreference.IF_WITHOUT_ELSE, "All possible execution paths should be handled,"
-				+ " atleast on the level of logging information in case of unexpected events");
+				+ " at least on the level of logging information in case of unexpected events");
 		m.put(ProblemTypePreference.INCORRECT_SHIFT_ROTATE_SIZE,
 				"Report too big (bigger than the string itself) or too small (negative) shift and rotation sizes.");
 		m.put(ProblemTypePreference.INFINITE_LOOP, "When there is no way to escape the loop");

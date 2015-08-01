@@ -37,7 +37,7 @@ import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3LexerTokenTypes;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
@@ -307,7 +307,7 @@ public abstract class ImportModule extends ModuleImportation implements ILocatea
 	public List<Integer> getPossibleExtensionStarterTokens() {
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>();
-			result.add(TTCN3LexerTokenTypes.WITH);
+			result.add(TTCN3Lexer4.WITH);
 			return result;
 		}
 
@@ -318,8 +318,8 @@ public abstract class ImportModule extends ModuleImportation implements ILocatea
 	public List<Integer> getPossiblePrefixTokens() {
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>(2);
-			result.add(TTCN3LexerTokenTypes.PUBLIC);
-			result.add(TTCN3LexerTokenTypes.PRIVATE);
+			result.add(TTCN3Lexer4.PUBLIC);
+			result.add(TTCN3Lexer4.PRIVATE);
 			return result;
 		}
 

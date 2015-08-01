@@ -1064,7 +1064,7 @@ public final class MarkerHandler {
 	 * @param markerTypeID the type identifier of the marker kind.
 	 * @param file the file to search on.
 	 *
-	 * @return true if there is atleast one marker of the provided kind on the provided file, false otherwise.
+	 * @return true if there is at least one marker of the provided kind on the provided file, false otherwise.
 	 * */
 	public static boolean hasMarker(final String markerTypeID, final IResource file) {
 		if (!MARKERS.containsKey(markerTypeID)) {

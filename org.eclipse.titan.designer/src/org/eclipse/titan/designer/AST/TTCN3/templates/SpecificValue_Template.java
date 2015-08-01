@@ -314,6 +314,10 @@ public final class SpecificValue_Template extends TTCN3Template {
 			return;
 		}
 
+		if (type == null) {
+			return;
+		}
+
 		if (specificValue != null) {
 			specificValue.setMyGovernor(type);
 			type.checkThisValue(timestamp, specificValue, new ValueCheckingOptions(Expected_Value_type.EXPECTED_TEMPLATE, isModified,

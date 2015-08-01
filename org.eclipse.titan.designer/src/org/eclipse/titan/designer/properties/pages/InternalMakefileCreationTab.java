@@ -268,6 +268,7 @@ public final class InternalMakefileCreationTab {
 		for (IOptionsPage page : pages) {
 			page.performDefaults();
 		}
+		setMakefileGenerationEnabled(true);
 	}
 
 	/**

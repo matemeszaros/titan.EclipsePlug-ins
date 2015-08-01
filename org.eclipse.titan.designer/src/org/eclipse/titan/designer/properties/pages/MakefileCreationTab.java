@@ -311,22 +311,16 @@ public final class MakefileCreationTab {
 	 * Defaults button has been pressed.
 	 */
 	protected void performDefaults() {
-		useAbsolutePathButton.setEnabled(true);
 		useAbsolutePathButton.setSelection(MakefileCreationData.USE_ABSOLUTEPATH_DEFAULT_VALUE);
-		gnuMakeButton.setEnabled(true);
 		gnuMakeButton.setSelection(MakefileCreationData.GNU_MAKE_DEFAULT_VALUE);
-		incrementalDependecyRefresh.setEnabled(true);
 		incrementalDependecyRefresh.setSelection(MakefileCreationData.INCREMENTAL_DEPENDENCY_DEFAULT_VALUE);
-		dynamicLinking.setEnabled(true);
 		dynamicLinking.setSelection(MakefileCreationData.DYNAMIC_LINKING_DEFAULT_VALUE);
-		functionTestRuntimeButton.setEnabled(true);
 		functionTestRuntimeButton.setSelection(MakefileCreationData.FUNCTIONTESTRUNTIME_DEFAULT_VALUE);
-		singleModeButton.setEnabled(true);
 		singleModeButton.setSelection(MakefileCreationData.SINGLEMODE_DEFAULT_VALUE);
-		codeSplitting.setEnabled(true, codeSplittingComposite);
 		codeSplitting.setSelectedValue(MakefileCreationData.CODE_SPLITTING_DEFAULT_VALUE);
 		defaultTarget.setSelectedValue(MakefileCreationData.DefaultTarget.getDefault().toString());
 		temporalTargetExecutableFileFieldEditor.setStringValue(MakefileCreationData.getDefaultTargetExecutableName(project));
+		setMakefileGenerationEnabled(true); // everything is enabled in the list just listed
 	}
 
 	/**

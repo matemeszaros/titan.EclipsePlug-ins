@@ -7,6 +7,16 @@
  ******************************************************************************/
 package org.eclipse.titan.executor.executors.jni;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,7 +32,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.cfg.CFGParserTokenTypes;
+import org.eclipse.titan.common.parsers.cfg.CFGLexer2;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
 import org.eclipse.titan.executor.Activator;
 import org.eclipse.titan.executor.GeneralConstants;
@@ -51,16 +61,6 @@ import org.eclipse.titan.executor.views.notification.Notification;
 import org.eclipse.titan.executor.views.testexecution.ExecutedTestcase;
 import org.eclipse.titan.executor.views.testexecution.TestExecutionView;
 import org.eclipse.ui.console.MessageConsoleStream;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This executor handles the execution of tests compiled in a parallel mode, via directly connecting to the MainController written in C++.
@@ -993,12 +993,12 @@ public final class JniExecutor extends BaseExecutor implements IJNICallback {
 		if (configHandler != null) {
 			List<Integer> disallowedNodes = new ArrayList<Integer>();
 
-			disallowedNodes.add(CFGParserTokenTypes.MAIN_CONTROLLER_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.DEFINE_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.INCLUDE_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.COMPONENTS_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.GROUPS_SECTION);
-			disallowedNodes.add(CFGParserTokenTypes.EXECUTE_SECTION);
+			disallowedNodes.add(CFGLexer2.MAIN_CONTROLLER_SECTION);
+			disallowedNodes.add(CFGLexer2.DEFINE_SECTION);
+			disallowedNodes.add(CFGLexer2.INCLUDE_SECTION);
+			disallowedNodes.add(CFGLexer2.COMPONENTS_SECTION);
+			disallowedNodes.add(CFGLexer2.GROUPS_SECTION);
+			disallowedNodes.add(CFGLexer2.EXECUTE_SECTION);
 
 			result += configHandler.toStringResolved(disallowedNodes);
 		}

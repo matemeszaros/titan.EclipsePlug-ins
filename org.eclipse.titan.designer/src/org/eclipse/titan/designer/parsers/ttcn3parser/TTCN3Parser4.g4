@@ -36,8 +36,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.common.parsers.TITANMarker_V4;
+import org.eclipse.titan.common.parsers.TitanListener;
 
 import org.eclipse.titan.designer.AST.*;
 import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
@@ -63,7 +65,7 @@ import org.eclipse.titan.designer.AST.TTCN3.values.expressions.*;
 {
 
 private IFile actualFile = null;
-private int line = 0;
+private int line = 1;
 private int offset = 0;
 
 @SuppressWarnings("unused")
@@ -189,13 +191,59 @@ public Token getStopToken() {
 	return _input.get( _input.index() - 1 );
 }
 
+/**
+ * Create new location, which modified by the parser offset and line,
+ * where the start and end token is the same
+ * @param aToken the start and end token
+ */
 private Location getLocation(final Token aToken) {
 	return getLocation(aToken, aToken);
 }
 
+/**
+ * Create new location, which modified by the parser offset and line
+ * @param aStartToken the 1st token, its line and start position will be used for the location
+ *                  NOTE: start position is the column index of the tokens 1st character.
+ *                        Column index starts with 0.
+ * @param aEndToken the last token, its end position will be used for the location.
+ *                  NOTE: end position is the column index after the token's last character.
+ */
 private Location getLocation(final Token aStartToken, final Token aEndToken) {
 	final Token endToken = (aEndToken != null) ? aEndToken : aStartToken; 
 	return new Location_V4(actualFile, line - 1 + aStartToken.getLine(), offset + aStartToken.getStartIndex(), offset + endToken.getStopIndex() + 1);
+}
+
+/**
+ * Create new location, which modified by the parser offset and line 
+ * @param aBaseLocation location of the start token, location is already modified by offset and line
+ * @param aEndToken end token, NOT null, not modified by offset and line yet
+ */
+private Location getLocation(final Location aBaseLocation, final Token aEndToken) {
+	return new Location_V4(actualFile, aBaseLocation.getLine(), aBaseLocation.getOffset(), offset + aEndToken.getStopIndex() + 1);
+}
+	
+/**
+ * @return list of errors, collected by the TitanListener
+ *         or null if there is no TitanListener (this case should NOT happen)
+ */
+public List<SyntacticErrorStorage> getErrors() {
+	TitanListener titanListener = null;
+	for ( ParseTreeListener listener : this.getParseListeners() ) {
+		// there should be only 1 listener, which is a TitanListener, but let's make it safe
+		if ( listener instanceof TitanListener ) {
+			titanListener = (TitanListener)listener;
+			return titanListener.getErrorsStored();
+		}
+	}
+	return null;
+}
+
+/**
+ * @return true if error list is empty
+ */
+public boolean isErrorListEmpty() {
+	List<SyntacticErrorStorage> errors = getErrors();
+	return ( errors == null || errors.isEmpty() );
 }
 
 }
@@ -240,7 +288,7 @@ pr_ErroneousAttributeSpec returns [ErroneousAttributeSpecification errAttrSpec =
 )
 {
 	$errAttrSpec = new ErroneousAttributeSpecification($indicator.indicator, isRaw, $t.templateInstance, hasAllKeyword);
-	$errAttrSpec.setLocation(new Location_V4(actualFile, $indicator.start, $z));
+	$errAttrSpec.setLocation(getLocation( $indicator.start, $z));
 };
 
 pr_ErroneousIndicator returns [Indicator_Type indicator = null]:
@@ -287,7 +335,7 @@ pr_TTCN3Module
 )
 {
 	act_ttcn3_module.setLocation( new LargeLocation_V4( actualFile, col, endcol ) );
-	act_ttcn3_module.setDefinitionsLocation( new Location_V4( actualFile, $begin.start, definitionsEnd ) );
+	act_ttcn3_module.setDefinitionsLocation( getLocation( $begin.start, definitionsEnd ) );
 	act_ttcn3_module.setWithAttributes( attributes );
 	act_ttcn3_module.setCommentLocation( commentLocation );
 	if ( controlpart != null ) {
@@ -315,7 +363,7 @@ pr_ObjectIdentifierValue returns [ObjectIdentifier_Value value]:
 	endcol = pr_EndChar
 {
 	$value = $v.value;
-	$value.setLocation(new Location_V4(actualFile, $OBJECTIDENTIFIERKEYWORD, $endcol.stop));
+	$value.setLocation(getLocation( $OBJECTIDENTIFIERKEYWORD, $endcol.stop));
 };
 
 pr_ObjIdComponentList returns [ObjectIdentifier_Value value]
@@ -330,13 +378,13 @@ pr_ObjIdComponent returns [ObjectIdentifierComponent objidComponent = null]:
 (	v = pr_ReferencedValue
 		{	if ($v.value != null) {
 				$objidComponent = new ObjectIdentifierComponent($v.value);
-				$objidComponent.setLocation(new Location_V4(actualFile, $v.start, $v.stop));
+				$objidComponent.setLocation(getLocation( $v.start, $v.stop));
 			}
 		}
 |	i = pr_Identifier
 		{	if ($i.identifier != null) {
 				$objidComponent = new ObjectIdentifierComponent($i.identifier, null);
-				$objidComponent.setLocation(new Location_V4(actualFile, $i.start, $i.stop));
+				$objidComponent.setLocation(getLocation( $i.start, $i.stop));
 			}
 		}
 |	o = pr_NumberForm { $objidComponent = $o.objidComponent;}
@@ -347,9 +395,9 @@ pr_NumberForm returns [ObjectIdentifierComponent objidComponent = null]:
 	NUMBER
 {
 	Value value = new Integer_Value($NUMBER.getText());
-	value.setLocation(new Location_V4(actualFile, $NUMBER));
+	value.setLocation(getLocation( $NUMBER));
 	$objidComponent = new ObjectIdentifierComponent(null, value);
-	$objidComponent.setLocation(new Location_V4(actualFile, $NUMBER));
+	$objidComponent.setLocation(getLocation( $NUMBER));
 };
 
 pr_NameAndNumberForm returns [ObjectIdentifierComponent objidComponent = null]:
@@ -359,9 +407,9 @@ pr_NameAndNumberForm returns [ObjectIdentifierComponent objidComponent = null]:
 	RPAREN
 {
 	Value value = new Integer_Value($NUMBER.getText());
-	value.setLocation(new Location_V4(actualFile, $NUMBER));
+	value.setLocation(getLocation( $NUMBER));
 	$objidComponent = new ObjectIdentifierComponent($i.identifier, value);
-	$objidComponent.setLocation(new Location_V4(actualFile, $i.start, $RPAREN));
+	$objidComponent.setLocation(getLocation( $i.start, $RPAREN));
 };
 
 // ASN.1 with TTCN-3 BNF Extension End
@@ -497,7 +545,7 @@ pr_StructuredTypeDef returns[Def_Type def_type = null]:
 )
 {
 	if ( $def_type != null ) {
-	$def_type.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$def_type.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -511,7 +559,7 @@ pr_RecordDef returns[Def_Type def_type = null]
 {
 	if($i.identifier != null) {
 		TTCN3_Sequence_Type type = new TTCN3_Sequence_Type(compFieldMap);
-		type.setLocation(new Location_V4(actualFile, $col.start, $i.stop));
+		type.setLocation(getLocation( $col.start, $i.stop));
 		$def_type = new Def_Type($i.identifier, type);
 	}
 	lexer.clearLastCommentLocation();
@@ -527,7 +575,7 @@ pr_StructDefBody[CompFieldMap compFieldMap] returns[Identifier identifier = null
 }:
 (	(	i = pr_Identifier { $identifier = $i.identifier; }
 		pr_StructDefFormalParList?
-	|	ADDRESS  { $identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", new Location_V4(actualFile, $ADDRESS)); }
+	|	ADDRESS  { $identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", getLocation( $ADDRESS)); }
 	)
 	begin = pr_BeginChar
 	(	c = pr_StructFieldDef { compFieldMap.addComp($c.compField); }
@@ -538,7 +586,7 @@ pr_StructDefBody[CompFieldMap compFieldMap] returns[Identifier identifier = null
 	endcol = pr_EndChar
 )
 {
-	if( $compFieldMap != null ) { $compFieldMap.setLocation(new Location_V4(actualFile, $begin.start, $endcol.stop)); }
+	if( $compFieldMap != null ) { $compFieldMap.setLocation(getLocation( $begin.start, $endcol.stop)); }
 };
 
 pr_StructDefFormalParList:
@@ -589,11 +637,11 @@ pr_StructFieldDef returns[CompField compField = null]
 		if( dimensions != null ) {
 			for ( int i = dimensions.size() - 1; i >= 0; i-- ) {
 				type = new Array_Type(type, dimensions.get(i), true);
-				type.setLocation(new Location_V4(actualFile, $d.start, $d.stop));
+				type.setLocation(getLocation( $d.start, $d.stop));
 			}
 		}
 		$compField = new CompField($i.identifier, type, optional, null);
-		$compField.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$compField.setLocation(getLocation( $start, getStopToken()));
 		Location commentLocation = lexer.getLastCommentLocation();
 		$compField.setCommentLocation(commentLocation);
 		lexer.clearLastCommentLocation();
@@ -628,9 +676,9 @@ pr_NestedRecordDef returns[Type type = null]
 	endcol = pr_EndChar
 )
 {
-	compFieldMap.setLocation(new Location_V4(actualFile, $begin.start, $endcol.stop));
+	compFieldMap.setLocation(getLocation( $begin.start, $endcol.stop));
 	$type = new TTCN3_Sequence_Type(compFieldMap);
-	$type.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_NestedUnionDef returns[Type type = null]
@@ -647,9 +695,9 @@ pr_NestedUnionDef returns[Type type = null]
 	endcol = pr_EndChar
 )
 {
-	compFieldMap.setLocation(new Location_V4(actualFile, $begin.start, $endcol.stop));
+	compFieldMap.setLocation(getLocation( $begin.start, $endcol.stop));
 	$type = new TTCN3_Choice_Type(compFieldMap);
-	$type.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_NestedSetDef returns[Type type = null]
@@ -666,9 +714,9 @@ pr_NestedSetDef returns[Type type = null]
 	endcol = pr_EndChar
 )
 {
-	compFieldMap.setLocation(new Location_V4(actualFile, $begin.start, $endcol.stop));
+	compFieldMap.setLocation(getLocation( $begin.start, $endcol.stop));
 	$type = new TTCN3_Set_Type(compFieldMap);
-	$type.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_NestedRecordOfDef returns[SequenceOf_Type type = null]
@@ -690,7 +738,7 @@ pr_NestedRecordOfDef returns[SequenceOf_Type type = null]
 		parsedSubTypes.add(new Length_ParsedSubType(restriction));
 		$type.setParsedRestrictions(parsedSubTypes);
 	}
-	$type.setLocation(new Location_V4(actualFile, $col.start, getStopToken()));
+	$type.setLocation(getLocation( $col.start, getStopToken()));
 };
 
 pr_NestedSetOfDef returns[SetOf_Type type = null]
@@ -712,7 +760,7 @@ pr_NestedSetOfDef returns[SetOf_Type type = null]
 		parsedSubTypes.add(new Length_ParsedSubType(restriction));
 		$type.setParsedRestrictions(parsedSubTypes);
 	}
-	$type.setLocation(new Location_V4(actualFile, $col.start, getStopToken()));
+	$type.setLocation(getLocation( $col.start, getStopToken()));
 };
 
 pr_NestedEnumDef returns[Type type = null]
@@ -725,9 +773,9 @@ pr_NestedEnumDef returns[Type type = null]
 	endcol = pr_EndChar
 )
 {
-	if(items != null) { items.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop)); }
+	if(items != null) { items.setLocation(getLocation( $col.start, $endcol.stop)); }
 	$type = new TTCN3_Enumerated_Type(items);
-	$type.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_NestedFunctionTypeDef returns[Type type = null]
@@ -756,9 +804,9 @@ pr_NestedFunctionTypeDef returns[Type type = null]
 )
 {
 	if(parList == null) { parList = new FormalParameterList(new ArrayList<FormalParameter>()); }
-	parList.setLocation(new Location_V4( actualFile, $start1.start, $end1.stop));
+	parList.setLocation(getLocation( $start1.start, $end1.stop));
 	$type = new Function_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf, returnType, returnsTemplate, template_restriction);
-	$type.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$type.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_NestedAltstepTypeDef returns[Type type = null]
@@ -774,9 +822,9 @@ pr_NestedAltstepTypeDef returns[Type type = null]
 )
 {
 	if(parList == null) { parList = new FormalParameterList(new ArrayList<FormalParameter>()); }
-	parList.setLocation(new Location_V4( actualFile, $start1.start, $end1.stop));
+	parList.setLocation(getLocation( $start1.start, $end1.stop));
 	$type = new Altstep_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf);
-	$type.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$type.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_NestedTestcaseTypeDef returns[Type type = null]
@@ -799,9 +847,9 @@ pr_NestedTestcaseTypeDef returns[Type type = null]
 		}
 {
 	if(parList == null) { parList = new TestcaseFormalParameterList(new ArrayList<FormalParameter>()); }
-	parList.setLocation(new Location_V4( actualFile, $start1.start, $end.stop));
+	parList.setLocation(getLocation( $start1.start, $end.stop));
 	$type = new Testcase_Type(parList, runsonReference, systemReference);
-	$type.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+	$type.setLocation(getLocation( $col.start, $h.stop));
 };
 
 pr_OptionalKeyword:
@@ -818,7 +866,7 @@ pr_UnionDef returns[Def_Type def_type = null]
 {
 	if($i.identifier != null) {
 		TTCN3_Choice_Type type = new TTCN3_Choice_Type(compFieldMap);
-		type.setLocation(new Location_V4(actualFile, $col.start, $i.stop));
+		type.setLocation(getLocation( $col.start, $i.stop));
 		$def_type = new Def_Type($i.identifier, type);
 	}
 };
@@ -833,7 +881,7 @@ pr_UnionDefBody[CompFieldMap compFieldMap] returns[Identifier identifier = null]
 }:
 (	(	i = pr_Identifier { $identifier = $i.identifier; }
 		pr_StructDefFormalParList?
-	|	ADDRESS { $identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", new Location_V4(actualFile, $ADDRESS)); }
+	|	ADDRESS { $identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", getLocation( $ADDRESS)); }
 	)
 	(	begin = pr_BeginChar
 		c = pr_UnionFieldDef { compFieldMap.addComp($c.compField); }
@@ -844,7 +892,7 @@ pr_UnionDefBody[CompFieldMap compFieldMap] returns[Identifier identifier = null]
 	)
 )
 {
-	if( $compFieldMap != null ) { $compFieldMap.setLocation(new Location_V4(actualFile, $begin.start, $endcol.stop )); }
+	if( $compFieldMap != null ) { $compFieldMap.setLocation(getLocation( $begin.start, $endcol.stop )); }
 };
 
 pr_UnionFieldDef returns[CompField compField = null]
@@ -875,11 +923,11 @@ pr_UnionFieldDef returns[CompField compField = null]
 	if (dimensions != null) {
 		for (int i = dimensions.size() - 1; i >= 0; i--) {
 			type = new Array_Type(type, dimensions.get(i), true);
-			type.setLocation(new Location_V4(actualFile, $d.start, $d.stop));
+			type.setLocation(getLocation( $d.start, $d.stop));
 		}
 	}
 	$compField = new CompField($i.identifier, type, false, null);
-	$compField.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$compField.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_SetDef returns[Def_Type def_type = null]
@@ -892,7 +940,7 @@ pr_SetDef returns[Def_Type def_type = null]
 {
 	if($i.identifier != null) {
 		TTCN3_Set_Type type = new TTCN3_Set_Type(compFieldMap);
-		type.setLocation(new Location_V4(actualFile, $col.start, $i.stop));
+		type.setLocation(getLocation( $col.start, $i.stop));
 		$def_type = new Def_Type($i.identifier, type);
 	}
 };
@@ -920,7 +968,7 @@ pr_RecordOfDef returns[Def_Type def_type = null]
 			parsedSubTypes.add(new Length_ParsedSubType(restriction));
 			type.setParsedRestrictions(parsedSubTypes);
 		}
-		type.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+		type.setLocation(getLocation( $col.start, $h.stop));
 		$def_type = new Def_Type(helper.identifier, type);
 		$def_type.setCommentLocation(commentLocation);
 	}
@@ -942,7 +990,7 @@ pr_StructOfDefBody returns[Type_Identifier_Helper helper]
 	)
 	
 	(	i = pr_Identifier { identifier = $i.identifier; }
-	|	ADDRESS { identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", new Location_V4(actualFile, $ADDRESS)); }
+	|	ADDRESS { identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", getLocation( $ADDRESS)); }
 	)
 	
 	( p = pr_SubTypeSpec { parsedSubTypes = $p.parsedSubTypes; } )?
@@ -981,7 +1029,7 @@ pr_SetOfDef returns[Def_Type def_type = null]
 			parsedSubTypes.add(new Length_ParsedSubType(restriction));
 			type.setParsedRestrictions(parsedSubTypes);
 		}
-		type.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+		type.setLocation(getLocation( $col.start, $h.stop));
 		$def_type = new Def_Type(helper.identifier, type);
 	}
 };
@@ -993,7 +1041,7 @@ pr_EnumDef returns[Def_Type def_type = null]
 }:
 (	col = pr_EnumKeyword
 	(	id = pr_Identifier { identifier = $id.identifier; }
-	|	ADDRESS { identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", new Location_V4(actualFile, $ADDRESS)); }
+	|	ADDRESS { identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", getLocation( $ADDRESS)); }
 	)
 	pr_BeginChar
 	e = pr_EnumerationList { items = $e.items; }
@@ -1002,7 +1050,7 @@ pr_EnumDef returns[Def_Type def_type = null]
 {
 	if(identifier != null && items != null) {
 		Type type = new TTCN3_Enumerated_Type(items);
-		type.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+		type.setLocation(getLocation( $col.start, $endcol.stop));
 		$def_type = new Def_Type(identifier, type);
 	}
 };
@@ -1033,14 +1081,14 @@ pr_Enumeration returns[EnumItem enumItem = null]
 			{
 				value = new Integer_Value($NUMBER.getText());
 				if(minus) { (value).changeSign(); }
-				value.setLocation(new Location_V4(actualFile, $NUMBER));
+				value.setLocation(getLocation( $NUMBER));
 			}
 		pr_RParen
 	)?
 )
 {
 	$enumItem = new EnumItem($i.identifier, value);
-	$enumItem.setLocation(new Location_V4(actualFile, $i.start, $i.stop));
+	$enumItem.setLocation(getLocation( $i.start, $i.stop));
 	Location commentLocation = lexer.getLastCommentLocation();
 	$enumItem.setCommentLocation(commentLocation);
 	if ( commentLocation != null ) {
@@ -1056,7 +1104,7 @@ pr_SubTypeDef returns[Def_Type def_type = null]
 }:
 (	t = pr_Type
 	(	i = pr_Identifier { identifier = $i.identifier; }
-	|	ADDRESS	{ identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", new Location_V4(actualFile, $ADDRESS)); }
+	|	ADDRESS	{ identifier = new Identifier(Identifier_type.ID_TTCN, "ADDRESS", getLocation( $ADDRESS)); }
 	)
 	( a = pr_ArrayDef { dimensions = $a.dimensions; } )?
 	( s = pr_SubTypeSpec { parsedSubTypes = $s.parsedSubTypes; } )?
@@ -1068,12 +1116,12 @@ pr_SubTypeDef returns[Def_Type def_type = null]
 	if (dimensions != null) {
 		for (int i = dimensions.size() - 1; i >= 0; i--) {
 			$t.type = new Array_Type($t.type, dimensions.get(i), true);
-			$t.type.setLocation(new Location_V4(actualFile, $a.start, $a.stop));
+			$t.type.setLocation(getLocation( $a.start, $a.stop));
 		}
 	}
 	if(identifier != null && $t.type != null) {
 		$def_type = new Def_Type(identifier, $t.type);
-		$def_type.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$def_type.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -1153,7 +1201,7 @@ pr_StringLength returns[LengthRestriction restriction = null]
 	} else {
 		$restriction = new RangeLenghtRestriction( $lower.value, $upper.value );
 	}
-	$restriction.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$restriction.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_LengthKeyword:
@@ -1171,9 +1219,9 @@ pr_PortType returns[Reference reference = null]:
 		$reference = new Reference(null);
 	}
 	FieldSubReference subReference = new FieldSubReference($id.identifier);
-	subReference.setLocation(new Location_V4(actualFile, $id.start, $id.stop));
+	subReference.setLocation(getLocation( $id.start, $id.stop));
 	$reference.addSubReference(subReference);
-	$reference.setLocation(new Location_V4(actualFile, $start, $id.stop));
+	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
 pr_PortDef returns[ Def_Type def_type = null]
@@ -1187,7 +1235,7 @@ pr_PortDef returns[ Def_Type def_type = null]
 {
 	if($i.identifier != null && $b.body != null) {
 		Type type = new Port_Type($b.body);
-		type.setLocation(new Location_V4(actualFile, $col.start, $b.stop));
+		type.setLocation(getLocation( $col.start, $b.stop));
 
 		$def_type = new Def_Type($i.identifier, type);
 		$def_type.setCommentLocation(commentLocation);
@@ -1206,7 +1254,7 @@ pr_PortDefAttribs returns[PortTypeBody body = null]:
 )
 {
 	if($body != null) {
-		$body.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$body.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -1313,17 +1361,17 @@ pr_ComponentDef returns[Def_Type def_type = null]
 )
 {
 	if($i.identifier != null) {
-		extends_refs.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+		extends_refs.setLocation(getLocation( $col.start, $endcol.stop));
 		if(component == null) {
 			component = new ComponentTypeBody($i.identifier, extends_refs);
 		}
-		component.setLocation(new Location_V4( $i.identifier.getLocation(), $endcol.stop ) );
+		component.setLocation(getLocation( $i.identifier.getLocation(), $endcol.stop ) );
 	    component.setCommentLocation(commentLocation);
 	    lexer.clearLastCommentLocation();
 		Type type = new Component_Type(component);
-		type.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+		type.setLocation(getLocation( $col.start, $endcol.stop));
 		$def_type = new Def_Type($i.identifier, type);
-		$def_type.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+		$def_type.setLocation(getLocation( $col.start, $endcol.stop));
 	}
 };
 
@@ -1346,9 +1394,9 @@ pr_ComponentType returns[Reference reference = null]:
 		$reference = new Reference(null);
 	}
 	FieldSubReference subReference = new FieldSubReference($id.identifier);
-	subReference.setLocation(new Location_V4(actualFile, $id.start, $id.stop));
+	subReference.setLocation(getLocation( $id.start, $id.stop));
 	$reference.addSubReference(subReference);
-	$reference.setLocation(new Location_V4(actualFile, $start, $id.stop));
+	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
 pr_ComponentTypeIdentifier returns [Identifier identifier = null]:
@@ -1429,7 +1477,7 @@ pr_PortElement[Reference portTypeReference]
 {
 	if($i.identifier != null) {
 		$def_port = new Def_Port( $i.identifier, $portTypeReference, dimensions );
-		$def_port.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$def_port.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -1478,11 +1526,11 @@ pr_SingleConstDef[Type type] returns[ Def_Const def_const = null]
 		if (dimensions != null) {
 			for (int i = dimensions.size() - 1; i >= 0; i--) {
 				tempType = new Array_Type(tempType, dimensions.get(i), false);
-				tempType.setLocation(new Location_V4(actualFile, $i.stop, $a.start));
+				tempType.setLocation(getLocation( $i.stop, $a.start));
 			}
 		}
 		$def_const = new Def_Const_V4($i.identifier, tempType, $v.value);
-		$def_const.setLocation(new Location_V4(actualFile, $i.start, $v.stop));
+		$def_const.setLocation(getLocation( $i.start, $v.stop));
 	}
 };
 
@@ -1518,9 +1566,9 @@ pr_FunctionTypeDef returns[Def_Type def_type = null]
 {
 	if($i.identifier != null) {
 		if(parList == null) { parList = new FormalParameterList(new ArrayList<FormalParameter>()); }
-		parList.setLocation(new Location_V4( actualFile, $start1.start, $end1.stop));
+		parList.setLocation(getLocation( $start1.start, $end1.stop));
 		Type type = new Function_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf, returnType, returnsTemplate, template_restriction);
-		type.setLocation(new Location_V4(actualFile, $col.start, getStopToken()));
+		type.setLocation(getLocation( $col.start, getStopToken()));
 		$def_type = new Def_Type($i.identifier, type);
 	}
 };
@@ -1541,9 +1589,9 @@ pr_AltstepTypeDef returns[Def_Type def_type = null]
 {
 	if($i.identifier != null) {
 		if(parList == null) { parList = new FormalParameterList(new ArrayList<FormalParameter>()); }
-		parList.setLocation(new Location_V4( actualFile, $start1.start, $end1.stop));
+		parList.setLocation(getLocation( $start1.start, $end1.stop));
 		Type type = new Altstep_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf);
-		type.setLocation(new Location_V4(actualFile, $col.start, endcol));
+		type.setLocation(getLocation( $col.start, endcol));
 		$def_type = new Def_Type($i.identifier, type);
 	}
 };
@@ -1571,9 +1619,9 @@ pr_TestcaseTypeDef returns[Def_Type def_type = null]
 {
 	if($i.identifier != null) {
 		if(parList == null) { parList = new TestcaseFormalParameterList(new ArrayList<FormalParameter>()); }
-		parList.setLocation(new Location_V4( actualFile, $start1.start, $end.stop));
+		parList.setLocation(getLocation( $start1.start, $end.stop));
 		Type type = new Testcase_Type(parList, runsonReference, systemReference);
-		type.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+		type.setLocation(getLocation( $col.start, $h.stop));
 		$def_type = new Def_Type($i.identifier, type);
 	}
 };
@@ -1595,7 +1643,7 @@ pr_TemplateDef returns[Def_Template def_template = null]
 {
 	if(helper.identifier != null && helper.type != null && $b.body != null) {
 		$def_template = new Def_Template(template_restriction, helper.identifier, helper.type, helper.formalParList, derived_reference, $b.body.getTemplate());
-		$def_template.setLocation(new Location_V4(actualFile, $col.start, $b.stop));
+		$def_template.setLocation(getLocation( $col.start, $b.stop));
 		$def_template.setCommentLocation(lexer.getLastCommentLocation());
 	}
 };
@@ -1616,7 +1664,7 @@ pr_BaseTemplate [Template_definition_helper helper]
 	$helper.identifier = $i.identifier;
 	if(formalParList != null) {
 		helper.formalParList = formalParList;
-		helper.formalParList.setLocation(new Location_V4( actualFile, $formalStart.start, getStopToken() ));
+		helper.formalParList.setLocation(getLocation( $formalStart.start, getStopToken() ));
 	}
 };
 
@@ -1715,7 +1763,7 @@ pr_FieldSpecList returns[TTCN3Template template = null]
 	} else {
 		$template = new Named_Template_List(namedTemplates);
 	}
-	$template.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$template.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 //From FieldSpec the AllElementsFrom handling is excluded therefore TemplateBody is replaced with its template
@@ -1727,7 +1775,7 @@ pr_FieldSpec returns[NamedTemplate namedTemplate = null]:
 {
 	if($name.identifier != null && $b.body != null) {
 		$namedTemplate = new NamedTemplate($name.identifier, $b.body.getTemplate());
-		$namedTemplate.setLocation(new Location_V4(actualFile, $name.start, $b.stop));
+		$namedTemplate.setLocation(getLocation( $name.start, $b.stop));
 	}
 };
 
@@ -1739,7 +1787,7 @@ pr_FieldReference returns[Identifier identifier = null]:
 
 pr_StructFieldRef returns[Identifier identifier = null]:
 (	t = pr_PredefinedType
-		{	$identifier = new Identifier(Identifier_type.ID_TTCN, $t.type.getTypename(), new Location_V4(actualFile, $t.start, $t.stop ));	}
+		{	$identifier = new Identifier(Identifier_type.ID_TTCN, $t.type.getTypename(), getLocation( $t.start, $t.stop ));	}
 |	(	id = pr_Identifier { $identifier = $id.identifier; }
 		pr_TypeActualParList?
 	)
@@ -1759,7 +1807,7 @@ pr_ArraySpecList returns[Indexed_Template_List indexed_template_list = null]
 )
 {
 	$indexed_template_list = new Indexed_Template_List(templates);
-	$indexed_template_list.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$indexed_template_list.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_ArraySpec returns[IndexedTemplate indexedTemplate = null]:
@@ -1770,7 +1818,7 @@ pr_ArraySpec returns[IndexedTemplate indexedTemplate = null]:
 {
 	if ($index.subReference != null && $b.body != null) {
 		$indexedTemplate = new IndexedTemplate($index.subReference, $b.body);
-		$indexedTemplate.setLocation(new Location_V4(actualFile, $index.start, $b.stop));
+		$indexedTemplate.setLocation(getLocation( $index.start, $b.stop));
 	}
 };
 
@@ -1783,14 +1831,14 @@ pr_ArrayOrBitRefOrDash returns[ArraySubReference subReference = null]
 	|	d = pr_Dash
 			{
 				value = new Notused_Value();
-				value.setLocation(new Location_V4(actualFile, $d.start, $d.stop));
+				value.setLocation(getLocation( $d.start, $d.stop));
 			}
 	)
 	endcol = pr_SquareClose
 )
 {
 	$subReference = new ArraySubReference(value);
-	$subReference.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$subReference.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_ArrayOrBitRef returns[ArraySubReference subReference = null]:
@@ -1800,7 +1848,7 @@ pr_ArrayOrBitRef returns[ArraySubReference subReference = null]:
 )
 {
 	$subReference = new ArraySubReference($v.value);
-	$subReference.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$subReference.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_SingleValueOrAttrib returns[TTCN3Template template = null]:
@@ -1812,7 +1860,7 @@ pr_SingleValueOrAttrib returns[TTCN3Template template = null]:
 )
 {
 	if ($template != null) {
-		$template.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$template.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -1827,7 +1875,7 @@ pr_ArrayValueOrAttrib returns[TTCN3Template template = null]:
 	} else {
 		$template = new Template_List($t.templates);
 	}
-	$template.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$template.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_ArrayElementSpecList returns[ListOfTemplates templates]
@@ -1855,7 +1903,7 @@ pr_ArrayElementSpec returns[ TemplateBody body = null ]
 )
 {
 	if($body != null) {
-		  $body.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		  $body.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -1890,7 +1938,7 @@ pr_MatchingSymbol returns[TTCN3Template template = null]
 )
 {
 	if($template != null) {
-		$template.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$template.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -2072,7 +2120,7 @@ pr_TemplateRefWithParList returns[Reference reference = null]
 		subReference.setLocation(new Location_V4(parameters.getLocation()));
 		$reference.addSubReference(subReference);
 	}
-	$reference.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$reference.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_TemplateRef returns[Reference reference = null]:
@@ -2086,7 +2134,7 @@ pr_TemplateRef returns[Reference reference = null]:
 		$reference = new Reference(null);
 	}
 	$reference.addSubReference(new FieldSubReference($id.identifier));
-	$reference.setLocation(new Location_V4(actualFile, $start, $id.stop));
+	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
 pr_InLineTemplate returns[TemplateInstance templateInstance = null]
@@ -2106,7 +2154,7 @@ pr_InLineTemplate returns[TemplateInstance templateInstance = null]
 {
 	if($b.body != null) {
 		$templateInstance = new TemplateInstance(type, derived, $b.body.getTemplate());
-		$templateInstance.setLocation(new Location_V4(actualFile, $start, $b.stop));
+		$templateInstance.setLocation(getLocation( $start, $b.stop));
 	}
 };
 
@@ -2127,16 +2175,16 @@ pr_TemplateActualParList returns [ParsedActualParameters parsedParameters]
 	endcol = pr_RParen
 )
 {
-	$parsedParameters.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$parsedParameters.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_TemplateActualPar returns[TemplateInstance instance = null]:
 (	pr_NotUsedSymbol
 	{
 		TTCN3Template template = new NotUsed_Template();
-		template.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		template.setLocation(getLocation( $start, getStopToken()));
 		$instance = new TemplateInstance(null, null, template);
-		$instance.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$instance.setLocation(getLocation( $start, getStopToken()));
 	}
 |	t = pr_TemplateInstance { $instance = $t.templateInstance; }
 );
@@ -2157,7 +2205,7 @@ pr_MatchOp returns[MatchExpression value = null]:
 )
 {
 	$value = new MatchExpression($v.value, $t.templateInstance);
-	$value.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$value.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_MatchKeyword:
@@ -2172,7 +2220,7 @@ pr_ValueofOp returns[ValueofExpression value = null]:
 )
 {
 	$value = new ValueofExpression($t.templateInstance);
-	$value.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$value.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_ValueofKeyword returns[String stringValue]:
@@ -2215,9 +2263,9 @@ pr_FunctionDef returns[Def_Function def_func = null]
 {
 	if($i.identifier != null && statementBlock != null) {
 		if(parameters == null) { parameters = new FormalParameterList(new ArrayList<FormalParameter>()); }
-		parameters.setLocation(new Location_V4(actualFile, $start1.start, $end.stop));
+		parameters.setLocation(getLocation( $start1.start, $end.stop));
 		$def_func = new Def_Function($i.identifier, parameters, runsonHelper.runsonReference, returnType, returnsTemplate, template_restriction, statementBlock);
-		$def_func.setLocation(new Location_V4(actualFile, $col.start, $s.stop));
+		$def_func.setLocation(getLocation( $col.start, $s.stop));
 		$def_func.setCommentLocation(commentLocation);
 	}
 };
@@ -2315,7 +2363,7 @@ pr_FunctionStatementOrDef returns[List<Statement> statements]
 	if(definitions != null) {
 		for(Definition definition : definitions) {
 			Statement temp_statement = new Definition_Statement(definition);
-			temp_statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+			temp_statement.setLocation(getLocation( $start, getStopToken()));
 			$statements.add(temp_statement);
 		}
 	} else if(statement != null) {
@@ -2361,7 +2409,7 @@ pr_TestcaseStopStatement returns[TestcaseStop_Statement statement = null]
 )
 {
 	$statement = new TestcaseStop_Statement(logArguments);
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_FunctionInstance returns[Reference temporalReference = null]
@@ -2379,11 +2427,11 @@ pr_FunctionInstance returns[Reference temporalReference = null]
 		if(parameters == null) {
 			parameters = new ParsedActualParameters();
 		}
-		parameters.setLocation(new Location_V4(actualFile, $a.start, $endcol.stop));
+		parameters.setLocation(getLocation( $a.start, $endcol.stop));
 		subReference = new ParameterisedSubReference(subReference.getId(), parameters);
-		((ParameterisedSubReference) subReference).setLocation(new Location_V4(actualFile, $start, $endcol.stop));
+		((ParameterisedSubReference) subReference).setLocation(getLocation( $start, $endcol.stop));
 		$temporalReference.addSubReference(subReference);
-		$temporalReference.setLocation(new Location_V4(actualFile, $start, $endcol.stop));
+		$temporalReference.setLocation(getLocation( $start, $endcol.stop));
 	}
 };
 
@@ -2395,25 +2443,25 @@ pr_FunctionRef returns[Reference reference = null]:
 		i2 = pr_Identifier
 		{	$reference = new Reference($i1.identifier);
 			FieldSubReference subReference = new FieldSubReference($i2.identifier);
-			subReference.setLocation(new Location_V4(actualFile, $i2.start, $i2.stop));
+			subReference.setLocation(getLocation( $i2.start, $i2.stop));
 			$reference.addSubReference(subReference);
 		}
 	|	DOT
 		i2 = pr_Identifier
 		{	$reference = new Reference($i1.identifier);
 			FieldSubReference subReference = new FieldSubReference($i2.identifier);
-			subReference.setLocation(new Location_V4(actualFile, $i2.start, $i2.stop));
+			subReference.setLocation(getLocation( $i2.start, $i2.stop));
 			$reference.addSubReference(subReference);
 		}
 	|	{	$reference = new Reference(null);
 			FieldSubReference subReference = new FieldSubReference($i1.identifier);
-			subReference.setLocation(new Location_V4(actualFile, $i1.start, $i1.stop));
+			subReference.setLocation(getLocation( $i1.start, $i1.stop));
 			$reference.addSubReference(subReference);
 		}
 	)
 )
 {
-	$reference.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$reference.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_FunctionActualParList returns [ParsedActualParameters parsedParameters]
@@ -2435,7 +2483,7 @@ pr_FunctionActualorNamedPar [boolean isStillUnnamed, ParsedActualParameters pars
 			{	$isUnnamed = false;
 				if($i.identifier != null) {
 					NamedParameter named = new NamedParameter($i.identifier, $ins.instance);
-					named.setLocation(new Location_V4(actualFile, $start, $ins.stop));
+					named.setLocation(getLocation( $start, $ins.stop));
 					parsedParameters.addNamedParameter(named);
 				}
 			}
@@ -2448,9 +2496,9 @@ pr_FunctionActualorNamedPar [boolean isStillUnnamed, ParsedActualParameters pars
 pr_FunctionActualPar returns[TemplateInstance instance = null]:
 (	n = pr_NotUsedSymbol
 		{	TTCN3Template template = new NotUsed_Template();
-			template.setLocation(new Location_V4(actualFile, $n.start, $n.stop));
+			template.setLocation(getLocation( $n.start, $n.stop));
 			$instance = new TemplateInstance(null, null, template);
-			$instance.setLocation(new Location_V4(actualFile, $n.start, $n.stop));
+			$instance.setLocation(getLocation( $n.start, $n.stop));
 		}
 |	t = pr_TemplateInstance { $instance = $t.templateInstance; }
 );
@@ -2467,7 +2515,7 @@ pr_ApplyOpEnd returns [ParsedActualParameters parsedParameters]
 )
 {
 	if ($parsedParameters != null) {
-		$parsedParameters.setLocation(new Location_V4(actualFile, $l.start, $endcol.stop));
+		$parsedParameters.setLocation(getLocation( $l.start, $endcol.stop));
 	}
 };
 
@@ -2507,13 +2555,13 @@ pr_SignatureDef returns[ Def_Type def_type = null]
 	if($i.identifier != null) {
 		if(parameters == null) {
 			parameters = new SignatureFormalParameterList(new ArrayList<SignatureFormalParameter>());
-			parameters.setLocation(new Location_V4(actualFile, $beginpar.start, $endpar.stop));
+			parameters.setLocation(getLocation( $beginpar.start, $endpar.stop));
 		}
 
 		Type type = new Signature_Type(parameters, returnType, no_block, exceptions);
-		type.setLocation(new Location_V4(actualFile, $col.start, getStopToken()));
+		type.setLocation(getLocation( $col.start, getStopToken()));
 		$def_type = new Def_Type($i.identifier, type);
-		$def_type.setLocation(new Location_V4(actualFile, $col.start, getStopToken()));
+		$def_type.setLocation(getLocation( $col.start, getStopToken()));
 		Location commentLocation = lexer.getLastCommentLocation();
 		$def_type.setCommentLocation(commentLocation);
 		if (commentLocation != null) {
@@ -2554,7 +2602,7 @@ pr_SignatureFormalPar returns[SignatureFormalParameter parameter = null]
 )
 {
 	$parameter = new SignatureFormalParameter(parameterType, $t.type, $i.identifier);
-	$parameter.setLocation(new Location_V4(actualFile, startcol, $i.stop));
+	$parameter.setLocation(getLocation( startcol, $i.stop));
 };
 
 pr_ExceptionSpec returns[SignatureExceptions exceptions = null]:
@@ -2565,7 +2613,7 @@ pr_ExceptionSpec returns[SignatureExceptions exceptions = null]:
 )
 {
 	$exceptions = new SignatureExceptions($t.types);
-	$exceptions.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$exceptions.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_ExceptionKeyword:
@@ -2597,9 +2645,9 @@ pr_Signature returns[Reference reference = null]:
 		$reference = new Reference(null);
 	}
 	FieldSubReference subReference = new FieldSubReference($id.identifier);
-	subReference.setLocation(new Location_V4(actualFile, $id.start, $id.stop));
+	subReference.setLocation(getLocation( $id.start, $id.stop));
 	$reference.addSubReference(subReference);
-	$reference.setLocation(new Location_V4(actualFile, $start, $id.stop));
+	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
 pr_TestcaseDef returns[ Def_Testcase def_testcase = null]
@@ -2625,9 +2673,9 @@ pr_TestcaseDef returns[ Def_Testcase def_testcase = null]
 	Location commentLocation = lexer.getLastCommentLocation();
 	if($i.identifier != null) {
 		if(parameters == null) { parameters = new TestcaseFormalParameterList(new ArrayList<FormalParameter>()); }
-		parameters.setLocation(new Location_V4( actualFile, $start1.start, $end.stop));
+		parameters.setLocation(getLocation( $start1.start, $end.stop));
 		$def_testcase = new Def_Testcase($i.identifier, parameters, runsonReference, systemReference, statementBlock);
-		$def_testcase.setLocation(new Location_V4(actualFile, $col.start, $s.stop));
+		$def_testcase.setLocation(getLocation( $col.start, $s.stop));
 		$def_testcase.setCommentLocation(commentLocation);
 	}
 	lexer.clearLastCommentLocation();
@@ -2701,7 +2749,7 @@ pr_TestcaseInstanceOp returns[Value value = null]
 	if(parameters == null) {
 		parameters = new ParsedActualParameters();
 	}
-	parameters.setLocation(new Location_V4(actualFile, $parstart.start, $parend.stop));
+	parameters.setLocation(getLocation( $parstart.start, $parend.stop));
 
 	if(isDerefered) {
 		$value = new ExecuteDereferedExpression(dereferedValue, parameters, timerValue);
@@ -2709,12 +2757,12 @@ pr_TestcaseInstanceOp returns[Value value = null]
 		Location temporalLocation = temporalReference.getLocation();
 		ISubReference subReference = temporalReference.removeLastSubReference();
 		subReference = new ParameterisedSubReference(subReference.getId(), parameters);
-		((ParameterisedSubReference) subReference).setLocation(new Location_V4(temporalLocation, $parend.stop));
+		((ParameterisedSubReference) subReference).setLocation(getLocation(temporalLocation, $parend.stop));
 		temporalReference.addSubReference(subReference);
-		temporalReference.setLocation(new Location_V4(temporalReference.getLocation(), $parend.stop));
+		temporalReference.setLocation(getLocation(temporalReference.getLocation(), $parend.stop));
 		$value = new ExecuteExpression(temporalReference, timerValue);
 	}
-	$value.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+	$value.setLocation(getLocation( $col, $endcol.stop));
 
 };
 
@@ -2743,20 +2791,20 @@ pr_TestcaseInstanceStatement returns[Statement statement = null]
 	if(parameters == null) {
 		parameters = new ParsedActualParameters();
 	}
-	parameters.setLocation(new Location_V4(actualFile, $parstart.start, $parend.stop));
+	parameters.setLocation(getLocation( $parstart.start, $parend.stop));
 
 	if(isDerefered) {
 		$statement = new Referenced_Testcase_Instance_Statement(dereferedValue, parameters, timerValue);
-		$statement.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+		$statement.setLocation(getLocation( $col, $endcol.stop));
 	} else if(temporalReference != null) {
 		Location temporalLocation = temporalReference.getLocation();
 		ISubReference subReference = temporalReference.removeLastSubReference();
 		subReference = new ParameterisedSubReference(subReference.getId(), parameters);
-		((ParameterisedSubReference) subReference).setLocation(new Location_V4(temporalLocation, $parend.stop));
+		((ParameterisedSubReference) subReference).setLocation(getLocation(temporalLocation, $parend.stop));
 		temporalReference.addSubReference(subReference);
-		temporalReference.setLocation(new Location_V4(temporalLocation, $parend.stop));
+		temporalReference.setLocation(getLocation(temporalLocation, $parend.stop));
 		$statement = new Testcase_Instance_Statement(temporalReference, timerValue);
-		$statement.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+		$statement.setLocation(getLocation( $col, $endcol.stop));
 	}
 };
 
@@ -2779,7 +2827,7 @@ pr_TestcaseActualorNamedPar [boolean isStillUnnamed, ParsedActualParameters pars
 		{
 			$isUnnamed = false;
 			NamedParameter named = new NamedParameter($id.identifier, $ins.instance);
-			named.setLocation(new Location_V4(actualFile, $id.start, $ins.stop));
+			named.setLocation(getLocation( $id.start, $ins.stop));
 			$parsedParameters.addNamedParameter(named);
 		}
 |	{ $isStillUnnamed }? ins = pr_TestcaseActualPar
@@ -2793,9 +2841,9 @@ pr_TestcaseActualPar returns[TemplateInstance instance = null]:
 (	n = pr_NotUsedSymbol
 		{
 			TTCN3Template template = new NotUsed_Template();
-			template.setLocation(new Location_V4(actualFile, $n.start, $n.stop));
+			template.setLocation(getLocation( $n.start, $n.stop));
 			$instance = new TemplateInstance(null, null, template);
-			$instance.setLocation(new Location_V4(actualFile, $n.start, $n.stop));
+			$instance.setLocation(getLocation( $n.start, $n.stop));
 		}
 |	i = pr_TemplateInstance { $instance = $i.templateInstance; }
 );
@@ -2825,15 +2873,15 @@ pr_AltstepDef returns[ Def_Altstep  def_altstep = null]
 		if(definitions != null) {
 			for(Definition definition : definitions) {
 				Statement statement = new Definition_Statement(definition);
-				statement.setLocation(new Location_V4(actualFile, $d.start, $d.stop));
+				statement.setLocation(getLocation( $d.start, $d.stop));
 				statementBlock.addStatement(statement);
 			}
 		}
 		if(parameters == null) { parameters = new FormalParameterList(new ArrayList<FormalParameter>()); }
-		parameters.setLocation(new Location_V4(actualFile, $start1.start, $end.stop));
-		altGuards.setLocation(new Location_V4(actualFile, $a.start, $a.stop));
+		parameters.setLocation(getLocation( $start1.start, $end.stop));
+		altGuards.setLocation(getLocation( $a.start, $a.stop));
 		$def_altstep = new Def_Altstep($i.identifier, parameters, runsonHelper.runsonReference, statementBlock, altGuards);
-		$def_altstep.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+		$def_altstep.setLocation(getLocation( $col.start, $endcol.stop));
 	}
 };
 
@@ -2890,7 +2938,7 @@ pr_ImportDef [Group parent_group]
 			impmod.setVisibility(modifier);
 		}
 		impmod.setWithAttributes(attributes);
-		impmod.setLocation(new Location_V4(actualFile, modifier != null ? $m.start : $col, endcol));
+		impmod.setLocation(getLocation( modifier != null ? $m.start : $col, endcol));
 		if(parent_group == null) {
 	  		impmod.setAttributeParentPath(act_ttcn3_module.getAttributePath());
 		} else {
@@ -3089,7 +3137,7 @@ pr_GlobalModuleId returns [Reference reference = null]
 	|	{	if($i.identifier != null) {
 			$reference = new Reference(null);
 			FieldSubReference subReference = new FieldSubReference($i.identifier);
-			subReference.setLocation(new Location_V4(actualFile, $i.start, $i.stop));
+			subReference.setLocation(getLocation( $i.start, $i.stop));
 			$reference.addSubReference(subReference);} }
 	)
 );
@@ -3131,7 +3179,7 @@ pr_FullGroupIdentifier returns [Qualifier qualifier = null]:
 		i = pr_Identifier  { $qualifier.addSubReference(new FieldSubReference($i.identifier)); }
 	)*
 {
-	$qualifier.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$qualifier.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_FullGroupIdentifierWithExcept:
@@ -3324,8 +3372,8 @@ pr_GroupDef[Group parent_group]
 	if (group != null) {
 		group.setWithAttributes(attributes);
 		group.setParentGroup(parent_group);
-		group.setLocation(new Location_V4(actualFile, $start, getStopToken()));
-		group.setInnerLocation(new Location_V4(actualFile, $begin.start, getStopToken()));
+		group.setLocation(getLocation( $start, getStopToken()));
+		group.setInnerLocation(getLocation( $begin.start, getStopToken()));
 		group.setCommentLocation(commentLocation);
 		if ($parent_group != null) {
 			$parent_group.addGroup(group);
@@ -3370,7 +3418,7 @@ pr_FriendModuleDef[Group parent_group]
 	for (Identifier identifier2 : identifiers) {
 		FriendModule friend = new FriendModule_V4(identifier2);
 		friend.setWithAttributes(attributes);
-		friend.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		friend.setLocation(getLocation( $start, getStopToken()));
 		if($parent_group == null) {
 			friend.setAttributeParentPath(act_ttcn3_module.getAttributePath());
 		} else {
@@ -3407,9 +3455,9 @@ pr_ExtFunctionDef returns [Def_Extfunction def_extfunction = null]
 {
 	if($i.identifier != null) {
 		if(parameters == null) { parameters = new FormalParameterList(new ArrayList<FormalParameter>()); }
-		parameters.setLocation(new Location_V4(actualFile, $start1.start, $enda.stop));
+		parameters.setLocation(getLocation( $start1.start, $enda.stop));
 		$def_extfunction = new Def_Extfunction($i.identifier, parameters,  returnType, returnsTemplate, template_restriction);
-		$def_extfunction.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$def_extfunction.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -3427,7 +3475,7 @@ pr_ExtConstDef returns[List<Definition> definitions]
 	i = pr_Identifier
 		{	if($i.identifier != null && $t.type != null) {
 				Definition def = new Def_ExternalConst($i.identifier, $t.type);
-				def.setLocation(new Location_V4(actualFile, $col.start, $i.stop));
+				def.setLocation(getLocation( $col.start, $i.stop));
 				$definitions.add(def);
 			}
 		}
@@ -3435,7 +3483,7 @@ pr_ExtConstDef returns[List<Definition> definitions]
 		i = pr_Identifier
 			{	if($i.identifier != null && $t.type != null) {
 					Definition def = new Def_ExternalConst($i.identifier, $t.type);
-					def.setLocation(new Location_V4(actualFile, $i.start, $i.stop));
+					def.setLocation(getLocation( $i.start, $i.stop));
 					$definitions.add(def);
 				}
 			}
@@ -3456,13 +3504,13 @@ pr_ModuleParDef returns [List<Definition> parameters = null]
 	|	p2 = pr_TemplateModulePar { $parameters = $p2.parameters; endcol = $p2.stop; }
 	|	(	pr_BeginChar
 			(	(	p31 = pr_ModulePar { multitypedModulePar = $p31.parameters; }
-				|	p32 = pr_TemplateModulePar { multitypedModulePar = $p31.parameters; }
+				|	p32 = pr_TemplateModulePar { multitypedModulePar = $p32.parameters; }
 				)
 					{	if ( multitypedModulePar != null ) {
 							if ( $parameters == null ) {
 								$parameters = new ArrayList<Definition>();
 							}
-							$parameters.addAll($p31.parameters);
+							$parameters.addAll( multitypedModulePar );
 						}
 					}
 				pr_SemiColon?
@@ -3514,7 +3562,7 @@ pr_ModuleParList [Type type]
 	)?
 		{	if($i.identifier != null && $type != null) {
 				Definition def = new Def_ModulePar($i.identifier, $type, value);
-				def.setLocation(new Location_V4(actualFile, $i.start, getStopToken()));
+				def.setLocation(getLocation( $i.start, getStopToken()));
 				$parameters.add(def);
 			}
 		}
@@ -3525,7 +3573,7 @@ pr_ModuleParList [Type type]
 		)?
 			{	if($i2.identifier != null && $type != null) {
 					Definition def = new Def_ModulePar($i2.identifier, $type, value);
-					def.setLocation(new Location_V4(actualFile, $i2.start, getStopToken()));
+					def.setLocation(getLocation( $i2.start, getStopToken()));
 					$parameters.add(def);
 				}
 			}
@@ -3550,7 +3598,7 @@ pr_TemplateModuleParList [Type type]
 				} else {
 					def = new Def_ModulePar_Template($i.identifier, $type, null);
 				}
-			def.setLocation(new Location_V4(actualFile, $i.start, endcol));
+			def.setLocation(getLocation( $i.start, endcol));
 			$parameters.add(def);
 			}
 		}
@@ -3565,7 +3613,7 @@ pr_TemplateModuleParList [Type type]
 				  	} else {
 				  		def = new Def_ModulePar_Template($i2.identifier, $type, null);
 				  	}
-				  	def.setLocation(new Location_V4(actualFile, $i2.start, endcol));
+				  	def.setLocation(getLocation( $i2.start, endcol));
 					$parameters.add(def);
 				}
 			}
@@ -3589,9 +3637,9 @@ pr_ModuleControlPart returns [ControlPart controlpart = null]
 	if(statementblock == null) {
 		statementblock = new StatementBlock_V4();
 	}
-	statementblock.setLocation(new Location_V4( actualFile, $blockstart.start, $blockend.stop));
+	statementblock.setLocation(getLocation( $blockstart.start, $blockend.stop));
 	$controlpart = new ControlPart_V4(statementblock);
-	$controlpart.setLocation(new Location_V4( actualFile, $col.start, endcol));
+	$controlpart.setLocation(getLocation( $col.start, endcol));
 	Location commentLocation = lexer.getLastCommentLocation();
 	$controlpart.setCommentLocation(commentLocation);
 	if (commentLocation != null) {
@@ -3646,7 +3694,7 @@ pr_ControlStatementOrDef returns [List<Statement> statements]
 		for(Definition definition : definitions) {
 			if(definition != null) {
 				Statement temp_statement = new Definition_Statement(definition);
-				temp_statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+				temp_statement.setLocation(getLocation( $start, getStopToken()));
 				$statements.add(temp_statement);
 			}
 		}
@@ -3661,7 +3709,7 @@ pr_ControlStatement returns[Statement statement = null]:
 |	s3 = pr_TimerStatements { $statement = $s3.statement; }
 |	s4 = pr_BehaviourStatements { $statement = $s4.statement; }
 |	STOP	{	$statement = new Stop_Execution_Statement();
-				$statement.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+				$statement.setLocation(getLocation( $start, getStopToken())); }
 );
 
 pr_VarInstance returns[List<Definition> definitions]
@@ -3684,10 +3732,10 @@ pr_VarInstance returns[List<Definition> definitions]
 		Definition def = $definitions.get(0);
 		if (def!=null) {
 			final Token t = $col.start;
-			def.getLocation().setLine( t.getLine() );
+			def.getLocation().setLine( t.getLine() + line - 1);
 			Location loc = def.getLocation();
 			if( loc instanceof Location_V4 ) {
-				((Location_V4)loc).setOffset( t );
+				((Location_V4)loc).setOffset( t.getStartIndex() + offset);
 			}
 		}
 	}
@@ -3717,12 +3765,12 @@ pr_SingleTempVarInstance [List<Definition> definitions, Type type, TemplateRestr
 		if (dimensions != null) {
 			for (int i = dimensions.size() - 1; i >= 0; i--) {
 				tempType = new Array_Type(tempType, dimensions.get(i), false);
-				tempType.setLocation(new Location_V4(actualFile, $d.start, $d.stop));
+				tempType.setLocation(getLocation( $d.start, $d.stop));
 			}
 		}
 
 		Definition definition = new Def_Var_Template( $template_restriction, $i.identifier, tempType, body != null ? body.getTemplate() : null );
-		definition.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		definition.setLocation(getLocation( $start, getStopToken()));
 		$definitions.add(definition);
 	}
 };
@@ -3752,11 +3800,11 @@ pr_SingleVarInstance[Type type] returns[Def_Var definition = null]
 		if (dimensions != null) {
 			for (int i = dimensions.size() - 1; i >= 0; i--) {
 				type2 = new Array_Type(type2, dimensions.get(i), false);
-				type2.setLocation(new Location_V4(actualFile, $d.start, $d.stop));
+				type2.setLocation(getLocation( $d.start, $d.stop));
 			}
 		}
 		$definition = new Def_Var($i.identifier, type2, value);
-		$definition.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$definition.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -3825,7 +3873,7 @@ pr_SingleTimerInstance returns[Def_Timer def_timer = null]
 {
 	if($i.identifier != null) {
 		$def_timer = new Def_Timer($i.identifier, dimensions, value);
-		$def_timer.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$def_timer.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -3856,7 +3904,7 @@ pr_ConfigurationStatements returns[Statement statement = null]
 				{
 					//pr_KilledStatement
 					$statement = new Killed_Statement( $componentValue.value );
-					$statement.setLocation(new Location_V4(actualFile, $componentValue.start, $k.stop));
+					$statement.setLocation(getLocation( $componentValue.start, $k.stop));
 				}
 		|	pr_DoneKeyword	//pr_DoneStatement
 			(	pr_LParen
@@ -3868,7 +3916,7 @@ pr_ConfigurationStatements returns[Statement statement = null]
 			)?
 				{
 					$statement = new Done_Statement($componentValue.value, doneMatch, reference);
-					$statement.setLocation(new Location_V4(actualFile, $componentValue.start, getStopToken()));
+					$statement.setLocation(getLocation( $componentValue.start, getStopToken()));
 				}
 		)
 	)
@@ -3908,28 +3956,28 @@ pr_CreateOpEnd	[Reference temporalReference]
 )
 {
 	$value = new ComponentCreateExpression($temporalReference, name, location, isAlive);
-	$value.setLocation( new Location_V4( $temporalReference.getLocation(), endcol ) );
+	$value.setLocation( getLocation( $temporalReference.getLocation(), endcol ) );
 };
 
 pr_SystemOp returns[SystemComponentExpression value = null]:
 	SYSTEM
 {
 	$value = new SystemComponentExpression();
-	$value.setLocation(new Location_V4(actualFile, $SYSTEM));
+	$value.setLocation(getLocation( $SYSTEM));
 };
 
 pr_SelfOp returns[SelfComponentExpression value = null]:
 	SELF
 {
 	$value = new SelfComponentExpression();
-	$value.setLocation(new Location_V4(actualFile, $SELF));
+	$value.setLocation(getLocation( $SELF));
 };
 
 pr_MTCOp returns[MTCComponentExpression value = null]:
 	MTC
 {
 	$value = new MTCComponentExpression();
-	$value.setLocation(new Location_V4(actualFile, $MTC));
+	$value.setLocation(getLocation( $MTC));
 };
 
 pr_KillTCStatement returns[Kill_Statement statement = null]
@@ -3945,7 +3993,7 @@ pr_KillTCStatement returns[Kill_Statement statement = null]
 )
 {
 	$statement = new Kill_Statement(value);
-	$statement.setLocation(new Location_V4(actualFile, $start, $endcol.stop));
+	$statement.setLocation(getLocation( $start, $endcol.stop));
 };
 
 pr_KilledKeyword:
@@ -3967,21 +4015,21 @@ pr_ComponentId returns[Value value = null]:
 pr_ComponentOrDefaultReference returns[Value value = null]:
 (	(	r = pr_FunctionInstance
 			{	$value = new Referenced_Value( $r.temporalReference );
-				$value.setLocation( new Location_V4( actualFile, $r.start, $r.stop ) );
+				$value.setLocation( getLocation( $r.start, $r.stop ) );
 			}
 		( p = pr_ApplyOpEnd
 			{	$value = new ApplyExpression( $value, $p.parsedParameters );
-				$value.setLocation(new Location_V4( actualFile, $r.start, $p.stop ) );
+				$value.setLocation(getLocation( $r.start, $p.stop ) );
 			}
 		)?
 	)
 |	(	r2 = pr_VariableRef
 			{	$value = new Referenced_Value( $r2.reference );
-				$value.setLocation( new Location_V4( actualFile, $r2.start, $r2.stop ) );
+				$value.setLocation( getLocation( $r2.start, $r2.stop ) );
 			}
 		( p2 = pr_ApplyOpEnd
 			{	$value = new ApplyExpression( $value, $p2.parsedParameters );
-				$value.setLocation(new Location_V4( actualFile, $r2.start, $p2.stop ) );
+				$value.setLocation(getLocation( $r2.start, $p2.stop ) );
 			}
 		)*
 	)
@@ -4003,7 +4051,7 @@ pr_ConnectStatement returns[Connect_Statement statement = null]:
 	if($h.helper != null) {
 		$statement = new Connect_Statement(	$h.helper.componentReference1, $h.helper.portReference1,
 											$h.helper.componentReference2, $h.helper.portReference2	);
-		$statement.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+		$statement.setLocation(getLocation( $col.start, $h.stop));
 	}
 };
 
@@ -4057,7 +4105,7 @@ pr_DisconnectStatement returns[Disconnect_Statement statement = null]
 		helper.portReference1 != null && helper.componentReference2 != null &&
 		helper.portReference2 != null) {
 		$statement = new Disconnect_Statement(helper.componentReference1, helper.portReference1, helper.componentReference2, helper.portReference2);
-		$statement.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+		$statement.setLocation(getLocation( $col.start, $h.stop));
 	} else {
 		reportUnsupportedConstruct(new TITANMarker_V4("Disconnect operation on multiple connections is not currently supported",
 			$col.start, $col.stop, IMarker.SEVERITY_ERROR, IMarker.PRIORITY_NORMAL));
@@ -4117,7 +4165,7 @@ pr_MapStatement returns[Map_Statement statement = null]:
 	if($h.helper != null) {
 		$statement = new Map_Statement( $h.helper.componentReference1, $h.helper.portReference1,
 									   $h.helper.componentReference2, $h.helper.portReference2 );
-		$statement.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+		$statement.setLocation(getLocation( $col.start, $h.stop));
 	}
 };
 
@@ -4141,7 +4189,7 @@ pr_UnmapStatement returns[Unmap_Statement statement = null]
 		helper.portReference1 != null && helper.componentReference2 != null &&
 		helper.portReference2 != null) {
 		$statement = new Unmap_Statement(helper.componentReference1, helper.portReference1, helper.componentReference2, helper.portReference2);
-		$statement.setLocation(new Location_V4(actualFile, $col.start, $h.stop));
+		$statement.setLocation(getLocation( $col.start, $h.stop));
 	} else {
 		reportUnsupportedConstruct(new TITANMarker_V4("Unmap operation on multiple mappings is not currently supported",
 			$col.start, $col.stop, IMarker.SEVERITY_ERROR, IMarker.PRIORITY_NORMAL));
@@ -4168,7 +4216,7 @@ pr_StartTCStatement returns[Statement statement = null]
 		( p = pr_FunctionActualParList { parameters = $p.parsedParameters; } )?
 		a2=pr_RParen
 			{	if(parameters == null) { parameters = new ParsedActualParameters();	}
-				parameters.setLocation(new Location_V4(actualFile, $a1.start, $a2.stop));
+				parameters.setLocation(getLocation( $a1.start, $a2.stop));
 				$statement = new Start_Referenced_Component_Statement( component, dereferedValue, parameters );
 			}
 	|	f = pr_FunctionInstance
@@ -4181,7 +4229,7 @@ pr_StartTCStatement returns[Statement statement = null]
 )
 {
 	if($statement != null) {
-		$statement.setLocation(new Location_V4(actualFile, $c.start, $endcol.stop));
+		$statement.setLocation(getLocation( $c.start, $endcol.stop));
 	}
 };
 
@@ -4200,10 +4248,10 @@ pr_StopTCStatement returns[Statement statement = null]
 {
 	if (componentRef != null || all_component) {
 		$statement = new Stop_Component_Statement(componentRef);
-		$statement.setLocation(new Location_V4(actualFile, $start, $endcol));
+		$statement.setLocation(getLocation( $start, $endcol));
 	} else {
 		$statement = new Stop_Execution_Statement();
-		$statement.setLocation(new Location_V4(actualFile, $endcol));
+		$statement.setLocation(getLocation( $endcol));
 	}
 };
 
@@ -4259,7 +4307,7 @@ pr_CommunicationStatements returns[Statement statement = null]:
 )
 {
 	if( $statement != null ) {
-		$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$statement.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -4372,7 +4420,7 @@ pr_CallBodyStatement returns[AltGuard altGuard = null]
 )
 {
 	$altGuard = new Operation_Altguard($v.value, $s.statement, statementBlock);
-	$altGuard.setLocation(new Location_V4(actualFile, $v.start, getStopToken()));
+	$altGuard.setLocation(getLocation( $v.start, getStopToken()));
 };
 
 pr_CallBodyOps returns[Statement statement = null]:
@@ -4398,7 +4446,7 @@ pr_PortReplyOp [Reference reference]
 )
 {
 	$statement = new Reply_Statement($reference, $parameter.templateInstance, replyValue, toClause);
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 
@@ -4426,7 +4474,7 @@ pr_PortRaiseOp [Reference reference]
 )
 {
 	$statement = new Raise_Statement($reference, $signature.reference, $parameter.templateInstance, toClause);
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_RaiseKeyword:
@@ -4468,7 +4516,7 @@ pr_PortReceiveOp [Reference reference, boolean is_check]
 			$statement = new Receive_Port_Statement( $reference, parameter, from, helper.redirectValue, helper.redirectSender );
 		}
 	}
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_ReceiveOpKeyword:
@@ -4544,7 +4592,7 @@ pr_PortTriggerOp [Reference reference]
 	} else {
 		$statement = new Trigger_Port_Statement(reference, parameter, from, helper.redirectValue, helper.redirectSender);
 	}
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_PortGetCallOp [Reference reference, boolean is_check]
@@ -4576,7 +4624,7 @@ pr_PortGetCallOp [Reference reference, boolean is_check]
 			$statement = new Getcall_Statement($reference, parameter, from, helper.redirectParameters, helper.senderReference);
 		}
 	}
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_PortRedirectWithParam returns[Redirection_Helper helper]:
@@ -4613,7 +4661,7 @@ pr_ParamAssignmentList returns[Parameter_Redirect redirect = null]:
 )
 {
 	if($redirect != null) {
-		$redirect.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+		$redirect.setLocation(getLocation( $col.start, $endcol.stop));
 	}
 };
 
@@ -4635,7 +4683,7 @@ pr_VariableAssignment returns[Parameter_Assignment param_assignment = null]:
 )
 {
 	$param_assignment = new Parameter_Assignment($r.reference, $i.identifier);
-	$param_assignment.setLocation(new Location_V4(actualFile, $r.start, $i.stop));
+	$param_assignment.setLocation(getLocation( $r.start, $i.stop));
 };
 
 pr_PortRedirectWithValueAndParam returns[Redirection_Helper helper = null]:
@@ -4671,7 +4719,7 @@ pr_VariableEntry returns[Variable_Entry entry = null]
 )
 {
 	$entry = new Variable_Entry(reference);
-	$entry.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$entry.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_PortGetReplyOp [Reference reference, boolean is_check]
@@ -4705,7 +4753,7 @@ pr_PortGetReplyOp [Reference reference, boolean is_check]
 			$statement = new Getreply_Statement($reference, parameter, valueMatch, from, helper.redirectValue, helper.redirectParameters, helper.senderReference);
 		}
 	}
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_GetReplyOpKeyword:
@@ -4725,7 +4773,7 @@ pr_PortCheckOp [Reference reference]
 		pr_RParen
 	|	{
 			$statement = new Check_Port_Statement(reference, null, null);
-			$statement.setLocation(new Location_V4(actualFile, $col.start, $col.stop)); }
+			$statement.setLocation(getLocation( $col.start, $col.stop)); }
 	)
 );
 
@@ -4753,7 +4801,7 @@ pr_FromClausePresent [Reference reference]
 )
 {
 	$statement = new Check_Port_Statement(reference, fromClause, redirectSender);
-	$statement.setLocation(new Location_V4(actualFile, $f.start, getStopToken()));
+	$statement.setLocation(getLocation( $f.start, getStopToken()));
 };
 
 pr_CheckPortOpsPresent [Reference reference]
@@ -4765,7 +4813,7 @@ pr_CheckPortOpsPresent [Reference reference]
 )
 {
 	if ($statement != null) {
-		$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$statement.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -4776,7 +4824,7 @@ pr_RedirectPresent [Reference reference]
 )
 {
 	$statement = new Check_Port_Statement( $reference, null, $redirectSender.reference );
-	$statement.setLocation( new Location_V4( actualFile, $col.start, $redirectSender.stop ) );
+	$statement.setLocation( getLocation( $col.start, $redirectSender.stop ) );
 };
 
 pr_PortCatchOp [Reference reference, boolean is_check]
@@ -4808,7 +4856,7 @@ pr_PortCatchOp [Reference reference, boolean is_check]
 		$statement = new Catch_Statement(reference, catchopHelper.signatureReference, catchopHelper.parameter, catchopHelper.timeout,
 		from, redirectHelper.redirectValue, redirectHelper.redirectSender);
 	}
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_CatchOpKeyword:
@@ -4873,7 +4921,7 @@ pr_TimerStatements returns[Statement statement = null]
 )
 {
 	if($statement != null) {
-		$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$statement.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -4885,7 +4933,7 @@ pr_TimerOps returns[AnyTimerRunningExpression value = null]:
 )
 {
 	$value = new AnyTimerRunningExpression();
-	$value.setLocation(new Location_V4(actualFile, $col.start, $endcol));
+	$value.setLocation(getLocation( $col.start, $endcol));
 };
 
 pr_TimeoutKeyword:
@@ -4911,8 +4959,8 @@ pr_PredefinedType returns[Type type = null]:
 |	ANYTYPE
 		{
 			Reference reference = new Reference(null);
-			FieldSubReference subReference = new FieldSubReference(new Identifier(Identifier_type.ID_TTCN, "anytype", new Location_V4(actualFile, $ANYTYPE)));
-			subReference.setLocation(new Location_V4(actualFile, $ANYTYPE));
+			FieldSubReference subReference = new FieldSubReference(new Identifier(Identifier_type.ID_TTCN, "anytype", getLocation( $ANYTYPE)));
+			subReference.setLocation(getLocation( $ANYTYPE));
 			reference.addSubReference(subReference);
 			$type = new Referenced_Type(reference);
 		}
@@ -4932,7 +4980,7 @@ pr_PredefinedType returns[Type type = null]:
 	)
 )
 {
-	$type.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$type.setLocation(getLocation( $start, getStopToken()));
 };
 
 // TODO: this is very different from TITAN, check why
@@ -4952,16 +5000,16 @@ pr_ReferencedType returns[Type type = null]
 		reference = new Reference(null);
 	}
 	FieldSubReference subReference = new FieldSubReference($id.identifier);
-	subReference.setLocation(new Location_V4(actualFile, $id.start, $id.stop));
+	subReference.setLocation(getLocation( $id.start, $id.stop));
 	reference.addSubReference(subReference);
 	if(subReferences != null) {
 		for(ISubReference subReference2: subReferences) {
 			reference.addSubReference(subReference2);
 		}
 	}
-	reference.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	reference.setLocation(getLocation( $start, getStopToken()));
 	$type = new Referenced_Type(reference);
-	$type.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$type.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_TypeReference returns[ Identifier identifier = null]:
@@ -5004,14 +5052,14 @@ pr_ArrayDefRange returns[RangedArrayDimension dimension = null]:
 )
 {
 	$dimension = new RangedArrayDimension($lower_boundary.value, $upper_boundary.value);
-	$dimension.setLocation(new Location_V4(actualFile, $lower_boundary.start, $upper_boundary.stop));
+	$dimension.setLocation(getLocation( $lower_boundary.start, $upper_boundary.stop));
 };
 
 pr_ArrayBounds returns[SingleArrayDimension dimension = null]:
 	v = pr_SingleExpression
 {
 	$dimension = new SingleArrayDimension($v.value);
-	$dimension.setLocation(new Location_V4(actualFile, $v.start, $v.stop));
+	$dimension.setLocation(getLocation( $v.start, $v.stop));
 };
 
 pr_Value returns[Value value = null]:
@@ -5021,21 +5069,21 @@ pr_Value returns[Value value = null]:
 
 pr_PredefinedValue returns [Value value = null]:
 (	h = pr_HexString	{	$value = new Hexstring_Value($h.string);
-							$value.setLocation(new Location_V4(actualFile, $h.start, $h.stop)); }
+							$value.setLocation(getLocation( $h.start, $h.stop)); }
 |	b = pr_BitString	{	$value = new Bitstring_Value($b.string);
-							$value.setLocation(new Location_V4(actualFile, $b.start, $b.stop)); }
+							$value.setLocation(getLocation( $b.start, $b.stop)); }
 |	o = pr_OctetString	{	$value = new Octetstring_Value($o.string);
-							$value.setLocation(new Location_V4(actualFile, $o.start, $o.stop)); }
+							$value.setLocation(getLocation( $o.start, $o.stop)); }
 |	v1 = pr_BooleanValue { $value = $v1.value; }
 |	v2 = pr_CharStringValue { $value = $v2.value; }
 |	NUMBER	{ 	$value = new Integer_Value( $NUMBER.getText() );
-				$value.setLocation(new Location_V4(actualFile, $NUMBER)); }
+				$value.setLocation(getLocation( $NUMBER)); }
 |	v3 = pr_VerdictTypeValue { $value = $v3.value; }
 //|	v4 = pr_EnumeratedValue { $value = $v4.value; }  // covered by pr_ReferencedValue
 |	v5 = pr_FloatValue { $value = $v5.value; }
 |	v6 = pr_AddressValue { $value = $v6.value; }
 |	OMIT	{	$value = new Omit_Value();
-				$value.setLocation(new Location_V4(actualFile, $OMIT)); }
+				$value.setLocation(getLocation( $OMIT)); }
 |	v7 = pr_ObjectIdentifierValue { $value = $v7.value; }
 |	v8 = pr_Macro { $value = $v8.value; }
 );
@@ -5046,7 +5094,7 @@ pr_FloatValue returns[Real_Value value = null]:
 |   NOT_A_NUMBER	{ $value = new Real_Value( Float.NaN ); }
 )
 {
-	if($value != null) { $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
 pr_BooleanValue returns[Boolean_Value value = null]:
@@ -5054,7 +5102,7 @@ pr_BooleanValue returns[Boolean_Value value = null]:
 |	FALSE	{ $value = new Boolean_Value(false); }
 )
 {
-	if($value != null) { $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
 pr_VerdictTypeValue returns[Verdict_Value value = null]:
@@ -5065,7 +5113,7 @@ pr_VerdictTypeValue returns[Verdict_Value value = null]:
 |	ERROR	{ $value = new Verdict_Value( Verdict_Value.Verdict_type.ERROR  ); }
 )
 {
-	if($value != null) { $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
 pr_CharStringValue returns[Value value = null ]:
@@ -5079,7 +5127,7 @@ pr_CharStringValue returns[Value value = null ]:
 |	ustring_value = pr_Quadruple { $value = new UniversalCharstring_Value($ustring_value.string); }
 )
 {
-	if($value != null) { $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
 pr_Quadruple returns[UniversalCharstring string = null]:
@@ -5115,7 +5163,7 @@ pr_ReferencedValue returns[Value value = null]
 			for(ISubReference subReference: subReferences) {
 				temporalReference.addSubReference(subReference);
 			}
-			temporalReference.setLocation(new Location_V4(actualFile, $t.start, $e.stop == null ? $t.stop : $e.stop));
+			temporalReference.setLocation(getLocation( $t.start, $e.stop == null ? $t.stop : $e.stop));
 		}
 
 		if(subReferences == null && temporalReference.getModuleIdentifier() == null && temporalReference.getSubreferences().size() == 1) {
@@ -5123,7 +5171,7 @@ pr_ReferencedValue returns[Value value = null]
 		} else {
 			$value = new Referenced_Value(temporalReference);
 		}
-		$value.setLocation(new Location_V4(actualFile, $t.start, $e.stop == null ? $t.stop : $e.stop));
+		$value.setLocation(getLocation( $t.start, $e.stop == null ? $t.stop : $e.stop));
 	}
 };
 
@@ -5139,9 +5187,9 @@ pr_ValueReference returns[Reference reference = null]:
 			$reference = new Reference(null);
 		}
 		FieldSubReference subReference = new FieldSubReference($id.identifier);
-		subReference.setLocation(new Location_V4(actualFile, getStopToken(), getStopToken()));
+		subReference.setLocation(getLocation( getStopToken(), getStopToken()));
 		$reference.addSubReference(subReference);
-		$reference.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$reference.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -5150,7 +5198,7 @@ pr_AddressValue returns[Value value = null]:
 |	NULL2 { $value = new ASN1_Null_Value(); }
 )
 {
-	$value.setLocation(new Location_V4(actualFile, $start, $start));
+	$value.setLocation(getLocation( $start, $start));
 };
 
 pr_Macro returns[Macro_Value value = null]:
@@ -5167,7 +5215,7 @@ pr_Macro returns[Macro_Value value = null]:
 )
 {
 	if($value != null) {
-		$value.setLocation(new Location_V4(actualFile, $start));
+		$value.setLocation(getLocation( $start));
 	}
 };
 
@@ -5190,9 +5238,9 @@ pr_FormalValuePar returns[FormalParameter parameter = null]
 	    (   n = pr_NotUsedSymbol
 	    		{
 	    			TTCN3Template template = new NotUsed_Template();
-	    			template.setLocation(new Location_V4(actualFile, $n.start, $n.stop));
+	    			template.setLocation(getLocation( $n.start, $n.stop));
 	    			default_value = new TemplateInstance(null, null, template);
-	    			default_value.setLocation(new Location_V4(actualFile,  $n.start, $n.stop));
+	    			default_value.setLocation(getLocation( $n.start, $n.stop));
 	    		}
 		|   dv = pr_TemplateInstance { default_value = $dv.templateInstance; }
 		)
@@ -5201,7 +5249,7 @@ pr_FormalValuePar returns[FormalParameter parameter = null]
 {
 	$parameter = new FormalParameter(TemplateRestriction.Restriction_type.TR_NONE, assignment_type, $t.type, $i.identifier, default_value, isLazy);
 	$parameter.setCommentLocation(commentLocation);
-	$parameter.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$parameter.setLocation(getLocation( $start, getStopToken()));
 	lexer.clearLastCommentLocation();
 };
 
@@ -5220,7 +5268,7 @@ pr_FormalTimerPar returns[FormalParameter parameter = null]
 {
 	$parameter = new FormalParameter( TemplateRestriction.Restriction_type.TR_NONE, Assignment_type.A_PAR_TIMER, null,
 		$i.identifier, default_value, false );
-	$parameter.setLocation(new Location_V4(actualFile, startcol, getStopToken()));
+	$parameter.setLocation(getLocation( startcol, getStopToken()));
 };
 
 pr_FormalTemplatePar returns[FormalParameter parameter = null]
@@ -5243,9 +5291,9 @@ pr_FormalTemplatePar returns[FormalParameter parameter = null]
 	    (   n = pr_NotUsedSymbol
 	    		{
 					TTCN3Template template = new NotUsed_Template();
-					template.setLocation(new Location_V4(actualFile, $n.start, $n.stop));
+					template.setLocation(getLocation( $n.start, $n.stop));
 					default_value = new TemplateInstance(null, null, template);
-					default_value.setLocation(new Location_V4(actualFile, $n.start, $n.stop));
+					default_value.setLocation(getLocation( $n.start, $n.stop));
 				}
 		|	ti = pr_TemplateInstance { default_value = $ti.templateInstance; }
 	    )
@@ -5253,7 +5301,7 @@ pr_FormalTemplatePar returns[FormalParameter parameter = null]
 )
 {
 	$parameter = new FormalParameter(template_restriction, $assignment_type, $t.type, $i.identifier, default_value, isLazy);
-	$parameter.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$parameter.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_TemplateOptRestricted returns[TemplateRestriction.Restriction_type template_restriction]
@@ -5283,7 +5331,7 @@ pr_WithStatement returns[MultipleWithAttributes attributes = null]:
 )
 {
 	if( $attributes != null) {
-		$attributes.setLocation(new Location_V4(actualFile, $a.start, $a.stop));
+		$attributes.setLocation(getLocation( $a.start, $a.stop));
 	}
 };
 
@@ -5314,7 +5362,7 @@ pr_SingleWithAttrib returns [ SingleWithAttribute singleWithAttrib = null]
 )
 {
 	$singleWithAttrib = new SingleWithAttribute( $t.attributeType, hasOverride, qualifiers, $s.attributeSpecficiation );
-	$singleWithAttrib.setLocation(new Location_V4(actualFile, $t.start, $s.stop));
+	$singleWithAttrib.setLocation(getLocation( $t.start, $s.stop));
 };
 
 pr_AttribKeyword returns [Attribute_Type attributeType = null]:
@@ -5354,11 +5402,11 @@ pr_DefOrFieldRefList returns [Qualifiers qualifiers = null]:
 pr_DefOrFieldRef returns[Qualifier qualifier = null]:
 (	(	i = pr_Identifier
 			{	$qualifier = new Qualifier(new FieldSubReference($i.identifier));
-				$qualifier.setLocation(new Location_V4(actualFile, $i.start, $i.stop));
+				$qualifier.setLocation(getLocation( $i.start, $i.stop));
 			}
 	|	s = pr_ArrayOrBitRefOrDash //TODO: could be more precise
 			{	$qualifier = new Qualifier($s.subReference);
-				$qualifier.setLocation(new Location_V4(actualFile, $s.start, $s.stop));
+				$qualifier.setLocation(getLocation( $s.start, $s.stop));
 			}
 	)
 	(	s2 = pr_ExtendedFieldReference
@@ -5406,7 +5454,7 @@ pr_AttribSpec returns [AttributeSpecification attributeSpecficiation = null]:
 ( s = pr_FreeText )
 {
 	$attributeSpecficiation = new AttributeSpecification($s.string);
-	$attributeSpecficiation.setLocation(new Location_V4(actualFile, $s.start, $s.stop));
+	$attributeSpecficiation.setLocation(getLocation( $s.start, $s.stop));
 };
 
 pr_BehaviourStatements returns[Statement statement = null]:
@@ -5420,35 +5468,35 @@ pr_BehaviourStatements returns[Statement statement = null]:
 |	s8 = pr_ActivateStatement			{ $statement = $s8.statement; }
 |	REPEAT
 		{	$statement = new Repeat_Statement();
-			$statement.setLocation(new Location_V4(actualFile, $REPEAT));
+			$statement.setLocation(getLocation( $REPEAT));
 		}
 |	(	t = pr_FunctionInstance
 		(	p = pr_ApplyOpEnd
 				{	Value value = new Referenced_Value($t.temporalReference);
-					value.setLocation(new Location_V4(actualFile, $t.start, $p.stop));
+					value.setLocation(getLocation( $t.start, $p.stop));
 					$statement = new Unknown_Applied_Statement(value, $p.parsedParameters);
-					$statement.setLocation(new Location_V4(actualFile, $t.start, $p.stop));
+					$statement.setLocation(getLocation( $t.start, $p.stop));
 				}
 		|		{	$statement = new Unknown_Instance_Statement($t.temporalReference);
-					$statement.setLocation(new Location_V4(actualFile, $t.start, $t.stop));
+					$statement.setLocation(getLocation( $t.start, $t.stop));
 				}
 		)
 	)
 |	(	v = pr_ReferencedValue
 		(	p2 = pr_ApplyOpEnd
 				{	$statement = new Unknown_Applied_Statement($v.value, $p2.parsedParameters);
-					$statement.setLocation(new Location_V4(actualFile, $v.start, $p2.stop));
+					$statement.setLocation(getLocation( $v.start, $p2.stop));
 				}
 		|	pr_LParen	// this is a syntactically erroneous state only used to report better error messages
 		)
 	)
 |	BREAK
 		{	$statement = new Break_Statement();
-			$statement.setLocation(new Location_V4(actualFile, $BREAK));
+			$statement.setLocation(getLocation( $BREAK));
 		}
 |	CONTINUE
 		{	$statement = new Continue_Statement();
-			$statement.setLocation(new Location_V4(actualFile, $CONTINUE));
+			$statement.setLocation(getLocation( $CONTINUE));
 		}
 );
 
@@ -5460,7 +5508,7 @@ pr_VerdictOps returns[GetverdictExpression value = null]:
 	GETVERDICT
 {
 	$value = new GetverdictExpression();
-	$value.setLocation(new Location_V4(actualFile, $GETVERDICT));
+	$value.setLocation(getLocation( $GETVERDICT));
 };
 
 pr_SetLocalVerdict returns[Setverdict_Statement statement = null]
@@ -5477,7 +5525,7 @@ pr_SetLocalVerdict returns[Setverdict_Statement statement = null]
 )
 {
 	$statement = new Setverdict_Statement($s.value, logarguments);
-	$statement.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+	$statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
 pr_SUTStatements returns[Action_Statement statement = null]
@@ -5493,7 +5541,7 @@ pr_SUTStatements returns[Action_Statement statement = null]
 )
 {
 	$statement = new Action_Statement(logArguments);
-	$statement.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+	$statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
 //TODO: Update it!! In 6.1: 478.ReturnStatement ::= ReturnKeyword [Expression | InLineTemplate] (4.4.1 is the same)
@@ -5511,7 +5559,7 @@ pr_ReturnStatement returns[Return_Statement statement = null]
 	} else {
 		$statement = new Return_Statement( null );
 	}
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_AltConstruct returns[Statement statement = null]:
@@ -5522,7 +5570,7 @@ pr_AltConstruct returns[Statement statement = null]:
 )
 {
 	$statement = new Alt_Statement($a.altGuards);
-	$statement.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+	$statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
 pr_AltGuardList returns [AltGuards altGuards]
@@ -5544,10 +5592,10 @@ pr_GuardStatement returns [AltGuard altGuard = null]
 (	v = pr_AltGuardChar
 	(	(	ref1 = pr_FunctionInstance
 				{	value2 = new Referenced_Value( $ref1.temporalReference );
-					value2.setLocation(new Location_V4(actualFile, $ref1.start, $ref1.stop)); }
+					value2.setLocation(getLocation( $ref1.start, $ref1.stop)); }
 		|	ref2 = pr_VariableRef
 				{	value2 = new Referenced_Value($ref2.reference);
-					value2.setLocation(new Location_V4(actualFile, $ref2.start, $ref2.stop)); }
+					value2.setLocation(getLocation( $ref2.start, $ref2.stop)); }
 		)
 		p1 = pr_ApplyOpEnd
 		(	pr_SemiColon?
@@ -5555,7 +5603,7 @@ pr_GuardStatement returns [AltGuard altGuard = null]
 		)?
 		pr_SemiColon?
 		{	$altGuard = new Invoke_Altguard($v.value, value2, $p1.parsedParameters, statementBlock);
-			$altGuard.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+			$altGuard.setLocation(getLocation( $start, getStopToken())); }
 	|	t = pr_FunctionInstance
 		( p2 = pr_ApplyOpEnd { invoked = true; parsedParameters = $p2.parsedParameters; } )?
 		(	pr_SemiColon?
@@ -5564,12 +5612,12 @@ pr_GuardStatement returns [AltGuard altGuard = null]
 		pr_SemiColon?
 		{	if(invoked) {
 				value2 = new Referenced_Value($t.temporalReference);
-				value2.setLocation(new Location_V4(actualFile, $t.start, $t.stop));
+				value2.setLocation(getLocation( $t.start, $t.stop));
 				$altGuard = new Invoke_Altguard($v.value, value2, parsedParameters, statementBlock);
 			} else {
 				$altGuard = new Referenced_Altguard($v.value, $t.temporalReference, statementBlock);
 			}
-			$altGuard.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+			$altGuard.setLocation(getLocation( $start, getStopToken()));
 		}
 	|	s = pr_GuardOp
 		(	pr_SemiColon?
@@ -5577,7 +5625,7 @@ pr_GuardStatement returns [AltGuard altGuard = null]
 		)?
 		pr_SemiColon?
 		{	$altGuard = new Operation_Altguard($v.value, $s.statement, statementBlock);
-			$altGuard.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+			$altGuard.setLocation(getLocation( $start, getStopToken())); }
 	)
 );
 
@@ -5609,7 +5657,7 @@ pr_ElseStatement returns [Else_Altguard altGuard = null]
 )
 {
 	$altGuard = new Else_Altguard($s.statementblock);
-	$altGuard.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$altGuard.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_AltGuardChar returns[Value value = null]:
@@ -5661,7 +5709,7 @@ pr_GuardOp returns[Statement statement = null]
 )
 {
 	if($statement != null) {
-		$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$statement.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -5698,7 +5746,7 @@ pr_InterleavedGuardElement returns[AltGuard altGuard = null]
 )
 {
 	$altGuard = new Operation_Altguard(null, $g.statement, statementBlock);
-	$altGuard.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$altGuard.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_LabelStatement returns[Label_Statement statement = null]:
@@ -5707,7 +5755,7 @@ pr_LabelStatement returns[Label_Statement statement = null]:
 )
 {
 	$statement = new Label_Statement($i.identifier);
-	$statement.setLocation(new Location_V4(actualFile, $col, $i.stop));
+	$statement.setLocation(getLocation( $col, $i.stop));
 };
 
 pr_GotoStatement returns[Goto_statement statement = null]
@@ -5727,7 +5775,7 @@ pr_GotoStatement returns[Goto_statement statement = null]
 {
 	if(identifier != null) {
 		$statement = new Goto_statement(identifier);
-		$statement.setLocation(new Location_V4(actualFile, $GOTO, getStopToken()));
+		$statement.setLocation(getLocation( $GOTO, getStopToken()));
 	}
 };
 
@@ -5745,7 +5793,7 @@ pr_ActivateOp returns [Value value = null]
 				if(parameters == null) {
 					parameters = new ParsedActualParameters();
 				}
-				parameters.setLocation(new Location_V4(actualFile, $a1.start, $a2.stop));
+				parameters.setLocation(getLocation( $a1.start, $a2.stop));
 				$value = new ActivateDereferedExpression($v.value, parameters);
 			}
 	|	t = pr_AltstepInstance	{ $value = new ActivateExpression($t.temporalReference); }
@@ -5754,7 +5802,7 @@ pr_ActivateOp returns [Value value = null]
 )
 {
 	if($value != null) {
-		$value.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$value.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -5771,7 +5819,7 @@ pr_ActivateStatement returns[Statement statement = null]
 			{	if(parameters == null) {
 					parameters = new ParsedActualParameters();
 				}
-				parameters.setLocation(new Location_V4(actualFile, $a1.start, $a2.stop));
+				parameters.setLocation(getLocation( $a1.start, $a2.stop));
 				$statement = new Activate_Referenced_Statement($v.value, parameters);
 			}
 	|	ai = pr_AltstepInstance	{ $statement = new Activate_Statement($ai.temporalReference); }
@@ -5780,7 +5828,7 @@ pr_ActivateStatement returns[Statement statement = null]
 )
 {
 	if($statement != null) {
-		$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+		$statement.setLocation(getLocation( $start, getStopToken()));
 	}
 };
 
@@ -5792,7 +5840,7 @@ pr_ReferOp returns[RefersExpression value = null]:
 )
 {
 	$value = new RefersExpression($r.reference);
-	$value.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$value.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_DeactivateStatement returns[Deactivate_Statement statement = null]
@@ -5807,7 +5855,7 @@ pr_DeactivateStatement returns[Deactivate_Statement statement = null]
 )
 {
 	$statement = new Deactivate_Statement(value);
-	$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_BasicStatements returns[Statement statement = null]
@@ -5829,14 +5877,14 @@ pr_BasicStatements returns[Statement statement = null]
 				pr_RParen
 					{	exc_id = $id.identifier;
 						exc_handling = StatementBlock.ExceptionHandling_type.EH_CATCH;
-						if (exc_id!=null) { exc_id.setLocation(new Location_V4(actualFile, $id.start, $id.stop)); }
+						if (exc_id!=null) { exc_id.setLocation(getLocation( $id.start, $id.stop)); }
 					}
 			)?
 			sb = pr_StatementBlock
 				{	statementblock = $sb.statementblock;
 					if (statementblock != null) {
 						$statement = new StatementBlock_Statement(statementblock);
-						$statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+						$statement.setLocation(getLocation( $start, getStopToken()));
 					}
 				}
 		)
@@ -5883,7 +5931,7 @@ pr_FieldExpressionList returns[Sequence_Value value = null]
 )
 {
 	$value = new Sequence_Value(values);
-	$value.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$value.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_FieldExpressionSpec returns[NamedValue namedValue = null]:
@@ -5893,7 +5941,7 @@ pr_FieldExpressionSpec returns[NamedValue namedValue = null]:
 )
 {
 	$namedValue = new NamedValue($i.identifier, $v.value);
-	$namedValue.setLocation(new Location_V4(actualFile, $i.start, $v.stop));
+	$namedValue.setLocation(getLocation( $i.start, $v.stop));
 };
 
 pr_ArrayExpressionList returns[SequenceOf_Value value = null]
@@ -5909,7 +5957,7 @@ pr_ArrayExpressionList returns[SequenceOf_Value value = null]
 )
 {
 	$value = new SequenceOf_Value(values);
-	$value.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$value.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_ArrayExpressionSpec returns[IndexedValue indexedValue = null]:
@@ -5920,7 +5968,7 @@ pr_ArrayExpressionSpec returns[IndexedValue indexedValue = null]:
 {
 	if($s.subReference != null && $v.value != null) {
 		$indexedValue = new IndexedValue($s.subReference, $v.value);
-		$indexedValue.setLocation(new Location_V4(actualFile, $s.start, $v.stop));
+		$indexedValue.setLocation(getLocation( $s.start, $v.stop));
 	}
 };
 
@@ -5937,7 +5985,7 @@ pr_ArrayExpression returns[SequenceOf_Value value = null]
 		values = new Values(false);
 	}
 	$value = new SequenceOf_Value(values);
-	$value.setLocation(new Location_V4(actualFile, $col.start, $endcol.stop));
+	$value.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
 pr_ArrayElementExpressionList returns[Values values]
@@ -5953,7 +6001,7 @@ pr_ArrayElementExpressionList returns[Values values]
 pr_NotUsedOrExpression returns[Value value = null]:
 (	v = pr_NotUsedSymbol
 		{	$value = new Notused_Value();
-			$value.setLocation(new Location_V4(actualFile, $v.start, $v.stop));
+			$value.setLocation(getLocation( $v.start, $v.stop));
 		}
 |	v2 = pr_Expression { $value = $v2.value; }
 );
@@ -5974,14 +6022,14 @@ pr_Assignment returns[Assignment_Statement statement = null]:
 		$statement = new Assignment_Statement($r.reference, null);
 	}
 
-	$statement.setLocation(new Location_V4(actualFile, $r.start, $b.stop));
+	$statement.setLocation(getLocation( $r.start, $b.stop));
 };
 
 pr_SingleExpression returns[Value value = null]:
 (	v = pr_XorExpression{ $value = $v.value; }
 	(	OR	v2 = pr_XorExpression
 			{	$value = new OrExpression( $value, $v2.value);
-				$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop));
+				$value.setLocation(getLocation( $v.start, $v2.stop));
 			}
 	)*
 );
@@ -5990,7 +6038,7 @@ pr_XorExpression returns[Value value = null]:
 (	v = pr_AndExpression{ $value = $v.value; }
 	(	XOR	v2 = pr_AndExpression
 			{	$value = new XorExpression($value, $v2.value);
-				$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop));
+				$value.setLocation(getLocation( $v.start, $v2.stop));
 			}
 	)*
 );
@@ -5999,7 +6047,7 @@ pr_AndExpression returns[Value value = null]:
 (	v = pr_NotExpression{ $value = $v.value; }
 	(	AND v2 = pr_NotExpression
 			{	$value = new AndExpression($value, $v2.value);
-				$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop));
+				$value.setLocation(getLocation( $v.start, $v2.stop));
 			}
 	)*
 );
@@ -6007,104 +6055,104 @@ pr_AndExpression returns[Value value = null]:
 pr_NotExpression returns[Value value = null]:
 (	NOT
 	v1 = pr_NotExpression	{	$value = new NotExpression($v1.value);
-								$value.setLocation(new Location_V4(actualFile, $NOT, $v1.stop)); }
+								$value.setLocation(getLocation( $NOT, $v1.stop)); }
 |	v2 = pr_EqualExpression	{ $value = $v2.value; }
 );
 
 pr_EqualExpression returns[Value value = null]:
 (	v = pr_RelExpression	{ $value = $v.value; }
 	(	EQUAL	v2 = pr_RelExpression	{	$value = new EqualsExpression($value, $v2.value);
-											$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+											$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
 pr_RelExpression returns[Value value = null]:
 (   v = pr_ShiftExpression	{ $value = $v.value; }
 	(	LESSTHAN	v1 = pr_ShiftExpression	{	$value = new LessThanExpression($value, $v1.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v1.stop)); }
+												$value.setLocation(getLocation( $v.start, $v1.stop)); }
 	|	MORETHAN	v2 = pr_ShiftExpression {	$value = new GreaterThanExpression($value, $v2.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	|	NOTEQUALS	v3 = pr_ShiftExpression {	$value = new NotequalesExpression($value, $v3.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v3.stop)); }
+												$value.setLocation(getLocation( $v.start, $v3.stop)); }
 	|	MOREOREQUAL	v4 = pr_ShiftExpression {	$value = new GreaterThanOrEqualExpression($value, $v4.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v4.stop)); }
+												$value.setLocation(getLocation( $v.start, $v4.stop)); }
 	|	LESSOREQUAL	v5 = pr_ShiftExpression {	$value = new LessThanOrEqualExpression($value, $v5.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v5.stop)); }
+												$value.setLocation(getLocation( $v.start, $v5.stop)); }
 	)?
 );
 
 pr_ShiftExpression returns[Value value = null]:
 (	v = pr_BitOrExpression { $value = $v.value; }
 	(	SHIFTLEFT		v1 = pr_BitOrExpression	{	$value = new ShiftLeftExpression($value, $v1.value);
-													$value.setLocation(new Location_V4(actualFile, $v.start, $v1.stop)); }
+													$value.setLocation(getLocation( $v.start, $v1.stop)); }
 	|	SHIFTRIGHT		v2 = pr_BitOrExpression	{	$value = new ShiftRightExpression($value, $v2.value);
-													$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+													$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	|	ROTATELEFT		v3 = pr_BitOrExpression	{	$value = new RotateLeftExpression($value, $v3.value);
-													$value.setLocation(new Location_V4(actualFile, $v.start, $v3.stop)); }
+													$value.setLocation(getLocation( $v.start, $v3.stop)); }
 	|	ROTATERIGHT		v4 = pr_BitOrExpression	{	$value = new RotateRightExpression($value, $v4.value);
-													$value.setLocation(new Location_V4(actualFile, $v.start, $v4.stop)); }
+													$value.setLocation(getLocation( $v.start, $v4.stop)); }
 	)*
 );
 
 pr_BitOrExpression returns[Value value = null]:
 (	v = pr_BitXorExpression { $value = $v.value; }
 	(	OR4B	v2 = pr_BitXorExpression	{	$value = new Or4bExpression($value, $v2.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
 pr_BitXorExpression returns[Value value = null]:
 (	v = pr_BitAndExpression { $value = $v.value; }
 	(	XOR4B	v2 = pr_BitAndExpression	{	$value = new Xor4bExpression($value, $v2.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
 pr_BitAndExpression returns[Value value = null]:
 (	v = pr_BitNotExpression { $value = $v.value; }
 	(	AND4B	v2 = pr_BitNotExpression	{	$value = new And4bExpression($value, $v2.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
 pr_BitNotExpression returns[Value value = null]:
 (	NOT4B
 	v = pr_AddExpression {	$value = new Not4bExpression($v.value);
-							$value.setLocation(new Location_V4(actualFile, $start, getStopToken())); }
+							$value.setLocation(getLocation( $start, getStopToken())); }
 |	v2 = pr_AddExpression { $value = $v2.value; }
 );
 
 pr_AddExpression returns[Value value = null]:
 (	v = pr_MulExpression { $value = $v.value; }
 	(	PLUS	v1 = pr_MulExpression	{	$value = new AddExpression($value, $v1.value);
-											$value.setLocation(new Location_V4(actualFile, $v.start, $v1.stop)); }
+											$value.setLocation(getLocation( $v.start, $v1.stop)); }
 	|	pr_Minus	v2 = pr_MulExpression {	$value = new SubstractExpression($value, $v2.value);
-											$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+											$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	|	STRINGOP	v3 = pr_MulExpression	{	$value = new StringConcatenationExpression($value, $v3.value);
-												$value.setLocation(new Location_V4(actualFile, $v.start, $v3.stop)); }
+												$value.setLocation(getLocation( $v.start, $v3.stop)); }
 	)*
 );
 
 pr_MulExpression returns[Value value = null]:
 (	v = pr_UnaryExpression { $value = $v.value; }
 	(	STAR	v1 = pr_UnaryExpression	{	$value = new MultiplyExpression($value, $v1.value);
-											$value.setLocation(new Location_V4(actualFile, $v.start, $v1.stop)); }
+											$value.setLocation(getLocation( $v.start, $v1.stop)); }
 	|	SLASH	v2 = pr_UnaryExpression	{	$value = new DivideExpression($value, $v2.value);
-											$value.setLocation(new Location_V4(actualFile, $v.start, $v2.stop)); }
+											$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	|	MOD		v3 = pr_UnaryExpression	{	$value = new ModuloExpression($value, $v3.value);
-											$value.setLocation(new Location_V4(actualFile, $v.start, $v3.stop)); }
+											$value.setLocation(getLocation( $v.start, $v3.stop)); }
 	|	REM		v4 = pr_UnaryExpression	{	$value = new RemainderExpression($value, $v4.value);
-											$value.setLocation(new Location_V4(actualFile, $v.start, $v4.stop)); }
+											$value.setLocation(getLocation( $v.start, $v4.stop)); }
 	)*
 );
 
 pr_UnaryExpression returns [Value value = null]:
 (	PLUS
 	v1 = pr_Primary	{	$value = new UnaryPlusExpression($v1.value);
-						$value.setLocation(new Location_V4(actualFile, $PLUS, $v1.stop)); }
+						$value.setLocation(getLocation( $PLUS, $v1.stop)); }
 |	MINUS
 	v2 = pr_Primary	{	$value = new UnaryMinusExpression($v2.value);
-						$value.setLocation(new Location_V4(actualFile, $MINUS, $v2.stop)); }
+						$value.setLocation(getLocation( $MINUS, $v2.stop)); }
 |	v3 = pr_Primary	{	$value = $v3.value; }
 );
 
@@ -6123,27 +6171,27 @@ pr_Primary returns[Value value = null]
 				if(parameters == null) {
 					parameters = new ParsedActualParameters();
 				}
-				parameters.setLocation(new Location_V4(actualFile, $a11.start, $a12.stop));
+				parameters.setLocation(getLocation( $a11.start, $a12.stop));
 				ParameterisedSubReference subReference = new ParameterisedSubReference(id, parameters);
-				subReference.setLocation(new Location_V4(actualFile, $t.start, $a12.stop));
+				subReference.setLocation(getLocation( $t.start, $a12.stop));
 				temporalReference.addSubReference(subReference);
-				temporalReference.setLocation(new Location_V4(actualFile, $t.start, $a12.stop));
+				temporalReference.setLocation(getLocation( $t.start, $a12.stop));
 				$value = new Referenced_Value(temporalReference);
-				$value.setLocation(new Location_V4(actualFile, $t.start, $a12.stop));
+				$value.setLocation(getLocation( $t.start, $a12.stop));
 			}
 		(	p2 = pr_ApplyOpEnd
 				{	$value = new ApplyExpression( $value, $p2.parsedParameters );
-		 	 		$value.setLocation(new Location_V4(actualFile, $t.start, $p2.stop));
+		 	 		$value.setLocation(getLocation( $t.start, $p2.stop));
 				}
 		)*
 		(	pr_Dot
 			(	a14=RUNNING
 					{	$value = new ComponentRunnningExpression($value);
-						$value.setLocation(new Location_V4(actualFile, $t.start, $a14));
+						$value.setLocation(getLocation( $t.start, $a14));
 					}
 			|	a15=ALIVE
 					{	$value = new ComponentAliveExpression($value);
-						$value.setLocation(new Location_V4(actualFile, $t.start, $a15));
+						$value.setLocation(getLocation( $t.start, $a15));
 					}
 			)
 		)?
@@ -6154,17 +6202,17 @@ pr_Primary returns[Value value = null]
 							temporalReference.addSubReference(subReference);
 						}
 					}
-					temporalReference.setLocation(new Location_V4(actualFile, $t.start, $sr.stop));
+					temporalReference.setLocation(getLocation( $t.start, $sr.stop));
 				}
 		)?
 		(	pr_Dot a21 = READ
 				{	$value = new TimerReadExpression(temporalReference);
-					$value.setLocation(new Location_V4(actualFile, $t.start, $a21));
+					$value.setLocation(getLocation( $t.start, $a21));
 				} //pr_ReadTimerOp
 		|	c = pr_CreateOpEnd[ temporalReference ]
 				{	$value = $c.value;
 					if ( $value != null ) {
-					$value.setLocation(new Location_V4(actualFile, $t.start, $c.stop));
+					$value.setLocation(getLocation( $t.start, $c.stop));
 				}
 				}
 		|	(	{	$value = new Referenced_Value(temporalReference);
@@ -6172,7 +6220,7 @@ pr_Primary returns[Value value = null]
 				}
 				(	p3 = pr_ApplyOpEnd
 					{	$value = new ApplyExpression($value, $p3.parsedParameters);
-						$value.setLocation(new Location_V4(actualFile, $t.start, $p3.stop));
+						$value.setLocation(getLocation( $t.start, $p3.stop));
 					}
 				)+
 			|	{	if(temporalReference.getSubreferences().size() == 1 && temporalReference.getModuleIdentifier() == null) {
@@ -6185,9 +6233,9 @@ pr_Primary returns[Value value = null]
 			)
 			(	pr_Dot
 				(	a24=RUNNING	{	$value = new UndefRunningExpression(temporalReference);
-									$value.setLocation(new Location_V4(actualFile, $t.start, $a24));	}
+									$value.setLocation(getLocation( $t.start, $a24));	}
 				|	a25=ALIVE	{	$value = new ComponentAliveExpression($value);
-									$value.setLocation(new Location_V4(actualFile, $t.start, $a25));	}
+									$value.setLocation(getLocation( $t.start, $a25));	}
 				)
 			)?
 		)
@@ -6195,21 +6243,21 @@ pr_Primary returns[Value value = null]
 |	(	h1=pr_AnyKeyword pr_ComponentKeyword pr_Dot
 		(	h11=RUNNING
 				{	$value = new AnyComponentRunningExpression();
-					$value.setLocation(new Location_V4(actualFile, $h1.start, $h11));
+					$value.setLocation(getLocation( $h1.start, $h11));
 				}
 		|	h12=ALIVE
 				{	$value = new AnyComponentAliveExpression();
-					$value.setLocation(new Location_V4(actualFile, $h1.start, $h12));
+					$value.setLocation(getLocation( $h1.start, $h12));
 				}
 		)
 	|	h2=pr_AllKeyword pr_ComponentKeyword pr_Dot
 		(	h21=RUNNING
 				{	$value = new AllComponentRunningExpression();
-					$value.setLocation(new Location_V4(actualFile, $h2.start, $h21));
+					$value.setLocation(getLocation( $h2.start, $h21));
 				}
 		|	h22=ALIVE
 				{	$value = new AllComponentAliveExpression();
-					$value.setLocation(new Location_V4(actualFile, $h2.start, $h22));
+					$value.setLocation(getLocation( $h2.start, $h22));
 				}
 		)
 	)
@@ -6228,20 +6276,20 @@ pr_ExtendedFieldReference returns[List<ISubReference> subReferences]
 (	a = pr_Dot
 	(	structFieldId = pr_Identifier
 			{	FieldSubReference tempReference = new FieldSubReference($structFieldId.identifier);
-				tempReference.setLocation(new Location_V4(actualFile, $structFieldId.start, $structFieldId.stop));
+				tempReference.setLocation(getLocation( $structFieldId.start, $structFieldId.stop));
 				$subReferences.add(tempReference);
 			}
 	|	t = pr_PredefinedType
-			{	Identifier identifier = new Identifier(Identifier_type.ID_TTCN, $t.type.getTypename(), new Location_V4(actualFile, $t.start, $t.stop));
+			{	Identifier identifier = new Identifier(Identifier_type.ID_TTCN, $t.type.getTypename(), getLocation( $t.start, $t.stop));
 				FieldSubReference tempReference = new FieldSubReference(identifier);
-				tempReference.setLocation(new Location_V4(actualFile, $t.start, $t.stop));
+				tempReference.setLocation(getLocation( $t.start, $t.stop));
 				$subReferences.add(tempReference);
 			}
 	)
 |	(	abd = pr_ArrayOrBitRefOrDash
 			{	ArraySubReference tempReference = $abd.subReference;
 				if ( tempReference != null ) {
-					tempReference.setLocation(new Location_V4(actualFile, $abd.start, $abd.stop));
+					tempReference.setLocation(getLocation( $abd.start, $abd.stop));
 					$subReferences.add( tempReference );
 				}
 			}
@@ -6318,7 +6366,7 @@ pr_PredefinedOps returns[Value value = null]
 	t = pr_TemplateInstance
 	pr_RParen	{	$value = new Ttcn2StringExpression($t.templateInstance); }
 )
-{ $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); };
+{ $value.setLocation(getLocation( $start, getStopToken())); };
 
 //The ones with only one standard operand
 pr_PredefinedOps1 returns[Value value = null]:
@@ -6434,7 +6482,7 @@ pr_PredefinedOps1 returns[Value value = null]:
 	pr_LParen	v = pr_SingleExpression
 	pr_RParen	{	$value = new DecodeBase64Expression($v.value); }
 )
-{ $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); };
+{ $value.setLocation(getLocation( $start, getStopToken())); };
 
 //The ones with 2 standard operands
 pr_PredefinedOps2 returns[Value value = null]:
@@ -6451,7 +6499,7 @@ pr_PredefinedOps2 returns[Value value = null]:
 	pr_Comma	v2 = pr_SingleExpression
 	pr_RParen	{	$value = new Int2OctExpression($v1.value, $v2.value); }
 )
-{ $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); };
+{ $value.setLocation(getLocation( $start, getStopToken())); };
 
 //The ones with 3 or 4 standard operands
 pr_PredefinedOps3 returns[Value value = null]:
@@ -6478,7 +6526,7 @@ pr_PredefinedOps3 returns[Value value = null]:
 	pr_Comma	t4 = pr_TemplateInstance
 	pr_RParen	{	$value = new ReplaceExpression($t1.templateInstance, $v2.value, $v3.value, $t4.templateInstance); }
 )
-{ $value.setLocation(new Location_V4(actualFile, $start, getStopToken())); };
+{ $value.setLocation(getLocation( $start, getStopToken())); };
 
 pr_SizeofARG returns[Reference reference = null]:
 (	r1 = pr_FunctionInstance { $reference = $r1.temporalReference; }
@@ -6498,7 +6546,7 @@ pr_LogStatement returns[Log_Statement statement = null]
 )
 {
 	$statement = new Log_Statement( logArguments );
-	$statement.setLocation(new Location_V4( actualFile, $col, $endcol.stop ) );
+	$statement.setLocation(getLocation( $col, $endcol.stop ) );
 };
 
 pr_String2TtcnStatement returns[String2Ttcn_Statement statement = null]:
@@ -6511,7 +6559,7 @@ pr_String2TtcnStatement returns[String2Ttcn_Statement statement = null]:
 )
 {
 	$statement = new String2Ttcn_Statement($v.value, $r.reference);
-	$statement.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+	$statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
 pr_LogArguments returns[LogArguments logArguments]
@@ -6529,7 +6577,7 @@ pr_LogItem returns[LogArgument item = null]:
 )
 {
 	$item = new LogArgument($t.templateInstance);
-	$item.setLocation(new Location_V4(actualFile, $t.start, $t.stop));
+	$item.setLocation(getLocation( $t.start, $t.stop));
 };
 
 pr_LoopConstruct returns[Statement statement = null]:
@@ -6561,7 +6609,7 @@ pr_ForStatement returns[Statement for_statement = null]
 	} else {
 		$for_statement = new For_Statement(definitions, $v.value, $incrementAssignment.statement, $sb.statementblock);
 	}
-	$for_statement.setLocation( new Location_V4(actualFile, $FOR, $sb.stop) );
+	$for_statement.setLocation( getLocation( $FOR, $sb.stop) );
 };
 
 pr_InitialDefinitions returns[For_Loop_Definitions definitions]
@@ -6574,7 +6622,7 @@ pr_InitialDefinitions returns[For_Loop_Definitions definitions]
 	if ( $d.definitions != null ) {
 		$definitions.addDefinitions( $d.definitions );
 	}
-	$definitions.setLocation( new Location_V4( actualFile, $d.start, $d.stop ) );
+	$definitions.setLocation( getLocation( $d.start, $d.stop ) );
 };
 
 pr_InitialAssignment returns[Assignment_Statement assignment = null]:
@@ -6590,7 +6638,7 @@ pr_WhileStatement returns[Statement while_statement = null ]:
 )
 {
 	$while_statement = new While_Statement($v.value, $sb.statementblock);
-	$while_statement.setLocation(new Location_V4(actualFile, $col, $sb.stop));
+	$while_statement.setLocation(getLocation( $col, $sb.stop));
 };
 
 pr_DoWhileStatement returns[Statement dowhile_statement = null ]:
@@ -6603,7 +6651,7 @@ pr_DoWhileStatement returns[Statement dowhile_statement = null ]:
 )
 {
 	$dowhile_statement = new DoWhile_Statement($v.value, $sb.statementblock);
-	$dowhile_statement.setLocation(new Location_V4(actualFile, $col, $endcol.stop));
+	$dowhile_statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
 pr_ConditionalConstruct returns[If_Statement if_statement = null]
@@ -6622,10 +6670,10 @@ pr_ConditionalConstruct returns[If_Statement if_statement = null]
 )
 {
 	If_Clause first_if_clause = new If_Clause($v.value, $sb.statementblock);
-	first_if_clause.setLocation( new Location_V4(actualFile, $start, $sb.stop) );
+	first_if_clause.setLocation( getLocation( $start, $sb.stop) );
 	if_clauses.addFrontIfClause(first_if_clause);
 	$if_statement = new If_Statement(if_clauses, statementblock2);
-	$if_statement.setLocation(new Location_V4(actualFile, $start, getStopToken()));
+	$if_statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_ElseIfClause returns[If_Clause if_clause = null]:
@@ -6638,7 +6686,7 @@ pr_ElseIfClause returns[If_Clause if_clause = null]:
 )
 {
 	$if_clause = new If_Clause($v.value, $sb.statementblock);
-	$if_clause.setLocation( new Location_V4(actualFile, $col, $sb.stop) );
+	$if_clause.setLocation( getLocation( $col, $sb.stop) );
 };
 
 pr_ElseClause returns[StatementBlock statementblock = null]:
@@ -6655,7 +6703,7 @@ pr_SelectCaseConstruct returns[Statement statement = null]:
 )
 {
 	$statement = new SelectCase_Statement($v.value, $sc.selectCases);
-	$statement.setLocation(new Location_V4(actualFile, $col, $sc.stop));
+	$statement.setLocation(getLocation( $col, $sc.stop));
 };
 
 pr_SelectCaseBody returns[SelectCases selectCases]
@@ -6677,7 +6725,7 @@ pr_SelectCase returns[SelectCase selectCase = null]
 		(	pr_Comma
 			t = pr_TemplateInstance	{ if($t.templateInstance != null) { templateInstances.addTemplateInstance($t.templateInstance); } }
 		)*
-		b = pr_RParen  {templateInstances.setLocation( new Location_V4(actualFile, $a.start, $b.stop));}
+		b = pr_RParen  {templateInstances.setLocation( getLocation( $a.start, $b.stop));}
 	|	ELSE
 	)
 	s = pr_StatementBlock
@@ -6685,7 +6733,7 @@ pr_SelectCase returns[SelectCase selectCase = null]
 )
 {
 	$selectCase = new SelectCase(templateInstances, $s.statementblock);
-	$selectCase.setLocation( new Location_V4(actualFile, $start, getStopToken()) );
+	$selectCase.setLocation( getLocation( $start, getStopToken()) );
 };
 
 pr_Identifier returns [Identifier identifier = null]:
@@ -6693,7 +6741,7 @@ pr_Identifier returns [Identifier identifier = null]:
 {
 	final String text = $IDENTIFIER.text;
 	if ( text != null) {
-		$identifier = new Identifier( Identifier_type.ID_TTCN, text, new Location_V4( actualFile, $IDENTIFIER ) );
+		$identifier = new Identifier( Identifier_type.ID_TTCN, text, getLocation( $IDENTIFIER ) );
 	}
 };
 
@@ -6789,7 +6837,7 @@ pr_UnifiedReferenceParser returns[Reference reference = null]
 			lastcol = $a2.stop;
 			final KeywordLessIdentifier id1 = $i1.identifier;
 			final KeywordLessIdentifier id2 = $i2.identifier;
-			Location location = new Location_V4(actualFile, $i1.start, $a2.stop);
+			Location location = getLocation( $i1.start, $a2.stop);
 			if("any".equals(id1.getName())) {
 				if("timer".equals(id2.getName())) {
 					$reference = new Reference(new KeywordLessIdentifier(Identifier_type.ID_TTCN, "any timer", location));
@@ -6877,14 +6925,14 @@ pr_UnifiedReferenceParser returns[Reference reference = null]
 )
 {
 	if($reference != null) {
-		$reference.setLocation(new Location_V4(actualFile, startcol, $endcol));
+		$reference.setLocation(getLocation( startcol, $endcol));
 	}
 };
 
 pr_KeywordLessIdentifier returns [KeywordLessIdentifier identifier = null]:
 (	IDENTIFIER | pr_Macro // 1 token only in each case
 )
-{	$identifier = new KeywordLessIdentifier(Identifier_type.ID_TTCN, $start.getText(), new Location_V4(actualFile, $start));
+{	$identifier = new KeywordLessIdentifier(Identifier_type.ID_TTCN, $start.getText(), getLocation( $start));
 };
 
 pr_KeywordLessGlobalModuleId returns [Reference reference = null]:
@@ -6894,7 +6942,7 @@ pr_KeywordLessGlobalModuleId returns [Reference reference = null]:
 		{	$reference = new Reference($i.identifier); }
 	|	{	$reference = new Reference(null);
 			FieldSubReference subReference = new FieldSubReference($i.identifier);
-			subReference.setLocation(new Location_V4(actualFile, $i.start, $i.stop));
+			subReference.setLocation(getLocation( $i.start, $i.stop));
 			$reference.addSubReference(subReference); }
 	)
 );
