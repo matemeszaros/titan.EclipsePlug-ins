@@ -28,6 +28,6 @@ http://polarsys.org/sites/default/files/custom_uploads/TITAN%20Datasheet%20A4%20
  
 ## Titan test ports and protocol modules
 
-listed on the above page 
+listed on the titan.core page 
 
  
