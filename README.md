@@ -30,4 +30,7 @@ http://polarsys.org/sites/default/files/custom_uploads/TITAN%20Datasheet%20A4%20
 
 listed on the titan.core page 
 
- 
+#Compressed update site and SHA512 checksum for the Eclipse plug-ins:
+
+* https://www.eclipse.org/downloads/download.php?file=/titan/TITAN_Designer_and_Executor_plugin-5.3.pl1-opensource.zip
+* https://www.eclipse.org/downloads/download.php?file=/titan/TITAN_Designer_and_Executor_plugin-5.3.pl1-opensource.zip.sha512
