@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,7 +89,7 @@ public final class BitString_Pattern_Template extends TTCN3Template {
 	protected void checkTemplateSpecificLengthRestriction(final CompilationTimeStamp timestamp, final Type_type typeType) {
 		if (Type_type.TYPE_BITSTRING.equals(typeType)) {
 			boolean hasAnyOrNone = containsAnyornoneSymbol();
-			lengthRestriction.checkNofElements(timestamp, getMinLengthOfPattern(), false, hasAnyOrNone, hasAnyOrNone, this);
+			lengthRestriction.checkNofElements(timestamp, getMinLengthOfPattern(), hasAnyOrNone, hasAnyOrNone, hasAnyOrNone, this);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public class UnusedStartedFuncRetVal extends BaseModuleCodeSmellSpotter {
 			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 			Start_Component_Statement s = (Start_Component_Statement) node;
 
-			Component_Type compType = Port_Utility.checkComponentReference(timestamp, s, s.getComponent(), false, false, false);
+			Component_Type compType = Port_Utility.checkComponentReference(timestamp, s, s.getComponent(), false, false);
 
 			Assignment assignment = s.getFunctionInstanceReference().getRefdAssignment(timestamp, false);
 			if (assignment == null) {

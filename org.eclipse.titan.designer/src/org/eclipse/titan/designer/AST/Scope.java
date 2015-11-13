@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -217,20 +217,16 @@ public abstract class Scope implements INamedNode, IIdentifierContainer, IVisita
 	 * @param isSystem
 	 *                true if searching for the system component, false
 	 *                otherwise.
-	 *                
-	 * @param isConnecting
-	 *                true if this function was called while checking the end
-	 *                points of a 'map' or 'connect' statement. 
 	 *
-	 * @return the system component type, or null if it can not be
-	 *         determined (outside testcase definitions.)
+	 * @return the system or mtc component type, or null if it cannot be
+	 *         determined (outside testcase definitions - in functions and in altsteps ) 
 	 * */
-	public Component_Type getMtcSystemComponentType(final CompilationTimeStamp timestamp, final boolean isSystem, final boolean isConnecting) {
+	public Component_Type getMtcSystemComponentType(final CompilationTimeStamp timestamp, final boolean isSystem) {
 		if (parentScope == null) {
 			return null;
 		}
 
-		return parentScope.getMtcSystemComponentType(timestamp, isSystem, isConnecting);
+		return parentScope.getMtcSystemComponentType(timestamp, isSystem);
 	}
 
 	/**

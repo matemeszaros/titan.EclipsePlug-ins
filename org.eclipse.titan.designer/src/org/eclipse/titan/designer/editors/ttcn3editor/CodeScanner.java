@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,8 +31,8 @@ public final class CodeScanner extends RuleBasedScanner {
 			"break", "case", "component", "const", "continue", "control", "deactivate", "display", "do", "else", "encode", "enumerated",
 			"except", "exception", "execute", "extends", "extension", "external", "for", "from", "function", "goto", "group", "if",
 			"import", "in", "infinity", "inout", "interleave", "label", "language", "length", "log", "match", "message", "mixed", "mod",
-			"modifies", "module", "modulepar", "mtc", "noblock", "not", "not4b", "nowait", "of", "on", "optional", "or", "or4b", "out",
-			"override", "param", "pattern", "port", "procedure", "record", "recursive", "rem", "repeat", "return", "runs", "select",
+			"modifies", "module", "modulepar", "mtc", "noblock", "not", "not4b", "nowait", "of", "omit", "on", "optional", "or", "or4b", "out",
+			"override", "param", "pattern", "port", "present", "procedure", "record", "recursive", "rem", "repeat", "return", "runs", "select",
 			"self", "sender", "set", "signature", "system", "template", "testcase", "to", "type", "union", "value", "valueof", "var",
 			"variant", "while", "with", "xor", "xor4b" };
 
@@ -68,7 +68,7 @@ public final class CodeScanner extends RuleBasedScanner {
 
 	public static final String[] VERDICT_CONSTANT = new String[] { "none", "pass", "inconc", "fail", "error" };
 
-	public static final String[] OTHER_CONSTANT = new String[] { "null", "NULL", "omit" };
+	public static final String[] OTHER_CONSTANT = new String[] { "null", "NULL" };
 
 	public static final String[] MACROS = new String[] { "%moduleId", "%definitionId", "%testcaseId", "%fileName", "%lineNumber", "__MODULE__",
 			"__FILE__", "__BFILE__", "__LINE__", "__SCOPE__", "__TESTCASE__" };

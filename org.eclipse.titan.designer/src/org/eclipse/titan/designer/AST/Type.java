@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -590,7 +590,8 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			case A_PAR_TEMP_IN:
 			case A_PAR_TEMP_OUT:
 			case A_PAR_TEMP_INOUT:
-				if (!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)) {
+				if (!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue) 
+						&& (!Expected_Value_type.EXPECTED_DYNAMIC_VALUE.equals(expectedValue))) {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format("Reference to a value was expected instead of {0}",
 									assignment.getDescription()));

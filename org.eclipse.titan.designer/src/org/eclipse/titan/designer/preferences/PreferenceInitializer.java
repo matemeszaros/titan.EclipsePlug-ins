@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,7 +54,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.CONTENTASSISTANT_PROPOSAL_SORTING, PreferenceConstantValues.SORT_BY_RELEVANCE);
 		preferenceStore.setDefault(PreferenceConstants.CONTENTASSISTANT_AUTO_ACTIVATION, true);
 		preferenceStore.setDefault(PreferenceConstants.CONTENTASSISTANT_AUTO_ACTIVATION_DELAY, 100);
-
+		
+		//		export
+		preferenceStore.setDefault(PreferenceConstants.EXPORT_EXCLUDE_WORKING_DIRECTORY_CONTENTS, true);
+		preferenceStore.setDefault(PreferenceConstants.EXPORT_EXCLUDE_DOT_RESOURCES, true);
+		preferenceStore.setDefault(PreferenceConstants.EXPORT_EXCLUDE_LINKED_CONTENTS, true);
+		preferenceStore.setDefault(PreferenceConstants.EXPORT_SAVE_DEFAULT_VALUES, false);
+		preferenceStore.setDefault(PreferenceConstants.EXPORT_PACK_ALL_PROJECTS_INTO_ONE, false);
+		
+		preferenceStore.setDefault(PreferenceConstants.EXPORT_AUTOMATIC_EXPORT, false);
+		preferenceStore.setDefault(PreferenceConstants.EXPORT_REQUEST_LOCATION, false);
+		
 		//		folding
 		preferenceStore.setDefault(PreferenceConstants.FOLDING_ENABLED, true);
 		preferenceStore.setDefault(PreferenceConstants.FOLD_COMMENTS, true);
@@ -352,7 +362,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_PREFERENCE_PAGE_ENABLED, false);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_TIMESTAMP, true);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_AST_ELEM, false);
-		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_ANTLR_V4, false);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_LOG_TO_SYSOUT, false);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_LOAD_TOKENS_TO_PROCESS_IN_A_ROW, 100);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_LOAD_SLEEP_BETWEEN_FILES, 10);

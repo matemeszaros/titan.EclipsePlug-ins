@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,7 @@ public final class SystemComponentExpression extends Expression_Value {
 		}
 
 		if (myScope != null) {
-			return myScope.getMtcSystemComponentType(timestamp, true, false);
+			return myScope.getMtcSystemComponentType(timestamp, true);
 		}
 
 		return null;
@@ -81,7 +81,7 @@ public final class SystemComponentExpression extends Expression_Value {
 			return;
 		}
 
-		Type componentType = myScope.getMtcSystemComponentType(timestamp, true, false);
+		Type componentType = myScope.getMtcSystemComponentType(timestamp, true);
 		if (componentType != null && !governorLast.isCompatible(timestamp, componentType, null, null, null)) {
 			// This actually would be an internal error
 			getLocation().reportSemanticError(

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,6 @@ import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 
 /**
  * Represents a hole type.
@@ -73,7 +72,7 @@ public final class Open_Type extends ASN1Type {
 	private TableConstraint myTableConstraint;
 
 	public Open_Type(final ObjectClass_Definition objectClass, final Identifier identifier) {
-		compFieldMap = ParserFactory.createCompFieldMap();
+		compFieldMap = new CompFieldMap();
 		this.objectClass = objectClass;
 		fieldName = identifier;
 
@@ -204,7 +203,7 @@ public final class Open_Type extends ASN1Type {
 
 	public void clear() {
 		lastTimeChecked = null;
-		compFieldMap = ParserFactory.createCompFieldMap();
+		compFieldMap = new CompFieldMap();
 		compFieldMap.setMyType(this);
 		compFieldMap.setFullNameParent(this);
 	}

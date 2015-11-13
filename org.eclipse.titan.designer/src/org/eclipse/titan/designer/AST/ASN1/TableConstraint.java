@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@ package org.eclipse.titan.designer.AST.ASN1;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.AtNotation;
 import org.eclipse.titan.designer.AST.AtNotations;
@@ -35,6 +38,9 @@ import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Choice_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Sequence_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Set_Type;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.BlockLevelTokenStreamTracker;
 
 /**
  * Represents a TableConstraint (SimpleTableConstraint and
@@ -43,7 +49,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class TableConstraint extends Constraint {
+public final class TableConstraint extends Constraint {
 	private static final String FULLNAMEPART = ".<tableconstraint-os>";
 	private static final String OCFTEXPECTED = "TableConstraint can only be applied to ObjectClassFieldType";
 	private static final String CANNOTDETERMINEPARENT = "Invalid use of ComponentRelationConstraint (cannot determine parent type)";
@@ -53,7 +59,9 @@ public abstract class TableConstraint extends Constraint {
 	private static final String SAMECONSTRAINTEXPECTED = "The referenced components must be value (set) fields"
 			+ " constrained by the same objectset as the referencing component";
 
-	
+	private Block mObjectSetBlock;
+	private Block mAtNotationsBlock;
+
 	protected ObjectSet objectSet;
 	protected AtNotations atNotationList;
 	//TODO: remove if not used
@@ -61,8 +69,14 @@ public abstract class TableConstraint extends Constraint {
 
 	private IType constrainedType;
 
-	public TableConstraint() {
+	public TableConstraint(final Block aObjectSetBlock, final Block aAtNotationsBlock) {
 		super(Constraint_type.CT_TABLE);
+		this.mObjectSetBlock = aObjectSetBlock;
+		this.mAtNotationsBlock = aAtNotationsBlock;
+	}
+
+	public TableConstraint newInstance() {
+		return new TableConstraint(mObjectSetBlock, mAtNotationsBlock);
 	}
 
 	@Override
@@ -364,7 +378,63 @@ public abstract class TableConstraint extends Constraint {
 	 * because the origin of the returned ID must be ASN. return new
 	 * Identifier(Identifier_type.ID_ASN, tempId.get_asnName()); }
 	 */
-	protected abstract void parseBlocks();
+	private void parseBlocks() {
+		if (mObjectSetBlock == null) {
+			return;
+		}
+
+		objectSet = null;
+		atNotationList = null;
+		if (null != mObjectSetBlock) {
+			if (mAtNotationsBlock == null) {
+				// SimpleTableConstraint
+				Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mObjectSetBlock, 0);
+				if (parser != null) {
+					objectSet = parser.pr_special_ObjectSetSpec().definition;
+					List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+					if (null != errors && !errors.isEmpty()) {
+						objectSet = null;
+						for (int i = 0; i < errors.size(); i++) {
+							ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mObjectSetBlock.getLocation().getFile(), errors.get(i),
+									IMarker.SEVERITY_ERROR);
+						}
+					}
+				}
+			} else {
+				// ComponentRelationConstraint
+				Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mObjectSetBlock, 0);
+				if (parser != null) {
+					objectSet = parser.pr_DefinedObjectSetBlock().objectSet;
+					List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+					if (null != errors && !errors.isEmpty()) {
+						objectSet = null;
+						for (int i = 0; i < errors.size(); i++) {
+							ParserMarkerSupport.createOnTheFlySyntacticMarker((IFile) mObjectSetBlock.getLocation().getFile(), errors.get(i),
+									IMarker.SEVERITY_ERROR);
+						}
+					}
+				}
+				parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mAtNotationsBlock, 0);
+				if (parser != null) {
+					atNotationList = parser.pr_AtNotationList().notationList;
+					List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+					if (null != errors && !errors.isEmpty()) {
+						objectSet = null;
+						for (int i = 0; i < errors.size(); i++) {
+							ParserMarkerSupport.createOnTheFlySyntacticMarker((IFile) mAtNotationsBlock.getLocation().getFile(), errors.get(i),
+									IMarker.SEVERITY_ERROR);
+						}
+					}
+				}
+				if (atNotationList == null) {
+					atNotationList = new AtNotations();
+				}
+			}
+		}
+		if (objectSet == null) {
+			objectSet = new ObjectSet_definition();
+		}
+	}
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {

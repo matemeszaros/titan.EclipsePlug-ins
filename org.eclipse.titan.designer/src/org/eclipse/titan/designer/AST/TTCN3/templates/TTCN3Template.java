@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,9 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * */
 public abstract class TTCN3Template extends GovernedSimple implements IReferenceChainElement, ITTCN3Template, IIncrementallyUpdateable {
 	protected static final String RESTRICTIONERROR = "Restriction on {0} does not allow usage of `{1}''";
+	protected static final String OMITRESTRICTIONERROR = "Restriction 'omit' on {0} does not allow usage of `{1}''";
+	protected static final String VALUERESTRICTIONERROR = "Restriction 'value' on {0} does not allow usage of `{1}''";
+	protected static final String PRESENTRESTRICTIONERROR = "Restriction 'present' on {0} does not allow usage of `{1}''";
 	private static final String LENGTHRESTRICTIONERROR = "Restriction on {0} does not allow usage of length restriction";
 
 	/** The type of the template, which also happens to be its governor. */
@@ -965,22 +968,24 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	 *                name for the error/warning message
 	 * @param templateRestriction
 	 *                the template restriction to check
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * */
 	@Override
-	public final void checkRestrictionCommon(final String definitionName, final TemplateRestriction.Restriction_type templateRestriction) {
+	public final void checkRestrictionCommon(final String definitionName, final TemplateRestriction.Restriction_type templateRestriction, final Location usageLocation) {
 		switch (templateRestriction) {
 		case TR_VALUE:
 		case TR_OMIT:
 			if (lengthRestriction != null) {
-				location.reportSemanticError(MessageFormat.format(LENGTHRESTRICTIONERROR, definitionName));
+				usageLocation.reportSemanticError(MessageFormat.format(LENGTHRESTRICTIONERROR, definitionName));
 			}
 			if (isIfpresent) {
-				location.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, "ifpresent"));
+				usageLocation.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, "ifpresent"));
 			}
 			break;
 		case TR_PRESENT:
 			if (isIfpresent) {
-				location.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, "ifpresent"));
+				usageLocation.reportSemanticError(MessageFormat.format(PRESENTRESTRICTIONERROR, definitionName, "ifpresent"));
 			}
 			break;
 		default:
@@ -998,6 +1003,8 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	 *                name for the error/warning message
 	 * @param omitAllowed
 	 *                true in case of TR_OMIT, false in case of TR_VALUE
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * @return false = always satisfies restriction -> no runtime check
 	 *         needed or never satisfies restriction -> compiler error(s)
 	 *         true = possibly violates restriction, cannot be determined at
@@ -1006,14 +1013,14 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	 *         there's no warning
 	 */
 	@Override
-	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed) {
+	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
-		location.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
+		usageLocation.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
 		return false;
 	}
 
@@ -1029,12 +1036,14 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	 *                the names of the named templates already checked.
 	 * @param neededCheckedCnt
 	 *                the number of elements left to be checked.
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * 
 	 * @return true if a check at runtime is needed, false otherwise.
 	 */
 	@Override
 	public boolean chkRestrictionNamedListBaseTemplate(final CompilationTimeStamp timestamp, final String definitionName,
-			final Set<String> checkedNames, final int neededCheckedCnt) {
+			final Set<String> checkedNames, final int neededCheckedCnt, final Location usageLocation) {
 		// override when needed
 		return false;
 	}
@@ -1047,12 +1056,14 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	 *                the time stamp of the actual semantic check cycle.
 	 * @param definitionName
 	 *                name for the error/warning message
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * 
 	 * @return true if the template conforms to the restriction TR_PRESENT.
 	 */
 	@Override
-	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT);
+	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
+		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
 		return false;
 	}
 

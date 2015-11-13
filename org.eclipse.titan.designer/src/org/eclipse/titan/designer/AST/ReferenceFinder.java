@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,7 +117,7 @@ public final class ReferenceFinder {
 
 		assignment = declaration.getAssignment();
 
-		if (scope == null || assignment == null) {
+		if (assignment == null) {
 			if (reportErrors) {
 				targetEditor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(NORECOGNISABLEASSIGNMENT);
 			}

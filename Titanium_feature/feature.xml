@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2014 Ericsson Telecom AB
+ Copyright (c) 2000-2015 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -10,17 +10,17 @@
 <feature
       id="Titanium"
       label="Titanium_Feature"
-      version="5.1.0.CRL_113_200_5_R1A_20141219-1800"
+      version="5.4.0.CRL_113_200_5_R4A_20151030-1100"
       provider-name="Eclipse Titan Project">
 
    <description url="http://ttcn.ericsson.se/download/update_site/releasenotes.pdf">
-      CRL 113 200/5 R1A (5.1.pl0) version of the Titanium
+      CRL 113 200/5 R4A (5.4.pl0) version of the Titanium
 plug-in.
    </description>
 
    <copyright>
       /*******************************************************************************
-* Copyright (c) 2000-2014 Ericsson Telecom AB
+* Copyright (c) 2000-2015 Ericsson Telecom AB
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at

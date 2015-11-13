@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,11 +41,11 @@ import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.extensionattributeparser.ExtensionAttributeAnalyzer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 
@@ -259,7 +259,7 @@ public final class Def_Type extends Definition {
 		List<ExtensionAttribute> attributes = new ArrayList<ExtensionAttribute>();
 		for (int i = 0; i < specifications.size(); i++) {
 			AttributeSpecification specification = specifications.get(i);
-			ExtensionAttributeAnalyzer analyzer = ParserFactory.createExtensionAttributeAnalyzer();
+			ExtensionAttributeAnalyzer analyzer = new ExtensionAttributeAnalyzer();
 			analyzer.parse(specification);
 
 			List<ExtensionAttribute> temp = analyzer.getAttributes();
@@ -350,16 +350,15 @@ public final class Def_Type extends Definition {
 	public List<Integer> getPossibleExtensionStarterTokens() {
 		List<Integer> result = new ArrayList<Integer>();
 		// might be extended with a subtype
-		result.add(TTCN3Lexer4.LPAREN);
+		result.add(Ttcn3Lexer.LPAREN);
 		// length restriction
-		result.add(TTCN3Lexer4.LENGTH);
+		result.add(Ttcn3Lexer.LENGTH);
 		// dimension
-		result.add(TTCN3Lexer4.SQUAREOPEN);
+		result.add(Ttcn3Lexer.SQUAREOPEN);
 
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			// might be extended with a with attribute
-			result.add(TTCN3Lexer4.WITH);
-			return result;
+			result.add(Ttcn3Lexer.WITH);
 		}
 
 		return result;
@@ -376,7 +375,7 @@ public final class Def_Type extends Definition {
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
 				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
-				IIdentifierReparser r = ParserFactory.createIdentifierReparser(reparser);
+				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
 				identifier = r.getIdentifier();
 				// damage handled

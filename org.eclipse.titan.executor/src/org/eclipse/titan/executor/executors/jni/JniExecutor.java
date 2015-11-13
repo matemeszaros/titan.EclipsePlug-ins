@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.cfg.CFGLexer2;
+import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
 import org.eclipse.titan.executor.Activator;
 import org.eclipse.titan.executor.GeneralConstants;
@@ -724,12 +724,7 @@ public final class JniExecutor extends BaseExecutor implements IJNICallback {
 					List<String> configurationFileElements = configHandler.getExecuteElements();
 					if (configurationFileElements.isEmpty()) {
 						invalidSelection = true;
-						Display.getDefault().syncExec(new Runnable() {
-							@Override
-							public void run() {
-								MessageDialog.openError(new Shell(Display.getDefault()), "Execution failed", "The configuration file selected does not have anything to execute");
-							}
-						});
+						Display.getDefault().syncExec( new EmptyExecutionRunnable() );
 					} else {
 						invalidSelection = false;
 						for (int i = 0; i < lastTimeSelectionTime; i++) {
@@ -993,12 +988,12 @@ public final class JniExecutor extends BaseExecutor implements IJNICallback {
 		if (configHandler != null) {
 			List<Integer> disallowedNodes = new ArrayList<Integer>();
 
-			disallowedNodes.add(CFGLexer2.MAIN_CONTROLLER_SECTION);
-			disallowedNodes.add(CFGLexer2.DEFINE_SECTION);
-			disallowedNodes.add(CFGLexer2.INCLUDE_SECTION);
-			disallowedNodes.add(CFGLexer2.COMPONENTS_SECTION);
-			disallowedNodes.add(CFGLexer2.GROUPS_SECTION);
-			disallowedNodes.add(CFGLexer2.EXECUTE_SECTION);
+			disallowedNodes.add(CfgLexer.MAIN_CONTROLLER_SECTION);
+			disallowedNodes.add(CfgLexer.DEFINE_SECTION);
+			disallowedNodes.add(CfgLexer.INCLUDE_SECTION);
+			disallowedNodes.add(CfgLexer.COMPONENTS_SECTION);
+			disallowedNodes.add(CfgLexer.GROUPS_SECTION);
+			disallowedNodes.add(CfgLexer.EXECUTE_SECTION);
 
 			result += configHandler.toStringResolved(disallowedNodes);
 		}

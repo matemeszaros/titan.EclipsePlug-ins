@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,6 +53,7 @@ import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.titan.designer.properties.data.CCompilerOptionsData;
 import org.eclipse.titan.designer.properties.data.COptimalizationOptionsData;
+import org.eclipse.titan.designer.properties.data.LinkerFlagsOptionsData;
 import org.eclipse.titan.designer.properties.data.LinkerLibrariesOptionsData;
 import org.eclipse.titan.designer.properties.data.MakefileCreationData;
 import org.eclipse.titan.designer.properties.data.PlatformSpecificLibrariesOptionsData;
@@ -842,7 +843,8 @@ public final class MakefileGenerator {
 		}
 		contents.append("\n\n");
 		contents.append("# Flags for the linker:\n");
-		contents.append("LDFLAGS =").append(useCrossCompilation ? "-L$(CROSSTOOL_DIR)/lib" : "");
+		contents.append("LDFLAGS = ").append(useCrossCompilation ? "-L$(CROSSTOOL_DIR)/lib " : "");
+		contents.append( LinkerFlagsOptionsData.getLinkerFlags(project));
 		if (dynamicLinking) {
 			contents.append(" -fPIC");
 		}
@@ -2029,11 +2031,13 @@ public final class MakefileGenerator {
 
 		final List<IProject> referencedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
 		if (dynamicLinking && library) {
-			contents.append("$(EXECUTABLE): $(LIBRARY)");
+			contents.append("$(EXECUTABLE): $(LIBRARY)\n");
 			contents.append("\t$(CXX) $(LDFLAGS) -o $@ $(LIBRARY)");
 		} else {
 			contents.append("$(EXECUTABLE): " + allObjects).append("\n");
-			contents.append("\t$(CXX) $(LDFLAGS) -o $@ ").append(gnuMake ? "$^" : allObjects);
+			contents.append("\t$(CXX) $(LDFLAGS) -o $@ ");
+			if(dynamicLinking && !Platform.OS_SOLARIS.equals(Platform.getOS())) contents.append("-Wl,--no-as-needed ");
+			contents.append(gnuMake ? "$^" : allObjects);
 
 			for (IProject referencedProject : referencedProjects) {
 				String[] optionList = LinkerLibrariesOptionsData.getAdditionalObjects(referencedProject);
@@ -2155,7 +2159,7 @@ public final class MakefileGenerator {
 		}
 		if (ResourceUtils.getBooleanPersistentProperty(
 				project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.DYNAMIC_LINKING_PROPERTY)) {
-			if (!Platform.OS_WIN32.equals(Platform.getOS())) {
+			if (!Platform.OS_WIN32.equals(Platform.getOS())) { 
 				dynamicLinking = true;
 			} else {
 				//TITANConsole.getConsole().newMessageStream().println(INVALID_OPTIONS);

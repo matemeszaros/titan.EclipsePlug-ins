@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,8 @@ import org.eclipse.titan.designer.core.TITANBuilder;
 import org.eclipse.titan.designer.properties.PropertyNotificationManager;
 import org.eclipse.titan.designer.properties.data.ProjectBuildPropertyData;
 import org.eclipse.titan.designer.properties.data.ProjectDocumentHandlingUtility;
+import org.eclipse.titan.designer.wizards.projectFormat.TITANAutomaticProjectExporter;
+import org.eclipse.titan.designer.wizards.projectFormat.TITANProjectExporter;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
@@ -158,7 +160,6 @@ public final class ProjectBuildPropertyPage extends PropertyPage {
 
 		if (saveXMLStore) {
 			removeMakefile = true;
-
 			copyPropertyStore();
 		}
 
@@ -377,7 +378,8 @@ public final class ProjectBuildPropertyPage extends PropertyPage {
 		configurationManager.saveActualConfiguration();
 		ProjectDocumentHandlingUtility.saveDocument(projectResource);
 		
-
+		TITANAutomaticProjectExporter.saveAllAutomatically(projectResource);
+		
 		evaluatePropertyStore();
 		return true;
 	}

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@ package org.eclipse.titan.designer.editors.ttcn3editor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,8 +45,6 @@ public class Reconciler implements IReconciler {
 
 		/** Has the reconciler been canceled. */
 		private boolean isCanceled = false;
-		/** Has the reconciler been reset. */
-		private boolean resetPending = false;
 		/** Un-install invoked. */
 		private volatile boolean uninstallInvoked = false;
 		/** Some changes need to be processed. */
@@ -92,30 +92,6 @@ public class Reconciler implements IReconciler {
 			if (pm != null) {
 				pm.setCanceled(true);
 			}
-
-			synchronized (dirtyRegionQueue) {
-				dirtyRegionQueue.notifyAll();
-			}
-		}
-
-		/**
-		 * Suspends the caller of this method until this background
-		 * thread has emptied the dirty region queue.
-		 */
-		public void suspendCallerWhileDirty() {
-			boolean tmpIsDirty;
-			do {
-				synchronized (dirtyRegionQueue) {
-					tmpIsDirty = !dirtyRegionQueue.isEmpty();
-					if (tmpIsDirty) {
-						try {
-							dirtyRegionQueue.wait();
-						} catch (InterruptedException e) {
-							ErrorReporter.logExceptionStackTrace(e);
-						}
-					}
-				}
-			} while (tmpIsDirty);
 		}
 
 		/**
@@ -123,19 +99,8 @@ public class Reconciler implements IReconciler {
 		 * changed.
 		 */
 		public void reset() {
-			if ( getReconcilerTimeout() > 0) {
-				synchronized (this) {
-					isDirty = true;
-					resetPending = true;
-				}
-			} else {
-				synchronized (this) {
-					isDirty = true;
-				}
-
-				synchronized (dirtyRegionQueue) {
-					dirtyRegionQueue.notifyAll();
-				}
+			synchronized (this) {
+				isDirty = true;
 			}
 
 			reconcilerReset();
@@ -149,10 +114,6 @@ public class Reconciler implements IReconciler {
 			synchronized (this) {
 				isDirty = true;
 				uninstallInvoked = true;
-			}
-
-			synchronized (dirtyRegionQueue) {
-				dirtyRegionQueue.notifyAll();
 			}
 		}
 
@@ -169,27 +130,14 @@ public class Reconciler implements IReconciler {
 		@Override
 		public void run() {
 			initialProcess();
-
-			synchronized (dirtyRegionQueue) {
-				try {
-					dirtyRegionQueue.wait( getReconcilerTimeout() );
-				} catch (InterruptedException e) {
-					ErrorReporter.logExceptionStackTrace(e);
-				}
-			}
-
-			if (isCanceled) {
-				return;
-			}
+			DirtyRegion region = null;
 
 			while (!isCanceled) {
 				if (!uninstallInvoked) {
-					synchronized (dirtyRegionQueue) {
-						try {
-							dirtyRegionQueue.wait( getReconcilerTimeout() );
-						} catch (InterruptedException e) {
-							ErrorReporter.logExceptionStackTrace(e);
-						}
+					try {
+						region = dirtyRegionQueue.poll(getReconcilerTimeout() + 5, TimeUnit.MILLISECONDS);
+					} catch (InterruptedException e) {
+						ErrorReporter.logExceptionStackTrace(e);
 					}
 				}
 
@@ -197,30 +145,22 @@ public class Reconciler implements IReconciler {
 					break;
 				}
 
-				if (!isDirty() && dirtyRegionQueue.isEmpty()) {
+				if (region == null) {
 					continue;
 				}
 
-				synchronized (this) {
-					if (resetPending) {
-						resetPending = false;
-						continue;
-					}
-				}
-
 				List<DirtyRegion> oldRegions = new ArrayList<DirtyRegion>();
-				synchronized (dirtyRegionQueue) {
-					oldRegions.addAll(dirtyRegionQueue);
-					dirtyRegionQueue.clear();
+				
+				while(region != null) {
+					oldRegions.add(region);
+					region = dirtyRegionQueue.poll();
 				}
 
 				isStrategyActive = true;
 
-				progressMonitor.setCanceled(false);
-
 				boolean full = false;
-				for (DirtyRegion region : oldRegions) {
-					if (region == null) {
+				for (DirtyRegion region2 : oldRegions) {
+					if (region2.getOffset() == -1) {
 						full = true;
 						break;
 					}
@@ -260,9 +200,6 @@ public class Reconciler implements IReconciler {
 
 				synchronized (this) {
 					isDirty = progressMonitor.isCanceled();
-				}
-				synchronized (dirtyRegionQueue) {
-					dirtyRegionQueue.notifyAll();
 				}
 
 				isStrategyActive = false;
@@ -393,7 +330,6 @@ public class Reconciler implements IReconciler {
 						DocumentEvent e = new DocumentEvent(document, 0, document.getLength(), "");
 						createDirtyRegion(e);
 						backgroundThread.reset();
-						backgroundThread.suspendCallerWhileDirty();
 					}
 				} else {
 					requestFullAnalyzes();
@@ -438,7 +374,6 @@ public class Reconciler implements IReconciler {
 						DocumentEvent e = new DocumentEvent(document, 0, document.getLength(), "");
 						createDirtyRegion(e);
 						backgroundThread.uninstall();
-						backgroundThread.suspendCallerWhileDirty();
 					}
 				} else {
 					requestFullAnalyzes();
@@ -450,12 +385,12 @@ public class Reconciler implements IReconciler {
 	}
 
 	/**
-	 * Queue to manage the changes applied to the text viewer. null is a
-	 * valid region meaning, that the whole document has to be analyzed.
+	 * Queue to manage the changes applied to the text viewer.
+	 * A region starting at -1 offset means, that the whole document has to be analyzed.
 	 * <p>
 	 * This is a modification of DirtyRegionQueue.
 	 */
-	private List<DirtyRegion> dirtyRegionQueue;
+	private LinkedBlockingQueue<DirtyRegion> dirtyRegionQueue;
 	/** The background thread. */
 	private BackgroundThread backgroundThread;
 	/** Internal document and text input listener. */
@@ -467,7 +402,7 @@ public class Reconciler implements IReconciler {
 	 * PreferenceConstants.USEINCREMENTALPARSING is also true in preferences.
 	 */
 	private boolean mIsIncrementalReconcilerAllowed = true;
-	
+
 	/** The progress monitor used by this reconciler. */
 	private IProgressMonitor progressMonitor;
 	/** Tells whether this reconciler is allowed to modify the document. */
@@ -570,9 +505,8 @@ public class Reconciler implements IReconciler {
 	protected final boolean isIncrementalReconciler() {
 		IPreferencesService prefs = Platform.getPreferencesService();
 		// incremental reconcile is set in preferences
-		boolean isIncrementalReconcilerPref = prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-				PreferenceConstants.USEINCREMENTALPARSING, false, null);
-		return mIsIncrementalReconcilerAllowed && isIncrementalReconcilerPref; 
+		return mIsIncrementalReconcilerAllowed && prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
+				PreferenceConstants.USEINCREMENTALPARSING, false, null); 
 	}
 
 	/**
@@ -634,7 +568,8 @@ public class Reconciler implements IReconciler {
 			backgroundThread = new BackgroundThread(getClass().getName());
 		}
 
-		dirtyRegionQueue = new ArrayList<DirtyRegion>();
+		//dirtyRegionQueue = new ArrayList<DirtyRegion>();
+		dirtyRegionQueue = new LinkedBlockingQueue<DirtyRegion>();
 
 		changeListener = new Listener();
 		textViewer.addTextInputListener(changeListener);
@@ -685,18 +620,16 @@ public class Reconciler implements IReconciler {
 	 *                the document event for which to create a dirty region
 	 */
 	private void createDirtyRegion(final DocumentEvent e) {
-		synchronized (dirtyRegionQueue) {
-			if (e.getLength() == 0 && e.getText() != null) {
-				// Insert
-				dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getText().length(), DirtyRegion.INSERT, e.getText()));
-			} else if (e.getText() == null || e.getText().length() == 0) {
-				// Remove
-				dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getLength(), DirtyRegion.REMOVE, null));
-			} else {
-				// Replace (Remove + Insert)
-				dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getLength(), DirtyRegion.REMOVE, null));
-				dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getText().length(), DirtyRegion.INSERT, e.getText()));
-			}
+		if (e.getLength() == 0 && e.getText() != null) {
+			// Insert
+			dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getText().length(), DirtyRegion.INSERT, e.getText()));
+		} else if (e.getText() == null || e.getText().length() == 0) {
+			// Remove
+			dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getLength(), DirtyRegion.REMOVE, null));
+		} else {
+			// Replace (Remove + Insert)
+			dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getLength(), DirtyRegion.REMOVE, null));
+			dirtyRegionQueue.add(new DirtyRegion(e.getOffset(), e.getText().length(), DirtyRegion.INSERT, e.getText()));
 		}
 	}
 
@@ -705,9 +638,7 @@ public class Reconciler implements IReconciler {
 	 * incremental mode is active at that time.
 	 * */
 	private void requestFullAnalyzes() {
-		synchronized (dirtyRegionQueue) {
-			dirtyRegionQueue.add(null);
-		}
+		dirtyRegionQueue.add(new DirtyRegion(-1, -1, DirtyRegion.INSERT, ""));
 	}
 
 	/**
@@ -725,9 +656,6 @@ public class Reconciler implements IReconciler {
 	 * reimplement this method.
 	 */
 	protected final void initialProcess() {
-		synchronized (dirtyRegionQueue) {
-			dirtyRegionQueue.clear();
-		}
 		reconcilingStrategy.initialReconcile();
 	}
 
@@ -737,7 +665,6 @@ public class Reconciler implements IReconciler {
 	 */
 	protected final void forceReconciling() {
 		if (document != null) {
-
 			if (!backgroundThread.isDirty() && backgroundThread.isAlive()) {
 				aboutToBeReconciled();
 			}

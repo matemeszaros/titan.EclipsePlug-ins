@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TemplateInstance;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
@@ -102,7 +102,7 @@ public final class Done_Statement extends Statement {
 			return;
 		}
 
-		Port_Utility.checkComponentReference(timestamp, this, componentreference, false, false, false);
+		Port_Utility.checkComponentReference(timestamp, this, componentreference, false, false);
 
 		if (componentreference == null) {
 			lastTimeChecked = timestamp;
@@ -164,13 +164,13 @@ public final class Done_Statement extends Statement {
 		}
 
 		List<Integer> result = new ArrayList<Integer>();
-		result.add(TTCN3Lexer4.PORTREDIRECTSYMBOL);
+		result.add(Ttcn3Lexer.PORTREDIRECTSYMBOL);
 
 		if (doneMatch != null) {
 			return result;
 		}
 
-		result.add(TTCN3Lexer4.LPAREN);
+		result.add(Ttcn3Lexer.LPAREN);
 
 		return result;
 	}

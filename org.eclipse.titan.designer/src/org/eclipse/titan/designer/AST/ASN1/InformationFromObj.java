@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class InformationFromObj extends Reference {
+public final class InformationFromObj extends Reference {
 	private static final String FULLNAMEPART = ".<fieldnames>";
 
 	public static final String INVALIDREFERENCE = "Invalid reference `{0}'' (ObjectClass, ObjectSet or Object reference was expected)";
@@ -77,6 +77,10 @@ public abstract class InformationFromObj extends Reference {
 		if (null != fieldName) {
 			fieldName.setFullNameParent(this);
 		}
+	}
+
+	public InformationFromObj newInstance() {
+		return new InformationFromObj(reference, fieldName.newInstance());
 	}
 
 	@Override
@@ -440,10 +444,14 @@ public abstract class InformationFromObj extends Reference {
 	/**
 	 * @return ObjectSet_definition
 	 */
-	protected abstract ObjectSet_definition newObjectSetDefinitionInstance();
+	protected ObjectSet_definition newObjectSetDefinitionInstance() {
+		return new ObjectSet_definition();
+	}
 	
 	/**
 	 * @return ObjectSet_definition
 	 */
-	protected abstract ObjectSet_definition newObjectSetDefinitionInstance( final ASN1Objects aObjects );
+	protected ObjectSet_definition newObjectSetDefinitionInstance( ASN1Objects aObjects ) {
+		return new ObjectSet_definition( aObjects );
+	}
 }

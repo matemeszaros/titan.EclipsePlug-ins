@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -295,7 +295,7 @@ public class ChecklistGenerator extends Action implements IWorkbenchWindowAction
 					testSuiteElements.add(new TestSuiteElement(sectionStarterError.filename, sectionStarterError.location.substring(sectionStarterError.location.indexOf('/', 1) + 1)));
 					codeSectionBuilder.append("\tprivate ArrayList<MarkerToCheck> " + sectionStarterError.filename.replace('.', '_') + "_initializer() {\n");
 					codeSectionBuilder.append("\t\t//" + sectionStarterError.filename + "\n");
-					codeSectionBuilder.append("\t\tArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();\n");
+					codeSectionBuilder.append("\t\tArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(" + errorMessages.size() + ");\n");
 					codeSectionBuilder.append("\t\tint lineNum = " + sectionStarterError.line + ";\n");
 					AtomicInteger printI = new AtomicInteger(1);
 					

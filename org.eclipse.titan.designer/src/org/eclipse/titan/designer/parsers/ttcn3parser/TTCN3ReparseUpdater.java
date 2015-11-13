@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.parsers.ttcn3parser;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,12 +17,23 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenFactory;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.common.parsers.TITANMarker;
+import org.eclipse.titan.common.parsers.TitanListener;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NULL_Location;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
 
 /**
  * This class directs the incremental parsing. Stores all information about the nature and size of the damage done to the system, helps in reparsing
@@ -29,34 +42,38 @@ import org.eclipse.titan.designer.AST.NULL_Location;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class TTCN3ReparseUpdater {
+public final class TTCN3ReparseUpdater {
+	
+	/** Errors from the parser (indicating syntax errors). */
+	private List<SyntacticErrorStorage> mErrors;
+
 	/** syntactic warnings created by the parser. */
-	protected List<TITANMarker> warnings;
+	private List<TITANMarker> warnings;
 	/** list of markers marking the locations of unsupported constructs. */
-	List<TITANMarker> unsupportedConstructs;
+	private List<TITANMarker> unsupportedConstructs;
 	/** map of markers marking the locations of unsupported constructs. */
-	Map<IFile, List<TITANMarker>> unsupportedConstructMap;
+	private Map<IFile, List<TITANMarker>> unsupportedConstructMap;
 
 	/** The file being checked. */
-	final IFile file;
+	private final IFile file;
 	/** The string form of the document. */
-	final String code;
+	private final String code;
 	/** The line in which the actual damage starts. */
-	int firstLine;
+	private int firstLine;
 	/** The amount to shift any line which comes after the first line. */
-	int lineShift;
+	private int lineShift;
 	/** The believed start of the interval which might be effected by the modification. */
-	int modificationStartOffset;
+	private int modificationStartOffset;
 	/** The believed end of the interval which might be effected by the modification. */
-	int modificationEndOffset;
+	private int modificationEndOffset;
 	/** The amount of shift caused by the modification itself. */
-	int shift;
+	private int shift;
 
 	// Additional information
 	/**
 	 * Stores if the name of entity has changed or not. This information can indicate a level higher, that a uniqueness check might be needed
 	 */
-	boolean namechanged = false;
+	private boolean namechanged = false;
 
 	/** stores the list of modules that need to be re-analyzed when incremental semantic checking is used.*/
 	public HashSet<String> moduleToBeReanalysed = new HashSet<String>();
@@ -89,6 +106,18 @@ public abstract class TTCN3ReparseUpdater {
 
 	public final int getDamageEnd() {
 		return modificationEndOffset;
+	}
+	
+	public final int getFirstLine() {
+		return firstLine;
+	}
+
+	public final int getLineShift() {
+		return lineShift;
+	}
+
+	public final int getShift() {
+		return shift;
 	}
 
 	public final boolean isAffected(Location location) {
@@ -165,7 +194,38 @@ public abstract class TTCN3ReparseUpdater {
 	 *
 	 * @return true if the first lexical token is part of the followset, false otherwise
 	 * */
-	public abstract boolean startsWithFollow(List<Integer> followSet);
+	public boolean startsWithFollow(List<Integer> followSet) {
+		if (followSet == null || followSet.isEmpty()) {
+			return false;
+		}
+
+		if (code == null) {
+			return false;
+		}
+
+		int line = getLineOfOfset(code, modificationStartOffset);
+		int column = getPositionInLine(code, modificationStartOffset);
+		String substring;
+		if (code.length() <= modificationEndOffset + shift) {
+			substring = code.substring(modificationStartOffset);
+		} else {
+			substring = code.substring(modificationStartOffset, modificationEndOffset + shift);
+		}
+		Reader reader = new StringReader(substring);
+		CharStream charStream = new UnbufferedCharStream(reader);
+		Ttcn3Lexer lexer = new Ttcn3Lexer(charStream);
+		lexer.setTokenFactory( new CommonTokenFactory( true ) );
+		lexer.setLine( line + 1 );
+		lexer.setCharPositionInLine(column);
+		lexer.initRootInterval(modificationEndOffset - modificationStartOffset + 1);
+
+		Token token = lexer.nextToken();
+		if (token == null) {
+			return false;
+		}
+
+		return followSet.contains( token.getType() );
+	}
 	
 	/**
 	 * Checks if the last TTCN-3 lexical token in the substring, that covers the possibly changed interval of the document belongs to a given list of
@@ -175,7 +235,38 @@ public abstract class TTCN3ReparseUpdater {
 	 *
 	 * @return true if the first lexical token is part of the followset, false otherwise
 	 * */
-	public abstract boolean endsWithToken(List<Integer> followSet);
+	public boolean endsWithToken(List<Integer> followSet) {
+		if (followSet == null || followSet.isEmpty()) {
+			return false;
+		}
+
+		if (code == null) {
+			return false;
+		}
+
+		int line = getLineOfOfset(code, modificationStartOffset);
+		int column = getPositionInLine(code, modificationStartOffset);
+		String substring;
+		if (code.length() <= modificationEndOffset + shift) {
+			substring = code.substring(modificationStartOffset);
+		} else {
+			substring = code.substring(modificationStartOffset, modificationEndOffset + shift);
+		}
+		Reader reader = new StringReader(substring);
+		CharStream charStream = new UnbufferedCharStream(reader);
+		Ttcn3Lexer lexer = new Ttcn3Lexer(charStream);
+		lexer.setTokenFactory( new CommonTokenFactory( true ) );
+		lexer.setLine( line + 1 );
+		lexer.setCharPositionInLine(column);
+		lexer.initRootInterval(modificationEndOffset - modificationStartOffset + 1);
+
+		Token token = lexer.nextToken();
+		if (token == null) {
+			return false;
+		}
+
+		return followSet.contains( token.getType() );
+	}
 
 	public final void extendDamagedRegion(Location location) {
 		if (location.getOffset() < modificationStartOffset) {
@@ -329,10 +420,6 @@ public abstract class TTCN3ReparseUpdater {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 
-		if (unclosedStarting == 1 && unclosedEnding == 0) {
-			return 0;
-		}
-
 		int result = Math.max(unclosedStarting, unclosedEnding);
 
 		if (insideSingleComment || insideMultiComment || insideString) {
@@ -344,7 +431,14 @@ public abstract class TTCN3ReparseUpdater {
 	/**
 	 * Specific part of marker handling
 	 */
-	protected abstract void reportSpecificSyntaxErrors();
+	private void reportSpecificSyntaxErrors() {
+		if (mErrors != null) {
+			Location temp = new Location(file, firstLine, modificationStartOffset, modificationEndOffset + shift);
+			for (int i = 0; i < mErrors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlySyntacticMarker(file, mErrors.get(i), IMarker.SEVERITY_ERROR, temp);
+			}
+		}
+	}
 	
 	public final void reportSyntaxErrors() {
 		reportSpecificSyntaxErrors();
@@ -391,5 +485,75 @@ public abstract class TTCN3ReparseUpdater {
 		}
 
 		return columnCounter;
+	}
+	
+	public int parse(ITTCN3ReparseBase userDefined) {
+		if (modificationStartOffset == modificationEndOffset + shift) {
+			return 0;
+		}
+		// double wideparsing = System.nanoTime();
+		mErrors = null;
+		warnings = null;
+		Iterator<TITANMarker> iterator = unsupportedConstructs.iterator();
+		while (iterator.hasNext()) {
+			TITANMarker marker = iterator.next();
+			if ((marker.getOffset() > modificationStartOffset && marker.getOffset() <= modificationEndOffset)
+					|| (marker.getEndOffset() > modificationStartOffset && marker.getEndOffset() <= modificationEndOffset)) {
+				iterator.remove();
+			}
+		}
+
+		MarkerHandler.markAllOnTheFlyMarkersForRemoval(file, modificationStartOffset, modificationEndOffset + shift);
+
+		if (code == null) {
+			return Integer.MAX_VALUE;
+		}
+
+		int line = getLineOfOfset(code, modificationStartOffset);
+		String substring;
+		if (code.length() <= modificationEndOffset + shift) {
+			substring = code.substring(modificationStartOffset);
+		} else {
+			substring = code.substring(modificationStartOffset, modificationEndOffset + shift);
+		}
+		Reader reader = new StringReader(substring);
+		CharStream charStream = new UnbufferedCharStream(reader);
+		Ttcn3Lexer lexer = new Ttcn3Lexer(charStream);
+		lexer.setTokenFactory( new CommonTokenFactory( true ) );
+		lexer.initRootInterval(modificationEndOffset - modificationStartOffset + 1);
+		
+		// lexer and parser listener
+		TitanListener parserListener = new TitanListener();
+		// remove ConsoleErrorListener
+		lexer.removeErrorListeners();
+		lexer.addErrorListener(parserListener);
+
+		// Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
+		// Read this: https://groups.google.com/forum/#!topic/antlr-discussion/gsAu-6d3pKU
+		// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
+		//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
+		TokenStream tokens = new BufferedTokenStream( lexer );
+		
+		Ttcn3Reparser parser = new Ttcn3Reparser( tokens );
+
+		lexer.setActualFile(file);
+		parser.setActualFile(file);
+		parser.setProject(file.getProject());
+		parser.setLexer(lexer);
+		parser.setOffset( modificationStartOffset );
+		parser.setLine( line + 1 );
+
+		// remove ConsoleErrorListener
+		parser.removeErrorListeners();
+		parser.addErrorListener( parserListener );
+
+		userDefined.reparse(parser);
+		mErrors = parserListener.getErrorsStored();
+		warnings = parser.getWarnings();
+		unsupportedConstructs.addAll(parser.getUnsupportedConstructs());
+		
+		int result = measureIntervallDamage();
+
+		return result;
 	}
 }

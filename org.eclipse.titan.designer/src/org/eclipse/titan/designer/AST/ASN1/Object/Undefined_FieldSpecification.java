@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.titan.designer.AST.ASN1.ASN1Object;
 import org.eclipse.titan.designer.AST.ASN1.Block;
 import org.eclipse.titan.designer.AST.ASN1.Defined_Reference;
 import org.eclipse.titan.designer.AST.ASN1.ObjectSet;
+import org.eclipse.titan.designer.AST.ASN1.values.Undefined_Block_Value;
 import org.eclipse.titan.designer.AST.ISetting.Setting_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Referenced_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Referenced_Value;
@@ -27,7 +28,6 @@ import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Val
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 
 /**
  * Class to represent an undefined FieldSpec.
@@ -103,7 +103,7 @@ public final class Undefined_FieldSpecification extends FieldSpecification imple
 					&& governorReference.refersToSettingType(timestamp, Setting_type.S_OC, temporalReferenceChain)) {
 				ObjectSet defaultObjectset = null;
 				if (null != mDefaultSetting) {
-					defaultObjectset = ParserFactory.createObjectSetDefinition(mDefaultSetting);
+					defaultObjectset = new ObjectSet_definition(mDefaultSetting);
 				}
 				fieldSpecification = new ObjectSet_FieldSpecification(identifier, new ObjectClass_refd(governorReference),
 						isOptional, defaultObjectset);
@@ -130,7 +130,7 @@ public final class Undefined_FieldSpecification extends FieldSpecification imple
 						defaultValue = new Referenced_Value(defaultSetting1);
 					}
 				} else if (null != mDefaultSetting) {
-					defaultValue = ParserFactory.createUndefinedBlockValue(mDefaultSetting);
+					defaultValue = new Undefined_Block_Value(mDefaultSetting);
 				}
 				fieldSpecification = new FixedTypeValue_FieldSpecification(identifier, new Referenced_Type(governorReference), false,
 						isOptional, null != defaultSetting1 && null != mDefaultSetting, defaultValue);

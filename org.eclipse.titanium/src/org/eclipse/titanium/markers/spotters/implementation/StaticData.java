@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,9 +58,12 @@ public final class StaticData {
 		m.put(CodeSmellType.MISSING_IMPORT, new BaseModuleCodeSmellSpotter[] { new MissingImport() });
 		m.put(CodeSmellType.MODULENAME_IN_DEFINITION, new BaseModuleCodeSmellSpotter[] { new ModuleName.InDef(),
 				new ModuleName.InGroup() });
+		m.put(CodeSmellType.LAZY, new BaseModuleCodeSmellSpotter[] { new Lazy() });
 		m.put(CodeSmellType.LOGIC_INVERSION, new BaseModuleCodeSmellSpotter[] { new LogicInversion() });
 		m.put(CodeSmellType.NONPRIVATE_PRIVATE,
 				new BaseModuleCodeSmellSpotter[] { new NonprivatePrivate() });
+		m.put(CodeSmellType.PRIVATE_FIELD_VIA_PUBLIC, new BaseModuleCodeSmellSpotter[] { new PrivateViaPublic.Field() });
+		m.put(CodeSmellType.PRIVATE_VALUE_VIA_PUBLIC, new BaseModuleCodeSmellSpotter[] { new PrivateViaPublic.Value() });
 		m.put(CodeSmellType.READING_OUT_PAR_BEFORE_WRITTEN, new BaseModuleCodeSmellSpotter[]{ new ReadingOutParBeforeWritten() });
 		m.put(CodeSmellType.READONLY_LOC_VARIABLE, new BaseModuleCodeSmellSpotter[] { new ReadOnlyLocal.VarTemplate(),
 				new ReadOnlyLocal.Var() });

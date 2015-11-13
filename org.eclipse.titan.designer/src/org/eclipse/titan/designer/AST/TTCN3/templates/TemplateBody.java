@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -190,27 +190,27 @@ public class TemplateBody implements ITemplateListItem {
 
 	@Override
 	public void checkRestrictionCommon(String definitionName,
-			Restriction_type templateRestriction) {
-		template.checkRestrictionCommon(definitionName, templateRestriction);	
+			Restriction_type templateRestriction, final Location usageLocation) {
+		template.checkRestrictionCommon(definitionName, templateRestriction, usageLocation);	
 	}
 
 	@Override
 	public boolean checkValueomitRestriction(CompilationTimeStamp timestamp,
-			String definitionName, boolean omitAllowed) {
-		return template.checkValueomitRestriction(timestamp, definitionName, omitAllowed);
+			String definitionName, boolean omitAllowed, final Location usageLocation) {
+		return template.checkValueomitRestriction(timestamp, definitionName, omitAllowed, usageLocation);
 	}
 
 	@Override
 	public boolean chkRestrictionNamedListBaseTemplate(
 			CompilationTimeStamp timestamp, String definitionName,
-			Set<String> checkedNames, int neededCheckedCnt) {
-			return template.chkRestrictionNamedListBaseTemplate(timestamp, definitionName, checkedNames, neededCheckedCnt);
+			Set<String> checkedNames, int neededCheckedCnt, final Location usageLocation) {
+			return template.chkRestrictionNamedListBaseTemplate(timestamp, definitionName, checkedNames, neededCheckedCnt, usageLocation);
 	}
 
 	@Override
 	public boolean checkPresentRestriction(CompilationTimeStamp timestamp,
-			String definitionName) {
-		return template.checkPresentRestriction(timestamp, definitionName);
+			String definitionName, final Location usageLocation) {
+		return template.checkPresentRestriction(timestamp, definitionName, usageLocation);
 	}
 
 	@Override

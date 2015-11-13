@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,10 +27,12 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.actions.MergeLog;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CfgParserFactory;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
 import org.eclipse.titan.common.path.PathConverter;
 import org.eclipse.titan.common.path.PathUtil;
@@ -98,6 +100,10 @@ import static org.eclipse.titan.executor.properties.FieldEditorPropertyPage.getO
  * @author Kristof Szabados
  * */
 public abstract class BaseExecutor {
+	
+	//TODO: implement
+	protected static final boolean CREATE_TEMP_CFG = false;
+	
 	public static final String PADDEDDATETIMEFORMAT = "%1$tF %1$tH:%1$tM:%1$tS.%1$tL000";
 	public static final String DATETIMEFORMAT = "%1$tF %1$tH:%1$tM:%1$tS.%2$06d";
 
@@ -105,6 +111,12 @@ public abstract class BaseExecutor {
 	protected static final String CONFIGFILEPATH_NULL = "Could not launch beacuse the configuration file's path is null";
 	protected static final String ENVVARS_NULL = "Could not launch beacuse the environmental variables are not available";
 	protected static final String NO_HOSTCONTROLLER_SPECIFIED = "No Host Controller was specified on this launch configuration's Host Controllers page";
+
+	/** Error dialog title for the case, when the execution control list is empty */
+	private static final String EMPTY_EXECUTION_FAILED_TITLE = "Execution failed";
+
+	/** Error dialog text for the case, when the execution control list is empty */
+	private static final String EMPTY_EXECUTION_FAILED_TEXT = "The configuration file selected does not have anything to execute";
 
 	protected Map<String, String> environmentalVariables;
 	private List<HostController> hostControllers;
@@ -146,6 +158,21 @@ public abstract class BaseExecutor {
 
 	private List<HostJob> innerHostControllers = new CopyOnWriteArrayList<HostJob>();
 
+	/**
+	 * Runnable for the case, when the execution control list is empty.
+	 * In this case a dialog pops-up with an error message
+	 * @author Arpad Lovassy
+	 */
+	protected class EmptyExecutionRunnable implements Runnable {
+		
+		public EmptyExecutionRunnable() {}
+
+		@Override
+		public void run() {
+			MessageDialog.openError( new Shell( Display.getDefault() ), EMPTY_EXECUTION_FAILED_TITLE, EMPTY_EXECUTION_FAILED_TEXT );
+		}
+	}
+	
 	/**
 	 * Initializes the Executor with data extracted from the provided launch configuration.
 	 *
@@ -456,7 +483,7 @@ public abstract class BaseExecutor {
 	public final void startHostControllers() {
 		if (hostControllers == null || hostControllers.isEmpty()) {
 			addNotification(new Notification((new Formatter()).format(PADDEDDATETIMEFORMAT, new Date()).toString(), "", "",
-					NO_HOSTCONTROLLER_SPECIFIED));
+				NO_HOSTCONTROLLER_SPECIFIED));
 			return;
 		}
 		ProcessBuilder pb = new ProcessBuilder();
@@ -607,12 +634,9 @@ public abstract class BaseExecutor {
 			return null;
 		}
 		
-		final ConfigFileHandler configHandler = CfgParserFactory.createConfigFileHandler();
+		final ConfigFileHandler configHandler = new ConfigFileHandler();
 		configHandler.readFromFile(configFilePath);
-		Map<String, String> env = new HashMap<String, String>(System.getenv());
-		if (!appendEnvironmentalVariables) {
-			env.clear();
-		}
+		Map<String, String> env = appendEnvironmentalVariables ? new HashMap<String, String>( System.getenv() ) : new HashMap<String, String>();
 
 		if (environmentalVariables != null) {
 			try {
@@ -642,7 +666,7 @@ public abstract class BaseExecutor {
 		
 		String workingDirRelative = getOverlayedPreferenceValue(
 				preferenceStore, project, PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.LOG_FOLDER_PATH_NAME);
-		String logFileFolder = workingdirectoryPath + IPath.SEPARATOR + workingDirRelative + IPath.SEPARATOR;
+		String logFileFolder = workingdirectoryPath + File.separator + workingDirRelative + File.separator;
 		Path path = new Path(logFileFolder);
 		
 		IContainer folder = ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(path);
@@ -703,15 +727,19 @@ public abstract class BaseExecutor {
 			return;
 		}
 		
-		String workingDirRelative = preferenceStore.getString(PreferenceConstants.LOG_FOLDER_PATH_NAME);
-		String logFileFolder = workingdirectoryPath + IPath.SEPARATOR + workingDirRelative + IPath.SEPARATOR;
+		String workingDirRelative =  getOverlayedPreferenceValue(
+				preferenceStore, project, PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.LOG_FOLDER_PATH_NAME);
+				//old: preferenceStore.getString(PreferenceConstants.LOG_FOLDER_PATH_NAME);
+		String logFileFolder = workingdirectoryPath + File.separator + workingDirRelative + File.separator;
 		Path path = new Path(logFileFolder);
 		
-		List<IFile> filesToMerge = new ArrayList<IFile>();
+		
 		IContainer folder = ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(path);
-		if (folder == null) {
+		if (folder == null || !folder.exists()) {
 			return;
 		}
+		
+		List<IFile> filesToMerge = new ArrayList<IFile>();
 		try {
 			folder.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 			for (IResource resource : folder.members()) {
@@ -728,7 +756,7 @@ public abstract class BaseExecutor {
 		} catch (CoreException e) {
 			ErrorReporter.parallelErrorDisplayInMessageDialog( 
 				"Error while merging log files", 
-				"The log folder is not accessible. ");
+				"The log folder "+logFileFolder+ " is not accessible.");
 		}
 
 		MergeLog mergeLog = new MergeLog();

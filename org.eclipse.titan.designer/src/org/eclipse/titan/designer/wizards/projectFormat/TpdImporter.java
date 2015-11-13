@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -124,6 +124,8 @@ public class TpdImporter {
 	 * Internal function used to do the import job. It is needed to extract
 	 * this functionality i order to be able to handle erroneous situations.
 	 *
+	 * @param projectFile
+	 *                the file path string of the project descriptor file (tpd)
 	 * @param projectsCreated
 	 *                the list of projects created so far. In case of
 	 *                problems we will try to delete them.
@@ -201,7 +203,7 @@ public class TpdImporter {
 			projectMap.put(file, project);
 			try {
 				project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-						ProjectBuildPropertyData.LOAD_LOCATION), file.toString());
+						ProjectBuildPropertyData.LOAD_LOCATION), file.getPath().toString());
 			} catch (CoreException e) {
 				ErrorReporter.logExceptionStackTrace("While loading referenced project from `" + file.getPath() + "'", e);
 			}
@@ -209,12 +211,12 @@ public class TpdImporter {
 		}
 		projectCreationMonitor.done();
 
-		IProgressMonitor normalInformationLocadingMonitor = new SubProgressMonitor(internalMonitor, 1);
-		normalInformationLocadingMonitor.beginTask("Loading directly stored project information", projectsToImport.size());
+		IProgressMonitor normalInformationLoadingMonitor = new SubProgressMonitor(internalMonitor, 1);
+		normalInformationLoadingMonitor.beginTask("Loading directly stored project information", projectsToImport.size());
 
 		for (URI file : projectsToImport.keySet()) {
 			if (!projectMap.containsKey(file)) {
-				normalInformationLocadingMonitor.worked(1);
+				normalInformationLoadingMonitor.worked(1);
 				continue;
 			}
 
@@ -228,20 +230,20 @@ public class TpdImporter {
 				return false;
 			}
 
-			normalInformationLocadingMonitor.worked(1);
+			normalInformationLoadingMonitor.worked(1);
 		}
-		normalInformationLocadingMonitor.done();
+		normalInformationLoadingMonitor.done();
 
 		IPath mainProjectFileFolderPath = new Path(projectFileURI.getPath()).removeLastSegments(1);
 		URI mainProjectFileFolderURI = URIUtil.toURI(mainProjectFileFolderPath);
 
 		List<Node> packedProjects = loadPackedProjects(projectsToImport.get(projectFileURI));
-		IProgressMonitor packedInformationLocadingMonitor = new SubProgressMonitor(internalMonitor, 1);
-		packedInformationLocadingMonitor.beginTask("Loading packed project information", packedProjects.size());
+		IProgressMonitor packedInformationLoadingMonitor = new SubProgressMonitor(internalMonitor, 1);
+		packedInformationLoadingMonitor.beginTask("Loading packed project information", packedProjects.size());
 		for (Node node : packedProjects) {
 			IProject project = createProject(node, false);
 			if (project == null) {
-				packedInformationLocadingMonitor.worked(1);
+				packedInformationLoadingMonitor.worked(1);
 				continue;
 			}
 			projectsCreated.add(project);
@@ -257,9 +259,9 @@ public class TpdImporter {
 				return false;
 			}
 
-			packedInformationLocadingMonitor.worked(1);
+			packedInformationLoadingMonitor.worked(1);
 		}
-		packedInformationLocadingMonitor.done();
+		packedInformationLoadingMonitor.done();
 
 		IProject mainProject = projectMap.get(projectFileURI);
 		if (mainProject == null) {
@@ -708,6 +710,8 @@ public class TpdImporter {
 
 		return true;
 	}
+	
+
 
 	/**
 	 * Loads the configuration related options onto the project from the
@@ -782,6 +786,7 @@ public class TpdImporter {
 		}
 
 		ProjectDocumentHandlingUtility.saveDocument(project);
+		ProjectBuildPropertyData.setProjectAlreadyExported(project,false);
 		ProjectFileHandler handler = new ProjectFileHandler(project);
 		handler.loadProjectSettingsFromDocument(targetDocument);
 

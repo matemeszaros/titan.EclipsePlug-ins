@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -216,8 +216,13 @@ public abstract class Expression_Value extends Value {
 	@Override
 	public final IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
-		IReferenceChain tempReferenceChain =
-				referenceChain != null ? referenceChain : ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+		final boolean newChain = null == referenceChain;
+		IReferenceChain tempReferenceChain;
+		if (newChain) {
+			tempReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+		} else {
+			tempReferenceChain = referenceChain;
+		}
 
 		IValue last = this;
 
@@ -231,7 +236,7 @@ public abstract class Expression_Value extends Value {
 
 		tempReferenceChain.previousState();
 
-		if (!tempReferenceChain.equals(referenceChain)) {
+		if (newChain) {
 			tempReferenceChain.release();
 		}
 

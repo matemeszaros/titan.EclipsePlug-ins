@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
+import org.eclipse.titan.designer.AST.TTCN3.values.CharstringExtractor;
 import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
@@ -119,25 +120,33 @@ public final class Unichar2IntExpression extends Expression_Value {
 			last = value.getValueRefdLast(timestamp, expectedValue, referenceChain);
 			if (!last.isUnfoldable(timestamp)) {
 				UniversalCharstring string = ((UniversalCharstring_Value) last).getValue();
-
-				if (string.length() != 1) {
+				if ( string.isErrorneous() ) {
+					value.getLocation().reportSemanticError( string.getErrorMessage() );
+					setIsErroneous(true);
+				} else if ( string.length() != 1 ) {
 					value.getLocation().reportSemanticError(OPERANDERROR2);
 					setIsErroneous(true);
 				}
 			}
-
-			return;
+			break;
 		case TYPE_CHARSTRING:
 			last = value.getValueRefdLast(timestamp, expectedValue, referenceChain);
 			if (!last.isUnfoldable(timestamp)) {
-				String string = ((Charstring_Value) last).getValue();
-
-				if (string.length() != 1) {
-					value.getLocation().reportSemanticError(OPERANDERROR2);
+				final String originalString = ((Charstring_Value) last).getValue();
+				CharstringExtractor cs = new CharstringExtractor( originalString );
+				if ( cs.isErrorneous() ) {
+					value.getLocation().reportSemanticError( cs.getErrorMessage() );
 					setIsErroneous(true);
 				}
+				else {
+					final String string = cs.getExtractedString();
+					if (string != null && string.length() != 1) {
+						value.getLocation().reportSemanticError(OPERANDERROR2);
+						setIsErroneous(true);
+					}
+				}
 			}
-			return;
+			break;
 		case TYPE_UNDEFINED:
 			setIsErroneous(true);
 			break;
@@ -146,7 +155,7 @@ public final class Unichar2IntExpression extends Expression_Value {
 				location.reportSemanticError(OPERANDERROR1);
 				setIsErroneous(true);
 			}
-			return;
+			break;
 		}
 	}
 

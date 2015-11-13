@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,8 +39,10 @@ import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 
 /**
  * The Definitions class represents the scope of module level definitions inside
@@ -49,7 +51,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class Definitions extends Assignments implements ILocateableNode {
+public final class Definitions extends Assignments implements ILocateableNode {
 	/** The list of definitions contained in this scope. */
 	private final List<Definition> definitions;
 
@@ -868,7 +870,59 @@ public abstract class Definitions extends Assignments implements ILocateableNode
 		}
 	}
 
-	protected abstract int reparse( final TTCN3ReparseUpdater aReparser, final boolean aTempIsControlPossible );
+	private int reparse( final TTCN3ReparseUpdater aReparser, final boolean aTempIsControlPossible ) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				List<Definition> allDefinitions = new ArrayList<Definition>();
+				List<Definition> localDefinitions = new ArrayList<Definition>();
+				List<Group> localGroups = new ArrayList<Group>();
+				List<ImportModule> allImports = new ArrayList<ImportModule>();
+				List<ImportModule> localImports = new ArrayList<ImportModule>();
+				List<FriendModule> allFriends = new ArrayList<FriendModule>();
+				List<FriendModule> localFriends = new ArrayList<FriendModule>();
+				List<ControlPart> controlParts = null;
+				if (aTempIsControlPossible) {
+					controlParts = new ArrayList<ControlPart>();
+				}
+
+				TTCN3Module module = (TTCN3Module) parentScope;
+				parser.setModule((TTCN3Module) parentScope);
+				parser.pr_reparse_ModuleDefinitionsList(null, allDefinitions, localDefinitions, localGroups, allImports,
+						localImports, allFriends, localFriends, controlParts);
+
+				if ( parser.isErrorListEmpty() ) {
+					if (!allDefinitions.isEmpty()) {
+						aReparser.fullAnalysysNeeded = true;
+					}
+					addDefinitions(allDefinitions);
+					if (doubleDefinitions != null) {
+						doubleDefinitions.clear();
+					}
+					lastUniquenessCheckTimeStamp = null;
+
+					for (ImportModule impmod : allImports) {
+						aReparser.fullAnalysysNeeded = true;
+						module.addImportedModule(impmod);
+					}
+
+					for (Group group : localGroups) {
+						aReparser.fullAnalysysNeeded = true;
+						addGroup(group);
+					}
+
+					for (FriendModule friend : allFriends) {
+						aReparser.fullAnalysysNeeded = true;
+						module.addFriendModule(friend);
+					}
+					if (controlParts != null && controlParts.size() == 1) {
+						aReparser.fullAnalysysNeeded = true;
+						((TTCN3Module) parentScope).addControlpart(controlParts.get(0));
+					}
+				}
+			}
+		});
+	}
 
 	/**
 	 * Destroy every element trapped inside the damage radius.

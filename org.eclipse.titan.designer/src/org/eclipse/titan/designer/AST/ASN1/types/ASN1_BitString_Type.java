@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ArraySubReference;
 import org.eclipse.titan.designer.AST.Assignments;
@@ -32,6 +35,8 @@ import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Type;
+import org.eclipse.titan.designer.AST.ASN1.Block;
+import org.eclipse.titan.designer.AST.ASN1.IASN1Type;
 import org.eclipse.titan.designer.AST.ASN1.values.Named_Bits;
 import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
@@ -43,18 +48,30 @@ import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.NamedValue;
 import org.eclipse.titan.designer.AST.TTCN3.values.NamedValues;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.BlockLevelTokenStreamTracker;
 
 /**
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class ASN1_BitString_Type extends ASN1Type {
+public final class ASN1_BitString_Type extends ASN1Type {
 	private static final String BITSTRINGVALUEEXPECTED1 = "BIT STRING value was expected";
 	private static final String BITSTRINGVALUEEXPECTED2 = "bitstring value was expected";
 
+	private final Block mBlock;
 	protected NamedValues namedValues;
+	
+	public ASN1_BitString_Type(final Block aBlock) {
+		this.mBlock = aBlock;
+		if (null != aBlock) {
+			aBlock.setFullNameParent(this);
+		}
+	}
 
-	public ASN1_BitString_Type() {
+	public IASN1Type newInstance() {
+		return new ASN1_BitString_Type(mBlock);
 	}
 
 	@Override
@@ -346,7 +363,29 @@ public abstract class ASN1_BitString_Type extends ASN1Type {
 		}
 	}
 
-	protected abstract void parseBlockBitstring();
+	private void parseBlockBitstring() {
+		Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return;
+		}
+		namedValues = null;
+		if (null != mBlock) {
+			namedValues = parser.pr_special_NamedBitList().namedValues;
+			List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+			if (null != errors && !errors.isEmpty()) {
+				isErroneous = true;
+				namedValues = null;
+				for (int i = 0; i < errors.size(); i++) {
+					ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+							IMarker.SEVERITY_ERROR);
+				}
+			}
+		}
+		if (namedValues != null) {
+			namedValues.setFullNameParent(this);
+			namedValues.setMyScope(getMyScope());
+		}
+	}
 	
 	@Override
 	public IType getFieldType(final CompilationTimeStamp timestamp, final Reference reference, final int actualSubReference,

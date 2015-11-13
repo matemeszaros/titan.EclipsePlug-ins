@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@ package org.eclipse.titan.designer.AST;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.antlr.v4.runtime.Token;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -72,6 +73,55 @@ public class Location {
 		setLocation(file, startTok, endTok);
 	}
 
+	/**
+	 * Constructor for ANTLR v4 tokens
+	 * @param aFile the parsed file
+	 * @param aStartToken the 1st token, its line and start position will be used for the location
+	 *                  NOTE: start position is the column index of the tokens 1st character.
+	 *                        Column index starts with 0.
+	 * @param aEndToken the last token, its end position will be used for the location.
+	 *                  NOTE: end position is the column index after the token's last character.
+	 */
+	public Location( final IResource aFile, final Token aStartToken, final Token aEndToken ) {
+		setLocation( aFile, aStartToken.getLine(), aStartToken.getStartIndex(),
+				     aEndToken.getStopIndex()+1);
+	}
+
+	/**
+	 * Constructor for ANTLR v4 token, where the start and end token is the same
+	 * @param aFile the parsed file
+	 * @param aToken the start and end token
+	 */
+	public Location( final IResource aFile, final Token aToken ) {
+		this( aFile, aToken, aToken );
+	}
+
+	/**
+	 * Constructor for ANTLR v4 token, where location is based on another location, and end token is modified
+	 * @param aBaseLocation base location
+	 * @param aEndToken the new end token
+	 */
+	public Location( final Location aBaseLocation, final Token aEndToken ) {
+		this( aBaseLocation );
+		this.setEndOffset( aEndToken );
+	}
+
+	/**
+	 * Sets the offset with an ANTLR v4 end token
+	 * @param aEndToken the new end token
+	 */
+	public final void setOffset(final Token aToken) {
+		this.setOffset( aToken.getStartIndex() );
+	}
+
+	/**
+	 * Sets the end offset with an ANTLR v4 end token
+	 * @param aEndToken the new end token
+	 */
+	public final void setEndOffset( final Token aEndToken ) {
+		this.setEndOffset( aEndToken.getStopIndex() + 1 ); // after the last character of the aEndToken
+	}
+	
 	public static Location interval(final Location startLoc, final Location endLoc) {
 		return new Location(startLoc.getFile(), startLoc.getLine(), startLoc.getOffset(), endLoc.getEndOffset());
 	}

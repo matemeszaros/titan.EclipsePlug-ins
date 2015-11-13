@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@ package org.eclipse.titan.designer.editors.asn1editor;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.titan.designer.editors.BaseTextHover;
 import org.eclipse.titan.designer.editors.IReferenceParser;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -37,6 +36,6 @@ public final class TextHover extends BaseTextHover {
 
 	@Override
 	protected IReferenceParser getReferenceParser() {
-		return ParserFactory.createASN1ReferenceParser();
+		return new ASN1ReferenceParser();
 	}
 }

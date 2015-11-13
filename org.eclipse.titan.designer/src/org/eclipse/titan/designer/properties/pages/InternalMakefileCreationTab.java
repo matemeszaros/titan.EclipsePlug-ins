@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ public final class InternalMakefileCreationTab {
 	private final PlatformSpecificLibrariesOptionsPage win32LibrariesPage = new PlatformSpecificLibrariesOptionsPage("Win32");
 	private final LinkerOptionsPage linkerPage = new LinkerOptionsPage();
 	private final LinkerLibrariesOptionsPage linkerLibrariesPage;
+	private final LinkerFlagsOptionsPage linkerFlagsOptionsPage = new LinkerFlagsOptionsPage();
 
 	private final IOptionsPage[] pages;
 
@@ -64,7 +65,7 @@ public final class InternalMakefileCreationTab {
 		pages = new IOptionsPage[] { ttcn3PreprocessorPage, ttcn3PreprocessorSymbolsPage, ttcn3PreprocessorIncludesPage, titanFlagsPage,
 				preprocessorPage, preprocessorSymbolsPage, preprocessorIncludesPage, cCompilerPage, optimizationPage,
 				solarisLibrariesPage, solaris8LibrariesPage, freeBSDLibrariesPage, linuxLibrariesPage, win32LibrariesPage,
-				linkerPage, linkerLibrariesPage };
+				linkerPage, linkerLibrariesPage, linkerFlagsOptionsPage};
 	}
 
 	/**
@@ -135,6 +136,7 @@ public final class InternalMakefileCreationTab {
 		OptionElement linker = new OptionElement("Linker", linkerPage);
 		root.addChild(linker);
 		linker.addChild(new OptionElement("Libraries", linkerLibrariesPage));
+		linker.addChild(new OptionElement("Options", linkerFlagsOptionsPage ));
 
 		optionList.setInput(root);
 

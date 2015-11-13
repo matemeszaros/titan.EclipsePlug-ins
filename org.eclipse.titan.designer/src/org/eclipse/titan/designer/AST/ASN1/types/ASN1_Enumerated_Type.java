@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ArraySubReference;
 import org.eclipse.titan.designer.AST.Assignments;
@@ -32,6 +35,8 @@ import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Assignment;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Type;
+import org.eclipse.titan.designer.AST.ASN1.Block;
+import org.eclipse.titan.designer.AST.ASN1.IASN1Type;
 import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
 import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
@@ -47,12 +52,15 @@ import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.BlockLevelTokenStreamTracker;
 
 /**
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithComponents {
+public final class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithComponents {
 	private static final String DUPLICATEENUMERATEDREPEATED = "Duplicate ENUMERATE identifier: `{0}'' was declared here again";
 	private static final String TTCN3ENUMERATEDVALUEEXPECTED = "Enumerated value was expected";
 	private static final String ASN1ENUMERATEDVALUEEXPECTED = "ENUMERATED value was expected";
@@ -61,11 +69,17 @@ public abstract class ASN1_Enumerated_Type extends ASN1Type implements ITypeWith
 	private static final String TEMPLATENOTALLOWED = "{0} cannot be used for enumerated type";
 	private static final String LENGTHRESTRICTIONNOTALLOWED = "Length restriction is not allowed for enumerated type";
 
+	private final Block mBlock;
 	protected ASN1_Enumeration enumerations;
 	private Map<String, EnumItem> nameMap;
 	private Integer firstUnused;
 
-	protected ASN1_Enumerated_Type() {
+	public ASN1_Enumerated_Type(final Block aBlock) {
+		this.mBlock = aBlock;
+	}
+
+	public IASN1Type newInstance() {
+		return new ASN1_Enumerated_Type(mBlock);
 	}
 
 	@Override
@@ -110,6 +124,12 @@ public abstract class ASN1_Enumerated_Type extends ASN1Type implements ITypeWith
 	@Override
 	public final String getOutlineIcon() {
 		return "enumeration.gif";
+	}
+
+	// TODO: remove this when the location is properly set
+	@Override
+	public Location getLikelyLocation() {
+		return location;
 	}
 
 	/**
@@ -425,7 +445,23 @@ public abstract class ASN1_Enumerated_Type extends ASN1Type implements ITypeWith
 		}
 	}
 
-	abstract protected void parseBlockEnumeration();
+	private void parseBlockEnumeration() {
+		Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return;
+		}
+
+		enumerations = parser.pr_special_Enumerations().enumeration;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			enumerations = null;
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}
+	}
 	
 	@Override
 	public final void addProposal(final ProposalCollector propCollector, final int i) {

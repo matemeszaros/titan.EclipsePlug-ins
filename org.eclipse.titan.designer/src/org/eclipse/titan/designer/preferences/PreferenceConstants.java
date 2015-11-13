@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,22 @@ public final class PreferenceConstants {
 	public static final String CONTENTASSISTANT_AUTO_ACTIVATION = ProductConstants.PRODUCT_ID_DESIGNER + ".autoActivation";
 	public static final String CONTENTASSISTANT_AUTO_ACTIVATION_DELAY = ProductConstants.PRODUCT_ID_DESIGNER + ".autoActivationDelay";
 
+	//export
+	public static final String EXPORT_EXCLUDE_WORKING_DIRECTORY_CONTENTS = ProductConstants.PRODUCT_ID_DESIGNER + ".excludeWorkingDirectoryContents";
+	public static final String EXPORT_EXCLUDE_DOT_RESOURCES = ProductConstants.PRODUCT_ID_DESIGNER + ".excludeDotResources";
+	public static final String EXPORT_EXCLUDE_LINKED_CONTENTS = ProductConstants.PRODUCT_ID_DESIGNER + ".excludeLinkedContents";
+	public static final String EXPORT_SAVE_DEFAULT_VALUES = ProductConstants.PRODUCT_ID_DESIGNER + ".saveDefaultValues";
+	public static final String EXPORT_PACK_ALL_PROJECTS_INTO_ONE = ProductConstants.PRODUCT_ID_DESIGNER + ".packAllProjectsIntoOne";
+	
+	/**
+	 * Flag: Automatic export required
+	 */
+	public static final String EXPORT_AUTOMATIC_EXPORT = ProductConstants.PRODUCT_ID_DESIGNER + ".automaticExport";
+	/**
+	 * Flag: Requests new location for the tpds at the first automatic save. "true" if yes, "false" otherwise
+	 */
+	public static final String EXPORT_REQUEST_LOCATION = ProductConstants.PRODUCT_ID_DESIGNER + ".requestLocation";
+	
 	// folding
 	public static final String FOLDING_ENABLED = ProductConstants.PRODUCT_ID_DESIGNER + ".foldingEnabledPreference";
 	public static final String FOLD_COMMENTS = ProductConstants.PRODUCT_ID_DESIGNER + ".foldComments";
@@ -224,7 +240,6 @@ public final class PreferenceConstants {
 	private static final String DEBUG_CONSOLE = DEBUG + ".console";
 	public static final String DEBUG_CONSOLE_TIMESTAMP = DEBUG_CONSOLE + ".timestamp";
 	public static final String DEBUG_CONSOLE_AST_ELEM = DEBUG_CONSOLE + ".astelem";
-	public static final String DEBUG_CONSOLE_ANTLR_V4 = DEBUG_CONSOLE + ".antlrv4"; // for debug purpose
 	public static final String DEBUG_CONSOLE_LOG_TO_SYSOUT = DEBUG_CONSOLE + ".logtosysout";
 	public static final String DEBUG_LOAD_TOKENS_TO_PROCESS_IN_A_ROW = DEBUG + ".load.tokensToProcessInARow";
 	public static final String DEBUG_LOAD_THREAD_PRIORITY = DEBUG + ".load.threadPriority";

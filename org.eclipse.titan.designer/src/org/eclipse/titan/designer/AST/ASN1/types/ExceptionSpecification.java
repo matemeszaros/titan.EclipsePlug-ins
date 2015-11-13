@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Type;
 import org.eclipse.titan.designer.AST.ASN1.IASN1Type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 
 /**
  * ExceptionSpecification.
@@ -32,7 +31,7 @@ public final class ExceptionSpecification extends ASTNode {
 
 	public ExceptionSpecification(final ASN1Type type, final Value value) {
 		if (null == type) {
-			this.type = ParserFactory.createASN1IntegerType();
+			this.type = new ASN1_Integer_Type();
 		} else {
 			this.type = type;
 		}

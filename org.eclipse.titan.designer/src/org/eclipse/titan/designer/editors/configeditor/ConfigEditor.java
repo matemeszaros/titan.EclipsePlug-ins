@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,24 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.parsers.LocationAST;
 import org.eclipse.titan.common.parsers.cfg.CfgAnalyzer;
+import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
+import org.eclipse.titan.designer.editors.configeditor.pages.compgroupmc.ComponentsGroupsMCPage;
+import org.eclipse.titan.designer.editors.configeditor.pages.execute.ExecuteExternalcommandsPage;
+import org.eclipse.titan.designer.editors.configeditor.pages.include.IncludeDefinePage;
+import org.eclipse.titan.designer.editors.configeditor.pages.logging.LoggingPage;
+import org.eclipse.titan.designer.editors.configeditor.pages.modulepar.ModuleParameterSectionPage;
+import org.eclipse.titan.designer.editors.configeditor.pages.testportpar.TestportParametersSectionPage;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -27,13 +38,22 @@ import org.eclipse.ui.part.FileEditorInput;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class ConfigEditor extends FormEditor implements IResourceChangeListener {
-	protected ConfigTextEditor editor;
+public final class ConfigEditor extends FormEditor implements IResourceChangeListener {
+	private ConfigTextEditor editor;
 
-	protected int editorPageIndex;
-	protected boolean isDirty = false;
-	protected String errorMessage;
+	private int editorPageIndex;
+	private boolean isDirty = false;
+	private String errorMessage;
 
+	private ModuleParameterSectionPage mModuleParameterSectionEditor;
+	private TestportParametersSectionPage mTestportParameterSectionEditor;
+	private ComponentsGroupsMCPage mComponentGroupMCSectionEditor;
+	private ExecuteExternalcommandsPage mExecuteExternalCommandsEditor;
+	private IncludeDefinePage mIncludeDefineEditor;
+	private LoggingPage mLoggingEditor;
+
+	private ParserRuleContext mParseTreeRoot;
+	
 	public ConfigEditor() {
 		editor = new ConfigTextEditor(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
@@ -63,10 +83,6 @@ public abstract class ConfigEditor extends FormEditor implements IResourceChange
 		return isDirty || editor.isDirty();
 	}
 
-	public abstract void refresh(final CfgAnalyzer cfgAnalyzer);
-
-	public abstract void setErrorMessage(final String errorMessage);
-	
 	public String getErrorMessage() {
 		return errorMessage;
 	}
@@ -104,4 +120,126 @@ public abstract class ConfigEditor extends FormEditor implements IResourceChange
 	public ConfigTextEditor getEditor() {
 		return editor;
 	}
+	
+	public void refresh(final CfgAnalyzer cfgAnalyzer) {
+		//TODO: implement
+		/*
+		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				mModuleParameterSectionEditor.refreshData( cfgAnalyzer.getModuleParametersHandler() );
+				mTestportParameterSectionEditor.refreshData( cfgAnalyzer.getTestportParametersHandler() );
+				mComponentGroupMCSectionEditor.refreshData( cfgAnalyzer.getComponentSectionHandler(),
+														   cfgAnalyzer.getGroupSectionHandler(),
+														   cfgAnalyzer.getMcSectionHandler() );
+				mExecuteExternalCommandsEditor.refreshData( cfgAnalyzer.getExternalCommandsSectionHandler(),
+														   cfgAnalyzer.getExecuteSectionHandler() );
+				mIncludeDefineEditor.refreshData( cfgAnalyzer.getIncludeSectionHandler(), cfgAnalyzer.getDefineSectionHandler() );
+				mLoggingEditor.refreshData( cfgAnalyzer.getLoggingSectionHandler() );
+			}
+		});
+		//*/
+	}
+
+	public void setErrorMessage(final String errorMessage) {
+		this.errorMessage = errorMessage;
+
+		//TODO: implement
+		/*
+		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				mModuleParameterSectionEditor.setErrorMessage();
+				mTestportParameterSectionEditor.setErrorMessage();
+				mComponentGroupMCSectionEditor.setErrorMessage();
+				mExecuteExternalCommandsEditor.setErrorMessage();
+				mIncludeDefineEditor.setErrorMessage();
+				mLoggingEditor.setErrorMessage();
+			}
+		});
+		//*/
+	}
+	
+	@Override
+	protected void addPages() {
+		//TODO: implement
+		//*
+		createTextEditorPage();
+		/*/
+		try {
+			createTextEditorPage();
+			mModuleParameterSectionEditor = new ModuleParameterSectionPage(this);
+			addPage(mModuleParameterSectionEditor);
+			mTestportParameterSectionEditor = new TestportParametersSectionPage(this);
+			addPage(mTestportParameterSectionEditor);
+			mComponentGroupMCSectionEditor = new ComponentsGroupsMCPage(this);
+			addPage(mComponentGroupMCSectionEditor);
+			mExecuteExternalCommandsEditor = new ExecuteExternalcommandsPage(this);
+			addPage(mExecuteExternalCommandsEditor);
+			mIncludeDefineEditor = new IncludeDefinePage(this);
+			addPage(mIncludeDefineEditor);
+			mLoggingEditor = new LoggingPage(this);
+			addPage(mLoggingEditor);
+		} catch (PartInitException e) {
+			ErrorReporter.logExceptionStackTrace(e);
+		}
+		//*/
+
+		setPartName(getEditorInput().getName());
+	}
+	
+	@Override
+	public void doSave(final IProgressMonitor monitor) {
+		if (isDirty) {
+			updateTextualPage();
+		}
+		
+		editor.doSave(monitor);
+		isDirty = false;
+		firePropertyChange(PROP_DIRTY);
+	}
+
+	@Override
+	public void doSaveAs() {
+		if (isDirty) {
+			updateTextualPage();
+		}
+		
+		editor.doSaveAs();
+		setPageText(editorPageIndex, editor.getTitle());
+		setInput(editor.getEditorInput());
+
+		isDirty = false;
+		firePropertyChange(PROP_DIRTY);
+	}
+
+	public LocationAST getParseTreeRoot() {
+		return new LocationAST(mParseTreeRoot);
+	}
+
+	public void setParseTreeRoot(ParserRuleContext aParseTreeRoot) {
+		mParseTreeRoot = aParseTreeRoot;
+	}
+
+	private void updateTextualPage() {
+		LocationAST parseTreeRoot = getParseTreeRoot();
+		if (parseTreeRoot != null && parseTreeRoot.getRule() != null) {
+			String original = editor.getDocument().get();
+			String content = ConfigTreeNodeUtilities.toStringWithhiddenAfter(parseTreeRoot);
+
+			if (!content.equals(original)) {
+				editor.getDocument().set(content);
+			}
+		}
+	}
+
+	@Override
+	protected void pageChange(final int newPageIndex) {
+		if (newPageIndex == editorPageIndex) {
+			updateTextualPage();
+		}
+
+		super.pageChange(newPageIndex);
+	}
+
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,8 +29,10 @@ import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 
 /**
  * Map of component fields.
@@ -39,7 +41,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * 
  * @author Kristof Szabados
  * */
-public abstract class CompFieldMap extends ASTNode implements ILocateableNode, IIncrementallyUpdateable {
+public final class CompFieldMap extends ASTNode implements ILocateableNode, IIncrementallyUpdateable {
 	public static final String DUPLICATEFIELDNAMEFIRST = "Duplicate field name `{0}'' was first declared here";
 	public static final String DUPLICATEFIELDNAMEREPEATED = "Duplicate field name `{0}'' was declared here again";
 
@@ -435,7 +437,20 @@ public abstract class CompFieldMap extends ASTNode implements ILocateableNode, I
 		}
 	}
 	
-	protected abstract int reparse( TTCN3ReparseUpdater aReparser );
+	private int reparse(TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				List<CompField> tempFields = parser.pr_reparse_StructFieldDefs().fields;
+				lastUniquenessCheck = null;
+				if ( parser.isErrorListEmpty() ) {
+					if (tempFields != null) {
+						addFieldsOrdered(tempFields);
+					}
+				}
+			}
+		});
+	}
 
 	private void removeStuffInRange(final TTCN3ReparseUpdater reparser) {
 		Location temp;

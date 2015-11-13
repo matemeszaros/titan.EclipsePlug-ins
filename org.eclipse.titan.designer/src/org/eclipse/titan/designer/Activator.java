@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.MarkerHandler;
-import org.eclipse.titan.designer.AST.ASN1.definitions.SpecialASN1Module;
 import org.eclipse.titan.designer.core.CompilerVersionInformationCollector;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.core.TITANBuilder;
@@ -49,10 +48,6 @@ import org.eclipse.titan.designer.core.TITANNature;
 import org.eclipse.titan.designer.extensions.ExtensionHandler;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.GlobalParser;
-import org.eclipse.titan.designer.parsers.ParserFactory;
-//import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer;
-//import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Parser;
-//import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Reparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.titan.designer.properties.PropertyNotificationManager;
@@ -448,8 +443,9 @@ public final class Activator extends AbstractUIPlugin {
 		WorkspaceJob initializer = new WorkspaceJob("Initializing the TITAN toolset") {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				//TODO: preload if needed
 				// preload some of the heavier classes, and do the analysis of the static ASN.1 module
-				ParserFactory.actvatorPreload();
+				
 				//The existence of the compiler must not be checked, as it is not a required component.
 				CompilerVersionInformationCollector.collectInformation();
 

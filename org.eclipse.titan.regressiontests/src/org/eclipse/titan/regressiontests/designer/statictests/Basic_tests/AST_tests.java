@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ public class AST_tests {
 	//template_specific_test_ttcn
 	//value_assignment_tests_ttcn
 	//value_tests_ttcn
+	//value_tests2_ttcn
 	//negativeTesting_ttcn
 	//ttcnpp_marker_test_with_syntax_errors_ttcnpp
 
@@ -77,6 +78,11 @@ public class AST_tests {
 	@Test
 	public void value_tests_ttcn() throws Exception {
 		Designer_plugin_tests.checkSemanticMarkersOnFile(value_tests_ttcn_initializer(), "src/Basic_tests/value_tests.ttcn");
+	}
+	
+	@Test
+	public void value_tests2_ttcn() throws Exception {
+		Designer_plugin_tests.checkSemanticMarkersOnFile(value_tests2_ttcn_initializer(), "src/Basic_tests/value_tests2.ttcn");
 	}
 
 	@Test
@@ -2139,9 +2145,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Parameter `Par3' is already given here",  lineNum, IMarker.SEVERITY_ERROR)); //2681
 		markersToCheck.add(new MarkerToCheck("Unexpected field `Par3' in signature value, expecting `Par1'",  ++lineNum, IMarker.SEVERITY_ERROR));//2682
 		markersToCheck.add(new MarkerToCheck("Unexpected field `Par3' in signature value, expecting `Par2'",  ++lineNum, IMarker.SEVERITY_ERROR));//2683
-		markersToCheck.add(new MarkerToCheck("Duplicate signature parameter `Par3'",  ++lineNum, IMarker.SEVERITY_ERROR));//2684
+		markersToCheck.add(new MarkerToCheck("Duplicate parameter `Par3' in template for signature `@specific_template_tests.mySignature'",  ++lineNum, IMarker.SEVERITY_ERROR));//2684
 		markersToCheck.add(new MarkerToCheck("Parameter `Par3' is already given here",  lineNum, IMarker.SEVERITY_ERROR)); //2684
-		markersToCheck.add(new MarkerToCheck("Unexpected field `Par3' in signature value, expecting `Par2'",  lineNum, IMarker.SEVERITY_ERROR));//2684
 		markersToCheck.add(new MarkerToCheck("integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));//2685
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@specific_template_tests.mySignature': 3 was expected instead of 5",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
@@ -3468,7 +3473,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("A definition that has `runs on' clause cannot execute testcases",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
 		markersToCheck.add(new MarkerToCheck("A definition that has `runs on' clause cannot execute testcases",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An altstep canot return a value",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An altstep cannot return a value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 12;
 		markersToCheck.add(new MarkerToCheck("The testcase quard timer has negative duration: `-5.0'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("float value expected",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -4333,7 +4338,7 @@ public class AST_tests {
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
 		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));//604
 		lineNum += 26;
 		markersToCheck.add(new MarkerToCheck("hexstring value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("value list notation cannot be used for type `hexstring'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -4379,7 +4384,7 @@ public class AST_tests {
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
 		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Reference to template variable `vt_i' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR)); //line 604
 		lineNum += 15;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `template_assignment_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `template_assignment_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -4737,9 +4742,9 @@ public class AST_tests {
 		//markersToCheck.add(new MarkerToCheck("Field `Par1' is missing from signature value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		//markersToCheck.add(new MarkerToCheck("Field `Par3' is missing from signature value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum ++;
-		markersToCheck.add(new MarkerToCheck("Duplicate signature parameter `Par3'",  ++lineNum, IMarker.SEVERITY_ERROR));//2586
+		markersToCheck.add(new MarkerToCheck("Duplicate parameter `Par3' in template for signature `@template_assignment_tests.mySignature'",  ++lineNum, IMarker.SEVERITY_ERROR));//2586
 		markersToCheck.add(new MarkerToCheck("Parameter `Par3' is already given here",  lineNum, IMarker.SEVERITY_ERROR)); //2586
-		markersToCheck.add(new MarkerToCheck("Reference to non-existent parameter `nonExi' in signature value for type `@template_assignment_tests.mySignature'",  lineNum, IMarker.SEVERITY_ERROR));//2586
+		markersToCheck.add(new MarkerToCheck("Reference to non-existent parameter `nonExi' in template for signature `@template_assignment_tests.mySignature'",  lineNum, IMarker.SEVERITY_ERROR));//2586
 		markersToCheck.add(new MarkerToCheck("Unexpected field `Par3' in signature value, expecting `Par2'", lineNum++, IMarker.SEVERITY_ERROR)); //2586
 		markersToCheck.add(new MarkerToCheck("Unexpected field `Par3' in signature value, expecting `Par2'", lineNum++, IMarker.SEVERITY_ERROR)); //2587
 		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));//2588
@@ -5358,10 +5363,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `template reference: @template_specific_test.t_recursiveTemplate4 -> template reference: @template_specific_test.t_recursiveTemplate4'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `template reference: @template_specific_test.t_recursiveTemplate5[0] -> template reference: @template_specific_test.t_recursiveTemplate5[0]'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("No elements were found with the index 1 in the referenced template",  ++lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 11;
-		markersToCheck.add(new MarkerToCheck("Using a large integer value (9999999999) as the lower boundary of a length restriction is not supported",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Using a large integer value (9999999999) as the upper boundary of a length restriction is not supported",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 1;
+		lineNum += 12;
 		int i = 0;
 		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
 		lineNum += 1;
@@ -5446,57 +5448,55 @@ public class AST_tests {
 		lineNum += 24;
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `template reference: @template_specific_test.temp_HM93170_1.f1 -> template reference: @template_specific_test.temp_HM93170_2.f1 -> template reference: @template_specific_test.temp_HM93170_2.f4 -> template reference: @template_specific_test.temp_HM93170_1.f5 -> template reference: @template_specific_test.temp_HM93170_1.f1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `template reference: @template_specific_test.temp_HM93170_1.f5 -> template reference: @template_specific_test.temp_HM93170_1.f1 -> template reference: @template_specific_test.temp_HM93170_2.f1 -> template reference: @template_specific_test.temp_HM93170_2.f4 -> template reference: @template_specific_test.temp_HM93170_1.f5'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to a value or template was expected instead of template `@template_specific_test.temp_HM93170_1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `template reference: @template_specific_test.temp_HM93170_2.f1 -> template reference: @template_specific_test.temp_HM93170_2.f4 -> template reference: @template_specific_test.temp_HM93170_1.f5 -> template reference: @template_specific_test.temp_HM93170_1.f1 -> template reference: @template_specific_test.temp_HM93170_2.f1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `template reference: @template_specific_test.temp_HM93170_2.f4 -> template reference: @template_specific_test.temp_HM93170_1.f5 -> template reference: @template_specific_test.temp_HM93170_1.f1 -> template reference: @template_specific_test.temp_HM93170_2.f1 -> template reference: @template_specific_test.temp_HM93170_2.f4'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to a value or template was expected instead of template `@template_specific_test.temp_HM93170_1'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 19;
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vtc' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `charstring' cannot be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a variable or template variable was expected instead of `template'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable", lineNum++, IMarker.SEVERITY_ERROR)); }
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vtc' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vtb' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `bitstring' cannot be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a variable or template variable was expected instead of `template'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable", lineNum++, IMarker.SEVERITY_ERROR)); }
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vtb' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vth' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `hexstring' cannot be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a variable or template variable was expected instead of `template'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable", lineNum++, IMarker.SEVERITY_ERROR)); }
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vth' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vto' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `octetstring' cannot be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a variable or template variable was expected instead of `template'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable", lineNum++, IMarker.SEVERITY_ERROR)); }
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vto' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vtu' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `universal charstring' cannot be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a variable or template variable was expected instead of `template'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a template variable", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("A template body with matching symbols cannot be assigned to a variable", lineNum++, IMarker.SEVERITY_ERROR)); }
 		markersToCheck.add(new MarkerToCheck("Reference to template variable `vtu' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 
 		return markersToCheck;
@@ -8039,165 +8039,221 @@ public class AST_tests {
 
 		return markersToCheck;
 	}
+	
+	
+	private ArrayList<MarkerToCheck> value_tests2_ttcn_initializer() {
+		//value_tests2.ttcn
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(44);
+		int lineNum = 5;
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
+		int i = 0;
+		for (i = 0; i < 5; i++) {
+			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		lineNum += 1;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 10;
+		markersToCheck.add(new MarkerToCheck("Type mismatch: a value of type `integer' was expected instead of `float'",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("The lower boundary cannot be +infinity",  lineNum, IMarker.SEVERITY_ERROR));
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("The upper boundary cannot be -infinity", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("The lower boundary is higher than the upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 7;
+		markersToCheck.add(new MarkerToCheck("Type mismatch: a value of type `integer' was expected instead of `float'",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("The lower boundary cannot be +infinity",  lineNum, IMarker.SEVERITY_ERROR));
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("The upper boundary cannot be -infinity", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("The lower boundary is higher than the upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 5;
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 5;
+		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
 
+		return markersToCheck;
+	}
+	
 	private ArrayList<MarkerToCheck> ttcnpp_marker_test_with_syntax_errors_ttcnpp_initializer() {
 		//ttcnpp_marker_test_with_syntax_errors.ttcnpp
+		// !! Only syntax errors !!
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
-		int lineNum = 19;
-		markersToCheck.add(new MarkerToCheck("this test is ready -already",  lineNum, IMarker.SEVERITY_WARNING));
+		int lineNum = 22;
+		markersToCheck.add(new MarkerToCheck(" this test is ready -already",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 4;
-		//markersToCheck.add(new MarkerToCheck("this is a wrong line  what will be signed by a marker",  lineNum, IMarker.SEVERITY_WARNING));
+		//semantic: markersToCheck.add(new MarkerToCheck(" this is a wrong line  that will be signed by a marker",  lineNum, IMarker.SEVERITY_WARNING)); //26
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("Preprocessor directive #line is ignored",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("Preprocessor directive #pragma is ignored",  ++lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 23;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		//markersToCheck.add(new MarkerToCheck("Invalid integer value: For input string: \"214748364888888888888\"",  lineNum, IMarker.SEVERITY_WARNING));
+		//semantic: markersToCheck.add(new MarkerToCheck("Invalid integer value: For input string: \"214748364888888888888\"",  lineNum, IMarker.SEVERITY_FILL_ME_OUT));//64
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: xxx",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'xxx;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("unexpected token: x1",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'x1;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
-		markersToCheck.add(new MarkerToCheck("unexpected token: x2",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'x2;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 12;
-		markersToCheck.add(new MarkerToCheck("unexpected token: xxx",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'xxx;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: xxxx",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'xxxx;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("unexpected token: xxxy",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'xxxy;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: xxxz",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'xxxz;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("Preprocessor directive #line is ignored",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("Preprocessor directive #line is ignored",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 23;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 24;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 13;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 9;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 9;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 8;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 3;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 17;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 20;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 15;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 19;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 9;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 19;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 13;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 8;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 9;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 12;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 15;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 14;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 8;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 12;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 35;
-		markersToCheck.add(new MarkerToCheck("unexpected token: error_marker_expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("no viable alternative at input 'error_marker_expected;'",  lineNum, IMarker.SEVERITY_ERROR));
+
 		return markersToCheck;
 	}
+	
+	
 	private ArrayList<MarkerToCheck> ttcnpp_marker_test_with_syntax_errors_ttcnpp_initializer_semantic() {
 		//ttcnpp_marker_test_with_syntax_errors.ttcnpp
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
-		int lineNum = 23;
-		markersToCheck.add(new MarkerToCheck("this is a wrong line  what will be signed by a marker",  lineNum, IMarker.SEVERITY_WARNING));
-		lineNum = 61;
+		int lineNum = 26;
+		markersToCheck.add(new MarkerToCheck(" this is a wrong line  that will be signed by a marker",  lineNum, IMarker.SEVERITY_WARNING));
+		lineNum = 64;
 		markersToCheck.add(new MarkerToCheck("Invalid integer value: For input string: \"214748364888888888888\"",  lineNum, IMarker.SEVERITY_WARNING));		
 
 		return markersToCheck;

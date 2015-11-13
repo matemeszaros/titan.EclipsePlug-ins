@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,9 @@ class TITANProjectExportMainPage extends WizardPage {
 
 	private Text projectFileText;
 	private Button projectFileSelectionButton;
+	/**
+	 * Project file path in string format, e.g C:/MyFolder/myFile or /home/MyFolder/myFile or myFile
+	 */
 	private String projectFile = null;
 	private IProject project = null;
 
@@ -157,6 +160,8 @@ class TITANProjectExportMainPage extends WizardPage {
 				// if this project is imported, the location of the source tpd is stored in loadLocation,
 				// if this project is not imported then loadLocation == null and the new default tpd will be defined
 				// in the current project folder in the current workspace
+				
+				//URI string or path string::
 				String loadLocation = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 						ProjectBuildPropertyData.LOAD_LOCATION));
 				if (loadLocation != null) {
@@ -165,9 +170,8 @@ class TITANProjectExportMainPage extends WizardPage {
 					if(projectFilePath != null) {
 						projectFileText.setText(projectFilePath.toString());//bugfix by ethbaat // FIXME: toOSString() ???
 					} 
-
 				} else if(project.getLocation() != null){
-					projectFileText.setText(project.getLocation().append(project.getName() + ".tpd").toOSString());				
+					projectFileText.setText(project.getLocation().append(project.getName() + ".tpd").toOSString());	//FIXME: toString() ???
 				}
 			} catch (CoreException e) {
 				ErrorReporter.logExceptionStackTrace(e);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,23 +19,39 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Position;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
+import org.eclipse.titan.common.parsers.TITANMarker;
+import org.eclipse.titan.common.parsers.cfg.CfgAnalyzer;
 import org.eclipse.titan.common.parsers.cfg.CfgDefinitionInformation;
 import org.eclipse.titan.common.parsers.cfg.CfgLocation;
 import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.core.TITANNature;
+import org.eclipse.titan.designer.editors.EditorTracker;
+import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
+import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
+import org.eclipse.titan.designer.editors.configeditor.ConfigFoldingSupport;
+import org.eclipse.titan.designer.editors.configeditor.ConfigTextEditor;
 import org.eclipse.titan.designer.graphics.ImageCache;
+import org.eclipse.titan.designer.preferences.PreferenceConstants;
+import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.ui.progress.IProgressConstants;
 
 /**
@@ -49,7 +65,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class ProjectConfigurationParser {
+public final class ProjectConfigurationParser {
 	private static final String SOURCE_ANALYSING = "Analysing the config file";
 	private static final String PARSING = "parsing";
 	private IProject project;
@@ -339,5 +355,88 @@ public abstract class ProjectConfigurationParser {
 	 * @param file
 	 *                the file to be parsed
 	 */
-	protected abstract void fileBasedAnalysis(final IFile file);
+	private void fileBasedAnalysis(final IFile file) {
+		List<TITANMarker> warnings = null;
+		List<SyntacticErrorStorage> errorsStored = null;
+		IDocument document = null;
+		ISemanticTITANEditor tempEditor = null;
+		List<ISemanticTITANEditor> editors = null;
+		if (EditorTracker.containsKey(file)) {
+			editors = EditorTracker.getEditor(file);
+			tempEditor = editors.get(0);
+			document = tempEditor.getDocument();
+		}
+		ConfigTextEditor editor = null;
+		if (tempEditor instanceof ConfigTextEditor) {
+			editor = (ConfigTextEditor) tempEditor;
+		}
+
+		String oldConfigFilePath = fileMap.get(file);
+		if (oldConfigFilePath != null) {
+			fileMap.remove(file);
+		}
+
+		CfgAnalyzer cfgAnalyzer = new CfgAnalyzer();
+		cfgAnalyzer.parse(file, document == null ? null : document.get());
+		errorsStored = cfgAnalyzer.getErrorStorage();
+		warnings = cfgAnalyzer.getWarnings();
+
+		if (editor != null && editor.getDocument() != null) {
+			ConfigEditor parentEditor = editor.getParentEditor();
+			if ( errorsStored == null || errorsStored.isEmpty() ) {
+				parentEditor.setParseTreeRoot(cfgAnalyzer.getParseTreeRoot());
+				parentEditor.refresh(cfgAnalyzer);
+				parentEditor.setErrorMessage(null);
+			}
+		}
+
+		fileMap.put(file, file.getFullPath().toOSString());
+		uptodateFiles.put(file, file.getFullPath().toOSString());
+
+		if (document != null) {
+			GlobalIntervalHandler.putInterval(document, cfgAnalyzer.getRootInterval());
+		}
+
+		if (warnings != null) {
+			for (TITANMarker marker : warnings) {
+				if (file.isAccessible()) {
+					Location location = new Location(file, marker.getLine(), marker.getOffset(), marker.getEndOffset());
+					location.reportExternalProblem(marker.getMessage(), marker.getSeverity(),
+							GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER);
+				}
+			}
+		}
+
+		if (errorsStored != null && !errorsStored.isEmpty()) {
+			String reportLevel = Platform.getPreferencesService().getString(ProductConstants.PRODUCT_ID_DESIGNER,
+					PreferenceConstants.REPORTERRORSINEXTENSIONSYNTAX, GeneralConstants.WARNING, null);
+			int errorLevel;
+			if (GeneralConstants.ERROR.equals(reportLevel)) {
+				errorLevel = IMarker.SEVERITY_ERROR;
+			} else if (GeneralConstants.WARNING.equals(reportLevel)) {
+				errorLevel = IMarker.SEVERITY_WARNING;
+			} else {
+				return;
+			}
+			for (int i = 0; i < errorsStored.size(); i++) {
+				ParserMarkerSupport.createOnTheFlySyntacticMarker(file, errorsStored.get(i), errorLevel);
+			}
+		}
+
+		if (document != null && editors != null) {
+			ConfigFoldingSupport foldingSupport = new ConfigFoldingSupport();
+			final IDocument tempDocument = document;
+			final List<ISemanticTITANEditor> editors2 = editors;
+			final List<Position> positions = foldingSupport.calculatePositions(tempDocument);
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					for (ISemanticTITANEditor editor : editors2) {
+						editor.updateFoldingStructure(positions);
+						editor.invalidateTextPresentation();
+					}
+				}
+			});
+		}
+	}
 }

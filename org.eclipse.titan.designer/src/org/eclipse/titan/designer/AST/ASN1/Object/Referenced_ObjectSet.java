@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.titan.designer.AST.ASN1.ObjectSetElement_Visitor;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 
 /**
  * Referenced ObjectSet.
@@ -98,15 +97,16 @@ public final class Referenced_ObjectSet extends ObjectSet implements IObjectSet_
 				}
 			}
 		}
-		osReferenced = ParserFactory.createObjectSetDefinition();
+		osReferenced = new ObjectSet_definition();
 		osReferenced.setMyGovernor(getMyGovernor());
 		return osReferenced;
 	}
 
 	@Override
 	public ObjectSet_definition getRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
+		final boolean newChain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (null == referenceChain) {
+		if (newChain) {
 			temporalReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		} else {
 			temporalReferenceChain = referenceChain;
@@ -114,7 +114,7 @@ public final class Referenced_ObjectSet extends ObjectSet implements IObjectSet_
 
 		referencedLast = getRefd(timestamp, temporalReferenceChain).getRefdLast(timestamp, temporalReferenceChain);
 
-		if (null == referenceChain) {
+		if (newChain) {
 			temporalReferenceChain.release();
 		}
 
@@ -138,7 +138,7 @@ public final class Referenced_ObjectSet extends ObjectSet implements IObjectSet_
 		if (myClass != refdClass) {
 			location.reportSemanticError(MessageFormat.format(MISMATCH, myClass.getFullName(), refdClass.getFullName()));
 
-			osReferenced = ParserFactory.createObjectSetDefinition();
+			osReferenced = new ObjectSet_definition();
 			osReferenced.setMyGovernor(myGovernor);
 			osReferenced.check(timestamp);
 		}

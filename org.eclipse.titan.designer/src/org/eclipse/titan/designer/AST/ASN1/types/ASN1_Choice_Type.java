@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@ package org.eclipse.titan.designer.AST.ASN1.types;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.ArraySubReference;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.IReferenceChain;
@@ -25,6 +28,7 @@ import org.eclipse.titan.designer.AST.Type;
 import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.ASN1.Block;
+import org.eclipse.titan.designer.AST.ASN1.IASN1Type;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.NamedTemplate;
@@ -35,12 +39,15 @@ import org.eclipse.titan.designer.AST.TTCN3.types.CompField;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Choice_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Choice_Value;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.BlockLevelTokenStreamTracker;
 
 /**
  * @author Kristof Szabados
  * @author Arpad Lovassy
  * */
-public abstract class ASN1_Choice_Type extends ASN1_Set_Seq_Choice_BaseType {
+public final class ASN1_Choice_Type extends ASN1_Set_Seq_Choice_BaseType {
 	private static final String MISSINGALTERNATIVE = "CHOICE type must have at least one alternative";
 	private static final String TEMPLATENOTALLOWED = "{0} cannot be used for union type `{1}''";
 	private static final String LENGTHRESTRICTIONNOTALLOWED = "Length restriction is not allowed for union type `{0}''";
@@ -57,6 +64,10 @@ public abstract class ASN1_Choice_Type extends ASN1_Set_Seq_Choice_BaseType {
 	public ASN1_Choice_Type(final Block aBlock) {
 		this.mBlock = aBlock;
 		setLocation(new Location(aBlock.getLocation()));
+	}
+
+	public IASN1Type newInstance() {
+		return new ASN1_Choice_Type(mBlock);
 	}
 
 	@Override
@@ -379,7 +390,37 @@ public abstract class ASN1_Choice_Type extends ASN1_Set_Seq_Choice_BaseType {
 	}
 
 	/** Parses the block as if it were the block of a choice. */
-	protected abstract void parseBlockChoice();
+	private void parseBlockChoice() {
+		Asn1Parser parser = null;
+		if (null != mBlock) {
+			parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		}
+		if (null == parser) {
+			return;
+		}
+		components = null;
+
+		if (null != mBlock) {
+			components = parser.pr_special_AlternativeTypeLists().list;
+			List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+			if (null != errors && !errors.isEmpty()) {
+				isErroneous = true;
+				components = null;
+				for (int i = 0; i < errors.size(); i++) {
+					ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+							IMarker.SEVERITY_ERROR);
+				}
+			}
+		}
+		if (components == null) {
+			isErroneous = true;
+			return;
+		}
+
+		components.setFullNameParent(this);
+		components.setMyScope(getMyScope());
+		components.setMyType(this);
+	}
 	
 	@Override
 	public IType getFieldType(final CompilationTimeStamp timestamp, final Reference reference, final int actualSubReference,

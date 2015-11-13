@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,6 @@ import org.eclipse.titan.designer.AST.ASN1.ObjectClass;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 
 /**
  * Class to represent a ReferencedObjectClass. It is a DefinedOC or OCFromObject
@@ -91,14 +90,14 @@ public final class ObjectClass_refd extends ObjectClass implements IReferenceCha
 	}
 	
 	private ObjectClass_Definition newObjectClassDefinitionInstance() {
-		return ParserFactory.createObjectClassDefinition();
+		return new ObjectClass_Definition();
 	}
 
 	@Override
 	public ObjectClass_Definition getRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		final boolean newChain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (null == referenceChain) {
+		if (newChain) {
 			temporalReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		} else {
 			temporalReferenceChain = referenceChain;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,8 +40,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CfgParserFactory;
-import org.eclipse.titan.common.parsers.cfg.CFGLexer2;
+import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
 import org.eclipse.titan.common.path.PathConverter;
 import org.eclipse.titan.executor.Activator;
@@ -169,7 +168,7 @@ public final class SingleExecutor extends BaseExecutor {
 			if (null != configFilePath && configFilePath.length() > 0) {
 				configHandler = readConfigFile();
 			} else {
-				configHandler = CfgParserFactory.createConfigFileHandler();
+				configHandler = new ConfigFileHandler();
 				logFileNameDefined = false;
 			}
 
@@ -190,12 +189,12 @@ public final class SingleExecutor extends BaseExecutor {
 			}
 			
 			List<Integer> disallowedNodes = new ArrayList<Integer>(6);
-			disallowedNodes.add(CFGLexer2.MAIN_CONTROLLER_SECTION);
-			disallowedNodes.add(CFGLexer2.DEFINE_SECTION);
-			disallowedNodes.add(CFGLexer2.INCLUDE_SECTION);
-			disallowedNodes.add(CFGLexer2.COMPONENTS_SECTION);
-			disallowedNodes.add(CFGLexer2.GROUPS_SECTION);
-			disallowedNodes.add(CFGLexer2.EXECUTE_SECTION);
+			disallowedNodes.add(CfgLexer.MAIN_CONTROLLER_SECTION);
+			disallowedNodes.add(CfgLexer.DEFINE_SECTION);
+			disallowedNodes.add(CfgLexer.INCLUDE_SECTION);
+			disallowedNodes.add(CfgLexer.COMPONENTS_SECTION);
+			disallowedNodes.add(CfgLexer.GROUPS_SECTION);
+			disallowedNodes.add(CfgLexer.EXECUTE_SECTION);
 
 			builder = configHandler.toStringResolved(disallowedNodes);
 			builder.append("\n[EXECUTE]\n");
@@ -226,13 +225,7 @@ public final class SingleExecutor extends BaseExecutor {
 				List<String> configurationFileElements = configHandler.getExecuteElements();
 				if (configurationFileElements.isEmpty()) {
 					invalidSelection = true;
-					Display.getDefault().syncExec(new Runnable() {
-						@Override
-						public void run() {
-							MessageDialog.openError(new Shell(Display.getDefault()),
-									"Execution failed", "The configuration file selected does not have anything to execute");
-						}
-					});
+					Display.getDefault().syncExec( new EmptyExecutionRunnable() );
 				} else {
 					invalidSelection = false;
 					for (int i = 0; i < lastTimeSelectionTime; i++) {
@@ -250,12 +243,17 @@ public final class SingleExecutor extends BaseExecutor {
 		executionStarted = true;
 		startExecutionAction.setEnabled(false);
 
-		builder.append(generateCfgString());
-
-		generateTemporalCfgFile(builder.toString());
+		File cfgFile;
+		if ( CREATE_TEMP_CFG ) {
+			builder.append(generateCfgString());
+			generateTemporalCfgFile(builder.toString());
+			cfgFile = temporalConfigFile;
+		} else {
+			cfgFile = new File ( configFilePath );
+		}
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		final IFile[] outputFiles = root.findFilesForLocationURI(temporalConfigFile.toURI());
+		final IFile[] outputFiles = root.findFilesForLocationURI(cfgFile.toURI());
 		for (IFile outputFile : outputFiles) {
 			try {
 				outputFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
@@ -264,7 +262,7 @@ public final class SingleExecutor extends BaseExecutor {
 			}
 		}
 
-		createProcess(temporalConfigFile.getAbsolutePath());
+		createProcess(cfgFile.getAbsolutePath());
 	}
 
 	/**

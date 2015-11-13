@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,10 +34,10 @@ import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
@@ -240,13 +240,13 @@ public final class CompField extends ASTNode
 		}
 
 		List<Integer> result = new ArrayList<Integer>();
-		result.add(TTCN3Lexer4.OPTIONAL);
+		result.add(Ttcn3Lexer.OPTIONAL);
 
-		result.add(TTCN3Lexer4.LPAREN);
-		result.add(TTCN3Lexer4.LENGTH);
+		result.add(Ttcn3Lexer.LPAREN);
+		result.add(Ttcn3Lexer.LENGTH);
 
 		// any array dimension can be added at this point
-		result.add(TTCN3Lexer4.SQUAREOPEN);
+		result.add(Ttcn3Lexer.SQUAREOPEN);
 
 		return result;
 	}
@@ -264,7 +264,7 @@ public final class CompField extends ASTNode
 			Location tempIdentifier = name.getLocation();
 			if (reparser.envelopsDamage(tempIdentifier) || reparser.isExtending(tempIdentifier)) {
 				reparser.extendDamagedRegion(tempIdentifier);
-				IIdentifierReparser r = ParserFactory.createIdentifierReparser(reparser);
+				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parse();
 				name = r.getIdentifier();
 				// damage handled

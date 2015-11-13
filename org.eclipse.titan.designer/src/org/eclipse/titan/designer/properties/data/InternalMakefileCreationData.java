@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ public final class InternalMakefileCreationData {
 		PlatformSpecificLibrariesOptionsData.removeTITANAttributes("Linux", project);
 		PlatformSpecificLibrariesOptionsData.removeTITANAttributes("Win32", project);
 		LinkerLibrariesOptionsData.removeTITANAttributes(project);
+		LinkerFlagsOptionsData.removeTITANAttributes(project);
 	}
 
 	/**
@@ -76,6 +77,7 @@ public final class InternalMakefileCreationData {
 		PlatformSpecificLibrariesOptionsData.loadMakefileSettings("Linux", node, project);
 		PlatformSpecificLibrariesOptionsData.loadMakefileSettings("Win32", node, project);
 		LinkerLibrariesOptionsData.loadMakefileSettings(node, project);
+		LinkerFlagsOptionsData.loadMakefileSettings(node, project);
 	}
 
 	/**
@@ -106,6 +108,7 @@ public final class InternalMakefileCreationData {
 		PlatformSpecificLibrariesOptionsData.saveMakefileSettings("Linux", makefileSettings, document, project);
 		PlatformSpecificLibrariesOptionsData.saveMakefileSettings("Win32", makefileSettings, document, project);
 		LinkerLibrariesOptionsData.saveMakefileSettings(makefileSettings, document, project);
+		LinkerFlagsOptionsData.saveMakefileSettings(makefileSettings, document, project);
 	}
 
 	/**
@@ -140,5 +143,6 @@ public final class InternalMakefileCreationData {
 		PlatformSpecificLibrariesOptionsData.copyMakefileSettings("Linux", source, makefileSettings, document, saveDefaultValues);
 		PlatformSpecificLibrariesOptionsData.copyMakefileSettings("Win32", source, makefileSettings, document, saveDefaultValues);
 		LinkerLibrariesOptionsData.copyMakefileSettings(source, makefileSettings, document, saveDefaultValues);
+		LinkerFlagsOptionsData.copyMakefileSettings(source,makefileSettings, document, true);
 	}
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.IValue.Value_type;
+import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
@@ -91,7 +92,7 @@ public final class Template_List extends CompositeTemplate {
 	public TTCN3Template setTemplatetype(final CompilationTimeStamp timestamp, final Template_type newType) {
 		switch (newType) {
 		case NAMED_TEMPLATE_LIST:
-			return new Named_Template_List(timestamp, this);
+			return Named_Template_List.convert(timestamp, this);
 		default:
 			return super.setTemplatetype(timestamp, newType);
 		}
@@ -244,24 +245,25 @@ public final class Template_List extends CompositeTemplate {
 	@Override
 	protected void checkTemplateSpecificLengthRestriction(final CompilationTimeStamp timestamp, final Type_type typeType) {
 		if (Type_type.TYPE_SEQUENCE_OF.equals(typeType) || Type_type.TYPE_SET_OF.equals(typeType)) {
-			int nofTemplatesGood = getNofTemplatesNotAnyornone(timestamp);
-			boolean hasAnyOrNone = nofTemplatesGood != getNofTemplates();
+			int nofTemplatesGood = getNofTemplatesNotAnyornone(timestamp); //at least !
+			
+			boolean hasAnyOrNone = templateContainsAnyornone();
 
 			lengthRestriction.checkNofElements(timestamp, nofTemplatesGood, hasAnyOrNone, false, hasAnyOrNone, this);
 		}
 	}
 
 	@Override
-	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed) {
+	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		boolean needsRuntimeCheck = false;
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
-			if (templates.getTemplateByIndex(i).checkValueomitRestriction(timestamp, definitionName, true)) {
+			if (templates.getTemplateByIndex(i).checkValueomitRestriction(timestamp, definitionName, true, usageLocation)) {
 				needsRuntimeCheck = true;
 			}
 		}

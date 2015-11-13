@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.editors.IReferenceParser;
 import org.eclipse.titan.designer.editors.Pair;
 import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReferenceAnalyzer;
 
 /**
@@ -77,7 +76,7 @@ public final class TTCN3ReferenceParser implements IReferenceParser {
 			// of the reference
 			ofs++;
 			String toBeParsed = document.get(ofs, offset - ofs);
-			TTCN3ReferenceAnalyzer refAnalyzer = ParserFactory.createTTCN3ReferenceAnalyzer();
+			TTCN3ReferenceAnalyzer refAnalyzer = new TTCN3ReferenceAnalyzer();
 			reference = refAnalyzer.parseForCompletion(file, toBeParsed);
 		} catch (BadLocationException e) {
 			ErrorReporter.logExceptionStackTrace(e);
@@ -132,7 +131,7 @@ public final class TTCN3ReferenceParser implements IReferenceParser {
 				return reference;
 			}
 
-			TTCN3ReferenceAnalyzer refAnalyzer = ParserFactory.createTTCN3ReferenceAnalyzer();
+			TTCN3ReferenceAnalyzer refAnalyzer = new TTCN3ReferenceAnalyzer();
 			reference = refAnalyzer.parse(file, toBeParsed, reportErrors, document.getLineOfOffset(ofs), ofs);
 		} catch (BadLocationException e) {
 			ErrorReporter.logExceptionStackTrace(e);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,6 +175,8 @@ public abstract class Statement extends ASTNode implements ILocateableNode, IApp
 		S_REFERENCED_TESTCASE_INSTANCE,
 		/** string2ttcn predef. func */
 		S_STRING2TTCN,
+		/** int2enum predef. func. */
+		S_INT2ENUM,
 		// profiler statement
 		/** start profiler. */
 		S_START_PROFILER,

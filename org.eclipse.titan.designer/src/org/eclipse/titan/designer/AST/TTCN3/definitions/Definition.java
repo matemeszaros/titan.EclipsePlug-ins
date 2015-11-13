@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,26 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.TTCN3.definitions;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenFactory;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.UnbufferedCharStream;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
+import org.eclipse.titan.common.parsers.TITANMarker;
+import org.eclipse.titan.common.parsers.TitanListener;
 import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.ASTVisitor;
@@ -24,6 +36,7 @@ import org.eclipse.titan.designer.AST.IReferencingElement;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
@@ -34,6 +47,7 @@ import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ErroneousAttributeSpecification;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ErroneousAttributeSpecification.Indicator_Type;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.AttributeSpecification;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ErroneousAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.Qualifier;
@@ -47,10 +61,12 @@ import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3CharstringLexer;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -127,7 +143,6 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 
 	protected Definition(final Identifier identifier) {
 		super(identifier);
-		visibilityModifier = VisibilityModifier.Public;
 	}
 
 	/**
@@ -144,6 +159,10 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	 * @return the visibility modifier of this definition.
 	 * */
 	public final VisibilityModifier getVisibilityModifier() {
+		if(visibilityModifier == null) {
+			return VisibilityModifier.Public;
+		}
+
 		return visibilityModifier;
 	}
 
@@ -360,7 +379,7 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 						}
 					}
 					// parse the attr. spec.
-					ErroneousAttributeSpecification errAttributeSpecification = ParserFactory.parseErrAttrSpecString(actualAttribute
+					ErroneousAttributeSpecification errAttributeSpecification = parseErrAttrSpecString(actualAttribute
 							.getAttributeSpecification());
 					if (errAttributeSpecification != null) {
 						if (erroneousAttributes == null) {
@@ -496,7 +515,7 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>();
-			result.add(TTCN3Lexer4.WITH);
+			result.add(Ttcn3Lexer.WITH);
 			return result;
 		}
 
@@ -507,16 +526,16 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	public List<Integer> getPossiblePrefixTokens() {
 		if (isLocal()) {
 			List<Integer> result = new ArrayList<Integer>(2);
-			result.add(TTCN3Lexer4.CONST);
-			result.add(TTCN3Lexer4.VAR);
+			result.add(Ttcn3Lexer.CONST);
+			result.add(Ttcn3Lexer.VAR);
 			return result;
 		}
 
 		if (visibilityModifier == null) {
 			List<Integer> result = new ArrayList<Integer>(3);
-			result.add(TTCN3Lexer4.PUBLIC);
-			result.add(TTCN3Lexer4.FRIEND);
-			result.add(TTCN3Lexer4.PRIVATE);
+			result.add(Ttcn3Lexer.PUBLIC);
+			result.add(Ttcn3Lexer.FRIEND);
+			result.add(Ttcn3Lexer.PRIVATE);
 			return result;
 		}
 
@@ -567,5 +586,81 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	@Override
 	public Declaration getDeclaration() {
 		return Declaration.createInstance(this);
+	}
+	
+	private static ErroneousAttributeSpecification parseErrAttrSpecString(final AttributeSpecification aAttrSpec) {
+		ErroneousAttributeSpecification returnValue = null;
+		Location location = aAttrSpec.getLocation();
+		String code = aAttrSpec.getSpecification();
+		if (code == null) {
+			return null;
+		}
+		// code must be transformed, according to
+		// compiler2/ttcn3/charstring_la.l
+		code = Ttcn3CharstringLexer.parseCharstringValue(code, location); // TODO
+		Reader reader = new StringReader(code);
+		CharStream charStream = new UnbufferedCharStream(reader);
+		Ttcn3Lexer lexer = new Ttcn3Lexer(charStream);
+		lexer.setTokenFactory( new CommonTokenFactory( true ) );
+		// needs to be shifted by one because of the \" of the string
+		lexer.setCharPositionInLine( 0 );
+
+		// lexer and parser listener
+		TitanListener parserListener = new TitanListener();
+		// remove ConsoleErrorListener
+		lexer.removeErrorListeners();
+		lexer.addErrorListener(parserListener);
+
+		// Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
+		// Read this: https://groups.google.com/forum/#!topic/antlr-discussion/gsAu-6d3pKU
+		// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
+		//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
+		TokenStream tokens = new BufferedTokenStream( lexer );
+		
+		Ttcn3Reparser parser = new Ttcn3Reparser( tokens );
+		IFile file = (IFile) location.getFile();
+		parser.setActualFile(file);
+		parser.setOffset( location.getOffset() + 1 );
+		parser.setLine( location.getLine() );
+
+		// remove ConsoleErrorListener
+		parser.removeErrorListeners();
+		parser.addErrorListener( parserListener );
+		
+		MarkerHandler.markMarkersForRemoval(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, location.getFile(), location.getOffset(),
+				location.getEndOffset());
+
+		returnValue = parser.pr_ErroneousAttributeSpec().errAttrSpec;
+		List<SyntacticErrorStorage> errors = parser.getErrors();
+		List<TITANMarker> warnings = parser.getWarnings();
+		List<TITANMarker> unsupportedConstructs = parser.getUnsupportedConstructs();
+
+		// add markers
+		if (errors != null) {
+			for (int i = 0; i < errors.size(); i++) {
+				Location temp = new Location(location);
+				temp.setOffset(temp.getOffset() + 1);
+				ParserMarkerSupport.createOnTheFlySyntacticMarker(file, errors.get(i), IMarker.SEVERITY_ERROR, temp);
+			}
+		}
+		if (warnings != null) {
+			for (TITANMarker marker : warnings) {
+				if (file.isAccessible()) {
+					Location loc = new Location(file, marker.getLine(), marker.getOffset(), marker.getEndOffset());
+					loc.reportExternalProblem(marker.getMessage(), marker.getSeverity(),
+							GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER);
+				}
+			}
+		}
+		if (unsupportedConstructs != null) {
+			for (TITANMarker marker : unsupportedConstructs) {
+				if (file.isAccessible()) {
+					Location loc = new Location(file, marker.getLine(), marker.getOffset(), marker.getEndOffset());
+					loc.reportExternalProblem(marker.getMessage(), marker.getSeverity(),
+							GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER);
+				}
+			}
+		}
+		return returnValue;
 	}
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,6 @@ import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.OpenDeclarationHelper;
 import org.eclipse.titan.designer.editors.OpenDeclarationLabelProvider;
 import org.eclipse.titan.designer.parsers.GlobalParser;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -157,7 +156,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			offset = ((ASN1Editor) targetEditor).getCarretOffset();
 		}
 
-		DeclarationCollector declarationCollector = OpenDeclarationHelper.findVisibleDeclarations(targetEditor, ParserFactory.createASN1ReferenceParser(),
+		DeclarationCollector declarationCollector = OpenDeclarationHelper.findVisibleDeclarations(targetEditor, new ASN1ReferenceParser(),
 				((ASN1Editor) targetEditor).getDocument(), offset, false);
 
 		if (declarationCollector == null) {

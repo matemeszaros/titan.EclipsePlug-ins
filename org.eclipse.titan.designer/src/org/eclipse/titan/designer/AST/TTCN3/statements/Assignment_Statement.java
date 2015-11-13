@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,8 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.FormalParameter;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TTCN3Template;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ValueList_Template;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Template_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.CompField;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Sequence_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Set_Type;
@@ -156,19 +158,29 @@ public final class Assignment_Statement extends Statement {
 			if (template.isValue(timestamp)) {
 				IValue temporalValue = template.getValue();
 				checkVarAssignment(timestamp, assignment, temporalValue);
+				break;
 			} else {
-				template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
+				if( Template_type.VALUE_LIST.equals(template.getTemplatetype()) && ((ValueList_Template) template).getNofTemplates() == 1) {
+					break;
+				} else {
+					template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
+					return;
+				}
 			}
-			break;
 		case A_VAR:
 			((Def_Var) assignment).setWritten();
 			if (template.isValue(timestamp)) {
 				IValue temporalValue = template.getValue();
 				checkVarAssignment(timestamp, assignment, temporalValue);
+				break;
 			} else {
-				template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
+				if( Template_type.VALUE_LIST.equals(template.getTemplatetype()) && ((ValueList_Template) template).getNofTemplates() == 1) {
+					break;
+				} else {
+					template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
+					return;
+				}
 			}
-			break;
 		case A_PAR_TEMP_IN:
 			((FormalParameter) assignment).useAsLValue(reference);
 			checkTemplateAssignment(timestamp, assignment);
@@ -378,7 +390,7 @@ public final class Assignment_Statement extends Statement {
 		if (reference.refersToStringElement()) {
 			if (!template.isValue(timestamp)) {
 				template.getLocation().reportSemanticError(
-						"A template body with matching symbols cannot be assigned to a template variable");
+						TEMPLATEASSIGNMENTTOVALUE);
 				isErroneous = true;
 				return;
 			}

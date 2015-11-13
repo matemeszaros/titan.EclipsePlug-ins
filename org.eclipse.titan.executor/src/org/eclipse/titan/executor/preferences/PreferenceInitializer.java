@@ -1,11 +1,13 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 package org.eclipse.titan.executor.preferences;
+
+import java.io.File;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
@@ -22,7 +24,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore preferenceStore = getPreference();
 		
 		preferenceStore.setDefault(PreferenceConstants.SET_LOG_FOLDER, true);
-		preferenceStore.setDefault(PreferenceConstants.LOG_FOLDER_PATH_NAME, ".." + IPath.SEPARATOR + "log" + IPath.SEPARATOR);
+		preferenceStore.setDefault(PreferenceConstants.LOG_FOLDER_PATH_NAME, ".." + File.separator + "log" + File.separator);
 		preferenceStore.setDefault(PreferenceConstants.DELETE_LOG_FILES_NAME, false);
 		preferenceStore.setDefault(PreferenceConstants.AUTOMATIC_MERGE_NAME, true);
 	}

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,8 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.designer.editors.ttcn3editor.Reconciler;
+import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Editor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 
@@ -53,7 +55,7 @@ public class ToggleComment extends TextEditorAction {
 			return;
 		}
 
-		ITextEditor editor = getTextEditor();
+		final ITextEditor editor = getTextEditor();
 		if (editor == null || !validateEditorInputState()) {
 			return;
 		}
@@ -82,7 +84,16 @@ public class ToggleComment extends TextEditorAction {
 		BusyIndicator.showWhile(display, new Runnable() {
 			@Override
 			public void run() {
-				operationTarget.doOperation(operationCode);
+				if(editor instanceof TTCN3Editor) {
+					Reconciler reconciler = ((TTCN3Editor)editor).getReconciler();
+					reconciler.allowIncrementalReconciler(false);
+
+					operationTarget.doOperation(operationCode);
+
+					reconciler.allowIncrementalReconciler(true);
+				} else {
+					operationTarget.doOperation(operationCode);
+				}
 			}
 		});
 	}

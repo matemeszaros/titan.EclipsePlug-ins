@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,7 +96,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 						+ " it might be a better idea to split to multiple branch,"
 						+ " each with different template matching in the receive statements.");
 		m.put(ProblemTypePreference.IF_WITHOUT_ELSE, "All possible execution paths should be handled,"
-				+ " at least on the level of logging information in case of unexpected events");
+				+ " atleast on the level of logging information in case of unexpected events");
 		m.put(ProblemTypePreference.INCORRECT_SHIFT_ROTATE_SIZE,
 				"Report too big (bigger than the string itself) or too small (negative) shift and rotation sizes.");
 		m.put(ProblemTypePreference.INFINITE_LOOP, "When there is no way to escape the loop");
@@ -113,12 +113,17 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 		m.put(ProblemTypePreference.MODULENAME_IN_DEFINITION, "As definitions can be referenced in the modulename.identifier format,"
 				+ " it is of no value if the name of the module is duplicated in the name of the definition\n"
 				+ "But makes it longer");
+		m.put(ProblemTypePreference.LAZY,
+				"When an in parameter evaluation not sure under code execution it should be a @lazy parameter, "
+				+ "otherwise not.");		
 		m.put(ProblemTypePreference.LOGIC_INVERSION,
 				"When an if statement has negated condition, and consists only an if- and an else branch,"
 						+ " the negation can be left simply by swapping the two branches.");
 		m.put(ProblemTypePreference.NONPRIVATE_PRIVATE, "By default all definitions are public,"
 				+ " but by declaring some private one can make them invisible for importing modules.\n"
 				+ "This might be usefull in case of internal functions, types, constants");
+		m.put(ProblemTypePreference.PRIVATE_FIELD_VIA_PUBLIC, "It is able to find references, fields pointing to types, that otherwise should be invisible for the actual module.");
+		m.put(ProblemTypePreference.PRIVATE_VALUE_VIA_PUBLIC, "It is able to find parametrized values, that pointing to types, that otherwise should be invisible for the actual module.");
 		m.put(ProblemTypePreference.READING_OUT_PAR_BEFORE_WRITTEN, "An out parameter is read before a value is assigned to it.");
 		m.put(ProblemTypePreference.READONLY_VARIABLE, "When a definition was declared to be changeable, but is never modified");
 		m.put(ProblemTypePreference.SELECT_COVERAGE, "When using a select statement with enumeration type, all the possible \n" +
@@ -209,6 +214,8 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 			createField(comp, ProblemTypePreference.UNUSED_IMPORT);
 			createField(comp, ProblemTypePreference.MISSING_FRIEND);
 			createField(comp, ProblemTypePreference.NONPRIVATE_PRIVATE);
+			createField(comp, ProblemTypePreference.PRIVATE_FIELD_VIA_PUBLIC);
+			createField(comp, ProblemTypePreference.PRIVATE_VALUE_VIA_PUBLIC);
 			createField(comp, ProblemTypePreference.VISIBILITY_IN_DEFINITION);
 			sec.addExpansionListener(new CustomExpansionListener(comp));
 			sec.setClient(comp);
@@ -242,8 +249,8 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 			createField(comp, ProblemTypePreference.UNINITIALIZED_VARIABLE);
 			createField(comp, ProblemTypePreference.SIZECHECK_IN_LOOP);
 			createField(comp, ProblemTypePreference.CONSECUTIVE_ASSIGNMENTS);
-			createIntegerEditor(comp, PreferenceConstants.TOO_MANY_CONSECUTIVE_ASSIGNMENTS_SIZE,
-					REPORT_TOO_MANY_CONSECUTIVE_ASSIGNMENTS_SIZE);
+			createIntegerEditor(comp, PreferenceConstants.TOO_MANY_CONSECUTIVE_ASSIGNMENTS_SIZE, REPORT_TOO_MANY_CONSECUTIVE_ASSIGNMENTS_SIZE);
+			createField(comp, ProblemTypePreference.LAZY);	
 			sec.addExpansionListener(new CustomExpansionListener(comp));
 			sec.setClient(comp);
 			sec.setExpanded(false);

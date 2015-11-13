@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -281,6 +281,48 @@ testcase tc_undef_ifndef() runs on My_CT {
   setverdict(fail);
   #endif
 
+}
+
+testcase tc_if_not_defined() runs on My_CT {  
+  #undef MYMACRO1
+  
+  // replace "not" with "!"
+  #if ! defined MYMACRO1
+  setverdict(pass);
+  #endif
+
+  #if ! defined MYMACRO1
+  setverdict(pass);
+  #else
+  setverdict(fail);
+  #endif
+
+  #if ! defined MYMACRO1
+  setverdict(pass);
+  #elif 12
+  setverdict(fail);
+  #else
+  setverdict(fail);
+  #endif
+  
+  //with ():
+  #if ! defined (MYMACRO1)
+  setverdict(pass);
+  #endif
+
+  #if ! defined (MYMACRO1)
+  setverdict(pass);
+  #else
+  setverdict(fail);
+  #endif
+
+  #if !defined (MYMACRO1)
+  setverdict(pass);
+  #elif 12
+  setverdict(fail);
+  #else
+  setverdict(fail);
+  #endif
 }
 
 testcase tc_undef_ifdef() runs on My_CT {  

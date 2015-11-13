@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,9 @@
 module ttcnpp_marker_test_with_syntax_errors {
 //This file is generally excluded from build
 type component My_CT1 {}
+
+//A mark ; or ! shall be placed  After "error marker expected" otherwise the parsing/analysis will continue
+// and only the end of the false text will be markered !!!
 
 //TODO: 15 level nested #include
 //TODO: 4095 macro
@@ -22,7 +25,7 @@ test is ready \
 
 #error this\
  is a wrong line \
- what will be signed by a\
+ that will be signed by a\
  marker
 
 #line 1 "blabla"
@@ -49,12 +52,12 @@ error_marker_not_expected //this is not inserted
 error_marker_not_expected //this is not inserted
 error_marker_not_expected //this is not inserted
 #else
-error_marker_expected
+{error_marker_expected;}
 #endif
 
 //not too big:
 #if 21474836488
-  error_marker_expected
+  {error_marker_expected;}
 #endif
 
 //too big number:
@@ -63,7 +66,7 @@ error_marker_expected
 #endif
 
 #if 1
-xxx;  //error expected, pass
+{xxx;}  //error expected, pass
 #else
 xxx; //commented out
 #endif
@@ -93,24 +96,24 @@ x1;  //error expected, fail
 #elif 0
 x2; 
 #else //commented out
-xxx; //error expected, pass
+{xxx;} //error expected, pass
 #endif
 //verdict:pass
 
 #if ((ONE+ONE)*THREE==6)
-xxxx; //error expected, fail
+{xxxx;} //error expected, fail
 #else
 xxx; //commented out
 #endif
 //verdict:fail
 
 #if(THREE-TWO==ONE)
-xxxy  //error expected
+{xxxy;}  //error expected
 #endif
 //verict: fail
 
 #if(THREE>TWO)
-xxxz  //error expected
+{xxxz;}  //error expected
 #endif
 
 }//tc_macro1
@@ -143,9 +146,9 @@ function f_include_test() runs on My_CT {
   if(vl_i==124){setverdict(pass);} else {setverdict(fail)}
   
   #if defined VL_I
-  error_expected
+  {error_expected;}
   #else
-  error_notexpected
+  error_notexpected;
   #endif
 }
 //=========================================================================
@@ -167,13 +170,13 @@ testcase tc_if_and_macro_expr() runs on My_CT {
   #if 0
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #if 0
   error_marker_not_expected
   #elif -3
-  error_marker_expected
+  {error_marker_expected;}
   #else //commented out
   error_marker_not_expected
   #endif
@@ -186,37 +189,37 @@ testcase tc_if_and_macro_expr() runs on My_CT {
   #elif ZERO
   error_marker_not_expected
   #else 
-  error_marker_expected
+  {error_marker_expected;}
   #endif
   //verdict:pass
 
   //#if true constructs
   #if 1
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #if 2147483647
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #if -2147483647
-  error_marker_expected
+  {error_marker_expected;}
   #endif  
 
   #if -1
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   //verdict:pass
   #if 1
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
   //verdict:pass
 
   #if 100
-  error_marker_expected
+  {error_marker_expected;}
   #elif -2
   error_marker_not_expected
   #else //commented out
@@ -225,7 +228,7 @@ testcase tc_if_and_macro_expr() runs on My_CT {
   //verdict:pass
 
   #if 100
-  error_marker_expected
+  {error_marker_expected;}
   #elif 0
   error_marker_not_expected
   #else //commented out
@@ -234,55 +237,55 @@ testcase tc_if_and_macro_expr() runs on My_CT {
   //verdict:pass
 
   #if ((ONE+ONE)*THREE==6)
-  error_marker_expected
+  {error_marker_expected;}
   #endif
   //verdict:pass
 
   #if ((ONE+ONE)*THREE==6)
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
   //verdict:pass
 
   #if (ONE+TWO*THREE==7)
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
   //verdict:pass
 
   #if(THREE-TWO==ONE)
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
   //verict: fail
 
   #if(THREE>TWO)
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
 }//tc_if
 
 testcase tc_define_ifdef() runs on My_CT {
   //************** define and ifdef************************************/
-  error_marker_expected//wrong highlighting, if */ removed from the prev line
+  {error_marker_expected;} //wrong highlighting, if */ removed from the prev line
 
   #define MYMACRO1
 
   #ifdef MYMACRO1
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #ifdef MYMACRO1
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
 
   #ifdef MYMACRO1
-  error_marker_expected
+  {error_marker_expected;}
   #elif 12
   error_marker_not_expected
   #else
@@ -290,20 +293,20 @@ testcase tc_define_ifdef() runs on My_CT {
   #endif
 
   #ifdef MYMACRO1
-  error_marker_expected
+  {error_marker_expected;}
   #define MYMACRO2
   #ifdef MYMACRO2
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
-  error_marker_expected
+  {error_marker_expected;}
   #else
   setverdict(false);
   #endif
 
   #ifdef MYMACRO
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #undef MYMACRO1
@@ -314,13 +317,13 @@ testcase tc_define_ifdef() runs on My_CT {
   #ifdef MYMACRO1
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #ifdef MYMACRO1
   error_marker_not_expected
   #elif 12
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -340,13 +343,13 @@ testcase tc_define_ifndef() runs on My_CT {
   #ifndef MYMACRO1
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #ifndef MYMACRO1
   error_marker_not_expected
   #elif 12
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -359,14 +362,14 @@ testcase tc_define_ifndef() runs on My_CT {
   #else
   error_marker_not_expected
   #endif
-  error_marker_expected
+  {error_marker_expected;}
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #define MYMACRO2
   #ifndef MYMACRO2
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
   #endif
 }
@@ -377,17 +380,17 @@ testcase tc_undef_ifndef() runs on My_CT {
   #undef MYMACRO1
 
   #ifndef MYMACRO1
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #ifndef MYMACRO1
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
 
   #ifndef MYMACRO1
-  error_marker_expected
+  {error_marker_expected;}
   #elif 12
   error_marker_not_expected
   #else
@@ -406,13 +409,13 @@ testcase tc_undef_ifdef() runs on My_CT {
   #ifdef MYMACRO1
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #ifdef MYMACRO1
   error_marker_not_expected
   #elif 12
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -421,11 +424,11 @@ testcase tc_undef_ifdef() runs on My_CT {
 
 testcase tc_embedded_ifs() runs on My_CT {
   #if 1 && -1
-  error_marker_expected
+  {error_marker_expected;}
   #if 0 
   setvedict(fail)
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
   #else
   error_marker_not_expected
@@ -444,11 +447,11 @@ testcase tc_embedded_ifs() runs on My_CT {
   error_marker_not_expected
   #endif
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #if 0 
   setvedict(fail)
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
   #endif
 }
@@ -461,13 +464,13 @@ testcase tc_cascade() runs on My_CT {
   #define TWENTY5 TWENTY4
   
   #if TWENTY2 == 20
-   error_marker_expected
+   {error_marker_expected;}
   #else
    error_marker_not_expected
   #endif  
   
   #if TWENTY5 == 20
-   error_marker_expected
+   {error_marker_expected;}
   #else
    error_marker_not_expected
   #endif
@@ -475,7 +478,7 @@ testcase tc_cascade() runs on My_CT {
   #if TWENTY5 != 20
    error_marker_not_expected
   #else
-   error_marker_expected
+   {error_marker_expected;}
   #endif
   
 }
@@ -485,12 +488,12 @@ testcase tc_three_operands() runs on My_CT {
   #if AAA ? 0 : 1
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
   
   #define AAA 1
   #if AAA ? 1 : 0
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -499,12 +502,12 @@ testcase tc_three_operands() runs on My_CT {
   #if AAA ? 1 : 0
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif 
   
   #define AAA 0
   #if AAA ? 0 : 1
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif 
@@ -516,7 +519,7 @@ testcase tc_A() runs on My_CT {
   #if defined A_IMPORTED
   var integer vl_i:=cg_A_i;
   log(vl_i);
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -526,7 +529,7 @@ testcase tc_B() runs on My_CT {
   #if defined B_IMPORTED
   var integer vl_i:=cg_B_i;
   log(vl_i);
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -541,7 +544,7 @@ testcase tc_B() runs on My_CT {
 testcase tc_AandB() runs on My_CT {
   #if defined  A_AND_B_DEFINED 
   var integer vl_i:=cg_A_i+cg_B_i;
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -555,7 +558,7 @@ testcase tc_if_defined() runs on My_CT {
   log(vl_i);
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 }
 
@@ -566,7 +569,7 @@ testcase tc_include_ttcnin() runs on My_CT {
   #if defined A_IMPORTED
   var integer vl_i:=cg_A_i;
   log(vl_i);
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -577,7 +580,7 @@ testcase tc_bitoperands() runs on My_CT{
   #define B 0x00
 
   #if (A & B == B)
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -585,17 +588,17 @@ testcase tc_bitoperands() runs on My_CT{
   #if ((A & B) == A)
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #if (A|B == B)
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
 
   #if (A|B == A)
-  error_marker_expected
+  {error_marker_expected;}
   #else
   error_marker_not_expected
   #endif
@@ -607,13 +610,13 @@ testcase tc_bitoperands() runs on My_CT{
   #if ((A & B) == B)
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
   #if ((A | B)  == A)
   error_marker_not_expected
   #else
-  error_marker_expected
+  {error_marker_expected;}
   #endif
 
 }
@@ -624,7 +627,7 @@ testcase tc_wrap() runs on My_CT{
 O 10\
 20
 #if FOO == 1020
-error_marker_expected
+{error_marker_expected;}
 #else
 error_marker_not_expected
 #endif
@@ -659,7 +662,7 @@ error_marker_not_expected
  error_marker_not_expected
 #else
  setverdict(pass);
- error_marker_expected
+ {error_marker_expected;}
 #endif
 }
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,6 +70,7 @@ import static org.eclipse.titan.executor.GeneralConstants.MCSTATEREFRESHTIMEOUT;
  * @author Kristof Szabados
  * */
 public final class CliExecutor extends BaseExecutor {
+	
 	private static final String EXTERNAL_TERMINATION = "Execution terminated from outside";
 
 	private Action automaticExecution, startHC, cmtc, smtc, emtc, exit, info;
@@ -377,7 +378,8 @@ public final class CliExecutor extends BaseExecutor {
 				logFileNameDefined = false;
 			}
 
-			if (logFileNameDefined) {
+			//TODO: implement
+			if ( !CREATE_TEMP_CFG || logFileNameDefined ) {
 				command.add(" sleep 1; " + mctrCliPath + " '" + PathConverter.convert(configFilePath, true, TITANDebugConsole.getConsole()) + "'");
 			} else {
 				generateTemporalCfgFile(generateCfgString());
@@ -471,16 +473,10 @@ public final class CliExecutor extends BaseExecutor {
 				return;
 			}
 
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					MessageDialog.openError(new Shell(Display.getDefault()),
-							"Execution failed",
-							"The configuration file selected does not have anything to execute");
-				}
-			});
+			if ( CREATE_TEMP_CFG ) {
+				Display.getDefault().syncExec( new EmptyExecutionRunnable() );
+			}
 		}
-
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -536,14 +532,7 @@ public final class CliExecutor extends BaseExecutor {
 						List<String> configurationFileElements = tempConfigHandler.getExecuteElements();
 						if (configurationFileElements.isEmpty()) {
 							invalidSelection = true;
-							Display.getDefault().syncExec(new Runnable() {
-								@Override
-								public void run() {
-									MessageDialog.openError(new Shell(Display.getDefault()),
-											"Execution failed",
-											"The configuration file selected does not have anything to execute");
-								}
-							});
+							Display.getDefault().syncExec( new EmptyExecutionRunnable() );
 						} else {
 							invalidSelection = false;
 							for (int i = 0; i < lastTimeSelectionTime; i++) {

@@ -1,0 +1,63 @@
+module value_tests2 {
+//copied from TR_2015_10
+import from A all;
+//asn1
+const MySeqOfInt cg_i0 := { null,
+  omit, 
+  '00'B,
+  '00'H, 
+  '00'O, 
+  true, 
+  "akarmi", 
+  5, 
+  5.5, 
+  char(0,0,0,0)}; //error markers as expected
+
+const MySeqOfInt cg_i1 := { 5.5 }
+
+template float t_f := 6.5;
+template integer t_i0 := 2;
+const integer cg_i2 := 2;
+const integer cg_i3 := 3;
+//ASN1:
+
+template MyInteger t_i1_asn1 := (-infinity .. infinity); 
+template MyInteger t_i2_asn1 := (-1 .. infinity);
+template MyInteger t_i3_asn1 := ( t_f .. infinity);
+template MyInteger t_i4_asn1 := t_i3;
+template MyInteger t_i5_asn1 := ( +infinity .. -infinity) ;
+template MyInteger t_i6_asn1 := ( 2 .. -infinity);
+template MyInteger t_i7_asn1 := ( cg_i2 .. -infinity);
+template MyInteger t_i8_asn1 := ( cg_i2 .. cg_i3);
+template MyInteger t_i9_asn1 := ( cg_i3 .. cg_i2);
+template MyInteger t_i10_asn1 := ( cg_i3 .. cg_i3);
+
+//ttcn3:
+
+template integer t_i1 := (-infinity .. infinity);
+template integer t_i2 := (-1 .. infinity);
+template integer t_i3 := ( t_f .. infinity);
+template integer t_i4 := t_i3;
+template integer t_i5 := ( +infinity .. -infinity);
+template integer t_i6 := ( 2 .. -infinity);
+template integer t_i7 := ( cg_i2 .. -infinity);
+template integer t_i8 := ( cg_i2 .. cg_i3);
+template integer t_i9 := ( cg_i3 .. cg_i2);
+template integer t_i10 := ( cg_i3 .. cg_i3);
+
+function f_ASNSetofValueTests()
+{
+  const MySeqOfInt cl_i1 := { 
+    null, 
+    omit, '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; //error markers as expected
+  const MySeqOfInt cl_i2 := {5.5}
+}
+
+type record of integer RoI;
+const RoI cg_i4 := {
+  null,
+  omit, 
+  '00'B, '00'H, '00'O, true, "akarmi", 5, 5.5, char(0,0,0,0)}; //error markers as expected
+const RoI cg_i5 := { 5.5 } //error markers as expected
+
+}

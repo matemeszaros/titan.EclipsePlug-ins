@@ -4,7 +4,7 @@ Created-By: 23.6-b04 (Oracle Corporation)
 Bundle-ManifestVersion: 2
 Bundle-Name: TITAN_Designer Plug-in
 Bundle-SymbolicName: org.eclipse.titan.designer;singleton:=true
-Bundle-Version: 5.3.0.CRL_113_200_5_R3A_20150630-1100
+Bundle-Version: 5.4.0.CRL_113_200_5_R4A_20151030-1100
 Bundle-Activator: org.eclipse.titan.designer.Activator
 Bundle-Vendor: Eclipse Titan Project
 Require-Bundle: org.eclipse.ui,
@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator.resources,
  org.eclipse.core.filesystem,
  org.eclipse.debug.core,
- org.eclipse.titan.common;bundle-version="5.3.0",
+ org.eclipse.titan.common;bundle-version="5.4.0",
  org.antlr.runtime;bundle-version="4.3.0"
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
@@ -49,6 +49,7 @@ Export-Package: org.eclipse.titan.designer,
  org.eclipse.titan.designer.commonFilters,
  org.eclipse.titan.designer.consoles,
  org.eclipse.titan.designer.core,
+ org.eclipse.titan.designer.declarationsearch,
  org.eclipse.titan.designer.editors,
  org.eclipse.titan.designer.editors.asn1editor,
  org.eclipse.titan.designer.editors.ttcn3editor,

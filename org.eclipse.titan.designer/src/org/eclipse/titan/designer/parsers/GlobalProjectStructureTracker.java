@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ public final class GlobalProjectStructureTracker {
 	/**
 	 * This function is called when a project is changed.
 	 * <p>
-	 * Compares the actually known informations to the ones known to be
+	 * Compares the actually known information to the ones known to be
 	 * saved, and if a difference exists the dependency changes is noted.
 	 * 
 	 * @param file
@@ -94,7 +94,7 @@ public final class GlobalProjectStructureTracker {
 	/**
 	 * This function is called when an editor is saving a file to the disc.
 	 * <p>
-	 * Compares the actually known informations to the ones known to be
+	 * Compares the actually known information to the ones known to be
 	 * saved, and if a difference exists the dependency changes is noted.
 	 * 
 	 * @param file
@@ -130,7 +130,7 @@ public final class GlobalProjectStructureTracker {
 
 	/**
 	 * Returns a project structure data collector for the given project with
-	 * informations about the saved state of the project.
+	 * information about the saved state of the project.
 	 * 
 	 * @param project
 	 *                the project whose information is requested.

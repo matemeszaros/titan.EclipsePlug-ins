@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,11 +14,18 @@ import java.util.List;
  * Internal representation of a universal charstring.
  * 
  * @author Kristof Szabados
+ * @author Arpad Lovassy
  */
 public final class UniversalCharstring implements Comparable<UniversalCharstring> {
 
 	private List<UniversalChar> value;
 
+	/** true, if TTCN-3 string contains error */
+	private boolean mErrorneous = false;
+	
+	/** the error message (if any) */
+	private String mErrorMessage;
+	
 	public UniversalCharstring() {
 		value = new ArrayList<UniversalChar>();
 	}
@@ -28,13 +35,40 @@ public final class UniversalCharstring implements Comparable<UniversalCharstring
 		value.add(character);
 	}
 
+	/**
+	 * Constructor
+	 * @param aValue TTCN-3 charstring value, it can contain escape characters
+	 */
 	public UniversalCharstring(final String string) {
-		value = new ArrayList<UniversalChar>(string.length());
-		for (int i = 0; i < string.length(); i++) {
-			value.add(new UniversalChar(0, 0, 0, string.charAt(i)));
+		final CharstringExtractor cs = new CharstringExtractor(string);
+		if ( cs.isErrorneous() ) {
+			mErrorneous = true;
+			mErrorMessage = cs.getErrorMessage();
+		}
+		final String extracted = cs.getExtractedString();
+		if ( extracted != null ) {
+			value = new ArrayList<UniversalChar>(extracted.length());
+			for (int i = 0; i < extracted.length(); i++) {
+				value.add(new UniversalChar(0, 0, 0, extracted.charAt(i)));
+			}
 		}
 	}
 
+	/**
+	 * @return if TTCN-3 string contains error
+	 * NOTE: it can only be true if String constructor was used
+	 */
+	public boolean isErrorneous() {
+		return mErrorneous;
+	}
+	
+	/**
+	 * @return the error message (if any)
+	 */
+	public String getErrorMessage() {
+		return mErrorMessage;
+	}
+	
 	public UniversalCharstring(final UniversalCharstring other) {
 		value = new ArrayList<UniversalChar>(other.value.size());
 		for (int i = 0; i < other.value.size(); i++) {

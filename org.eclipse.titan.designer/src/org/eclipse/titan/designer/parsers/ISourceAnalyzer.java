@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.titan.common.parsers.Interval;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.designer.AST.Module;
 
@@ -22,6 +23,9 @@ import org.eclipse.titan.designer.AST.Module;
  * */
 public interface ISourceAnalyzer {
 
+	/** @return the errors from ANTLR 4 lexer and parser */
+	List<SyntacticErrorStorage> getErrorStorage();
+	
 	/**
 	 * @return the list of markers created for the parse time found
 	 *         unsupported features and bad practices

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,9 +30,11 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 
 /**
@@ -41,7 +43,7 @@ import org.eclipse.titan.designer.preferences.PreferenceConstants;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class Group extends ASTNode implements IOutlineElement, ILocateableNode, IAppendableSyntax {
+public final class Group extends ASTNode implements IOutlineElement, ILocateableNode, IAppendableSyntax {
 	/** Definitions in the current group. */
 	private final List<Definition> definitions;
 
@@ -434,7 +436,7 @@ public abstract class Group extends ASTNode implements IOutlineElement, ILocatea
 	public List<Integer> getPossibleExtensionStarterTokens() {
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>();
-			result.add(TTCN3Lexer4.WITH);
+			result.add(Ttcn3Lexer.WITH);
 			return result;
 		}
 
@@ -445,19 +447,84 @@ public abstract class Group extends ASTNode implements IOutlineElement, ILocatea
 	public List<Integer> getPossiblePrefixTokens() {
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>(2);
-			result.add(TTCN3Lexer4.PUBLIC);
-			result.add(TTCN3Lexer4.PRIVATE);
+			result.add(Ttcn3Lexer.PUBLIC);
+			result.add(Ttcn3Lexer.PRIVATE);
 			return result;
 		}
 
 		return new ArrayList<Integer>(0);
 	}
 
-	protected abstract int reparseIdentifier( TTCN3ReparseUpdater aReparser );
-	
-	protected abstract int reparseOptionalWithStatement( TTCN3ReparseUpdater aReparser );
-	
-	protected abstract int reparseModuleDefinitionsList( TTCN3ReparseUpdater aReparser );
+	private int reparseIdentifier(TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				identifier = parser.pr_reparse_Identifier().identifier;
+			}
+		});
+	}
+
+	private int reparseOptionalWithStatement(TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath.setWithAttributes(attributes);
+					if (attributes != null) {
+						getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+					}
+				}
+			}
+		});
+	}
+
+	private int reparseModuleDefinitionsList(TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				List<Definition> allDefinitions = new ArrayList<Definition>();
+				List<Definition> localDefinitions = new ArrayList<Definition>();
+				List<Group> localGroups = new ArrayList<Group>();
+				List<ImportModule> allImports = new ArrayList<ImportModule>();
+				List<ImportModule> localImports = new ArrayList<ImportModule>();
+				List<FriendModule> allFriends = new ArrayList<FriendModule>();
+				List<FriendModule> localFriends = new ArrayList<FriendModule>();
+
+				TTCN3Module temp = getModule();
+
+				parser.setModule(temp);
+				parser.pr_reparse_ModuleDefinitionsList(null, allDefinitions, localDefinitions, localGroups, allImports,
+						localImports, allFriends, localFriends, null);
+
+				if ( parser.isErrorListEmpty() ) {
+					temp.addDefinitions(allDefinitions);
+					for (ImportModule impmod : allImports) {
+						temp.addImportedModule(impmod);
+					}
+
+					for (FriendModule friend : allFriends) {
+						temp.addFriendModule(friend);
+					}
+
+					addDefinitions(localDefinitions);
+
+					for (ImportModule impmod : localImports) {
+						addImportedModule(impmod);
+					}
+
+					for (Group group : localGroups) {
+						addGroup(group);
+					}
+
+					for (FriendModule friend : localFriends) {
+						addFriendModule(friend);
+					}
+				}
+			}
+		});
+	}
 
 	/**
 	 * Handles the incremental parsing of this list of definitions.

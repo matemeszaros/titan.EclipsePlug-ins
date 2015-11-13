@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,8 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.TitanVersionAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.VersionRequirementAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
+import org.eclipse.titan.designer.AST.TTCN3.statements.Map_Statement;
+import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 import org.eclipse.titan.designer.AST.TTCN3.types.Anytype_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.CompField;
 import org.eclipse.titan.designer.AST.TTCN3.types.Referenced_Type;
@@ -64,13 +66,15 @@ import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ProjectStructureDataCollector;
 import org.eclipse.titan.designer.parsers.extensionattributeparser.ExtensionAttributeAnalyzer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
+import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -80,7 +84,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class TTCN3Module extends Module {
+public final class TTCN3Module extends Module {
 	private static final String FULLNAMEPART = ".control";
 	public static final String MODULE = "module";
 
@@ -116,6 +120,10 @@ public abstract class TTCN3Module extends Module {
 
 		importedModules = new CopyOnWriteArrayList<ImportModule>();
 		friendModules = new CopyOnWriteArrayList<FriendModule>();
+		
+		definitions = new Definitions();
+		definitions.setParentScope(this);
+		definitions.setFullNameParent(this);
 
 		anytype = new Anytype_Type();
 		anytypeDefinition = new Def_Type(new Identifier(Identifier_type.ID_TTCN, "anytype"), anytype);
@@ -481,7 +489,7 @@ public abstract class TTCN3Module extends Module {
 		AttributeSpecification specification;
 		for (int i = 0; i < specifications.size(); i++) {
 			specification = specifications.get(i);
-			ExtensionAttributeAnalyzer analyzer = ParserFactory.createExtensionAttributeAnalyzer();
+			ExtensionAttributeAnalyzer analyzer = new ExtensionAttributeAnalyzer();
 			analyzer.parse(specification);
 			List<ExtensionAttribute> temp = analyzer.getAttributes();
 			if (temp != null) {
@@ -750,6 +758,13 @@ public abstract class TTCN3Module extends Module {
 			if (temporalAssignment != null) {
 				return temporalAssignment;
 			}
+			
+			//map(A:port, system:MyActualNotIdentifiedPort) form shall be accepted in function and altstep
+			if( reference.getNameParent() != null && reference.getNameParent() instanceof Map_Statement 
+				&& reference.getMyScope() != null && (reference.getMyScope() instanceof StatementBlock)
+				) {
+				return null;
+			}
 
 			referenceLocation
 					.reportSemanticError(MessageFormat.format(MISSINGREFERENCE, id.getDisplayName(), identifier.getDisplayName()));
@@ -929,9 +944,37 @@ public abstract class TTCN3Module extends Module {
 		}
 	}
 
-	protected abstract int reparseAfterModule( TTCN3ReparseUpdater aReparser );
-	
-	protected abstract int reparseInsideAttributelist( TTCN3ReparseUpdater aReparser );
+	private int reparseAfterModule(final TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				aReparser.fullAnalysysNeeded = true;
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath = new WithAttributesPath();
+					withAttributesPath.setWithAttributes(attributes);
+					if (attributes != null) {
+						getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+					}
+				}
+			}
+		});
+	}
+
+	private int reparseInsideAttributelist(TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath.setWithAttributes(attributes);
+					getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+				}
+			}
+		});
+	}
 	
 	/**
 	 * Handles the incremental parsing of this definition.
@@ -980,7 +1023,7 @@ public abstract class TTCN3Module extends Module {
 		if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
 			reparser.fullAnalysysNeeded = true;
 			reparser.extendDamagedRegion(temporalIdentifier);
-			IIdentifierReparser r = ParserFactory.createIdentifierReparser(reparser);
+			IIdentifierReparser r = new IdentifierReparser(reparser);
 			int result = r.parse();
 			identifier = r.getIdentifier();
 			// damage handled

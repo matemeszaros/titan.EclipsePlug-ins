@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.editors.IReferenceParser;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReferenceAnalyzer;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -117,7 +116,7 @@ public final class ConfigReferenceParser implements IReferenceParser {
 				}
 				parameter = selected.substring(dotIndex + 1);
 			}
-			TTCN3ReferenceAnalyzer refAnalyzer = ParserFactory.createTTCN3ReferenceAnalyzer();
+			TTCN3ReferenceAnalyzer refAnalyzer = new TTCN3ReferenceAnalyzer();
 			reference = refAnalyzer.parse(file, parameter, reportErrors, document.getLineOfOffset(ofs), ofs);
 		} catch (BadLocationException e) {
 			ErrorReporter.logExceptionStackTrace(e);

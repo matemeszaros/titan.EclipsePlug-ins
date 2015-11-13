@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -111,7 +111,7 @@ public final class Start_Component_Statement extends Statement {
 
 		lastTimeChecked = timestamp;
 
-		Component_Type componentType = Port_Utility.checkComponentReference(timestamp, this, componentReference, false, false, false);
+		Component_Type componentType = Port_Utility.checkComponentReference(timestamp, this, componentReference, false, false);
 		Assignment assignment = functionInstanceReference.getRefdAssignment(timestamp, true);
 		if (assignment == null) {
 			return;

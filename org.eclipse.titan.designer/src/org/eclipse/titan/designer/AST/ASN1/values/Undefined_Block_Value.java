@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@ package org.eclipse.titan.designer.AST.ASN1.values;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ArraySubReference;
 import org.eclipse.titan.designer.AST.FieldSubReference;
@@ -24,6 +27,7 @@ import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.ASN1.Block;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.values.NamedValues;
 import org.eclipse.titan.designer.AST.TTCN3.values.ObjectIdentifier_Value;
@@ -33,15 +37,24 @@ import org.eclipse.titan.designer.AST.TTCN3.values.SetOf_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Set_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Values;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.BlockLevelTokenStreamTracker;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
  * @author Kristof Szabados
  * */
-public abstract class Undefined_Block_Value extends Value {
+public final class Undefined_Block_Value extends Value {
 
 	private Value realValue;
+
+	private Block mBlock;
+	
+	public Undefined_Block_Value(final Block aBlock) {
+		this.mBlock = aBlock;
+	}
 
 	public Undefined_Block_Value() {
 	}
@@ -232,19 +245,153 @@ public abstract class Undefined_Block_Value extends Value {
 		return realValue;
 	}
 
-	abstract protected Named_Bits parseBlockNamedBits();
+	private Named_Bits parseBlockNamedBits() {
+		Asn1Parser parser = null;
+		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return null;
+		}
+		Named_Bits namedBits = null;
+		namedBits = parser.pr_special_NamedBitListValue().named_bits;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			namedBits = null;
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}
+		return namedBits;
+	}
 
-	abstract protected SequenceOf_Value parseBlockSeqofValue();
-	
-	abstract protected SetOf_Value parseBlockSetofValue();
 
-	abstract protected Sequence_Value parseBlockSequenceValue();
+	private SequenceOf_Value parseBlockSeqofValue() {
+		Asn1Parser parser = null;
+		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return null;
+		}
+		SequenceOf_Value value = null;
+		value = parser.pr_special_SeqOfValue().value;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			value = null;
 
-	abstract protected Set_Value parseBlockSetValue();
-	
-	abstract protected ObjectIdentifier_Value parseBlockObjectIdentifierValue();
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}
+		return value;
+	}
 
-	abstract protected RelativeObjectIdentifier_Value parseBlockRelativeObjectIdentifierValue();
+	private SetOf_Value parseBlockSetofValue() {
+		Asn1Parser parser = null;
+		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return null;
+		}
+		SetOf_Value value = null;
+		value = parser.pr_special_SetOfValue().value;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			value = null;
+		
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}	
+		return value;
+	}
+
+	private Sequence_Value parseBlockSequenceValue() {
+		Asn1Parser parser = null;
+		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return null;
+		}
+		Sequence_Value value = null;
+		value = parser.pr_special_SequenceValue().value;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			value = null;
+		
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}	
+		return value;
+	}
+
+	private Set_Value parseBlockSetValue() {
+		Asn1Parser parser = null;
+		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return null;
+		}
+		Set_Value value = null;
+
+		value = parser.pr_special_SetValue().value;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			value = null;
+		
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}	
+		return value;
+	}
+
+	private ObjectIdentifier_Value parseBlockObjectIdentifierValue() {
+		Asn1Parser parser = null;
+		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return null;
+		}
+		ObjectIdentifier_Value value = null;
+		value = parser.pr_special_ObjectIdentifierValue().value;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			value = null;
+		
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}	
+		return value;
+	}
+
+	private RelativeObjectIdentifier_Value parseBlockRelativeObjectIdentifierValue() {
+		Asn1Parser parser = null;
+		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == parser) {
+			return null;
+		}
+		RelativeObjectIdentifier_Value value = null;
+		value = parser.pr_special_RelativeObjectIdentifierValue().value;
+		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			value = null;
+		
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
+			}
+		}
+		return value;
+	}
 	
 	@Override
 	public boolean checkEquality(final CompilationTimeStamp timestamp, final IValue other) {
@@ -279,5 +426,14 @@ public abstract class Undefined_Block_Value extends Value {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public Location getLocation() {
+		if (null != mBlock) {
+			return mBlock.getLocation();
+		} else {
+			return null;
+		}
 	}
 }

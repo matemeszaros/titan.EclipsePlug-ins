@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.titan.common.parsers.ILocationAST;
+import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
+import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.path.PathConverter;
 
 /**
  * This class handles the parsing and resolving of configuration files,
@@ -23,32 +31,32 @@ import org.eclipse.titan.common.parsers.ILocationAST;
  * @author Kristof Szabados
  * @author Arpad Lovassy 
  */
-public abstract class ConfigFileHandler {
-	private static final String ORIGANLLY_FROM = "//This part was originally found in file: ";
+public final class ConfigFileHandler {
+	private static final String ORIGINALLY_FROM = "//This part was originally found in file: ";
 
-	protected Map<Path, ILocationAST> originalASTs = new HashMap<Path, ILocationAST>();
-	protected Map<Path, ILocationAST> resolvedASTs = new HashMap<Path, ILocationAST>();
-	protected final Map<String, CfgDefinitionInformation> definesMap = new HashMap<String, CfgDefinitionInformation>();
+	private Map<Path, LocationAST> originalASTs = new HashMap<Path, LocationAST>();
+	private Map<Path, LocationAST> resolvedASTs = new HashMap<Path, LocationAST>();
+	private final Map<String, CfgDefinitionInformation> definesMap = new HashMap<String, CfgDefinitionInformation>();
 	private final List<Path> processedFiles = new ArrayList<Path>();
-	protected final List<Path> toBeProcessedFiles = new ArrayList<Path>();
+	private final List<Path> toBeProcessedFiles = new ArrayList<Path>();
 	
-	protected int tcpPort = 0;
-	protected String localAddress = null;
-	protected double killTimer = 10.0;
-	protected int numHCs = 0;
+	private int tcpPort = 0;
+	private String localAddress = null;
+	private double killTimer = 10.0;
+	private int numHCs = 0;
 	private boolean unixDomainSocket = false;
-	protected final Map<String , String[]> groups = new HashMap<String, String[]>();
-	protected final Map<String, String> components = new HashMap<String, String>();
-	protected final List<String> executeElements = new ArrayList<String>();
+	private final Map<String , String[]> groups = new HashMap<String, String[]>();
+	private final Map<String, String> components = new HashMap<String, String>();
+	private final List<String> executeElements = new ArrayList<String>();
 	
-	protected final List<Throwable> exceptions = new ArrayList<Throwable>();
-	protected boolean processingErrorsDetected = false;
+	private final List<Throwable> exceptions = new ArrayList<Throwable>();
+	private boolean processingErrorsDetected = false;
 
-	protected List<Integer> disallowedNodes;
+	private List<Integer> disallowedNodes;
 	
-	protected Map<String, String> environmentalVariables;
+	private Map<String, String> environmentalVariables;
 
-	protected boolean logFileNameDefined = false;
+	private boolean logFileNameDefined = false;
 
 	public ConfigFileHandler(){
 		// Do nothing
@@ -142,14 +150,62 @@ public abstract class ConfigFileHandler {
 	 * Parsing, collecting includes and defines
 	 * @param actualFile the file to process
 	 */
-	protected abstract void processFile(Path actualFile);
+	private void processFile(Path actualFile) {
+		CfgAnalyzer analyzer = new CfgAnalyzer();
+		IWorkspaceRoot wroot = ResourcesPlugin.getWorkspace().getRoot();
+		IFile[] files = wroot.findFilesForLocation(actualFile);
 
+		if (files.length == 0) {
+			ErrorReporter.logError("The file " + actualFile.toOSString()
+					+ " can not be mapped to a file resource in eclipse, and so is not accessible");
+			processingErrorsDetected = true;
+		} else if (files[0].isAccessible()){
+			parseFile(actualFile, analyzer, files[0]);
+		} else {
+			ErrorReporter.logError("The file " + files[0].getLocationURI() + " can not be found");
+			processingErrorsDetected = true;
+		}
+	}
+	
 	/**
 	 * Processes the parsed tree structure of the configuration file, resolving expressions and extracting executor required data.
 	 * This parsed tree already contains all of the data that were found in the configuration file,
 	 * or in configuration files that can be reached from it via inclusion.
 	 */
-	public abstract void processASTs();
+	public void processASTs() {
+		//TODO: use if we need listener, or remove
+		/*
+		if(originalASTs.isEmpty()) {
+			return;
+		}
+		
+		for ( Entry<Path,LocationAST> entry : originalASTs.entrySet() ) {
+			CfgResolverListener cfgResolver = new CfgResolverListener();
+			
+			cfgResolver.setDefinitions( definesMap );
+			cfgResolver.setEnvironmentalVariables( environmentalVariables );
+			ParserRuleContext rule = entry.getValue().getRule();
+			ParseTreeWalker walker = new ParseTreeWalker();
+			walker.walk(cfgResolver, rule);
+
+			if ( cfgResolver.getTcpPort() != null ) {
+				tcpPort = cfgResolver.getTcpPort();
+			}
+			if ( cfgResolver.getLocalAddress() != null ) {
+				localAddress = cfgResolver.getLocalAddress();
+			}
+			if ( cfgResolver.getNumHcs() != null ) {
+				numHCs = cfgResolver.getNumHcs();
+			}
+			if ( cfgResolver.getKillTimer() != null ) {
+				killTimer = cfgResolver.getKillTimer();
+			}
+			groups.putAll( cfgResolver.getGroups() );
+			components.putAll( cfgResolver.getComponents() );
+			executeElements.addAll( cfgResolver.getExecuteElements() );
+		}
+		//*/
+	}
 
 	/**
 	 * Creates the String representation of the parsed tree of the root configuration file.
@@ -180,7 +236,7 @@ public abstract class ConfigFileHandler {
 	 * @param asts the root node of the parse tree to start from.
 	 * @param disallowedNodes the list of nodes that should be left out of the process.
 	 * */
-	private StringBuilder toStringInternal(final Map<Path, ILocationAST> asts, final List<Integer> disallowedNodes){
+	private StringBuilder toStringInternal(final Map<Path, LocationAST> asts, final List<Integer> disallowedNodes){
 		if(asts == null || asts.isEmpty()){
 			return new StringBuilder();
 		}
@@ -189,8 +245,8 @@ public abstract class ConfigFileHandler {
 		StringBuilder stringbuilder = new StringBuilder();
 		stringbuilder.setLength(0);
 		
-		for(Entry<Path, ILocationAST> entry:asts.entrySet()){
-			stringbuilder.append(ORIGANLLY_FROM).
+		for(Entry<Path, LocationAST> entry:asts.entrySet()){
+			stringbuilder.append(ORIGINALLY_FROM).
 				append(entry.getKey().toOSString()).append('\n');
 			if(entry.getValue() != null){
 				print(entry.getValue(), stringbuilder);
@@ -201,6 +257,30 @@ public abstract class ConfigFileHandler {
 		return stringbuilder;
 	}
 
+	private void parseFile(Path actualFile, CfgAnalyzer analyzer, IFile file) {
+		analyzer.directParse(file, actualFile.toOSString(), null);
+
+		if (analyzer.isLogFileNameDefined()) {
+			logFileNameDefined = true;
+		}
+		LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot() );
+		if ( rootNode != null ) {
+			originalASTs.put( actualFile, rootNode );
+
+			List<String> includeFiles = analyzer.getIncludeFilePaths();
+			for ( String filename:includeFiles ) {
+				filename = PathConverter.getAbsolutePath( actualFile.toOSString(), filename );
+				if ( filename != null ) {
+					toBeProcessedFiles.add( new Path( filename ) );
+				}
+			}
+
+			definesMap.putAll( analyzer.getDefinitions() );
+			executeElements.addAll( analyzer.getExecuteElements() );
+
+		}
+	}
+	
 	/**
 	 * Prints out the hidden values and the visible value of a tree node, and calls itself recursively on it's children
 	 * 
@@ -209,5 +289,26 @@ public abstract class ConfigFileHandler {
 	 * 
 	 * @param root the tree root to start at.
 	 */
-	protected abstract void print(final ILocationAST root, final StringBuilder stringbuilder);
+	private void print(final LocationAST root, final StringBuilder stringbuilder) {
+		CommonHiddenStreamToken hidden = root.getHiddenBefore();
+		if(hidden != null){
+			while(hidden.getHiddenBefore() != null){
+				hidden = hidden.getHiddenBefore();
+			}
+			while(hidden != null){
+				stringbuilder.append(hidden.getText());
+				hidden = hidden.getHiddenAfter();
+			}
+		}
+		stringbuilder.append(root.getText());
+		LocationAST child = root.getFirstChild();
+		while(child != null){
+			Integer tempType = child.getType();
+			if(disallowedNodes != null && !disallowedNodes.contains(tempType)){
+				print(child, stringbuilder);
+			}
+			child = child.getNextSibling();
+		}
+	}
+	
 }

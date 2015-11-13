@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,8 +45,6 @@ import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TTCN3Scope;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Testcase;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Function;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Altstep;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Var;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Var_Template;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
@@ -59,8 +57,10 @@ import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -71,7 +71,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * */
 // FIXME add support for determining if this statementblock has receiving
 // statements or not.
-public abstract class StatementBlock extends TTCN3Scope implements ILocateableNode, IIncrementallyUpdateable {
+public final class StatementBlock extends TTCN3Scope implements ILocateableNode, IIncrementallyUpdateable {
 	private static final String FULLNAMEPART = ".statement_";
 	private static final String INFINITELOOP = "Inifinite loop detected: the program can not escape from this goto statement";
 	public static final String HIDINGSCOPEELEMENT = "Definition with identifier `{0}'' is not unique in the scope hierarchy";
@@ -939,15 +939,13 @@ public abstract class StatementBlock extends TTCN3Scope implements ILocateableNo
 	}
 
 	@Override
-	public Component_Type getMtcSystemComponentType(final CompilationTimeStamp timestamp,
-			final boolean isSystem, final boolean isConnecting) {
-		if (myDefinition == null || ((isSystem || !isConnecting) &&
-				!Assignment_type.A_TESTCASE.equals(myDefinition.getAssignmentType()))) {
+	public Component_Type getMtcSystemComponentType(final CompilationTimeStamp timestamp, final boolean isSystem) {
+		if (myDefinition == null || !Assignment_type.A_TESTCASE.equals(myDefinition.getAssignmentType())) {
 			return null;
 		}
 
+		Def_Testcase testcase = (Def_Testcase) myDefinition;
 		if (isSystem) {
-			Def_Testcase testcase = (Def_Testcase) myDefinition;
 			Component_Type type = testcase.getSystemType(timestamp);
 			if (type != null) {
 				return type;
@@ -955,21 +953,8 @@ public abstract class StatementBlock extends TTCN3Scope implements ILocateableNo
 			// if the system clause is not set the type of the
 			// `system' is the same as the type of the `mtc'
 		}
-		
-		Component_Type result = null;
-		if (myDefinition instanceof Def_Testcase) {
-			Def_Testcase testcase = (Def_Testcase) myDefinition;
-			result = testcase.getRunsOnType(timestamp);
-		} 
-		else if (myDefinition instanceof Def_Function) {
-			Def_Function function = (Def_Function) myDefinition;
-			result = function.getRunsOnType(timestamp);
-		} 
-		else if (myDefinition instanceof Def_Altstep) {
-			Def_Altstep altstep = (Def_Altstep) myDefinition;
-			result = altstep.getRunsOnType(timestamp);
-		}
-		return result;
+
+		return testcase.getRunsOnType(timestamp);
 	}
 
 	@Override
@@ -1014,12 +999,14 @@ public abstract class StatementBlock extends TTCN3Scope implements ILocateableNo
 	@Override
 	public void addProposal(final ProposalCollector propCollector) {
 		if (definitionMap != null && propCollector.getReference().getModuleIdentifier() == null) {
-			for (Definition definition : definitionMap.values()) {
+			HashMap<String, Definition> temp = new HashMap<String, Definition>(definitionMap);
+			for (Definition definition : temp.values()) {
 				definition.addProposal(propCollector, 0);
 			}
 		}
 		if (labelMap != null && propCollector.getReference().getModuleIdentifier() == null) {
-			for (String name : labelMap.keySet()) {
+			HashMap<String, Label_Statement> temp = new HashMap<String, Label_Statement>(labelMap);
+			for (String name : temp.keySet()) {
 				propCollector.addProposal(name, name, null);
 			}
 		}
@@ -1174,7 +1161,19 @@ public abstract class StatementBlock extends TTCN3Scope implements ILocateableNo
 		}
 	}
 	
-	protected abstract int reparse( final TTCN3ReparseUpdater aReparser );
+	private int reparse( final TTCN3ReparseUpdater aReparser ) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				List<Statement> statements = parser.pr_reparse_FunctionStatementOrDefList().statements;
+				if ( parser.isErrorListEmpty() ) {
+					if (statements != null) {
+						addStatementsOrdered(statements);
+					}
+				}
+			}
+		});
+	}
 
 	private void removeStuffInRange(final TTCN3ReparseUpdater reparser) {
 		Location temp;

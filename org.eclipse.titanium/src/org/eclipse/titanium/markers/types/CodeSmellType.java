@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,8 +36,11 @@ public enum CodeSmellType implements ProblemType{
 	MISSING_FRIEND("Missing friend module", 0.0, 0.5, 3.5),
 	MISSING_IMPORT("Missing import", 0.0, 0.5, 3.5),
 	MODULENAME_IN_DEFINITION("Module name in definition", 0.0, 1.0, 3.5),
+	LAZY("Lazy formalparameter", 0.0, 2.0, 5.0),
 	LOGIC_INVERSION("Logic inversion", 0.0, 0.5, 3.5),
 	NONPRIVATE_PRIVATE("Definition should be private", 0.0, 0.5, 4.5),
+	PRIVATE_FIELD_VIA_PUBLIC("Private field wrapped into public definition", 0.0, 0.0, 0.0),
+	PRIVATE_VALUE_VIA_PUBLIC("Private field wrapped into public definition", 0.0, 0.0, 0.0),
 	READING_OUT_PAR_BEFORE_WRITTEN("Reading out parameter before written", 0.0, 0.5, 2.0),
 	READONLY_LOC_VARIABLE("Readonly local variable", 0.0, 2.0, 5.0),
 	READONLY_OUT_PARAM("Readonly out formal parameter", 0.0, 2.0, 5.0),

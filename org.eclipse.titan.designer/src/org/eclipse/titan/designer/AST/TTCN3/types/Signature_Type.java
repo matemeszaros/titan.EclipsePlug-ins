@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -383,12 +383,12 @@ public final class Signature_Type extends Type {
 			Identifier valueId = namedValue.getName();
 			if (!formalParList.hasParameterWithName(valueId.getName())) {
 				namedValue.getLocation().reportSemanticError(MessageFormat.format(
-						"Reference to non-existent parameter `{0}'' in signature value for type `{1}''", valueId.getDisplayName(), getTypename()));
+						NONEXISTENTPARAMETER, valueId.getDisplayName(), getTypename()));
 				inSnyc = false;
 				continue;
 			} else if (componentMap.containsKey(valueId.getName())) {
 				namedValue.getLocation().reportSemanticError(MessageFormat.format(
-						"Duplicate signature parameter `{0}''", valueId.getDisplayName()));
+						DUPLICATEPARAMETERAGAIN, valueId.getDisplayName(), getTypename()));
 				componentMap.get(valueId.getName()).getLocation().reportSemanticError(MessageFormat.format(
 						"Parameter `{0}'' is already given here", valueId.getDisplayName()));
 				inSnyc = false;

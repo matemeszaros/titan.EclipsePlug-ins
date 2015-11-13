@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,11 +16,11 @@ import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.ASN1.Object.ObjectClass_refd;
 import org.eclipse.titan.designer.AST.ASN1.Object.Object_Definition;
 import org.eclipse.titan.designer.AST.ASN1.Object.ReferencedObject;
+import org.eclipse.titan.designer.AST.ASN1.values.Undefined_Block_Value;
 import org.eclipse.titan.designer.AST.ISetting.Setting_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Referenced_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 
 /**
  * An undefined assignment.
@@ -78,7 +78,7 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 	protected void classifyAssignment(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		final boolean new_chain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (null == referenceChain) {
+		if (new_chain) {
 			temporalReferenceChain = ReferenceChain.getInstance(CIRCULARASSIGNMENTCHAIN, true);
 		} else {
 			temporalReferenceChain = referenceChain;
@@ -112,7 +112,7 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 								.refersToSettingType(timestamp, Setting_type.S_VS, temporalReferenceChain))) {
 					final Referenced_Type type = new Referenced_Type(reference);
 					if (null != mBlock) {
-						final Value value = ParserFactory.createUndefinedBlockValue(mBlock);
+						final Value value = new Undefined_Block_Value(mBlock);
 						value.setLocation(mBlock.getLocation());
 						realAssignment = new Value_Assignment(identifier, ass_pard, type, value);
 					} else if (null != objectReference) {

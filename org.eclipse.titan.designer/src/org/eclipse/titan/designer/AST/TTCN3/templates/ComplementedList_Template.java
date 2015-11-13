@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IType.Type_type;
+import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -102,20 +103,12 @@ public final class ComplementedList_Template extends CompositeTemplate {
 	}
 
 	@Override
-	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT);
-		boolean hasAnyOrOmit = false;
-		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
-			TTCN3Template.Template_type componentType = templates.getTemplateByIndex(i).getTemplatetype();
-			if (componentType == ITTCN3Template.Template_type.OMIT_VALUE || componentType == ITTCN3Template.Template_type.ANY_OR_OMIT) {
-				hasAnyOrOmit = true;
-				break;
-			}
-		}
-		if (!hasAnyOrOmit) {
-			location.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
-		}
-
+	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
+		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
+		
+		//TODO: if ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY is switched on and has any or omit in the list then accepted, otherwise not
+		//Old solution has been removed	
+		
 		// some basic check was performed, always needs runtime check
 		return true;
 	}

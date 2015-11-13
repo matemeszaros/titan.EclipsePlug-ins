@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,10 @@
 package org.eclipse.titan.regressiontests.designer.statictests.Basic_tests.templates;
 
 import org.eclipse.titan.regressiontests.designer.Designer_plugin_tests;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore("The tested feature is not ready yet")
+//@Ignore("The tested feature is not ready yet")
 public class AllFromTest {
 
 	private static final String DIR_PATH = "src/Basic_tests/templates/all_from/positive/";
@@ -51,14 +51,14 @@ public class AllFromTest {
 		checkZeroMarkersOnFile("functions.ttcn");
 	}
 
-	@Test
+	//@Test
 	public void allFromSapc() throws Exception {
 		checkZeroMarkersOnFile("sapc.ttcn");
 	}
 
 	private static void checkZeroMarkersOnFile(final String fileName) {
 		final String filePath = DIR_PATH + fileName;
-		Designer_plugin_tests.checkZeroSemanticMarkersOnFile(filePath);
+		Designer_plugin_tests.checkRealZeroSemanticMarkersOnFile(filePath);
 	}
 
 }

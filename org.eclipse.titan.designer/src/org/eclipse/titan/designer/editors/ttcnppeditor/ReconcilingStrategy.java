@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,12 +27,10 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3FoldingSupport;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
 import org.eclipse.titan.designer.parsers.GlobalParser;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ProjectConfigurationParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
@@ -122,12 +120,10 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		int length = dirtyRegion.getLength();
 
 		if (DirtyRegion.INSERT.equals(dirtyRegion.getType())) {
-			MarkerHandler.updateInsertMarkers(editedFile, firstLine + 1, lineBreaks, dirtyRegion.getOffset(), length);
-			reparser = ParserFactory.createTTCN3ReparseUpdater(editedFile, actualCode.toString(), firstLine + 1, lineBreaks, dirtyRegion.getOffset(),
+			reparser = new TTCN3ReparseUpdater(editedFile, actualCode.toString(), firstLine + 1, lineBreaks, dirtyRegion.getOffset(),
 					dirtyRegion.getOffset(), length);
 		} else {
-			MarkerHandler.updateRemoveMarkers(editedFile, firstLine + 1, lineBreaks, dirtyRegion.getOffset(), -1 * length);
-			reparser = ParserFactory.createTTCN3ReparseUpdater(editedFile, actualCode.toString(), firstLine + 1, -1 * lineBreaks,
+			reparser = new TTCN3ReparseUpdater(editedFile, actualCode.toString(), firstLine + 1, -1 * lineBreaks,
 					dirtyRegion.getOffset(), dirtyRegion.getOffset() + length, -1 * length);
 		}
 

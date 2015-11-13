@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@ public final class MainTestSuite {
 
 	//public static final String LICENSE_FILE = "/home/ekripnd/license.dat";
 	//public static final String PATH_TO_WORKSPACE = "file:///home/ekripnd/workspace/titan_eclipse/";
-	public static final String PATH_TO_WORKSPACE = "file:///c:/Users/ethbaat/git/titan_eclipse2/";
+	public static final String PATH_TO_WORKSPACE = "file:///c:/Users/ethbaat/git/titan_eclipse/";
 
 	static {
 		try {

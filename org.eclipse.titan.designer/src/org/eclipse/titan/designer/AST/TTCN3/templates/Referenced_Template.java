@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * */
 public final class Referenced_Template extends TTCN3Template {
 	public static final String CIRCULARTEMPLATEREFERENCE = "circular template reference chain: `{0}''";
-	private static final String TYPEMISSMATCH1 = "Type missmatch: a signature template of type `{0}'' was expected instead of `{1}''";
+	private static final String TYPEMISSMATCH1 = "Type mismatch: a signature template of type `{0}'' was expected instead of `{1}''";
 	private static final String TYPEMISSMATCH2 = "Type mismatch: a value or template of type `{0}'' was expected instead of `{1}''";
 	private static final String INADEQUATETEMPLATERESTRICTION = "Inadequate restriction on the referenced {0} `{1}'',"
 			+ " this may cause a dynamic test case error at runtime";
@@ -226,8 +226,13 @@ public final class Referenced_Template extends TTCN3Template {
 			return this;
 		}
 
-		IReferenceChain tempReferenceChain = (referenceChain != null) ? referenceChain : ReferenceChain.getInstance(
-				CIRCULARTEMPLATEREFERENCE, true);
+		final boolean newChain = null == referenceChain;
+		IReferenceChain tempReferenceChain;
+		if (newChain) {
+			tempReferenceChain = ReferenceChain.getInstance(CIRCULARTEMPLATEREFERENCE, true);
+		} else {
+			tempReferenceChain = referenceChain;
+		}
 
 		TTCN3Template template = this;
 		Assignment ass = reference.getRefdAssignment(timestamp, true);
@@ -249,7 +254,7 @@ public final class Referenced_Template extends TTCN3Template {
 			setIsErroneous(true);
 		}
 
-		if (!tempReferenceChain.equals(referenceChain)) {
+		if (newChain) {
 			tempReferenceChain.release();
 		}
 
@@ -268,8 +273,13 @@ public final class Referenced_Template extends TTCN3Template {
 	 * @return true if it has, false otherwise.
 	 * */
 	private boolean hasTemplateImpliciteOmit(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
-		IReferenceChain tempReferenceChain = (referenceChain != null) ? referenceChain : ReferenceChain.getInstance(
-				CIRCULARTEMPLATEREFERENCE, true);
+		final boolean newChain = null == referenceChain;
+		IReferenceChain tempReferenceChain;
+		if (newChain) {
+			tempReferenceChain = ReferenceChain.getInstance(CIRCULARTEMPLATEREFERENCE, true);
+		} else {
+			tempReferenceChain = referenceChain;
+		}
 
 		boolean result = false;
 		if (reference != null) {
@@ -296,7 +306,7 @@ public final class Referenced_Template extends TTCN3Template {
 			}
 		}
 
-		if (!tempReferenceChain.equals(referenceChain)) {
+		if (newChain) {
 			tempReferenceChain.release();
 		}
 
@@ -379,9 +389,6 @@ public final class Referenced_Template extends TTCN3Template {
 			IReferenceChain referenceChain = ReferenceChain.getInstance(CIRCULARTEMPLATEREFERENCE, true);
 			boolean referencedHasImplicitOmit = hasTemplateImpliciteOmit(timestamp, referenceChain);
 			referenceChain.release();
-
-			temp.checkThisTemplateGeneric(timestamp, type, temp.getBaseTemplate() != null, allowOmit, allowAnyOrOmit, subCheck,
-					implicitOmit || referencedHasImplicitOmit);
 		}
 	}
 
@@ -392,11 +399,11 @@ public final class Referenced_Template extends TTCN3Template {
 	}
 
 	@Override
-	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed) {
+	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		if (reference != null) {
@@ -404,7 +411,7 @@ public final class Referenced_Template extends TTCN3Template {
 			switch (ass.getAssignmentType()) {
 			case A_TEMPLATE:
 				ITTCN3Template templateLast = getTemplateReferencedLast(timestamp);
-				return templateLast.checkValueomitRestriction(timestamp, definitionName, omitAllowed);
+				return templateLast.checkValueomitRestriction(timestamp, definitionName, omitAllowed, usageLocation);
 			case A_VAR_TEMPLATE:
 			case A_EXT_FUNCTION_RTEMP:
 			case A_FUNCTION_RTEMP:
@@ -434,14 +441,14 @@ public final class Referenced_Template extends TTCN3Template {
 	}
 
 	@Override
-	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT);
+	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
+		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
 		if (reference != null) {
 			Assignment ass = reference.getRefdAssignment(timestamp, true);
 			switch (ass.getAssignmentType()) {
 			case A_TEMPLATE:
 				ITTCN3Template templateLast = getTemplateReferencedLast(timestamp);
-				return templateLast.checkPresentRestriction(timestamp, definitionName);
+				return templateLast.checkPresentRestriction(timestamp, definitionName, usageLocation);
 			case A_VAR_TEMPLATE:
 			case A_EXT_FUNCTION_RTEMP:
 			case A_FUNCTION_RTEMP:

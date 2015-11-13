@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- Copyright (c) 2000-2014 Ericsson Telecom AB
+ Copyright (c) 2000-2015 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -10,7 +10,7 @@
 <project basedir="." default="build" name="org.eclipse.titan.regressiontests">
 	<property environment="env"/>
 	<!-- The qualifier of the features -->
-	<property name="version" value="3.2.0.CRL_113_200_3_R2A"/>
+	<property name="version" value="5.4.0.CRL_113_200_5_R4A"/>
 	<tstamp/>
 	<property name="timestamp" value="${DSTAMP}-${TSTAMP}"/>
 	<property name="version.qualifier" value="${version}_${timestamp}"/>

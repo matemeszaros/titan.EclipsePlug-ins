@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.titan.common.fieldeditors.TITANResourceLocator;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CfgParserFactory;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
 import org.eclipse.titan.common.path.PathConverter;
 import org.eclipse.titan.common.path.TITANPathUtilities;
@@ -629,7 +628,7 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		File file = path.toFile();
 		if (file.exists() && file.isFile()) {
 			exceptions.clear();
-			ConfigFileHandler configHandler = CfgParserFactory.createConfigFileHandler();
+			ConfigFileHandler configHandler = new ConfigFileHandler();
 			configHandler.readFromFile(path.toOSString());
 			if (configHandler.parseExceptions().isEmpty()) {
 				Map<String, String> env = new HashMap<String, String>(System.getenv());

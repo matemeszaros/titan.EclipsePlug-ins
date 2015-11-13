@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2014 Ericsson Telecom AB
+ Copyright (c) 2000-2015 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<?eclipse version="3.2"?>
+<?eclipse version="4.4"?>
 <plugin>
   <extension point="org.eclipse.ui.commands"><command
                                                    defaultHandler="org.eclipse.titan.designer.actions.NatureConverter"
@@ -209,7 +209,7 @@
       extensions="cfg"
       icon="icons/cfg.gif"
       contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
-      class="org.eclipse.titan.designer.editors.configeditor.ConfigEditor_V4"
+      class="org.eclipse.titan.designer.editors.configeditor.ConfigEditor"
       id="org.eclipse.titan.designer.editors.configeditor.ConfigEditor">
     </editor>
   </extension>
@@ -665,6 +665,11 @@
       id="org.eclipse.titan.designer.preferences.pages.DebugPreferencePage"
       class="org.eclipse.titan.designer.preferences.pages.DebugPreferencePage"
       name="Debug"
+      category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
+      <page
+      id="org.eclipse.titan.designer.preferences.pages.ExportOptionsPage"
+      class="org.eclipse.titan.designer.preferences.pages.ExportOptionsPage"
+      name="Export"
       category="org.eclipse.titan.designer.preferences.pages.TITANPreferencePage"/>
   </extension>
   <extension
@@ -1203,22 +1208,22 @@
       contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
       sequence="CTRL+F4"/>
-     <key
+    <key
       commandId="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3IndentAction"
       contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
       sequence="CTRL+I"/>
-   <key
+    <key
       commandId="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3GotoMatchingBracketAction"
       contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
       sequence="CTRL+SHIFT+P"/>
-   <key
+    <key
       commandId="org.eclipse.titan.designer.editors.ttcn3editor.ToggleComment"
       contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
       sequence="CTRL+/"/>
-   <key
+    <key
       commandId="org.eclipse.titan.designer.editors.ttcn3editor.ToggleComment"
       contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"

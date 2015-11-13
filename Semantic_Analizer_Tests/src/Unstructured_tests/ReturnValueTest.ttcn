@@ -1,0 +1,372 @@
+module Bug1 {
+//Artifact artf598689 : [DESIGNER] A specific value without matching symbols was expected as return value 
+// Return Statement regression test
+//TODO: put into plugin regression test !
+type record of integer RoI;
+
+function f_00()  {
+  return;  
+}
+
+function f_01()return integer {
+  return; //expected error 
+}
+
+function f_b0() return boolean { 
+  return (true);
+}
+
+function f_b1() return boolean {
+  return (1<2);
+}
+
+function f_b2() return boolean {
+  return 1<2;
+}
+
+function f_b3() return boolean { 
+  return true;
+}
+
+//=== enumeration ===========
+//===== integer ==============
+function f_1() return integer { 
+  return 1;
+}
+
+function f_1_range() return integer {
+  return 1..2;//expected error
+} 
+
+function f_1_expr() return integer {
+  return 1+1;
+}
+
+function f_2() return integer { 
+  return (2);
+}
+
+function f_2_range() return integer {
+  return (1..2);//expected error
+} 
+
+function f_2expr1() return integer {
+  return (2+3); //expected error
+}
+
+function f_2expr2() return integer {
+  return (2+3,4*5+6);//expected error
+}
+
+function f_1_t() return template integer { 
+  return 1;
+}
+
+function f_1_expr_t() return template integer {
+  return 1+1;
+}
+
+function f_2_t() return template integer {
+  return (2);
+}
+
+function f_2_t_range1() return template integer {
+  return (2..3);
+};
+
+
+function f_2_t_range2() return template integer {
+  return (3, 5..7); //expected error
+};
+
+function f_2_t_range2v() return template integer {
+  template integer t_i := (3, 9, 5..7);
+  return t_i;
+};
+
+function f_2_t_range2vt() return template integer {
+  var template integer vt_i := (3, 9, 5 .. 7);
+  return vt_i;
+};
+
+function f_2expr1_t() return template integer { 
+  return (2+3);
+}
+
+function f_2expr2_t() return template integer {
+  return (2+3,4*5+6);
+}
+//==
+
+function f_3() return integer {
+  return "a"; //expected error
+}
+
+function f_4() return template integer {
+  return ("a",2);//expected error
+}
+
+function f_5() return RoI{ 
+  return {1,2,"a"}; //expected error
+}
+
+function f_6_vl() return RoI{
+  return ({1,2}); //expected error
+}
+
+function f_6() return RoI{
+  return ({1,2},{1}); //expected error
+}
+
+function f_7() return RoI {
+  template RoI t_roi := {3,4};
+  return t_roi;
+}
+
+function f_6_t() return template RoI{
+  return ({1,2},{1});
+}
+
+function f_7_t() return template RoI {
+  template RoI t_roi := {3,4};
+  return t_roi;
+}
+
+function f_8_t() return template RoI {
+  template RoI t_roi := {3,4};
+  return (t_roi,{5,6,"a"}); //expected error
+}
+
+function f_9_t() return template RoI {
+  template RoI t_roi := {3,4};
+  return (t_roi,{5,6,7}); 
+}
+
+//omit check
+function f_10() return RoI {
+  return {1,2,omit} //expected error
+}
+
+function f_10_t() return template RoI {
+  return {1,2,omit} //expected error
+}
+// "*" anyoromit
+function f_11_t() return template RoI {
+  return {1,2,*}
+}
+
+function f_12_t() return template RoI {
+  return omit; 
+}
+
+
+//============== Record ==================
+group MyRecord {
+
+  type record MyRec {
+    integer i optional,
+    charstring c
+  }
+
+  function f_rec_1() return MyRec {
+    return {1,"a"};  
+  }
+
+  function f_rec_2() return MyRec { 
+    return {1,1};  //expected error
+  }
+
+  function f_rec_3() return MyRec {
+    return {1,omit};  //expected error
+  }
+  function f_rec_4() return MyRec {
+    return {omit,"b"};
+  }
+
+  function f_rec_5() return MyRec {
+    return {omit,omit};  //expected error
+  }
+
+  function f_rec_6() return MyRec { 
+    return {1, ?};  //expected error
+  }
+
+  function f_rec_1v() return MyRec {
+    var MyRec vl_r := {1,"a"}
+    return  vl_r;
+  }
+
+  function f_rec_2v() return MyRec {
+    var MyRec vl_r := {1,1}; //expected error
+    return  vl_r;
+  }
+
+  function f_rec_3v() return MyRec {
+    var MyRec vl_r := {1,omit};
+    return  vl_r;
+  }
+
+  function f_rec_4v() return MyRec {
+    var MyRec vl_r := {omit,"b"};
+    return  vl_r; 
+  }
+
+  function f_rec_5v() return MyRec {
+    var MyRec vl_r := {omit,omit}; //expected error
+    return  vl_r; 
+  }
+
+  function f_rec_6v() return MyRec {
+    var MyRec vl_r := {1,?}; //  wrong, expected error
+    return  vl_r;  
+  }
+
+  function f_rec_1t() return template MyRec {
+    return {1,"b"}
+  }
+
+
+  function f_rec_2t() return template MyRec {
+    return {1,1};  //expected error
+  }
+
+  function f_rec_3t() return template MyRec {
+    return {1,omit};  //expected error
+  }
+
+  function f_rec_4t() return template MyRec {
+    return {omit,"b"}; 
+  }
+
+  function f_rec_4t2() return template MyRec {
+    return {*,"b"};   
+  }
+
+  function f_rec_5t() return template MyRec {
+    return {omit, omit};  //expected error
+  }
+
+  function f_rec_6t() return template MyRec {
+    return {1,?};  
+  }
+
+  //  ==== return var as template ======
+
+  function f_rec_1vt() return template MyRec {
+    var MyRec vl_r := {1,"a"}
+    return  vl_r;
+  }
+
+  function f_rec_2vt() return template MyRec {
+    var MyRec vl_r := {1, 1}; //expected error
+    return  vl_r;
+  }
+
+  function f_rec_3vt() return template MyRec {
+    var MyRec vl_r := {1,omit}; //expected error
+    return  vl_r;
+  }
+
+  function f_rec_4vt() return template MyRec {
+    var MyRec vl_r := {omit,"b"};
+    return  vl_r; 
+  }
+
+  function f_rec_5vt() return template MyRec {
+    var MyRec vl_r := {omit,omit}; //expected error
+    return  vl_r; 
+  }
+
+  function f_rec_6vt() return template MyRec { 
+    var MyRec vl_r := { 1, ? }; //expected error
+    return  vl_r; 
+  }
+
+  //===== return var template as template =====
+
+  function f_rec_1vtt() return template MyRec {
+    var template MyRec vt_r := {1,"a"}
+    return  vt_r;
+  }
+
+  function f_rec_2vtt() return template MyRec {
+    var template MyRec vt_r := {1, 1}; //expected error
+    return  vt_r;
+  }
+
+  function f_rec_3vtt() return template MyRec {
+    var template MyRec vt_r := {1,omit}; //expected error
+    return  vt_r;
+  }
+
+  function f_rec_4vtt() return template MyRec {
+    var template MyRec vt_r := {omit,"b"};
+    return  vt_r; 
+  }
+
+  function f_rec_5vtt() return template MyRec {
+    var template MyRec vt_r := {omit,omit}; //expected error
+    return  vt_r; 
+  }
+
+  function f_rec_6vtt() return template MyRec { 
+    var template MyRec vt_r := { * , ? }; 
+    return  vt_r; 
+  }	
+
+  function f_rec_7vtt() return template MyRec { 
+    var template MyRec vt_r := { * , ? }; 
+    return  vt_r; 
+  }
+
+  function f_rec_8vtt() return template MyRec { 
+    template MyRec t_r := { * , ? }; 
+    template MyRec t_rm modifies t_r := { 
+      i:= 2 
+    }
+    return  t_rm; 
+  }
+
+  function f_rec_9vtt() return template MyRec { 
+    template MyRec t_r := { * , ? }; 
+    template MyRec t_rm modifies t_r := {
+      i:= 2 
+    }
+    return  t_rm; 
+  }
+}//group	 
+
+group G3 {
+  type port PT message {
+    inout MyRec;
+  } with { extension  "internal"}
+
+  type component CT {
+    port PT myport;
+  }
+
+  template MyRec t_rec9 := {*,?};
+  template MyRec t_rec9m modifies t_rec9 := { i:= (2..8)}
+
+  function f_rec10tt() return template MyRec {
+    return t_rec9;
+  }
+
+  function f_rec11tt() return template MyRec {
+    return t_rec9m;
+  }
+
+  altstep as_1() runs on CT {
+    [] myport.receive(MyRec:*) { }
+    [] myport.receive(MyRec:modifies t_rec9 := {i:= (2..8)}) { }
+    [] myport.receive(t_rec9m) { 
+      return 1;
+    }
+
+
+  }
+
+
+}//group	
+
+}

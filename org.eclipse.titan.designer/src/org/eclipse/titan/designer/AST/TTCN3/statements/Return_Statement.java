@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,18 +12,16 @@ import java.util.List;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
-import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Type;
-import org.eclipse.titan.designer.AST.IType.ValueCheckingOptions;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
-import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Function;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TTCN3Template;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ValueList_Template;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReparseUtilities;
@@ -38,9 +36,8 @@ public final class Return_Statement extends Statement {
 	private static final String MISSINGVALUE = "Missing return value. The function should return a value of type `{0}''";
 	private static final String UNEXPECTEDRETURNVALUE = "Unexpected return value. The function does not have return type";
 	private static final String UNEXPETEDRETURNSTATEMENT = "Return statement cannot be used in a {0}. It is allowed only in functions and altsteps";
-	private static final String ALTSTEPRETURNINGVALUE = "An altstep canot return a value";
+	private static final String ALTSTEPRETURNINGVALUE = "An altstep cannot return a value";
 	private static final String USAGEINCONTROLPART = "Return statement cannot be used in the control part. It is alowed only in functions and altsteps";
-
 	private static final String FULLNAMEPART = ".returnexpression";
 	private static final String STATEMENT_NAME = "return";
 
@@ -113,28 +110,56 @@ public final class Return_Statement extends Statement {
 				location.reportSemanticError(MessageFormat.format(MISSINGVALUE, ((Def_Function) definition).getType(timestamp)
 						.getTypename()));
 				break;
-			} else if (!template.isValue(timestamp)) {
-				template.getLocation().reportSemanticError(SPECIFICVALUEEXPECTED);
-				break;
-			} else {
-				IValue tempValue = template.getValue();
-				Type returnType = ((Def_Function) definition).getType(timestamp);
-				tempValue.setMyGovernor(returnType);
-				tempValue = returnType.checkThisValueRef(timestamp, tempValue);
-				returnType.checkThisValue(timestamp, tempValue, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE,
-						false, false, true, false, false));
 			}
+			
+			Type returnType = ((Def_Function) definition).getType(timestamp);
+
+			switch (template.getTemplatetype()) {
+			case VALUE_LIST:
+				if (((ValueList_Template) template).getNofTemplates() == 1) {
+					// ValueList_Template with one element can be accepted as a
+					// hidden expression
+					// TODO: if you want to compile this, the type should change
+					// for SingleExpression
+					break;
+				}
+			case SPECIFIC_VALUE:
+			default:
+				if (!template.isValue(timestamp)) {
+					template.getLocation().reportSemanticError(SPECIFICVALUEEXPECTED);
+					break;
+				};
+			}
+
+			// General:
+			template.setMyGovernor(returnType);
+			ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template);// FIXME:
+																									// remove
+																									// this
+																									// line
+																									// ???
+			temporalTemplate.checkThisTemplateGeneric(timestamp, returnType, false, /* isModified */
+					false, /* allowOmit */
+					true, /* allowAnyOrOmit */
+					true, /* subCheck */
+					false /* implicitOmit */);
+			TemplateRestriction.check(timestamp, definition, temporalTemplate, null);
 			break;
+
 		case A_FUNCTION_RTEMP:
 			if (template == null) {
 				location.reportSemanticError(MessageFormat.format(MISSINGTEMPLATE, ((Def_Function) definition).getType(timestamp)
 						.getTypename()));
 			} else {
-				Type returnType = ((Def_Function) definition).getType(timestamp);
-				template.setMyGovernor(returnType);
-				ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template);
-				temporalTemplate.checkThisTemplateGeneric(timestamp, returnType, false, true, true, true, false);
-				TemplateRestriction.check(timestamp, definition, temporalTemplate, null);
+				Type returnType1 = ((Def_Function) definition).getType(timestamp);
+				template.setMyGovernor(returnType1);
+				ITTCN3Template temporalTemplate1 = returnType1.checkThisTemplateRef(timestamp, template);
+				temporalTemplate1.checkThisTemplateGeneric(timestamp, returnType1, true, /* isModified */
+						true, /* allowOmit */
+						true, /* allowAnyOrOmit */
+						true, /* subCheck */
+						true); /* implicitOmit */
+				TemplateRestriction.check(timestamp, definition, temporalTemplate1, null);
 			}
 			break;
 		case A_ALTSTEP:

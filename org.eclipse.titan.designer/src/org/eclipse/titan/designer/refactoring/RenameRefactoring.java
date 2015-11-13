@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -296,9 +296,6 @@ public class RenameRefactoring extends Refactoring {
 			filesToProcess.add((IFile) m.getLocation().getFile());
 		}
 
-		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		projectSourceParser.reportOutdating(filesToProcess);
-
 		return result;
 	}
 
@@ -416,6 +413,7 @@ public class RenameRefactoring extends Refactoring {
 		} catch (InterruptedException irex) {
 			// operation was canceled
 		} finally {
+			projectSourceParser.reportOutdating(file);
 			projectSourceParser.analyzeAll();
 		}
 	}

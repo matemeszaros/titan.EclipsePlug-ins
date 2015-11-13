@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,15 +64,15 @@ public class AST_warnings_tests {
 		Designer_plugin_tests.checkSemanticMarkersOnFile(subtype_tests_ttcn_initializer(), "src/Basic_tests/subtype_tests.ttcn");
 	}
 
-	@org.junit.Test
-	public void t3doc_explicit_test_ttcn() throws Exception {
-		Designer_plugin_tests.checkSemanticMarkersOnFile(t3doc_explicit_test_ttcn_initializer(), "src/Basic_tests/t3doc_explicit_test.ttcn");
-	}
-
-	@org.junit.Test
-	public void t3doc_explicit_negative_test_ttcn() throws Exception {
-		Designer_plugin_tests.checkSemanticMarkersOnFile(t3doc_explicit_negative_test_ttcn_initializer(), "src/Basic_tests/t3doc_explicit_negative_test.ttcn");
-	}
+//	@org.junit.Test
+//	public void t3doc_explicit_test_ttcn() throws Exception {
+//		Designer_plugin_tests.checkSemanticMarkersOnFile(t3doc_explicit_test_ttcn_initializer(), "src/Basic_tests/t3doc_explicit_test.ttcn");
+//	}
+//
+//	@org.junit.Test
+//	public void t3doc_explicit_negative_test_ttcn() throws Exception {
+//		Designer_plugin_tests.checkSemanticMarkersOnFile(t3doc_explicit_negative_test_ttcn_initializer(), "src/Basic_tests/t3doc_explicit_negative_test.ttcn");
+//	}
 
 	@org.junit.Test
 	public void ttcnpp_test_main_ttcnpp() throws Exception {

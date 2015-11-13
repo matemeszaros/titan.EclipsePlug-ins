@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ public final class ReparseUtilities {
 	public static List<Integer> getAllValidTokenTypes() {
 		List<Integer> result = new ArrayList<Integer>();
 		
-		for (int i = TTCN3Lexer4.EOF + 1; i < TTCN3Lexer4.LEXERPLACEHOLDER; i++) {
+		for (int i = Ttcn3Lexer.EOF + 1; i < Ttcn3Lexer.LEXERPLACEHOLDER; i++) {
 			result.add(Integer.valueOf(i));
 		}
 		

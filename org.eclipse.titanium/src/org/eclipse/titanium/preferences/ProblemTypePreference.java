@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,8 +43,11 @@ public enum ProblemTypePreference {
 	MISSING_IMPORT("Missing imported module", EnumSet.of(CodeSmellType.MISSING_IMPORT)),
 	MODULENAME_IN_DEFINITION("Report if the name of the module is mentioned in the name of the definition", EnumSet
 			.of(CodeSmellType.MODULENAME_IN_DEFINITION)),
+	LAZY("Report proper usage of @lazy modifier", EnumSet.of(CodeSmellType.LAZY)),
 	LOGIC_INVERSION("Report unnecessary negations in if statements.", EnumSet.of(CodeSmellType.LOGIC_INVERSION)),
 	NONPRIVATE_PRIVATE("Report TTCN-3 definitions that could be private, but are not set so", EnumSet.of(CodeSmellType.NONPRIVATE_PRIVATE)),
+	PRIVATE_FIELD_VIA_PUBLIC("Report when use private field via public definition", EnumSet.of(CodeSmellType.PRIVATE_FIELD_VIA_PUBLIC)),
+	PRIVATE_VALUE_VIA_PUBLIC("Report when parameterize private field via public definition", EnumSet.of(CodeSmellType.PRIVATE_VALUE_VIA_PUBLIC)),
 	READING_OUT_PAR_BEFORE_WRITTEN("Report reading out parameter before assigning a value to it", EnumSet.of(CodeSmellType.READING_OUT_PAR_BEFORE_WRITTEN)),
 	READONLY_VARIABLE("Report read only variables", EnumSet.of(CodeSmellType.READONLY_LOC_VARIABLE, CodeSmellType.READONLY_OUT_PARAM,
 			CodeSmellType.READONLY_INOUT_PARAM)),

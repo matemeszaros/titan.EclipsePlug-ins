@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 
 /**
  * Class to represent ObjectDefinition.
@@ -294,7 +293,7 @@ public final class Object_Definition extends ASN1Object {
 			return;
 		}		
 		ObjectClassSyntax_Parser parser = null;
-		parser = ParserFactory.createObjectClassSyntaxParser(mBlock, this);
+		parser = new ObjectClassSyntax_Parser(mBlock, this);
 		final ObjectClassSyntax_root root = myGovernor.getObjectClassSyntax(timestamp);
 		if (null != root) {
 			root.accept(parser);

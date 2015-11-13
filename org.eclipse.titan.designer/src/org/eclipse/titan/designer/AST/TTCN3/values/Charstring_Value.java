@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,32 +45,43 @@ public final class Charstring_Value extends Value {
 		this.value = value;
 	}
 
-	protected Charstring_Value(final UniversalCharstring_Value original) {
-		copyGeneralProperties(original);
+	/**
+	 * function used to convert a universal charstring value into a charstring value if possible.
+	 * 
+	 * @param timestamp the timestamp of the actual build cycle
+	 * @param original the value to be converted
+	 * */
+	public static Charstring_Value convert(final CompilationTimeStamp timestamp, final UniversalCharstring_Value original) {
 		UniversalCharstring oldString = original.getValue();
+		Charstring_Value target;
 
 		if (oldString == null) {
-			value = null;
-			setIsErroneous(true);
-			return;
+			original.setIsErroneous(true);
+			target = new Charstring_Value(null);
+			target.copyGeneralProperties(original);
+			return target;
 		}
 
 		boolean warning = false;
-		for (int i = 0; i < oldString.length() && !isErroneous; i++) {
+		for (int i = 0; i < oldString.length() && !original.getIsErroneous(timestamp); i++) {
 			UniversalChar uchar = oldString.get(i);
 			if (uchar.group() != 0 || uchar.plane() != 0 || uchar.row() != 0) {
-				location.reportSemanticError(MessageFormat.format(QUADRUPLEPROBLEM, uchar.group(), uchar.plane(), uchar.row(), uchar.cell(), i));
-				setIsErroneous(true);
+				original.getLocation().reportSemanticError(MessageFormat.format(QUADRUPLEPROBLEM, uchar.group(), uchar.plane(), uchar.row(), uchar.cell(), i));
+				original.setIsErroneous(true);
 			} else if (uchar.cell() > 127 && !warning) {
-				location.reportSemanticWarning(MessageFormat.format(CHARACTERCODEPROBLEM, uchar.cell(), i));
+				original.getLocation().reportSemanticWarning(MessageFormat.format(CHARACTERCODEPROBLEM, uchar.cell(), i));
 			}
 		}
 
-		if (isErroneous) {
-			value = null;
+		if (original.getIsErroneous(timestamp)) {
+			target = new Charstring_Value(null);
 		} else {
-			value = oldString.getString();
+			target = new Charstring_Value(oldString.getString());
 		}
+
+		target.copyGeneralProperties(original);
+
+		return target;
 	}
 
 	@Override

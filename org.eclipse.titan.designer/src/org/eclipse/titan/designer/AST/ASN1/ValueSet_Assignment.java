@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,19 +25,31 @@ import org.eclipse.titan.designer.graphics.ImageCache;
  * @author Arpad Lovassy
  */
 // TODO handling of the right value is not implemented in the compiler either
-public abstract class ValueSet_Assignment extends ASN1Assignment {
+public final class ValueSet_Assignment extends ASN1Assignment {
 	private static final String UNKNOWNASSIGNMENT = "unknown value assignment";
 
 	/** left. */
 	protected final IASN1Type type;
+	/** right */
+	private final Block mBlock;
 
-	public ValueSet_Assignment(final Identifier id, final Ass_pard ass_pard, final IASN1Type type) {
+	public ValueSet_Assignment(final Identifier id, final Ass_pard ass_pard, final IASN1Type type, final Block aBlock) {
 		super(id, ass_pard);
 		this.type = type;
+		this.mBlock = aBlock;
 
 		if (null != type) {
 			type.setFullNameParent(this);
 		}
+		
+		if (null != aBlock) {
+			aBlock.setFullNameParent(this);
+		}
+	}
+
+	@Override
+	protected ASN1Assignment internalNewInstance(final Identifier identifier) {
+		return new ValueSet_Assignment(identifier, null, type.newInstance(), mBlock);
 	}
 
 	@Override

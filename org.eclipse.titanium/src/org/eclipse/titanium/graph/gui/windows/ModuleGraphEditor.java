@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,7 +96,6 @@ public class ModuleGraphEditor extends GraphEditor {
 	protected void initWindow() {
 		super.initWindow();
 
-		isom.setSelected(true);
 		isom.addActionListener(layoutListener);
 		layoutGroup.add(isom);
 		layoutMenu.add(isom);
@@ -120,6 +119,7 @@ public class ModuleGraphEditor extends GraphEditor {
 		JMenu dagMenu = new JMenu("Directed layouts");
 		layoutMenu.add(dagMenu);
 
+		tdag.setSelected(true);
 		tdag.addActionListener(layoutListener);
 		dagMenu.add(tdag);
 		layoutGroup.add(tdag);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,11 +57,17 @@ public final class Sequence_Value extends Value {
 		}
 	}
 
-	public Sequence_Value(final CompilationTimeStamp timestamp, final SequenceOf_Value value) {
-		copyGeneralProperties(value);
+	/**
+	 * function used to convert a value written without naming the fields into a template where all field names are provided.
+	 * 
+	 * @param timestamp the timestamp of the actual build cycle
+	 * @param value the value to be converted
+	 * */
+	public static Sequence_Value convert(final CompilationTimeStamp timestamp, final SequenceOf_Value value) {
 		if (value.getMyGovernor() == null) {
-			values = null;
-			return;
+			Sequence_Value target = new Sequence_Value(null);
+			target.copyGeneralProperties(value);
+			return target;
 		}
 
 		IType t = value.getMyGovernor().getTypeRefdLast(timestamp);
@@ -76,15 +82,18 @@ public final class Sequence_Value extends Value {
 		case TYPE_SIGNATURE:
 			nofComponents = ((Signature_Type) t).getNofParameters();
 			break;
-		default:
-			values = null;
-			return;
+		default:{
+			Sequence_Value target = new Sequence_Value(null);
+			target.copyGeneralProperties(value);
+			return target;
+		}
 		}
 
 		Values oldValues = value.getValues();
 		int nofValues = oldValues.getNofValues();
 		if (nofValues > nofComponents) {
-			location.reportSemanticError(MessageFormat.format(TOOMANYELEMENTS, t.getTypename(), nofComponents, nofValues));
+			value.getLocation().reportSemanticError(MessageFormat.format(TOOMANYELEMENTS, t.getTypename(), nofComponents, nofValues));
+			value.setIsErroneous(true);
 		}
 
 		int upperLimit;
@@ -97,7 +106,7 @@ public final class Sequence_Value extends Value {
 			allNotUsed = false;
 		}
 
-		values = new NamedValues();
+		NamedValues values = new NamedValues();
 		NamedValue namedValue;
 		Identifier identifier;
 		for (int i = 0; i < upperLimit; i++) {
@@ -114,9 +123,11 @@ public final class Sequence_Value extends Value {
 				case TYPE_SIGNATURE:
 					identifier = ((Signature_Type) t).getParameterIdentifierByIndex(i);
 					break;
-				default:
-					//impossible branch
-					return;
+				default:{
+					Sequence_Value target = new Sequence_Value(null);
+					target.copyGeneralProperties(value);
+					return target;
+				}
 				}
 
 				namedValue = new NamedValue(identifier, v);
@@ -125,12 +136,16 @@ public final class Sequence_Value extends Value {
 			}
 		}
 
-		values.setMyScope(getMyScope());
-		values.setFullNameParent(this);
+		
 
 		if (allNotUsed && nofValues > 0) {
-			location.reportSemanticWarning(MessageFormat.format(ALLARENOTUSED, t.getTypename()));
+			value.getLocation().reportSemanticWarning(MessageFormat.format(ALLARENOTUSED, t.getTypename()));
 		}
+		
+		Sequence_Value target = new Sequence_Value(values);
+		target.copyGeneralProperties(value);
+		
+		return target;
 	}
 
 	@Override

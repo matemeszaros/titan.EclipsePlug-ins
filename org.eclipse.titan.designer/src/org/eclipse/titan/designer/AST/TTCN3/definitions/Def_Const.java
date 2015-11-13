@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,10 +33,12 @@ import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
+import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 
 /**
@@ -45,7 +47,7 @@ import org.eclipse.titan.designer.preferences.PreferenceConstants;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class Def_Const extends Definition {
+public final class Def_Const extends Definition {
 	private static final String FULLNAMEPART = ".<type>";
 	public static final String PORTNOTALLOWED = "Constant can not be defined for port type `{0}''";
 	public static final String SIGNATURENOTALLOWED = "Constant can not be defined for signature type `{0}''";
@@ -301,7 +303,7 @@ public abstract class Def_Const extends Definition {
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
 				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
-				IIdentifierReparser r = ParserFactory.createIdentifierReparser(reparser);
+				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
 				identifier = r.getIdentifier();
 				// damage handled
@@ -376,7 +378,20 @@ public abstract class Def_Const extends Definition {
 		}
 	}
 
-	protected abstract int reparse( TTCN3ReparseUpdater aReparser );
+	private int reparse(TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				Value newValue = parser.pr_Expression().value;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					if (newValue != null) {
+						value = newValue;
+					}
+				}
+			}
+		});
+	}
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {

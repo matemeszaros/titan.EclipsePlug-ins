@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,10 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.asn1editor;
 
+import java.io.StringReader;
+
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -20,12 +24,17 @@ import org.eclipse.titan.designer.editors.Pair;
 import org.eclipse.titan.designer.editors.ttcn3editor.HeuristicalIntervalDetector;
 import org.eclipse.titan.designer.editors.ttcn3editor.PairMatcher;
 import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Lexer;
+import org.eclipse.titan.designer.parsers.asn1parser.ASN1Listener;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.ModuleLevelTokenStreamTracker;
+import org.eclipse.titan.designer.parsers.asn1parser.TokenWithIndexAndSubTokensFactory;
 
 /**
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class ASN1ReferenceParser implements IReferenceParser {
+public final class ASN1ReferenceParser implements IReferenceParser {
 	private int ofs;
 
 	public ASN1ReferenceParser() {
@@ -181,8 +190,34 @@ public abstract class ASN1ReferenceParser implements IReferenceParser {
 		return temporalOffset;
 	}
 
-	protected abstract Reference parseReference(final IFile file, final String input, final int line, final int offset);
+	private Reference parseReference(final IFile file, final String input, final int line, final int offset) {
+		Reference reference = null;
+		StringReader reader = new StringReader(input);
+		CharStream charStream = new UnbufferedCharStream(reader);
+		Asn1Lexer lexer = new Asn1Lexer(charStream);
+		lexer.setTokenFactory(new TokenWithIndexAndSubTokensFactory(true));
+		ASN1Listener lexerListener = new ASN1Listener();
+		lexer.removeErrorListeners(); // remove ConsoleErrorListener
+		lexer.addErrorListener(lexerListener);
+		ModuleLevelTokenStreamTracker tracker = new ModuleLevelTokenStreamTracker(lexer);
+		tracker.discard(Asn1Lexer.WS);
+		tracker.discard(Asn1Lexer.MULTILINECOMMENT);
+		tracker.discard(Asn1Lexer.SINGLELINECOMMENT);
+		Asn1Parser parser = new Asn1Parser(tracker);
+		parser.setProject(file.getProject());
+		parser.setActualFile(file);
+		parser.setLine(line);
+		parser.setOffset(offset);
+		parser.setBuildParseTree(false);
+		ASN1Listener parserListener = new ASN1Listener();
+		parser.removeErrorListeners(); // remove ConsoleErrorListener
+		parser.addErrorListener(parserListener);
+		reference = parser.pr_parseReference().reference;
+		return reference;
+	}
 	
-	protected abstract ASN1ReferenceParser newInstance();
+	private ASN1ReferenceParser newInstance() {
+		return new ASN1ReferenceParser();
+	}
 
 }

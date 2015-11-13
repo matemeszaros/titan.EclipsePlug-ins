@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -280,7 +280,7 @@ public final class LogFileCacheHandler {
 	 */
 	private static File getCacheFolderFor(final IFolder logFolder) {
 		final IPath projectRelativePath = Path.fromOSString(
-				Constants.CACHE_DIRECTORY + IPath.SEPARATOR + logFolder.getProjectRelativePath().toOSString());
+				Constants.CACHE_DIRECTORY + File.separator + logFolder.getProjectRelativePath().toOSString());
 		final IProject project = logFolder.getProject();
 
 		return new File(project.getFolder(projectRelativePath).getLocationURI());
@@ -295,7 +295,7 @@ public final class LogFileCacheHandler {
 	private static IFolder getCacheFolderFor(final IFile logFile) {
 		final IProject project = logFile.getProject();
 		final IPath projectRelativePath = Path.fromOSString(
-				Constants.CACHE_DIRECTORY + IPath.SEPARATOR + logFile.getProjectRelativePath().removeLastSegments(1).toOSString());
+				Constants.CACHE_DIRECTORY + File.separator + logFile.getProjectRelativePath().removeLastSegments(1).toOSString());
 
 		return project.getFolder(projectRelativePath);
 	}

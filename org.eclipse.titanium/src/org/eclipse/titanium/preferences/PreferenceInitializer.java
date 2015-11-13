@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,6 +69,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(ProblemTypePreference.IF_WITHOUT_ELSE.getPreferenceName(), GeneralConstants.IGNORE);
 		preferenceStore.setDefault(ProblemTypePreference.SWITCH_ON_BOOLEAN.getPreferenceName(), GeneralConstants.IGNORE);
 		preferenceStore.setDefault(ProblemTypePreference.SETVERDICT_WITHOUT_REASON.getPreferenceName(), GeneralConstants.IGNORE);
+		preferenceStore.setDefault(ProblemTypePreference.LAZY.getPreferenceName(), GeneralConstants.IGNORE);
+		preferenceStore.setDefault(ProblemTypePreference.PRIVATE_FIELD_VIA_PUBLIC.getPreferenceName(), GeneralConstants.IGNORE);
+		preferenceStore.setDefault(ProblemTypePreference.PRIVATE_VALUE_VIA_PUBLIC.getPreferenceName(), GeneralConstants.IGNORE);
 		preferenceStore.setDefault(ProblemTypePreference.LOGIC_INVERSION.getPreferenceName(), GeneralConstants.IGNORE);
 		preferenceStore.setDefault(ProblemTypePreference.UNCOMMENTED_FUNCTION.getPreferenceName(), GeneralConstants.IGNORE);
 		preferenceStore.setDefault(ProblemTypePreference.UNINITIALIZED_VARIABLE.getPreferenceName(), GeneralConstants.IGNORE);

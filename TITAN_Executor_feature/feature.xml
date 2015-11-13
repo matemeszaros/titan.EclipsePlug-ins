@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2014 Ericsson Telecom AB
+ Copyright (c) 2000-2015 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -10,17 +10,17 @@
 <feature
       id="TITAN_Executor"
       label="TITAN_Executor_Feature"
-      version="5.3.0.CRL_113_200_5_R3A_20150524-1100"
+      version="5.4.0.CRL_113_200_5_R4A_20151030-1100"
       provider-name="Eclipse Titan Project">
 
    <description url="http://ttcn.ericsson.se/download/update_site/releasenotes.pdf">
-      CRL 113 200/5 R2A (5.2.pl0) version of the TITAN Executor
+      CRL 113 200/5 R4A (5.4.pl0) version of the TITAN Executor
 plug-in.
    </description>
 
    <copyright>
       /*******************************************************************************
-* Copyright (c) 2000-2014 Ericsson Telecom AB
+* Copyright (c) 2000-2015 Ericsson Telecom AB
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License
 v1.0
@@ -156,21 +156,21 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="org.eclipse.titan.executor"
          download-size="720"
          install-size="0"
-         version="5.3.0.CRL_113_200_5_R3A_20150630-1100"
+         version="5.4.0.CRL_113_200_5_R4A_20151030-1100"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.titan.help"
          download-size="10546"
          install-size="0"
-         version="5.3.0.CRL_113_200_5_R3A_20150630-1100"
+         version="5.4.0.CRL_113_200_5_R4A_20151030-1100"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.titan.common"
          download-size="532"
          install-size="0"
-         version="5.3.0.CRL_113_200_5_R3A_20150630-1100"
+         version="5.4.0.CRL_113_200_5_R4A_20151030-1100"
          unpack="false"/>
 
 </feature>

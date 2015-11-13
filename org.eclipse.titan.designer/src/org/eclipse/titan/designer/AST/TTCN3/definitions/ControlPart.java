@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,16 +27,18 @@ import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
 import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 
 /**
  * The ControlPart class represents the control parts of TTCN3 modules.
  * 
  * @author Kristof Szabados
  **/
-public abstract class ControlPart extends Scope implements ILocateableNode, IAppendableSyntax {
+public final class ControlPart extends Scope implements ILocateableNode, IAppendableSyntax {
 
 	private static final String KIND = "controlpart";
 
@@ -74,8 +76,16 @@ public abstract class ControlPart extends Scope implements ILocateableNode, IApp
 	/** the time when this control part was checked the last time. */
 	private CompilationTimeStamp lastTimeChecked;
 
-	public ControlPart() {
+	public ControlPart(final StatementBlock statementblock) {
 		setScopeMacroName("control");
+		if (statementblock == null) {
+			this.statementblock = new StatementBlock();
+		} else {
+			this.statementblock = statementblock;
+			setLocation(statementblock.getLocation());
+			addSubScope(statementblock.getLocation(), statementblock);
+		}
+		this.statementblock.setFullNameParent(this);
 	}
 
 	@Override
@@ -204,7 +214,7 @@ public abstract class ControlPart extends Scope implements ILocateableNode, IApp
 	public List<Integer> getPossibleExtensionStarterTokens() {
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>();
-			result.add(TTCN3Lexer4.WITH);
+			result.add(Ttcn3Lexer.WITH);
 			return result;
 		}
 
@@ -276,7 +286,21 @@ public abstract class ControlPart extends Scope implements ILocateableNode, IApp
 		}
 	}
 	
-	protected abstract int reparse( final TTCN3ReparseUpdater aReparser );
+	private int reparse( final TTCN3ReparseUpdater aReparser ) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath.setWithAttributes(attributes);
+					if (attributes != null) {
+						getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+					}
+				}
+			}
+		});
+	}
 
 	@Override
 	public Assignment getEnclosingAssignment(final int offset) {

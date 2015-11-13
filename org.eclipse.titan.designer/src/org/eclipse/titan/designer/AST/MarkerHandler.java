@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -368,6 +368,68 @@ public final class MarkerHandler {
 			}
 
 			return null;
+		}
+	}
+
+	/**
+	 * Updates the stored markers, should be run only by incremental syntax checking.
+	 * As such it needs to know where the change started in the file, and how much has it shifted the contents.
+	 *
+	 * @param file the file whose markers should be updated
+	 * @param lineOffset the index of the first line where the change happened.
+	 * @param lineShift the number of lines all line following the line offset have to be shifted with.
+	 * @param offset the offset where the change happened
+	 * @param shift the amount to shift the markers offset.
+	 * */
+	public static void updateMarkers(final IResource file, final int lineOffset, final int lineShift, final int offset, final int shift) {
+		for (String markerTypeID : MARKERS.keySet()) {
+			updateMarkers(markerTypeID, file, lineOffset, lineShift, offset, shift);
+		}
+	}
+
+	/**
+	 * Updates the stored markers, should be run only by incremental syntax checking.
+	 * As such it needs to know where the change started in the file, and how much has it shifted the contents.
+	 *
+	 * @param markerTypeID the type of markers to be updated
+	 * @param file the file whose markers should be updated
+	 * @param lineOffset the index of the first line where the change happened.
+	 * @param lineShift the number of lines all line following the line offset have to be shifted with.
+	 * @param offset the offset where the change happened
+	 * @param shift the amount to shift the markers offset.
+	 * */
+	private static void updateMarkers(final String markerTypeID, final IResource file,
+			final int lineOffset, final int lineShift, final int offset, final int shift) {
+		if (!MARKERS.containsKey(markerTypeID)) {
+			return;
+		}
+
+		synchronized (MARKERS) {
+			Map<IResource, List<InternalMarker>> typeSpecificMarkers = MARKERS.get(markerTypeID);
+
+			if (!typeSpecificMarkers.containsKey(file)) {
+				return;
+			}
+
+			List<InternalMarker> fileSpecificMarkers = typeSpecificMarkers.get(file);
+
+			if (fileSpecificMarkers == null || fileSpecificMarkers.isEmpty()) {
+				return;
+			}
+
+			for (Iterator<InternalMarker> iterator = fileSpecificMarkers.iterator(); iterator.hasNext();) {
+				InternalMarker marker = iterator.next();
+
+				if (marker.row >= lineOffset && marker.offset > offset) {
+					marker.row += lineShift;
+					if (marker.offset != -1) {
+						marker.offset += shift;
+					}
+					if (marker.endoffset != -1) {
+						marker.endoffset += shift;
+					}
+				}
+			}
 		}
 	}
 

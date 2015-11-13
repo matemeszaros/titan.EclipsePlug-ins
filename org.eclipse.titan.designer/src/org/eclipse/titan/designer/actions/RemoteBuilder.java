@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,9 @@ import org.eclipse.titan.designer.license.LicenseValidator;
 import org.eclipse.titan.designer.properties.data.BuildLocation;
 import org.eclipse.titan.designer.properties.data.ProjectRemoteBuildPropertyData;
 import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.progress.IProgressConstants;
 
@@ -272,6 +274,13 @@ public final class RemoteBuilder extends AbstractHandler implements IObjectActio
 		if (!LicenseValidator.check()) {
 			return;
 		}
+
+		/**
+		 * This is needed because AbstractHandler does not deal with
+		 * selection, and selectionChanged is not called.
+		 */
+		IWorkbenchPage iwPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		selection = iwPage.getSelection();
 
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection structSelection = (IStructuredSelection) selection;

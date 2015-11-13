@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,12 +33,14 @@ import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.GlobalParser;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
+import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Lexer4;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 
 /**
  * The ImportModule class represents a TTCN3 import statement. This class is
@@ -53,7 +55,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 // FIXME the normal import specification and import of imports specification
 // should be stored in lists.
-public abstract class ImportModule extends ModuleImportation implements ILocateableNode, IAppendableSyntax, IIncrementallyUpdateable,
+public final class ImportModule extends ModuleImportation implements ILocateableNode, IAppendableSyntax, IIncrementallyUpdateable,
 		IReferencingElement {
 	public static final String MISSINGMODULE = "There is no module with name `{0}''";
 
@@ -307,7 +309,7 @@ public abstract class ImportModule extends ModuleImportation implements ILocatea
 	public List<Integer> getPossibleExtensionStarterTokens() {
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>();
-			result.add(TTCN3Lexer4.WITH);
+			result.add(Ttcn3Lexer.WITH);
 			return result;
 		}
 
@@ -318,8 +320,8 @@ public abstract class ImportModule extends ModuleImportation implements ILocatea
 	public List<Integer> getPossiblePrefixTokens() {
 		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
 			List<Integer> result = new ArrayList<Integer>(2);
-			result.add(TTCN3Lexer4.PUBLIC);
-			result.add(TTCN3Lexer4.PRIVATE);
+			result.add(Ttcn3Lexer.PUBLIC);
+			result.add(Ttcn3Lexer.PRIVATE);
 			return result;
 		}
 
@@ -343,7 +345,7 @@ public abstract class ImportModule extends ModuleImportation implements ILocatea
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
 				reparser.extendDamagedRegion(temporalIdentifier);
-				IIdentifierReparser r = ParserFactory.createIdentifierReparser(reparser);
+				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parse();
 				identifier = r.getIdentifier();
 
@@ -384,7 +386,21 @@ public abstract class ImportModule extends ModuleImportation implements ILocatea
 		}
 	}
 
-	protected abstract int reparse( TTCN3ReparseUpdater aReparser );
+	private int reparse(TTCN3ReparseUpdater aReparser) {
+		return aReparser.parse(new ITTCN3ReparseBase() {
+			@Override
+			public void reparse(final Ttcn3Reparser parser) {
+				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
+				parser.pr_EndOfFile();
+				if ( parser.isErrorListEmpty() ) {
+					withAttributesPath.setWithAttributes(attributes);
+					if (attributes != null) {
+						getLocation().setEndOffset(attributes.getLocation().getEndOffset());
+					}
+				}
+			}
+		});
+	}
 
 	@Override
 	public boolean hasImportedAssignmentWithID(final CompilationTimeStamp timestamp, final Identifier identifier) {

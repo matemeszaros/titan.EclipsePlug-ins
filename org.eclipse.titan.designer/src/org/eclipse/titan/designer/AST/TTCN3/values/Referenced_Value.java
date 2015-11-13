@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,7 +54,6 @@ public final class Referenced_Value extends Value {
 	private static final String INFORMATIONFROMOBJECTNOTVALUE = "InformationFromObjects construct `{0}'' does not refer to a value";
 	private static final String VALUERETURNEXPECTED =
 			"Reference to a value was expected instead of a call of {0}, which does not have a return type";
-	private static final String VALUERETURNEXPECTED2 = "Reference to a value was expected instead of a call of {0}, which returns a template";
 
 	private final Reference reference;
 
@@ -202,7 +201,13 @@ public final class Referenced_Value extends Value {
 			return referencedValue;
 		}
 
-		IReferenceChain tempReferenceChain = referenceChain != null ? referenceChain : ReferenceChain.getInstance(CIRCULARVALUEREFERENCE, true);
+		final boolean newChain = null == referenceChain;
+		IReferenceChain tempReferenceChain;
+		if (newChain) {
+			tempReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+		} else {
+			tempReferenceChain = referenceChain;
+		}
 
 		referencedValue = this;
 		isErroneous = false;
@@ -291,6 +296,8 @@ public final class Referenced_Value extends Value {
 		case A_VAR_TEMPLATE:
 		case A_VAR:
 		case A_FUNCTION_RVAL:
+		case A_FUNCTION_RTEMP:
+		case A_EXT_FUNCTION_RTEMP:
 		case A_EXT_FUNCTION_RVAL:
 		case A_PAR_VAL:
 		case A_PAR_VAL_IN:
@@ -304,11 +311,6 @@ public final class Referenced_Value extends Value {
 			reference.getLocation().reportSemanticError(MessageFormat.format(VALUERETURNEXPECTED, ass.getDescription()));
 			isErroneous = true;
 			break;
-		case A_FUNCTION_RTEMP:
-		case A_EXT_FUNCTION_RTEMP:
-			reference.getLocation().reportSemanticError(MessageFormat.format(VALUERETURNEXPECTED2, ass.getDescription()));
-			isErroneous = true;
-			break;
 		default:
 			if (Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)) {
 				getLocation().reportSemanticError(MessageFormat.format(UNEXPECTEDASSIGNMENT1, ass.getDescription()));
@@ -319,7 +321,7 @@ public final class Referenced_Value extends Value {
 			break;
 		}
 
-		if (!tempReferenceChain.equals(referenceChain)) {
+		if (newChain) {
 			tempReferenceChain.release();
 		}
 

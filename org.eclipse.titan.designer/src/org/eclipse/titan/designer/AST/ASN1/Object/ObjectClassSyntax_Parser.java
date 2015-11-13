@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,21 @@
 package org.eclipse.titan.designer.AST.ASN1.Object;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Object;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Type;
+import org.eclipse.titan.designer.AST.ASN1.Block;
 import org.eclipse.titan.designer.AST.ASN1.ObjectSet;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Lexer;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.BlockLevelTokenStreamTracker;
+import org.eclipse.titan.designer.parsers.asn1parser.TokenWithIndexAndSubTokens;
 
 /**
  * OCS visitor to parse an object definition.
@@ -18,8 +30,9 @@ import org.eclipse.titan.designer.AST.ASN1.ObjectSet;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
+public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 
+	private final Block mBlock;
 	protected final Object_Definition myObject;
 
 	/**
@@ -33,8 +46,19 @@ public abstract class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor
 	/** the actual index till which the tokens are already parsed. */
 	protected int internalIndex;
 
-	public ObjectClassSyntax_Parser(final Object_Definition myObject) {
+	public ObjectClassSyntax_Parser(final Block aBlock, final Object_Definition myObject) {
 		this.myObject = myObject;
+		final List<org.antlr.v4.runtime.Token> tempTokens = aBlock.getTokenList();
+		final List<org.antlr.v4.runtime.Token> temp = new ArrayList<org.antlr.v4.runtime.Token>(tempTokens.size());
+		for (int i = 0; i < tempTokens.size(); i++) {
+			temp.add(tempTokens.get(i));
+		}
+		temp.add(new TokenWithIndexAndSubTokens(org.antlr.v4.runtime.Token.EOF));
+
+		this.mBlock = new Block(temp, aBlock.getLocation());
+		this.mBlock.setFullNameParent(aBlock);
+		success = true;
+		internalIndex = 0;
 	}
 
 	@Override
@@ -82,11 +106,206 @@ public abstract class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor
 		myObject.addFieldSetting(fieldSetting);
 	}
 
-	abstract protected  ASN1Type parseType();
+	@Override
+	public void visitRoot(final ObjectClassSyntax_root parameter) {
+		if (mBlock != null) {
+			if (!success || !parameter.getIsBuilded() || (mBlock.getTokenList().isEmpty())) {
+				// FATAL ERROR, but now OK
+				return;
+			}
+		}
+
+		previousSuccess = false;
+		parameter.getSequence().accept(this);
+		if (null != mBlock) {
+			if (success && internalIndex < mBlock.getTokenList().size() && mBlock.getTokenList().get(internalIndex).getType() != org.antlr.v4.runtime.Token.EOF) {
+				success = false;
+				final org.antlr.v4.runtime.Token token = mBlock.getTokenList().get(internalIndex);
+				myObject.getLocation().reportSemanticError("Unexpected `" + token.getText() + "', it is a superfluous part");
+			}
+		} 
+
+		if (!success) {
+			myObject.getLocation().reportSemanticError("Check the syntax of objectclass");
+			myObject.setIsErroneous(true);
+		}
+	}
+
+	@Override
+	public void visitLiteral(final ObjectClassSyntax_literal parameter) {
+		previousSuccess = false;
+		if (null != mBlock) {
+			if (mBlock.getTokenList().size() <= internalIndex) {
+				return;
+			}
+		}
+
+		if (null != mBlock) {
+			final org.antlr.v4.runtime.Token token = mBlock.getTokenList().get(internalIndex);
+			if (null == token.getText()) {
+				// reached the end of the block
+				return;
+			}
+			if (token.getText().equals(parameter.getLiteral())) {
+				if (internalIndex < mBlock.getTokenList().size() - 1) {
+					internalIndex++;
+				}
+				previousSuccess = true;
+			}
+		}
+	}
+
+	@Override
+	public void visitSequence(final ObjectClassSyntax_sequence parameter) {
+
+		if (null != mBlock) {
+			if (mBlock.getTokenList().size() <= internalIndex) {
+				return;
+			}
+		}
+
+		int i;
+		
+		if (null != mBlock) {
+			org.antlr.v4.runtime.Token token = mBlock.getTokenList().get(internalIndex);
+			if (parameter.getOptionalFirstComma() && myObject.getNofFieldSettings() > 0) {
+				if (token.getType() == Asn1Lexer.COMMA) {
+					if (internalIndex < mBlock.getTokenList().size() - 1) {
+						internalIndex++;
+					}
+				} else {
+					if (parameter.getIsOptional()) {
+						previousSuccess = true;
+					} else {
+						success = false;
+						myObject.getLocation().reportSemanticError("Unexpected `" + token.getText() + "', expecting `,'");
+					}
+					return;
+				}
+				i = 0;
+			} else {
+				if (0 == parameter.getNofNodes()) {
+					return;
+				}
+				parameter.getNthNode(0).accept(this);
+				if (!success) {
+					return;
+				}
+				if (!previousSuccess) {
+					if (parameter.getIsOptional()) {
+						previousSuccess = true;
+					} else {
+						success = false;
+						myObject.getLocation().reportSemanticError(
+								"Unexpected `" + token.getText() + "', expecting `"
+										+ parameter.getNthNode(0).getDisplayName() + "'");
+					}
+					return;
+				}
+				i = 1;
+			}
 	
-	abstract protected boolean parseValue();
-	
-	abstract protected ASN1Object parseObject();
-	
-	abstract protected ObjectSet parseObjectSet();
+			for (; i < parameter.getNofNodes(); i++) {
+				parameter.getNthNode(i).accept(this);
+				if (!previousSuccess) {
+					if (parameter.getIsOptional()) {
+						previousSuccess = true;
+						internalIndex--;
+						return;
+					}
+					success = false;
+					if (mBlock.getTokenList().size() <= internalIndex) {
+						return;
+					}
+					token = mBlock.getTokenList().get(internalIndex);
+					myObject.getLocation().reportSemanticError(
+							"Unexpected `" + token.getText() + "', expecting `" + parameter.getNthNode(i).getDisplayName() + "'");
+				}
+				if (!success) {
+					return;
+				}
+			}
+		}
+	}
+
+	private ASN1Type parseType() {
+		ASN1Type type = null;
+		if (mBlock != null) {
+			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			if (parser != null) {
+				type = parser.pr_special_Type().type;
+				internalIndex += parser.nof_consumed_tokens();
+				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				if (null != errors && !errors.isEmpty()) {
+					for (int i = 0; i < errors.size(); i++) {
+						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(),
+								errors.get(i), IMarker.SEVERITY_ERROR);
+					}
+				}
+			}
+		}
+		
+		return type;
+	}
+
+	private boolean parseValue() {
+		if (mBlock != null) {
+			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			if (parser != null) {
+				parser.pr_special_Value();
+				internalIndex += parser.nof_consumed_tokens();
+				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				if (null != errors && !errors.isEmpty()) {
+					for (int i = 0; i < errors.size(); i++) {
+						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+								IMarker.SEVERITY_ERROR);
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+		
+		return false;
+	}
+
+	private ASN1Object parseObject() {
+		ASN1Object object = null;
+		if (mBlock != null) {
+			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			if (parser != null) {
+				object = parser.pr_special_Object().object;
+				internalIndex += parser.nof_consumed_tokens();
+				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				if (null != errors && !errors.isEmpty()) {
+					for (int i = 0; i < errors.size(); i++) {
+						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+								IMarker.SEVERITY_ERROR);
+					}
+				}
+			}
+		}
+		
+		return object;
+	}
+
+	private ObjectSet parseObjectSet() {
+		ObjectSet objectSet = null;
+		if (mBlock != null) {
+			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			if (parser != null) {
+				objectSet = parser.pr_special_ObjectSet().objectSet;
+				internalIndex += parser.nof_consumed_tokens();
+				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				if (null != errors && !errors.isEmpty()) {
+					for (int i = 0; i < errors.size(); i++) {
+						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+								IMarker.SEVERITY_ERROR);
+					}
+				}
+			}
+		}
+		
+		return objectSet;
+	}
 }

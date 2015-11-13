@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,27 +42,6 @@ public final class MTCComponentExpression extends Expression_Value {
 	public String createStringRepresentation() {
 		return "mtc";
 	}
-	
-	/** 
-	 * Calculates the governor of the component value. Only used when checking the end points of connections 
-	 * (in 'map' and 'connect' statements).
-	 * 
-	 * @param timestamp
-	 *                the time stamp of the actual semantic check cycle.
-	 *                
-	 * @return the governor of the component value.
-	 */
-	public IType getComponentGovernor(final CompilationTimeStamp timestamp) {
-		if (myGovernor != null) {
-			return myGovernor;
-		}
-		
-		if (myScope != null) {
-			return myScope.getMtcSystemComponentType(timestamp, false, true);
-		}
-		
-		return null;
-	}
 
 	@Override
 	public IType getExpressionGovernor(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
@@ -71,7 +50,7 @@ public final class MTCComponentExpression extends Expression_Value {
 		}
 
 		if (myScope != null) {
-			return myScope.getMtcSystemComponentType(timestamp, false, false);
+			return myScope.getMtcSystemComponentType(timestamp, false);
 		}
 
 		return null;
@@ -102,7 +81,7 @@ public final class MTCComponentExpression extends Expression_Value {
 			return;
 		}
 
-		Type componentType = myScope.getMtcSystemComponentType(timestamp, false, false);
+		Type componentType = myScope.getMtcSystemComponentType(timestamp, false);
 		if (componentType != null && !governorLast.isCompatible(timestamp, componentType, null, null, null)) {
 			getLocation().reportSemanticError(
 					MessageFormat.format(

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 	private Button addSourceLineInfo;
 	private Button suppressWarnings;
 	private Button quietly;
+	private Button omitInValueList;
 
 	//private Composite namingRuleComposite;
 	//private ComboFieldEditor namingRules;
@@ -67,7 +68,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 			addSourceLineInfo.dispose();
 			suppressWarnings.dispose();
 			quietly.dispose();
-
+			omitInValueList.dispose();
 		}
 	}
 
@@ -125,6 +126,9 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 
 		quietly = new Button(mainComposite, SWT.CHECK);
 		quietly.setText("Suppress all messages (quiet mode) (-q)");
+		
+		omitInValueList = new Button(mainComposite, SWT.CHECK);
+		omitInValueList.setText("Allow 'omit' in template value lists (legacy behavior) (-M)");
 
 		return mainComposite;
 	}
@@ -150,7 +154,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 		addSourceLineInfo.setEnabled(enabled);
 		suppressWarnings.setEnabled(enabled);
 		quietly.setEnabled(enabled);
-
+		omitInValueList.setEnabled(enabled);
 	}
 
 	@Override
@@ -212,7 +216,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 		addSourceLineInfo.setSelection(true);
 		suppressWarnings.setSelection(false);
 		quietly.setSelection(false);
-
+		omitInValueList.setSelection(false);
 	}
 
 	@Override
@@ -295,24 +299,13 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 			temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					TITANFlagsOptionsData.QUIETLY_PROPERTY));
 			quietly.setSelection("true".equals(temp) ? true : false);
+			
+			temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+					TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY));
+			omitInValueList.setSelection("true".equals(temp) ? true : false);
 
-		} catch (CoreException e) {
-			disableBER.setSelection(false);
-			disableRAW.setSelection(false);
-			disableTEXT.setSelection(false);
-			disableXER.setSelection(false);
-			disableJSON.setSelection(false);
-			forceXER.setSelection(false);
-			disableSubtypeChecking.setSelection(false);
-			defaultAsOmit.setSelection(false);
-			forceOldFuncOutPar.setSelection(false);
-			gccMessageFormat.setSelection(false);
-			lineNumbersOnlyInMessages.setSelection(false);
-			includeSourceInfo.setSelection(false);
-			addSourceLineInfo.setSelection(false);
-			suppressWarnings.setSelection(false);
-			quietly.setSelection(false);
-
+		} catch (CoreException e) {			
+			performDefaults();
 		}
 	}
 
@@ -336,6 +329,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 			setProperty(project, TITANFlagsOptionsData.ADD_SOURCELINEINFO_PROPERTY, addSourceLineInfo.getSelection() ? "true" : "false");
 			setProperty(project, TITANFlagsOptionsData.SUPPRESS_WARNINGS_PROPERTY, suppressWarnings.getSelection() ? "true" : "false");
 			setProperty(project, TITANFlagsOptionsData.QUIETLY_PROPERTY, quietly.getSelection() ? "true" : "false");
+			setProperty(project, TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY ,  omitInValueList.getSelection() ? "true" : "false");
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);
 			return false;

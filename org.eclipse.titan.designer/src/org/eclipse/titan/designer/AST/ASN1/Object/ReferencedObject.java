@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -137,8 +137,9 @@ public final class ReferencedObject extends ASN1Object implements IReferenceChai
 
 	@Override
 	public Object_Definition getRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
+		final boolean newChain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (null == referenceChain) {
+		if (newChain) {
 			temporalReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		} else {
 			temporalReferenceChain = referenceChain;
@@ -146,7 +147,7 @@ public final class ReferencedObject extends ASN1Object implements IReferenceChai
 
 		referencedLast = getRefd(timestamp, temporalReferenceChain).getRefdLast(timestamp, temporalReferenceChain);
 
-		if (null == referenceChain) {
+		if (newChain) {
 			temporalReferenceChain.release();
 		}
 

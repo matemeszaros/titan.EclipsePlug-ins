@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,7 +54,7 @@ public class UnnecessaryControl {
 	}
 
 	public static class For extends Base {
-		private static final String ONE_SHOT = "This loop is executed at most once, beacuse the body always returns";
+		private static final String ONE_SHOT = "This loop is executed at most once, because the body always returns";
 
 		@Override
 		public void process(IVisitableNode node, Problems problems) {

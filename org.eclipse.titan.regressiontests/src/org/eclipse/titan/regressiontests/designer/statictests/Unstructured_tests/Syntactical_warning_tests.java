@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -85,9 +85,8 @@ public class Syntactical_warning_tests {
 		int lineNum = 10;
 		markersToCheck.add(new MarkerToCheck("Obsolete type `char' is taken as `charstring' ",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("Obsolete type `universal char' is taken as `universal charstring' ",  ++lineNum, IMarker.SEVERITY_WARNING));
-		lineNum += 8;
-		markersToCheck.add(new MarkerToCheck("The last character of a bitstring literal should be `B' instead of `b'",  lineNum, IMarker.SEVERITY_WARNING));
-		lineNum += 2;
+		lineNum += 10;
+
 		markersToCheck.add(new MarkerToCheck("Obsolete statement `goto alt' will be substituted with `repeat' ", lineNum, IMarker.SEVERITY_WARNING));
 
 		return markersToCheck;

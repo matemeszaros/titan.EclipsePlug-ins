@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,7 @@ import org.eclipse.titan.designer.AST.TTCN3.types.PortTypeBody.PortType_type;
 import org.eclipse.titan.designer.AST.TTCN3.values.ArrayDimensions;
 import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.expressions.MTCComponentExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ValueofExpression;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -210,7 +210,7 @@ public final class Port_Utility {
 	 *         problems.
 	 * */
 	public static Component_Type checkComponentReference(final CompilationTimeStamp timestamp, final Statement source, final IValue value,
-			final boolean allowMtc, final boolean allowSystem, final boolean isConnecting) {
+			final boolean allowMtc, final boolean allowSystem) {
 		if (source.getMyStatementBlock() != null && source.getMyStatementBlock().getMyDefinition() == null) {
 			source.getLocation().reportSemanticError(COMPONENTOPINCONTROLPART);
 		}
@@ -254,6 +254,12 @@ public final class Port_Utility {
 				break;
 			case COMPONENT_CREATE_OPERATION:
 				break;
+			case VALUEOF_OPERATION:
+				IReferenceChain referenceChain = ReferenceChain.getInstance(
+								IReferenceChain.CIRCULARREFERENCE, true);
+				((ValueofExpression) expression).evaluateValue(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, referenceChain);
+				referenceChain.release();
+				break;
 			default:
 				value.getLocation().reportSemanticError(COMPONENTREFERENCEEXPECTED);
 				return null;
@@ -264,14 +270,7 @@ public final class Port_Utility {
 			return null;
 		}
 
-		IType result;
-		if (isConnecting && value instanceof MTCComponentExpression) {
-			MTCComponentExpression mtcComponent = (MTCComponentExpression) value;
-			result = mtcComponent.getComponentGovernor(timestamp);
-		} else {
-			result = value.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
-		}
-		
+		IType result = value.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 		if (result == null) {
 			return null;
 		}
@@ -310,7 +309,7 @@ public final class Port_Utility {
 	 * */
 	public static IType checkConnectionEndpoint(final CompilationTimeStamp timestamp, final Statement source, final Value componentReference,
 			final Reference portReference, final boolean allowSystem) {
-		IType componentType = checkComponentReference(timestamp, source, componentReference, true, allowSystem, true);
+		IType componentType = checkComponentReference(timestamp, source, componentReference, true, allowSystem);
 		if (portReference == null) {
 			return componentType;
 		}
@@ -543,7 +542,7 @@ public final class Port_Utility {
 					} else if (Type_type.TYPE_COMPONENT.equals(last.getTypetype())) {
 						if (Template_type.SPECIFIC_VALUE.equals(templateBody.getTemplatetype())) {
 							checkComponentReference(timestamp, source,
-									((SpecificValue_Template) templateBody).getSpecificValue(), true, true, false);
+									((SpecificValue_Template) templateBody).getSpecificValue(), true, true);
 						}
 					} else {
 						final String message = MessageFormat.format(
@@ -600,7 +599,7 @@ public final class Port_Utility {
 		}
 
 		if (addressType == null) {
-			checkComponentReference(timestamp, source, toClause, true, true, false);
+			checkComponentReference(timestamp, source, toClause, true, true);
 		} else {
 			// detect possible enumerated values (address may be an
 			// enumerated type)
@@ -620,7 +619,7 @@ public final class Port_Utility {
 				addressType.checkThisValue(timestamp, temp, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE,
 						false, false, true, false, false));
 			} else {
-				checkComponentReference(timestamp, source, temp, true, true, false);
+				checkComponentReference(timestamp, source, temp, true, true);
 			}
 		}
 	}

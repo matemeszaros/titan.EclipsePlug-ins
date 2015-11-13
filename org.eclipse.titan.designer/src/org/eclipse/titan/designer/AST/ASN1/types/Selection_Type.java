@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -217,15 +217,20 @@ public final class Selection_Type extends ASN1Type implements IReferencingType {
 
 	@Override
 	public IType getTypeRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
-		final IReferenceChain tempReferenceChain = (null != referenceChain) ? referenceChain : ReferenceChain.getInstance(
-				IReferenceChain.CIRCULARREFERENCE, true);
+		final boolean newChain = null == referenceChain;
+		IReferenceChain tempReferenceChain;
+		if (newChain) {
+			tempReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+		} else {
+			tempReferenceChain = referenceChain;
+		}
 
 		IType type = this;
 		while (null != type && type instanceof IReferencingType && !type.getIsErroneous(timestamp)) {
 			type = ((IReferencingType) type).getTypeRefd(timestamp, tempReferenceChain);
 		}
 
-		if (!tempReferenceChain.equals(referenceChain)) {
+		if (newChain) {
 			tempReferenceChain.release();
 		}
 		return type;

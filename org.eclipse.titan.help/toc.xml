@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2014 Ericsson Telecom AB
+ Copyright (c) 2000-2015 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
@@ -114,6 +114,7 @@
 			<topic label="inout" href="info/inout.html"/>
 			<topic label="int2bit" href="info/int2bit.html"/>
 			<topic label="int2char" href="info/int2char.html"/>
+			<topic label="int2enum" href="info/int2enum.html"/>
 			<topic label="int2float" href="info/int2float.html"/>
 			<topic label="int2hex" href="info/int2hex.html"/>
 			<topic label="int2oct" href="info/int2oct.html"/>
@@ -136,6 +137,7 @@
 			<topic label="length" href="info/length.html"/>
 			<topic label="lengthof" href="info/lengthof.html"/>
 			<topic label="log" href="info/log.html"/>
+			<topic label="log2str" href="info/log2str.html"/>
 		</topic>
 		<topic label="M" href="titan_index.html#m">
 			<topic label="map" href="info/map.html"/>

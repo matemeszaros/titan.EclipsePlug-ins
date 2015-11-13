@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -267,9 +267,12 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 			return;
 		}
 
-		if (locatable instanceof CharString_Pattern_Template ||
-			locatable instanceof UnivCharString_Pattern_Template) {
-			return; // CharString Pattern Template will not be checked to No of elements 
+		if (locatable instanceof BitString_Pattern_Template  ||
+			locatable instanceof CharString_Pattern_Template ||
+			locatable instanceof HexString_Pattern_Template  ||
+			locatable instanceof UnivCharString_Pattern_Template
+			) {
+			return; // xString Pattern Templates will not be checked to No of elements 
 		}
 
 		if (!lessAllowed) {

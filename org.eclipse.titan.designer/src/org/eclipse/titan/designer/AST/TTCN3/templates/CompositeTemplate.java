@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,10 +68,14 @@ public abstract class CompositeTemplate extends TTCN3Template {
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			ITTCN3Template template = templates.getTemplateByIndex(i);
 			Template_type ttype = template.getTemplatetype();
+			
 			switch (ttype) {
 			case ANY_OR_OMIT:
 				break;
 			case PERMUTATION_MATCH:
+				if(template instanceof TemplateBody){
+					template = ((TemplateBody) template).getTemplate();
+				}
 				result += ((PermutationMatch_Template) template).getNofTemplatesNotAnyornone(timestamp);
 				break;
 			case ALLELEMENTSFROM:
@@ -98,6 +102,9 @@ public abstract class CompositeTemplate extends TTCN3Template {
 			case ANY_OR_OMIT:
 				return true;
 			case PERMUTATION_MATCH:
+				if(template instanceof TemplateBody){
+					template = ((TemplateBody) template).getTemplate();
+				}
 				if (((PermutationMatch_Template) template).templateContainsAnyornone()) {
 					return true;
 				}
@@ -109,6 +116,28 @@ public abstract class CompositeTemplate extends TTCN3Template {
 
 		return false;
 	}
+	
+	/**
+	 * Checks if the list of templates has at least one any or none or permutation symbol
+	 * <p> It is prohibited after "all from"
+	 * 
+	 * @return true if an any or none symbol was found, false otherwise.
+	 * */
+	public boolean containsAnyornoneOrPermutation() {
+		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
+			ITTCN3Template template = templates.getTemplateByIndex(i);
+			switch (template.getTemplatetype()) {
+			case ANY_OR_OMIT:
+			case PERMUTATION_MATCH:
+				return true;
+			default:
+				break;
+			}
+		}
+
+		return false;
+	}
+	
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {

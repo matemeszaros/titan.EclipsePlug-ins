@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,6 @@ public class ComponentGraphEditor extends GraphEditor {
 		super.initWindow();
 
 		JRadioButtonMenuItem isom = Layouts.LAYOUT_ISOM.clone();
-		isom.setSelected(true);
 		isom.addActionListener(layoutListener);
 		layoutGroup.add(isom);
 		layoutMenu.add(isom);
@@ -48,6 +47,7 @@ public class ComponentGraphEditor extends GraphEditor {
 		layoutMenu.add(dagMenu);
 
 		JRadioButtonMenuItem tdag = Layouts.LAYOUT_TDAG.clone();
+		tdag.setSelected(true);
 		tdag.addActionListener(layoutListener);
 		dagMenu.add(tdag);
 		layoutGroup.add(tdag);

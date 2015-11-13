@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Identifier;
+import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.ASN1.types.ASN1_Sequence_Type;
@@ -56,11 +57,14 @@ public final class Named_Template_List extends TTCN3Template {
 		namedTemplates.setFullNameParent(this);
 	}
 
-	public Named_Template_List(final CompilationTimeStamp timestamp, final Template_List other) {
-		super();
-		copyGeneralProperties(other);
-
-		IType lastType = myGovernor.getTypeRefdLast(timestamp);
+	/**
+	 * function used to convert a template written without naming the fields into a template with all field names provided.
+	 * 
+	 * @param timestamp the timestamp of the actual build cycle
+	 * @param other the template to be converted
+	 * */
+	public static Named_Template_List convert(final CompilationTimeStamp timestamp, final Template_List other) {
+		IType lastType = other.getMyGovernor().getTypeRefdLast(timestamp);
 		int nofTemplates = other.getNofTemplates();
 		int nofTypeComponents = 0;
 		switch (lastType.getTypetype()) {
@@ -75,26 +79,16 @@ public final class Named_Template_List extends TTCN3Template {
 			break;
 		case TYPE_TTCN3_SET:
 			nofTypeComponents = ((TTCN3_Set_Type) lastType).getNofComponents();
-			if (nofTemplates != 0 || nofTypeComponents != 0) {
-				namedTemplates = new NamedTemplates();
-				return;
-			}
 			break;
 		case TYPE_ASN1_SET:
 			nofTypeComponents = ((ASN1_Set_Type) lastType).getNofComponents(timestamp);
-			if (nofTemplates != 0 || nofTypeComponents != 0) {
-				namedTemplates = new NamedTemplates();
-				return;
-			}
 			break;
 		default:
-			namedTemplates = new NamedTemplates();
-			return;
 		}
 
 		if (nofTemplates > nofTypeComponents) {
-			location.reportSemanticError(MessageFormat.format(TOOMANYELEMENTS, lastType.getTypename(), nofTypeComponents, nofTemplates));
-			setIsErroneous(true);
+			other.getLocation().reportSemanticError(MessageFormat.format(TOOMANYELEMENTS, lastType.getTypename(), nofTypeComponents, nofTemplates));
+			other.setIsErroneous(true);
 		}
 
 		int upperLimit;
@@ -107,7 +101,7 @@ public final class Named_Template_List extends TTCN3Template {
 			allNotUsed = false;
 		}
 
-		namedTemplates = new NamedTemplates();
+		NamedTemplates namedTemplates = new NamedTemplates();
 		for (int i = 0; i < upperLimit; i++) {
 			ITemplateListItem template = other.getTemplateByIndex(i);
 			if (!Template_type.TEMPLATE_NOTUSED.equals(template.getTemplatetype())) {
@@ -143,13 +137,18 @@ public final class Named_Template_List extends TTCN3Template {
 			}
 		}
 
-		namedTemplates.setMyScope(getMyScope());
-		namedTemplates.setFullNameParent(this);
+		namedTemplates.setMyScope(other.getMyScope());
+		namedTemplates.setFullNameParent(other);
 
 		if (allNotUsed && nofTemplates > 0 && !Type_type.TYPE_SIGNATURE.equals(lastType.getTypetype())) {
-			location.reportSemanticWarning(MessageFormat.format(ALLARENOTUSED, lastType.getTypename()));
-			setIsErroneous(true);
+			other.getLocation().reportSemanticWarning(MessageFormat.format(ALLARENOTUSED, lastType.getTypename()));
+			other.setIsErroneous(true);
 		}
+		
+		Named_Template_List target = new Named_Template_List(namedTemplates);
+		target.copyGeneralProperties(other);
+
+		return target;
 	}
 
 	public void addNamedValue(final NamedTemplate template) {
@@ -333,7 +332,7 @@ public final class Named_Template_List extends TTCN3Template {
 
 	@Override
 	public boolean chkRestrictionNamedListBaseTemplate(final CompilationTimeStamp timestamp, final String definitionName,
-			final Set<String> checkedNames, final int neededCheckedCnt) {
+			final Set<String> checkedNames, final int neededCheckedCnt, final Location usageLocation) {
 		boolean needsRuntimeCheck = false;
 		if (checkedNames.size() >= neededCheckedCnt) {
 			return needsRuntimeCheck;
@@ -343,7 +342,7 @@ public final class Named_Template_List extends TTCN3Template {
 			ITTCN3Template tmpl = namedTemplates.getTemplateByIndex(i).getTemplate();
 			final String name = namedTemplates.getTemplateByIndex(i).getName().getName();
 			if (!checkedNames.contains(name)) {
-				if (tmpl.checkValueomitRestriction(timestamp, definitionName, true)) {
+				if (tmpl.checkValueomitRestriction(timestamp, definitionName, true, usageLocation)) {
 					needsRuntimeCheck = true;
 				}
 				checkedNames.add(name);
@@ -351,7 +350,7 @@ public final class Named_Template_List extends TTCN3Template {
 		}
 		if (baseTemplate instanceof Named_Template_List) {
 			if (((Named_Template_List) baseTemplate).chkRestrictionNamedListBaseTemplate(timestamp, definitionName, checkedNames,
-					neededCheckedCnt)) {
+					neededCheckedCnt, usageLocation)) {
 				needsRuntimeCheck = true;
 			}
 		}
@@ -359,11 +358,11 @@ public final class Named_Template_List extends TTCN3Template {
 	}
 
 	@Override
-	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed) {
+	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE);
+			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		boolean needsRuntimeCheck = false;
@@ -394,7 +393,7 @@ public final class Named_Template_List extends TTCN3Template {
 
 			for (int i = 0, size = getNofTemplates(); i < size; i++) {
 				NamedTemplate temp = namedTemplates.getTemplateByIndex(i);
-				if (temp.getTemplate().checkValueomitRestriction(timestamp, definitionName, true)) {
+				if (temp.getTemplate().checkValueomitRestriction(timestamp, definitionName, true, usageLocation)) {
 					needsRuntimeCheck = true;
 				}
 
@@ -405,7 +404,7 @@ public final class Named_Template_List extends TTCN3Template {
 			if (neededCheckedCnt > 0) {
 				if (baseTemplate instanceof Named_Template_List
 						&& ((Named_Template_List) baseTemplate).chkRestrictionNamedListBaseTemplate(timestamp,
-								definitionName, checkedNames, neededCheckedCnt)) {
+								definitionName, checkedNames, neededCheckedCnt, usageLocation)) {
 					needsRuntimeCheck = true;
 				}
 			}

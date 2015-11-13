@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,13 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.ASN1.definitions;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.UnbufferedCharStream;
+import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
 import org.eclipse.titan.designer.AST.Module;
@@ -17,13 +22,17 @@ import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Assignment;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Assignments;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.parsers.ParserFactory;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Lexer;
+import org.eclipse.titan.designer.parsers.asn1parser.ASN1Listener;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.ModuleLevelTokenStreamTracker;
+import org.eclipse.titan.designer.parsers.asn1parser.TokenWithIndexAndSubTokensFactory;
 
 /**
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class SpecialASN1Module {
+public final class SpecialASN1Module {
 	public static final String INTERNAL_MODULE = "<internal_module>";
 	public static final String PARSINGFAILED = "Parsing failed for internal ASN.1 module";
 	public static final String PARSINGFAILEDWITHREASON = "Parsing failed for internal ASN.1 module with: `{1}''";
@@ -157,7 +166,7 @@ public abstract class SpecialASN1Module {
 		ASN1Assignment actualAssignment;
 
 		for (String[] assignment : INTERNAL_ASSIGNMENTS) {
-			actualAssignment = ParserFactory.parseSpecialInternalAssignment(assignment[1], new Identifier(Identifier_type.ID_ASN, assignment[0]));
+			actualAssignment = SpecialASN1Module.parseSpecialInternalAssignment(assignment[1], new Identifier(Identifier_type.ID_ASN, assignment[0]));
 			parsedAssignments.addAssignment(actualAssignment);
 		}
 
@@ -195,5 +204,45 @@ public abstract class SpecialASN1Module {
 	 * */
 	public static boolean isSpecAsss(final Module module) {
 		return null != specialAssignmentsModule && !specialAssignmentsModule.equals(module);
+	}
+
+	/**
+	 * Parses the special internal assignments to build their semantic
+	 * representation.
+	 * 
+	 * @param input_code
+	 *                the code to parse.
+	 * @param identifier
+	 *                the identifier for the assignment to be created.
+	 * 
+	 * @return the parsed assignment.
+	 */
+	public static ASN1Assignment parseSpecialInternalAssignment(final String input_code, final Identifier identifier) {
+		ASN1Assignment assignment = null;
+		StringReader reader = new StringReader(input_code);
+		CharStream charStream = new UnbufferedCharStream(reader);
+		Asn1Lexer lexer = new Asn1Lexer(charStream);
+		lexer.setTokenFactory(new TokenWithIndexAndSubTokensFactory(true));
+
+		ASN1Listener lexerListener = new ASN1Listener();
+		lexer.removeErrorListeners(); // remove ConsoleErrorListener
+		lexer.addErrorListener(lexerListener);
+		ModuleLevelTokenStreamTracker tracker = new ModuleLevelTokenStreamTracker(lexer);
+		tracker.discard(Asn1Lexer.WS);
+		tracker.discard(Asn1Lexer.MULTILINECOMMENT);
+		tracker.discard(Asn1Lexer.SINGLELINECOMMENT);
+		Asn1Parser parser = new Asn1Parser(tracker);
+		parser.setBuildParseTree(false);		
+		ASN1Listener parserListener = new ASN1Listener(parser);
+		parser.removeErrorListeners(); // remove ConsoleErrorListener
+		parser.addErrorListener(parserListener);
+		assignment = parser.pr_TITAN_special_Assignment(identifier).assignment;
+		if (!parser.getErrorStorage().isEmpty()) {
+			ErrorReporter.INTERNAL_ERROR(PARSINGFAILED);
+			for (SyntacticErrorStorage temp : parser.getErrorStorage()) {
+				ErrorReporter.logError(temp.message);
+			}
+		}
+		return assignment;
 	}
 }

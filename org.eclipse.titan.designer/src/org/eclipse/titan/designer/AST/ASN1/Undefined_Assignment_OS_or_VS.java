@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,16 +26,26 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
+public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 
 	protected final Reference reference;
+	private final Block mBlock;
 	
-	public Undefined_Assignment_OS_or_VS(final Identifier id, final Ass_pard ass_pard, final Reference reference) {
+	public Undefined_Assignment_OS_or_VS(final Identifier id, final Ass_pard ass_pard, final Reference reference, final Block aBlock) {
 		super(id, ass_pard);
 		this.reference = reference;
+		this.mBlock = aBlock;
+
 		if (null != reference) {
 			reference.setFullNameParent(this);
 		}
+		if (null != aBlock) {
+			aBlock.setFullNameParent(this);
+		}
+	}
+
+	protected ASN1Assignment internalNewInstance(final Identifier identifier) {
+		return new Undefined_Assignment_OS_or_VS(identifier, null, reference.newInstance(), mBlock);
 	}
 
 	@Override
@@ -50,7 +60,7 @@ public abstract class Undefined_Assignment_OS_or_VS extends Undefined_Assignment
 	protected void classifyAssignment(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		final boolean new_chain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (null == referenceChain) {
+		if (new_chain) {
 			temporalReferenceChain = ReferenceChain.getInstance(CIRCULARASSIGNMENTCHAIN, true);
 		} else {
 			temporalReferenceChain = referenceChain;
@@ -101,8 +111,11 @@ public abstract class Undefined_Assignment_OS_or_VS extends Undefined_Assignment
 		}
 	}
 	
-	protected abstract ObjectSet_definition newObjectSetDefinitionInstance();
-	
-	protected abstract ValueSet_Assignment newValueSetAssignmentInstance( final Referenced_Type aType );
+	private ObjectSet_definition newObjectSetDefinitionInstance() {
+		return new ObjectSet_definition(mBlock);
+	}
 
+	private ValueSet_Assignment newValueSetAssignmentInstance( final Referenced_Type aType ) {
+		return new ValueSet_Assignment(identifier, ass_pard, aType, mBlock);
+	}
 }

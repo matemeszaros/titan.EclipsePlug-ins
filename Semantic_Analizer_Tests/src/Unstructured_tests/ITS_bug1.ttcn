@@ -1,0 +1,27 @@
+module ITS_bug1 {
+//critical line: syncPort_PT.send(pl_syncCmd) to valueof(pl_clientRefs[i]);
+//status: fixed
+type component ClientSyncComp{}
+type record of ClientSyncComp ClientSyncCompList;
+type integer SyncCmd; //hack
+type port SyncPort message { inout SyncCmd } with { extension "internal" }; 
+
+type component ServerSyncComp {
+  port SyncPort syncPort_PT;
+}
+function f_serverSendToAllClients(  
+in ClientSyncCompList pl_clientRefs, 
+  in template (value) SyncCmd pl_syncCmd )
+runs on ServerSyncComp {
+  var template ClientSyncComp vt_client := ClientSyncComp.create; 
+  syncPort_PT.send(pl_syncCmd) to vt_client; 
+  syncPort_PT.send(pl_syncCmd) to valueof(vt_client);
+  var integer vl_i:=0;
+  for (vl_i:=0; vl_i< sizeof(pl_clientRefs); vl_i:=vl_i+1 ){
+    syncPort_PT.send(pl_syncCmd) to valueof(pl_clientRefs[vl_i]);
+    
+  }
+  
+} // end function f_serverSendToAllClients
+
+}

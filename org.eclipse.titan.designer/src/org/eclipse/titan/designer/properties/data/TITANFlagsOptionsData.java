@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,16 +43,17 @@ public final class TITANFlagsOptionsData {
 	public static final String SUPPRESS_WARNINGS_PROPERTY = "suppressWarnings";
 	public static final String QUIETLY_PROPERTY = "quietly";
 	public static final String DISABLE_SUBTYPE_CHECKING_PROPERTY = "disableSubtypeChecking";
+	public static final String ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY = "omitInValueList";
 
-	public static final String[] PROPERTIES = { 
+	public static final String[] PROPERTIES = {
 			DISABLE_BER_PROPERTY, DISABLE_RAW_PROPERTY, DISABLE_TEXT_PROPERTY, DISABLE_XER_PROPERTY, DISABLE_JSON_PROPERTY,
 			FORCE_XER_IN_ASN1_PROPERTY, DEFAULT_AS_OMIT_PROPERTY, FORCE_OLD_FUNC_OUT_PAR_PROPERTY, GCC_MESSAGE_FORMAT_PROPERTY, LINE_NUMBERS_ONLY_IN_MESSAGES_PROPERTY,
-			INCLUDE_SOURCEINFO_PROPERTY, ADD_SOURCELINEINFO_PROPERTY, SUPPRESS_WARNINGS_PROPERTY, QUIETLY_PROPERTY, DISABLE_SUBTYPE_CHECKING_PROPERTY };
+			INCLUDE_SOURCEINFO_PROPERTY, ADD_SOURCELINEINFO_PROPERTY, SUPPRESS_WARNINGS_PROPERTY, QUIETLY_PROPERTY, DISABLE_SUBTYPE_CHECKING_PROPERTY,ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY };
 	public static final String[] TAGS = PROPERTIES;
-	public static final String[] DEFAULT_VALUES = { 
+	public static final String[] DEFAULT_VALUES = {
 		"false", "false", "false", "false", "false", 
 		"false", "false", "false", "false", "false",
-		"true", "true", "false", "false", "false" };
+		"true",  "true",  "false", "false", "false", "false" };
 
 	private TITANFlagsOptionsData() {
 		// Do nothing
@@ -124,6 +125,10 @@ public final class TITANFlagsOptionsData {
 			temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					TITANFlagsOptionsData.DISABLE_SUBTYPE_CHECKING_PROPERTY));
 			builder.append("true".equals(temp) ? "y" : "");
+
+			temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+					TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY));
+			builder.append("true".equals(temp) ? "M" : "");
 
 			if (builder.length() > 0) {
 				builder.insert(0, '-');

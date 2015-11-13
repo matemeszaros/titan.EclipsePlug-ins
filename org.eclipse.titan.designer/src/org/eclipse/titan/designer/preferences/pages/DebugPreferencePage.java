@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.titan.designer.Activator;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -108,9 +107,6 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
 		addField(new BooleanFieldEditor(PreferenceConstants.DISPLAYDEBUGINFORMATION, "Enable debug console", comp));
 		addField(new BooleanFieldEditor(PreferenceConstants.DEBUG_CONSOLE_TIMESTAMP, "Console timestamp", comp));
 		addField(new BooleanFieldEditor(PreferenceConstants.DEBUG_CONSOLE_AST_ELEM, "Print AST element for the cursor position", comp));
-		if ( ParserFactory.isUseAntlrV4Visible() ) {
-			addField(new BooleanFieldEditor(PreferenceConstants.DEBUG_CONSOLE_ANTLR_V4, "Use ANTLR V4", comp));
-		}
 	}
 
 	private void createLoadBalancingSection(final Composite parent) {

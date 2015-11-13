@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ import org.eclipse.titan.common.fieldeditors.TITANResourceLocator;
  * @author Kristof Szabados
  * */
 public final class NewTITANProjectOptionsWizardPage extends WizardPage {
-	private static final String SOURCEDIR_TOOLTIP = "The folder in which you want to plave the sources of this project";
+	private static final String SOURCEDIR_TOOLTIP = "The folder in which you want to save the sources of this project";
 	private static final String WORKINGDIR_TOOLTIP = "The folder in which you want all build operations to run.\n"
 			+ "Please note, that all files in the working directory are assumed to be generated, and will not be analyzed on-the-fly.";
 

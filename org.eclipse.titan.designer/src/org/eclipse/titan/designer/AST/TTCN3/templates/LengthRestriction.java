@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,21 +80,21 @@ public abstract class LengthRestriction extends ASTNode implements ILocateableNo
 	 * 
 	 * @param timestamp
 	 *                the time stamp of the actual semantic check cycle.
-	 * @param nof_elements
+	 * @param nofElements
 	 *                the number of elements the checked template has.
 	 * @param lessAllowed
 	 *                wheter less elements should be accepted (subset
 	 *                template)
-	 * @param more_allowed
+	 * @param moreAllowed
 	 *                wheter more elements should be accepted (the template
 	 *                has anyornone elements).
-	 * @param has_anyornone
+	 * @param hasAnyornone
 	 *                whether the template has anyornone elements.
 	 * @param locatable
 	 *                the location errors should be reported to if found.
 	 * */
-	public abstract void checkNofElements(final CompilationTimeStamp timestamp, final int nof_elements, boolean lessAllowed,
-			final boolean more_allowed, final boolean has_anyornone, final ILocateableNode locatable);
+	public abstract void checkNofElements(final CompilationTimeStamp timestamp, final int nofElements, boolean lessAllowed,
+			final boolean moreAllowed, final boolean hasAnyornone, final ILocateableNode locatable);
 
 	/**
 	 * Handles the incremental parsing of this length restriction.

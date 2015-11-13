@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,6 @@ public final class For_Statement extends Statement {
 	private static final String OPERANDERROR = "The final expression of a for statement should be a boolean value";
 	private static final String UNNECESSARYCONTROL = "This control is unnecessary because the final condition evaluates to true";
 	private static final String NEVERREACH = "Control never reaches this code because the final condition evaluates to false";
-	private static final String ALWAYSRETURN = "This loop is executed at most once, beacuse the body always returns";
 
 	private static final String FULLNAMEPART1 = ".init";
 	private static final String FULLNAMEPART2 = ".final";
@@ -256,12 +255,7 @@ public final class For_Statement extends Statement {
 		}
 		if (statementblock != null) {
 			statementblock.check(timestamp);
-			if (ReturnStatus_type.RS_YES.equals(statementblock.hasReturn(timestamp))) {
-				getLocation().reportConfigurableSemanticProblem(
-						Platform.getPreferencesService().getString(ProductConstants.PRODUCT_ID_DESIGNER,
-								PreferenceConstants.REPORTUNNECESSARYCONTROLS, GeneralConstants.WARNING, null),
-						ALWAYSRETURN);
-			}
+			//warning for "return" has been removed. Not valid problem
 		}
 
 		lastTimeChecked = timestamp;

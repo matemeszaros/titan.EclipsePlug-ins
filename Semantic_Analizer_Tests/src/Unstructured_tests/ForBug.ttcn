@@ -1,0 +1,20 @@
+module ForBug {
+//Fixed Wrong warning on line 6 (for()): 
+type component CT {}
+
+function f_1() {
+  for(var integer vl_i:=0;vl_i<10;vl_i:=vl_i+1) {//fixed wrong warning: This loop is executed at most once, because the body always returns
+    if(vl_i<5){
+      log("i:",vl_i);
+      continue;
+    }
+    return;
+  }
+  
+}
+
+control {
+  f_1();
+}
+
+}

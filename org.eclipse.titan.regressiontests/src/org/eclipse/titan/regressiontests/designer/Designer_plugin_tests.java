@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	CommonTestSuite.class })
 public class Designer_plugin_tests {
 
-	public static final String PROJECT_NAME = "Semantic_Analizer_Tests"; //TODO: Debug this name change!
+	public static final String PROJECT_NAME = "Semantic_Analizer_Tests";
 
 	private static Map<IResource, List<Map<?, ?>>> semanticMarkers;
 	private static Map<IResource, List<Map<?, ?>>> syntacticMarkers;
@@ -120,7 +120,7 @@ public class Designer_plugin_tests {
 	}
 
 	public static void checkZeroMarkersOnFile(final String projectRelativePath) {
-		Designer_plugin_tests.checkZeroSemanticMarkersOnFile(projectRelativePath);
+		Designer_plugin_tests.checkRealZeroSemanticMarkersOnFile(projectRelativePath);
 		Designer_plugin_tests.checkZeroSyntaxMarkersOnFile(projectRelativePath);
 	}
 
@@ -131,27 +131,40 @@ public class Designer_plugin_tests {
 		assertNotNull("Couldn't find syntax markers on file: " + file.getName(), fileMarkerList);
 
 		if (!fileMarkerList.isEmpty()) {
-			fail("Invalid markers found");
 			MarkerHandlingLibrary.printMarkerArray(projectRelativePath, fileMarkerList);
+			fail("Invalid markers found");
 		}
 	}
+	
+	public static void checkRealZeroSyntaxMarkersOnFile(final String projectRelativePath) {
+		IFile file = getAccessibleFile(projectRelativePath);
+		List<Map<?, ?>> fileMarkerList = syntacticMarkers.get(file);
 
+		assertNull("Invalid syntax markers found on file: " + file.getName(), fileMarkerList);
+
+	}
+
+	/**
+	 * Gets the file marker list. If the list is not null and it is empty prints marker onto the file
+	 * @param projectRelativePath
+	 */
 	public static void checkZeroSemanticMarkersOnFile(final String projectRelativePath) {
 		List<Map<?, ?>> fileMarkerList = semanticMarkers.get(getAccessibleFile(projectRelativePath));
 
 		assertNotNull(fileMarkerList);
 
 		if (!fileMarkerList.isEmpty()) {
-			fail("Invalid markers found");
 			MarkerHandlingLibrary.printMarkerArray(projectRelativePath, fileMarkerList);
+			fail("Invalid semantic markers found");
 		}
 	}
 
-	public static void checkRealZeroMarkersOnFile(final String projectRelativePath) {
+	//
+	public static void checkRealZeroSemanticMarkersOnFile(final String projectRelativePath) {
 		IFile file = getAccessibleFile(projectRelativePath);
 
 		List<Map<?, ?>> fileMarkerList = semanticMarkers.get(file);
-		assertNull("Invalid markers found on file: " + file.getName(), fileMarkerList);
+		assertNull("Invalid semantic markers found on file: " + file.getName(), fileMarkerList);
 	}
 
 

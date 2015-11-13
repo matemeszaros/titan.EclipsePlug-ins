@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Identifier;
+import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
@@ -70,7 +71,7 @@ public interface ITTCN3Template extends IGovernedSimple {
 		USTR_PATTERN,
 		/** all from template type, hides its real type*/
 		ALLELEMENTSFROM,
-		/** template body, hides sits real type */
+		/** template body, hides its real type */
 		TEMPLATEBODY
 	}
 
@@ -347,8 +348,10 @@ public interface ITTCN3Template extends IGovernedSimple {
 	 *                name for the error/warning message
 	 * @param templateRestriction
 	 *                the template restriction to check
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * */
-	void checkRestrictionCommon(final String definitionName, final TemplateRestriction.Restriction_type templateRestriction);
+	void checkRestrictionCommon(final String definitionName, final TemplateRestriction.Restriction_type templateRestriction, final Location usageLocation);
 
 	/**
 	 * Checks if this template conforms to the restriction TR_OMIT or
@@ -360,6 +363,8 @@ public interface ITTCN3Template extends IGovernedSimple {
 	 *                name for the error/warning message
 	 * @param omitAllowed
 	 *                true in case of TR_OMIT, false in case of TR_VALUE
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * @return false = always satisfies restriction -> no runtime check
 	 *         needed or never satisfies restriction -> compiler error(s)
 	 *         true = possibly violates restriction, cannot be determined at
@@ -367,7 +372,7 @@ public interface ITTCN3Template extends IGovernedSimple {
 	 *         given when inadequate restrictions are used, in other cases
 	 *         there's no warning
 	 */
-	boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed);
+	boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation);
 
 	/**
 	 * Helper function for check_valueomit_restriction called by
@@ -381,11 +386,13 @@ public interface ITTCN3Template extends IGovernedSimple {
 	 *                the names of the named templates already checked.
 	 * @param neededCheckedCnt
 	 *                the number of elements left to be checked.
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * 
 	 * @return true if a check at runtime is needed, false otherwise.
 	 */
 	boolean chkRestrictionNamedListBaseTemplate(final CompilationTimeStamp timestamp, final String definitionName,
-			final Set<String> checkedNames, final int neededCheckedCnt);
+			final Set<String> checkedNames, final int neededCheckedCnt, final Location usageLocation);
 
 	/**
 	 * Checks if this template conforms to the restriction TR_PRESENT. This
@@ -395,9 +402,11 @@ public interface ITTCN3Template extends IGovernedSimple {
 	 *                the time stamp of the actual semantic check cycle.
 	 * @param definitionName
 	 *                name for the error/warning message
+	 * @param usageLocation
+	 *                the location to be used for reporting errors
 	 * 
 	 * @return true if the template conforms to the restriction TR_PRESENT.
 	 */
-	boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName);
+	boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation);
 
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,13 +49,13 @@ public final class ProjectBasedBuilder {
 	}
 
 	/**
-	 * Creates a builder that handles the build related informations of the
+	 * Creates a builder that handles the build related information of the
 	 * given project.
 	 * 
 	 * @param project
 	 *                the project to create a builder for
 	 * 
-	 * @return the builder which handles the build related informations of
+	 * @return the builder which handles the build related information of
 	 *         the provided project
 	 * */
 	public static ProjectBasedBuilder getProjectBasedBuilder(final IProject project) {

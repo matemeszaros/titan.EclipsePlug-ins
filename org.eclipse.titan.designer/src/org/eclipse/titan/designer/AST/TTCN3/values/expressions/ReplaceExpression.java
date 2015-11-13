@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.SpecificValue_Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TemplateInstance;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Template_type;
+import org.eclipse.titan.designer.AST.TTCN3.templates.Template_List;
 import org.eclipse.titan.designer.AST.TTCN3.values.Bitstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value;
@@ -331,12 +332,26 @@ public final class ReplaceExpression extends Expression_Value {
 
 		if (templateInstance4 != null) {
 			ITTCN3Template temp = templateInstance4.getTemplateBody();
-			if (!Template_type.SPECIFIC_VALUE.equals(temp.getTemplatetype())) {
+			
+			switch( temp.getTemplatetype() ) {
+			case SPECIFIC_VALUE:
+				value4 = ((SpecificValue_Template) temp).getSpecificValue();
+				break;
+			case TEMPLATE_LIST:			
+				if( !((Template_List) temp).isValue(timestamp) ) {
+					location.reportSemanticError(OPERANDERROR6); 
+					setIsErroneous(true);
+					return;
+				}
+			case NAMED_TEMPLATE_LIST:
+			case INDEXED_TEMPLATE_LIST:
+				return; 
+			default:
 				location.reportSemanticError(OPERANDERROR6);
 				setIsErroneous(true);
 				return;
 			}
-			value4 = ((SpecificValue_Template) temp).getSpecificValue();
+					
 			value4.setLoweridToReference(timestamp);
 			tempType4 = value4.getExpressionReturntype(timestamp, internalExpectation);
 

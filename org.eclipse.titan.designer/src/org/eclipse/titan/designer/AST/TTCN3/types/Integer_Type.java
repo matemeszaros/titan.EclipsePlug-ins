@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,12 +16,12 @@ import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
+import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.ParameterisedSubReference;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.Type;
 import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.Value;
-import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TTCN3Template;
@@ -41,11 +41,11 @@ public final class Integer_Type extends Type {
 	private static final String TEMPLATENOTALLOWED = "{0} cannot be used for type `integer''";
 	private static final String LENGTHRESTRICTIONNOTALLOWED = "Length restriction is not allowed for type `integer''";
 	private static final String INCORRECTBOUNDARIES = "The lower boundary is higher than the upper boundary";
-	private static final String LARGEINTEGERLOWERERROR =
-			"Using a large integer value ({0}) as the lower boundary of a length restriction is not supported";
-	private static final String LARGEINTEGERUPPERERROR =
-			"Using a large integer value ({0}) as the upper boundary of a length restriction is not supported";
-
+	private static final String INCORRECTLOWERBOUNDARY = "The lower boundary cannot be +infinity";
+	private static final String INCORRECTUPPERBOUNDARY = "The upper boundary cannot be -infinity";
+	
+	private static enum  BOUNDARY_TYPE { LOWER, UPPER }
+	
 	@Override
 	public Type_type getTypetype() {
 		return Type_type.TYPE_INTEGER;
@@ -226,20 +226,12 @@ public final class Integer_Type extends Type {
 		switch (template.getTemplatetype()) {
 		case VALUE_RANGE:
 			ValueRange range = ((Value_Range_Template) template).getValueRange();
-			IValue lower = checkBoundary(timestamp, range.getMin());
-			IValue upper = checkBoundary(timestamp, range.getMax());
+			IValue lower = checkBoundary(timestamp, range.getMin(),BOUNDARY_TYPE.LOWER);
+			IValue upper = checkBoundary(timestamp, range.getMax(),BOUNDARY_TYPE.UPPER);
 
 			// Template references are not checked.
 			if (lower != null && Value.Value_type.INTEGER_VALUE.equals(lower.getValuetype()) && upper != null
 					&& Value.Value_type.INTEGER_VALUE.equals(upper.getValuetype())) {
-				if (!((Integer_Value) lower).isNative()) {
-					lower.getLocation().reportSemanticError(MessageFormat.format(LARGEINTEGERLOWERERROR, lower));
-					setIsErroneous(true);
-				}
-				if (!((Integer_Value) upper).isNative()) {
-					upper.getLocation().reportSemanticError(MessageFormat.format(LARGEINTEGERUPPERERROR, upper));
-					setIsErroneous(true);
-				}
 				if (!getIsErroneous(timestamp) && ((Integer_Value) lower).getValue() > ((Integer_Value) upper).getValue()) {
 					template.getLocation().reportSemanticError(INCORRECTBOUNDARIES);
 				}
@@ -265,7 +257,7 @@ public final class Integer_Type extends Type {
 		}
 	}
 
-	private IValue checkBoundary(final CompilationTimeStamp timestamp, final Value value) {
+	private IValue checkBoundary(final CompilationTimeStamp timestamp, final Value value, BOUNDARY_TYPE btype ) {
 		if (value == null) {
 			return null;
 		}
@@ -274,6 +266,28 @@ public final class Integer_Type extends Type {
 		IValue temp = checkThisValueRef(timestamp, value);
 		checkThisValueLimit(timestamp, temp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false, false, true, false);
 		temp = temp.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+		
+		if(Value_type.REAL_VALUE.equals(temp.getValuetype()))
+		{
+			if( ((Real_Value) temp).isNegativeInfinity() ) {
+				if( BOUNDARY_TYPE.UPPER.equals(btype)) {
+					value.getLocation().reportSemanticError(INCORRECTUPPERBOUNDARY);
+					value.setIsErroneous(true);
+				}
+				return temp;
+			} else if( ((Real_Value) temp).isPositiveInfinity() ) {
+				if( BOUNDARY_TYPE.LOWER.equals(btype)) {
+					value.getLocation().reportSemanticError(INCORRECTLOWERBOUNDARY);
+					value.setIsErroneous(true);
+				}
+				return temp;
+			} else {
+				value.getLocation().reportSemanticError(INTEGERVALUEEXPECTED);
+				value.setIsErroneous(true);
+				return null;
+			}
+		}
+		
 		switch (temp.getValuetype()) {
 		case INTEGER_VALUE:
 			break;

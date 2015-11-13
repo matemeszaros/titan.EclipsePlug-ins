@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
+import org.eclipse.titan.designer.wizards.projectFormat.TITANAutomaticProjectExporter;
 import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -393,6 +394,8 @@ public final class ProjectFileHandler {
 				indentNode(document, document.getDocumentElement(), 1);
 
 				ProjectDocumentHandlingUtility.saveDocument(project);
+				//this is the only place to save file modifications (add,remove,rename)
+				TITANAutomaticProjectExporter.saveAllAutomatically(project);
 
 				return Status.OK_STATUS;
 			}
@@ -407,7 +410,7 @@ public final class ProjectFileHandler {
 	}
 
 	/**
-	 * Save the Titan related informations of the project into the provided
+	 * Save the Titan related information of the project into the provided
 	 * document.
 	 * 
 	 * @param document
@@ -660,7 +663,7 @@ public final class ProjectFileHandler {
 	 * provided document.
 	 * 
 	 * @param document
-	 *                the document holding the informations.
+	 *                the document holding the information.
 	 * */
 	public void loadProjectSettingsFromDocument(final Document document) {
 		Node activeConfiguration = getNodebyName(document.getDocumentElement().getChildNodes(), ACTIVECONFIGURATIONXMLNODE);

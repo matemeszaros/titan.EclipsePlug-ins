@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -150,9 +150,13 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 		}
 	}
 
+	/**
+	 * Checks if the single length restriction is applicable for the given value
+	 * If the the length restriction value is too small it reports semantic marker error
+	 */
 	@Override
 	public void checkNofElements(final CompilationTimeStamp timestamp, final int nofElements, final boolean lessAllowed,
-			final boolean more_allowed, final boolean has_anyornone, final ILocateableNode locatable) {
+			final boolean moreAllowed, final boolean hasAnyornone, final ILocateableNode locatable) {
 		if (value == null) {
 			return;
 		}
@@ -169,10 +173,10 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 		if (Value_type.INTEGER_VALUE.equals(last.getValuetype()) && !last.getIsErroneous(timestamp)) {
 			BigInteger length = ((Integer_Value) last).getValueValue();
 			int compareResult = length.compareTo(BigInteger.valueOf(nofElements));
-			if (compareResult == -1 && !more_allowed) {
+			if (compareResult == -1 && !moreAllowed) {
 				final String message = MessageFormat.format(
-						"There are more ({0} {1}) elements than it is allowed by the length restriction ({2})",
-						has_anyornone ? "at least" : "", nofElements, length);
+						"There are more ({0}{1}) elements than it is allowed by the length restriction ({2})",
+						hasAnyornone ? "at least " : "", nofElements, length);
 				locatable.getLocation().reportSemanticError(message);
 			} else if (compareResult == 1 && !lessAllowed) {
 				locatable.getLocation().reportSemanticError(

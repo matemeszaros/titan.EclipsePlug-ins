@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.GlobalParser;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstantValues;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
@@ -51,7 +50,7 @@ public final class ContentAssistProcessor implements IContentAssistProcessor {
 
 		IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 
-		ASN1ReferenceParser refParser = ParserFactory.createASN1ReferenceParser();
+		ASN1ReferenceParser refParser = new ASN1ReferenceParser();
 		Reference ref = refParser.findReferenceForCompletion(file, offset, doc);
 
 		IPreferencesService prefs = Platform.getPreferencesService();

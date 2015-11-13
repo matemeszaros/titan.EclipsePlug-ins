@@ -1,11 +1,28 @@
+/******************************************************************************
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 package org.eclipse.titan.designer.AST.ASN1;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.IntStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenFactory;
+import org.antlr.v4.runtime.TokenSource;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IVisitableNode;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.NULL_Location;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Lexer;
+import org.eclipse.titan.designer.parsers.asn1parser.TokenWithIndexAndSubTokens;
 
 /**
  * Represents a block of tokens.
@@ -17,7 +34,7 @@ import org.eclipse.titan.designer.AST.Location;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class Block implements INamedNode, IVisitableNode {
+public final class Block implements INamedNode, IVisitableNode, Token, TokenSource {
 	/** the naming parent of the block. */
 	//private WeakReference<INamedNode> nameParent;
 
@@ -30,13 +47,36 @@ public abstract class Block implements INamedNode, IVisitableNode {
 	/** the naming parent of the block. */
 	private WeakReference<INamedNode> mNameParent;
 	
-	public Block() {
-	}
+	/**
+	 * The list of the tokens contained inside the actual block. There might
+	 * be sub-blocks in this list, but it does not contain its own '{' '}'
+	 * enclosing tokens
+	 * */
+	private List<Token> tokenList;
+	
+	private int index = 0;
 
-	public Block( final Location aLocation ) {
+	private Block( final Location aLocation ) {
 		this.mLocation = aLocation;
 	}
 
+	public Block(List<Token> tokenList, final Location location) {
+		this( location );
+		this.tokenList = tokenList;
+	}
+
+	public Block(final Token token) {
+		if (token instanceof TokenWithIndexAndSubTokens) {
+			tokenList = ((TokenWithIndexAndSubTokens) token).getSubTokens();
+			final IFile sourceFile = ((TokenWithIndexAndSubTokens) token).getSourceFile();
+			setLocation( new Location(sourceFile, token.getLine(), token.getStartIndex(), token.getStopIndex()) );
+		}
+		else {
+			setLocation( NULL_Location.INSTANCE );
+			tokenList = ((TokenWithIndexAndSubTokens) token).getSubTokens();
+		}
+	}
+	
 	/** @return the location of the block */
 	public Location getLocation() {
 		return mLocation;
@@ -88,6 +128,89 @@ public abstract class Block implements INamedNode, IVisitableNode {
 		return true;
 	}
 
-	abstract public int getTokenListSize();
+	public int getTokenListSize() {
+		return tokenList.size();
+	}
+	
+	public List<Token> getTokenList() {
+		return tokenList;
+	}
 
+	@Override
+	public int getCharPositionInLine() {
+		return tokenList.get(0).getCharPositionInLine();
+	}
+
+	@Override
+	public CharStream getInputStream() {
+		assert(false);
+		return null;
+	}
+
+	@Override
+	public int getLine() {
+		return tokenList.get(0).getLine();
+	}
+
+	@Override
+	public int getChannel() {
+		return Token.DEFAULT_CHANNEL;
+	}
+
+	@Override
+	public int getStartIndex() {
+		return tokenList.get(0).getStartIndex();
+	}
+
+	@Override
+	public int getStopIndex() {
+		return tokenList.get(tokenList.size() - 1).getStopIndex();
+	}
+
+	@Override
+	public String getText() {
+		StringBuilder text = new StringBuilder();
+		for (Token t : tokenList) {
+			text.append(t.getText());
+		}
+		return text.toString();
+	}
+
+	@Override
+	public int getTokenIndex() {
+		assert(false);
+		return -1;
+	}
+
+	@Override
+	public TokenSource getTokenSource() {
+		assert(false);
+		return null;
+	}
+
+	@Override
+	public int getType() {
+		return Asn1Lexer.BLOCK;
+	}
+
+	@Override
+	public String getSourceName() {
+		return IntStream.UNKNOWN_SOURCE_NAME;
+	}
+
+	@Override
+	public TokenFactory<?> getTokenFactory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Token nextToken() {
+		return tokenList.get(index++);
+	}
+
+	@Override
+	public void setTokenFactory(TokenFactory<?> arg0) {
+		assert(false);
+	}
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,7 +56,6 @@ import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.FileSaveTracker;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.GlobalProjectStructureTracker;
-import org.eclipse.titan.designer.parsers.ParserFactory;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -109,7 +108,7 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 	};
 
 	private static class ASN1OccurrenceMarker extends OccurencesMarker {
-		private final IReferenceParser referenceParser = ParserFactory.createASN1ReferenceParser();
+		private final IReferenceParser referenceParser = new ASN1ReferenceParser();
 
 		public ASN1OccurrenceMarker(final ITextEditor editor) {
 			super(editor);

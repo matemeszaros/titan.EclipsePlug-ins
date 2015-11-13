@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@ package org.eclipse.titan.designer.AST.ASN1.Object;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
@@ -19,12 +22,16 @@ import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Object;
+import org.eclipse.titan.designer.AST.ASN1.Block;
 import org.eclipse.titan.designer.AST.ASN1.IObjectSet_Element;
 import org.eclipse.titan.designer.AST.ASN1.ObjectSet;
 import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
+import org.eclipse.titan.designer.parsers.asn1parser.BlockLevelTokenStreamTracker;
 
 /**
  * ObjectSet definition.
@@ -32,18 +39,45 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public abstract class ObjectSet_definition extends ObjectSet implements IReferenceChainElement {
+public final class ObjectSet_definition extends ObjectSet implements IReferenceChainElement {
+
+	private final Block mBlock;
 
 	private ArrayList<IObjectSet_Element> objectSetElements;
 	protected ASN1Objects objects;
 
 	public ObjectSet_definition() {
 		setObjectSetElements(new ArrayList<IObjectSet_Element>());
+		mBlock = null;
+	}
+
+	public ObjectSet_definition(final Block aBlock) {
+		setObjectSetElements(new ArrayList<IObjectSet_Element>());
+		this.mBlock = aBlock;
 	}
 
 	public ObjectSet_definition(final ASN1Objects objects) {
-		this();
+		setObjectSetElements(new ArrayList<IObjectSet_Element>());
+		mBlock = null;
 		this.objects = objects;
+	}
+
+	public ObjectSet_definition newInstance() {
+		ObjectSet_definition temp;
+		if (null != mBlock) {
+			temp = new ObjectSet_definition(mBlock);
+		} else if (null != objects) {
+			temp = new ObjectSet_definition(objects);
+		} else {
+			temp = new ObjectSet_definition();
+		}
+
+		for (int i = 0; i < getObjectSetElements().size(); i++) {
+			temp.addObjectSetElement(getObjectSetElements().get(i).newOseInstance());
+		}
+		temp.getObjectSetElements().trimToSize();
+
+		return temp;
 	}
 
 	public final ArrayList<IObjectSet_Element> getObjectSetElements() {
@@ -105,6 +139,29 @@ public abstract class ObjectSet_definition extends ObjectSet implements IReferen
 	}
 
 	@Override
+	public void check(final CompilationTimeStamp timestamp) {
+		if (null != lastTimeChecked && !lastTimeChecked.isLess(timestamp)) {
+			return;
+		}
+
+		isErroneous = false;
+
+		if (null != mBlock) {
+			parseBlockObjectSetSpecifications();
+		}
+
+		final ObjectSetElementVisitor_checker checker = new ObjectSetElementVisitor_checker(timestamp, location, myGovernor);
+		getObjectSetElements().trimToSize();
+		for (IObjectSet_Element element : getObjectSetElements()) {
+			element.accept(checker);
+		}
+
+		lastTimeChecked = timestamp;
+
+		createObjects(true);
+	}
+
+	@Override
 	public final ObjectSet_definition getRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		if (1 != getObjectSetElements().size()) {
 			return this;
@@ -117,7 +174,7 @@ public abstract class ObjectSet_definition extends ObjectSet implements IReferen
 
 		final boolean newChain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (null == referenceChain) {
+		if (newChain) {
 			temporalReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		} else {
 			temporalReferenceChain = referenceChain;
@@ -158,7 +215,37 @@ public abstract class ObjectSet_definition extends ObjectSet implements IReferen
 		v.visitObjectSet(this, false);
 	}
 
-	abstract protected void parseBlockObjectSetSpecifications();
+	private void parseBlockObjectSetSpecifications() {
+		ObjectSet_definition temporalDefinition = null;
+		if (mBlock != null) {
+			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+			if (parser != null) {
+				temporalDefinition = parser.pr_special_ObjectSetSpec().definition;
+				//internalIndex += parser.nof_consumed_tokens();
+				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				if (null != errors && !errors.isEmpty()) {
+					for (int i = 0; i < errors.size(); i++) {
+						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+								IMarker.SEVERITY_ERROR);
+					}
+				}
+			}
+		}
+
+		if (null == temporalDefinition) {
+			isErroneous = true;
+			return;
+		}
+
+		temporalDefinition.getObjectSetElements().trimToSize();
+		for (int i = 0; i < temporalDefinition.getObjectSetElements().size(); i++) {
+			addObjectSetElement(temporalDefinition.getObjectSetElements().get(i));
+		}
+		temporalDefinition.setObjectSetElements(null);
+		getObjectSetElements().trimToSize();
+
+		setMyScope(getMyScope());
+	}
 	
 	protected final void createObjects(final boolean force) {
 		if (null != objects && !force) {

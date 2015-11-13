@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.wizards.projectFormat;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -15,6 +17,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.titan.designer.preferences.PreferenceConstants;
+import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
 /**
  * @author Kristof Szabados
@@ -31,15 +35,31 @@ class TITANProjectExportOptionsPage extends WizardPage {
 	private Button saveDefaultValues;
 	private boolean isSaveDefaultValues = false;
 	private Button packAllProjectsIntoOne;
-	private boolean ispackAllProjectsIntoOne = false;
+	private boolean isPackAllProjectsIntoOne = false;
+	private IPreferencesService preferenceService = null;
 
 	public TITANProjectExportOptionsPage() {
 		super(TITLE);
+		preferenceService = Platform.getPreferencesService();
+		setExportPreferences();
+	}
+	
+	private void setExportPreferences(){
+		isExcludedWorkingDirectoryContents =
+				preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.EXPORT_EXCLUDE_WORKING_DIRECTORY_CONTENTS, true, null);
+		isExcludedDotResources =
+				preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.EXPORT_EXCLUDE_DOT_RESOURCES, true, null);
+		isExcludeLinkedContents =
+				preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.EXPORT_EXCLUDE_LINKED_CONTENTS, true, null);
+		isSaveDefaultValues =
+				preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.EXPORT_SAVE_DEFAULT_VALUES, true, null);
+		isPackAllProjectsIntoOne = 
+				preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.EXPORT_PACK_ALL_PROJECTS_INTO_ONE, true, null);
 	}
 
 	@Override
 	public String getDescription() {
-		return "Fine tune the ammount of data saved about the project";
+		return "Fine tune the amount of data saved about the project";
 	}
 
 	@Override
@@ -63,8 +83,8 @@ class TITANProjectExportOptionsPage extends WizardPage {
 		return isSaveDefaultValues;
 	}
 
-	public boolean ispackAllProjectsIntoOne() {
-		return ispackAllProjectsIntoOne;
+	public boolean isPackAllProjectsIntoOne() {
+		return isPackAllProjectsIntoOne;
 	}
 
 	@Override
@@ -110,7 +130,7 @@ class TITANProjectExportOptionsPage extends WizardPage {
 		});
 
 		saveDefaultValues = new Button(pageComposite, SWT.CHECK);
-		saveDefaultValues.setText("Save also the default values");
+		saveDefaultValues.setText("Save default values");
 		saveDefaultValues.setEnabled(true);
 		saveDefaultValues.setSelection(isSaveDefaultValues);
 		saveDefaultValues.addSelectionListener(new SelectionAdapter() {
@@ -123,11 +143,11 @@ class TITANProjectExportOptionsPage extends WizardPage {
 		packAllProjectsIntoOne = new Button(pageComposite, SWT.CHECK);
 		packAllProjectsIntoOne.setText("Pack all data of related projects in this descriptor");
 		packAllProjectsIntoOne.setEnabled(true);
-		packAllProjectsIntoOne.setSelection(ispackAllProjectsIntoOne);
+		packAllProjectsIntoOne.setSelection(isPackAllProjectsIntoOne);
 		packAllProjectsIntoOne.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				ispackAllProjectsIntoOne = packAllProjectsIntoOne.getSelection();
+				isPackAllProjectsIntoOne = packAllProjectsIntoOne.getSelection();
 			}
 		});
 

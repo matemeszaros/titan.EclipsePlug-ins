@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -39,6 +40,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.Location;
@@ -54,9 +56,12 @@ import org.eclipse.titan.designer.editors.EditorTracker;
 import org.eclipse.titan.designer.editors.FoldingSupport;
 import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
 import org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPEditor;
+import org.eclipse.titan.designer.parsers.asn1parser.ASN1Analyzer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITtcn3FileReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Analyzer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3FileReparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.ui.console.MessageConsoleStream;
@@ -68,7 +73,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
  * 
  * @author Kristof Szabados
  * */
-public abstract class ProjectSourceSyntacticAnalyzer {
+public final class ProjectSourceSyntacticAnalyzer {
 	private final IProject project;
 	private final ProjectSourceParser sourceParser;
 
@@ -336,6 +341,7 @@ public abstract class ProjectSourceSyntacticAnalyzer {
 					try {
 						((TTCN3Module) module).updateSyntax(reparser, sourceParser);
 						reparser.updateLocation(((TTCN3Module) module).getLocation());
+						MarkerHandler.markAllOnTheFlyMarkersForRemoval(file, reparser.getDamageStart(), reparser.getDamageEnd());
 					} catch (ReParseException e) {
 						reparser.fullAnalysysNeeded = true;
 						syntacticallyOutdated = true;
@@ -351,12 +357,14 @@ public abstract class ProjectSourceSyntacticAnalyzer {
 
 						reparser.maxDamage();
 						
-						ITtcn3FileReparser r = ParserFactory.createTtcn3FileReparser( reparser, file, sourceParser, fileMap, uptodateFiles, highlySyntaxErroneousFiles );
+						ITtcn3FileReparser r = new Ttcn3FileReparser( reparser, file, sourceParser, fileMap, uptodateFiles, highlySyntaxErroneousFiles );
 						syntacticallyOutdated = r.parse();
 
 					}
 
 					MarkerHandler.removeAllOnTheFlySyntacticMarkedMarkers(file);
+					//update the position of the markers located after the damaged region
+					MarkerHandler.updateMarkers(file, reparser.getFirstLine(), reparser.getLineShift(), reparser.getDamageEnd(), reparser.getShift());
 				} catch (Exception e) {
 					// This catch is extremely important, as
 					// it is supposed to protect the project
@@ -832,7 +840,7 @@ public abstract class ProjectSourceSyntacticAnalyzer {
 	 *         module in the list of modules, in the post-analyzes step.
 	 * */
 	private TemporalParseData fileBasedTTCN3Analysis(final IFile file) {
-		return fileBasedGeneralAnalysis(file, ParserFactory.createTTCN3Analyzer());
+		return fileBasedGeneralAnalysis(file, new TTCN3Analyzer());
 	}
 
 	/**
@@ -845,7 +853,7 @@ public abstract class ProjectSourceSyntacticAnalyzer {
 	 *         module in the list of modules, in the post-analyzes step.
 	 * */
 	private TemporalParseData fileBasedASN1Analysis(final IFile file) {
-		return fileBasedGeneralAnalysis(file, ParserFactory.createASN1Analyzer());
+		return fileBasedGeneralAnalysis(file, new ASN1Analyzer());
 	}
 
 	/**
@@ -943,7 +951,19 @@ public abstract class ProjectSourceSyntacticAnalyzer {
 	 * @param aAnalyzer analyzer, that collected the errors
 	 * @return true if it had parse errors
 	 */
-	protected abstract boolean processParserErrors( final IFile aFile, final ISourceAnalyzer aAnalyzer );
+	private boolean processParserErrors(final IFile aFile, ISourceAnalyzer aAnalyzer) {
+		List<SyntacticErrorStorage> errors = null;
+
+		errors = aAnalyzer.getErrorStorage();
+		
+		if (errors != null) {
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlySyntacticMarker(aFile, errors.get(i), IMarker.SEVERITY_ERROR);
+			}
+		}
+
+		return errors != null && !errors.isEmpty();
+	}
 
 	/**
 	 * Uses the parsed data structure to decide if the module found can be

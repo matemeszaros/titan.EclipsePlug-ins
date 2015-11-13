@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (c) 2000-2014 Ericsson Telecom AB
+# Copyright (c) 2000-2015 Ericsson Telecom AB
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License v1.0
 # which accompanies this distribution, and is available at
@@ -96,9 +96,9 @@ It modifies the source, you need to rebuild org.eclipse.titan.common plug-in pro
 
 4.2. BUILDING TITAN PLUG-INS FROM COMMAND LINE WITH ANT
 
-Building must be run from git/titan_eclipse/automatic_build
+Building must be run from <git repository>/titan_eclipse/automatic_build
 
-In general
+In general building from command line is done with this command:
 ant \
 -f build_main.xml \
 -D<environment value definition 1> \
@@ -138,7 +138,7 @@ zip.dir: output directory for zip package that contains all the plug-ins (option
 These variables can be set by editing <git repository>/titan_eclipse/automatic_build/build_config.xml
 and also in the command.
 
-4.2.1. A working example with all of the dependencies (if all the values are set corretly, it will work with any target):
+4.2.1. A working example with all of the dependencies (if all the values are set correctly, it will work with any target):
 
 LIB_DIR_LOCAL=$HOME/lib
 LIB_DIR_GIT=$HOME/git/titan_playground/jar

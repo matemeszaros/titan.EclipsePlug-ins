@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 
 		try {
 			char c;
-			for (startPos = caretPos; startPos >= 0; startPos--) {
+			for (startPos = caretPos - 1; startPos >= 0; startPos--) {
 				c = doc.getChar(startPos);
 				if (c != '_' && !Character.isLetterOrDigit(c)) {
 					break;

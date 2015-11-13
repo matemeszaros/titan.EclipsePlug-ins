@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,6 +125,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			isErroneous = true;
 			return;
 		}
+
 		if (templateInstance.getType() == null && templateInstance.getDerivedReference() == null && template.isValue(timestamp)) {
 			IValue value = template.getValue();
 			final IType gov = template.getMyGovernor();
@@ -193,9 +194,9 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			return;
 		}
 
+		//TODO: Is the next part necessary ???
 		temp.setMyGovernor(governor);
-		governor.checkThisValue(timestamp, temp, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false, false, true,
-				false, false));
+		governor.checkThisValue(timestamp, temp, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE, true, true, true, true, false));
 
 		IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		if (ArgumentType.Value.equals(internalLogArgument.getArgumentType()) && !temp.isUnfoldable(timestamp)) {

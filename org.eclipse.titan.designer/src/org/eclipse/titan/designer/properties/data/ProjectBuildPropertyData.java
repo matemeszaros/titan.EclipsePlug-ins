@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2014 Ericsson Telecom AB
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,18 @@ public final class ProjectBuildPropertyData {
 	private static final String[] MAKEFILE_TAGS = new String[] { "generateMakefile", "generateInternalMakefile", "symboliclinklessBuild" };
 	private static final String[] MAKEFILE_DEFAULTS = new String[] { TRUE_STRING, TRUE_STRING, TRUE_STRING };
 
+	// TODO: The following attributes are not saved yet into .TITAN_properties (only by Eclipse internal persistent storage)
+	/**
+	 * Stores the URI string of the tpd file which the project is loaded from
+	 */
 	public static final String LOAD_LOCATION = "loadLocation";
+	/**
+	 * Stores the state if the project was already exported to tpd from the
+	 * current workspace It is used at automatic export. In that case the first
+	 * automatic export can start with the TITANProjectExportWizard if it is
+	 * ordered. True if it is exported, otherwise false.
+	 */
+	public static final String ALREADY_EXPORTED = "alreadyExported";
 
 	private ProjectBuildPropertyData() {
 		// Do nothing
@@ -60,7 +71,7 @@ public final class ProjectBuildPropertyData {
 	 * Remove the TITAN provided attributes from a project.
 	 * 
 	 * @param project
-	 *                the project to remove the attributes from.
+	 *            the project to remove the attributes from.
 	 * */
 	public static void removeTITANAttributes(final IProject project) {
 		try {
@@ -76,15 +87,14 @@ public final class ProjectBuildPropertyData {
 	}
 
 	/**
-	 * Creates an XML tree from the Makefile related settings of the
-	 * project.
+	 * Creates an XML tree from the Makefile related settings of the project.
 	 * 
 	 * @see ProjectFileHandler#saveProjectSettings()
 	 * 
 	 * @param document
-	 *                the document used for creating the tree nodes
+	 *            the document used for creating the tree nodes
 	 * @param project
-	 *                the project to work on
+	 *            the project to work on
 	 * 
 	 * @return the created XML tree's root node
 	 * */
@@ -100,8 +110,8 @@ public final class ProjectBuildPropertyData {
 					makefileSettings.appendChild(node);
 				}
 			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(
-						"While saving property `" + MAKEFILE_PROPERTIES[i] + "' of `" + project.getName() + "'", e);
+				ErrorReporter.logExceptionStackTrace("While saving property `" + MAKEFILE_PROPERTIES[i] + "' of `" + project.getName()
+						+ "'", e);
 			}
 		}
 
@@ -113,18 +123,17 @@ public final class ProjectBuildPropertyData {
 	}
 
 	/**
-	 * Loads and sets the Makefile related settings contained in the XML
-	 * tree for this project.
+	 * Loads and sets the Makefile related settings contained in the XML tree
+	 * for this project.
 	 * 
 	 * @see ProjectFileHandler#loadProjectSettings()
 	 * 
 	 * @param root
-	 *                the root of the subtree containing Makefile related
-	 *                attributes
+	 *            the root of the subtree containing Makefile related attributes
 	 * @param project
-	 *                the project to set the found attributes on.
+	 *            the project to set the found attributes on.
 	 * @param changedResources
-	 *                the set of resources whose attributes have changed
+	 *            the set of resources whose attributes have changed
 	 * */
 	public static void loadMakefileSettings(final Node root, final IProject project, final Set<IResource> changedResources) {
 		final NodeList resourceList = root.getChildNodes();
@@ -157,8 +166,8 @@ public final class ProjectBuildPropertyData {
 					project.setPersistentProperty(qualifiedName, newValue);
 				}
 			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(
-						"While loading property `" + MAKEFILE_PROPERTIES[i] + "' of `" + project.getName() + "'", e);
+				ErrorReporter.logExceptionStackTrace("While loading property `" + MAKEFILE_PROPERTIES[i] + "' of `" + project.getName()
+						+ "'", e);
 			}
 		}
 	}
@@ -167,17 +176,17 @@ public final class ProjectBuildPropertyData {
 	 * Copies the project information related to Makefile settings from the
 	 * source node to the target node.
 	 * 
-	 * @see ProjectFileHandler#copyProjectInfo(Node, Node, IProject,
-	 *      TreeMap, TreeMap, boolean)
+	 * @see ProjectFileHandler#copyProjectInfo(Node, Node, IProject, TreeMap,
+	 *      TreeMap, boolean)
 	 * 
 	 * @param source
-	 *                the node used as the source of the information.
+	 *            the node used as the source of the information.
 	 * @param document
-	 *                the document to contain the result, used to create the
-	 *                XML nodes.
+	 *            the document to contain the result, used to create the XML
+	 *            nodes.
 	 * @param saveDefaultValues
-	 *                whether the default values should be forced to be
-	 *                added to the output.
+	 *            whether the default values should be forced to be added to the
+	 *            output.
 	 * 
 	 * @return the resulting target node.
 	 * */
@@ -217,15 +226,14 @@ public final class ProjectBuildPropertyData {
 	}
 
 	/**
-	 * Creates an XML tree from the local build related settings of the
-	 * project.
+	 * Creates an XML tree from the local build related settings of the project.
 	 * 
 	 * @see ProjectFileHandler#saveProjectSettings()
 	 * 
 	 * @param document
-	 *                the document used for creating the tree nodes
+	 *            the document used for creating the tree nodes
 	 * @param project
-	 *                the project to work on
+	 *            the project to work on
 	 * 
 	 * @return the created XML tree's root node
 	 * */
@@ -234,18 +242,17 @@ public final class ProjectBuildPropertyData {
 	}
 
 	/**
-	 * Loads and sets the local build related settings contained in the XML
-	 * tree for this project.
+	 * Loads and sets the local build related settings contained in the XML tree
+	 * for this project.
 	 * 
 	 * @see ProjectFileHandler#loadProjectSettings()
 	 * 
 	 * @param node
-	 *                the root of the subtree containing Makefile related
-	 *                attributes
+	 *            the root of the subtree containing Makefile related attributes
 	 * @param project
-	 *                the project to set the found attributes on.
+	 *            the project to set the found attributes on.
 	 * @param changedResources
-	 *                the set of resources whose attributes have changed
+	 *            the set of resources whose attributes have changed
 	 * */
 	public static void loadLocalBuildSettings(final Node node, final IProject project, final Set<IResource> changedResources) {
 		changedResources.add(project);
@@ -254,24 +261,65 @@ public final class ProjectBuildPropertyData {
 	}
 
 	/**
-	 * Copies the project information related to local build settings from
-	 * the source node to the target node.
+	 * Copies the project information related to local build settings from the
+	 * source node to the target node.
 	 * 
-	 * @see ProjectFileHandler#copyProjectInfo(Node, Node, IProject,
-	 *      TreeMap, TreeMap, boolean)
+	 * @see ProjectFileHandler#copyProjectInfo(Node, Node, IProject, TreeMap,
+	 *      TreeMap, boolean)
 	 * 
 	 * @param source
-	 *                the node used as the source of the information.
+	 *            the node used as the source of the information.
 	 * @param document
-	 *                the document to contain the result, used to create the
-	 *                XML nodes.
+	 *            the document to contain the result, used to create the XML
+	 *            nodes.
 	 * @param saveDefaultValues
-	 *                whether the default values should be forced to be
-	 *                added to the output.
+	 *            whether the default values should be forced to be added to the
+	 *            output.
 	 * 
 	 * @return the resulting target node.
 	 * */
 	public static Element copyLocalBuildSettings(final Node source, final Document document, final boolean saveDefaultValues) {
 		return MakeAttributesData.copyLocalBuildSettings(source, document, saveDefaultValues);
 	}
+
+	// ===== Get/Set functions ====
+	/**
+	 * Sets  "loadLoacation" of the `project' for 'value`. No semantic check on value
+	 * 
+	 * @param project
+	 * @param value
+	 */
+	public static void setLoadLocation(IProject project, String value) {
+		if (project == null || value == null)
+			return;
+
+		try {
+			project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.LOAD_LOCATION),
+					value);
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace("While setting `loadLocation' for project `" + project.getName() + "'", e);
+		}
+
+	}
+
+	/**
+	 * Sets the status flag "alreadyExported" of the `project' for 'value`
+	 * 
+	 * @param project
+	 * @param value
+	 */
+	public static void setProjectAlreadyExported(IProject project, boolean value) {
+		if (project == null)
+			return;
+
+		String exported = value ? ProjectBuildPropertyData.TRUE_STRING : ProjectBuildPropertyData.FALSE_STRING;
+		try {
+			project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.ALREADY_EXPORTED),
+					exported);
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace("While setting `alreadyExported' for project `" + project.getName() + "'", e);
+		}
+
+	}
+
 }
