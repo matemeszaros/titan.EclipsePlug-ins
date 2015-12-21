@@ -13,7 +13,7 @@ Java 1.6 or higher, recommended: 1.7
 ANTLR 4 SDK 0.3.5
 ANTLR Runtime 4.3 or higher, recommended: 4.3, available at Eclipse Orbit
 Ant 1.9.2 or higher 
-  NOTE: Build will not work below 1.8 for sure!
+  NOTE: For Ant version below 1.8, the build will fail
 Eclipse Standard or Java 3.6 (Helios) or higher, recommended: 4.4 (Luna)
 
 ----------------------
@@ -26,9 +26,8 @@ Eclipse -> Help -> Install New Software...
 ANTLR
 http://antlreclipse.sourceforge.net/updates/
 
-Titan plug-ins
-from the Titan update site
-TODO: add URL
+Titan plug-ins can be obtained from the Titan download site:
+https://projects.eclipse.org/projects/tools.titan/downloads
 
 Set the new JDK in Window -> Preferences -> Java -> Installed JREs
 
@@ -66,33 +65,43 @@ It modifies the source, you need to rebuild org.eclipse.titan.common plug-in pro
 
 4.1. EXTERNAL JAR DEPENDENCIES
 
-  antlr-4.3-complete.jar 
+  - antlr-4.3-complete.jar 
     available at Eclipse Orbit
-    http://download.eclipse.org/tools/orbit/downloads/drops/S20150519210750/
-    NOTE: The drop version changes very often.
-  junit.jar (JUnit4)
+    http://download.eclipse.org/tools/orbit/downloads/
+    NOTE: Use a recommended or a stable repository; the drop version of the latter changes often.
+    
+  - junit.jar (JUnit4)
+    available at Eclipse Orbit
+    http://download.eclipse.org/tools/orbit/downloads/
+  
 
-  These jars are needed by help.plugin to create pdf documentation
+  The following jars are needed by help.plugin to create pdf documentation;
     PDF documentation can be created only inside Ericcson network
-    doc2pdf.jar (optional, pdf will not be created if file not found at this location)
-      For Ericsson users only: Download the plugin from http://ttcn.ericsson.se/download/third_party/ OR write to any contact person at Project Titan
-    ant-contrib.jar (mandatory if doc2pdf.jar exists)
+  -  doc2pdf.jar (optional, pdf will not be created if file not found at this location)
+      For Ericsson users only: Download the plugin from http://ttcn.ericsson.se/download/third_party/ 
+      OR write to any contact person at Project Titan
+  -  ant-contrib.jar (mandatory if doc2pdf.jar exists)
 
-  These jars are needed by titanium.plugin
-    org.apache.commons.collections15/collections-generic-4.01.jar
-      Download Commons-Collections from http://commons.apache.org/proper/commons-collections/
-      OR for Ericsson users only: Download the Jung plugin from  http://ttcn.ericsson.se/download/third_party/commons.collections.zip 
-      OR for users outside Ericsson: Write to any contact person on site https://projects.eclipse.org/projects/tools.titan and ask the commons.collections.zip .
-    edu.uci.ics.jung/jung-graph-impl-2.0.1.jar
-    edu.uci.ics.jung/jung-visualization-2.0.1.jar
-    edu.uci.ics.jung/jung-algorithms-2.0.1.jar
-    edu.uci.ics.jung/jung-io-2.0.1.jar
+  The following jars are needed by the  Titanium plugin:
+  
+  -  org.apache.commons.collections15/collections-generic-4.01.jar
+      For Ericsson users only: Download the Jung plugin from  http://ttcn.ericsson.se/download/third_party/commons.collections.zip 
+      OR for users outside Ericsson: 
+      Dwonload the plug-in from https://www.eclipse.org/downloads/download.php?file=/titan/commons.collections.zip
+      
+  Jung 2.0.1    
+  -  edu.uci.ics.jung/jung-graph-impl-2.0.1.jar
+  -  edu.uci.ics.jung/jung-visualization-2.0.1.jar
+  -  edu.uci.ics.jung/jung-algorithms-2.0.1.jar
+  -  edu.uci.ics.jung/jung-io-2.0.1.jar
+   
       For Ericsson users only: Download the Jung plugin from http://ttcn.ericsson.se/download/third_party/edu.uci.ics.jung.zip 
-      OR for users outside Ericsson: Write to any contact person on site https://projects.eclipse.org/projects/tools.titan and ask the jung.zip  
-    org.apache.poi_3.9.0.v201405241750.jar
+      OR for users outside Ericsson: 
+      https://www.eclipse.org/downloads/download.php?file=/titan/edu.uci.ics.jung.zip
+      
+  -  org.apache.poi_3.9.0.v201405241750.jar
       available at Eclipse Orbit
-      http://download.eclipse.org/tools/orbit/downloads/drops/S20150519210750/
-      NOTE: The drop version changes very often.
+      http://download.eclipse.org/tools/orbit/downloads
 
 4.2. BUILDING TITAN PLUG-INS FROM COMMAND LINE WITH ANT
 
