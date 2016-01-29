@@ -62,7 +62,7 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 	 * A hashset of imported symbol names which were imported from multiple
 	 * locations.
 	 */
-	protected final Set<String> pluralImportedSymlos = new HashSet<String>();
+	protected final Set<String> pluralImportedSymbols = new HashSet<String>();
 
 	private CompilationTimeStamp lastImportCheckTimeStamp;
 	private IProject project;
@@ -164,7 +164,7 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 
 		importedModules_map.clear();
 		singularImportedSymbols_map.clear();
-		pluralImportedSymlos.clear();
+		pluralImportedSymbols.clear();
 
 		final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(project);
 		if (null == parser) {
@@ -218,9 +218,9 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 				if (singularImportedSymbols_map.containsKey(name)) {
 					if (!referredModule.equals(singularImportedSymbols_map.get(name))) {
 						singularImportedSymbols_map.remove(name);
-						pluralImportedSymlos.add(name);
+						pluralImportedSymbols.add(name);
 					}
-				} else if (!pluralImportedSymlos.contains(name)) {
+				} else if (!pluralImportedSymbols.contains(name)) {
 					singularImportedSymbols_map.put(name, referredModule);
 				}
 			}
@@ -326,7 +326,7 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 	 *         otherwise.
 	 * */
 	public boolean hasImportedSymbolWithId(final Identifier identifier) {
-		return singularImportedSymbols_map.containsKey(identifier.getName()) || pluralImportedSymlos.contains(identifier.getName());
+		return singularImportedSymbols_map.containsKey(identifier.getName()) || pluralImportedSymbols.contains(identifier.getName());
 	}
 
 	/**

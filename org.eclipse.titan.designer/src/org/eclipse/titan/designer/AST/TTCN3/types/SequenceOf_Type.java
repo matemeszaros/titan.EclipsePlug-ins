@@ -100,7 +100,14 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 		}
 
 		if (info == null || noStructuredTypeCompatibility) {
-			return this == lastOtherType;
+			//There is another chance to be compatible:
+			//If records of/sets of are strongly compatible, then the records of/sets of are compatible
+			IType last = getTypeRefdLast(timestamp);
+			if(! last.isStronglyCompatible(timestamp, lastOtherType, info, leftChain, rightChain)) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 
 		switch (lastOtherType.getTypetype()) {
@@ -314,6 +321,56 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 		default:
 			return false;
 		}
+	}
+	
+	@Override
+	public boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
+			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain) {
+
+		IType lastOtherType = otherType.getTypeRefdLast(timestamp);
+		if (Type_type.TYPE_SEQUENCE_OF.equals(lastOtherType.getTypetype())) {
+			IType oftOther = ((SequenceOf_Type) lastOtherType).getOfType();
+			IType oft = getOfType().getTypeRefdLast(timestamp); // type of the
+																// fields 
+			if (oft != null && oftOther != null) {
+				// For basic types pre-generated seq/set of is applied in titan:
+				switch (oft.getTypetype()) {
+				case TYPE_BOOL:
+				case TYPE_BITSTRING:
+				case TYPE_OCTETSTRING:
+				case TYPE_INTEGER:
+				case TYPE_REAL:
+				case TYPE_CHARSTRING:
+				case TYPE_HEXSTRING:
+				case TYPE_UCHARSTRING:
+				case TYPE_INTEGER_A:
+				case TYPE_ASN1_ENUMERATED:
+				case TYPE_BITSTRING_A:
+				case TYPE_UTF8STRING:
+				case TYPE_NUMERICSTRING:
+				case TYPE_PRINTABLESTRING:
+				case TYPE_TELETEXSTRING:
+				case TYPE_VIDEOTEXSTRING:
+				case TYPE_IA5STRING:
+				case TYPE_GRAPHICSTRING:
+				case TYPE_VISIBLESTRING:
+				case TYPE_GENERALSTRING:
+				case TYPE_UNIVERSALSTRING:
+				case TYPE_BMPSTRING:
+				case TYPE_UNRESTRICTEDSTRING:
+				case TYPE_UTCTIME:
+				case TYPE_GENERALIZEDTIME:
+				case TYPE_OBJECTDESCRIPTOR:
+					if (oft.isStronglyCompatible(timestamp, oftOther, info, leftChain, rightChain)) {
+						return true;
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override

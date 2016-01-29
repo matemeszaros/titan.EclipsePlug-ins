@@ -92,6 +92,9 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 		lastTimeChecked = timestamp;
 
 		Integer_Type integer = new Integer_Type();
+		if( value == null) { 
+			return; 
+		}
 		value.setMyGovernor(integer);
 		IValue last = integer.checkThisValueRef(timestamp, value);
 		integer.checkThisValue(timestamp, last, new ValueCheckingOptions(expected_value, false, false, true, false, false));
@@ -159,11 +162,6 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 			final boolean moreAllowed, final boolean hasAnyornone, final ILocateableNode locatable) {
 		if (value == null) {
 			return;
-		}
-
-		if (locatable instanceof CharString_Pattern_Template ||
-			locatable instanceof UnivCharString_Pattern_Template) {
-			return; // CharString Pattern Template will not be checked to No of elements
 		}
 
 		IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);

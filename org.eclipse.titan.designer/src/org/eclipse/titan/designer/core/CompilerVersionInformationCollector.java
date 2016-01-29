@@ -199,7 +199,6 @@ public final class CompilerVersionInformationCollector {
 		try {
 			proc = pb.start();
 		} catch (IOException e) {
-			//TITANConsole.getConsole().newMessageStream().println(ExternalTitanAction.EXECUTION_FAILED);
 			TITANConsole.println(ExternalTitanAction.EXECUTION_FAILED);
 			ErrorReporter.logExceptionStackTrace(e);
 			return null;
@@ -217,7 +216,6 @@ public final class CompilerVersionInformationCollector {
 					return null;
 				}
 				if (reportDebugInformation) {
-					//TITANConsole.getConsole().newMessageStream().println(line);
 					TITANConsole.println(line);
 				}
 				line = stdout.readLine();
@@ -225,7 +223,6 @@ public final class CompilerVersionInformationCollector {
 			int exitval = proc.waitFor();
 			if (exitval != 0) {
 				if (reportDebugInformation) {
-					//TITANConsole.getConsole().newMessageStream().println(FAILURE + exitval);
 					TITANConsole.println(FAILURE + exitval);
 				}
 				proc.destroy();
@@ -233,7 +230,6 @@ public final class CompilerVersionInformationCollector {
 			}
 
 			if (reportDebugInformation) {
-				//TITANConsole.getConsole().newMessageStream().println(SUCCESS);
 				TITANConsole.println(SUCCESS);
 			}
 		} catch (IOException e) {

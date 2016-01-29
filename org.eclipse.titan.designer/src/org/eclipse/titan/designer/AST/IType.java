@@ -165,8 +165,8 @@ public interface IType extends IGovernor, IIdentifierContainer, IVisitableNode, 
 		RAW,
 		/** text encoding. */
 		TEXT,
-    /** json encoding. */
-    JSON
+		/** json encoding. */
+		JSON
 	}
 
 	/**
@@ -568,6 +568,25 @@ public interface IType extends IGovernor, IIdentifierContainer, IVisitableNode, 
 	 * @return true if they are compatible, false otherwise.
 	 * */
 	boolean isCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
+			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain);
+	
+	/**
+	 * Returns whether this type is strongly compatible with type that is exactly has the same type and they are both base types
+	 * <p>
+	 * 
+	 * @param timestamp
+	 *                the time stamp of the actual semantic check cycle.
+	 * @param otherType
+	 *                the type to check against.
+	 * @param info
+	 *                the type compatibility information.
+	 * @param leftChain
+	 *                to detect type recursion on the left side.
+	 * @param rightChain
+	 *                to detect type recursion on the right side.
+	 * @return true if they are compatible, false otherwise.
+	 * */
+	boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
 			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain);
 
 	/**

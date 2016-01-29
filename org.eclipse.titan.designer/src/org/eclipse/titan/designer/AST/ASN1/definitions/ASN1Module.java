@@ -262,7 +262,7 @@ public final class ASN1Module extends Module {
 				module = imports.singularImportedSymbols_map.get(id.getName());
 				moduleId = module.getIdentifier();
 				imports.getImportedModuleById(moduleId).setUsedForImportation();
-			} else if (imports.pluralImportedSymlos.contains(id.getName())) {
+			} else if (imports.pluralImportedSymbols.contains(id.getName())) {
 				id.getLocation().reportSemanticError(
 						MessageFormat.format(MORESYMBOLS, id.getDisplayName(), identifier.getDisplayName()));
 				return null;

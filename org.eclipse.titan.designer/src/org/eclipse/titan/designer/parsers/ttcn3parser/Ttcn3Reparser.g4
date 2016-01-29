@@ -133,7 +133,7 @@ pr_reparse_ImportDef [Group parent_group, List<ImportModule> all_imports, List<I
 )
 {	if ( impmod != null ) {
 		impmod.setWithAttributes( attributes );
-		impmod.setLocation( new Location( actualFile, $start, getStopToken() ) );
+		impmod.setLocation( getLocation( $start, getStopToken() ) );
 		if ( $parent_group == null ) {
 			impmod.setAttributeParentPath( act_ttcn3_module.getAttributePath() );
 		} else {
@@ -173,8 +173,8 @@ pr_reparse_GroupDef
 {	if ( group != null ) {
 		group.setWithAttributes( attributes );
 		group.setParentGroup( $parent_group );
-		group.setLocation( new Location( actualFile, $start, getStopToken() ) );
-		group.setInnerLocation( new Location( actualFile, $begin.start, $end1.stop ) );
+		group.setLocation( getLocation( $start, getStopToken() ) );
+		group.setInnerLocation( getLocation( $begin.start, $end1.stop ) );
 		if ( $parent_group != null ) {
 			$parent_group.addGroup( group );
 			group.setAttributeParentPath( $parent_group.getAttributePath() );

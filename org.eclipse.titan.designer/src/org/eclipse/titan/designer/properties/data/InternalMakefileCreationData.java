@@ -143,6 +143,6 @@ public final class InternalMakefileCreationData {
 		PlatformSpecificLibrariesOptionsData.copyMakefileSettings("Linux", source, makefileSettings, document, saveDefaultValues);
 		PlatformSpecificLibrariesOptionsData.copyMakefileSettings("Win32", source, makefileSettings, document, saveDefaultValues);
 		LinkerLibrariesOptionsData.copyMakefileSettings(source, makefileSettings, document, saveDefaultValues);
-		LinkerFlagsOptionsData.copyMakefileSettings(source,makefileSettings, document, true);
+		LinkerFlagsOptionsData.copyMakefileSettings(source,makefileSettings, document, saveDefaultValues);
 	}
 }

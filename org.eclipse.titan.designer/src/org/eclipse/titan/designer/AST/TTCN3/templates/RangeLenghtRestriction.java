@@ -267,14 +267,6 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 			return;
 		}
 
-		if (locatable instanceof BitString_Pattern_Template  ||
-			locatable instanceof CharString_Pattern_Template ||
-			locatable instanceof HexString_Pattern_Template  ||
-			locatable instanceof UnivCharString_Pattern_Template
-			) {
-			return; // xString Pattern Templates will not be checked to No of elements 
-		}
-
 		if (!lessAllowed) {
 			IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 			IValue last = lower.getValueRefdLast(timestamp, chain);

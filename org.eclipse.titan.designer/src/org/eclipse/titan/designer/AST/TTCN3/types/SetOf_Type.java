@@ -14,21 +14,21 @@ import java.util.Map;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
+import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Type;
 import org.eclipse.titan.designer.AST.ASN1.IASN1Type;
 import org.eclipse.titan.designer.AST.ASN1.types.ASN1_Set_Type;
-import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Completeness_type;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Template_type;
 import org.eclipse.titan.designer.AST.TTCN3.templates.IndexedTemplate;
 import org.eclipse.titan.designer.AST.TTCN3.templates.Indexed_Template_List;
 import org.eclipse.titan.designer.AST.TTCN3.templates.SubsetMatch_Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.SupersetMatch_Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.Template_List;
-import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Completeness_type;
-import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Template_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.subtypes.SubType;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.SetOf_Value;
@@ -78,7 +78,14 @@ public final class SetOf_Type extends AbstractOfType {
 		}
 
 		if (info == null || noStructuredTypeCompatibility) {
-			return this == lastOtherType;
+			//There is another chance to be compatible:
+			//If records of/sets of are strongly compatible, then the records of/sets of are compatible
+			IType last = getTypeRefdLast(timestamp);
+			if(! last.isStronglyCompatible(timestamp, lastOtherType, info, leftChain, rightChain)) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 
 		switch (lastOtherType.getTypetype()) {
@@ -242,6 +249,56 @@ public final class SetOf_Type extends AbstractOfType {
 		default:
 			return false;
 		}
+	}
+	
+	@Override
+	public boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
+			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain) {
+
+		IType lastOtherType = otherType.getTypeRefdLast(timestamp);
+		if (Type_type.TYPE_SET_OF.equals(lastOtherType.getTypetype())) {
+			IType oftOther = ((SetOf_Type) lastOtherType).getOfType();
+			IType oft = getOfType().getTypeRefdLast(timestamp); // type of the
+																// fields
+			if (oft != null && oftOther != null) {
+				// For basic types pre-generated seq/set of is applied in titan:
+				switch (oft.getTypetype()) {
+				case TYPE_BOOL:
+				case TYPE_BITSTRING:
+				case TYPE_OCTETSTRING:
+				case TYPE_INTEGER:
+				case TYPE_REAL:
+				case TYPE_CHARSTRING:
+				case TYPE_HEXSTRING:
+				case TYPE_UCHARSTRING:
+				case TYPE_INTEGER_A:
+				case TYPE_ASN1_ENUMERATED:
+				case TYPE_BITSTRING_A:
+				case TYPE_UTF8STRING:
+				case TYPE_NUMERICSTRING:
+				case TYPE_PRINTABLESTRING:
+				case TYPE_TELETEXSTRING:
+				case TYPE_VIDEOTEXSTRING:
+				case TYPE_IA5STRING:
+				case TYPE_GRAPHICSTRING:
+				case TYPE_VISIBLESTRING:
+				case TYPE_GENERALSTRING:
+				case TYPE_UNIVERSALSTRING:
+				case TYPE_BMPSTRING:
+				case TYPE_UNRESTRICTEDSTRING:
+				case TYPE_UTCTIME:
+				case TYPE_GENERALIZEDTIME:
+				case TYPE_OBJECTDESCRIPTOR:
+					if (oft.isStronglyCompatible(timestamp, oftOther, info, leftChain, rightChain)) {
+						return true;
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override

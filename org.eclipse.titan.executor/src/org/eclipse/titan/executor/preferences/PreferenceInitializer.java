@@ -9,7 +9,6 @@ package org.eclipse.titan.executor.preferences;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.titan.executor.Activator;

@@ -43,7 +43,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
  * Also ... if an "in" parameter is not used on every possible execution path,
  * the code might become faster if it is set as @lazy.
  * 
- * @author Péter Oláh
+ * @author Peter Olah
  */
 public class Lazy extends BaseModuleCodeSmellSpotter {
 	private static final String ERROR_MESSAGE = "The {0} parameter should {1}be @lazy";
@@ -109,7 +109,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 	 * Def_Altstep or Def_Function or Def_Testcase as root because it is the
 	 * StartNode.
 	 * 
-	 * @author Péter Oláh
+	 * @author Peter Olah
 	 */
 	public class RelevantNodeBuilder extends ASTVisitor {
 
@@ -226,7 +226,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 	/**
 	 * This class collects default and in FormalParameters.
 	 * 
-	 * @author Péter Oláh
+	 * @author Peter Olah
 	 */
 	public class RelevantFormalParameterCollector extends ASTVisitor {
 		private List<FormalParameter> items;

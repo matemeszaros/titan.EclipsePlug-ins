@@ -111,6 +111,11 @@ public final class InformationFromObj extends Reference {
 	}
 
 	@Override
+	public Identifier getId() {
+		return reference.getId();
+	}
+
+	@Override
 	public String getDisplayName() {
 		return reference.getDisplayName() + fieldName.getDisplayName();
 	}

@@ -2151,7 +2151,6 @@ public final class MakefileGenerator {
 				project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.INCREMENTAL_DEPENDENCY_PROPERTY)) {
 			incrementalDependencyRefresh = true;
 			if (!gnuMake) {
-				//TITANConsole.getConsole().newMessageStream().println(INVALID_OPTIONS);
 				TITANConsole.println(INVALID_OPTIONS);
 				ErrorReporter.logError("Incremental dependency refresh is only supported if generating GNU makefiles. The GNU make option was turned on.");
 				ResourceUtils.setPersistentProperty(project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.GNU_MAKE_PROPERTY, true);
@@ -2162,7 +2161,6 @@ public final class MakefileGenerator {
 			if (!Platform.OS_WIN32.equals(Platform.getOS())) { 
 				dynamicLinking = true;
 			} else {
-				//TITANConsole.getConsole().newMessageStream().println(INVALID_OPTIONS);
 				TITANConsole.println(INVALID_OPTIONS);
 				ErrorReporter.logError("Could not create Makefile with dynamic linking enabled for project " + project.getName()
 						+ " as this is not supported on Windows");

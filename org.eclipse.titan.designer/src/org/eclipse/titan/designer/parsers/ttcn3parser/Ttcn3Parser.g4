@@ -21,6 +21,55 @@ NOTE:
  Rule pr_CString is for CSTRING to remove the beginning and ending '"' characters,
  as lexer cannot remove them as it was done in the ANTLR V2 Parser.
  Do NOT use CSTRING in any rule, use this instead.
+
+-------------------------- 
+Precedence of Operators with precedence levels (higher number is higher precedence)
+
+15 ( ... )
+14 +, - (unary)
+13 *, /, mod, rem
+12 +, -, &
+11 not4b (unary)
+10 and4b
+ 9 xor4b
+ 8 or4b
+ 7 <<, >>, <@, @>
+ 6 <, >, <=, >=
+ 5 ==, !=
+ 4 not (unary)
+ 3 and
+ 2 xor
+ 1 or
+
+Simplified* expression rules using precedence climbing method:
+
+E1 : E2 ( OR E2 )*
+E2 : E3 ( XOR E3 )*
+E3 : E4 ( AND E4 )*
+E4 : NOT E4 | E5
+E5 : E6 ( ( '==' | '!=' ) E6 )*
+E6 : E7 ( ( '<' | '>' | '<=' | '>=' ) E7 )*
+E7 : E8 ( ( '<<' | '>>' | '<@' | '@>' ) E8 )*
+E8 : E9 ( OR4B E9 )*
+E9 : E10 ( XOR4B E10 )*
+E10: E11 ( AND4B E11 )*
+E11: NOT4B E11 | E12
+E12: E13 ( ( '+' | '-' | '&' ) E13 )*
+E13: P ( ( '*' | '/' | MOD | REM ) P )*
+P : NOT E4 | NOT4B E11 | ( '+' | '-' ) P | '(' E1 ')' | v
+
+*: without java code, but the structure is identical to the used rules, where
+  En: rule for the n-th precedence level
+  E1: pr_SingleExpression in case of Ttcn3Parser.g4
+  P: last rule with unary operations
+  v: atomic expression without any operators, pr_Primary in case of Ttcn3Parser.g4
+
+NOTE: unary operators, which are not on the highest priority level, are used twice, because they must be handled at their precendence level,
+      and also at the last (highest precedence) level, if there is no match to other operators.
+      If any of these unary operators was matched in the last rule, control must jump back to the rule of its precedence level ( NOT E4, NOT4B E11 ).
+      Example case:
+        not4b a & not4b b  <=>  not4b ( a & ( not4b b ) )
+        1st not4b matches at rule E4, but the 2nd not4b matches at rule P.
 */
 
 options {
@@ -6120,8 +6169,10 @@ pr_NotExpression returns[Value value = null]:
 
 pr_EqualExpression returns[Value value = null]:
 (	v = pr_RelExpression	{ $value = $v.value; }
-	(	EQUAL	v2 = pr_RelExpression	{	$value = new EqualsExpression($value, $v2.value);
-											$value.setLocation(getLocation( $v.start, $v2.stop)); }
+	(	EQUAL	v1 = pr_RelExpression	{	$value = new EqualsExpression($value, $v1.value);
+											$value.setLocation(getLocation( $v.start, $v1.stop)); }
+	|	NOTEQUALS	v2 = pr_ShiftExpression {	$value = new NotequalesExpression($value, $v2.value);
+												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
@@ -6131,13 +6182,11 @@ pr_RelExpression returns[Value value = null]:
 												$value.setLocation(getLocation( $v.start, $v1.stop)); }
 	|	MORETHAN	v2 = pr_ShiftExpression {	$value = new GreaterThanExpression($value, $v2.value);
 												$value.setLocation(getLocation( $v.start, $v2.stop)); }
-	|	NOTEQUALS	v3 = pr_ShiftExpression {	$value = new NotequalesExpression($value, $v3.value);
+	|	MOREOREQUAL	v3 = pr_ShiftExpression {	$value = new GreaterThanOrEqualExpression($value, $v3.value);
 												$value.setLocation(getLocation( $v.start, $v3.stop)); }
-	|	MOREOREQUAL	v4 = pr_ShiftExpression {	$value = new GreaterThanOrEqualExpression($value, $v4.value);
+	|	LESSOREQUAL	v4 = pr_ShiftExpression {	$value = new LessThanOrEqualExpression($value, $v4.value);
 												$value.setLocation(getLocation( $v.start, $v4.stop)); }
-	|	LESSOREQUAL	v5 = pr_ShiftExpression {	$value = new LessThanOrEqualExpression($value, $v5.value);
-												$value.setLocation(getLocation( $v.start, $v5.stop)); }
-	)?
+	)*
 );
 
 pr_ShiftExpression returns[Value value = null]:
@@ -6176,8 +6225,8 @@ pr_BitAndExpression returns[Value value = null]:
 
 pr_BitNotExpression returns[Value value = null]:
 (	NOT4B
-	v = pr_AddExpression {	$value = new Not4bExpression($v.value);
-							$value.setLocation(getLocation( $start, getStopToken())); }
+	v = pr_BitNotExpression {	$value = new Not4bExpression($v.value);
+								$value.setLocation(getLocation( $start, getStopToken())); }
 |	v2 = pr_AddExpression { $value = $v2.value; }
 );
 
@@ -6185,8 +6234,8 @@ pr_AddExpression returns[Value value = null]:
 (	v = pr_MulExpression { $value = $v.value; }
 	(	PLUS	v1 = pr_MulExpression	{	$value = new AddExpression($value, $v1.value);
 											$value.setLocation(getLocation( $v.start, $v1.stop)); }
-	|	pr_Minus	v2 = pr_MulExpression {	$value = new SubstractExpression($value, $v2.value);
-											$value.setLocation(getLocation( $v.start, $v2.stop)); }
+	|	MINUS	v2 = pr_MulExpression {	$value = new SubstractExpression($value, $v2.value);
+										$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	|	STRINGOP	v3 = pr_MulExpression	{	$value = new StringConcatenationExpression($value, $v3.value);
 												$value.setLocation(getLocation( $v.start, $v3.stop)); }
 	)*
@@ -6206,13 +6255,20 @@ pr_MulExpression returns[Value value = null]:
 );
 
 pr_UnaryExpression returns [Value value = null]:
-(	PLUS
-	v1 = pr_Primary	{	$value = new UnaryPlusExpression($v1.value);
-						$value.setLocation(getLocation( $PLUS, $v1.stop)); }
+(	NOT
+	v1 = pr_NotExpression	{	$value = new NotExpression($v1.value);
+								$value.setLocation(getLocation( $NOT, $v1.stop ));	}
+|	NOT4B
+	v2 = pr_BitNotExpression {	$value = new Not4bExpression($v2.value);
+								$value.setLocation(getLocation( $NOT4B, $v2.stop ));	}
+|	PLUS
+	v3 = pr_Primary	{	$value = new UnaryPlusExpression($v3.value);
+						$value.setLocation(getLocation( $PLUS, $v3.stop));	}
 |	MINUS
-	v2 = pr_Primary	{	$value = new UnaryMinusExpression($v2.value);
-						$value.setLocation(getLocation( $MINUS, $v2.stop)); }
-|	v3 = pr_Primary	{	$value = $v3.value; }
+	v4 = pr_Primary	{	$value = new UnaryMinusExpression($v4.value);
+						$value.setLocation(getLocation( $MINUS, $v4.stop));	}
+|	pr_LParen	v5 = pr_SingleExpression	pr_RParen	{ $value = $v5.value; }
+|	v6 = pr_Primary	{	$value = $v6.value; }
 );
 
 pr_Primary returns[Value value = null]

@@ -114,7 +114,6 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			return;
 		}
 
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		int lineBreaks = 0;
 		try {
 			if (DirtyRegion.INSERT.equals(dirtyRegion.getType())) {
@@ -215,6 +214,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
 		op.schedule();
 
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		if (store.getBoolean(PreferenceConstants.DISPLAYDEBUGINFORMATION)) {
 			TITANDebugConsole.println("Refreshing the syntax took " + (System.nanoTime() - parserStart) * (1e-9) + " secs");
 		}

@@ -57,6 +57,14 @@ public final class ASN1CodeSkeletons {
 			new SkeletonTemplateProposal("VALUESET", new Template("Value Set", "", CONTEXT_IDENTIFIER, "${Identifier} ${type} := {"
 					+ NEWLINE + "${first-value} |" + NEWLINE + "${second-value}" + NEWLINE + "}", false)) };
 
+	private static final String ASN1_MODULE_EMPTY = " DEFINITIONS" + NEWLINE
+	+ NEWLINE
+	+ "  AUTOMATIC TAGS ::=" + NEWLINE
+	+ NEWLINE
+	+ "BEGIN" + NEWLINE
+	+ NEWLINE
+	+ "END" + NEWLINE;
+	
 	private static final String ASN1_MODULE_SKELETON = " DEFINITIONS" + NEWLINE
 	+ NEWLINE
 	+ "-- [(AUTOMATIC|EXPLICIT|IMPLICIT) TAGS]" + NEWLINE
@@ -89,6 +97,20 @@ public final class ASN1CodeSkeletons {
 		for (SkeletonTemplateProposal templateProposal : TEMPLATE_PROPOSALS) {
 			collector.addTemplateProposal(templateProposal.getPrefix(), templateProposal.getProposal(), skeletonImage);
 		}
+	}
+	
+	/**
+	 * Returns a valid ASN1 module with almost empty content.
+	 * 
+	 * @param moduleName
+	 *                the name of the module to be used to create the
+	 *                skeleton
+	 * @return the ASN1 module skeleton
+	 * */
+	public static String getASN1ModuleWithEmptyBody(final String moduleName) {
+		StringBuilder buffer = new StringBuilder(moduleName);
+		buffer.append(ASN1_MODULE_EMPTY);
+		return buffer.toString();
 	}
 
 	/**

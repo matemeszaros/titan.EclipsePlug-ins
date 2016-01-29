@@ -34,6 +34,8 @@ import java.util.Map;
 
 	private boolean mLogFileDefined = false;
 	
+	private String mLogFileName = null;
+	
 	private Map<String, String> mEnvVariables;
 	
 	private Integer mTcpPort = null;
@@ -89,6 +91,10 @@ import java.util.Map;
 
 	public boolean isLogFileDefined() {
 		return mLogFileDefined;
+	}
+	
+	public String getLogFileName() {
+		return mLogFileName;
 	}
 	
 	public Integer getTcpPort() {
@@ -580,8 +586,18 @@ pr_PlainLoggingParam:
 |	DISKFULLACTION ASSIGNMENTCHAR11 pr_DiskFullActionValue
 |	LOGFILENUMBER ASSIGNMENTCHAR11 pr_Number
 |	LOGFILESIZE ASSIGNMENTCHAR11 pr_Number
-|	LOGFILENAME ASSIGNMENTCHAR11 pr_LogfileName
-	{	mLogFileDefined = true;	}
+|	LOGFILENAME ASSIGNMENTCHAR11 f = pr_LogfileName
+	{	mLogFileDefined = true;
+		mLogFileName = $f.text;
+		if ( mLogFileName != null ) {
+			if ( mLogFileName.length() > 0 && mLogFileName.startsWith( "\"" ) ) {
+				mLogFileName = mLogFileName.substring( 1 );
+			}
+			if ( mLogFileName.length() > 0 && mLogFileName.endsWith( "\"" ) ) {
+				mLogFileName = mLogFileName.substring( 0, mLogFileName.length() - 1 );
+			}
+		}
+	}
 |	(TIMESTAMPFORMAT | CONSOLETIMESTAMPFORMAT) ASSIGNMENTCHAR11 TIMESTAMPVALUE
 |	SOURCEINFOFORMAT ASSIGNMENTCHAR11
 	(	SOURCEINFOVALUE

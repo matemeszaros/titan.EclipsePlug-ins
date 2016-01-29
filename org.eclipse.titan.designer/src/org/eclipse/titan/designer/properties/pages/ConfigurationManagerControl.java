@@ -194,8 +194,8 @@ public class ConfigurationManagerControl {
 					if (dialog.open() == Window.OK) {
 						String newName = dialog.getName();
 						Document document = ProjectDocumentHandlingUtility.getDocument(project);
-						List<String> newConfigurations = ProjectFileHandler.getConfigurations(document);
-						if (newConfigurations.contains(newName)) {
+						List<String> configurations = ProjectFileHandler.getConfigurations(document);
+						if (configurations.contains(newName)) {
 							errorText.setText("It is not possible to create a new configuration with name `" + newName
 									+ "' as there is already one with that name.");
 							errorText.setEnabled(true);
@@ -214,18 +214,18 @@ public class ConfigurationManagerControl {
 						Node configurationRoot = ProjectFileHandler.findConfigurationNode(document.getDocumentElement(),
 								newName);
 						if (configurationRoot == null) {
-							Element temp = document.createElement("Configuration");
+							Element newConfiguration = document.createElement("Configuration");
 
-							temp.setAttribute("name", newName);
-							configurationsRoot.appendChild(temp);
-							configurationRoot = temp;
+							newConfiguration.setAttribute("name", newName);
+							configurationsRoot.appendChild(newConfiguration);
+							configurationRoot = newConfiguration;
 						}
 
 						ProjectFileHandler.saveProjectInfoToNode(project, configurationRoot, document);
 
-						newConfigurations = ProjectFileHandler.getConfigurations(ProjectDocumentHandlingUtility
+						configurations = ProjectFileHandler.getConfigurations(ProjectDocumentHandlingUtility
 								.getDocument(project));
-						hostViewer.setInput(newConfigurations.toArray(new String[newConfigurations.size()]));
+						hostViewer.setInput(configurations.toArray(new String[configurations.size()]));
 					}
 				}
 			});

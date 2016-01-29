@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -58,6 +56,8 @@ public final class ConfigFileHandler {
 
 	private boolean logFileNameDefined = false;
 
+	private String mLogFileName = null;
+
 	public ConfigFileHandler(){
 		// Do nothing
 	}
@@ -68,6 +68,10 @@ public final class ConfigFileHandler {
 	 */
 	public boolean isLogFileNameDefined() {
 		return logFileNameDefined;
+	}
+	
+	public String getLogFileName() {
+		return mLogFileName;
 	}
 	
 	public int getTcpPort(){
@@ -262,6 +266,7 @@ public final class ConfigFileHandler {
 
 		if (analyzer.isLogFileNameDefined()) {
 			logFileNameDefined = true;
+			mLogFileName  = analyzer.getLogFileName();
 		}
 		LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot() );
 		if ( rootNode != null ) {

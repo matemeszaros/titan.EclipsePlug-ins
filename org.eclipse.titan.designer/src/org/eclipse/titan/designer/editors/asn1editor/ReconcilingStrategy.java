@@ -27,6 +27,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.MarkerHandler;
+import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
 import org.eclipse.titan.designer.parsers.GlobalParser;
@@ -95,18 +96,15 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 	}
 
 	void analyze(final boolean is_initial) {
-		final IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
-
-		if (file == null) {
+		final IFile editedFile = (IFile) editor.getEditorInput().getAdapter(IFile.class);
+		if (editedFile == null || ResourceExclusionHelper.isExcluded(editedFile)) {
 			return;
 		}
 
-		IProject project = file.getProject();
+		IProject project = editedFile.getProject();
 		if (project == null) {
 			return;
 		}
-
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
 
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
@@ -116,7 +114,8 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			}
 		});
 
-		projectSourceParser.reportOutdating(file);
+		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
+		projectSourceParser.reportOutdating(editedFile);
 
 		if (is_initial || !editor.isSemanticCheckingDelayed()) {
 			projectSourceParser.setFullSemanticAnalysisNeeded();
@@ -130,8 +129,8 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							if (!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, file) ||
-								!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_MIXED_MARKER, file)	) {
+							if (!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, editedFile) ||
+								!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_MIXED_MARKER, editedFile)	) {
 								getEditor().updateOutlinePage();
 							}
 						}
@@ -145,6 +144,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			op.setRule(project);
 			op.schedule();
 		} else {
+			projectSourceParser.reportSyntacticOutdatingOnly(editedFile);
 			projectSourceParser.analyzeAllOnlySyntactically();
 		}
 	}

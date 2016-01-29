@@ -27,6 +27,9 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.AST.MarkerHandler;
+import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3FoldingSupport;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
@@ -178,10 +181,10 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 	}
 
 	private void fullReconciliation(final boolean is_initial) {
-		IPreferencesService prefs = Platform.getPreferencesService();
-		// if (prefs.getBoolean(Activator.PLUGIN_ID,
-		// PreferenceConstants.TREATTTCNPPASTTCN, true, null)) {
+		actualCode = new StringBuilder(document.get());
+		
 		GlobalIntervalHandler.putInterval(document, null);
+		IPreferencesService prefs = Platform.getPreferencesService();
 		if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.USEONTHEFLYPARSING, true, null)) {
 			analyze(is_initial);
 		} else {
@@ -194,22 +197,11 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 				}
 			});
 		}
-		// } else {
-		// Display.getDefault().asyncExec(new Runnable() {
-		// public void run() {
-		// ArrayList<Position> positions = (new
-		// TTCN3FoldingSupport()).calculatePositions(document);
-		// editor.updateFoldingStructure(positions);
-		// editor.updateOutlinePage();
-		// }
-		// });
-		// }
 	}
 
 	public void analyze(final boolean is_initial) {
-		IFile editedFile = (IFile) editor.getEditorInput().getAdapter(IFile.class);
-
-		if (editedFile == null) {
+		final IFile editedFile = (IFile) editor.getEditorInput().getAdapter(IFile.class);
+		if (editedFile == null || ResourceExclusionHelper.isExcluded(editedFile)) {
 			return;
 		}
 
@@ -217,9 +209,6 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		if (project == null) {
 			return;
 		}
-
-		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		projectSourceParser.setFullSemanticAnalysisNeeded();
 
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
@@ -229,6 +218,8 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			}
 		});
 
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
+		projectSourceParser.setFullSemanticAnalysisNeeded();
 		if (is_initial || !editor.isSemanticCheckingDelayed()) {
 			projectSourceParser.reportOutdating(editedFile);
 			projectSourceParser.analyzeAll();
@@ -242,7 +233,9 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							editor.updateOutlinePage();
+							if (!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, editedFile)) {
+								getEditor().updateOutlinePage();
+							}
 						}
 					});
 					return Status.OK_STATUS;

@@ -32,6 +32,7 @@ import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 
 /**
  * Import module.
+ * Models an asn.1 module of the section IMPORTS in the parent asn1.module
  * 
  * @author Kristof Szabados
  */
@@ -40,7 +41,7 @@ public final class ImportModule extends ModuleImportation {
 	private static final String NOTASN1MODULE = "The module referred by `{0}'' is not an ASN.1 module";
 	private static final String SYMBOLNOTEXPORTED = "Symbol `{0}'' is not exported from module `{1}''";
 
-	/** imported symbols. */
+	/** imported symbols FROM this module */
 	private final Symbols symbols;
 
 	public ImportModule(final Identifier identifier, final Symbols symbols) {
@@ -85,7 +86,8 @@ public final class ImportModule extends ModuleImportation {
 
 		final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(project);
 		if (null == parser || null == identifier) {
-			lastImportCheckTimeStamp = timestamp;
+			lastImportCheckTimeStamp = timestamp; 
+			//FIXME: is it correct? lastImportCheckTimeStamp will be set in extreme case only - very early running
 			return;
 		}
 
@@ -107,7 +109,7 @@ public final class ImportModule extends ModuleImportation {
 			if (!referenceChain.add(this)) {
 				moduleStack.remove(moduleStack.size() - 1);
 				lastImportCheckTimeStamp = timestamp;
-				return;
+				return; 
 			}
 
 			referredModule.checkImports(timestamp, referenceChain, moduleStack);

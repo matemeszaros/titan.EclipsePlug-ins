@@ -781,7 +781,7 @@ public final class SubType implements IIncrementallyUpdateable {
 		IValue lower = null, upper = null;
 		if (lengthRestriction instanceof SingleLenghtRestriction) {
 			lower = ((SingleLenghtRestriction) lengthRestriction).getRestriction(timestamp);
-			if (lower.getIsErroneous(timestamp) || !Value_type.INTEGER_VALUE.equals(lower.getValuetype())
+			if (lower == null || lower.getIsErroneous(timestamp) || !Value_type.INTEGER_VALUE.equals(lower.getValuetype())
 					|| lower.isUnfoldable(timestamp)) {
 				return false;
 			}
@@ -793,7 +793,7 @@ public final class SubType implements IIncrementallyUpdateable {
 		}
 
 		lower = ((RangeLenghtRestriction) lengthRestriction).getLowerValue(timestamp);
-		if (lower.getIsErroneous(timestamp) || !Value_type.INTEGER_VALUE.equals(lower.getValuetype()) || lower.isUnfoldable(timestamp)) {
+		if (lower == null || lower.getIsErroneous(timestamp) || !Value_type.INTEGER_VALUE.equals(lower.getValuetype()) || lower.isUnfoldable(timestamp)) {
 			return false;
 		}
 		if (!checkBoundaryValid(lower, "lower boundary")) {

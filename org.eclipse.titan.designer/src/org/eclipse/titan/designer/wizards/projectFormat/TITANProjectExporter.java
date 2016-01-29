@@ -168,7 +168,7 @@ public final class TITANProjectExporter {
 				project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 						ProjectBuildPropertyData.LOAD_LOCATION),projectFile);
 			} 
-			if( projectFile.startsWith("/"))
+			if( projectFile.matches("/[a-zA-Z]:.*"))
 			{
 				projectFile = projectFile.substring(1);
 				project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
@@ -198,7 +198,7 @@ public final class TITANProjectExporter {
 
 	/**
 	 * Saves all project information of "project" into the tpd file given output
-	 * file "projectFile" Prerequites: project and projectFile are set properly
+	 * file "projectFile" Prerequisites: project and projectFile are set properly
 	 * 
 	 * @return true if the save was successful
 	 */
@@ -542,9 +542,9 @@ public final class TITANProjectExporter {
 		for (String name : namesArray) {
 			final Element variableRoot = document.createElement(ProjectFormatConstants.PATH_VARIABLE);
 			variablesRoot.appendChild(variableRoot);
-			// IPath value = pathVariableManager.getValue(name);
-			URI uri = pathVariableManager.getURIValue(name);
-			variableRoot.setAttribute("value", uri.toString());
+			URI value = pathVariableManager.getURIValue(name);
+			variableRoot.setAttribute("value", value.toString());
+			variableRoot.setAttribute("name", name);
 		}
 	}
 

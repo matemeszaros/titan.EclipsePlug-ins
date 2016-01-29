@@ -131,7 +131,7 @@ public final class RemoteBuilder extends AbstractHandler implements IObjectActio
 			Process proc = null;
 			BufferedReader stdout;
 			
-			MessageConsoleStream stream = TITANConsole.getConsole().newMessageStream(); //ethbaat
+			MessageConsoleStream stream = TITANConsole.getConsole().newMessageStream(); 
        
 			String actualCommand;
 			for (int i = 0; i < commands.size(); i++) {
@@ -148,14 +148,12 @@ public final class RemoteBuilder extends AbstractHandler implements IObjectActio
 				for (String c : finalCommand) {
 					builder.append(c + ' ');
 				}
-				//TITANConsole.getConsole().newMessageStream().println(builder.toString());
 				TITANConsole.println(builder.toString(),stream); 
 
 				pb.command(finalCommand);
 				try {
 					proc = pb.start();
 				} catch (IOException e) {
-					//TITANConsole.getConsole().newMessageStream().println(ExternalTitanAction.EXECUTION_FAILED);
 					TITANConsole.println(ExternalTitanAction.EXECUTION_FAILED,stream);
 					ErrorReporter.logExceptionStackTrace(e);
 					TITANJob.reportExecutionProblem(project, Platform.getPreferencesService(), getName(), finalCommand, null, false);
@@ -175,16 +173,13 @@ public final class RemoteBuilder extends AbstractHandler implements IObjectActio
 							MarkerHandler.removeAllMarkedMarkers(project);
 							return Status.CANCEL_STATUS;
 						}
-						//TITANConsole.getConsole().newMessageStream().println(hostnames.get(i) + ": " + line);
 						TITANConsole.println(hostnames.get(i) + ": " + line,stream);
 						line = stdout.readLine();
 					}
 					int exitval = proc.waitFor();
 					if (exitval == 0) {
-						//TITANConsole.getConsole().newMessageStream().println("The process on " + hostnames.get(i) + " finished without indicating an error.");
 						TITANConsole.println("The process on " + hostnames.get(i) + " finished without indicating an error.",stream);
 					} else {
-						//TITANConsole.getConsole().newMessageStream().println(hostnames.get(i) + " finished with return value: " + exitval);
 						TITANConsole.println(hostnames.get(i) + " finished with return value: " + exitval,stream);
 
 						if (stderr.ready()) {
@@ -203,11 +198,9 @@ public final class RemoteBuilder extends AbstractHandler implements IObjectActio
 						return Status.CANCEL_STATUS;
 					}
 				} catch (IOException e) {
-					//TITANConsole.getConsole().newMessageStream().println(ExternalTitanAction.EXECUTION_FAILED);
 					TITANConsole.println(ExternalTitanAction.EXECUTION_FAILED,stream);
 					ErrorReporter.logExceptionStackTrace(e);
 				} catch (InterruptedException e) {
-					//TITANConsole.getConsole().newMessageStream().println(ExternalTitanAction.INTERRUPTION);
 					TITANConsole.println(ExternalTitanAction.INTERRUPTION,stream);
 					ErrorReporter.logExceptionStackTrace(e);
 				} finally {

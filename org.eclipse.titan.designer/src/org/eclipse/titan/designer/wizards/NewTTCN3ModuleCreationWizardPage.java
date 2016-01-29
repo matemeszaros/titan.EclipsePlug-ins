@@ -40,7 +40,7 @@ public final class NewTTCN3ModuleCreationWizardPage extends WizardNewFileCreatio
 	private static final String DESCRIPTION = "Create a new TTCN3 module";
 	private static final String ERROR_MESSAGE = "When provided the extension of the TTCN3 Module must be \"ttcn\" or \"ttcn3\"";
 	private static final String OCCUPIED = "This module name would create a file that already exists.";
-
+	
 	private boolean hasLicense;
 	private final NewTTCN3ModuleWizard wizard;
 
@@ -152,16 +152,26 @@ public final class NewTTCN3ModuleCreationWizardPage extends WizardNewFileCreatio
 
 	@Override
 	protected InputStream getInitialContents() {
-		if (wizard.getOptionsPage().isGenerateSkeletonSelected()) {
-			String moduleName = getFileName();
-			int dotIndex = moduleName.indexOf('.');
-			moduleName = dotIndex == -1 ? moduleName : moduleName.substring(0, dotIndex);
-			String temporalModuleSkeleton = TTCN3CodeSkeletons.getTTCN3ModuleSkeleton(moduleName);
-
+		switch (wizard.getOptionsPage().getGeneratedModuleType()) {
+		case EMPTY:
+			return super.getInitialContents();
+		case NAME_AND_EMPTY_BODY:
+			String temporalModule = TTCN3CodeSkeletons.getTTCN3ModuleWithEmptyBody(getModuleName());
+			return new BufferedInputStream(new ByteArrayInputStream(temporalModule.getBytes()));
+		case SKELETON:
+			String temporalModuleSkeleton = TTCN3CodeSkeletons.getTTCN3ModuleSkeleton(getModuleName());
 			return new BufferedInputStream(new ByteArrayInputStream(temporalModuleSkeleton.getBytes()));
+		default:
+			return super.getInitialContents();
 		}
 
-		return super.getInitialContents();
+	}
+
+	private String getModuleName() {
+		String moduleName = getFileName();
+		int dotIndex = moduleName.indexOf('.');
+		moduleName = dotIndex == -1 ? moduleName : moduleName.substring(0, dotIndex);
+		return moduleName;
 	}
 
 }

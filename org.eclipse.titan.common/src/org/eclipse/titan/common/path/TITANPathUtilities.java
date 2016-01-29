@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.utils.environment.EnvironmentVariableResolver;
+import org.eclipse.titan.common.utils.environment.EnvironmentVariableResolver.VariableNotFoundException;
 
 /**
  * Utility class to resolve eclipse paths.
@@ -32,7 +33,7 @@ public final class TITANPathUtilities {
 
 	/**
 	 * Resolves the provided uri relative to the provided base uri.
-	 * 
+	 * Environment variables and path variables will be resolved
 	 * @param pathToBeResolved
 	 *                the path to be resolved.
 	 * @param basePath
@@ -49,21 +50,28 @@ public final class TITANPathUtilities {
 			envVariables = null;
 		}
 
-		String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolveIgnoreErrors(pathToBeResolved, envVariables);
-
+		String tmp1 = null;
+		String tmp2 = null;
+		try {
+			tmp1 = EnvironmentVariableResolver.eclipseStyle().resolve(pathToBeResolved, envVariables);
+			tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);	
+		} catch(VariableNotFoundException e){
+			ErrorReporter.logError("There was an error while resolving `" + pathToBeResolved + "'");
+			return null;
+		} 
+		
 		final IPathVariableManager pathVariableManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
-		final IPath path2 = new Path(tmp1);
-		final IPath resolvedPath = pathVariableManager.resolvePath(path2);
-		final URI pathURI = URIUtil.toURI(tmp1);
+			URI uri = URIUtil.toURI(tmp2);
+			uri = pathVariableManager.resolveURI(uri);
 
-		if (basePath != null && !resolvedPath.isAbsolute()) {
-			final URI temp = org.eclipse.core.runtime.URIUtil.append(basePath, path2.toString());
-			if (temp != null) {
-				return temp;
+			if (basePath != null && uri != null && !uri.isAbsolute()) {
+				final URI mergedURI = org.eclipse.core.runtime.URIUtil.append(basePath, uri.toString());
+				return mergedURI;
+			
+			} else {
+				return uri;
 			}
-		}
-
-		return pathVariableManager.resolveURI(pathURI);
+		
 	}
 
 	/**
@@ -134,5 +142,33 @@ public final class TITANPathUtilities {
 		final IPath resolvedPath = resolvePath(path, rootPath);
 
 		return URIUtil.toURI(resolvedPath);
+	}
+	
+	/**
+	 * Converts the provided uri relative to the provided base uri
+	 * Environment variables and path variables will not be resolved.
+	 * If the pathToBeConverted is absolute or the basePath is null, the basePath is not used
+	 * 
+	 * @param pathToBeConverted
+	 *                the path to be resolved.
+	 * @param basePath
+	 *                the absolute URI with schema part and absolute path
+	 *                relative to.
+	 * 
+	 * @return the resolved uri.
+	 * */
+	public static URI convertToAbsoluteURI(final String pathToBeConverted, final String basePath) {
+		return convertToAbsoluteURI(pathToBeConverted, URIUtil.toURI(basePath));
+	}
+	
+	public static URI convertToAbsoluteURI(final String pathToBeConverted, final URI basePath) {
+		IPath tmp = new Path(pathToBeConverted);
+		if( basePath != null && tmp != null && !tmp.isAbsolute()) {
+			final URI convertedURI = org.eclipse.core.runtime.URIUtil.append(basePath, pathToBeConverted);
+			if(convertedURI != null) {
+				return convertedURI;
+			}
+		}
+		return URIUtil.toURI(tmp); //!! wrong if basePath == null && !tmp.isAbsolute() because ../ will be removed !!
 	}
 }

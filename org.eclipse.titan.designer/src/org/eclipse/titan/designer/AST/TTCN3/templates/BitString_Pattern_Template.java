@@ -89,7 +89,7 @@ public final class BitString_Pattern_Template extends TTCN3Template {
 	protected void checkTemplateSpecificLengthRestriction(final CompilationTimeStamp timestamp, final Type_type typeType) {
 		if (Type_type.TYPE_BITSTRING.equals(typeType)) {
 			boolean hasAnyOrNone = containsAnyornoneSymbol();
-			lengthRestriction.checkNofElements(timestamp, getMinLengthOfPattern(), hasAnyOrNone, hasAnyOrNone, hasAnyOrNone, this);
+			lengthRestriction.checkNofElements(timestamp, getMinLengthOfPattern(), hasAnyOrNone, false, hasAnyOrNone, this);
 		}
 	}
 

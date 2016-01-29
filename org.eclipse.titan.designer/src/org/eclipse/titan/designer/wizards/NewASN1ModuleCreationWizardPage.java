@@ -162,16 +162,27 @@ public final class NewASN1ModuleCreationWizardPage extends WizardNewFileCreation
 
 	@Override
 	protected InputStream getInitialContents() {
-		if (wizard.getOptionsPage().isGenerateSkeletonSelected()) {
-			String moduleName = getFileName();
-			int dotIndex = moduleName.indexOf('.');
-			moduleName = dotIndex == -1 ? moduleName : moduleName.substring(0, dotIndex);
-			String temporalModuleSkeleton = ASN1CodeSkeletons.getASN1ModuleSkeleton(moduleName);
 
+		switch (wizard.getOptionsPage().getGeneratedModuleType()) {
+		case EMPTY:
+			return super.getInitialContents();
+		case NAME_AND_EMPTY_BODY:
+			String temporalModule = ASN1CodeSkeletons.getASN1ModuleWithEmptyBody(getModuleName());
+			return new BufferedInputStream(new ByteArrayInputStream(temporalModule.getBytes()));
+		case SKELETON:
+			String temporalModuleSkeleton = ASN1CodeSkeletons.getASN1ModuleSkeleton(getModuleName());
 			return new BufferedInputStream(new ByteArrayInputStream(temporalModuleSkeleton.getBytes()));
+		default:
+			return super.getInitialContents();
 		}
 
-		return super.getInitialContents();
+	}
+	
+	private String getModuleName() {
+		String moduleName = getFileName();
+		int dotIndex = moduleName.indexOf('.');
+		moduleName = dotIndex == -1 ? moduleName : moduleName.substring(0, dotIndex);
+		return moduleName;
 	}
 
 }

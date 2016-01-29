@@ -90,14 +90,14 @@ public final class TITANDebugConsole {
 		if(inHeadLessMode) {
 			return;
 		}
-		String msg = "";
+		StringBuilder msg = new StringBuilder();
 		for (int i = 0; i < message.length; i++) {
-			msg += message[i];
+			msg.append(message[i]);
 			if (i < message.length-1) {
-				msg += ": ";
+				msg.append(": ");
 			}
 		}
-		println(msg, getConsole().newMessageStream());
+		println(msg.toString(), getConsole().newMessageStream());
 	}
 	
 	public static void print(String message, MessageConsoleStream stream) {

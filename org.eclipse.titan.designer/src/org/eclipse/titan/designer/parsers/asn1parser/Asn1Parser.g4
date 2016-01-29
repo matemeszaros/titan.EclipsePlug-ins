@@ -624,15 +624,19 @@ locals [ASN1Type subType, NamedType_Helper namedType_Helper, Constraint constrai
 					e = pr_Constraints { $constraints = $e.constraints; } 
 				)?  // pr_BuiltinType_reg, pr_ConstrainedType
 				{
-					$type.setLocation(new Location(actualFile, $builtin.start, $builtin.start));
-					$type.addConstraints($constraints);
+					if ( $type != null ) {
+						$type.setLocation(new Location(actualFile, $builtin.start, $builtin.start));
+						$type.addConstraints($constraints);
+					}
 				}
 			|	ref = pr_ReferencedType { $type = $ref.type; }
 				f = pr_Constraints
 				{
 					$constraints = $f.constraints;
-					$type.setLocation(new Location(actualFile, $ref.start, $ref.start));
-					$type.addConstraints($constraints);
+					if ( $type != null ) {
+						$type.setLocation(new Location(actualFile, $ref.start, $ref.start));
+						$type.addConstraints($constraints);
+					}
 				}
 			)
 /*		(	(	pr_ReferencedType

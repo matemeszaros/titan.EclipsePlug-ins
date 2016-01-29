@@ -121,7 +121,6 @@ public final class Block implements INamedNode, IVisitableNode, Token, TokenSour
 		case ASTVisitor.V_SKIP:
 			return true;
 		}
-		//
 		if (v.leave(this) == ASTVisitor.V_ABORT) {
 			return false;
 		}

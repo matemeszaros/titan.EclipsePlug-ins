@@ -12,10 +12,12 @@ import java.util.List;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
+import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
+import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
@@ -23,10 +25,9 @@ import org.eclipse.titan.designer.AST.ParameterisedSubReference;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
-import org.eclipse.titan.designer.AST.Scope;
-import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
-import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.Scope;
+import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
@@ -181,9 +182,9 @@ public final class Referenced_Template extends TTCN3Template {
 	 * reference too.
 	 *
 	 * @param timestamp
-	 *                the time stamp of the actual semantic check cycle.
+	 *            the time stamp of the actual semantic check cycle.
 	 * @param referenceChain
-	 *                the reference chain used to detect cyclic references.
+	 *            the reference chain used to detect cyclic references.
 	 *
 	 * @return the template referenced
 	 * */
@@ -262,13 +263,13 @@ public final class Referenced_Template extends TTCN3Template {
 	}
 
 	/**
-	 * Returns whether in the chain of referenced templates there is one
-	 * which was defined to have the implicit omit attribute set
+	 * Returns whether in the chain of referenced templates there is one which
+	 * was defined to have the implicit omit attribute set
 	 *
 	 * @param timestamp
-	 *                the time stamp of the actual semantic check cycle.
+	 *            the time stamp of the actual semantic check cycle.
 	 * @param referenceChain
-	 *                the ReferenceChain used to detect circular references
+	 *            the ReferenceChain used to detect circular references
 	 *
 	 * @return true if it has, false otherwise.
 	 * */
@@ -365,7 +366,9 @@ public final class Referenced_Template extends TTCN3Template {
 			return;
 		}
 
-		if (!type.isCompatible(timestamp, governor, null, null, null)) {
+		TypeCompatibilityInfo info = new TypeCompatibilityInfo(type, governor, true);
+
+		if (!type.isCompatible(timestamp, governor, info, null, null)) {
 			IType last = type.getTypeRefdLast(timestamp);
 
 			switch (last.getTypetype()) {
@@ -374,13 +377,13 @@ public final class Referenced_Template extends TTCN3Template {
 				break;
 			case TYPE_SIGNATURE:
 				getLocation().reportSemanticError(MessageFormat.format(TYPEMISSMATCH1, type.getTypename(), governor.getTypename()));
+				setIsErroneous(true);
 				break;
 			default:
 				getLocation().reportSemanticError(MessageFormat.format(TYPEMISSMATCH2, type.getTypename(), governor.getTypename()));
+				setIsErroneous(true);
 				break;
 			}
-			setIsErroneous(true);
-			return;
 		}
 
 		// check for circular references
@@ -399,7 +402,8 @@ public final class Referenced_Template extends TTCN3Template {
 	}
 
 	@Override
-	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
+	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed,
+			final Location usageLocation) {
 		if (omitAllowed) {
 			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
@@ -420,15 +424,13 @@ public final class Referenced_Template extends TTCN3Template {
 			case A_PAR_TEMP_INOUT:
 				if (ass instanceof Definition) {
 					TemplateRestriction.Restriction_type refdTemplateRestriction = ((Definition) ass).getTemplateRestriction();
-					refdTemplateRestriction = TemplateRestriction
-							.getSubRestriction(refdTemplateRestriction, timestamp, reference);
+					refdTemplateRestriction = TemplateRestriction.getSubRestriction(refdTemplateRestriction, timestamp, reference);
 					// if restriction not satisfied issue
 					// warning
 					if (TemplateRestriction.isLessRestrictive(omitAllowed ? TemplateRestriction.Restriction_type.TR_OMIT
 							: TemplateRestriction.Restriction_type.TR_VALUE, refdTemplateRestriction)) {
 						getLocation().reportSemanticError(
-								MessageFormat.format(INADEQUATETEMPLATERESTRICTION, ass.getAssignmentName(),
-										reference.getDisplayName()));
+								MessageFormat.format(INADEQUATETEMPLATERESTRICTION, ass.getAssignmentName(), reference.getDisplayName()));
 						return true;
 					}
 				}
@@ -457,15 +459,12 @@ public final class Referenced_Template extends TTCN3Template {
 			case A_PAR_TEMP_INOUT:
 				if (ass instanceof Definition) {
 					TemplateRestriction.Restriction_type refdTemplateRestriction = ((Definition) ass).getTemplateRestriction();
-					refdTemplateRestriction = TemplateRestriction
-							.getSubRestriction(refdTemplateRestriction, timestamp, reference);
+					refdTemplateRestriction = TemplateRestriction.getSubRestriction(refdTemplateRestriction, timestamp, reference);
 					// if restriction not satisfied issue
 					// warning
-					if (TemplateRestriction.isLessRestrictive(TemplateRestriction.Restriction_type.TR_PRESENT,
-							refdTemplateRestriction)) {
+					if (TemplateRestriction.isLessRestrictive(TemplateRestriction.Restriction_type.TR_PRESENT, refdTemplateRestriction)) {
 						getLocation().reportSemanticError(
-								MessageFormat.format(INADEQUATETEMPLATERESTRICTION, ass.getAssignmentName(),
-										reference.getDisplayName()));
+								MessageFormat.format(INADEQUATETEMPLATERESTRICTION, ass.getAssignmentName(), reference.getDisplayName()));
 						return true;
 					}
 				}

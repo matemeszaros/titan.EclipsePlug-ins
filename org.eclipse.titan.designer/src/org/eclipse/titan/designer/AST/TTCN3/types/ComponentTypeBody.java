@@ -75,11 +75,14 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	public static final String HIDINGSCOPEELEMENT = "The name of the inherited definition `{0}'' is not unique in the scope hierarchy";
 	public static final String HIDDENSCOPEELEMENT = "Previous definition with identifier `{0}'' in higher scope unit is here";
 	public static final String HIDINGMODULEIDENTIFIER = "Inherited definition with name `{0}'' hides a module identifier";
+	
+	public static final String MEMBERNOTVISIBLE = "The member definition `{0}'' in component type `{1}'' is not visible in this scope";
 
 	private Location location;
 
 	private Location commentLocation = null;
 
+	/** the identifier of the component does not belong to the componentTypeBody naturally !*/
 	private final Identifier identifier;
 	/** component references from the extends part or null if none */
 	private final ComponentTypeReferenceList extendsReferences;
@@ -276,10 +279,25 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 
 		definition = getExtendsInheritedDefinition(identifier);
 		if (definition != null) {
-			return definition;
+			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
+				return definition;
+			} else {
+				identifier.getLocation().reportSemanticError(MessageFormat.format(
+						MEMBERNOTVISIBLE, identifier.getDisplayName(), this.identifier.getDisplayName()));
+			}
 		}
 
-		return getAttributesInheritedDefinition(identifier);
+		definition =  getAttributesInheritedDefinition(identifier);
+		if (definition != null) {
+			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
+				return definition;
+			} else {
+				identifier.getLocation().reportSemanticError(MessageFormat.format(
+						MEMBERNOTVISIBLE, identifier.getDisplayName(), this.identifier.getDisplayName()));
+			}
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -329,8 +347,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			}
 
 			reference.getLocation().reportSemanticError(MessageFormat.format(
-					"The member definition `{0}'' in component type `{1}'' is not visible in this scope",
-					reference.getId().getDisplayName(), identifier.getDisplayName()));
+					MEMBERNOTVISIBLE, reference.getId().getDisplayName(), identifier.getDisplayName()));
 			return null;
 		}
 
@@ -341,8 +358,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			}
 
 			reference.getLocation().reportSemanticError(MessageFormat.format(
-					"The member definition `{0}'' in component type `{1}'' is not visible in this scope",
-					reference.getId().getDisplayName(), identifier.getDisplayName()));
+					MEMBERNOTVISIBLE, reference.getId().getDisplayName(), identifier.getDisplayName()));
 			return null;
 		}
 
@@ -847,8 +863,6 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			throw new ReParseException();
 		}
 
-		reparser.updateLocation(identifier.getLocation());
-
 		for (Definition definition : definitions) {
 			definition.updateSyntax(reparser, false);
 			reparser.updateLocation(definition.getLocation());
@@ -899,11 +913,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		case ASTVisitor.V_SKIP:
 			return true;
 		}
-		if (identifier != null) {
-			if (!identifier.accept(v)) {
-				return false;
-			}
-		}
+
 		if (definitions != null) {
 			for (Definition def : definitions) {
 				if (!def.accept(v)) {

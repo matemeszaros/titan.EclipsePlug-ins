@@ -75,6 +75,9 @@ public class InfiniteLoop {
 			}
 
 			Value finalExpression = s.getFinalExpression();
+			if (finalExpression == null) {
+				return;
+			}
 			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 			finalExpression.setLoweridToReference(timestamp);
 			IValue lastValue = finalExpression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);

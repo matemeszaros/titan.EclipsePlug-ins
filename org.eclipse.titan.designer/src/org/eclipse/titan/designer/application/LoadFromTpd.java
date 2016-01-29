@@ -14,9 +14,10 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
@@ -30,7 +31,7 @@ import org.eclipse.titan.designer.wizards.projectFormat.TpdImporter;
  * 
  * @author Kristof Szabados
  * */
-public class LoadFromTpd implements IPlatformRunnable {
+public class LoadFromTpd implements IApplication {
 	private boolean result;
 
 	private void reportResult(final boolean result) {
@@ -38,18 +39,19 @@ public class LoadFromTpd implements IPlatformRunnable {
 	}
 
 	@Override
-	public Object run(final Object args) throws Exception {
+	public Object start(IApplicationContext context) throws Exception {
 		if (!GeneralConstants.DEBUG) {
 			ErrorReporter.INTERNAL_ERROR("Loading Tpd files in headless mode is in prototype mode and so should not be available in released versions yet");
 		}
 
 		Platform.getBundle("org.eclipse.titan.designer").start();
 
-		if (!(args instanceof String[])) {
+		Object arguments = context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
+		if (!(arguments instanceof String[])) {
 			System.out.println("A list of strings was expected as argument.");
 			return Integer.valueOf(-1);
 		}
-		final String[] projectFiles = (String[]) args;
+		final String[] projectFiles = (String[]) arguments;
 		
 		if (projectFiles.length != 1) {
 			System.out.println("This application takes as parameter the location of the Tpd file it should load projects from.");
@@ -100,5 +102,11 @@ public class LoadFromTpd implements IPlatformRunnable {
 		}
 
 		return Integer.valueOf(-1);
+	}
+	
+	@Override
+	public void stop() {
+		// nothing to be done
+		
 	}
 }

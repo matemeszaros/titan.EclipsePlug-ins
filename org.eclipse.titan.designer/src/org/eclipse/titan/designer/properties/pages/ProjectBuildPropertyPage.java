@@ -29,7 +29,6 @@ import org.eclipse.titan.designer.properties.PropertyNotificationManager;
 import org.eclipse.titan.designer.properties.data.ProjectBuildPropertyData;
 import org.eclipse.titan.designer.properties.data.ProjectDocumentHandlingUtility;
 import org.eclipse.titan.designer.wizards.projectFormat.TITANAutomaticProjectExporter;
-import org.eclipse.titan.designer.wizards.projectFormat.TITANProjectExporter;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 /**

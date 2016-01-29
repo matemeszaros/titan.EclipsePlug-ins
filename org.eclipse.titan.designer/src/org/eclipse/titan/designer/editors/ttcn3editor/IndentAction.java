@@ -9,10 +9,10 @@ package org.eclipse.titan.designer.editors.ttcn3editor;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.RewriteSessionEditProcessor;
 import org.eclipse.titan.common.parsers.Interval;
 import org.eclipse.titan.common.parsers.Interval.interval_type;
 import org.eclipse.titan.designer.editors.AbstractIndentAction;
-import org.eclipse.titan.designer.editors.RewriteSessionEditProcessor;
 import org.eclipse.ui.IEditorPart;
 
 /**

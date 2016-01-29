@@ -65,6 +65,7 @@ public final class CfgAnalyzer {
 	private DefineSectionHandler defineSectionHandler = null;
 	private LoggingSectionHandler loggingSectionHandler = null;
 	private ParserRuleContext mParseTreeRoot = null;
+	private String mLogFileName = null;
 	
 	public List<TITANMarker> getWarnings() {
 		return warnings;
@@ -78,6 +79,10 @@ public final class CfgAnalyzer {
 		return logFileNameDefined;
 	}
 
+	public String getLogFileName() {
+		return mLogFileName;
+	}
+	
 	public Map<String, CfgDefinitionInformation> getDefinitions(){
 		return definitions;
 	}
@@ -229,6 +234,7 @@ public final class CfgAnalyzer {
 		loggingSectionHandler = parser.getLoggingSectionHandler();
 		
 		logFileNameDefined = parser.isLogFileDefined();
+		mLogFileName  = parser.getLogFileName();
 	}
 
 }

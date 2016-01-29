@@ -283,11 +283,11 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 			resolvedPathLabelText.setVisible(false);
 			return;
 		}
-
+		//TODO: To change the next lines for this one:
+		//final URI uri1 = TITANPathUtilities.getURI(target, rootPath);
 		final IPath path = new Path(target);
-		final IPath resolvedPath = TITANPathUtilities.resolvePath(target, rootPath);
-		
-		final URI uri = URIUtil.toURI(resolvedPath);
+		final IPath resolvedPath = TITANPathUtilities.resolvePath(target, rootPath);		
+		final URI uri = URIUtil.toURI(resolvedPath); 
 		final String message = "Resolved location: " + uri.toString();
 		resolvedPathLabelText.setText(message);
 		

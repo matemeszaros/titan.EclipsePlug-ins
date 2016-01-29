@@ -37,6 +37,7 @@ public abstract class TitanLaunchConfigurationDelegate extends LaunchConfigurati
 	protected IProject[] getBuildOrder(final ILaunchConfiguration configuration, final String mode) throws CoreException {
 
 		IResource[] resources = configuration.getMappedResources();
+		if( resources == null) { return null; }
 		final List<IProject> result = new ArrayList<IProject>();
 		for (final IResource resource : resources) {
 			if (resource instanceof IProject) {

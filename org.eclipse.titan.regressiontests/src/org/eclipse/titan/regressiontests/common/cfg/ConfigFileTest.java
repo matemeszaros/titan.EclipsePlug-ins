@@ -18,7 +18,7 @@ public class ConfigFileTest {
 
 	@Test
 	public void configFileParserTest() {
-		Designer_plugin_tests.checkSyntaxMarkersOnFile(config_cfg_initializer(), "bin/config.cfg");
+		Designer_plugin_tests.checkSyntaxMarkersOnFile(config_cfg_initializer(), "cfg/config.cfg");
 	}
 
 	private ArrayList<MarkerToCheck> config_cfg_initializer() {

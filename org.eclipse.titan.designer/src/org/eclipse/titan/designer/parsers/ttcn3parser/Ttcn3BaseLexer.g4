@@ -354,6 +354,12 @@ HSTRINGMATCH:	'\'' WS? ( HEXORMATCH WS? )* '\'H';
 OSTRING:		'\'' WS? ( OCT        WS? )* '\'O';
 OSTRINGMATCH:	'\'' WS? ( OCTORMATCH WS? )* '\'O';
 
+// Tokens for erroneous cases for [BHO]STRING(MATCH)? rules
+//  - wrong character between the quotes
+//  - odd number of hex digits in case of OSTRING(MATCH)?)
+// These tokens are not used in any parser rules, but these cases must be parser errors instead of lexer errors 
+BHOSTRING_WRONG:		'\'' ~( '\'' )* '\'' [BHO];
+
 // Macros
 MACRO_MODULEID:			'%moduleId' | '__MODULE__';
 MACRO_DEFINITION_ID:	'%definitionId';

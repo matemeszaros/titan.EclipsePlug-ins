@@ -697,6 +697,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			value.setIsErroneous(true);
 			return;
 		}
+		
 		final TypeCompatibilityInfo info = new TypeCompatibilityInfo(this, governor, true);
 		info.setStr1Elem(strElem);
 		info.setStr2Elem(reference.refersToStringElement());
@@ -720,9 +721,9 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 					value.getLocation().reportSemanticError(message);
 				}
 				break;
+			case TYPE_SEQUENCE_OF:
 			case TYPE_ASN1_SEQUENCE:
 			case TYPE_TTCN3_SEQUENCE:
-			case TYPE_SEQUENCE_OF:
 			case TYPE_ARRAY:
 			case TYPE_ASN1_SET:
 			case TYPE_TTCN3_SET:
@@ -956,6 +957,23 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 	@Override
 	public abstract boolean isCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
 			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain);
+	
+	@Override
+	public boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
+			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain) {
+
+		check(timestamp);
+		otherType.check(timestamp);
+		final IType thisTypeLast = this.getTypeRefdLast(timestamp);
+		final IType otherTypeLast = otherType.getTypeRefdLast(timestamp);
+
+		if (thisTypeLast == null || otherTypeLast == null || thisTypeLast.getIsErroneous(timestamp)
+				|| otherTypeLast.getIsErroneous(timestamp)) {
+			return true;
+		}
+
+		return thisTypeLast.getTypetype().equals(otherTypeLast.getTypetype());
+	}
 
 	public enum CompatibilityLevel {
 		INCOMPATIBLE_TYPE, INCOMPATIBLE_SUBTYPE, COMPATIBLE
@@ -970,6 +988,11 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 
 		if (!isCompatible(timestamp, type, info, leftChain, rightChain)) {
 			return CompatibilityLevel.INCOMPATIBLE_TYPE;
+		}
+		
+		// if there is noStructuredTypeCompatibility and isCompatible then it should be strong compatibility:
+		if( noStructuredTypeCompatibility ) {
+			return CompatibilityLevel.COMPATIBLE;
 		}
 
 		SubType otherSubType = type.getSubtype();

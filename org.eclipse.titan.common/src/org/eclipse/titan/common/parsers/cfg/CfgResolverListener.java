@@ -15,7 +15,6 @@ import java.util.Map;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.titan.common.parsers.LocationAST;
 import org.eclipse.titan.common.parsers.TITANMarker;
 
 public class CfgResolverListener extends CfgParserBaseListener {

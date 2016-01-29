@@ -24,7 +24,7 @@ public final class CharString_Pattern_Template extends TTCN3Template {
 	private PatternString patternstring;
 
 	public CharString_Pattern_Template() {
-		patternstring = new PatternString(PatternType.UNIVCHARSTRING_PATTERN);
+		patternstring = new PatternString(PatternType.CHARSTRING_PATTERN);
 	}
 
 	public CharString_Pattern_Template(final PatternString ps) {
@@ -108,7 +108,7 @@ public final class CharString_Pattern_Template extends TTCN3Template {
 	protected void checkTemplateSpecificLengthRestriction(final CompilationTimeStamp timestamp, final Type_type typeType) {
 		if (Type_type.TYPE_CHARSTRING.equals(typeType) || Type_type.TYPE_UCHARSTRING.equals(typeType)) {
 			boolean hasAnyOrNone = patternContainsAnyornoneSymbol();
-			lengthRestriction.checkNofElements(timestamp, getMinLengthOfPattern(), false, hasAnyOrNone, hasAnyOrNone, this);
+			lengthRestriction.checkNofElements(timestamp, getMinLengthOfPattern(), hasAnyOrNone, false, hasAnyOrNone, this);
 		}
 	}
 

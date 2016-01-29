@@ -15,6 +15,8 @@ import org.eclipse.titan.designer.AST.IOutlineElement;
 
 /**
  * @author Kristof Szabados
+ * 
+ * TODO: instead of getOutlineChildren we should use visitors
  * */
 public final class OutlineContentProvider implements ITreeContentProvider {
 

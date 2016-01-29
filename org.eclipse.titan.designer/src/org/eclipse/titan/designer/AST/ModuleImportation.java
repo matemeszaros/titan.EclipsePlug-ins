@@ -37,7 +37,7 @@ public abstract class ModuleImportation implements IReferenceChainElement, IOutl
 	protected CompilationTimeStamp lastImportCheckTimeStamp;
 
 	/**
-	 * Stores whether the module refered by this importation has changed
+	 * Stores whether the module referred by this importation has changed
 	 * when the importation check was last done.
 	 */
 	private boolean hasUnhandledChange = false;
@@ -64,7 +64,7 @@ public abstract class ModuleImportation implements IReferenceChainElement, IOutl
 	}
 
 	/**
-	 * @return whether the module refered to by this importation has changed
+	 * @return whether the module referred to by this importation has changed
 	 *         to an other one since the last importation check.
 	 * */
 	public boolean hasUnhandledChange() {

@@ -12,9 +12,10 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.LexerNoViableAltException;
 import org.antlr.v4.runtime.InputMismatchException;
 import org.antlr.v4.runtime.FailedPredicateException;
+
 /**
  * @author Kristof Szabados
- *
+ * 
  */
 public class SyntacticErrorStorage {
 	public final int lineNumber;
@@ -22,23 +23,27 @@ public class SyntacticErrorStorage {
 	public final int charEnd;
 	public final String message;
 	public final ExceptionType exceptionType;
-	public enum ExceptionType { LexerNoViableAltException, NoViableAltException, InputMismatchException, FailedPredicateException, InvalidExceptionType };
-		
-	public SyntacticErrorStorage (final int lineNumber, final int charStart, final int charEnd, final String message, RecognitionException e) {
+
+	public enum ExceptionType {
+		LexerNoViableAltException, NoViableAltException, InputMismatchException, FailedPredicateException, InvalidExceptionType
+	};
+
+	public SyntacticErrorStorage(final int lineNumber, final int charStart, final int charEnd, final String message, RecognitionException e) {
 		this.lineNumber = lineNumber;
 		this.charStart = charStart;
 		this.charEnd = charEnd;
 		this.message = message;
-		
-		if (e instanceof LexerNoViableAltException) 
+
+		if (e instanceof LexerNoViableAltException) {
 			exceptionType = ExceptionType.LexerNoViableAltException;
-		else if (e instanceof NoViableAltException)
+		} else if (e instanceof NoViableAltException) {
 			exceptionType = ExceptionType.NoViableAltException;
-		else if (e instanceof FailedPredicateException) 
+		} else if (e instanceof FailedPredicateException) {
 			exceptionType = ExceptionType.FailedPredicateException;
-		else if (e instanceof InputMismatchException)
+		} else if (e instanceof InputMismatchException) {
 			exceptionType = ExceptionType.InputMismatchException;
-		else 
+		} else {
 			exceptionType = ExceptionType.InvalidExceptionType;
+		}
 	}
 }

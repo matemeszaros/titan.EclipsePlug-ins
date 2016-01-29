@@ -40,7 +40,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
  * parts. PrivateViaPublic.Field class marks references and explicit field
  * assignments. PrivateViaPublic.Value class marks value of private field assignments.
  * 
- * @author Péter Oláh
+ * @author Peter Olah
  */
 public class PrivateViaPublic {
 

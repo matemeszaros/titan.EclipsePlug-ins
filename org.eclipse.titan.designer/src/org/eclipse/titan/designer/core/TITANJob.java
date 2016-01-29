@@ -229,7 +229,7 @@ public class TITANJob extends WorkspaceJob {
 		pb.redirectErrorStream(true);
 		Process proc = null;
 
-		MessageConsoleStream stream = TITANConsole.getConsole().newMessageStream(); //ethbaat
+		MessageConsoleStream stream = TITANConsole.getConsole().newMessageStream(); 
 		
 		String line;
 		BufferedReader stdout;
@@ -277,14 +277,12 @@ public class TITANJob extends WorkspaceJob {
 			for (String c : finalCommand) {
 				builder.append(c + SPACE);
 			}
-			//TITANConsole.getConsole().newMessageStream().println(builder.toString());
 			TITANConsole.println(builder.toString(),stream);
 
 			pb.command(finalCommand);
 			try {
 				proc = pb.start();
 			} catch (IOException e) {
-				//TITANConsole.getConsole().newMessageStream().println(ExternalTitanAction.EXECUTION_FAILED);
 				TITANConsole.println(ExternalTitanAction.EXECUTION_FAILED,stream);
 				ErrorReporter.logExceptionStackTrace(e);
 				reportExecutionProblem(project, prefs, getName(), finalCommand, null, false);
@@ -312,12 +310,10 @@ public class TITANJob extends WorkspaceJob {
 						return Status.CANCEL_STATUS;
 					}
 					analyzer.parseTitanErrors(line);
-					//TITANConsole.getConsole().newMessageStream().println(line);
 					TITANConsole.println(line,stream);
 				}
 				int exitval = proc.waitFor();
 				if (exitval != 0) {
-					//TITANConsole.getConsole().newMessageStream().println(FAILURE + exitval);
 					TITANConsole.println(FAILURE + exitval,stream);
 					if (!analyzer.hasProcessedErrorMessages()) {
 						if (stderr.ready()) {
@@ -339,14 +335,11 @@ public class TITANJob extends WorkspaceJob {
 					return Status.CANCEL_STATUS;
 				}
 
-				//TITANConsole.getConsole().newMessageStream().println(SUCCESS);
 				TITANConsole.println(SUCCESS,stream);
 			} catch (IOException e) {
-				//TITANConsole.getConsole().newMessageStream().println(ExternalTitanAction.EXECUTION_FAILED);
 				TITANConsole.println(ExternalTitanAction.EXECUTION_FAILED,stream);
 				ErrorReporter.logExceptionStackTrace(ExternalTitanAction.EXECUTION_FAILED, e);
 			} catch (InterruptedException e) {
-				//TITANConsole.getConsole().newMessageStream().println(ExternalTitanAction.INTERRUPTION);
 				TITANConsole.println(ExternalTitanAction.INTERRUPTION,stream);
 				ErrorReporter.logExceptionStackTrace(ExternalTitanAction.INTERRUPTION, e);
 			} finally {

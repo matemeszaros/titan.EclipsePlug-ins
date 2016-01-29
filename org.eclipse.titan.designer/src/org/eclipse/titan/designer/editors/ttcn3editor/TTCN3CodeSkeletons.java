@@ -661,6 +661,21 @@ public final class TTCN3CodeSkeletons {
 	}
 
 	/**
+	 * Returns a valid TTCN3 module with empty body.
+	 * 
+	 * @param moduleName
+	 *                the name of the module to be used to create the
+	 *                module
+	 * @return the TTCN3 module content
+	 * */
+	public static String getTTCN3ModuleWithEmptyBody(final String moduleName) {
+		StringBuilder buffer = new StringBuilder(MODULE_KEYWORD);
+		buffer.append(moduleName).append(" {\n\n}\n");
+		return buffer.toString();
+	}
+	
+
+	/**
 	 * Returns a valid TTCN3 module skeleton.
 	 * 
 	 * @param moduleName
@@ -670,7 +685,9 @@ public final class TTCN3CodeSkeletons {
 	 * */
 	public static String getTTCN3ModuleSkeleton(final String moduleName) {
 		StringBuilder buffer = new StringBuilder(TTCN3_MODULE_HEADER_SKELETON);
-		buffer.append(MODULE_KEYWORD).append(moduleName).append('\n').append(TTCN3_MODULE_BODY_SKELETON);
+		buffer.append(MODULE_KEYWORD).append(moduleName).append(NEWLINE).append(TTCN3_MODULE_BODY_SKELETON);
 		return buffer.toString();
 	}
+	
+	
 }

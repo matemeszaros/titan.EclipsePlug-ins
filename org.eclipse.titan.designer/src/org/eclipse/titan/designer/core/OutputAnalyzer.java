@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -113,7 +114,7 @@ public final class OutputAnalyzer {
 		ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
 		for (IPath path : filesOpened) {
 			try {
-				manager.disconnect(path, null);
+				manager.disconnect(path,LocationKind.IFILE,null);
 			} catch (CoreException e) {
 				ErrorReporter.logExceptionStackTrace(e);
 			}
@@ -310,8 +311,8 @@ public final class OutputAnalyzer {
 					ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
 					IPath fullPath = resource.getFullPath();
 					if (manager != null) {
-						manager.connect(fullPath, null);
-						ITextFileBuffer buffer = manager.getTextFileBuffer(fullPath);
+						manager.connect(fullPath, LocationKind.IFILE, null);
+						ITextFileBuffer buffer = manager.getTextFileBuffer(fullPath,LocationKind.IFILE);
 						document = buffer.getDocument();
 						documentMap.put(resource, document);
 						filesOpened.add(fullPath);

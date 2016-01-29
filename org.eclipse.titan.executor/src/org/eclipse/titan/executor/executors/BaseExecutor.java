@@ -139,6 +139,7 @@ public abstract class BaseExecutor {
 	protected boolean verdictExtraction;
 	protected boolean keepTemporarilyGeneratedConfigFiles;
 	protected boolean logFileNameDefined = false;
+	protected String mLogFileName = null;
 	protected boolean logFilesMerged = false;
 
 	protected String mcPort;
@@ -451,10 +452,7 @@ public abstract class BaseExecutor {
 			return;
 		}
 
-		if (!logFileNameDefined) {
-			mergeLogFiles();
-			return; // resources are refreshed during the merge
-		}
+		mergeLogFiles();
 
 		if (project == null) {
 			return;
@@ -600,26 +598,53 @@ public abstract class BaseExecutor {
 	protected abstract String getDefaultLogFileName();
 	
 	/**
+	 * @return the relative directory path of the default log file from the preferences
+	 */
+	private String getDefaultLogFileDir() {
+		//TODO
+		/*
+		final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		String logFolder = getOverlayedPreferenceValue(preferenceStore, project,
+				PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.SET_LOG_FOLDER);
+		if (!logFileNameDefined && Boolean.parseBoolean(logFolder)) {
+			return getOverlayedPreferenceValue(preferenceStore, project,
+					PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.LOG_FOLDER_PATH_NAME);
+		}
+		return null;
+		*/
+		// log files are created in the bin (actual) directory
+		// until temporary cfg file creation is fixed:
+		//  - ../log/MyExample-%n.log file is set as LogFile if it's not provided by the input cfg file
+		return ".";
+	}
+	
+	/**
+	 * @return the relative path of the log dir (from the cfg file, or the default from the preferences)
+	 */
+	private String getLogDir() {
+		if ( this.logFileNameDefined && mLogFileName != null ) {
+			File file = new File(mLogFileName);
+			String parent = file.getParent();
+			return parent != null ? parent : "";
+		}
+		
+		return this.getDefaultLogFileDir();
+	}
+	
+	/**
 	 * Creates the content of the configuration file
 	 * @return the generated cfg string
 	 */
 	protected String generateCfgString() {
 		StringBuilder builder = new StringBuilder();
-		final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-		String logFolder = getOverlayedPreferenceValue(preferenceStore, project,
-				PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.SET_LOG_FOLDER);
-		if (!logFileNameDefined && Boolean.parseBoolean(logFolder)) {
-			String workingDirRelative = getOverlayedPreferenceValue(preferenceStore, project,
-					PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.LOG_FOLDER_PATH_NAME);
-			
-			if (workingDirRelative != null && workingDirRelative.length() != 0) {
-				builder.append("\n//This part was added by the TITAN Executor.\n");
-				builder.append("[LOGGING]\n");
-				builder.append("LogFile := ");
-				builder.append("\"" + "." + IPath.SEPARATOR + workingDirRelative + IPath.SEPARATOR);
-				builder.append(getDefaultLogFileName());
-				builder.append("\"\n\n");
-			}
+		String workingDirRelative = getDefaultLogFileDir();
+		if (workingDirRelative != null && workingDirRelative.length() != 0) {
+			builder.append("\n//This part was added by the TITAN Executor.\n");
+			builder.append("[LOGGING]\n");
+			builder.append("LogFile := ");
+			builder.append("\"" + "." + IPath.SEPARATOR + workingDirRelative + IPath.SEPARATOR);
+			builder.append(getDefaultLogFileName());
+			builder.append("\"\n\n");
 		}
 		return builder.toString();
 	}
@@ -649,7 +674,7 @@ public abstract class BaseExecutor {
 		configHandler.setEnvMap(env);
 		configHandler.processASTs();
 		logFileNameDefined = configHandler.isLogFileNameDefined();
-	
+		mLogFileName = configHandler.getLogFileName();
 		return configHandler;
 	}
 
@@ -658,14 +683,14 @@ public abstract class BaseExecutor {
 	 */
 	protected void deleteLogFiles() {
 		final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-		if (logFileNameDefined
-				||!isLogFolderSet(preferenceStore)
-				|| !isDeleteLogFilesSet(preferenceStore)) {
+		if ( !isDeleteLogFilesSet( preferenceStore ) ) {
 			return;
 		}
 		
-		String workingDirRelative = getOverlayedPreferenceValue(
-				preferenceStore, project, PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.LOG_FOLDER_PATH_NAME);
+		String workingDirRelative = getLogDir();
+		if ( workingDirRelative == null ) {
+			return;
+		}
 		String logFileFolder = workingdirectoryPath + File.separator + workingDirRelative + File.separator;
 		Path path = new Path(logFileFolder);
 		
@@ -716,20 +741,20 @@ public abstract class BaseExecutor {
 	 * Merges the generated log files together.
 	 */
 	protected void mergeLogFiles() {
-		if (logFilesMerged) {
+ 		if (logFilesMerged) {
 			return;
 		} else {
 			logFilesMerged = true;
 		}
 		final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-		if (!isLogFolderSet(preferenceStore)
-				|| !isAutomaticMergeEnabled(preferenceStore)) {
+		if ( !isAutomaticMergeEnabled( preferenceStore ) ) {
 			return;
 		}
 		
-		String workingDirRelative =  getOverlayedPreferenceValue(
-				preferenceStore, project, PreferenceConstants.EXECUTOR_PREFERENCE_PAGE_ID, PreferenceConstants.LOG_FOLDER_PATH_NAME);
-				//old: preferenceStore.getString(PreferenceConstants.LOG_FOLDER_PATH_NAME);
+		String workingDirRelative =  getLogDir();
+		if ( workingDirRelative == null ) {
+			return;
+		}
 		String logFileFolder = workingdirectoryPath + File.separator + workingDirRelative + File.separator;
 		Path path = new Path(logFileFolder);
 		

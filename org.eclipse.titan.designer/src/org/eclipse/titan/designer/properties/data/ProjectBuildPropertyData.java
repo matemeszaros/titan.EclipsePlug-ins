@@ -52,7 +52,8 @@ public final class ProjectBuildPropertyData {
 
 	// TODO: The following attributes are not saved yet into .TITAN_properties (only by Eclipse internal persistent storage)
 	/**
-	 * Stores the URI string of the tpd file which the project is loaded from
+	 * Stores the URI string of the tpd file which the project is loaded from,
+	 * with resolved environment variables
 	 */
 	public static final String LOAD_LOCATION = "loadLocation";
 	/**

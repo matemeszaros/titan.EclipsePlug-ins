@@ -115,12 +115,10 @@ public final class CheckSemantic extends ExternalTitanAction {
 		// used to generate the Makefile, otherwise use the general
 		// preferences.
 		if (singleSelectedProject == null) {
-			//TITANConsole.getConsole().newMessageStream().println("Using the general preferences to do the external semantic check");
 			TITANConsole.println("Using the general preferences to do the external semantic check");
 			titanFlags += getTITANActionFlags();
 			command.add(titanFlags);
 		} else {
-			//TITANConsole.getConsole().newMessageStream().println("Using the project properties to do the external semantic check");
 			TITANConsole.println("Using the project properties to do the external semantic check");
 			boolean useRuntime2 = false;
 			try {
