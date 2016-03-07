@@ -73,11 +73,11 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 
 	private static final String KIND = "external function";
 
-	private final Assignment_type assignment_type;
+	private final Assignment_type assignmentType;
 	private final FormalParameterList formalParList;
 	private final Type returnType;
 	private final boolean returnsTemplate;
-	private final TemplateRestriction.Restriction_type template_restriction;
+	private final TemplateRestriction.Restriction_type templateRestriction;
 	private EncodingPrototype_type prototype;
 	private Type inputType;
 	private Type outputType;
@@ -88,15 +88,15 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 	private PrintingType printingType;
 
 	public Def_Extfunction(final Identifier identifier, final FormalParameterList formalParameters, final Type returnType,
-			final boolean returnsTemplate, final TemplateRestriction.Restriction_type template_restriction) {
+			final boolean returnsTemplate, final TemplateRestriction.Restriction_type templateRestriction) {
 		super(identifier);
-		assignment_type = (returnType == null) ? Assignment_type.A_EXT_FUNCTION : (returnsTemplate ? Assignment_type.A_EXT_FUNCTION_RTEMP
+		assignmentType = (returnType == null) ? Assignment_type.A_EXT_FUNCTION : (returnsTemplate ? Assignment_type.A_EXT_FUNCTION_RTEMP
 				: Assignment_type.A_EXT_FUNCTION_RVAL);
 		formalParList = formalParameters;
 		formalParList.setMyDefinition(this);
 		this.returnType = returnType;
 		this.returnsTemplate = returnsTemplate;
-		this.template_restriction = template_restriction;
+		this.templateRestriction = templateRestriction;
 		prototype = EncodingPrototype_type.NONE;
 		functionEncodingType = ExternalFunctionEncodingType_type.MANUAL;
 		encodingType = Encoding_type.UNDEFINED;
@@ -112,7 +112,7 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 
 	@Override
 	public Assignment_type getAssignmentType() {
-		return assignment_type;
+		return assignmentType;
 	}
 
 	@Override
@@ -442,7 +442,7 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 				location.reportSemanticError(MessageFormat.format(
 						"The external function must have a return type for attribute `prototype({0})''", prototype.getName()));
 			} else {
-				if (Assignment_type.A_FUNCTION_RTEMP.equals(assignment_type)) {
+				if (Assignment_type.A_FUNCTION_RTEMP.equals(assignmentType)) {
 					returnType.getLocation()
 							.reportSemanticError(
 									MessageFormat.format(
@@ -610,20 +610,16 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 
 	@Override
 	public TemplateRestriction.Restriction_type getTemplateRestriction() {
-		return template_restriction;
+		return templateRestriction;
 	}
 
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.addAll(referingHere);
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
-
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();

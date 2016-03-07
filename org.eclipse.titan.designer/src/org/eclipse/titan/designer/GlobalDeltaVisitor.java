@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.parsers.FileSaveTracker;
@@ -83,10 +84,12 @@ public final class GlobalDeltaVisitor implements IResourceDeltaVisitor {
 	/**
 	 * Reports the collected list of outdated files, to let the internal storage know, that their data is outdated..
 	 * */
-	public void reportOutdatedFiles() {
+	public WorkspaceJob[] reportOutdatedFiles() {
+		WorkspaceJob[] jobs = new WorkspaceJob[2];
 		if (!outdatedFiles.isEmpty()) {
-			GlobalParser.getProjectSourceParser(project).reportOutdating(outdatedFiles);
-			GlobalParser.getConfigSourceParser(project).reportOutdating(outdatedFiles);
+			jobs[0] = GlobalParser.getProjectSourceParser(project).reportOutdating(outdatedFiles);
+			jobs[1] = GlobalParser.getConfigSourceParser(project).reportOutdating(outdatedFiles);
 		}
+		return jobs;
 	}
 }

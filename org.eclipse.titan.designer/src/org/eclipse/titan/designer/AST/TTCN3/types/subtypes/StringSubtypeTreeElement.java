@@ -26,10 +26,10 @@ public abstract class StringSubtypeTreeElement extends SubtypeConstraint {
 		CONSTRAINT
 	}
 
-	protected final StringType string_type;
+	protected final StringType stringType;
 
-	protected StringSubtypeTreeElement(final StringType string_type) {
-		this.string_type = string_type;
+	protected StringSubtypeTreeElement(final StringType stringType) {
+		this.stringType = stringType;
 	}
 
 	public StringSubtypeTreeElement evaluate() {

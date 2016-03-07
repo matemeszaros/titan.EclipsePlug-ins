@@ -46,7 +46,7 @@ public final class SubsetMatch_Template extends CompositeTemplate {
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (getIsErroneous(timestamp)) {
 			return Type_type.TYPE_UNDEFINED;
 		}
@@ -55,7 +55,7 @@ public final class SubsetMatch_Template extends CompositeTemplate {
 	}
 
 	@Override
-	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allow_omit) {
+	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		getLocation().reportSemanticError("A specific value expected instead of a subset match");
 	}
 

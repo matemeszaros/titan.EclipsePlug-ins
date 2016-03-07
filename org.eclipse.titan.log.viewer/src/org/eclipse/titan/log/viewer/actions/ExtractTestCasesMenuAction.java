@@ -9,6 +9,9 @@ package org.eclipse.titan.log.viewer.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -16,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,30 +31,28 @@ import org.eclipse.titan.log.viewer.utils.Constants;
 import org.eclipse.titan.log.viewer.utils.Messages;
 import org.eclipse.titan.log.viewer.utils.SelectionUtils;
 import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * Extracts test cases from a TITAN log file and shows the test cases
  * in the test cases viewer in the navigator view
  */
-//FIXME this is not even an ACTION !!!!
-public class ExtractTestCasesMenuAction extends Action implements IActionDelegate {
+//TODO remove unnecessary functions after conversion
+public class ExtractTestCasesMenuAction extends AbstractHandler implements IActionDelegate {
 
-	private static final String NAME = Messages.getString("ExtractTestCasesMenuAction.0"); //$NON-NLS-1$
-	private IStructuredSelection selection;
+	private ISelection selection;
 		
 	public ExtractTestCasesMenuAction() {
-		super(NAME);
 	}
 	
-	@Override
-	public void run() {
-		if (this.selection == null) {
+	public void run(final ISelection selection) {
+		if (selection == null) {
 			return;
 		}
-		if (!SelectionUtils.isSelectionALogFile(this.selection)) {
+		if (!SelectionUtils.isSelectionALogFile(selection)) {
 			return;
 		}
-		final IFile logFile = SelectionUtils.selectionToIFile(this.selection);
+		final IFile logFile = SelectionUtils.selectionToIFile(selection);
 		try {
 			Object temp = logFile.getSessionProperty(Constants.EXTRACTION_RUNNING);
 			if (temp != null && (Boolean) temp) {
@@ -109,7 +109,16 @@ public class ExtractTestCasesMenuAction extends Action implements IActionDelegat
 	
 	@Override
 	public void run(final IAction action) {
-		run();
+		run(selection);
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+
+		run(selection);
+
+		return null;
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public final class OpenDeclarationHelper {
 			return null;
 		}
 
-		DeclarationCollector declarationCollector = new DeclarationCollector(reference, projectSourceParser);
+		DeclarationCollector declarationCollector = new DeclarationCollector(reference);
 		scope.addDeclaration(declarationCollector);
 
 		return declarationCollector;

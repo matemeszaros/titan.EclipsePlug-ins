@@ -193,18 +193,15 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		WorkspaceJob op = new WorkspaceJob("reparse information update") {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				WorkspaceJob temp_lastIncrementalSyntaxCheck = lastIncrementalSyntaxCheck;
-				if (temp_lastIncrementalSyntaxCheck != null) {
+				WorkspaceJob tempLastIncrementalSyntaxCheck = lastIncrementalSyntaxCheck;
+				if (tempLastIncrementalSyntaxCheck != null) {
 					try {
-						temp_lastIncrementalSyntaxCheck.join();
+						tempLastIncrementalSyntaxCheck.join();
 					} catch (InterruptedException e) {
 						ErrorReporter.logExceptionStackTrace(e);
 					}
 				}
-				sourceParser.addModulesToBeSemanticallyAnalyzed(reparser.moduleToBeReanalysed);
-				if (reparser.fullAnalysysNeeded) {
-					sourceParser.setFullSemanticAnalysisNeeded();
-				}
+
 				return Status.OK_STATUS;
 			}
 		};
@@ -217,10 +214,6 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		if (store.getBoolean(PreferenceConstants.DISPLAYDEBUGINFORMATION)) {
 			TITANDebugConsole.println("Refreshing the syntax took " + (System.nanoTime() - parserStart) * (1e-9) + " secs");
-		}
-
-		if (!reparser.fullAnalysysNeeded) {
-			return;
 		}
 
 		op = new WorkspaceJob(FOLDING_UPDATE) {
@@ -255,10 +248,10 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			return;
 		}
 
-		final WorkspaceJob temp_lastIncrementalSyntaxCheck = lastIncrementalSyntaxCheck;
-		if (temp_lastIncrementalSyntaxCheck != null) {
+		final WorkspaceJob tempLastIncrementalSyntaxCheck = lastIncrementalSyntaxCheck;
+		if (tempLastIncrementalSyntaxCheck != null) {
 			try {
-				temp_lastIncrementalSyntaxCheck.join();
+				tempLastIncrementalSyntaxCheck.join();
 			} catch (InterruptedException e) {
 				ErrorReporter.logExceptionStackTrace(e);
 			}
@@ -306,13 +299,13 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		fullReconciliation(true);
 	}
 
-	private void fullReconciliation(final boolean is_initial) {
+	private void fullReconciliation(final boolean isInitial) {
 		actualCode = new StringBuilder(document.get());
 
 		GlobalIntervalHandler.putInterval(document, null);
 		IPreferencesService prefs = Platform.getPreferencesService();
 		if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.USEONTHEFLYPARSING, true, null)) {
-			analyze(is_initial);
+			analyze(isInitial);
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
@@ -328,7 +321,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		}
 	}
 
-	public void analyze(final boolean is_initial) {
+	public void analyze(final boolean isInitial) {
 		final IFile editedFile = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 		if (editedFile == null || ResourceExclusionHelper.isExcluded(editedFile)) {
 			return;
@@ -348,10 +341,10 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		});
 
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		if (is_initial || !editor.isSemanticCheckingDelayed()) {
+		if (isInitial || !editor.isSemanticCheckingDelayed()) {
 			final boolean minimizeMemoryUsage = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 					PreferenceConstants.MINIMISEMEMORYUSAGE, false, null);
-			if (!is_initial || minimizeMemoryUsage) {
+			if (!isInitial || minimizeMemoryUsage) {
 				projectSourceParser.reportOutdating(editedFile);
 			}
 			projectSourceParser.analyzeAll();

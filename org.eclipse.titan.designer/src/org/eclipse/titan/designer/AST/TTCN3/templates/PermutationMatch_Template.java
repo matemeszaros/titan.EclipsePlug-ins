@@ -36,7 +36,7 @@ public final class PermutationMatch_Template extends CompositeTemplate {
 	}
 
 	@Override
-	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allow_omit) {
+	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		getLocation().reportSemanticError("A specific value expected instead of a permutation match");
 	}
 

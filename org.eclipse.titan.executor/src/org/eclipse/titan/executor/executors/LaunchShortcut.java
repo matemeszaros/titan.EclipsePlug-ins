@@ -7,6 +7,11 @@
  ******************************************************************************/
 package org.eclipse.titan.executor.executors;
 
+import static org.eclipse.titan.executor.GeneralConstants.EXECUTECONFIGFILEONLAUNCH;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -20,17 +25,10 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.executor.tabpages.hostcontrollers.HostControllersTab;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.eclipse.titan.executor.GeneralConstants.EXECUTECONFIGFILEONLAUNCH;
 
 //FIXME comment
 /**
@@ -90,7 +88,7 @@ public abstract class LaunchShortcut implements ILaunchShortcut {
 				return null;
 			} else if (candidateConfigurations.size() > 1) {
 				ILabelProvider labelProvider = DebugUITools.newDebugModelPresentation();
-				ElementListSelectionDialog dialog = new ElementListSelectionDialog(new Shell(Display.getDefault()), labelProvider);
+				ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, labelProvider);
 				dialog.setTitle(getDialogTitle());
 				dialog.setMessage("Select existing configuration.");
 				dialog.setElements(candidateConfigurations.toArray(new ILaunchConfiguration[candidateConfigurations.size()]));

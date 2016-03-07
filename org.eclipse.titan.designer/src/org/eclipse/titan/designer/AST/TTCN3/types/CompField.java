@@ -345,6 +345,9 @@ public final class CompField extends ASTNode
 		INamedNode inamedNode = getNameParent();
 
 		while (!(inamedNode instanceof Definition)) {
+			if( inamedNode == null) {
+				return null; //FIXME: this is just a temp solution! find the reason!
+			}
 			inamedNode = inamedNode.getNameParent();
 		}
 

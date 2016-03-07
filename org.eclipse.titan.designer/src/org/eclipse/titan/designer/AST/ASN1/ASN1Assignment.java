@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.titan.designer.Activator;
+import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
@@ -39,7 +40,7 @@ public abstract class ASN1Assignment extends Assignment {
 
 	private static boolean markOccurrences;
 
-	protected final Ass_pard ass_pard;
+	protected final Ass_pard assPard;
 
 	static {
 		final IPreferencesService prefService = Platform.getPreferencesService();
@@ -61,14 +62,14 @@ public abstract class ASN1Assignment extends Assignment {
 		}
 	}
 
-	protected ASN1Assignment(final Identifier id, final Ass_pard ass_pard) {
+	protected ASN1Assignment(final Identifier id, final Ass_pard assPard) {
 		super(id);
-		this.ass_pard = ass_pard;
+		this.assPard = assPard;
 	}
 
 	/** @return the parameterizes assignment related to the assignment */
 	public final Ass_pard getAssPard() {
-		return ass_pard;
+		return assPard;
 	}
 
 	/**
@@ -101,7 +102,7 @@ public abstract class ASN1Assignment extends Assignment {
 	 * @return the assignment created.
 	 * */
 	public final ASN1Assignment newInstance(final Module module) {
-		if (null == ass_pard) {
+		if (null == assPard) {
 			if (null != location) {
 				location.reportSemanticError(MessageFormat.format(NOTPARAMETERIZEDASSIGNMENT, getFullName()));
 			}
@@ -110,7 +111,7 @@ public abstract class ASN1Assignment extends Assignment {
 		}
 
 		String newName = getIdentifier().getAsnName() + "." + module.getIdentifier().getAsnName() + ".inst";
-		newName += ass_pard.newInstanceNumber(module);
+		newName += assPard.newInstanceNumber(module);
 		return internalNewInstance(new Identifier(Identifier_type.ID_ASN, newName));
 	}
 
@@ -133,8 +134,8 @@ public abstract class ASN1Assignment extends Assignment {
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
-		if (null != ass_pard) {
-			ass_pard.check(timestamp);
+		if (null != assPard) {
+			assPard.check(timestamp);
 			lastTimeChecked = timestamp;
 		}
 	}
@@ -144,7 +145,7 @@ public abstract class ASN1Assignment extends Assignment {
 	 * 
 	 * @param timestamp
 	 *                the timestamp of the actual semantic check cycle.
-	 * @param assignment_type
+	 * @param assignmentType
 	 *                the type to check against.
 	 * @param referenceChain
 	 *                the reference chain to detect circular references
@@ -152,9 +153,9 @@ public abstract class ASN1Assignment extends Assignment {
 	 * @return true if the assignment is of the specified type, false
 	 *         otherwise
 	 * */
-	public boolean isAssignmentType(final CompilationTimeStamp timestamp, final Assignment_type assignment_type,
+	public boolean isAssignmentType(final CompilationTimeStamp timestamp, final Assignment_type assignmentType,
 			final IReferenceChain referenceChain) {
-		return getAssignmentType().equals(assignment_type);
+		return getAssignmentType().equals(assignmentType);
 	}
 
 	// TODO: remove when location is fixed
@@ -164,15 +165,27 @@ public abstract class ASN1Assignment extends Assignment {
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (ass_pard == null) {
+		if (assPard == null) {
 			return;
 		}
 
-		ass_pard.findReferences(referenceFinder, foundIdentifiers);
+		assPard.findReferences(referenceFinder, foundIdentifiers);
 	}
 
 	@Override
 	public boolean shouldMarkOccurrences() {
 		return markOccurrences;
+	}
+	
+	@Override
+	protected boolean memberAccept(ASTVisitor v) {
+		if (identifier != null && !identifier.accept(v)) {
+			return false;
+		}
+		if (assPard != null && !assPard.accept(v)) {
+			return false;
+		}
+
+		return true;
 	}
 }

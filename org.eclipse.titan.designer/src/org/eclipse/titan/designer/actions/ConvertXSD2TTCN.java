@@ -21,7 +21,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.path.PathConverter;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
@@ -97,7 +96,7 @@ public final class ConvertXSD2TTCN extends ExternalTitanAction {
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				DirectoryDialog dialog = new DirectoryDialog(new Shell(Display.getDefault()), SWT.SAVE);
+				DirectoryDialog dialog = new DirectoryDialog(null, SWT.SAVE);
 				dialog.setFilterPath(project.getLocation().toOSString());
 				String outFolder = dialog.open();
 				if (outFolder != null) {

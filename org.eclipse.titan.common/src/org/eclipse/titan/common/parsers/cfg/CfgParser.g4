@@ -22,6 +22,16 @@ import java.util.Map;
 }
 
 @members{
+	// format strings for error messages if definition (macro or environment variable) cannot be resolved
+	// %s : definition
+	private static final String DEFINITION_NOT_FOUND_STRING  = "Could not resolve definition: %s using \"\" as a replacement.";
+	private static final String DEFINITION_NOT_FOUND_BSTR    = "Could not resolve definition: %s using ''B as a replacement.";
+	private static final String DEFINITION_NOT_FOUND_HSTR    = "Could not resolve definition: %s using ''H as a replacement.";
+	private static final String DEFINITION_NOT_FOUND_OSTR    = "Could not resolve definition: %s using ''O as a replacement.";
+	private static final String DEFINITION_NOT_FOUND_INT     = "Could not resolve integer definition: %s using 0 as replacement.";
+	private static final String DEFINITION_NOT_FOUND_FLOAT   = "No macro or environmental variable defined %s could be found, using 0.0 as a replacement value.";
+	private static final String DEFINITION_NOT_FOUND_BOOLEAN = "Could not resolve definition: %s using \"true\" as a replacement.";
+
 	private List<TITANMarker> mWarnings = new ArrayList<TITANMarker>();
 	
 	private List<ISection> mSections = new ArrayList<ISection>();
@@ -32,20 +42,10 @@ import java.util.Map;
 
 	private IFile mActualFile = null;
 
-	private boolean mLogFileDefined = false;
-	
-	private String mLogFileName = null;
-	
 	private Map<String, String> mEnvVariables;
 	
-	private Integer mTcpPort = null;
-	private String mLocalAddress = null;
-	private Double mKillTimer = null;
-	private Integer mNumHcs = null;
-	private Boolean mUnixDomainSocket = null;
-	private Map<String, String> mComponents = new HashMap<String, String>();
-	private Map<String , String[]> mGroups = new HashMap<String, String[]>();
-	private List<String> mExecuteElements = new ArrayList<String>();
+	private CfgParseResult mCfgParseResult = new CfgParseResult();
+	
 	private int mLine = 1;
 	private int mOffset = 0;
 	
@@ -89,44 +89,8 @@ import java.util.Map;
 		mActualFile = file;
 	}
 
-	public boolean isLogFileDefined() {
-		return mLogFileDefined;
-	}
-	
-	public String getLogFileName() {
-		return mLogFileName;
-	}
-	
-	public Integer getTcpPort() {
-		return mTcpPort;
-	}
-  
-	public String getLocalAddress() {
-		return mLocalAddress;
-	}
-  
-	public Double getKillTimer() {
-		return mKillTimer;
-	}
-  
-	public Integer getNumHcs() {
-		return mNumHcs;
-	}
-	
-	public Boolean isUnixDomainSocketEnabled() {
-		return mUnixDomainSocket;
-	}
-	
-	public Map<String, String> getComponents() {
-		return mComponents;
-	}
-  
-	public Map<String, String[]> getGroups() {
-		return mGroups;
-	}
-	
-	public List<String> getExecuteElements() {
-		return mExecuteElements;
+	public CfgParseResult getCfgParseResult() {
+		return mCfgParseResult;
 	}
 	
 	public void setEnvironmentalVariables(Map<String, String> aEnvVariables){
@@ -225,6 +189,84 @@ import java.util.Map;
 			return null;
 		}
 	}
+	
+	/**
+	 * Gets the macro value string of a macro (without type)
+	 * @param aMacroToken the macro token
+	 * @param aErrorFormatStr format strings for error messages if definition (macro or environment variable) cannot be resolved
+	 *                        %s : definition
+	 * @return the macro value string
+	 *         or "" if macro is invalid. In this case an error marker is also created
+	 */
+	private String getMacroValue( Token aMacroToken, String aErrorFormatStr ) {
+		String definition = aMacroToken.getText().substring( 1, aMacroToken.getText().length() );
+		String value = getDefinitionValue( definition );
+		if ( value == null ) {
+			String errorMsg = String.format( aErrorFormatStr, definition );
+			reportError( errorMsg, aMacroToken, aMacroToken );
+			return "";
+		}
+		return value;
+	}
+	
+	/**
+	 * Gets the macro value string of a macro (without type)
+	 * @param aMacroRule the macro rule
+	 * @param aErrorFormatStr format strings for error messages if definition (macro or environment variable) cannot be resolved
+	 *                        %s : definition
+	 * @return the macro value string
+	 *         or "" if macro is invalid. In this case an error marker is also created
+	 */
+	private String getMacroValue( ParserRuleContext aMacroRule, String aErrorFormatStr ) {
+		String definition = aMacroRule.getText().substring( 1, aMacroRule.getText().length() );
+		String value = getDefinitionValue( definition );
+		if ( value == null ) {
+			String errorMsg = String.format( aErrorFormatStr, definition );
+			reportError( errorMsg, aMacroRule.start, aMacroRule.stop );
+			return "";
+		}
+		return value;
+	}
+	
+	/**
+	 * Gets the macro value string of a macro (with type)
+	 * @param aMacroToken the macro token
+	 * @param aErrorFormatStr format strings for error messages if definition (macro or environment variable) cannot be resolved
+	 *                        %s : definition
+	 * @return the macro value string
+	 *         or "" if macro is invalid. In this case an error marker is also created
+	 */
+	private String getTypedMacroValue( Token aMacroToken, String aErrorFormatStr ) {
+		int commaPosition = aMacroToken.getText().indexOf( ',' );
+		String definition = aMacroToken.getText().substring( 2, commaPosition );
+		String value = getDefinitionValue( definition );
+		if ( value == null ) {
+			String errorMsg = String.format( aErrorFormatStr, definition );
+			reportError( errorMsg, aMacroToken, aMacroToken );
+			return "";
+		}
+		return value;
+	}
+		
+	/**
+	 * Gets the macro value string of a macro (with type)
+	 * @param aMacroRule the macro rule
+	 * @param aErrorFormatStr format strings for error messages if definition (macro or environment variable) cannot be resolved
+	 *                        %s : definition
+	 * @return the macro value string
+	 *         or "" if macro is invalid. In this case an error marker is also created
+	 */
+	private String getTypedMacroValue( ParserRuleContext aMacroRule, String aErrorFormatStr ) {
+		int commaPosition = aMacroRule.getText().indexOf( ',' );
+		String definition = aMacroRule.getText().substring( 2, commaPosition );
+		String value = getDefinitionValue( definition );
+		if ( value == null ) {
+			String errorMsg = String.format( aErrorFormatStr, definition );
+			reportError( errorMsg, aMacroRule.start, aMacroRule.stop );
+			return "";
+		}
+		return value;
+	}	
 }
 
 options{
@@ -244,8 +286,7 @@ pr_ConfigFile:
 pr_Section returns [ ISection section ]:
 {	$section = null;
 }
-(	pr_DefaultSection	
-|	pr_MainControllerSection
+(	pr_MainControllerSection
 |	i = pr_IncludeSection { $section = $i.includeSection; }
 |	pr_OrderedIncludeSection
 |	pr_ExecuteSection
@@ -257,13 +298,6 @@ pr_Section returns [ ISection section ]:
 |	pr_ComponentsSection
 |	pr_LoggingSection
 |	pr_ProfilerSection
-)
-;
-
-pr_DefaultSection:
-(	WS
-|	LINE_COMMENT
-|	BLOCK_COMMENT	
 )
 ;
 
@@ -284,36 +318,30 @@ pr_MainControllerItem:
 
 pr_MainControllerItemUnixDomainSocket:
 	UNIXSOCKETS1	ASSIGNMENTCHAR1	u = (YES1 | NO1)					SEMICOLON1?
-	{	mUnixDomainSocket = Boolean.parseBoolean( $u.getText() );
+	{	mCfgParseResult.setUnixDomainSocket( Boolean.parseBoolean( $u.getText() ) );
 	}
 ;
 
 pr_MainControllerItemKillTimer:
 	KILLTIMER1		ASSIGNMENTCHAR1	k = pr_ArithmeticValueExpression	SEMICOLON1?
-	{	try {
-			mKillTimer = Double.parseDouble( $k.text );
-		} catch( NumberFormatException e ) {}
+	{	mCfgParseResult.setKillTimer( $k.number.getValue() );
 	}
 ;
 
 pr_MainControllerItemLocalAddress:
 	LOCALADDRESS1	ASSIGNMENTCHAR1	l = pr_HostName						SEMICOLON1?
-	{	mLocalAddress = $l.text;	}
+	{	mCfgParseResult.setLocalAddress( $l.text );	}
 ;
 
 pr_MainControllerItemNumHcs:
 	NUMHCS1			ASSIGNMENTCHAR1	n = pr_IntegerValueExpression		SEMICOLON1?
-	{	try {
-			mNumHcs = Integer.parseInt( $n.text );
-		} catch( NumberFormatException e ) {}
+	{	mCfgParseResult.setNumHcs( $n.number.getIntegerValue() );
 	}
 ;
 
 pr_MainControllerItemTcpPort:
 	TCPPORT1		ASSIGNMENTCHAR1	t = pr_IntegerValueExpression		SEMICOLON1?
-	{	try {
-			mTcpPort = Integer.parseInt( $t.text );
-		} catch( NumberFormatException e ) {}
+	{	mCfgParseResult.setTcpPort( $t.number.getIntegerValue() );
 	}
 ;
 
@@ -341,7 +369,7 @@ pr_ExecuteSection:
 ;
 
 pr_ExecuteSectionItem:
-	t = TEST3 { mExecuteElements.add( $t.getText() ); }
+	t = TEST3 { mCfgParseResult.getExecuteElements().add( $t.getText() ); }
 	SEMICOLON3?
 ;
 
@@ -438,15 +466,19 @@ pr_DisableCoverage:
 pr_DatabaseFile:
 	DATABASEFILE
 	ASSIGNMENTCHAR12
-	(	STRING12
-	|	MACRO12	
-	)
+	pr_DatabaseFilePart
 	(	AND12
-		(	STRING12
-		|	MACRO12	
-		)
+		pr_DatabaseFilePart
 	)*
 ;
+
+pr_DatabaseFilePart:
+(	STRING12
+|	macro = MACRO12
+		{	String value = getMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );
+			//TODO: implement: use value if needed
+		}
+);
 
 pr_AggregateData:
 	AGGREGATEDATA
@@ -459,15 +491,21 @@ pr_AggregateData:
 pr_StatisticsFile:
 	STATISTICSFILE
 	ASSIGNMENTCHAR12
-	(	STRING12
-	|	MACRO12	
-	)
+	pr_StatisticsFilePart
 	(	AND12
-		(	STRING12
-		|	MACRO12	
-		)
+		pr_StatisticsFilePart
 	)*
 ;
+
+// currently it is the same as pr_DatabaseFilePart,
+// but it will be different if value is used
+pr_StatisticsFilePart:
+(	STRING12
+|	macro = MACRO12
+		{	String value = getMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );
+			//TODO: implement: use value if needed
+		}
+);
 
 pr_DisableStatistics:
 	DISABLESTATISTICS
@@ -587,15 +625,12 @@ pr_PlainLoggingParam:
 |	LOGFILENUMBER ASSIGNMENTCHAR11 pr_Number
 |	LOGFILESIZE ASSIGNMENTCHAR11 pr_Number
 |	LOGFILENAME ASSIGNMENTCHAR11 f = pr_LogfileName
-	{	mLogFileDefined = true;
-		mLogFileName = $f.text;
-		if ( mLogFileName != null ) {
-			if ( mLogFileName.length() > 0 && mLogFileName.startsWith( "\"" ) ) {
-				mLogFileName = mLogFileName.substring( 1 );
-			}
-			if ( mLogFileName.length() > 0 && mLogFileName.endsWith( "\"" ) ) {
-				mLogFileName = mLogFileName.substring( 0, mLogFileName.length() - 1 );
-			}
+	{	mCfgParseResult.setLogFileDefined( true );
+		String logFileName = $f.text;
+		if ( logFileName != null ) {
+			// remove quotes
+			logFileName = logFileName.replaceAll("^\"|\"$", "");
+			mCfgParseResult.setLogFileName( logFileName );
 		}
 	}
 |	(TIMESTAMPFORMAT | CONSOLETIMESTAMPFORMAT) ASSIGNMENTCHAR11 TIMESTAMPVALUE
@@ -718,8 +753,8 @@ pr_Detailed:
 pr_ComponentItem:
 	n = pr_ComponentName
 	ASSIGNMENTCHAR10 
-	(	h = pr_HostName { mComponents.put( $n.text, $h.text ); }
-	|	i = IPV6_10 { mComponents.put( $n.text, $i.getText() ); }
+	(	h = pr_HostName { mCfgParseResult.getComponents().put( $n.text, $h.text ); }
+	|	i = IPV6_10 { mCfgParseResult.getComponents().put( $n.text, $i.getText() ); }
 	)
 ;
 
@@ -732,7 +767,10 @@ pr_ComponentName:
 pr_HostName:
 (	pr_DNSName
 |	TTCN3IDENTIFIER1 | TTCN3IDENTIFIER10
-|	MACRO_HOSTNAME1 | MACRO_HOSTNAME10
+|	macro = (MACRO_HOSTNAME1 | MACRO_HOSTNAME10)
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );
+			//TODO: implement: use value if needed
+		}
 )
 ;
 
@@ -811,103 +849,98 @@ pr_TestportName:
 )
 ;
 
-pr_Identifier:
-(	MACRO_ID7 | MACRO_ID8 | MACRO_ID9 | MACRO_ID10 | MACRO_ID11
-|	TTCN3IDENTIFIER7 | TTCN3IDENTIFIER8 | TTCN3IDENTIFIER9 | TTCN3IDENTIFIER10 | TTCN3IDENTIFIER11
-)
-;
-
-pr_IntegerValueExpression:
-	pr_IntegerAddExpression
-;
-
-pr_IntegerAddExpression:
-	pr_IntegerMulExpression
-	(	(	PLUS1 | PLUS7 | PLUS9
-		|	MINUS1 | MINUS7 | MINUS9
-		)
-		pr_IntegerMulExpression
-	)*
-;
-
-pr_IntegerMulExpression:
-	pr_IntegerUnaryExpression
-	(	(	STAR1 | STAR7 | STAR9
-		|	SLASH1 | SLASH7 | SLASH9 
-		)	
-		pr_IntegerUnaryExpression
-	)*
-;
-
-pr_IntegerUnaryExpression:
-	(	PLUS1 | PLUS7 | PLUS9
-	|	MINUS1 | MINUS7 | MINUS9
-	)?
-	pr_IntegerPrimaryExpression
-;
-
-pr_IntegerPrimaryExpression:
-(	pr_Number
-|	LPAREN1 pr_IntegerAddExpression RPAREN1
-|	LPAREN7 pr_IntegerAddExpression RPAREN7
-|	LPAREN9 pr_IntegerAddExpression RPAREN9
-)
-;
-
-pr_Number:
-(	NUMBER1 | NUMBER7 | NUMBER9 | NUMBER11
-|	MACRO_INT1 | MACRO_INT7 | MACRO_INT9 | MACRO_INT11	
-)
-;
-
-pr_StringValue:
-	pr_CString
-	(	(STRINGOP1 | STRINGOP7 | STRINGOP9 | STRINGOP11) pr_CString
-	)*
-;
-
-pr_CString:
-(	STRING1 | STRING7 | STRING9 | STRING11
-|	macro2 = pr_MacroCString
-		{
-//TODO
-/*
-			String definition = $macro2.text.substring(1, $macro2.text.length());
-			LocationAST tempAST = new LocationAST();
-			String value = getDefinitionValue(definition);
-			if ( value != null ) {
-				tempAST.initialize(STRING,"\""+value+"\"");
-			} else {
-				tempAST.initialize(STRING,"\"\"");
-				reportError( "Could not resolve definition: " + definition + " using \"\" as a replacement.", $macro2.start, $macro2.stop );
-			}
-//*/
+pr_Identifier returns [String identifier]:
+(	macro = (MACRO_ID7 | MACRO_ID8 | MACRO_ID9 | MACRO_ID10 | MACRO_ID11)
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );
+			$identifier = value;
 		}
-|	macro1 = pr_MacroExpliciteCString
-		{
-//TODO
-/*
-			int commaPosition = $macro1.text.indexOf(',');
-			String definition = $macro1.text.substring(2,commaPosition);
-			LocationAST tempAST = new LocationAST();
-			String value = getDefinitionValue(definition);
-			if ( value != null ) {
-				tempAST.initialize(STRING,"\""+value+"\"");
-			} else {
-				tempAST.initialize(STRING,"\"\"");
-				reportError( "Could not resolve definition: " + definition + " using \"\" as a replacement.", $macro1.start, $macro1.stop );
+|	a = (TTCN3IDENTIFIER7 | TTCN3IDENTIFIER8 | TTCN3IDENTIFIER9 | TTCN3IDENTIFIER10 | TTCN3IDENTIFIER11)
+		{	$identifier = $a.getText();	}
+)
+;
+
+pr_IntegerValueExpression returns [CFGNumber number]:
+	a = pr_IntegerAddExpression	{	$number = $a.number;	}
+;
+
+pr_IntegerAddExpression returns [CFGNumber number]:
+	a = pr_IntegerMulExpression	{	$number = $a.number;	}
+	(	(	PLUS1 | PLUS7 | PLUS9	)	b1 = pr_IntegerMulExpression	{	$number.add($b1.number);	}
+	|	(	MINUS1 | MINUS7 | MINUS9	)	b2 = pr_IntegerMulExpression	{	$b2.number.mul(-1); $number.add($b2.number);	}
+	)*
+;
+
+pr_IntegerMulExpression returns [CFGNumber number]:
+	a = pr_IntegerUnaryExpression	{	$number = $a.number;	}
+	(	(	STAR1 | STAR7 | STAR9	)	b1 = pr_IntegerUnaryExpression	{	$number.mul($b1.number);	}
+	|	(	SLASH1 | SLASH7 | SLASH9	)	b2 = pr_IntegerUnaryExpression
+		{	try {
+				$number.div($b2.number);
+			} catch ( ArithmeticException e ) {
+				// division by 0
+				reportError( e.getMessage(), $a.start, $b2.stop );
+				$number = new CFGNumber( "0" );
 			}
-//*/
+		}
+	)*
+;
+
+pr_IntegerUnaryExpression returns [CFGNumber number]:
+{	boolean negate = false;
+}
+	(	(PLUS1 | PLUS7 | PLUS9)
+	|	(MINUS1 | MINUS7 | MINUS9)	{	negate = !negate;	}
+	)*
+	a = pr_IntegerPrimaryExpression
+		{	$number = $a.number;
+			if ( negate ) {
+				$number.mul( -1 );
+			}
+		}
+;
+
+pr_IntegerPrimaryExpression returns [CFGNumber number]:
+(	a = pr_Number	{	$number = $a.number;	}
+|	LPAREN1 b = pr_IntegerAddExpression RPAREN1	{	$number = $b.number;	}
+|	LPAREN7 c = pr_IntegerAddExpression RPAREN7	{	$number = $c.number;	}
+|	LPAREN9 d = pr_IntegerAddExpression RPAREN9	{	$number = $d.number;	}
+)
+;
+
+pr_Number returns [CFGNumber number]:
+(	a = (NUMBER1 | NUMBER7 | NUMBER9 | NUMBER11)	{$number = new CFGNumber($a.text);}
+|	macro = (MACRO_INT1 | MACRO_INT7 | MACRO_INT9 | MACRO_INT11)	
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_INT );
+			$number = new CFGNumber( value.length() > 0 ? value : "0" );
 		}
 )
 ;
 
-pr_MacroCString:
-	(MACRO1 | MACRO7 | MACRO9 | MACRO11)
+pr_StringValue returns [String string]:
+	a = pr_CString	{ $string = $a.string.replaceAll("^\"|\"$", ""); }
+	(	(STRINGOP1 | STRINGOP7 | STRINGOP9 | STRINGOP11) b = pr_CString { $string = $string + $b.string.replaceAll("^\"|\"$", ""); }
+	)*
+	{	$string = "\"" + $string + "\"";	}
 ;
 
-pr_MacroExpliciteCString:
-	(MACRO_EXP_CSTR1 | MACRO_EXP_CSTR7 | MACRO_EXP_CSTR9 | MACRO_EXP_CSTR11)
+pr_CString returns [String string]:
+(	a = (STRING1 | STRING7 | STRING9 | STRING11)
+		{	
+			$string = $a.text;
+		}
+|	macro2 = pr_MacroCString			{	$string = "\"" + $macro2.string + "\"";	}
+|	macro1 = pr_MacroExpliciteCString	{	$string = "\"" + $macro1.string + "\"";	}
+)
+;
+
+pr_MacroCString returns [String string]:
+	macro = (MACRO1 | MACRO7 | MACRO9 | MACRO11)
+		{	$string = getMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );	}
+;
+
+pr_MacroExpliciteCString returns [String string]:
+	macro = (MACRO_EXP_CSTR1 | MACRO_EXP_CSTR7 | MACRO_EXP_CSTR9 | MACRO_EXP_CSTR11)
+		{	$string = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );	}
 ;
 
 pr_GroupItem:
@@ -925,7 +958,7 @@ pr_GroupItem:
 		)*
 	)
 )
-{	mGroups.put( $a.text, memberlist.toArray( new String[ memberlist.size() ] ) );
+{	mCfgParseResult.getGroups().put( $a.text, memberlist.toArray( new String[ memberlist.size() ] ) );
 }
 ;
 
@@ -995,53 +1028,74 @@ pr_LengthBound:
 	pr_IntegerValueExpression
 ;
 
-pr_ArithmeticValueExpression:
-	pr_ArithmeticAddExpression
+pr_ArithmeticValueExpression returns [CFGNumber number]:
+	a = pr_ArithmeticAddExpression	{	$number = $a.number;	}
 ;
 
-pr_ArithmeticAddExpression:
-	pr_ArithmeticMulExpression
-	(	(	PLUS1 | PLUS9
-		|	MINUS1 | MINUS9
-		)
-		pr_ArithmeticMulExpression
+pr_ArithmeticAddExpression returns [CFGNumber number]:
+	a = pr_ArithmeticMulExpression	{	$number = $a.number;	}
+	(	(	PLUS1 | PLUS9	)	b1 = pr_ArithmeticMulExpression	{	$number.add($b1.number);	}
+	|	(	MINUS1 | MINUS9	)	b2 = pr_ArithmeticMulExpression	{	$b2.number.mul(-1); $number.add($b2.number);	}
 	)*
 ;
 
-pr_ArithmeticMulExpression:
-	pr_ArithmeticUnaryExpression
-	(	(	STAR1 | STAR9
-		|	SLASH1 | SLASH9
-		)
-		pr_ArithmeticUnaryExpression
+pr_ArithmeticMulExpression returns [CFGNumber number]:
+	a = pr_ArithmeticUnaryExpression	{	$number = $a.number;	}
+	(	(	STAR1 | STAR9	)	b1 = pr_ArithmeticUnaryExpression	{	$number.mul($b1.number);	}
+	|	(	SLASH1 | SLASH9	)	b2 = pr_ArithmeticUnaryExpression
+		{	try {
+				$number.div($b2.number);
+			} catch ( ArithmeticException e ) {
+				// division by 0
+				reportError( e.getMessage(), $a.start, $b2.stop );
+				$number = new CFGNumber( "0.0" );
+			}
+		}
 	)*
 ;
 
-pr_ArithmeticUnaryExpression:
-	(	PLUS1 | PLUS9
-	|	MINUS1 | MINUS9
+pr_ArithmeticUnaryExpression returns [CFGNumber number]:
+{	boolean negate = false;
+}
+	(	(	PLUS1 | PLUS9	)
+	|	(	MINUS1 | MINUS9	)	{	negate = !negate;	}
 	)*
-	pr_ArithmeticPrimaryExpression
+	a = pr_ArithmeticPrimaryExpression
+		{	$number = $a.number;
+			if ( negate ) {
+				$number.mul( -1 );
+			}
+		}
 ;
 
-pr_ArithmeticPrimaryExpression:
-(	pr_Float
-|	pr_Number
-|	LPAREN1 pr_ArithmeticAddExpression RPAREN1
-|	LPAREN9 pr_ArithmeticAddExpression RPAREN9
+pr_ArithmeticPrimaryExpression returns [CFGNumber number]:
+(	a = pr_Float	{$number = $a.number;}
+|	b = pr_Number	{$number = $b.number;}
+|	LPAREN1 c = pr_ArithmeticAddExpression RPAREN1 {$number = $c.number;}
+|	LPAREN9 d = pr_ArithmeticAddExpression RPAREN9 {$number = $d.number;}
 )
 ;
 
-pr_Float:
-(	FLOAT1 | FLOAT9
-|	MACRO_FLOAT1 | MACRO_FLOAT9
+pr_Float returns [CFGNumber number]:
+(	a = (FLOAT1 | FLOAT9) {$number = new CFGNumber($a.text);}
+|	macro = (MACRO_FLOAT1 | MACRO_FLOAT9)
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_FLOAT );
+			$number = new CFGNumber( value.length() > 0 ? value : "0.0" );
+		}
 )
 ;
 
-pr_Boolean:
-(	TRUE9 | TRUE11
-|	FALSE9 | FALSE11
-|	MACRO_BOOL9 | MACRO_BOOL11
+pr_Boolean returns [String string]:
+(	t = (TRUE9 | TRUE11) { $string = $t.getText(); }
+|	f = (FALSE9 | FALSE11) { $string = $f.getText(); }
+|	macro = (MACRO_BOOL9 | MACRO_BOOL11)
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_BOOLEAN );
+			if ( "false".equals( value ) ) {
+				$string = "false";
+			} else {
+				$string = "true";
+			}
+		}
 )
 ;
 
@@ -1068,9 +1122,12 @@ pr_BStringValue:
 	pr_BString	(	STRINGOP9 pr_BString	)*
 ;
 
-pr_BString:
-(	BITSTRING9
-|	MACRO_BSTR9
+pr_BString returns [String string]:
+(	b = BITSTRING9 { $string = $b.getText(); }
+|	macro = MACRO_BSTR9
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_BSTR );
+			$string = "'" + value + "'B";
+		}
 )
 ;
 
@@ -1078,9 +1135,12 @@ pr_HStringValue:
 	pr_HString	(	STRINGOP9 pr_HString	)*
 ;
 
-pr_HString:
-(	HEXSTRING9
-|	MACRO_HSTR9
+pr_HString returns [String string]:
+(	h = HEXSTRING9 { $string = $h.getText(); }
+|	macro = MACRO_HSTR9
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_HSTR );
+			$string = "'" + value + "'H";
+		}
 )
 ;
 
@@ -1088,10 +1148,16 @@ pr_OStringValue:
 	pr_OString	(	STRINGOP9 pr_OString	)*
 ;
 
-pr_OString:
-(	OCTETSTRING9
-|	MACRO_OSTR9
-|	MACRO_BINARY9
+pr_OString returns [String string]:
+(	o = OCTETSTRING9 { $string = $o.getText(); }
+|	macro = MACRO_OSTR9
+		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_OSTR );
+			$string = "'" + value + "'0";
+		}
+|	macro_bin = MACRO_BINARY9
+		{	String value = getTypedMacroValue( $macro_bin, DEFINITION_NOT_FOUND_STRING );
+			$string = value;
+		}
 )
 ;
 

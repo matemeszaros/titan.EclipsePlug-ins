@@ -1316,7 +1316,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("The second operand of operation `create()' should be a charstring value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `expression_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Operation `create' should refer to a component type instead of constant `@expression_tests.cg_boolean'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@expression_tests.componentName_CT' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Referencing fields of a component is not allowed",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type mismatch: reference to a component type was expected in operation `create' instead of `@expression_tests.myrecof1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Incompatible component type: operation `create' should refer to `@expression_tests.componentName_CT2' instaed of `@expression_tests.componentName_CT'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
@@ -6806,7 +6806,7 @@ public class AST_tests {
 		lineNum += 1;
 		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
 		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.mycomponent' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Referencing fields of a component is not allowed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Type `@value_tests.mycomponent' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.mycomponent' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
@@ -7142,7 +7142,6 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Value list notation cannot be used for set type `@value_tests.mysetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@value_tests.myrecordType': 3 was expected instead of 5",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 2 and 3",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Too few elements in the array value: 6 was expected instead of 3",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;

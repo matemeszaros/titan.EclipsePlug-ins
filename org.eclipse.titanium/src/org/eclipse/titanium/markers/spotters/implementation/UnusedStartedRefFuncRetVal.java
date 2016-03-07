@@ -40,14 +40,14 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 			Start_Referenced_Component_Statement s = (Start_Referenced_Component_Statement) node;
 
-			Value dereferedValue = s.getDereferedValue();
-			if (dereferedValue == null) {
+			Value dereferredValue = s.getDereferredValue();
+			if (dereferredValue == null) {
 				return;
 			}
 
-			switch (dereferedValue.getValuetype()) {
+			switch (dereferredValue.getValuetype()) {
 			case EXPRESSION_VALUE:
-				if (Operation_type.REFERS_OPERATION.equals(((Expression_Value) dereferedValue).getOperationType())) {
+				if (Operation_type.REFERS_OPERATION.equals(((Expression_Value) dereferredValue).getOperationType())) {
 					return;
 				}
 				break;
@@ -58,7 +58,7 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 				break;
 			}
 
-			IType type = dereferedValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			IType type = dereferredValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			if (type != null) {
 				type = type.getTypeRefdLast(timestamp);
 			}
@@ -110,7 +110,7 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 
 			if (!returnTypeCorrect) {
 				String msg = MessageFormat.format(PROBLEM, functionType.getTypename(), returnType.getTypename());
-				problems.report(dereferedValue.getLocation(), msg);
+				problems.report(dereferredValue.getLocation(), msg);
 			}
 		}
 	}

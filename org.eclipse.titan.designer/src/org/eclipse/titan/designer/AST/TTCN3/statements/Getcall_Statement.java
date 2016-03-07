@@ -144,7 +144,7 @@ public final class Getcall_Statement extends Statement {
 		lastTimeChecked = timestamp;
 	}
 
-	public static void checkGetcallStatement(final CompilationTimeStamp timestamp, final Statement statement, final String statement_name,
+	public static void checkGetcallStatement(final CompilationTimeStamp timestamp, final Statement statement, final String statementName,
 			final Reference portReference, final TemplateInstance parameter, final TemplateInstance fromClause,
 			final Parameter_Redirect redirect, final Reference redirectSender) {
 		Port_Type portType = Port_Utility.checkPortReference(timestamp, statement, portReference);
@@ -154,7 +154,7 @@ public final class Getcall_Statement extends Statement {
 				PortTypeBody body = portType.getPortBody();
 				if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
-							MessageFormat.format(MESSAGEBASEDPORT, statement_name, portType.getTypename()));
+							MessageFormat.format(MESSAGEBASEDPORT, statementName, portType.getTypename()));
 				} else if (body.getInSignatures() == null) {
 					portReference.getLocation().reportSemanticError(MessageFormat.format(NOINSIGNATURES, portType.getTypename()));
 				}
@@ -173,7 +173,7 @@ public final class Getcall_Statement extends Statement {
 				TypeSet inSignatures = body.getInSignatures();
 				if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
-							MessageFormat.format(MESSAGEBASEDPORT, statement_name, portType.getTypename()));
+							MessageFormat.format(MESSAGEBASEDPORT, statementName, portType.getTypename()));
 				} else if (inSignatures != null) {
 					if (inSignatures.getNofTypes() == 1) {
 						signature = inSignatures.getTypeByIndex(0);
@@ -198,9 +198,9 @@ public final class Getcall_Statement extends Statement {
 			} else if (portReference == null) {
 				// any port is referenced, or there was a syntax
 				// error
-				parameter.getLocation().reportSemanticError(MessageFormat.format(ANYWITHPARAMETER, statement_name));
+				parameter.getLocation().reportSemanticError(MessageFormat.format(ANYWITHPARAMETER, statementName));
 				if (redirect != null) {
-					redirect.getLocation().reportSemanticError(MessageFormat.format(ANYWITHREDIRECT, statement_name));
+					redirect.getLocation().reportSemanticError(MessageFormat.format(ANYWITHREDIRECT, statementName));
 				}
 			}
 

@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -559,7 +558,7 @@ public final class GeneralOptionsSubPage {
 					loggingPage.createLoggingSection();
 				}
 
-				ParamDialog d = new ParamDialog(new Shell(Display.getDefault()), selectedLogEntry, null);
+				ParamDialog d = new ParamDialog(null, selectedLogEntry, null);
 				if (d.open() == Window.OK) {
 					PluginSpecificParam psp = createPluginSpecificParamNode(d.getName(), d.getValue());
 					paramViewer.setInput(selectedLogEntry);
@@ -597,7 +596,7 @@ public final class GeneralOptionsSubPage {
 				StructuredSelection selection = (StructuredSelection) paramViewer.getSelection();
 				PluginSpecificParam psp = (PluginSpecificParam) selection.getFirstElement();
 
-				ParamDialog d = new ParamDialog(new Shell(Display.getDefault()), selectedLogEntry, psp);
+				ParamDialog d = new ParamDialog(null, selectedLogEntry, psp);
 				if (d.open() == Window.OK) {
 					if (psp.getParam() != null) {
 						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), psp.getParam()

@@ -72,7 +72,7 @@ public abstract class ModuleImportation implements IReferenceChainElement, IOutl
 	}
 
 	/**
-	 * Sets whether the module refered to by this importation has changed to
+	 * Sets whether the module referred to by this importation has changed to
 	 * an other one since the last importation check.
 	 * 
 	 * @param value

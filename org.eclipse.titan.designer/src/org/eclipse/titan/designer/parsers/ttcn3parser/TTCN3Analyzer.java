@@ -134,7 +134,7 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 			return;
 		}
 		
-		parse4( reader, rootInt, aFile );
+		parse( reader, rootInt, aFile );
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 			return;
 		}
 
-		parse4( bufferedReader, fileLength, null );
+		parse( bufferedReader, fileLength, null );
 	}
 	
 	/**
@@ -162,10 +162,11 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 	 * @param aFileLength file length
 	 * @param aEclipseFile Eclipse dependent resource file
 	 */
-	private void parse4( final Reader aReader, final int aFileLength, IFile aEclipseFile ) {
+	private void parse( final Reader aReader, final int aFileLength, IFile aEclipseFile ) {
 		CharStream charStream = new UnbufferedCharStream( aReader );
 		Ttcn3Lexer lexer = new Ttcn3Lexer( charStream );
 
+		lexer.setCommentTodo( true );
 		lexer.setTokenFactory( new CommonTokenFactory( true ) );
 		lexer.initRootInterval( aFileLength );
 

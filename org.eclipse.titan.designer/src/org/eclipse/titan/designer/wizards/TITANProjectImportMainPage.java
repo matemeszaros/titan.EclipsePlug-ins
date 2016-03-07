@@ -23,10 +23,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.path.PathConverter;
@@ -128,7 +126,7 @@ public class TITANProjectImportMainPage extends WizardPage {
 	protected void handleProjectFileModified() {
 		projectFile = projectFileText.getText();
 		try {
-			new ProgressMonitorDialog(new Shell(Display.getDefault())).run(true, false, new IRunnableWithProgress() {
+			new ProgressMonitorDialog(null).run(true, false, new IRunnableWithProgress() {
 
 				@Override
 				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

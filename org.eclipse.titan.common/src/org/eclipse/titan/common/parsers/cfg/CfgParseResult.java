@@ -27,21 +27,58 @@ public class CfgParseResult {
 	
 	private List<String> mIncludeFiles = new ArrayList<String>();
 
+	/**
+	 * true if and only if LogFile parameter is defined in [LOGGING] section 
+	 */
 	private boolean mLogFileDefined = false;
+	
+	/**
+	 * Format string of the log file. <br>
+	 * This value is read from the [LOGGING] section with this parameter:
+	 * <pre>
+	 * LogFile := "&lt;log_file_name&gt;"
+	 * </pre>
+	 * where log_file_name is a relative file name to the bin/ directory of the TTCN-3 project,
+	 * it must contain "%n" (node), which will be for example "hc" or "mtc". <br>
+	 * Example:
+	 * <pre>
+	 * LogFile := "../log/MyExample-%n.log"
+	 * </pre>
+	 * This will create the following log files if there is 1 HC: <br>
+	 * &lt;project_dir&gt;/log/MyExample-hc.log <br>
+	 * &lt;project_dir&gt;/log/MyExample-mtc.log
+	 */
+	private String mLogFileName = null;
 	
 	private Integer mTcpPort = null;
 	
 	private String mLocalAddress = null;
 	
+	/**
+	 * Setting for kill timer (in seconds).
+	 * The executing process is killed, if there is no answer form the Main Controller. <br>
+	 * NOTE: this value has effect only for the Titan Eclipse Executor plug-in, works only in JNI Executor mode <br>
+	 * This value is read from the [MAIN_CONTROLLER] section with this parameter:
+	 * <pre>
+	 * KillTimer := &lt;float&gt;;
+	 * </pre>
+	 */
 	private Double mKillTimer = null;
 	
+	/**
+	 * Number of Host Controllers. <br>
+	 * This value is read from the [MAIN_CONTROLLER] section with this parameter:
+	 * <pre>
+	 * NumHCs := &lt;integer&gt;;
+	 * </pre>
+	 */
 	private Integer mNumHcs = null;
 	
 	private Boolean mUnixDomainSocket = null;
 	
 	private Map<String, String> mComponents = new HashMap<String, String>();
 	
-	private Map<String , String[]> mGroups = new HashMap<String, String[]>();
+	private Map<String, String[]> mGroups = new HashMap<String, String[]>();
 	
 	private List<String> mExecuteElements = new ArrayList<String>();
 	
@@ -77,6 +114,14 @@ public class CfgParseResult {
 		this.mLogFileDefined = aLogFileDefined;
 	}
 	
+	public String getLogFileName() {
+		return mLogFileName;
+	}
+	
+	public void setLogFileName(String aLogFileName) {
+		this.mLogFileName = aLogFileName;
+	}
+	
 	public Integer getTcpPort() {
 		return mTcpPort;
 	}
@@ -109,7 +154,7 @@ public class CfgParseResult {
 		this.mNumHcs = aNumHcs;
 	}
 	
-	public Boolean getUnixDomainSocket() {
+	public Boolean isUnixDomainSocket() {
 		return mUnixDomainSocket;
 	}
 	

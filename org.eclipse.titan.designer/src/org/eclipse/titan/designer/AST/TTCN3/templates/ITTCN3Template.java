@@ -226,14 +226,14 @@ public interface ITTCN3Template extends IGovernedSimple {
 	 * 
 	 * @param timestamp
 	 *                the time stamp of the actual semantic check cycle.
-	 * @param new_type
+	 * @param newType
 	 *                the new template_type the new template should belong
 	 *                to.
 	 * 
 	 * @return the new template of the provided kind if the conversion is
 	 *         possible, or this template otherwise.
 	 * */
-	ITTCN3Template setTemplatetype(final CompilationTimeStamp timestamp, final Template_type new_type);
+	ITTCN3Template setTemplatetype(final CompilationTimeStamp timestamp, final Template_type newType);
 
 	/**
 	 * Calculates the return type of the template when used in an
@@ -351,7 +351,7 @@ public interface ITTCN3Template extends IGovernedSimple {
 	 * @param usageLocation
 	 *                the location to be used for reporting errors
 	 * */
-	void checkRestrictionCommon(final String definitionName, final TemplateRestriction.Restriction_type templateRestriction, final Location usageLocation);
+	void checkRestrictionCommon(final CompilationTimeStamp timestamp, final String definitionName, final TemplateRestriction.Restriction_type templateRestriction, final Location usageLocation);
 
 	/**
 	 * Checks if this template conforms to the restriction TR_OMIT or

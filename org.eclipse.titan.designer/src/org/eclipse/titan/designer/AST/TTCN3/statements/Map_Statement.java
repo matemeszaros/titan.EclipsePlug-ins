@@ -14,12 +14,12 @@ import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
-import org.eclipse.titan.designer.AST.Reference;
+import org.eclipse.titan.designer.AST.IValue.Value_type;
+import org.eclipse.titan.designer.AST.PortReference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Value;
-import org.eclipse.titan.designer.AST.IValue.Value_type;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.PortTypeBody;
 import org.eclipse.titan.designer.AST.TTCN3.types.Port_Type;
@@ -47,12 +47,12 @@ public final class Map_Statement extends Statement {
 	private static final String STATEMENT_NAME = "map";
 
 	private final Value componentReference1;
-	private final Reference portReference1;
+	private final PortReference portReference1;
 	private final Value componentReference2;
-	private final Reference portReference2;
+	private final PortReference portReference2;
 
-	public Map_Statement(final Value componentReference1, final Reference portReference1, final Value componentReference2,
-			final Reference portReference2) {
+	public Map_Statement(final Value componentReference1, final PortReference portReference1, final Value componentReference2,
+			final PortReference portReference2) {
 		this.componentReference1 = componentReference1;
 		this.portReference1 = portReference1;
 		this.componentReference2 = componentReference2;
@@ -105,14 +105,8 @@ public final class Map_Statement extends Statement {
 		if (componentReference1 != null) {
 			componentReference1.setMyScope(scope);
 		}
-		if (portReference1 != null) {
-			portReference1.setMyScope(scope);
-		}
 		if (componentReference2 != null) {
 			componentReference2.setMyScope(scope);
-		}
-		if (portReference2 != null) {
-			portReference2.setMyScope(scope);
 		}
 	}
 

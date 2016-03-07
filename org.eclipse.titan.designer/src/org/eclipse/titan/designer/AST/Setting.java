@@ -41,8 +41,8 @@ public abstract class Setting extends ASTNode implements ISetting {
 	}
 
 	@Override
-	public final void setIsErroneous(final boolean is_erroneous) {
-		isErroneous = is_erroneous;
+	public final void setIsErroneous(final boolean isErroneous) {
+		this.isErroneous = isErroneous;
 	}
 
 	@Override

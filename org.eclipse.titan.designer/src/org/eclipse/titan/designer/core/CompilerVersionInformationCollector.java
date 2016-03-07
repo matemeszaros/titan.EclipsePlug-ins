@@ -24,6 +24,7 @@ import org.eclipse.titan.common.utils.Cygwin;
 import org.eclipse.titan.designer.actions.ExternalTitanAction;
 import org.eclipse.titan.designer.consoles.TITANConsole;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
+import org.eclipse.titan.designer.license.License;
 import org.eclipse.titan.designer.license.LicenseValidator;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -137,8 +138,9 @@ public final class CompilerVersionInformationCollector {
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, false, null);
 
 		String ttcn3Dir = PathConverter.convert(path, reportDebugInformation, TITANDebugConsole.getConsole());
-
-		env.put(TTCN3_LICENSE_FILE_KEY, LicenseValidator.getResolvedLicenseFilePath(false));
+		if( License.isLicenseNeeded() ) {
+			env.put(TTCN3_LICENSE_FILE_KEY, LicenseValidator.getResolvedLicenseFilePath(false));
+		}
 		env.put(TTCN3_DIR_KEY, ttcn3Dir);
 		String temp = env.get(LD_LIBRARY_PATH_KEY);
 		if (temp == null) {

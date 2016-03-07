@@ -35,8 +35,8 @@ public final class ObjectSet_Assignment extends ASN1Assignment {
 	/** right. */
 	private final ObjectSet objectSet;
 
-	public ObjectSet_Assignment(final Identifier id, final Ass_pard ass_pard, final ObjectClass objectClass, final ObjectSet objectSet) {
-		super(id, ass_pard);
+	public ObjectSet_Assignment(final Identifier id, final Ass_pard assPard, final ObjectClass objectClass, final ObjectSet objectSet) {
+		super(id, assPard);
 		this.objectClass = objectClass;
 		this.objectSet = objectSet;
 
@@ -59,9 +59,9 @@ public final class ObjectSet_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public void setRightScope(final Scope right_scope) {
+	public void setRightScope(final Scope rightScope) {
 		if (null != objectSet) {
-			objectSet.setMyScope(right_scope);
+			objectSet.setMyScope(rightScope);
 		}
 	}
 
@@ -85,7 +85,7 @@ public final class ObjectSet_Assignment extends ASN1Assignment {
 	 * @return the object set of this object set assignment,
 	 * */
 	public ObjectSet getObjectSet(final CompilationTimeStamp timestamp) {
-		if (null != ass_pard) {
+		if (null != assPard) {
 			location.reportSemanticError(MessageFormat.format(PARAMETERISEDOBJECTSET, getFullName()));
 			return null;
 		}
@@ -108,8 +108,8 @@ public final class ObjectSet_Assignment extends ASN1Assignment {
 
 		lastTimeChecked = timestamp;
 
-		if (null != ass_pard) {
-			ass_pard.check(timestamp);
+		if (null != assPard) {
+			assPard.check(timestamp);
 			// lastTimeChecked = timestamp;;
 			return;
 		}
@@ -172,10 +172,7 @@ public final class ObjectSet_Assignment extends ASN1Assignment {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (identifier != null && !identifier.accept(v)) {
-			return false;
-		}
-		if (ass_pard != null && !ass_pard.accept(v)) {
+		if (!super.memberAccept(v)) {
 			return false;
 		}
 		if (objectClass != null && !objectClass.accept(v)) {

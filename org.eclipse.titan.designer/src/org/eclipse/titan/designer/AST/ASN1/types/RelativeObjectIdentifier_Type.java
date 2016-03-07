@@ -139,7 +139,7 @@ public final class RelativeObjectIdentifier_Type extends ASN1Type {
 
 	@Override
 	public void checkThisTemplate(final CompilationTimeStamp timestamp, final ITTCN3Template template, final boolean isModified,
-			final boolean implicit_omit) {
+			final boolean implicitOmit) {
 		registerUsage(template);
 		template.setMyGovernor(this);
 

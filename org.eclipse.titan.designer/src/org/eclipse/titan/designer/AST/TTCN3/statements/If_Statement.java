@@ -45,7 +45,7 @@ public final class If_Statement extends Statement {
 	private static final String FULLNAMEPART2 = ".elseblock";
 	private static final String STATEMENT_NAME = "if";
 
-	private final If_Clauses if_clauses;
+	private final If_Clauses ifClauses;
 
 	/**
 	 * this statementblock represents the else clause.
@@ -80,12 +80,12 @@ public final class If_Statement extends Statement {
 		}
 	}
 
-	public If_Statement(final If_Clauses if_clauses, final StatementBlock statementblock) {
-		this.if_clauses = if_clauses;
+	public If_Statement(final If_Clauses ifClauses, final StatementBlock statementblock) {
+		this.ifClauses = ifClauses;
 		this.statementblock = statementblock;
 
-		if (if_clauses != null) {
-			if_clauses.setFullNameParent(this);
+		if (ifClauses != null) {
+			ifClauses.setFullNameParent(this);
 		}
 		if (statementblock != null) {
 			statementblock.setFullNameParent(this);
@@ -106,7 +106,7 @@ public final class If_Statement extends Statement {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (if_clauses == child) {
+		if (ifClauses == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (statementblock == child) {
 			return builder.append(FULLNAMEPART2);
@@ -116,7 +116,7 @@ public final class If_Statement extends Statement {
 	}
 
 	public If_Clauses getIfClauses() {
-		return if_clauses;
+		return ifClauses;
 	}
 
 	public StatementBlock getStatementBlock() {
@@ -126,8 +126,8 @@ public final class If_Statement extends Statement {
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (if_clauses != null) {
-			if_clauses.setMyScope(scope);
+		if (ifClauses != null) {
+			ifClauses.setMyScope(scope);
 		}
 		if (statementblock != null) {
 			statementblock.setMyScope(scope);
@@ -137,8 +137,8 @@ public final class If_Statement extends Statement {
 	@Override
 	public void setMyStatementBlock(final StatementBlock statementBlock, final int index) {
 		super.setMyStatementBlock(statementBlock, index);
-		if (if_clauses != null) {
-			if_clauses.setMyStatementBlock(statementBlock, index);
+		if (ifClauses != null) {
+			ifClauses.setMyStatementBlock(statementBlock, index);
 		}
 		if (statementblock != null) {
 			statementblock.setMyStatementBlock(statementBlock, index);
@@ -147,8 +147,8 @@ public final class If_Statement extends Statement {
 
 	@Override
 	public void setMyDefinition(final Definition definition) {
-		if (if_clauses != null) {
-			if_clauses.setMyDefinition(definition);
+		if (ifClauses != null) {
+			ifClauses.setMyDefinition(definition);
 		}
 		if (statementblock != null) {
 			statementblock.setMyDefinition(definition);
@@ -157,8 +157,8 @@ public final class If_Statement extends Statement {
 
 	@Override
 	public void setMyAltguards(final AltGuards altGuards) {
-		if (if_clauses != null) {
-			if_clauses.setMyAltguards(altGuards);
+		if (ifClauses != null) {
+			ifClauses.setMyAltguards(altGuards);
 		}
 		if (statementblock != null) {
 			statementblock.setMyAltguards(altGuards);
@@ -167,8 +167,8 @@ public final class If_Statement extends Statement {
 
 	@Override
 	public StatementBlock.ReturnStatus_type hasReturn(final CompilationTimeStamp timestamp) {
-		if (if_clauses != null) {
-			return if_clauses.hasReturn(timestamp, statementblock);
+		if (ifClauses != null) {
+			return ifClauses.hasReturn(timestamp, statementblock);
 		}
 
 		return StatementBlock.ReturnStatus_type.RS_NO;
@@ -181,8 +181,8 @@ public final class If_Statement extends Statement {
 		}
 
 		boolean unreachable = false;
-		if (if_clauses != null) {
-			unreachable = if_clauses.check(timestamp, unreachable);
+		if (ifClauses != null) {
+			unreachable = ifClauses.check(timestamp, unreachable);
 		}
 
 		if (statementblock != null) {
@@ -202,8 +202,8 @@ public final class If_Statement extends Statement {
 
 	@Override
 	public void checkAllowedInterleave() {
-		if (if_clauses != null) {
-			if_clauses.checkAllowedInterleave();
+		if (ifClauses != null) {
+			ifClauses.checkAllowedInterleave();
 		}
 		if (statementblock != null) {
 			statementblock.checkAllowedInterleave();
@@ -212,8 +212,8 @@ public final class If_Statement extends Statement {
 
 	@Override
 	public void postCheck() {
-		if (if_clauses != null) {
-			if_clauses.postCheck();
+		if (ifClauses != null) {
+			ifClauses.postCheck();
 		}
 		if (statementblock != null) {
 			statementblock.postCheck();
@@ -238,8 +238,8 @@ public final class If_Statement extends Statement {
 			throw new ReParseException();
 		}
 
-		if (if_clauses != null) {
-			if_clauses.updateSyntax(reparser, false);
+		if (ifClauses != null) {
+			ifClauses.updateSyntax(reparser, false);
 		}
 
 		if (statementblock != null) {
@@ -250,8 +250,8 @@ public final class If_Statement extends Statement {
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (if_clauses != null) {
-			if_clauses.findReferences(referenceFinder, foundIdentifiers);
+		if (ifClauses != null) {
+			ifClauses.findReferences(referenceFinder, foundIdentifiers);
 		}
 		if (statementblock != null) {
 			statementblock.findReferences(referenceFinder, foundIdentifiers);
@@ -260,7 +260,7 @@ public final class If_Statement extends Statement {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (if_clauses != null && !if_clauses.accept(v)) {
+		if (ifClauses != null && !ifClauses.accept(v)) {
 			return false;
 		}
 		if (statementblock != null && !statementblock.accept(v)) {

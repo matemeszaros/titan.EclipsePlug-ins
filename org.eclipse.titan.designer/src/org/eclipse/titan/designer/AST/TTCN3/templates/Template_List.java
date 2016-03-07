@@ -236,7 +236,7 @@ public final class Template_List extends CompositeTemplate {
 	}
 
 	@Override
-	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allow_omit) {
+	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			templates.getTemplateByIndex(i).checkSpecificValue(timestamp, true);
 		}
@@ -256,9 +256,9 @@ public final class Template_List extends CompositeTemplate {
 	@Override
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		boolean needsRuntimeCheck = false;

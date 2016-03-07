@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2015 Ericsson Telecom AB
+ * Copyright (c) 2000-2016 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,17 +13,18 @@ import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.IType;
+import org.eclipse.titan.designer.AST.IType.Type_type;
+import org.eclipse.titan.designer.AST.IType.ValueCheckingOptions;
 import org.eclipse.titan.designer.AST.IValue;
+import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
-import org.eclipse.titan.designer.AST.Scope;
-import org.eclipse.titan.designer.AST.IType.Type_type;
-import org.eclipse.titan.designer.AST.IType.ValueCheckingOptions;
-import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
@@ -31,6 +32,7 @@ import org.eclipse.titan.designer.AST.TTCN3.types.Function_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Bitstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value;
+import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value.Operation_type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Function_Reference_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Hexstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Octetstring_Value;
@@ -39,7 +41,6 @@ import org.eclipse.titan.designer.AST.TTCN3.values.SequenceOf_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.SetOf_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.UniversalCharstring_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value.Operation_type;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ApplyExpression;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
@@ -161,10 +162,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 
 		lastTimeChecked = timestamp;
 		realTemplate = this;
-
-		if (getIsErroneous(timestamp)) {
-			return this;
-		}
+		isErroneous = false;
 
 		IValue temp = specificValue.setLoweridToReference(timestamp);
 
@@ -203,7 +201,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 	}
 
 	@Override
-	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allow_omit) {
+	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		if (specificValue == null) {
 			return;
 		}
@@ -213,7 +211,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 			// checked later
 			break;
 		case OMIT_VALUE:
-			if (!allow_omit) {
+			if (!allowOmit) {
 				getLocation().reportSemanticError(OmitValue_Template.SPECIFICVALUEEXPECTED);
 			}
 			return;
@@ -236,7 +234,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 
 		if (Type_type.TYPE_FUNCTION.equals(type.getTypetype()) && ((Function_Type) type).returnsTemplate()) {
 			ITTCN3Template template = setTemplatetype(timestamp, Template_type.TEMPLATE_INVOKE);
-			template.checkSpecificValue(timestamp, allow_omit);
+			template.checkSpecificValue(timestamp, allowOmit);
 		}
 	}
 
@@ -329,7 +327,11 @@ public final class SpecificValue_Template extends TTCN3Template {
 
 		checkLengthRestriction(timestamp, type);
 		if (!allowOmit && isIfpresent) {
-			location.reportSemanticError("`ifpresent' is not allowed here");
+			if( location != null && !(location instanceof NULL_Location)) {
+				location.reportSemanticError("`ifpresent' is not allowed here");
+			} else if(specificValue != null && !(specificValue.getLocation() instanceof NULL_Location)) {
+				specificValue.getLocation().reportSemanticError("`ifpresent' is not allowed here");
+			} 
 		}
 		if (subCheck) {
 			type.checkThisTemplateSubtype(timestamp, this);
@@ -445,9 +447,9 @@ public final class SpecificValue_Template extends TTCN3Template {
 	@Override
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		return false;

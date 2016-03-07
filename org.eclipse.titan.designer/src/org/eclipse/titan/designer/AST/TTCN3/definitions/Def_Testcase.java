@@ -67,15 +67,15 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 	private final StatementBlock block;
 	private NamedBridgeScope bridgeScope = null;
 
-	public Def_Testcase(final Identifier identifier, final FormalParameterList formalParameters, final Reference runs_on_ref,
-			final Reference system_ref, final StatementBlock block) {
+	public Def_Testcase(final Identifier identifier, final FormalParameterList formalParameters, final Reference runsOnRef,
+			final Reference systemRef, final StatementBlock block) {
 		super(identifier);
 		this.formalParList = formalParameters;
 		if (formalParList != null) {
 			formalParList.setMyDefinition(this);
 		}
-		this.runsOnReference = runs_on_ref;
-		this.systemReference = system_ref;
+		this.runsOnReference = runsOnRef;
+		this.systemReference = systemRef;
 		this.block = block;
 		if (block != null) {
 			block.setMyDefinition(this);
@@ -85,11 +85,11 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 		if (formalParList != null) {
 			formalParList.setFullNameParent(this);
 		}
-		if (runs_on_ref != null) {
-			runs_on_ref.setFullNameParent(this);
+		if (runsOnRef != null) {
+			runsOnRef.setFullNameParent(this);
 		}
-		if (system_ref != null) {
-			system_ref.setFullNameParent(this);
+		if (systemRef != null) {
+			systemRef.setFullNameParent(this);
 		}
 	}
 
@@ -344,14 +344,11 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
-
 			boolean enveloped = false;
 			int result = 1;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				result = r.parseAndSetNameChanged();
@@ -359,7 +356,6 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 				// damage handled
 				if (result == 0) {
 					enveloped = true;
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				} else {
 					removeBridge();
 					throw new ReParseException(result);
@@ -375,7 +371,6 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 						formalParList.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(formalParList.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -392,7 +387,6 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 						runsOnReference.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(runsOnReference.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -409,7 +403,6 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 						systemReference.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(systemReference.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -442,7 +435,6 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 						withAttributesPath.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(withAttributesPath.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;

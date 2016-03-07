@@ -212,12 +212,14 @@ public abstract class OccurencesMarker {
 
 		Map<Annotation, Position> annotationMap = new HashMap<Annotation, Position>();
 		for (Hit hit : result) {
-			int hitOffset = hit.identifier.getLocation().getOffset();
-			int hitEndOffset = hit.identifier.getLocation().getEndOffset();
-			if( hitOffset>=0 && hitEndOffset>=0 && hitEndOffset>=hitOffset ) {
-				final Annotation annotationToAdd = new Annotation(ANNOTATION_TYPE, false, "Occurence of " + hit.identifier.getDisplayName());
-				final Position position = new Position(hitOffset, hitEndOffset - hitOffset);
-				annotationMap.put(annotationToAdd, position);
+			if (hit.identifier != null) {
+				int hitOffset = hit.identifier.getLocation().getOffset();
+				int hitEndOffset = hit.identifier.getLocation().getEndOffset();
+				if( hitOffset>=0 && hitEndOffset>=0 && hitEndOffset>=hitOffset ) {
+					final Annotation annotationToAdd = new Annotation(ANNOTATION_TYPE, false, "Occurence of " + hit.identifier.getDisplayName());
+					final Position position = new Position(hitOffset, hitEndOffset - hitOffset);
+					annotationMap.put(annotationToAdd, position);
+				}
 			}
 		}
 

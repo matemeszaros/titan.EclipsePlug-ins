@@ -51,23 +51,23 @@ public final class Def_Var_Template extends Definition {
 	private static final String KIND = " template variable definition";
 
 	private final Type type;
-	private final TTCN3Template initial_value;
-	private final TemplateRestriction.Restriction_type template_restriction;
+	private final TTCN3Template initialValue;
+	private final TemplateRestriction.Restriction_type templateRestriction;
 
 	private boolean wasAssigned;
 
-	public Def_Var_Template(final TemplateRestriction.Restriction_type template_restriction, final Identifier identifier, final Type type,
-			final TTCN3Template initial_value) {
+	public Def_Var_Template(final TemplateRestriction.Restriction_type templateRestriction, final Identifier identifier, final Type type,
+			final TTCN3Template initialValue) {
 		super(identifier);
-		this.template_restriction = template_restriction;
+		this.templateRestriction = templateRestriction;
 		this.type = type;
-		this.initial_value = initial_value;
+		this.initialValue = initialValue;
 
 		if (type != null) {
 			type.setFullNameParent(this);
 		}
-		if (initial_value != null) {
-			initial_value.setFullNameParent(this);
+		if (initialValue != null) {
+			initialValue.setFullNameParent(this);
 		}
 	}
 
@@ -82,7 +82,7 @@ public final class Def_Var_Template extends Definition {
 
 		if (type == child) {
 			return builder.append(FULLNAMEPART1);
-		} else if (initial_value == child) {
+		} else if (initialValue == child) {
 			return builder.append(FULLNAMEPART2);
 		}
 
@@ -129,8 +129,8 @@ public final class Def_Var_Template extends Definition {
 		if (type != null) {
 			type.setMyScope(scope);
 		}
-		if (initial_value != null) {
-			initial_value.setMyScope(scope);
+		if (initialValue != null) {
+			initialValue.setMyScope(scope);
 		}
 	}
 
@@ -161,7 +161,7 @@ public final class Def_Var_Template extends Definition {
 		type.check(timestamp);
 		lastTimeChecked = timestamp;
 
-		if (initial_value == null) {
+		if (initialValue == null) {
 			return;
 		}
 
@@ -174,20 +174,20 @@ public final class Def_Var_Template extends Definition {
 			break;
 		}
 
-		TTCN3Template realInitialValue = initial_value;
+		TTCN3Template realInitialValue = initialValue;
 
-		initial_value.setMyGovernor(type);
+		initialValue.setMyGovernor(type);
 
 		// Needed in case of universal charstring templates
-		if (initial_value.getTemplatetype() == Template_type.CSTR_PATTERN && lastType.getTypetype() == Type.Type_type.TYPE_UCHARSTRING) {
-			realInitialValue = initial_value.setTemplatetype(timestamp, Template_type.USTR_PATTERN);
+		if (initialValue.getTemplatetype() == Template_type.CSTR_PATTERN && lastType.getTypetype() == Type.Type_type.TYPE_UCHARSTRING) {
+			realInitialValue = initialValue.setTemplatetype(timestamp, Template_type.USTR_PATTERN);
 			// FIXME implement setting the pattern type, once
 			// universal charstring pattern are supported.
 		}
 
 		ITTCN3Template temporalValue = type.checkThisTemplateRef(timestamp, realInitialValue);
 		temporalValue.checkThisTemplateGeneric(timestamp, type, true, true, true, true, false);
-		TemplateRestriction.check(timestamp, this, initial_value, null);
+		TemplateRestriction.check(timestamp, this, initialValue, null);
 
 		// Only to follow the pattern, otherwise no such field can exist
 		// here
@@ -209,7 +209,7 @@ public final class Def_Var_Template extends Definition {
 	}
 
 	public TTCN3Template getInitialValue() {
-		return initial_value;
+		return initialValue;
 	}
 
 	/**
@@ -243,15 +243,15 @@ public final class Def_Var_Template extends Definition {
 			return false;
 		}
 
-		if (initial_value != null) {
-			if (otherVariable.initial_value == null) {
-				initial_value.getLocation()
+		if (initialValue != null) {
+			if (otherVariable.initialValue == null) {
+				initialValue.getLocation()
 						.reportSemanticWarning(
 								MessageFormat.format(
 										"Local template variable `{0}'' has initial value, but the template variable inherited from component type `{1}'' does not",
 										identifier.getDisplayName(), otherVariable.getMyScope().getFullName()));
 			}
-		} else if (otherVariable.initial_value != null) {
+		} else if (otherVariable.initialValue != null) {
 			location.reportSemanticWarning(MessageFormat
 					.format("Local template variable `{0}'' does not have initial value, but the template variable inherited from component type `{1}'' has",
 							identifier.getDisplayName(), otherVariable.getMyScope().getFullName()));
@@ -300,20 +300,16 @@ public final class Def_Var_Template extends Definition {
 
 	@Override
 	public TemplateRestriction.Restriction_type getTemplateRestriction() {
-		return template_restriction;
+		return templateRestriction;
 	}
 
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.addAll(referingHere);
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
-
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
@@ -337,14 +333,14 @@ public final class Def_Var_Template extends Definition {
 				}
 			}
 
-			if (initial_value != null) {
+			if (initialValue != null) {
 				if (enveloped) {
-					initial_value.updateSyntax(reparser, false);
-					reparser.updateLocation(initial_value.getLocation());
-				} else if (reparser.envelopsDamage(initial_value.getLocation())) {
-					initial_value.updateSyntax(reparser, true);
+					initialValue.updateSyntax(reparser, false);
+					reparser.updateLocation(initialValue.getLocation());
+				} else if (reparser.envelopsDamage(initialValue.getLocation())) {
+					initialValue.updateSyntax(reparser, true);
 					enveloped = true;
-					reparser.updateLocation(initial_value.getLocation());
+					reparser.updateLocation(initialValue.getLocation());
 				}
 			}
 
@@ -372,9 +368,9 @@ public final class Def_Var_Template extends Definition {
 			reparser.updateLocation(type.getLocation());
 		}
 
-		if (initial_value != null) {
-			initial_value.updateSyntax(reparser, false);
-			reparser.updateLocation(initial_value.getLocation());
+		if (initialValue != null) {
+			initialValue.updateSyntax(reparser, false);
+			reparser.updateLocation(initialValue.getLocation());
 		}
 
 		if (withAttributesPath != null) {
@@ -389,8 +385,8 @@ public final class Def_Var_Template extends Definition {
 		if (type != null) {
 			type.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (initial_value != null) {
-			initial_value.findReferences(referenceFinder, foundIdentifiers);
+		if (initialValue != null) {
+			initialValue.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
@@ -402,7 +398,7 @@ public final class Def_Var_Template extends Definition {
 		if (type != null && !type.accept(v)) {
 			return false;
 		}
-		if (initial_value != null && !initial_value.accept(v)) {
+		if (initialValue != null && !initialValue.accept(v)) {
 			return false;
 		}
 		return true;

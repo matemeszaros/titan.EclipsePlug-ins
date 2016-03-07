@@ -467,14 +467,9 @@ public final class Array_Type extends Type implements IReferenceableElement {
 
 		int nofValues = lastValue.getNofComponents();
 
-		if (!dimension.getIsErroneous(timestamp) && dimension.getSize() != nofValues) {
-			if (nofValues < dimension.getSize()) {
-				originalValue.getLocation().reportSemanticError(MessageFormat.format(TOOFEWEXPECTED, dimension.getSize(), nofValues));
-				originalValue.setIsErroneous(true);
-			} else {
+		if (!dimension.getIsErroneous(timestamp) && dimension.getSize() < nofValues) {
 				originalValue.getLocation().reportSemanticError(MessageFormat.format(TOOMANYEXPECTED, dimension.getSize(), nofValues));
 				originalValue.setIsErroneous(true);
-			}
 		}
 
 		if (lastValue.isIndexed()) {

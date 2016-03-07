@@ -1,75 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2015 Ericsson Telecom AB
+ Copyright (c) 2000-2016 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<?eclipse version="3.2"?>
+<?eclipse version="4.4"?>
 <plugin>
-   <extension point="org.eclipse.ui.commands"><command
-                                                   defaultHandler="org.eclipse.titan.common.actions.FormatLog"
-                                                   id="org.eclipse.titan.common.actions.FormatLog"
-                                                   name="FormatLog"/></extension>
-   <extension point="org.eclipse.ui.commands"><command
-                                                   defaultHandler="org.eclipse.titan.common.actions.MergeLog"
-                                                   id="org.eclipse.titan.common.actions.MergeLog"
-                                                   name="FormatLog"/></extension>
-   <extension
-         point="org.eclipse.ui.menus">
-    <menuContribution
-          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-          <menu
-                label="Titan log">
-          <command
-                commandId="org.eclipse.titan.common.actions.FormatLog"
-                label="Format log">
-                <visibleWhen
-                      checkEnabled="false">
-                      <with  
-                        variable="selection">  
-                     <iterate  
-                           operator="or">  
-                        <adapt  
-                              type="org.eclipse.core.resources.IResource">
-                            <test property="org.eclipse.core.resources.name" value="*.log"/> 
-                        </adapt>  
-                     </iterate>
-                     </with>  
-                </visibleWhen>
-          </command>
-          <command
-                commandId="org.eclipse.titan.common.actions.MergeLog"
-                label="Merge log">
-                <visibleWhen
-                      checkEnabled="false">
-                      <with  
-                        variable="selection">  
-                     <iterate  
-                           operator="or">  
-                        <adapt  
-                              type="org.eclipse.core.resources.IResource">
-                            <test property="org.eclipse.core.resources.name" value="*.log"/> 
-                        </adapt>  
-                     </iterate>
-                     </with>  
-                </visibleWhen>
+  <extension point="org.eclipse.ui.commands">
+    <command defaultHandler="org.eclipse.titan.common.actions.FormatLog"
+      id="org.eclipse.titan.common.actions.FormatLog" name="FormatLog" />
+  </extension>
+  <extension point="org.eclipse.ui.commands">
+    <command defaultHandler="org.eclipse.titan.common.actions.MergeLog"
+      id="org.eclipse.titan.common.actions.MergeLog" name="FormatLog" />
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <menu label="Titan log">
+        <command commandId="org.eclipse.titan.common.actions.FormatLog"
+          label="Format log">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IResource">
+                  <test property="org.eclipse.core.resources.name"
+                    value="*.log" />
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command commandId="org.eclipse.titan.common.actions.MergeLog"
+          label="Merge log">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IResource">
+                  <test property="org.eclipse.core.resources.name"
+                    value="*.log" />
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
 
-          </command>
-          </menu>
+        </command>
+      </menu>
     </menuContribution>
-   </extension>
+  </extension>
 
-  <extension
-    point="org.eclipse.core.runtime.preferences">
-    <initializer class="org.eclipse.titan.common.preferences.PreferenceInitializer"/>
+  <extension point="org.eclipse.core.runtime.preferences">
+    <initializer
+      class="org.eclipse.titan.common.preferences.PreferenceInitializer" />
   </extension>
   <extension point="org.eclipse.ui.preferencePages">
     <page
       id="org.eclipse.titan.common.preferences.pages.TITANCommonPreferencePage"
       class="org.eclipse.titan.common.preferences.pages.TITANCommonPreferencePage"
-      name="TITAN Common Preferences"/>
+      name="TITAN Common Preferences" />
   </extension>
 </plugin>

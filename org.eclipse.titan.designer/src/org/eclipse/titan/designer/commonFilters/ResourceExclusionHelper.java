@@ -112,7 +112,6 @@ public final class ResourceExclusionHelper {
 		try {
 			return "true".equalsIgnoreCase(file.getPersistentProperty(EXCLUDED_FILE_QUALIFIER));
 		} catch (CoreException e) {
-			ErrorReporter.logExceptionStackTrace("Error while checking persistent property of file: " + file.getName(), e);
 			return false;
 		}
 	}

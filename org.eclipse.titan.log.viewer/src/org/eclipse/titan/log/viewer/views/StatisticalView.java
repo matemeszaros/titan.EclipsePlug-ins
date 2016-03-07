@@ -44,6 +44,25 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.utils.IOUtils;
+import org.eclipse.titan.log.viewer.Activator;
+import org.eclipse.titan.log.viewer.actions.OpenMSCViewAction;
+import org.eclipse.titan.log.viewer.actions.OpenTextTableStatisticalViewMenuAction;
+import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
+import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
+import org.eclipse.titan.log.viewer.extractors.TestCaseExtractor;
+import org.eclipse.titan.log.viewer.models.LogFileMetaData;
+import org.eclipse.titan.log.viewer.parsers.data.LogRecord;
+import org.eclipse.titan.log.viewer.parsers.data.TestCase;
+import org.eclipse.titan.log.viewer.readers.CachedLogReader;
+import org.eclipse.titan.log.viewer.readers.LogFileReader;
+import org.eclipse.titan.log.viewer.utils.Constants;
+import org.eclipse.titan.log.viewer.utils.LogFileCacheHandler;
+import org.eclipse.titan.log.viewer.utils.Messages;
+import org.eclipse.titan.log.viewer.views.details.StatisticalData;
+import org.eclipse.titan.log.viewer.views.navigator.ProjectsViewerMenuListener;
+import org.eclipse.titan.log.viewer.views.navigator.ProjectsViewerMenuManager;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
@@ -63,26 +82,6 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
-import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.utils.IOUtils;
-import org.eclipse.titan.log.viewer.Activator;
-import org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction;
-import org.eclipse.titan.log.viewer.actions.OpenTextTableStatisticalViewMenuAction;
-import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
-import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
-import org.eclipse.titan.log.viewer.extractors.TestCaseExtractor;
-import org.eclipse.titan.log.viewer.models.LogFileMetaData;
-import org.eclipse.titan.log.viewer.parsers.data.LogRecord;
-import org.eclipse.titan.log.viewer.parsers.data.TestCase;
-import org.eclipse.titan.log.viewer.readers.CachedLogReader;
-import org.eclipse.titan.log.viewer.readers.LogFileReader;
-import org.eclipse.titan.log.viewer.utils.Constants;
-import org.eclipse.titan.log.viewer.utils.LogFileCacheHandler;
-import org.eclipse.titan.log.viewer.utils.Messages;
-import org.eclipse.titan.log.viewer.views.details.StatisticalData;
-import org.eclipse.titan.log.viewer.views.navigator.ProjectsViewerMenuListener;
-import org.eclipse.titan.log.viewer.views.navigator.ProjectsViewerMenuManager;
-
 /**
  * This class represents the statistical view
  */
@@ -97,7 +96,7 @@ public class StatisticalView extends ViewPart implements ISelectionProvider, ILo
 	private CachedLogReader reader = null;
 	private static final int DEFAULT_COLUMN_WIDTH = 55;
 	private static final int DEFAULT_AMOUNT_COLUMN_WIDTH = 75;
-	private OpenMSCViewMenuAction openMSCViewMenuAction;
+	private OpenMSCViewAction openMSCViewAction;
 	private OpenTextTableStatisticalViewMenuAction openTextTableStatisticalViewMenuAction;
 	private List<ISelectionChangedListener> registeredListeners;
 	private TestCase testcaseSelection = null;
@@ -440,10 +439,10 @@ public class StatisticalView extends ViewPart implements ISelectionProvider, ILo
 	
 	private void createStatisticalViewContextMenuActions() {
 
-		this.openMSCViewMenuAction = new OpenMSCViewMenuAction();
-		this.openMSCViewMenuAction.setEnabled(false);
-		this.openMSCViewMenuAction.setImageDescriptor(Activator.getDefault().getCachedImageDescriptor(Constants.ICONS_MSC_VIEW));
-		this.addSelectionChangedListener(openMSCViewMenuAction);
+		this.openMSCViewAction = new OpenMSCViewAction();
+		this.openMSCViewAction.setEnabled(false);
+		this.openMSCViewAction.setImageDescriptor(Activator.getDefault().getCachedImageDescriptor(Constants.ICONS_MSC_VIEW));
+		this.addSelectionChangedListener(openMSCViewAction);
 		
 		this.openTextTableStatisticalViewMenuAction = new OpenTextTableStatisticalViewMenuAction(this);
 		this.openTextTableStatisticalViewMenuAction.setEnabled(false);
@@ -470,7 +469,7 @@ public class StatisticalView extends ViewPart implements ISelectionProvider, ILo
 		// MB_ADDITIONS must be added to the menuMgr or platform will
 		// throw a part initialize exception, this will fix this	
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		menuManager.add(this.openMSCViewMenuAction);
+		menuManager.add(this.openMSCViewAction);
 		menuManager.add(this.openTextTableStatisticalViewMenuAction);
 	}
 

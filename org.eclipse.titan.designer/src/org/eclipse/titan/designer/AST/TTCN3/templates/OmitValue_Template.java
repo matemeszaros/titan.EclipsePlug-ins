@@ -120,9 +120,9 @@ public final class OmitValue_Template extends TTCN3Template {
 	@Override
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 			usageLocation.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
 		}
 
@@ -131,7 +131,7 @@ public final class OmitValue_Template extends TTCN3Template {
 
 	@Override
 	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
+		checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
 		usageLocation.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
 		return false;
 	}

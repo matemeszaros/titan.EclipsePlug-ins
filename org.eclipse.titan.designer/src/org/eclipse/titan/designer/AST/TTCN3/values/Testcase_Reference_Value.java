@@ -37,10 +37,10 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 public final class Testcase_Reference_Value extends Value {
 
-	private Def_Testcase referedTestcase;
+	private Def_Testcase referredTestcase;
 
 	public Testcase_Reference_Value(final Def_Testcase referredTestcase) {
-		this.referedTestcase = referredTestcase;
+		this.referredTestcase = referredTestcase;
 	}
 
 	@Override
@@ -51,12 +51,12 @@ public final class Testcase_Reference_Value extends Value {
 	@Override
 	public String createStringRepresentation() {
 		StringBuilder builder = new StringBuilder("refers(");
-		builder.append(referedTestcase.getAssignmentName()).append(')');
+		builder.append(referredTestcase.getAssignmentName()).append(')');
 		return builder.toString();
 	}
 
-	public Def_Testcase getReferedTestcase() {
-		return referedTestcase;
+	public Def_Testcase getReferredTestcase() {
+		return referredTestcase;
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public final class Testcase_Reference_Value extends Value {
 		referenceChain.release();
 
 		return Value_type.TESTCASE_REFERENCE_VALUE.equals(last.getValuetype())
-				&& referedTestcase == ((Testcase_Reference_Value) last).getReferedTestcase();
+				&& referredTestcase == ((Testcase_Reference_Value) last).getReferredTestcase();
 	}
 
 	@Override

@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.product.ProductConstants;
 import org.eclipse.ui.IEditorPart;
 
@@ -170,7 +169,7 @@ public final class ErrorReporter {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog.openError(new Shell(Display.getDefault()), title, message); //$NON-NLS-1$
+				MessageDialog.openError(null, title, message); //$NON-NLS-1$
 			}
 		});
 	}
@@ -184,7 +183,7 @@ public final class ErrorReporter {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog.openWarning(new Shell(Display.getDefault()), title, message);
+				MessageDialog.openWarning(null, title, message);
 			}
 		});
 	}

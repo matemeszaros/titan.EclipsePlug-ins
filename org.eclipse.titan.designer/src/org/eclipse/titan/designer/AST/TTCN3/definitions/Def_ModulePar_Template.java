@@ -54,15 +54,15 @@ public final class Def_ModulePar_Template extends Definition {
 	private final TTCN3Template defaultTemplate;
 	private ITTCN3Template realTemplate;
 
-	public Def_ModulePar_Template(final Identifier identifier, final Type type, final TTCN3Template default_template) {
+	public Def_ModulePar_Template(final Identifier identifier, final Type type, final TTCN3Template defaultTemplate) {
 		super(identifier);
 		this.type = type;
-		this.defaultTemplate = default_template;
+		this.defaultTemplate = defaultTemplate;
 		if (type != null) {
 			type.setFullNameParent(this);
 		}
-		if (default_template != null) {
-			default_template.setFullNameParent(this);
+		if (defaultTemplate != null) {
+			defaultTemplate.setFullNameParent(this);
 		}
 	}
 
@@ -246,12 +246,10 @@ public final class Def_ModulePar_Template extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
@@ -259,7 +257,6 @@ public final class Def_ModulePar_Template extends Definition {
 				// damage handled
 				if (result == 0) {
 					enveloped = true;
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				} else {
 					throw new ReParseException(result);
 				}
@@ -273,7 +270,6 @@ public final class Def_ModulePar_Template extends Definition {
 					type.updateSyntax(reparser, true);
 					enveloped = true;
 					reparser.updateLocation(type.getLocation());
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				}
 			}
 
@@ -296,7 +292,6 @@ public final class Def_ModulePar_Template extends Definition {
 					withAttributesPath.updateSyntax(reparser, true);
 					enveloped = true;
 					reparser.updateLocation(withAttributesPath.getLocation());
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				}
 			}
 

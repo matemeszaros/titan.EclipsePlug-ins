@@ -18,6 +18,7 @@ import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Module;
+import org.eclipse.titan.designer.AST.PortReference;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.Value;
@@ -308,7 +309,7 @@ public final class Port_Utility {
 	 *         problems.
 	 * */
 	public static IType checkConnectionEndpoint(final CompilationTimeStamp timestamp, final Statement source, final Value componentReference,
-			final Reference portReference, final boolean allowSystem) {
+			final PortReference portReference, final boolean allowSystem) {
 		IType componentType = checkComponentReference(timestamp, source, componentReference, true, allowSystem);
 		if (portReference == null) {
 			return componentType;
@@ -363,6 +364,7 @@ public final class Port_Utility {
 
 		ComponentTypeBody componentBody = ((Component_Type) componentType).getComponentBody();
 		portReference.setBaseScope(componentBody);
+		portReference.setComponent((Component_Type) componentType);
 		Identifier portIdentifier = portReference.getId();
 
 		if (!componentBody.hasLocalAssignmentWithId(portIdentifier)) {

@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.parsers.GlobalParser;
@@ -43,11 +42,11 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 	private static final String REPORTUNSUPPORTEDCONSTRUCTS = "Language constructs not supported yet:";
 	private static final String REPORTUNSUPPORTEDCONSTRUCTS_TOOLTIP = "For example pattern subtyping in TTCN-3.";
 	private static final String REPORTMISSINGIMPORTATION = "Missing imported module:";
-	private static final String REPORTMISSINGIMPORTATION_TOOLTIP = "When a module refered to in an import statement could not be found.";
+	private static final String REPORTMISSINGIMPORTATION_TOOLTIP = "When a module referred to in an import statement could not be found.";
 	private static final String REPORTUNUSEDMODULEIMPORTATION = "Report unused module importation:";
 	private static final String REPORTUNUSEDMODULEIMPORTATION_TOOLTIP = "When nothing is used in the module from the imported module.";
 	private static final String REPORTMISSINGFRIEND = "Report friend declarations with missing modules:";
-	private static final String REPORTMISSINGFRIEND_TOOLTIP = "When the module refered to in a friend declaration doulc not be found..";
+	private static final String REPORTMISSINGFRIEND_TOOLTIP = "When the module referred to in a friend declaration doulc not be found..";
 	private static final String REPORTUNUSEDGLOBALDEFINITION = "Report unused module level definition:";
 	private static final String REPORTUNUSEDGLOBALDEFINITIONTOOLTIP = "When a module level definition is never read/written.\n"
 			+ " Also when a type is not used to declare other definitions.";
@@ -568,7 +567,7 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openWarning(new Shell(Display.getDefault()), "Error/Warning settings changed",
+					MessageDialog.openWarning(null, "Error/Warning settings changed",
 							"Error/Warning settings have changed, the known projects have to be re-analyzed completly.\nThis might take some time.");
 				}
 			});

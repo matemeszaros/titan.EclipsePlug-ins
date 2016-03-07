@@ -108,8 +108,8 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 		m.put(ProblemTypePreference.MAGIC_CONSTANTS,
 				"It is always recommended to extract local literal values into constants and use the constants in the code.\n"
 						+ "Since otherwise sooner or later it will be forgotten what that exact value was meaning");
-		m.put(ProblemTypePreference.MISSING_FRIEND, "When the module refered to in a friend declaration could not be found..");
-		m.put(ProblemTypePreference.MISSING_IMPORT, "When a module refered to in an import statement could not be found.");
+		m.put(ProblemTypePreference.MISSING_FRIEND, "When the module referred to in a friend declaration could not be found..");
+		m.put(ProblemTypePreference.MISSING_IMPORT, "When a module referred to in an import statement could not be found.");
 		m.put(ProblemTypePreference.MODULENAME_IN_DEFINITION, "As definitions can be referenced in the modulename.identifier format,"
 				+ " it is of no value if the name of the module is duplicated in the name of the definition\n"
 				+ "But makes it longer");

@@ -460,11 +460,11 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 	 * @param value the value to be checked
 	 * @param expectedValue the kind of value expected here.
 	 * @param incompleteAllowed wheather incomplete value is allowed or not.
-	 * @param implicit_omit true if the implicit omit optional attribute was set
+	 * @param implicitOmit true if the implicit omit optional attribute was set
 	 *            for the value, false otherwise
 	 * */
 	public void checkThisValueSequenceOf(final CompilationTimeStamp timestamp, final SequenceOf_Value value,
-			final Expected_Value_type expectedValue, final boolean incompleteAllowed , final boolean implicit_omit, final boolean strElem) {
+			final Expected_Value_type expectedValue, final boolean incompleteAllowed , final boolean implicitOmit, final boolean strElem) {
 		if (value.isIndexed()) {
 			boolean checkHoles = Expected_Value_type.EXPECTED_CONSTANT.equals(expectedValue);
 			BigInteger maxIndex = BigInteger.valueOf(-1);
@@ -504,7 +504,7 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 				component.setMyGovernor(getOfType());
 				IValue tempValue2 = getOfType().checkThisValueRef(timestamp, component);
 				getOfType().checkThisValue(timestamp, tempValue2,
-						new ValueCheckingOptions(expectedValue, incompleteAllowed, false, true, implicit_omit, strElem));
+						new ValueCheckingOptions(expectedValue, incompleteAllowed, false, true, implicitOmit, strElem));
 			}
 			if (checkHoles) {
 				if (maxIndex.compareTo(BigInteger.valueOf(indexMap.size() - 1)) != 0) {
@@ -522,7 +522,7 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 				} else {
 					IValue tempValue2 = getOfType().checkThisValueRef(timestamp, component);
 					getOfType().checkThisValue(timestamp, tempValue2,
-							new ValueCheckingOptions(expectedValue, incompleteAllowed, false, true, implicit_omit, strElem));
+							new ValueCheckingOptions(expectedValue, incompleteAllowed, false, true, implicitOmit, strElem));
 				}
 			}
 		}

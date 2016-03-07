@@ -7,6 +7,22 @@
  ******************************************************************************/
 package org.eclipse.titan.executor.executors.mctr.cli;
 
+import static org.eclipse.titan.executor.GeneralConstants.MCSTATEREFRESHTIMEOUT;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -24,7 +40,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
 import org.eclipse.titan.common.path.PathConverter;
@@ -47,22 +62,6 @@ import org.eclipse.titan.executor.views.notification.Notification;
 import org.eclipse.titan.executor.views.testexecution.ExecutedTestcase;
 import org.eclipse.titan.executor.views.testexecution.TestExecutionView;
 import org.eclipse.ui.console.MessageConsoleStream;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.eclipse.titan.executor.GeneralConstants.MCSTATEREFRESHTIMEOUT;
 
 /**
  * This executor handles the execution of tests compiled in a parallel mode, connecting to the MainController via command line.
@@ -288,7 +287,7 @@ public final class CliExecutor extends BaseExecutor {
 				Display.getDefault().syncExec(new Runnable() {
 					@Override
 					public void run() {
-						MessageDialog.openError(new Shell(Display.getDefault()),
+						MessageDialog.openError(null,
 								"Execution failed",
 								"The working directory `" + workingdirectoryPath + "' does not exist.");
 					}
@@ -482,7 +481,7 @@ public final class CliExecutor extends BaseExecutor {
 			public void run() {
 				boolean invalidSelection = false;
 				do {
-					ExecuteDialog dialog = new ExecuteDialog(new Shell(Display.getDefault()));
+					ExecuteDialog dialog = new ExecuteDialog(null);
 					dialog.setControlparts(availableControlParts);
 					dialog.setTestcases(availableTestcases);
 					dialog.setTestsets(availableTestSetNames);

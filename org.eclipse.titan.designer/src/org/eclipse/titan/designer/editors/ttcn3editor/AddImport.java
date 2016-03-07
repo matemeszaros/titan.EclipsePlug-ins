@@ -20,7 +20,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -129,7 +128,7 @@ public final class AddImport implements IEditorActionDelegate {
 				resultToInsert = collected.get(0);
 			} else {
 				OpenDeclarationLabelProvider labelProvider = new OpenDeclarationLabelProvider();
-				ElementListSelectionDialog dialog = new ElementListSelectionDialog(new Shell(Display.getDefault()), labelProvider);
+				ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, labelProvider);
 				dialog.setTitle("Add Import");
 				dialog.setMessage("Choose element to generate an import statement for.");
 				dialog.setElements(collected.toArray());
@@ -186,7 +185,7 @@ public final class AddImport implements IEditorActionDelegate {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog.openWarning(new Shell(Display.getDefault()), "Study feature",
+				MessageDialog.openWarning(null, "Study feature",
 						"Adding a missing importation is still under study");
 			}
 		});

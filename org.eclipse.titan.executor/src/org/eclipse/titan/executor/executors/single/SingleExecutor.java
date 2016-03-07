@@ -38,7 +38,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
@@ -139,7 +138,7 @@ public final class SingleExecutor extends BaseExecutor {
 				Display.getDefault().syncExec(new Runnable() {
 					@Override
 					public void run() {
-						ExecuteDialog dialog = new ExecuteDialog(new Shell(Display.getDefault()));
+						ExecuteDialog dialog = new ExecuteDialog(null);
 						dialog.setControlparts(availableControlParts);
 						dialog.setTestsets(availableTestSetNames);
 						dialog.setTestcases(availableTestcases);
@@ -292,7 +291,7 @@ public final class SingleExecutor extends BaseExecutor {
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openError(new Shell(Display.getDefault()), "Execution failed", "The executable `" + executableFile + "' does not exist.");
+					MessageDialog.openError(null, "Execution failed", "The executable `" + executableFile + "' does not exist.");
 				}
 			});
 		}
@@ -323,7 +322,7 @@ public final class SingleExecutor extends BaseExecutor {
 				Display.getDefault().syncExec(new Runnable() {
 					@Override
 					public void run() {
-						MessageDialog.openError(new Shell(Display.getDefault()),
+						MessageDialog.openError(null,
 								"Execution failed", "The working directory `" + workingdirectoryPath + "' does not exist.");
 					}
 				});

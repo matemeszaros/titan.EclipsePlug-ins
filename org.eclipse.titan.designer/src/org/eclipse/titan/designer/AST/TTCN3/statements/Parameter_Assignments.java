@@ -28,18 +28,18 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 public final class Parameter_Assignments extends ASTNode implements IIncrementallyUpdateable {
 	private static final String FULLNAMEPART = ".parameterassignment_";
 
-	private final List<Parameter_Assignment> parameter_assignments;
+	private final List<Parameter_Assignment> parameterAssignments;
 
 	public Parameter_Assignments() {
-		parameter_assignments = new ArrayList<Parameter_Assignment>();
+		parameterAssignments = new ArrayList<Parameter_Assignment>();
 	}
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		for (int i = 0; i < parameter_assignments.size(); i++) {
-			if (parameter_assignments.get(i) == child) {
+		for (int i = 0; i < parameterAssignments.size(); i++) {
+			if (parameterAssignments.get(i) == child) {
 				return builder.append(FULLNAMEPART).append(Integer.toString(i + 1));
 			}
 		}
@@ -51,22 +51,22 @@ public final class Parameter_Assignments extends ASTNode implements IIncremental
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
 
-		for (int i = 0; i < parameter_assignments.size(); i++) {
-			parameter_assignments.get(i).setMyScope(scope);
+		for (int i = 0; i < parameterAssignments.size(); i++) {
+			parameterAssignments.get(i).setMyScope(scope);
 		}
 	}
 
-	public void add(final Parameter_Assignment parameter_assignment) {
-		parameter_assignments.add(parameter_assignment);
-		parameter_assignment.setFullNameParent(this);
+	public void add(final Parameter_Assignment parameterAssignment) {
+		parameterAssignments.add(parameterAssignment);
+		parameterAssignment.setFullNameParent(this);
 	}
 
 	public int getNofParameterAssignments() {
-		return parameter_assignments.size();
+		return parameterAssignments.size();
 	}
 
 	public Parameter_Assignment getParameterAssignmentByIndex(final int index) {
-		return parameter_assignments.get(index);
+		return parameterAssignments.get(index);
 	}
 
 	@Override
@@ -75,8 +75,8 @@ public final class Parameter_Assignments extends ASTNode implements IIncremental
 			throw new ReParseException();
 		}
 
-		for (int i = 0, size = parameter_assignments.size(); i < size; i++) {
-			Parameter_Assignment assignment = parameter_assignments.get(i);
+		for (int i = 0, size = parameterAssignments.size(); i < size; i++) {
+			Parameter_Assignment assignment = parameterAssignments.get(i);
 
 			assignment.updateSyntax(reparser, isDamaged);
 			reparser.updateLocation(assignment.getLocation());
@@ -85,19 +85,19 @@ public final class Parameter_Assignments extends ASTNode implements IIncremental
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (parameter_assignments == null) {
+		if (parameterAssignments == null) {
 			return;
 		}
 
-		for (Parameter_Assignment pa : parameter_assignments) {
+		for (Parameter_Assignment pa : parameterAssignments) {
 			pa.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (parameter_assignments != null) {
-			for (Parameter_Assignment pa : parameter_assignments) {
+		if (parameterAssignments != null) {
+			for (Parameter_Assignment pa : parameterAssignments) {
 				if (!pa.accept(v)) {
 					return false;
 				}

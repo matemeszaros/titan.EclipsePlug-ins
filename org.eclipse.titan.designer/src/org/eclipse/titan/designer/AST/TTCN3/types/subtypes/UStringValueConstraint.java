@@ -113,12 +113,12 @@ public final class UStringValueConstraint extends SubtypeConstraint {
 		sb.append(')');
 	}
 
-	public UStringValueConstraint remove(final RangeListConstraint range_constraint, final boolean ifElement) {
-		switch (range_constraint.getLimitType()) {
+	public UStringValueConstraint remove(final RangeListConstraint rangeConstraint, final boolean ifElement) {
+		switch (rangeConstraint.getLimitType()) {
 		case SIZE: {
 			Set<UniversalCharstring> returnValue = new TreeSet<UniversalCharstring>();
 			for (UniversalCharstring str : values) {
-				if (range_constraint.isElement(new SizeLimit(str.length())) != ifElement) {
+				if (rangeConstraint.isElement(new SizeLimit(str.length())) != ifElement) {
 					returnValue.add(str);
 				}
 			}
@@ -129,7 +129,7 @@ public final class UStringValueConstraint extends SubtypeConstraint {
 			for (UniversalCharstring str : values) {
 				boolean allCharsAreElements = true;
 				for (int charIndex = 0; charIndex < str.length(); charIndex++) {
-					if (!range_constraint.isElement(new UCharLimit(str.get(charIndex)))) {
+					if (!rangeConstraint.isElement(new UCharLimit(str.get(charIndex)))) {
 						allCharsAreElements = false;
 						break;
 					}
@@ -141,7 +141,7 @@ public final class UStringValueConstraint extends SubtypeConstraint {
 			return new UStringValueConstraint(returnValue);
 		}
 		default:
-			// illegal range_constraint type, ignore
+			// illegal rangeConstraint type, ignore
 			return this;
 		}
 	}

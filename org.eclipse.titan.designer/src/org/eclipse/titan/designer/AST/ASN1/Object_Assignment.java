@@ -35,8 +35,8 @@ public final class Object_Assignment extends ASN1Assignment {
 	private final ObjectClass objectClass;
 	private final ASN1Object object;
 
-	public Object_Assignment(final Identifier id, final Ass_pard ass_pard, final ObjectClass objectClass, final ASN1Object object) {
-		super(id, ass_pard);
+	public Object_Assignment(final Identifier id, final Ass_pard assPard, final ObjectClass objectClass, final ASN1Object object) {
+		super(id, assPard);
 		this.objectClass = objectClass;
 		this.object = object;
 
@@ -59,9 +59,9 @@ public final class Object_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public void setRightScope(final Scope right_scope) {
+	public void setRightScope(final Scope rightScope) {
 		if (null != object) {
-			object.setMyScope(right_scope);
+			object.setMyScope(rightScope);
 		}
 	}
 
@@ -84,7 +84,7 @@ public final class Object_Assignment extends ASN1Assignment {
 	 * @return the object if this object assignment.
 	 * */
 	public ASN1Object getObject(final CompilationTimeStamp timestamp) {
-		if (null != ass_pard) {
+		if (null != assPard) {
 			location.reportSemanticError(MessageFormat.format(PARAMETERISEDOBJECT, getFullName()));
 			return null;
 		}
@@ -107,8 +107,8 @@ public final class Object_Assignment extends ASN1Assignment {
 
 		lastTimeChecked = timestamp;
 
-		if (null != ass_pard) {
-			ass_pard.check(timestamp);
+		if (null != assPard) {
+			assPard.check(timestamp);
 			// lastTimeChecked = timestamp;
 			return;
 		}
@@ -170,10 +170,7 @@ public final class Object_Assignment extends ASN1Assignment {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (identifier != null && !identifier.accept(v)) {
-			return false;
-		}
-		if (ass_pard != null && !ass_pard.accept(v)) {
+		if (!super.memberAccept(v)) {
 			return false;
 		}
 		if (objectClass != null && !objectClass.accept(v)) {

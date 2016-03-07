@@ -103,4 +103,9 @@ public final class TestcaseStop_Statement extends Statement {
 		}
 		return true;
 	}
+	
+	@Override
+	public boolean isTerminating(final CompilationTimeStamp timestamp) {
+		return true;
+	}
 }

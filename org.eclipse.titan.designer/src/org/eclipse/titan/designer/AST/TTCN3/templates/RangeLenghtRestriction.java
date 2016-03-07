@@ -126,7 +126,7 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 	}
 
 	@Override
-	public void check(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public void check(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
@@ -135,7 +135,7 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 		Integer_Type integer = new Integer_Type();
 		lower.setMyGovernor(integer);
 		IValue last = integer.checkThisValueRef(timestamp, lower);
-		integer.checkThisValueLimit(timestamp, last, expected_value, false, false, true, false);
+		integer.checkThisValueLimit(timestamp, last, expectedValue, false, false, true, false);
 
 		IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		IValue valueLower = last.getValueRefdLast(timestamp, chain);
@@ -168,7 +168,7 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 
 		upper.setMyGovernor(integer);
 		last = integer.checkThisValueRef(timestamp, upper);
-		integer.checkThisValueLimit(timestamp, last, expected_value, false, false, true, false);
+		integer.checkThisValueLimit(timestamp, last, expectedValue, false, false, true, false);
 
 		chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		IValue valueUpper = last.getValueRefdLast(timestamp, chain);
@@ -262,7 +262,7 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 
 	@Override
 	public void checkNofElements(final CompilationTimeStamp timestamp, final int nofElements, final boolean lessAllowed,
-			final boolean more_allowed, final boolean has_anyornone, final ILocateableNode locatable) {
+			final boolean moreAllowed, final boolean hasAnyornone, final ILocateableNode locatable) {
 		if (lower == null) {
 			return;
 		}
@@ -293,10 +293,10 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 
 		if (Value_type.INTEGER_VALUE.equals(last.getValuetype()) && !last.getIsErroneous(timestamp)) {
 			BigInteger length = ((Integer_Value) last).getValueValue();
-			if (length.compareTo(BigInteger.valueOf(nofElements)) == -1 && !more_allowed) {
+			if (length.compareTo(BigInteger.valueOf(nofElements)) == -1 && !moreAllowed) {
 				final String message = MessageFormat.format(
 						"There are more ({0} {1}) elements than it is allowed by the length restriction ({2})",
-						has_anyornone ? "at least" : "", nofElements, length);
+						hasAnyornone ? "at least" : "", nofElements, length);
 				locatable.getLocation().reportSemanticError(message);
 			}
 		}

@@ -7,8 +7,6 @@
  ******************************************************************************/
 package org.eclipse.titan.common.parsers.cfg;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.misc.Interval;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
 
@@ -110,15 +108,6 @@ public final class ConfigTreeNodeUtilities {
 	
 	private static final StringBuilder print(final StringBuilder builder, final LocationAST root){
 		appendHiddenBefore(builder, root);
-		//TODO: remove
-		//*
-		ParserRuleContext rootRule = root.getRule();
-		if ( rootRule != null ) {
-			int a = rootRule.start.getStartIndex();
-	    	int b = rootRule.stop.getStopIndex();
-	    	Interval interval = new Interval(a,b);
-		}
-	    //*/
 		builder.append(root.getText());
 		appendChildren(builder, root);
 		

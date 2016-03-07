@@ -42,14 +42,14 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 public final class RefersExpression extends Expression_Value {
 	private static final String OPERANDERROR = "Reference to a function, external function, altstep or testcase was expected.";
 
-	private Reference refered;
-	private Assignment referedAssignment;
+	private Reference referred;
+	private Assignment referredAssignment;
 
-	public RefersExpression(final Reference refered) {
-		this.refered = refered;
+	public RefersExpression(final Reference referred) {
+		this.referred = referred;
 
-		if (refered != null) {
-			refered.setFullNameParent(this);
+		if (referred != null) {
+			referred.setFullNameParent(this);
 		}
 	}
 
@@ -60,20 +60,20 @@ public final class RefersExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		if (refered == null) {
+		if (referred == null) {
 			return "<erroneous value>";
 		}
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("refers(").append(refered.getDisplayName()).append(')');
+		builder.append("refers(").append(referred.getDisplayName()).append(')');
 		return builder.toString();
 	}
 
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (refered != null) {
-			refered.setMyScope(scope);
+		if (referred != null) {
+			referred.setMyScope(scope);
 		}
 	}
 
@@ -81,7 +81,7 @@ public final class RefersExpression extends Expression_Value {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (refered == child) {
+		if (referred == child) {
 			return builder.append(OPERAND);
 		}
 
@@ -90,11 +90,11 @@ public final class RefersExpression extends Expression_Value {
 
 	@Override
 	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
-		if (referedAssignment == null) {
+		if (referredAssignment == null) {
 			return Type_type.TYPE_UNDEFINED;
 		}
 
-		switch (referedAssignment.getAssignmentType()) {
+		switch (referredAssignment.getAssignmentType()) {
 		case A_FUNCTION:
 		case A_FUNCTION_RTEMP:
 		case A_FUNCTION_RVAL:
@@ -130,16 +130,16 @@ public final class RefersExpression extends Expression_Value {
 	 * */
 	private void checkExpressionOperands(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
-		if (refered == null) {
+		if (referred == null) {
 			return;
 		}
 
-		referedAssignment = refered.getRefdAssignment(timestamp, false);
-		if (referedAssignment == null) {
+		referredAssignment = referred.getRefdAssignment(timestamp, false);
+		if (referredAssignment == null) {
 			return;
 		}
 
-		switch (referedAssignment.getAssignmentType()) {
+		switch (referredAssignment.getAssignmentType()) {
 		case A_FUNCTION:
 		case A_FUNCTION_RTEMP:
 		case A_FUNCTION_RVAL:
@@ -167,13 +167,13 @@ public final class RefersExpression extends Expression_Value {
 		lastTimeChecked = timestamp;
 		lastValue = this;
 
-		if (refered == null) {
+		if (referred == null) {
 			return lastValue;
 		}
 
 		checkExpressionOperands(timestamp, expectedValue, referenceChain);
 
-		if (getIsErroneous(timestamp) || referedAssignment == null) {
+		if (getIsErroneous(timestamp) || referredAssignment == null) {
 			return lastValue;
 		}
 
@@ -181,25 +181,25 @@ public final class RefersExpression extends Expression_Value {
 			return lastValue;
 		}
 
-		switch (referedAssignment.getAssignmentType()) {
+		switch (referredAssignment.getAssignmentType()) {
 		case A_FUNCTION:
 		case A_FUNCTION_RTEMP:
 		case A_FUNCTION_RVAL:
-			lastValue = new Function_Reference_Value((Def_Function) referedAssignment);
+			lastValue = new Function_Reference_Value((Def_Function) referredAssignment);
 			lastValue.copyGeneralProperties(this);
 			break;
 		case A_EXT_FUNCTION:
 		case A_EXT_FUNCTION_RTEMP:
 		case A_EXT_FUNCTION_RVAL:
-			lastValue = new Function_Reference_Value((Def_Extfunction) referedAssignment);
+			lastValue = new Function_Reference_Value((Def_Extfunction) referredAssignment);
 			lastValue.copyGeneralProperties(this);
 			break;
 		case A_ALTSTEP:
-			lastValue = new Altstep_Reference_Value((Def_Altstep) referedAssignment);
+			lastValue = new Altstep_Reference_Value((Def_Altstep) referredAssignment);
 			lastValue.copyGeneralProperties(this);
 			break;
 		case A_TESTCASE:
-			lastValue = new Testcase_Reference_Value((Def_Testcase) referedAssignment);
+			lastValue = new Testcase_Reference_Value((Def_Testcase) referredAssignment);
 			lastValue.copyGeneralProperties(this);
 			break;
 		default:
@@ -217,24 +217,24 @@ public final class RefersExpression extends Expression_Value {
 			throw new ReParseException();
 		}
 
-		if (refered != null) {
-			refered.updateSyntax(reparser, false);
-			reparser.updateLocation(refered.getLocation());
+		if (referred != null) {
+			referred.updateSyntax(reparser, false);
+			reparser.updateLocation(referred.getLocation());
 		}
 	}
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (refered == null) {
+		if (referred == null) {
 			return;
 		}
 
-		refered.findReferences(referenceFinder, foundIdentifiers);
+		referred.findReferences(referenceFinder, foundIdentifiers);
 	}
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (refered != null && !refered.accept(v)) {
+		if (referred != null && !referred.accept(v)) {
 			return false;
 		}
 		return true;

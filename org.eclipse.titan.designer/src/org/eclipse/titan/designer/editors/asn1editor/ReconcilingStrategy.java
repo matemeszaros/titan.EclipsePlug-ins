@@ -74,11 +74,11 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		fullReconciliation(true);
 	}
 
-	private void fullReconciliation(final boolean is_initial) {
+	private void fullReconciliation(final boolean isInitial) {
 		GlobalIntervalHandler.putInterval(document, null);
 		IPreferencesService prefs = Platform.getPreferencesService();
 		if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.USEONTHEFLYPARSING, true, null)) {
-			analyze(is_initial);
+			analyze(isInitial);
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
@@ -95,7 +95,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		}
 	}
 
-	void analyze(final boolean is_initial) {
+	void analyze(final boolean isInitial) {
 		final IFile editedFile = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 		if (editedFile == null || ResourceExclusionHelper.isExcluded(editedFile)) {
 			return;
@@ -117,8 +117,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
 		projectSourceParser.reportOutdating(editedFile);
 
-		if (is_initial || !editor.isSemanticCheckingDelayed()) {
-			projectSourceParser.setFullSemanticAnalysisNeeded();
+		if (isInitial || !editor.isSemanticCheckingDelayed()) {
 			projectSourceParser.analyzeAll();
 			ProjectConfigurationParser projectConfigurationParser = GlobalParser.getConfigSourceParser(project);
 			projectConfigurationParser.analyzeAll();

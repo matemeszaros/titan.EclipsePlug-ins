@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.utils.Cygwin;
 import org.eclipse.titan.designer.Activator;
@@ -42,6 +41,7 @@ import org.eclipse.titan.designer.actions.ExternalTitanAction;
 import org.eclipse.titan.designer.consoles.TITANConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.titan.designer.graphics.ImageCache;
+import org.eclipse.titan.designer.license.License;
 import org.eclipse.titan.designer.license.LicenseValidator;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -136,7 +136,9 @@ public class TITANJob extends WorkspaceJob {
 		Map<String, String> env = pb.environment();
 
 		String ttcn3Dir = CompilerVersionInformationCollector.getResolvedInstallationPath(false);
-		env.put(TTCN3_LICENSE_FILE_KEY, LicenseValidator.getResolvedLicenseFilePath(false));
+		if(License.isLicenseNeeded()) {
+			env.put(TTCN3_LICENSE_FILE_KEY, LicenseValidator.getResolvedLicenseFilePath(false));
+		}
 		env.put(TTCN3_DIR_KEY, ttcn3Dir);
 		String temp = env.get(LD_LIBRARY_PATH_KEY);
 		if (temp == null) {
@@ -313,6 +315,12 @@ public class TITANJob extends WorkspaceJob {
 					TITANConsole.println(line,stream);
 				}
 				int exitval = proc.waitFor();
+				
+				if ((exitval == 0) && (analyzer.hasProcessedErrorMessages())) {
+					//make returns error if there was a linker error, but does not propagate the error code
+					exitval = analyzer.getExternalErrorCode();
+				}
+				
 				if (exitval != 0) {
 					TITANConsole.println(FAILURE + exitval,stream);
 					if (!analyzer.hasProcessedErrorMessages()) {
@@ -418,19 +426,19 @@ public class TITANJob extends WorkspaceJob {
 					}
 					if (errorOutput == null || errorOutput.length() == 0) {
 						if (cygwin) {
-							MessageDialog.openError(new Shell(Display.getDefault()), name + FAILED, builder.toString());
+							MessageDialog.openError(null, name + FAILED, builder.toString());
 							ErrorReporter.logError(builder.toString());
 						} else {
-							MessageDialog.openError(new Shell(Display.getDefault()), name + FAILED,
+							MessageDialog.openError(null, name + FAILED,
 									MessageFormat.format(CHECK_PERMISSION, builder.toString()));
 							ErrorReporter.logError(MessageFormat.format(CHECK_PERMISSION, builder.toString()));
 						}
 					} else {
 						if (cygwin) {
-							MessageDialog.openError(new Shell(Display.getDefault()), name + FAILED, builder.toString());
+							MessageDialog.openError(null, name + FAILED, builder.toString());
 							ErrorReporter.logError(builder.toString());
 						} else {
-							MessageDialog.openError(new Shell(Display.getDefault()), name + FAILED,
+							MessageDialog.openError(null, name + FAILED,
 									MessageFormat.format(ERRORS_FOUND, builder.toString(), errorOutput));
 							ErrorReporter.logError(MessageFormat.format(ERRORS_FOUND, builder.toString(), errorOutput));
 						}

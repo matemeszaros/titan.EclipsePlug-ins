@@ -20,7 +20,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
@@ -151,7 +150,7 @@ public class FolderNamingConventionPropertyPage extends BaseNamingConventionProp
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openWarning(new Shell(Display.getDefault()), "Naming convention settings changed",
+					MessageDialog.openWarning(null, "Naming convention settings changed",
 							"Naming convention settings have changed, the known projects have to be re-analyzed completly.\nThis might take some time.");
 				}
 			});

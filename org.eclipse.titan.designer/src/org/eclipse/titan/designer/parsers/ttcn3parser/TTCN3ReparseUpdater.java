@@ -10,7 +10,6 @@ package org.eclipse.titan.designer.parsers.ttcn3parser;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -74,12 +73,6 @@ public final class TTCN3ReparseUpdater {
 	 * Stores if the name of entity has changed or not. This information can indicate a level higher, that a uniqueness check might be needed
 	 */
 	private boolean namechanged = false;
-
-	/** stores the list of modules that need to be re-analyzed when incremental semantic checking is used.*/
-	public HashSet<String> moduleToBeReanalysed = new HashSet<String>();
-
-	/** Indicates whether a full semantic analyzes is required even if using incremental ones would be allowed.*/
-	public boolean fullAnalysysNeeded = false;
 
 	public TTCN3ReparseUpdater(final IFile file, final String code, int firstLine, int lineShift, int startOffset, int endOffset, int shift) {
 		this.file = file;
@@ -395,7 +388,13 @@ public final class TTCN3ReparseUpdater {
 					insideString = true;
 					nextPos++;
 					while (nextPos < rangeEnd && ('\"' != substring.charAt(nextPos) || '\"' == substring.charAt(nextPos - 1))) {
-						nextPos++;
+						if('\"' != substring.charAt(nextPos)) {
+							nextPos++;
+						} else if (nextPos + 1 < rangeEnd && '\"' == substring.charAt(nextPos + 1)) {
+							nextPos += 2;
+						} else {
+							break;
+						}
 					}
 					if (nextPos < rangeEnd) {
 						insideString = false;
@@ -425,7 +424,7 @@ public final class TTCN3ReparseUpdater {
 		if (insideSingleComment || insideMultiComment || insideString) {
 			return Integer.MAX_VALUE;
 		}
-		return ++result;
+		return result;
 	}
 
 	/**
@@ -553,6 +552,9 @@ public final class TTCN3ReparseUpdater {
 		unsupportedConstructs.addAll(parser.getUnsupportedConstructs());
 		
 		int result = measureIntervallDamage();
+		if(!parser.isErrorListEmpty()){
+			++result;
+		}
 
 		return result;
 	}

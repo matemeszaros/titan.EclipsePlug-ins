@@ -212,6 +212,59 @@ public final class ProjectBasedBuilder {
 		}
 	}
 
+	/**
+	 * @return a list of all projects referencing transitively the actual project.
+	 * */
+	public List<IProject> getAllReferencingProjects() {
+		List<IProject> referenceChain = new ArrayList<IProject>();
+		List<IProject> knownProjects = new ArrayList<IProject>();
+
+		getAllReferencingProjects(referenceChain, project, knownProjects);
+
+		return knownProjects;
+	}
+	
+	/**
+	 * Calculates and returns a list of all projects referencing transitively the provided one.
+	 * 
+	 * @param referenceChain
+	 *                a reference chain used to detect project reference
+	 *                cycles.
+	 * @param actualProject
+	 *                the project being checked.
+	 * @param knownProjects
+	 *                the projects already known, they shall not be added
+	 *                any more to the list.
+	 * */
+	private void getAllReferencingProjects(final List<IProject> referenceChain, final IProject actualProject, final List<IProject> knownProjects) {
+		if (knownProjects.contains(actualProject)) {
+			return;
+		}
+
+		if (referenceChain.contains(actualProject)) {
+			knownProjects.add(actualProject);
+			return;
+		}
+
+		IProject[] referencingProjects = ProjectBasedBuilder.getProjectBasedBuilder(actualProject).getReferencingProjects();
+
+		if (referencingProjects.length == 0) {
+			knownProjects.add(actualProject);
+		}
+
+		int size = referenceChain.size();
+		referenceChain.add(actualProject);
+		for (IProject temporalProject : referencingProjects) {
+			getAllReferencingProjects(referenceChain, temporalProject, knownProjects);
+		}
+
+		referenceChain.remove(size);
+
+		if (!knownProjects.contains(actualProject)) {
+			knownProjects.add(actualProject);
+		}
+	}
+	
 	public IProject[] getReferencingProjects() {
 		return project.getReferencingProjects();
 	}

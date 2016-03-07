@@ -74,7 +74,7 @@ public final class Undefined_Block_Value extends Value {
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (null == lastTimeChecked || lastTimeChecked.isLess(timestamp)) {
 			return Type_type.TYPE_UNDEFINED;
 		}
@@ -83,7 +83,7 @@ public final class Undefined_Block_Value extends Value {
 			return Type_type.TYPE_UNDEFINED;
 		}
 
-		return realValue.getExpressionReturntype(timestamp, expected_value);
+		return realValue.getExpressionReturntype(timestamp, expectedValue);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public final class Undefined_Block_Value extends Value {
 	}
 
 	@Override
-	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		if (null == lastTimeChecked || lastTimeChecked.isLess(timestamp)) {
 			return true;
@@ -135,11 +135,11 @@ public final class Undefined_Block_Value extends Value {
 			return true;
 		}
 
-		return realValue.isUnfoldable(timestamp, expected_value, referenceChain);
+		return realValue.isUnfoldable(timestamp, expectedValue, referenceChain);
 	}
 
 	@Override
-	public IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		if (null == lastTimeChecked || lastTimeChecked.isLess(timestamp)) {
 			return this;
@@ -149,15 +149,15 @@ public final class Undefined_Block_Value extends Value {
 			return this;
 		}
 
-		return realValue.getValueRefdLast(timestamp, expected_value, referenceChain);
+		return realValue.getValueRefdLast(timestamp, expectedValue, referenceChain);
 	}
 
 	// FIXME can be converted to: charsyms
 	@Override
-	public Value setValuetype(final CompilationTimeStamp timestamp, final Value_type new_type) {
+	public Value setValuetype(final CompilationTimeStamp timestamp, final Value_type newType) {
 		lastTimeChecked = timestamp;
 
-		switch (new_type) {
+		switch (newType) {
 		case NAMED_BITS: {
 			Named_Bits namedBits = parseBlockNamedBits();
 			if (null == namedBits) {
@@ -239,7 +239,7 @@ public final class Undefined_Block_Value extends Value {
 			break;
 		}
 		default:
-			realValue = super.setValuetype(timestamp, new_type);
+			realValue = super.setValuetype(timestamp, newType);
 		}
 
 		return realValue;

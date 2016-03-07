@@ -54,7 +54,7 @@ public final class ASN1Module extends Module {
 	/** default tagging. */
 	private final Tag_types tagdef;
 
-	private final boolean extensibility_implied;
+	private final boolean extensibilityImplied;
 	/** exported stuff. */
 	private Exports exports;
 	/** imported stuff. */
@@ -62,10 +62,10 @@ public final class ASN1Module extends Module {
 
 	private ASN1Assignments assignments;
 
-	public ASN1Module(final Identifier identifier, final IProject project, final Tag_types tagdef, final boolean extensibility_implied) {
+	public ASN1Module(final Identifier identifier, final IProject project, final Tag_types tagdef, final boolean extensibilityImplied) {
 		super(identifier, project);
 		this.tagdef = tagdef;
-		this.extensibility_implied = extensibility_implied;
+		this.extensibilityImplied = extensibilityImplied;
 		exports = new Exports(false);
 		exports.setMyModule(this);
 		exports.setFullNameParent(this);
@@ -293,16 +293,16 @@ public final class ASN1Module extends Module {
 			module = parser.getModuleByName(moduleId.getName());
 		}
 
-		final List<ISubReference> new_subreferences = new ArrayList<ISubReference>();
-		new_subreferences.add(new FieldSubReference(id));
-		final Defined_Reference final_reference = new Defined_Reference(null, new_subreferences);
+		final List<ISubReference> newSubreferences = new ArrayList<ISubReference>();
+		newSubreferences.add(new FieldSubReference(id));
+		final Defined_Reference finalSeference = new Defined_Reference(null, newSubreferences);
 
 		if (this == module || null == module) {
 			return null;
 		}
 
 		// FIXME add semantic check guard on project level.
-		return module.getAssBySRef(timestamp, final_reference);
+		return module.getAssBySRef(timestamp, finalSeference);
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public final class ISO2022String_Value extends Value {
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		return Type_type.TYPE_GENERALSTRING;
 	}
 
@@ -79,15 +79,15 @@ public final class ISO2022String_Value extends Value {
 		final ISubReference subreference = subreferences.get(actualSubReference);
 		switch (subreference.getReferenceType()) {
 		case arraySubReference:
-			final Value array_index = ((ArraySubReference) subreference).getValue();
-			final IValue value_index = array_index.getValueRefdLast(timestamp, refChain);
-			if (!value_index.isUnfoldable(timestamp)) {
-				if (Value_type.INTEGER_VALUE.equals(value_index.getValuetype())) {
-					final int index = ((Integer_Value) value_index).intValue();
-					return getStringElement(index, array_index.getLocation());
+			final Value arrayIndex = ((ArraySubReference) subreference).getValue();
+			final IValue valueIndex = arrayIndex.getValueRefdLast(timestamp, refChain);
+			if (!valueIndex.isUnfoldable(timestamp)) {
+				if (Value_type.INTEGER_VALUE.equals(valueIndex.getValuetype())) {
+					final int index = ((Integer_Value) valueIndex).intValue();
+					return getStringElement(index, arrayIndex.getLocation());
 				}
 
-				array_index.getLocation().reportSemanticError(ArraySubReference.INTEGERINDEXEXPECTED);
+				arrayIndex.getLocation().reportSemanticError(ArraySubReference.INTEGERINDEXEXPECTED);
 				return null;
 			}
 			return null;
@@ -106,7 +106,7 @@ public final class ISO2022String_Value extends Value {
 	}
 
 	@Override
-	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		return false;
 	}

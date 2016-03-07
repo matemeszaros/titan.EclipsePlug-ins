@@ -23,10 +23,10 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * */
 public final class SimpleTypeMappingTarget extends TypeMappingTarget {
 
-	private final Type target_type;
+	private final Type targetType;
 
-	public SimpleTypeMappingTarget(final Type target_type) {
-		this.target_type = target_type;
+	public SimpleTypeMappingTarget(final Type targetType) {
+		this.targetType = targetType;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public final class SimpleTypeMappingTarget extends TypeMappingTarget {
 
 	@Override
 	public Type getTargetType() {
-		return target_type;
+		return targetType;
 	}
 
 	@Override
@@ -52,23 +52,23 @@ public final class SimpleTypeMappingTarget extends TypeMappingTarget {
 
 		lastTimeChecked = timestamp;
 
-		if (source != null && !source.isIdentical(timestamp, target_type)) {
-			target_type.getLocation().reportSemanticError(
+		if (source != null && !source.isIdentical(timestamp, targetType)) {
+			targetType.getLocation().reportSemanticError(
 					MessageFormat.format("The source and target types must be the same: `{0}'' was expected instead of `{1}''",
-							source.getTypename(), target_type.getTypename()));
+							source.getTypename(), targetType.getTypename()));
 		}
 	}
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (target_type != null) {
-			target_type.findReferences(referenceFinder, foundIdentifiers);
+		if (targetType != null) {
+			targetType.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (target_type != null && !target_type.accept(v)) {
+		if (targetType != null && !targetType.accept(v)) {
 			return false;
 		}
 		return true;

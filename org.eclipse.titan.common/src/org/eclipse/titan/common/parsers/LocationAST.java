@@ -46,8 +46,7 @@ public class LocationAST {
 			sb.append("" + mRule.stop + ", ");
 			sb.append("" + mRule.getChildCount() + ", " );
 			sb.append(mRule.getText() + "}" );
-		}
-		else {
+		} else {
 			sb.append("null");
 		}
 		sb.append(", " );

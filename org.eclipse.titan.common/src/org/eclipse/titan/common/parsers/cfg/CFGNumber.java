@@ -11,13 +11,18 @@ import java.math.BigInteger;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class CFGNumber {
 	private static final String DIV_BY_ZERO = "Division by zero";
 	private boolean isFloatNumber;
 	private float floatNumber;
 	private BigInteger intNumber;
 	
+	/**
+	 * Constructor
+	 * @param text the string representation of the number. The constructor will decide if it will be stored as float or integer
+	 */
 	public CFGNumber(final String text) {
 		try {
 			floatNumber = Float.parseFloat(text);
@@ -33,6 +38,9 @@ public final class CFGNumber {
 		return isFloatNumber;
 	}
 
+	/**
+	 * @return this + num
+	 */
 	public void add(final CFGNumber num) {
 		if (isFloatNumber) {
 			if (num.isFloatNumber) {
@@ -50,6 +58,29 @@ public final class CFGNumber {
 		}
 	}
 
+	/**
+	 * @return this - num
+	 */
+	public void sub(final CFGNumber num) {
+		if (isFloatNumber) {
+			if (num.isFloatNumber) {
+				floatNumber -= num.floatNumber;
+			} else {
+				floatNumber -= num.intNumber.floatValue();
+			}
+		} else {
+			if (num.isFloatNumber) {
+				isFloatNumber = true;
+				floatNumber = intNumber.floatValue() - num.floatNumber;
+			} else {
+				intNumber = intNumber.subtract(num.intNumber);
+			}
+		}
+	}
+
+	/**
+	 * @return this * num
+	 */
 	public void mul(final int num) {
 		if (isFloatNumber) {
 			floatNumber *= num;
@@ -58,6 +89,9 @@ public final class CFGNumber {
 		}
 	}
 
+	/**
+	 * @return this * num
+	 */
 	public void mul(final CFGNumber num) {
 		if (isFloatNumber) {
 			if (num.isFloatNumber) {
@@ -75,6 +109,10 @@ public final class CFGNumber {
 		}
 	}
 
+	/**
+	 * @return this / num
+	 * @throws ArithmeticException if num == 0
+	 */
 	public void div(final CFGNumber num) throws ArithmeticException {
 		if (isFloatNumber) {
 			if (num.isFloatNumber) {
@@ -108,12 +146,34 @@ public final class CFGNumber {
 	public String toString() {
 		if (isFloatNumber) {
 			// "Infinity" is not a valid value in a configuration file.
-			if ((floatNumber == Float.NEGATIVE_INFINITY) || (floatNumber == Float.POSITIVE_INFINITY)) {
+			if (Float.isInfinite(floatNumber)) {
 				return "0.0";
 			}
 			return Float.toString(floatNumber);
 		}
 		
 		return intNumber.toString();
+	}
+	
+	/**
+	 * @return float value of the number
+	 */
+	public Double getValue() {
+		if ( isFloatNumber ) {
+			return new Double( floatNumber );
+		} else {
+			return intNumber.doubleValue();
+		}
+	}
+	
+	/**
+	 * @return integer value, or null if number is float
+	 */
+	public Integer getIntegerValue() {
+		if ( isFloatNumber ) {
+			return null;
+		} else {
+			return intNumber.intValue();
+		}
 	}
 }

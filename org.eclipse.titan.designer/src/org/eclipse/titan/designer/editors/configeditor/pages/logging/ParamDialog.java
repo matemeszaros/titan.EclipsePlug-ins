@@ -46,7 +46,7 @@ public class ParamDialog extends TitleAreaDialog {
 
 	public ParamDialog(final Shell parentShell, final LogParamEntry logentry, final PluginSpecificParam param) {
 		super(parentShell);
-		setShellStyle(parentShell.getStyle() | SWT.RESIZE | SWT.PRIMARY_MODAL);
+		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.PRIMARY_MODAL);
 		isAddition = param == null;
 		this.logentry = logentry;
 		this.param = param;

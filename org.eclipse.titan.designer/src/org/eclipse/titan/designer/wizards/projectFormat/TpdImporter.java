@@ -300,8 +300,7 @@ public class TpdImporter {
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								Shell shell = new Shell(Display.getDefault());
-								PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(shell, project,
+								PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(null, project,
 										GeneralConstants.PROJECT_PROPERTY_PAGE, null, null);
 								if (dialog != null) {
 									dialog.open();
@@ -583,7 +582,7 @@ public class TpdImporter {
 												+ " the location information is missing or corrupted");
 					}
 				} catch (CoreException e) {
-					ErrorReporter.logExceptionStackTrace("While creating folder `" + folder.getName() + "'", e);
+					//be silent, it can happen normally
 				}
 			} else {
 				ErrorReporter.logWarning("Folder to be imported `" + folder.getName() + "' already exists in project `" + project.getName()
@@ -787,9 +786,7 @@ public class TpdImporter {
 
 		// Remove possible target configuration nodes in existence
 		removeConfigurationNodes(targetDocument.getDocumentElement());
-
-		Node configurationsNode = ProjectFileHandler.getNodebyName(mainNodes, ProjectFormatConstants.CONFIGURATIONS_NODE);
-		NodeList configurationsNodeList = configurationsNode.getChildNodes();
+		
 
 		Node targetActiveConfiguration = targetDocument.createElement(ProjectFormatConstants.ACTIVE_CONFIGURATION_NODE);
 		targetActiveConfiguration.appendChild(targetDocument.createTextNode(activeConfiguration));
@@ -798,6 +795,17 @@ public class TpdImporter {
 		Node targetConfigurationsRoot = targetDocument.createElement(ProjectFormatConstants.CONFIGURATIONS_NODE);
 		targetDocument.getDocumentElement().appendChild(targetConfigurationsRoot);
 
+		Node configurationsNode = ProjectFileHandler.getNodebyName(mainNodes, ProjectFormatConstants.CONFIGURATIONS_NODE);
+		if (configurationsNode == null) {
+			ProjectDocumentHandlingUtility.saveDocument(project);
+			ProjectBuildPropertyData.setProjectAlreadyExported(project, false);
+			ProjectFileHandler handler = new ProjectFileHandler(project);
+			handler.loadProjectSettingsFromDocument(targetDocument);
+			
+			return true;
+		}
+
+		NodeList configurationsNodeList = configurationsNode.getChildNodes();
 		for (int i = 0, size = configurationsNodeList.getLength(); i < size; i++) {
 			Node configurationNode = configurationsNodeList.item(i);
 			if (configurationNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -1078,7 +1086,8 @@ public class TpdImporter {
 			String unresolvedProjectLocationURI = locationNode.getTextContent();
 
 			URI absoluteURI = TITANPathUtilities.convertToAbsoluteURI(unresolvedProjectLocationURI, URIUtil.toURI(projectFileFolderPath));
-						
+			
+			
 			if (absoluteURI!=null && !"file".equals(absoluteURI.getScheme())) {
 				final StringBuilder builder = new StringBuilder(
 						"Loading of project information is only supported for local files right now. " + absoluteURI.toString()
@@ -1175,7 +1184,7 @@ public class TpdImporter {
 								createProject(description, newProjectHandle, monitor);
 							}
 						};
-						new ProgressMonitorDialog(new Shell(Display.getDefault())).run(true, true, op);
+						new ProgressMonitorDialog(null).run(true, true, op);
 					} catch (InterruptedException e) {
 						return;
 					} catch (final InvocationTargetException e) {

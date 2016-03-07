@@ -35,7 +35,7 @@ public final class Exports extends ASTNode implements ILocateableNode {
 	 * exports all (true if the module of this export list exports all of
 	 * its assignments).
 	 */
-	private final boolean export_all;
+	private final boolean exportAll;
 
 	/**
 	 * The location of the whole export list. This location encloses the
@@ -49,9 +49,9 @@ public final class Exports extends ASTNode implements ILocateableNode {
 	 */
 	private CompilationTimeStamp lastCompilationTimeStamp;
 
-	public Exports(final boolean export_all) {
-		this.export_all = export_all;
-		if (export_all) {
+	public Exports(final boolean exportAll) {
+		this.exportAll = exportAll;
+		if (exportAll) {
 			symbols = null;
 		} else {
 			symbols = new Symbols();
@@ -59,7 +59,7 @@ public final class Exports extends ASTNode implements ILocateableNode {
 	}
 
 	public Exports(final Symbols symbols) {
-		export_all = false;
+		exportAll = false;
 		this.symbols = symbols;
 	}
 
@@ -86,7 +86,7 @@ public final class Exports extends ASTNode implements ILocateableNode {
 	public boolean exportsSymbol(final CompilationTimeStamp timestamp, final Identifier id) {
 		check(timestamp);
 
-		if (export_all) {
+		if (exportAll) {
 			return true;
 		}
 
@@ -105,7 +105,7 @@ public final class Exports extends ASTNode implements ILocateableNode {
 			return;
 		}
 
-		if (export_all) {
+		if (exportAll) {
 			lastCompilationTimeStamp = timestamp;
 			return;
 		}

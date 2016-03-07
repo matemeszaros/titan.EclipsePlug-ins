@@ -27,10 +27,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigFileHandler;
@@ -668,7 +666,7 @@ public final class JniExecutor extends BaseExecutor implements IJNICallback {
 				Display.getDefault().syncExec(new Runnable() {
 					@Override
 					public void run() {
-						ExecuteDialog dialog = new ExecuteDialog(new Shell(Display.getDefault()));
+						ExecuteDialog dialog = new ExecuteDialog(null);
 						dialog.setControlparts(availableControlParts);
 						dialog.setTestcases(availableTestcases);
 						dialog.setTestsets(availableTestSetNames);

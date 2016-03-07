@@ -52,7 +52,7 @@ public final class LicenseValidator {
 			super.buttonPressed(buttonId);
 
 			if (buttonId == 1) {
-				PreferencesUtil.createPreferenceDialogOn(new Shell(Display.getDefault()),
+				PreferencesUtil.createPreferenceDialogOn(null,
 						"org.eclipse.titan.designer.preferences.pages.TITANPreferencePage", null, null).open();
 			}
 		}
@@ -134,7 +134,7 @@ public final class LicenseValidator {
 					}
 
 					LicenseErrorDialog.isDialogOpen = true;
-					LicenseErrorDialog dialog = new LicenseErrorDialog(new Shell(Display.getDefault()), title, message);
+					LicenseErrorDialog dialog = new LicenseErrorDialog(null, title, message);
 					dialog.open();
 					LicenseErrorDialog.isDialogOpen = false;
 				}
@@ -159,6 +159,9 @@ public final class LicenseValidator {
 	 * @return the resolved license file path
 	 * */
 	public static String getResolvedLicenseFilePath(final boolean force) {
+		if(!License.isLicenseNeeded()){
+			return "";
+		}
 		final IPreferencesService preferenceService = Platform.getPreferencesService();
 		boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, false, null);

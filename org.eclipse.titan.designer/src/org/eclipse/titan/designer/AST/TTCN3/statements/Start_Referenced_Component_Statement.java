@@ -43,20 +43,20 @@ public final class Start_Referenced_Component_Statement extends Statement {
 	private static final String STATEMENT_NAME = "start test component";
 
 	private final Value componentReference;
-	private final Value dereferedValue;
+	private final Value dereferredValue;
 	private final ParsedActualParameters parameters;
 
-	public Start_Referenced_Component_Statement(final Value componentReference, final Value dereferedValue,
+	public Start_Referenced_Component_Statement(final Value componentReference, final Value dereferredValue,
 			final ParsedActualParameters parameters) {
 		this.componentReference = componentReference;
-		this.dereferedValue = dereferedValue;
+		this.dereferredValue = dereferredValue;
 		this.parameters = parameters;
 
 		if (componentReference != null) {
 			componentReference.setFullNameParent(this);
 		}
-		if (dereferedValue != null) {
-			dereferedValue.setFullNameParent(this);
+		if (dereferredValue != null) {
+			dereferredValue.setFullNameParent(this);
 		}
 		if (parameters != null) {
 			parameters.setFullNameParent(this);
@@ -79,7 +79,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 
 		if (componentReference == child) {
 			return builder.append(FULLNAMEPART1);
-		} else if (dereferedValue == child) {
+		} else if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART2);
 		} else if (parameters == child) {
 			return builder.append(FULLNAMEPART3);
@@ -89,8 +89,8 @@ public final class Start_Referenced_Component_Statement extends Statement {
 	}
 
 	/** @return the dereferred value */
-	public Value getDereferedValue() {
-		return dereferedValue;
+	public Value getDereferredValue() {
+		return dereferredValue;
 	}
 
 	@Override
@@ -99,8 +99,8 @@ public final class Start_Referenced_Component_Statement extends Statement {
 		if (componentReference != null) {
 			componentReference.setMyScope(scope);
 		}
-		if (dereferedValue != null) {
-			dereferedValue.setMyScope(scope);
+		if (dereferredValue != null) {
+			dereferredValue.setMyScope(scope);
 		}
 		if (parameters != null) {
 			parameters.setMyScope(scope);
@@ -121,14 +121,14 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			compType = Port_Utility.checkComponentReference(timestamp, this, componentReference, false, false);
 		}
 
-		if (dereferedValue == null) {
+		if (dereferredValue == null) {
 			return;
 		}
 
-		switch (dereferedValue.getValuetype()) {
+		switch (dereferredValue.getValuetype()) {
 		case EXPRESSION_VALUE:
-			if (Operation_type.REFERS_OPERATION.equals(((Expression_Value) dereferedValue).getOperationType())) {
-				dereferedValue.getLocation().reportSemanticError(
+			if (Operation_type.REFERS_OPERATION.equals(((Expression_Value) dereferredValue).getOperationType())) {
+				dereferredValue.getLocation().reportSemanticError(
 						"A value of a function type was expected in the argument instead of a `refers' operation,"
 								+ " which does not specify any function type.");
 				return;
@@ -136,7 +136,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			break;
 		case TTCN3_NULL_VALUE:
 		case FAT_NULL_VALUE:
-			dereferedValue.getLocation()
+			dereferredValue.getLocation()
 					.reportSemanticError(
 							"A value of a function type was expected in the argument instead of a `null' value, which does not specify any function type.");
 			return;
@@ -144,8 +144,8 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			break;
 		}
 
-		dereferedValue.setLoweridToReference(timestamp);
-		IType type = dereferedValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+		dereferredValue.setLoweridToReference(timestamp);
+		IType type = dereferredValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 		if (type != null) {
 			type = type.getTypeRefdLast(timestamp);
 		}
@@ -155,14 +155,14 @@ public final class Start_Referenced_Component_Statement extends Statement {
 		}
 
 		if (!Type_type.TYPE_FUNCTION.equals(type.getTypetype())) {
-			dereferedValue.getLocation().reportSemanticError(
+			dereferredValue.getLocation().reportSemanticError(
 					MessageFormat.format("A value of type function was expected in the argument of `{0}''", type.getTypename()));
 			return;
 		}
 
 		Function_Type functionType = (Function_Type) type;
 		if (functionType.isRunsOnSelf()) {
-			dereferedValue.getLocation().reportSemanticError("The argument cannot be a function reference with 'runs on self' clause");
+			dereferredValue.getLocation().reportSemanticError("The argument cannot be a function reference with 'runs on self' clause");
 			return;
 		}
 
@@ -182,7 +182,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 		IType returnType = functionType.getReturnType();
 		if (returnType != null) {
 			if (functionType.returnsTemplate()) {
-				dereferedValue.getLocation().reportSemanticWarning(
+				dereferredValue.getLocation().reportSemanticWarning(
 						MessageFormat.format("Function of type `{0}'' return a template of type `{1}'',"
 								+ " which cannot be retrieved when the test component terminates",
 								functionType.getTypename(), returnType.getTypename()));
@@ -209,7 +209,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 				}
 
 				if (!returnTypeCorrect) {
-					dereferedValue.getLocation()
+					dereferredValue.getLocation()
 							.reportSemanticWarning(
 									MessageFormat.format(
 											"Return type of function type `{0}'' is `{1}'', which does not have the `done'' extension attibute."
@@ -238,9 +238,9 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			reparser.updateLocation(componentReference.getLocation());
 		}
 
-		if (dereferedValue != null) {
-			dereferedValue.updateSyntax(reparser, false);
-			reparser.updateLocation(dereferedValue.getLocation());
+		if (dereferredValue != null) {
+			dereferredValue.updateSyntax(reparser, false);
+			reparser.updateLocation(dereferredValue.getLocation());
 		}
 		if (parameters != null) {
 			parameters.updateSyntax(reparser, false);
@@ -253,8 +253,8 @@ public final class Start_Referenced_Component_Statement extends Statement {
 		if (componentReference != null) {
 			componentReference.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (dereferedValue != null) {
-			dereferedValue.findReferences(referenceFinder, foundIdentifiers);
+		if (dereferredValue != null) {
+			dereferredValue.findReferences(referenceFinder, foundIdentifiers);
 		}
 		if (parameters != null) {
 			parameters.findReferences(referenceFinder, foundIdentifiers);
@@ -266,7 +266,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 		if (componentReference != null && !componentReference.accept(v)) {
 			return false;
 		}
-		if (dereferedValue != null && !dereferedValue.accept(v)) {
+		if (dereferredValue != null && !dereferredValue.accept(v)) {
 			return false;
 		}
 		if (parameters != null && !parameters.accept(v)) {

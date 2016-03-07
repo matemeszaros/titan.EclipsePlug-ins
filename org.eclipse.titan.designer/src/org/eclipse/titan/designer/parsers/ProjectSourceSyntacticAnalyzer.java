@@ -343,7 +343,6 @@ public final class ProjectSourceSyntacticAnalyzer {
 						reparser.updateLocation(((TTCN3Module) module).getLocation());
 						MarkerHandler.markAllOnTheFlyMarkersForRemoval(file, reparser.getDamageStart(), reparser.getDamageEnd());
 					} catch (ReParseException e) {
-						reparser.fullAnalysysNeeded = true;
 						syntacticallyOutdated = true;
 
 						uptodateFiles.remove(file);
@@ -373,14 +372,11 @@ public final class ProjectSourceSyntacticAnalyzer {
 					ErrorReporter.logExceptionStackTrace(e);
 				}
 			} else {
-				reparser.fullAnalysysNeeded = true;
 				reportOutdating(file);
 			}
 		} else if (highlySyntaxErroneousFiles.contains(file)) {
-			reparser.fullAnalysysNeeded = true;
 			reportOutdating(file);
 		} else {
-			reparser.fullAnalysysNeeded = true;
 			MarkerHandler.markAllMarkersForRemoval(file);
 			TemporalParseData temp = fileBasedTTCN3Analysis(file);
 			postFileBasedGeneralAnalysis(temp);
@@ -927,15 +923,15 @@ public final class ProjectSourceSyntacticAnalyzer {
 
 		// add annotations on inactive code
 		if (module != null && module instanceof TTCN3Module && document != null && editors != null) {
-			final TTCN3Module ttcn_module = (TTCN3Module) module;
+			final TTCN3Module ttcnModule = (TTCN3Module) module;
 			final List<ISemanticTITANEditor> editors2 = editors;
-			final List<Location> icl_list = ttcn_module.getInactiveCodeLocations();
+			final List<Location> icList = ttcnModule.getInactiveCodeLocations();
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					for (ISemanticTITANEditor editor : editors2) {
 						if (editor instanceof TTCNPPEditor) {
-							((TTCNPPEditor) editor).updateInactiveCodeAnnotations(icl_list);
+							((TTCNPPEditor) editor).updateInactiveCodeAnnotations(icList);
 						}
 					}
 				}

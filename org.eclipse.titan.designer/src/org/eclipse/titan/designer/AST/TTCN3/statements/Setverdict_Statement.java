@@ -75,14 +75,14 @@ public final class Setverdict_Statement extends Statement {
 		}
 	}
 
-	public Setverdict_Statement(final Value verdictValue, final LogArguments verdict_reason) {
+	public Setverdict_Statement(final Value verdictValue, final LogArguments verdictReason) {
 		this.verdictValue = verdictValue;
-		this.verdictReason = verdict_reason;
+		this.verdictReason = verdictReason;
 
 		if (verdictValue != null) {
 			verdictValue.setFullNameParent(this);
 		}
-		if (verdict_reason != null) {
+		if (verdictReason != null) {
 			this.verdictReason.setFullNameParent(this);
 		}
 	}

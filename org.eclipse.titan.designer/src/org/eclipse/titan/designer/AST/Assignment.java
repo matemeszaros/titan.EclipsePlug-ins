@@ -12,6 +12,7 @@ import java.text.MessageFormat;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Group;
+import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -25,7 +26,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * 
  * @author Kristof Szabados
  * */
-public abstract class Assignment extends ASTNode implements IOutlineElement, ILocateableNode, IReferenceChainElement {
+public abstract class Assignment extends ASTNode implements IOutlineElement, ILocateableNode, IReferenceChainElement, IReferencingElement {
 	protected static final String GLOBALLY_UNUSED = "The {0} seems to be never used globally";
 	protected static final String LOCALLY_UNUSED = "The {0} seems to be never used locally";
 
@@ -97,6 +98,13 @@ public abstract class Assignment extends ASTNode implements IOutlineElement, ILo
 		return lastTimeChecked;
 	}
 
+	/**
+	 * Resets the last time when this assignment was checked.
+	 * */
+	public final void resetLastTimeChecked() {
+		lastTimeChecked = null;
+	}
+	
 	public final boolean getIsErroneous() {
 		return isErroneous;
 	}
@@ -263,4 +271,9 @@ public abstract class Assignment extends ASTNode implements IOutlineElement, ILo
 	 * @return true if the highlighting of this assignment is turned on
 	 */
 	public abstract boolean shouldMarkOccurrences();
+	
+	@Override
+	public Declaration getDeclaration() {
+		return Declaration.createInstance(this);
+	}
 }

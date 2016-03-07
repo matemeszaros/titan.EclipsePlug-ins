@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2015 Ericsson Telecom AB
+ * Copyright (c) 2000-2016 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@ package org.eclipse.titan.designer.AST.TTCN3.templates;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -76,23 +77,27 @@ public final class ValueList_Template extends CompositeTemplate {
 			final boolean allowOmit, final boolean allowAnyOrOmit, final boolean subCheck, final boolean implicitOmit) {
 		if(type == null){
 			return;
-		}
+		}		
+		boolean allowOmitInValueList = allowOmitInValueList(allowOmit);
+		
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			ITemplateListItem component = templates.getTemplateByIndex(i);
 			component.setMyGovernor(type);
 			ITTCN3Template temporalComponent = type.checkThisTemplateRef(timestamp, component);
-			temporalComponent.checkThisTemplateGeneric(timestamp, type, false, allowOmit, true, subCheck, implicitOmit);
+			temporalComponent.checkThisTemplateGeneric(timestamp, type, false, allowOmitInValueList, true, subCheck, implicitOmit);
 		}
 
 		checkLengthRestriction(timestamp, type);
 		if (!allowOmit && isIfpresent) {
-			location.reportSemanticError("`ifpresent' is not allowed here");
+			if( location != null && !(location instanceof NULL_Location)) {
+				location.reportSemanticError("`ifpresent' is not allowed here");
+			} 
 		}
 		if (subCheck) {
 			type.checkThisTemplateSubtype(timestamp, this);
 		}
 	}
-
+	
 	@Override
 	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		getLocation().reportSemanticError("A specific value was expected instead of value list match");
@@ -100,7 +105,7 @@ public final class ValueList_Template extends CompositeTemplate {
 
 	@Override
 	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
+		checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
 		boolean needsRuntimeCheck = false;
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			ITTCN3Template component = templates.getTemplateByIndex(i);

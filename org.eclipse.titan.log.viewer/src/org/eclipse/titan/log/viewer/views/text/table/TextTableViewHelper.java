@@ -19,13 +19,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
 import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
@@ -37,6 +30,11 @@ import org.eclipse.titan.log.viewer.utils.Constants;
 import org.eclipse.titan.log.viewer.utils.LogFileCacheHandler;
 import org.eclipse.titan.log.viewer.utils.Messages;
 import org.eclipse.titan.log.viewer.views.MSCView;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 public class TextTableViewHelper {
 	/**
@@ -82,7 +80,7 @@ public class TextTableViewHelper {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						MessageDialog.openInformation(new Shell(Display.getDefault()), "View can not be opened.", "Test case extraction is already running on " + logFile.getName());
+						MessageDialog.openInformation(null, "View can not be opened.", "Test case extraction is already running on " + logFile.getName());
 					}
 				});
 				return null;

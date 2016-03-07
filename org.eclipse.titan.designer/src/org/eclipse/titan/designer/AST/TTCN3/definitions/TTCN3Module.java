@@ -22,11 +22,14 @@ import org.eclipse.titan.common.product.ProductIdentity;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
+import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
+import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.Identifier;
+import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportation;
@@ -34,12 +37,9 @@ import org.eclipse.titan.designer.AST.ModuleImportationChain;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Type;
-import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
-import org.eclipse.titan.designer.AST.IType.Type_type;
-import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.AnytypeAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.AttributeSpecification;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ExtensionAttribute;
@@ -47,12 +47,10 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.ModuleVersionAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.Qualifiers;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.TitanVersionAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.VersionRequirementAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
-import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
-import org.eclipse.titan.designer.AST.TTCN3.statements.Map_Statement;
-import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 import org.eclipse.titan.designer.AST.TTCN3.types.Anytype_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.CompField;
 import org.eclipse.titan.designer.AST.TTCN3.types.Referenced_Type;
@@ -88,9 +86,7 @@ public final class TTCN3Module extends Module {
 	private static final String FULLNAMEPART = ".control";
 	public static final String MODULE = "module";
 
-	public static final String DUPLICATEIMPORTFIRST = "Duplicate import from module `{0}'' was first declared here";
-	public static final String DUPLICATEIMPORTREPEATED = "Duplicate import from module `{0}'' was declared here again";
-	public static final String MISSINGREFERENCE = "There is no visible definition with name `{0}'' in module `{1}''";
+	private static final String MISSINGREFERENCE = "There is no visible definition with name `{0}'' in module `{1}''";
 
 	private final List<ImportModule> importedModules;
 	private final List<FriendModule> friendModules;
@@ -441,6 +437,53 @@ public final class TTCN3Module extends Module {
 			controlpart.check(timestamp);
 		}
 	}
+	
+	/**
+	 * Experimental method for BrokenPartsViaInvertedImports.
+	 */
+	public void checkWithDefinitions(final CompilationTimeStamp timestamp, final List<Assignment> assignments) {
+		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
+			return;
+		}
+
+		T3Doc.check(this.getCommentLocation(), MODULE);
+
+		lastCompilationTimeStamp = timestamp;
+
+		NamingConventionHelper.checkConvention(PreferenceConstants.REPORTNAMINGCONVENTION_TTCN3MODULE, identifier, "TTCN-3 module");
+
+		// re-initialize at the beginning of the cycle.
+		versionNumber = null;
+		anytype.clear();
+		missingReferences.clear();
+
+		if (withAttributesPath != null) {
+			withAttributesPath.checkGlobalAttributes(timestamp, false);
+			withAttributesPath.checkAttributes(timestamp);
+		}
+
+		//for (ImportModule impMod : importedModules) {
+		//	impMod.check(timestamp);
+		//}
+
+		checkFriendModuleUniqueness();
+		for (FriendModule friendModule : friendModules) {
+			friendModule.check(timestamp);
+		}
+
+		if (withAttributesPath != null) {
+			analyzeExtensionAttributes(timestamp);
+		}
+
+		//anytypeDefinition.check(timestamp);
+		//definitions.check(timestamp);
+		
+		definitions.checkWithDefinitions(timestamp, assignments);
+		
+		if (controlpart != null) {
+			controlpart.check(timestamp);
+		}
+	}
 
 	@Override
 	public void postCheck() {
@@ -758,13 +801,6 @@ public final class TTCN3Module extends Module {
 			if (temporalAssignment != null) {
 				return temporalAssignment;
 			}
-			
-			//map(A:port, system:MyActualNotIdentifiedPort) form shall be accepted in function and altstep
-			if( reference.getNameParent() != null && reference.getNameParent() instanceof Map_Statement 
-				&& reference.getMyScope() != null && (reference.getMyScope() instanceof StatementBlock)
-				) {
-				return null;
-			}
 
 			referenceLocation
 					.reportSemanticError(MessageFormat.format(MISSINGREFERENCE, id.getDisplayName(), identifier.getDisplayName()));
@@ -948,7 +984,6 @@ public final class TTCN3Module extends Module {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				aReparser.fullAnalysysNeeded = true;
 				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
 				parser.pr_EndOfFile();
 				if ( parser.isErrorListEmpty() ) {
@@ -1021,7 +1056,6 @@ public final class TTCN3Module extends Module {
 		// edited the module identifier
 		Location temporalIdentifier = identifier.getLocation();
 		if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-			reparser.fullAnalysysNeeded = true;
 			reparser.extendDamagedRegion(temporalIdentifier);
 			IIdentifierReparser r = new IdentifierReparser(reparser);
 			int result = r.parse();
@@ -1044,7 +1078,6 @@ public final class TTCN3Module extends Module {
 			}
 			return;
 		} else if (reparser.isDamaged(temporalIdentifier)) {
-			reparser.fullAnalysysNeeded = true;
 			throw new ReParseException();
 		}
 
@@ -1056,7 +1089,6 @@ public final class TTCN3Module extends Module {
 				try {
 					definitions.updateSyntax(reparser, importedModules, friendModules, controlpart);
 				} catch (ReParseException e) {
-					reparser.fullAnalysysNeeded = true;
 					throw e;
 				}
 
@@ -1066,7 +1098,6 @@ public final class TTCN3Module extends Module {
 				try {
 					controlpart.updateSyntax(reparser);
 				} catch (ReParseException e) {
-					reparser.fullAnalysysNeeded = true;
 					throw e;
 				}
 
@@ -1079,7 +1110,6 @@ public final class TTCN3Module extends Module {
 		if (withAttributesPath != null && reparser.isAffected(withAttributesPath.getLocation())) {
 			// The modification happened inside the attribute list
 			if (reparser.envelopsDamage(withAttributesPath.getLocation())) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(withAttributesPath.getLocation());
 				int result = reparseInsideAttributelist( reparser );
 
@@ -1094,7 +1124,6 @@ public final class TTCN3Module extends Module {
 
 				reparser.updateLocation(withAttributesPath.getLocation());
 			} else {
-				reparser.fullAnalysysNeeded = true;
 				// Something happened that we can not handle,
 				// for example the with attribute were commented
 				// out

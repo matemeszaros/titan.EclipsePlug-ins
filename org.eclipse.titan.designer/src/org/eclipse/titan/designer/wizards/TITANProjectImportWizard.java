@@ -24,7 +24,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.GeneralConstants;
@@ -216,8 +215,7 @@ public class TITANProjectImportWizard extends BasicNewResourceWizard implements 
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				Shell shell = new Shell(Display.getDefault());
-				PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(shell, newProject,
+				PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(null, newProject,
 						GeneralConstants.PROJECT_PROPERTY_PAGE, null, null);
 				if (dialog != null) {
 					dialog.open();

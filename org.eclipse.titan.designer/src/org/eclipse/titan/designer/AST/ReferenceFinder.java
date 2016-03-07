@@ -201,6 +201,7 @@ public final class ReferenceFinder {
 		// runs on that component or a compatible or self
 		// treat it as global definition
 		if (localScope instanceof ComponentTypeBody) {
+			//FIXME this still does not make them global, that is something completely different.
 			localScope = module;
 		} else
 		// search for actual named parameters everywhere
@@ -215,7 +216,7 @@ public final class ReferenceFinder {
 
 		return localScope;
 	}
-
+	//FIXME should check all modules that might transitively import the definition
 	public Map<Module, List<Hit>> findAllReferences(final Module module, final ProjectSourceParser projectSourceParser,
 			final IProgressMonitor pMonitor, final boolean reportDebugInformation) {
 		final IProgressMonitor monitor = pMonitor == null ? new NullProgressMonitor() : pMonitor;
@@ -223,13 +224,15 @@ public final class ReferenceFinder {
 		monitor.beginTask("Searching references.", projectSourceParser.getKnownModuleNames().size());
 		Map<Module, List<Hit>> foundIdsMap = new HashMap<Module, List<Hit>>();
 		// in this scope
+		//TODO this is efficient but only for local variables ... and if are not followed up by other searches
 		List<Hit> foundIds = new ArrayList<Hit>();
 		scope.findReferences(this, foundIds);
 		if (!foundIds.isEmpty()) {
-			foundIdsMap.put(module, foundIds);
+			foundIdsMap.put(scope.getModuleScope(), foundIds);
 		}
 		// in other modules that import this module, if the assignment
 		// is global
+		//FIXME but if component variable ... we might have to search all related modules in all related projects.
 		if (scope instanceof Module) {
 			for (String moduleName2 : projectSourceParser.getKnownModuleNames()) {
 				if (monitor.isCanceled()) {
@@ -241,7 +244,7 @@ public final class ReferenceFinder {
 					continue;
 				}
 				for (Module m : module2.getImportedModules()) {
-					if (m == module) {
+					if (m == scope) {
 						if (reportDebugInformation) {
 							TITANDebugConsole.println("found importing module: " + module2.getName());
 						}

@@ -17,8 +17,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Module;
@@ -127,7 +125,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 		}
 
 		if (ResourceExclusionHelper.isExcluded(file)) {
-			MessageDialog.openError(new Shell(Display.getDefault()), "Open Declaration does not work within excluded resources",
+			MessageDialog.openError(null, "Open Declaration does not work within excluded resources",
 					"This module is excluded from build. To use the Open Declaration "
 							+ "feature please click on the 'Toggle exclude from build state' in the context menu of the Project Explorer. ");
 			return;
@@ -144,8 +142,6 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			offset = ((TTCNPPEditor) targetEditor).getCarretOffset();
 		}
 
-		IdentifierFinderVisitor visitor = new IdentifierFinderVisitor(offset);
-
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
 
 		final String ttcn3ModuleName = projectSourceParser.containedModule(file);
@@ -159,6 +155,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			return;
 		}
 
+		IdentifierFinderVisitor visitor = new IdentifierFinderVisitor(offset);
 		module.accept(visitor);
 		final Declaration decl = visitor.getReferencedDeclaration();
 		if (decl == null) {

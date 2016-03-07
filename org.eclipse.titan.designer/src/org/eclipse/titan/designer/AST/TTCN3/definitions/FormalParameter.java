@@ -91,14 +91,14 @@ public final class FormalParameter extends Definition {
 
 	private boolean wasAssigned;
 
-	public FormalParameter(final TemplateRestriction.Restriction_type template_restriction, final Assignment_type assignmentType,
+	public FormalParameter(final TemplateRestriction.Restriction_type templateRestriction, final Assignment_type assignmentType,
 			final Type type, final Identifier identifier, final TemplateInstance defaultValue, final boolean isLazy) {
 		super(identifier);
 		this.assignmentType = assignmentType;
 		realAssignmentType = assignmentType;
 		this.type = type;
 		this.defaultValue = defaultValue;
-		this.templateRestriction = template_restriction;
+		this.templateRestriction = templateRestriction;
 		this.isLazy = isLazy;
 
 		if (type != null) {

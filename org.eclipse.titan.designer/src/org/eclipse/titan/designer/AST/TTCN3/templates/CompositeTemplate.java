@@ -9,9 +9,16 @@ package org.eclipse.titan.designer.AST.TTCN3.templates;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
+import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
@@ -19,6 +26,8 @@ import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.properties.data.ProjectBuildPropertyData;
+import org.eclipse.titan.designer.properties.data.TITANFlagsOptionsData;
 
 /**
  * @author Kristof Szabados
@@ -232,4 +241,57 @@ public abstract class CompositeTemplate extends TTCN3Template {
 		}
 		return true;
 	}
+	
+	/** Test if omit is allowed in a value list
+	 * <p>
+	 *  Uses TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY:
+	 *  (It is the same as -M flag of makefilegen) <p>
+	 *  If it is true the old syntax allowed.
+	 *  If it is false then only the new syntax is allowed.<p>
+	 *	For example:<p/>
+	 *	 ( 1 ifpresent, 2 ifpresent, omit ) //=> allowed in old solution,
+	 *                                           not allowed in new solution (3 error markers)<p>
+	 *	 ( 1, 2 ) ifpresent //= only this allowed in new solution when this function returns false<p>
+	 *
+	 * @param allowOmit true if the field is optional field,
+	 *                  false if the field is mandatory.<p>
+	 *                  Of course in this case omit value and the ifpresent clause is prohibitied=> returns false<p>
+	 * @return 	 
+	 *   If allowOmit == false it returns false 
+	 *   ( quick exit for mandatory fields).
+	 *	 If allowOmit == true it returns according to the
+	 *	 project property setting 
+	 *   TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY
+	 */ 
+	final protected boolean allowOmitInValueList(boolean allowOmit) {
+			if( !allowOmit ) {
+				return false;
+			}
+	
+			Location loc = this.getLocation();
+			if(loc == null || (loc instanceof NULL_Location)) {
+				return true;
+			}
+
+			IResource f = loc.getFile();
+			if( f == null) {
+				return true;
+			}
+
+			IProject project = f.getProject();
+			if(project == null) {
+				return true;
+			}
+
+			QualifiedName qn = new QualifiedName(ProjectBuildPropertyData.QUALIFIER,TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY);
+			try {
+				String s= project.getPersistentProperty(qn);
+				return ( "true".equals(s));
+			} catch (CoreException e) {
+				ErrorReporter.logExceptionStackTrace(e);
+				return true;
+			}
+			
+		}
+
 }

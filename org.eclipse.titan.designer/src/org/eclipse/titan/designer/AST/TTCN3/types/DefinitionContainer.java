@@ -75,6 +75,22 @@ public class DefinitionContainer implements Iterable<Definition> {
 		}
 	}
 
+	public void checkUniqueness() {
+		definitionMap.clear();
+		
+		for(Definition definition: definitions) {
+			String definitionName = definition.getIdentifier().getName();
+			if (definitionMap.containsKey(definitionName)) {
+				definitionMap.get(definitionName).getIdentifier().getLocation().reportSingularSemanticError(
+						MessageFormat.format(CompFieldMap.DUPLICATEFIELDNAMEFIRST, definition.getIdentifier().getDisplayName()));
+				definition.getIdentifier().getLocation().reportSemanticError(
+						MessageFormat.format(CompFieldMap.DUPLICATEFIELDNAMEREPEATED, definition.getIdentifier().getDisplayName()));
+			} else {
+				definitionMap.put(definitionName, definition);
+			}
+		}
+	}
+
 	public boolean isEmpty() {
 		return definitions.isEmpty();
 	}

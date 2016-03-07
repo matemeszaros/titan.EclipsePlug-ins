@@ -10,7 +10,7 @@
 <project basedir="." default="build" name="org.eclipse.titan.regressiontests">
 	<property environment="env"/>
 	<!-- The qualifier of the features -->
-	<property name="version" value="5.4.0.CRL_113_200_5_R4A"/>
+	<property name="version" value="5.4.3.CRL_113_200_5_R4D"/>
 	<tstamp/>
 	<property name="timestamp" value="${DSTAMP}-${TSTAMP}"/>
 	<property name="version.qualifier" value="${version}_${timestamp}"/>
@@ -19,8 +19,8 @@
 	<property name="ECLIPSE_HOME" value="/home/titanrt/eclipse_installed/eclipse-SDK-4.2-linux-gtk-x86_64"/>
 
 	<property name="debuglevel" value="source,lines,vars"/>
-	<property name="target" value="1.6"/>
-	<property name="source" value="1.6"/>
+	<property name="target" value="1.8"/>
+	<property name="source" value="1.8"/>
 	<path id="PDE.classpath">
 		<fileset dir="${ECLIPSE_HOME}/plugins">
 			<include name="*.jar"/>

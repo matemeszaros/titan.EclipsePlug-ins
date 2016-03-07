@@ -37,9 +37,9 @@ public final class FunctionTypeMappingTarget extends TypeMappingTarget {
 	private Def_Function functionReferenced;
 	private Def_Extfunction extfunctionReferenced;
 
-	public FunctionTypeMappingTarget(final Type target_type, final Reference function_reference) {
-		this.targetType = target_type;
-		this.functionReference = function_reference;
+	public FunctionTypeMappingTarget(final Type targetType, final Reference functionReference) {
+		this.targetType = targetType;
+		this.functionReference = functionReference;
 	}
 
 	@Override

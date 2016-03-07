@@ -12,25 +12,18 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.Interval;
 import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.designer.AST.ASN1.definitions.ASN1Module;
 import org.eclipse.titan.designer.parsers.ISourceAnalyzer;
-import org.eclipse.titan.designer.parsers.asn1parser.Asn1Lexer;
-import org.eclipse.titan.designer.parsers.asn1parser.ASN1Listener;
-import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
-import org.eclipse.titan.designer.parsers.asn1parser.ModuleLevelTokenStreamTracker;
-import org.eclipse.titan.designer.parsers.asn1parser.TokenWithIndexAndSubTokensFactory;
 
 /**
  * ASN1 Analyzer
@@ -91,8 +84,8 @@ public class ASN1Analyzer implements ISourceAnalyzer {
 			reader = new StringReader(code);
 		} else if (file != null) {
 			try {
-				reader = new BufferedReader(new InputStreamReader(file.getContents(), StandardCharsets.UTF_8));
-			} catch (CoreException e) {
+				reader = new BufferedReader(new InputStreamReader(file.getContents(), file.getCharset()));
+			} catch (Exception e) {
 				ErrorReporter.logExceptionStackTrace("Could not get the contents of `" + file.getName() + "'", e);
 			}
 		} else {

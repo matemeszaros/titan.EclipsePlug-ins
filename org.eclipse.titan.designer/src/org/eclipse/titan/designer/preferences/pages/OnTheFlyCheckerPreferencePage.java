@@ -15,9 +15,11 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.parsers.GlobalParser;
+import org.eclipse.titan.designer.preferences.PreferenceConstantValues;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.ui.IWorkbench;
@@ -30,18 +32,24 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 	private static final String DESCRIPTION = "Preferences of the on-the-fly checker";
 
 	private static final String ENABLE_PARSING = "Enable parsing of TTCN-3, ASN.1 and Runtime Configuration files";
-	private static final String ENABLE_RISKY_REFACTORING = "Enable refactoring of projects containing errors and/or .ttcnpp files";
 	private static final String ENABLE_INCREMENTAL_PARSING = "Enable the incremental parsing of TTCN-3 files";
 	private static final String MINIMISE_MEMORY_USAGE = "Minimise memory usage";
 	private static final String DELAY_SEMANTIC_CHECKING = "Delay the on-the-fly semantic check till the file is saved";
 	private static final String RECONCILER_TIMEOUT = "Timeout in seconds before on-the-fly check starts";
+	private static final String BROKEN_MODULES_RATIO = "Limit of broken modules during selection (%)";
+	private static final String[][] ALGORITHM_OPTIONS = new String[][] {
+		{ PreferenceConstantValues.MODULESELECTIONORIGINAL, PreferenceConstantValues.MODULESELECTIONORIGINAL },
+		{ PreferenceConstantValues.BROKENPARTSVIAREFERENCES, PreferenceConstantValues.BROKENPARTSVIAREFERENCES }};
 
+
+	private	Composite composite;
 	private BooleanFieldEditor useOnTheFlyParsing;
-	private BooleanFieldEditor enableRiskyRefactoring;
 	private BooleanFieldEditor useIncrementalParsing;
+	private ComboFieldEditor moduleSelectionAlgorithm;
 	private BooleanFieldEditor minimiseMemoryUsage;
 	private BooleanFieldEditor delaySemanticCheckTillSave;
 	private IntegerFieldEditor reconcilerTimeout;
+	private IntegerFieldEditor brokenModulesLimit;
 
 	private boolean minimiseMemoryChanged = false;
 
@@ -56,24 +64,34 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 		useOnTheFlyParsing = new BooleanFieldEditor(PreferenceConstants.USEONTHEFLYPARSING, ENABLE_PARSING, tempParent);
 		addField(useOnTheFlyParsing);
 
-		enableRiskyRefactoring = new BooleanFieldEditor(PreferenceConstants.ENABLERISKYREFACTORING, ENABLE_RISKY_REFACTORING, tempParent);
-		addField(enableRiskyRefactoring);
-
 		useIncrementalParsing = new BooleanFieldEditor(PreferenceConstants.USEINCREMENTALPARSING, ENABLE_INCREMENTAL_PARSING, tempParent);
 		addField(useIncrementalParsing);
-
+		
+		moduleSelectionAlgorithm = new ComboFieldEditor(PreferenceConstants.MODULESELECTIONALGORITHM, "Selection method", ALGORITHM_OPTIONS, tempParent);
+		Label text = moduleSelectionAlgorithm.getLabelControl(tempParent);
+		text.setToolTipText("Broken parts selection algorithm.");
+		addField(moduleSelectionAlgorithm);
+		
+		composite = new Composite(tempParent, SWT.NONE);
+		
+		brokenModulesLimit = new IntegerFieldEditor(PreferenceConstants.BROKENMODULESRATIO, BROKEN_MODULES_RATIO, composite);
+		brokenModulesLimit.setValidRange(1, 100);
+		brokenModulesLimit.setTextLimit(3);
+		brokenModulesLimit.getLabelControl(composite).setToolTipText("Under of this ratio, running selection on definition level otherwise module level.");
+		
+		String actualAlgorithm = doGetPreferenceStore().getString(PreferenceConstants.MODULESELECTIONALGORITHM);
+		brokenModulesLimit.setEnabled(useModuleLimit(actualAlgorithm), composite);
+		addField(brokenModulesLimit);
+		
 		minimiseMemoryUsage = new BooleanFieldEditor(PreferenceConstants.MINIMISEMEMORYUSAGE, MINIMISE_MEMORY_USAGE, tempParent);
-		addField(minimiseMemoryUsage);
-
-		Composite composite = new Composite(tempParent, SWT.NONE);
+		addField(minimiseMemoryUsage);	
 
 		reconcilerTimeout = new IntegerFieldEditor(PreferenceConstants.RECONCILERTIMEOUT, RECONCILER_TIMEOUT, composite);
 		reconcilerTimeout.setValidRange(0, 10);
 		reconcilerTimeout.setTextLimit(2);
 		addField(reconcilerTimeout);
 
-		delaySemanticCheckTillSave = new BooleanFieldEditor(PreferenceConstants.DELAYSEMANTICCHECKINGTILLSAVE, DELAY_SEMANTIC_CHECKING,
-				tempParent);
+		delaySemanticCheckTillSave = new BooleanFieldEditor(PreferenceConstants.DELAYSEMANTICCHECKINGTILLSAVE, DELAY_SEMANTIC_CHECKING, tempParent);
 		addField(delaySemanticCheckTillSave);
 	}
 
@@ -88,7 +106,23 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 						"Minimise memory usage is on, this could indicate that in some cases rename refactoring function will not operate properly!");
 			}
 		}
+		
+		if(event.getSource().equals(moduleSelectionAlgorithm)) {
+			String newValue = event.getNewValue().toString();
+			if(!newValue.equals(event.getOldValue())) {
+				if(!brokenModulesLimit.isValid()){
+					brokenModulesLimit.loadDefault();
+					ErrorReporter.parallelWarningDisplayInMessageDialog("On-the-fly analyzer", "Incorrect limit of broken modules restored to default value.");
+				}
+				brokenModulesLimit.setEnabled(useModuleLimit(newValue), composite);	
+			}
+		}
+		
 		super.propertyChange(event);
+	}
+	
+	private boolean useModuleLimit(String value){
+		return value.equals(PreferenceConstantValues.BROKENPARTSVIAREFERENCES);
 	}
 
 	@Override
@@ -108,12 +142,13 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 		minimiseMemoryUsage.dispose();
 		delaySemanticCheckTillSave.dispose();
 		reconcilerTimeout.dispose();
+		brokenModulesLimit.dispose();
+		composite.dispose();
 		super.dispose();
 	}
 
 	private boolean isImportantChanged() {
-		return getPreferenceStore().getBoolean(PreferenceConstants.USEINCREMENTALPARSING) != useIncrementalParsing.getBooleanValue()
-				|| getPreferenceStore().getBoolean(PreferenceConstants.MINIMISEMEMORYUSAGE) != minimiseMemoryUsage.getBooleanValue();
+		return getPreferenceStore().getBoolean(PreferenceConstants.MINIMISEMEMORYUSAGE) != minimiseMemoryUsage.getBooleanValue();
 	}
 
 	@Override
@@ -139,5 +174,5 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 
 		super.performApply();
 
-	}
+	}	
 }

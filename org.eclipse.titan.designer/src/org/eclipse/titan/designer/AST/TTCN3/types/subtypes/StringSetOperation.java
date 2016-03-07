@@ -17,14 +17,14 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 		INTERSECTION, INHERIT, UNION, EXCEPT
 	}
 
-	private final OperationType operation_type;
+	private final OperationType operationType;
 	private StringSubtypeTreeElement a;
 	private StringSubtypeTreeElement b;
 
-	public StringSetOperation(final StringType string_type, final OperationType operation_type, final StringSubtypeTreeElement a,
+	public StringSetOperation(final StringType stringType, final OperationType operationType, final StringSubtypeTreeElement a,
 			final StringSubtypeTreeElement b) {
-		super(string_type);
-		this.operation_type = operation_type;
+		super(stringType);
+		this.operationType = operationType;
 		this.a = a;
 		this.b = b;
 	}
@@ -36,20 +36,20 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 
 	@Override
 	public SubtypeConstraint complement() {
-		StringSetOperation returnValue = new StringSetOperation(string_type, OperationType.EXCEPT, new FullStringSet(string_type), this);
+		StringSetOperation returnValue = new StringSetOperation(stringType, OperationType.EXCEPT, new FullStringSet(stringType), this);
 		return returnValue.evaluate();
 	}
 
 	@Override
 	public SubtypeConstraint intersection(final SubtypeConstraint other) {
-		StringSetOperation returnValue = new StringSetOperation(string_type, OperationType.INTERSECTION, this,
+		StringSetOperation returnValue = new StringSetOperation(stringType, OperationType.INTERSECTION, this,
 				(StringSubtypeTreeElement) other);
 		return returnValue.evaluate();
 	}
 
 	@Override
 	public boolean isElement(final Object o) {
-		switch (operation_type) {
+		switch (operationType) {
 		case INHERIT:
 		case INTERSECTION:
 			return a.isElement(o) && b.isElement(o);
@@ -64,7 +64,7 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 
 	@Override
 	public TernaryBool isEmpty() {
-		switch (operation_type) {
+		switch (operationType) {
 		case INHERIT:
 		case INTERSECTION:
 			return a.isEmpty().or(b.isEmpty());
@@ -87,7 +87,7 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 
 	@Override
 	public TernaryBool isFull() {
-		switch (operation_type) {
+		switch (operationType) {
 		case INHERIT:
 		case INTERSECTION:
 			return a.isFull().and(b.isFull());
@@ -104,7 +104,7 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 	public void toString(final StringBuilder sb) {
 		sb.append('(');
 		a.toString(sb);
-		switch (operation_type) {
+		switch (operationType) {
 		case INHERIT:
 			sb.append(" intersection ");
 			break;
@@ -126,13 +126,13 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 
 	@Override
 	public SubtypeConstraint union(final SubtypeConstraint other) {
-		StringSetOperation returnValue = new StringSetOperation(string_type, OperationType.UNION, this, (StringSubtypeTreeElement) other);
+		StringSetOperation returnValue = new StringSetOperation(stringType, OperationType.UNION, this, (StringSubtypeTreeElement) other);
 		return returnValue.evaluate();
 	}
 
 	@Override
 	public SubtypeConstraint except(final SubtypeConstraint other) {
-		StringSetOperation returnValue = new StringSetOperation(string_type, OperationType.EXCEPT, this, (StringSubtypeTreeElement) other);
+		StringSetOperation returnValue = new StringSetOperation(stringType, OperationType.EXCEPT, this, (StringSubtypeTreeElement) other);
 		return returnValue.evaluate();
 	}
 
@@ -150,26 +150,26 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 		// special simple cases when one side is ET_ALL or ET_NONE but
 		// the other can be a tree
 		if ((a instanceof EmptyStringSet) || (b instanceof EmptyStringSet)) {
-			if ((operation_type == OperationType.INHERIT) || (operation_type == OperationType.INTERSECTION)) {
-				return new EmptyStringSet(string_type);
+			if ((operationType == OperationType.INHERIT) || (operationType == OperationType.INTERSECTION)) {
+				return new EmptyStringSet(stringType);
 			}
-			if (operation_type == OperationType.UNION) {
+			if (operationType == OperationType.UNION) {
 				return (a instanceof EmptyStringSet) ? a : b;
 			}
 		}
-		if ((b instanceof EmptyStringSet) && (operation_type == OperationType.EXCEPT)) {
+		if ((b instanceof EmptyStringSet) && (operationType == OperationType.EXCEPT)) {
 			return a;
 		}
 		if ((a instanceof FullStringSet) || (b instanceof FullStringSet)) {
-			if ((operation_type == OperationType.INHERIT) || (operation_type == OperationType.INTERSECTION)) {
+			if ((operationType == OperationType.INHERIT) || (operationType == OperationType.INTERSECTION)) {
 				return (a instanceof FullStringSet) ? b : a;
 			}
-			if (operation_type == OperationType.UNION) {
+			if (operationType == OperationType.UNION) {
 				return (a instanceof FullStringSet) ? a : b;
 			}
 		}
-		if ((b instanceof FullStringSet) && (operation_type == OperationType.EXCEPT)) {
-			return new EmptyStringSet(string_type);
+		if ((b instanceof FullStringSet) && (operationType == OperationType.EXCEPT)) {
+			return new EmptyStringSet(stringType);
 		}
 
 		// both operands must be single constraints
@@ -181,7 +181,7 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 
 		// special case: ALL - some constraint type that can be
 		// complemented
-		if ((a instanceof FullStringSet) && (operation_type == OperationType.EXCEPT) && (b instanceof StringSetConstraint)) {
+		if ((a instanceof FullStringSet) && (operationType == OperationType.EXCEPT) && (b instanceof StringSetConstraint)) {
 			switch (((StringSetConstraint) b).getType()) {
 			case SIZE_CONSTRAINT:
 			case ALPHABET_CONSTRAINT:
@@ -193,7 +193,7 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 		// isElement() can be called for the values
 		// and drop values or drop the other operand set or both
 		// depending on the operation
-		switch (operation_type) {
+		switch (operationType) {
 		case INHERIT:
 		case INTERSECTION:
 			if (a instanceof StringSetConstraint) {
@@ -243,8 +243,8 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 		if (a.getElementType() == b.getElementType()) {
 			switch (a.getElementType()) {
 			case ALL:
-				if (operation_type == OperationType.EXCEPT) {
-					return new EmptyStringSet(string_type);
+				if (operationType == OperationType.EXCEPT) {
+					return new EmptyStringSet(stringType);
 				}
 
 				return a;
@@ -255,7 +255,7 @@ public final class StringSetOperation extends StringSubtypeTreeElement {
 					if (((StringSetConstraint) a).getType() == ConstraintType.PATTERN_CONSTRAINT) {
 						break;
 					}
-					switch (operation_type) {
+					switch (operationType) {
 					case INHERIT:
 					case INTERSECTION:
 						return (StringSubtypeTreeElement) a.intersection(b);

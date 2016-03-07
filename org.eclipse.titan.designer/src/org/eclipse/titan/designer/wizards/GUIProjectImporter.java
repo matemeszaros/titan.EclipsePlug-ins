@@ -785,7 +785,7 @@ public final class GUIProjectImporter {
 
 			File file = new File(path);
 			if (!file.exists()) {
-				reportError("Could not load the group file `" + path + "' refered by `" + basePath + "' as `"
+				reportError("Could not load the group file `" + path + "' referred by `" + basePath + "' as `"
 						+ pathAttribute.getTextContent() + "'", headless);
 				return;
 			}

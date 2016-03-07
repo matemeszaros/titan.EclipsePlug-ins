@@ -64,9 +64,9 @@ public final class ASN1Assignments extends Assignments implements ILocateableNod
 	 * @param right_scope
 	 *                the scope to be set.
 	 * */
-	public void setRightScope(final Scope right_scope) {
+	public void setRightScope(final Scope rightScope) {
 		for (ASN1Assignment assignment : assignments) {
-			assignment.setRightScope(right_scope);
+			assignment.setRightScope(rightScope);
 		}
 	}
 

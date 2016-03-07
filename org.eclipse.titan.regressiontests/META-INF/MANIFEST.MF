@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test_fragment Fragment
 Bundle-SymbolicName: org.eclipse.titan.regressiontests;singleton:=true
-Bundle-Version: 5.4.1.CRL_113_200_5_R4B_20151202-1100
-Fragment-Host: org.eclipse.titan.designer;bundle-version="5.4.1.CRL_113_200_5_R4B_20151202-1100"
+Bundle-Version: 5.4.3.CRL_113_200_5_R4D_20160301-1100
+Fragment-Host: org.eclipse.titan.designer;bundle-version="5.4.3.CRL_113_200_5_R4D_20160301-1100"
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.junit

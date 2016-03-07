@@ -146,7 +146,7 @@ public final class StringValueConstraint extends SubtypeConstraint {
 			return new StringValueConstraint(returnValue);
 		}
 		default:
-			// illegal range_constraint type, ignore
+			// illegal rangeConstraint type, ignore
 			return this;
 		}
 	}

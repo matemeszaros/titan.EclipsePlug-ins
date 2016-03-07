@@ -11,6 +11,7 @@ package org.eclipse.titan.designer.AST.ASN1.Object;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.Token;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
@@ -48,12 +49,12 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 
 	public ObjectClassSyntax_Parser(final Block aBlock, final Object_Definition myObject) {
 		this.myObject = myObject;
-		final List<org.antlr.v4.runtime.Token> tempTokens = aBlock.getTokenList();
-		final List<org.antlr.v4.runtime.Token> temp = new ArrayList<org.antlr.v4.runtime.Token>(tempTokens.size());
+		final List<Token> tempTokens = aBlock.getTokenList();
+		final List<Token> temp = new ArrayList<Token>(tempTokens.size());
 		for (int i = 0; i < tempTokens.size(); i++) {
 			temp.add(tempTokens.get(i));
 		}
-		temp.add(new TokenWithIndexAndSubTokens(org.antlr.v4.runtime.Token.EOF));
+		temp.add(new TokenWithIndexAndSubTokens(Token.EOF));
 
 		this.mBlock = new Block(temp, aBlock.getLocation());
 		this.mBlock.setFullNameParent(aBlock);
@@ -69,14 +70,14 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 			final ASN1Type type = parseType();
 			if (null != type) {
 				fieldSetting = new FieldSetting_Type(parameter.getIdentifier().newInstance(), type);
-				fieldSetting.setLocation(type.getLocation());
+				fieldSetting.setLocation(mBlock.getLocation());
 			}
 			break;
 		case S_V:
 			final boolean parseSuccess = parseValue();
 			if (parseSuccess) {
 				fieldSetting = new FieldSetting_Value(parameter.getIdentifier().newInstance());
-				fieldSetting.setLocation(parameter.getIdentifier().getLocation());
+				fieldSetting.setLocation(mBlock.getLocation());
 			}
 			break;
 		case S_VS:
@@ -86,14 +87,14 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 			final ASN1Object object = parseObject();
 			if (null != object) {
 				fieldSetting = new FieldSetting_Object(parameter.getIdentifier().newInstance(), object);
-				fieldSetting.setLocation(object.getLocation());
+				fieldSetting.setLocation(mBlock.getLocation());
 			}
 			break;
 		case S_OS:
 			final ObjectSet objectSet = parseObjectSet();
 			if (null != objectSet) {
 				fieldSetting = new FieldSetting_ObjectSet(parameter.getIdentifier().newInstance(), objectSet);
-				fieldSetting.setLocation(objectSet.getLocation());
+				fieldSetting.setLocation(mBlock.getLocation());
 			}
 			break;
 		case S_UNDEF:
@@ -118,9 +119,9 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 		previousSuccess = false;
 		parameter.getSequence().accept(this);
 		if (null != mBlock) {
-			if (success && internalIndex < mBlock.getTokenList().size() && mBlock.getTokenList().get(internalIndex).getType() != org.antlr.v4.runtime.Token.EOF) {
+			if (success && internalIndex < mBlock.getTokenList().size() && mBlock.getTokenList().get(internalIndex).getType() != Token.EOF) {
 				success = false;
-				final org.antlr.v4.runtime.Token token = mBlock.getTokenList().get(internalIndex);
+				final Token token = mBlock.getTokenList().get(internalIndex);
 				myObject.getLocation().reportSemanticError("Unexpected `" + token.getText() + "', it is a superfluous part");
 			}
 		} 
@@ -141,7 +142,7 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 		}
 
 		if (null != mBlock) {
-			final org.antlr.v4.runtime.Token token = mBlock.getTokenList().get(internalIndex);
+			final Token token = mBlock.getTokenList().get(internalIndex);
 			if (null == token.getText()) {
 				// reached the end of the block
 				return;
@@ -167,7 +168,7 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 		int i;
 		
 		if (null != mBlock) {
-			org.antlr.v4.runtime.Token token = mBlock.getTokenList().get(internalIndex);
+			Token token = mBlock.getTokenList().get(internalIndex);
 			if (parameter.getOptionalFirstComma() && myObject.getNofFieldSettings() > 0) {
 				if (token.getType() == Asn1Lexer.COMMA) {
 					if (internalIndex < mBlock.getTokenList().size() - 1) {

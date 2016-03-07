@@ -100,7 +100,7 @@ public final class CharString_Pattern_Template extends TTCN3Template {
 	}
 
 	@Override
-	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allow_omit) {
+	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		getLocation().reportSemanticError("A specific value expected instead of an charstring pattern");
 	}
 

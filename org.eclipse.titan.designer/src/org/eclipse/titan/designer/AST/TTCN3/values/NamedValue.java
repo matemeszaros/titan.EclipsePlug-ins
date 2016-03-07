@@ -152,6 +152,9 @@ public final class NamedValue extends ASTNode implements ILocateableNode, IIncre
 		INamedNode inamedNode = getNameParent();
 
 		while (!(inamedNode instanceof IValue)) {
+			if( inamedNode == null) {
+				return null; //FIXME: this is just a temp solution! find the reason!
+			}
 			inamedNode = inamedNode.getNameParent();
 		}
 

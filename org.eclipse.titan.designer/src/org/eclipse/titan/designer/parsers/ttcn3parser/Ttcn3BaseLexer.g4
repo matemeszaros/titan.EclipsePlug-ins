@@ -17,6 +17,8 @@ lexer grammar Ttcn3BaseLexer;
 @header {
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -104,58 +106,56 @@ import org.eclipse.titan.designer.AST.Location;
   public Location getLastPPDirectiveLocation() {
   	return lastPPDirectiveLocation;
   }
+  
+  /**
+   * true, if todo/fixme markers can be placed by the lexer,
+   *       typically it is set if full parsing is done
+   * false otherwise
+   */
+  private boolean mCommentTodo = false;
+  
+  public void setCommentTodo( boolean aCommentTodo ) {
+    mCommentTodo = aCommentTodo;
+  }
 
   //TODO: we will need it later for the performance
   /** Used to preload the class, also loading the TTCN-3 lexer. */
   public static void preLoad() {
   }
   
-  protected void detectTasks(final String param, final boolean multiLine) {
-		int todoIndex;
-		int fixmeIndex;
-		int newLineIndex;
-		int lastIndex = 0;
-		todoIndex = param.indexOf("TODO");
-		fixmeIndex = param.indexOf("FIXME");
-		int linecount = 0;
-
-		while (todoIndex != -1 || fixmeIndex != -1) {
-			int start;
-			if (todoIndex > 0) {
-				if (fixmeIndex > 0 && fixmeIndex < todoIndex) {
-					start = fixmeIndex;
-				} else {
-					start = todoIndex;
-				}
-			} else {
-				start = fixmeIndex;
-			}
-			newLineIndex = param.indexOf('\n', lastIndex);
-			if (newLineIndex == -1 || newLineIndex > start) {
-				if (newLineIndex == -1) {
-					if(multiLine) {
-					  newLineIndex = param.length() - 2;
-					} else {
-					  newLineIndex = param.length();
-					}
-				}
-
-				String text = param.substring(start, newLineIndex);
-				if (start == todoIndex) {
-					createTaskMarker(new TITANMarker(text, actualLine + linecount + _tokenStartLine, -1, -1,
-							IMarker.SEVERITY_INFO, IMarker.PRIORITY_NORMAL));
-				} else {
-					createTaskMarker(new TITANMarker(text, actualLine + linecount + _tokenStartLine, -1, -1,
-							IMarker.SEVERITY_INFO, IMarker.PRIORITY_HIGH));
-				}
-			}
-
-			linecount++;
-			lastIndex = newLineIndex + 1;
-			todoIndex = param.indexOf("TODO", lastIndex);
-			fixmeIndex = param.indexOf("FIXME", lastIndex);
+	/** pattern for matching todo/fixme in a comment line */
+	final static Pattern PATTERN_TODO_FIXME = Pattern.compile("((TODO|FIXME).*?)\\s*(?=(TODO|FIXME|$))");
+			
+	/**
+	 * Extracts todo and fixme information from comment text
+	 * @param aCommentText the full text of the comment token
+	 * @param aMultiLine type of comment. true: / * ... * /, false: / / ... \n
+	 */
+	private void detectTasks( final String aCommentText, final boolean aMultiLine ) {
+		if ( !mCommentTodo ) {
+			return;
 		}
-  }
+		// remove comment boundary characters
+		String commentText;
+		if ( aMultiLine ) {
+			commentText = aCommentText.substring( 2, aCommentText.length() - 2 );
+		} else {
+			commentText = aCommentText.substring( 2 );
+		}
+			
+		String commentLines[] = commentText.split("\\r?\\n");
+		for( int i = 0; i < commentLines.length; i++ ) {
+			String commentLine = commentLines[ i ];
+			Matcher m = PATTERN_TODO_FIXME.matcher(commentLine);
+			while ( m.find() ) {
+				String text = m.group( 1 );
+				if ( text != null ) {
+					createTaskMarker( new TITANMarker( text, actualLine + i + _tokenStartLine, -1, -1,
+							IMarker.SEVERITY_INFO, text.startsWith("TODO") ? IMarker.PRIORITY_NORMAL : IMarker.PRIORITY_HIGH ) );
+				}
+			}
+		}
+	}
 }
 
 /*------------------------------------------- Keywords -------------------------------------------*/

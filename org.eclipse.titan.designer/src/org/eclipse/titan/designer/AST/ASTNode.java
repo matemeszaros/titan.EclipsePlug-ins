@@ -63,8 +63,8 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 				return null;
 			}
 
-			final T3Doc parent_t3doc = assignment.getT3Doc(location);
-			if (parent_t3doc != null) {
+			final T3Doc parentT3doc = assignment.getT3Doc(location);
+			if (parentT3doc != null) {
 				// if it is a type assignment/definition then detect if we are in a field
 				if (assignment.getAssignmentType() == Assignment_type.A_TYPE) {
 					IType type = assignment.getType(CompilationTimeStamp.getBaseTimestamp());
@@ -86,8 +86,8 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 					}
 
 					//Get member information if available
-					if (parent_t3doc.getMembers() != null) {
-						final String desc = parent_t3doc.getMembers().get(st);
+					if (parentT3doc.getMembers() != null) {
+						final String desc = parentT3doc.getMembers().get(st);
 						if (desc != null) {
 							return new T3Doc(desc);
 						}
@@ -97,12 +97,12 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 					String st = st1.substring(st1.lastIndexOf(".") + 1);
 
 					String desc = null;
-					if (parent_t3doc.getMembers() != null) {
-					  desc = parent_t3doc.getMembers().get(st);
+					if (parentT3doc.getMembers() != null) {
+					  desc = parentT3doc.getMembers().get(st);
 					}
 					
-					if (parent_t3doc.getParams() != null) {
-					  desc = parent_t3doc.getParams().get(st);
+					if (parentT3doc.getParams() != null) {
+					  desc = parentT3doc.getParams().get(st);
 					}
 
 					if (desc != null) {
@@ -118,8 +118,8 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 					String st1 = this.getFullName().toString();
 					String st = st1.substring(st1.lastIndexOf(".") + 1);
 
-					if (parent_t3doc.getParams() != null) {
-						final String desc = parent_t3doc.getParams().get(st);
+					if (parentT3doc.getParams() != null) {
+						final String desc = parentT3doc.getParams().get(st);
 						if (desc != null) {
 							return new T3Doc(desc);
 						}

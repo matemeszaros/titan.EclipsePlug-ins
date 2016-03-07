@@ -159,24 +159,24 @@ public final class ValueListConstraint extends SubtypeConstraint {
 
 	/**
 	 * remove all elements whose size/length is inside/outside of
-	 * size_constraint
+	 * sizeConstraint
 	 */
-	public ValueListConstraint remove(final RangeListConstraint size_constraint, final boolean if_element) {
+	public ValueListConstraint remove(final RangeListConstraint sizeConstraint, final boolean ifElement) {
 		ArrayList<IValue> returnValue = new ArrayList<IValue>();
 		for (IValue v : values) {
 			switch (v.getValuetype()) {
 			case ARRAY_VALUE:
-				if (size_constraint.isElement(new SizeLimit(((Array_Value) v).getNofComponents())) != if_element) {
+				if (sizeConstraint.isElement(new SizeLimit(((Array_Value) v).getNofComponents())) != ifElement) {
 					returnValue.add(v);
 				}
 				break;
 			case SEQUENCEOF_VALUE:
-				if (size_constraint.isElement(new SizeLimit(((SequenceOf_Value) v).getNofComponents())) != if_element) {
+				if (sizeConstraint.isElement(new SizeLimit(((SequenceOf_Value) v).getNofComponents())) != ifElement) {
 					returnValue.add(v);
 				}
 				break;
 			case SETOF_VALUE:
-				if (size_constraint.isElement(new SizeLimit(((SetOf_Value) v).getNofComponents())) != if_element) {
+				if (sizeConstraint.isElement(new SizeLimit(((SetOf_Value) v).getNofComponents())) != ifElement) {
 					returnValue.add(v);
 				}
 				break;

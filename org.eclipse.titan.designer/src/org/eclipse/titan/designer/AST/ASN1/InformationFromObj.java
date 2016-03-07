@@ -168,12 +168,12 @@ public final class InformationFromObj extends Reference {
 			return new Error_Setting();
 		}
 
-		final int nof_fields = fieldName.getNofFields();
+		final int nofFields = fieldName.getNofFields();
 
 		/* the middle part */
 		Identifier currentFieldName;
 		FieldSpecification currentFieldSpecification;
-		for (int i = 0; i < nof_fields - 1; i++) {
+		for (int i = 0; i < nofFields - 1; i++) {
 			currentFieldName = fieldName.getFieldByIndex(i);
 			currentFieldSpecification = objectClass.getFieldSpecifications().getFieldSpecificationByIdentifier(currentFieldName)
 					.getLast();
@@ -313,7 +313,7 @@ public final class InformationFromObj extends Reference {
 		}
 
 		/* and the last part... */
-		currentFieldName = fieldName.getFieldByIndex(nof_fields - 1);
+		currentFieldName = fieldName.getFieldByIndex(nofFields - 1);
 		currentFieldSpecification = objectClass.getFieldSpecifications().getFieldSpecificationByIdentifier(currentFieldName).getLast();
 		temporalSetting = null;
 

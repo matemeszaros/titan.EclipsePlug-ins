@@ -173,7 +173,9 @@ public final class ComponentsOfComponentType extends ComponentType {
 		for (int i = 0; i < tempCtss.getNofRootComps(); i++) {
 			CompField compfield = tempCtss.getRootCompByIndex(i).newInstance();
 			compfield.setLocation(location);
-			componentTypes.addComponentType(new RegularComponentType(compfield));
+			RegularComponentType componentType = new RegularComponentType(compfield);
+			componentType.setLocation(location);
+			componentTypes.addComponentType(componentType);
 		}
 		componentTypes.setMyScope(componentsOfType.getMyScope());
 		componentTypes.setFullNameParent(this);

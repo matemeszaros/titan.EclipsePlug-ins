@@ -184,32 +184,32 @@ locals [Token col, ASN1Type type, Reference reference, ObjectClass_Definition ob
 		{
 			$type = $a.type; 
 			$assignment = new Type_Assignment($identifier, null, $type);
-			$assignment.setLocation(new Location(actualFile, $a.start, $a.start));
+			$assignment.setLocation(new Location(actualFile, $a.start, $a.stop));
 		}
 	|	b = pr_FromObjs
 		{
 			$reference = $b.fromObj; 
 			$col = $b.start;
 			$type = new Referenced_Type($reference);
-			$type.setLocation(new Location(actualFile, $b.start, $b.start));
+			$type.setLocation(new Location(actualFile, $b.start, $b.stop));
 			$assignment = new Type_Assignment($identifier, null, $type);
-			$assignment.setLocation(new Location(actualFile, $col, $col));
+			$assignment.setLocation(new Location(actualFile, $col, $b.stop));
 		}
 	|	c = pr_UpperFromObj
 		{
 			$reference = $c.fromObj;
 			$col = $c.start;
 			$type = new Referenced_Type($reference);
-			$type.setLocation(new Location(actualFile, $c.start, $c.start));
+			$type.setLocation(new Location(actualFile, $c.start, $c.stop));
 			$assignment = new Type_Assignment($identifier, null, $type);
-			$assignment.setLocation(new Location(actualFile, $col, $col));
+			$assignment.setLocation(new Location(actualFile, $col, $c.stop));
 		}
 	|	d = pr_ObjectClassDefn
 		{
 			$objectClass_Definition = $d.objectClass_Definition; 
 			$col = $d.start;
 			$assignment = new ObjectClass_Assignment($identifier, null, $objectClass_Definition);
-			$assignment.setLocation(new Location(actualFile, $d.start, $d.start));
+			$assignment.setLocation(new Location(actualFile, $d.start, $d.stop));
 		}
 	)
 	EOF
@@ -323,7 +323,7 @@ locals [ASN1Assignment assignment]
 (
 	a = pr_Assignment { $assignment = $a.assignment;
 		if($assignment != null) {
-			$assignment.setLocation(new Location(actualFile, $a.start, $a.start));
+			$assignment.setLocation(new Location(actualFile, $a.start, $a.stop));
 			$assignments.addAssignment($assignment);
 		}
 	}
@@ -350,11 +350,11 @@ locals [ImportModule importModule]
 pr_Assignment returns [ASN1Assignment assignment]
 locals [Token endcol, Token col]:
 (
-	a = pr_ValueAssignment			{ $assignment = $a.assignment;  $col = $a.start; $endcol = $a.start; }
-|	b = pr_ValueSetTypeAssignment	{ $assignment = $b.assignment;  $col = $b.start; $endcol = $b.start; }
-|	c = pr_UndefAssignment			{ $assignment = $c.assignment;  $col = $c.start; $endcol = $c.start; }
-|	d = pr_ObjectClassAssignment	{ $assignment = $d.assignment;  $col = $d.start; $endcol = $d.start; }
-|	e = pr_TypeAssignment			{ $assignment = $e.assignment;  $col = $e.start; $endcol = $e.start; }
+	a = pr_ValueAssignment			{ $assignment = $a.assignment;  $col = $a.start; $endcol = $a.stop; }
+|	b = pr_ValueSetTypeAssignment	{ $assignment = $b.assignment;  $col = $b.start; $endcol = $b.stop; }
+|	c = pr_UndefAssignment			{ $assignment = $c.assignment;  $col = $c.start; $endcol = $c.stop; }
+|	d = pr_ObjectClassAssignment	{ $assignment = $d.assignment;  $col = $d.start; $endcol = $d.stop; }
+|	e = pr_TypeAssignment			{ $assignment = $e.assignment;  $col = $e.start; $endcol = $e.stop; }
 )
 {
 	if ($assignment != null) {
@@ -407,7 +407,7 @@ locals [Identifier identifier, Ass_pard formalParameters, ASN1Type type, Referen
 		{
 			$reference = $uo.fromObj;
 			$type = new Referenced_Type($reference);
-			$type.setLocation(new Location(actualFile, $uo.start, $uo.start));
+			$type.setLocation(new Location(actualFile, $uo.start, $uo.stop));
 			$assignment = new Type_Assignment($identifier, $formalParameters, $type);
 			
 		}
@@ -417,7 +417,7 @@ locals [Identifier identifier, Ass_pard formalParameters, ASN1Type type, Referen
 		{
 			$reference = $fo.fromObj;
 			$type = new Referenced_Type($reference);
-			$type.setLocation(new Location(actualFile, $fo.start, $fo.start));
+			$type.setLocation(new Location(actualFile, $fo.start, $fo.stop));
 			$assignment = new Type_Assignment($identifier, $formalParameters, $type);
 		}
 	)
@@ -433,7 +433,7 @@ locals [Token endCol, Identifier identifier, Ass_pard formalParameters, ObjectCl
 	cd = pr_ObjectClassDefn
 	{
 		$objectClass_Definition = $cd.objectClass_Definition;
-		$endCol = $cd.start;
+		$endCol = $cd.stop;
 		$assignment = new ObjectClass_Assignment($identifier, $formalParameters, $objectClass_Definition);
 	}
 )
@@ -523,11 +523,11 @@ locals [Token endcol, Identifier identifier, Reference reference, Reference refe
 			a10 = pr_Type_reg { $type = $a10.type; }
 			ASSIGNMENT
 			(	
-				a11 = pr_Value_reg			{ $value = $a11.value; $endcol = $a11.start; }
-			|	a12 = pr_NullValue			{ $value = $a12.value; $endcol = $a12.start; }
+				a11 = pr_Value_reg			{ $value = $a11.value; $endcol = $a11.stop; }
+			|	a12 = pr_NullValue			{ $value = $a12.value; $endcol = $a12.stop; }
 			|	block1 = BLOCK				{ $value = new Undefined_Block_Value(new Block($block1)); $endcol = $block1;}
-			|	a14 = pr_ReferencedValue_reg{ $value = $a14.value; $endcol = $a14.start; }
-			|	a15 = pr_LowerIdValue		{ $value = $a15.value; $endcol = $a15.start; }
+			|	a14 = pr_ReferencedValue_reg{ $value = $a14.value; $endcol = $a14.stop; }
+			|	a15 = pr_LowerIdValue		{ $value = $a15.value; $endcol = $a15.stop; }
 			)
 			{
 				$assignment = new Value_Assignment($identifier, $formalParameters, $type, $value);
@@ -537,7 +537,7 @@ locals [Token endcol, Identifier identifier, Reference reference, Reference refe
 		ASSIGNMENT
 		a21 = pr_Value { $value = $a21.value; }
 		{
-			$endcol = $a21.start;
+			$endcol = $a21.stop;
 			$type = new Referenced_Type($reference);
 			$assignment = new Value_Assignment($identifier, $formalParameters, $type, $value);
 		}
@@ -545,7 +545,7 @@ locals [Token endcol, Identifier identifier, Reference reference, Reference refe
 		ASSIGNMENT
 		a31 = pr_Value { $value = $a31.value; }
 		{
-			$endcol = $a31.start;
+			$endcol = $a31.stop;
 			$type = new Referenced_Type($reference);
 			$assignment = new Value_Assignment($identifier, $formalParameters, $type, $value);
 		}
@@ -555,13 +555,13 @@ locals [Token endcol, Identifier identifier, Reference reference, Reference refe
 			(	
 				a41 = pr_Value_reg { $value = $a41.value; }//value_assignment
 				{
-					$endcol = $a41.start;
+					$endcol = $a41.stop;
 					$type = new Referenced_Type($reference);
 					$assignment = new Value_Assignment( $identifier, $formalParameters, $type, $value);
 				}
 			|	a42 = pr_NullValue { $value = $a42.value; } //value_assignment
 				{
-					$endcol = $a42.start;
+					$endcol = $a42.stop;
 					$type = new Referenced_Type($reference);
 					$assignment = new Value_Assignment($identifier, $formalParameters, $type, $value);
 				}
@@ -604,10 +604,10 @@ locals [ASN1Type subType, NamedType_Helper namedType_Helper, Constraint constrai
 		{
 			if($set != null) {
 				$type = new SetOf_Type($subType);
-				$type.setLocation(new Location(actualFile, $set, $c.start != null ? $c.start : $d.start));
+				$type.setLocation(new Location(actualFile, $set, $c.stop != null ? $c.stop : $d.stop));
 			} else if($sequence != null) {
 				$type = new SequenceOf_Type($subType);
-				$type.setLocation(new Location(actualFile, $sequence, $c.start != null ? $c.start : $d.start));
+				$type.setLocation(new Location(actualFile, $sequence, $c.stop != null ? $c.stop : $d.stop));
 			}
 			if ($constraint != null && $type != null) {
 				$constraints = new Constraints();
@@ -625,7 +625,7 @@ locals [ASN1Type subType, NamedType_Helper namedType_Helper, Constraint constrai
 				)?  // pr_BuiltinType_reg, pr_ConstrainedType
 				{
 					if ( $type != null ) {
-						$type.setLocation(new Location(actualFile, $builtin.start, $builtin.start));
+						$type.setLocation(new Location(actualFile, $builtin.start, $builtin.stop));
 						$type.addConstraints($constraints);
 					}
 				}
@@ -634,7 +634,7 @@ locals [ASN1Type subType, NamedType_Helper namedType_Helper, Constraint constrai
 				{
 					$constraints = $f.constraints;
 					if ( $type != null ) {
-						$type.setLocation(new Location(actualFile, $ref.start, $ref.start));
+						$type.setLocation(new Location(actualFile, $ref.start, $ref.stop));
 						$type.addConstraints($constraints);
 					}
 				}
@@ -661,7 +661,7 @@ locals [Token end, Block withBlock]
 	CLASS
 	block1 = BLOCK {  $end = $block1; }
 	(	
-		block2 = pr_WithSyntaxSpec { $withBlock = $block2.block; $end = $block2.start; }
+		block2 = pr_WithSyntaxSpec { $withBlock = $block2.block; $end = $block2.stop; }
 	)?
 )
 {
@@ -731,7 +731,7 @@ locals [FieldSpecification fieldSpecification]
 	startCol = pr_FieldSpec { $fieldSpecification = $startCol.fieldSpecification; }
 	{
 		if ($fieldSpecification != null) {
-			$fieldSpecification.setLocation(new Location(actualFile, $startCol.start, $startCol.start));
+			$fieldSpecification.setLocation(new Location(actualFile, $startCol.start, $startCol.stop));
 			$fieldSpecifications.addFieldSpecification($fieldSpecification);
 		}
 	}
@@ -739,7 +739,7 @@ locals [FieldSpecification fieldSpecification]
 		COMMA
 		endCol = pr_FieldSpec { $fieldSpecification = $endCol.fieldSpecification; }
 			{	if($fieldSpecification != null) {
-					$fieldSpecification.setLocation(new Location(actualFile, $endCol.start, $endCol.start));
+					$fieldSpecification.setLocation(new Location(actualFile, $endCol.start, $endCol.stop));
 					$fieldSpecifications.addFieldSpecification($fieldSpecification);
 				}
 			}
@@ -901,8 +901,8 @@ pr_special_Value_subrule returns [Value value]
 @init { $value = null; }:
 (	// Originally pr_FixedTypeFieldValue, but moved to a separate branch not to have invalid lookaheads
 	a = pr_BuiltinValue { $value = $a.value; }
-|	pr_ReferencedValue_reg
-|	b = pr_BuiltinValue { $value = $b.value; }
+|	b = pr_ReferencedValue_reg { $value = $b.value; }
+|	c = pr_BuiltinValue { $value = $c.value; }
 );
 
 pr_special_Value_endCorrectingSubrule:
@@ -1255,10 +1255,10 @@ locals [Type subType, NamedType_Helper namedType_Helper, Constraint constraint, 
 		{
 			if ($set != null) {
 				$type = new SetOf_Type($subType);
-				$type.setLocation(new Location(actualFile, $set, $namedTypecol.start != null ? $namedTypecol.start : $subTypecol.start));
+				$type.setLocation(new Location(actualFile, $set, $namedTypecol.stop != null ? $namedTypecol.stop : $subTypecol.stop));
 			} else if ($sequence != null) {
 				$type = new SequenceOf_Type($subType);
-				$type.setLocation(new Location(actualFile, $sequence, $namedTypecol.start != null ? $namedTypecol.start : $subTypecol.start));
+				$type.setLocation(new Location(actualFile, $sequence, $namedTypecol.stop != null ? $namedTypecol.stop : $subTypecol.stop));
 			}
 			if ($constraint != null && $type != null) {
 				$constraints = new Constraints();
@@ -1272,12 +1272,12 @@ locals [Type subType, NamedType_Helper namedType_Helper, Constraint constraint, 
 			builtin = pr_BuiltinType_reg 
 			{
 				$type = $builtin.type;
-				$type.setLocation(new Location(actualFile, $builtin.start, $builtin.start));
+				$type.setLocation(new Location(actualFile, $builtin.start, $builtin.stop));
 			}
 		|	referenced = pr_ReferencedType
 			{	
 				$type = $referenced.type;
-				$type.setLocation(new Location(actualFile, $referenced.start, $referenced.start));
+				$type.setLocation(new Location(actualFile, $referenced.start, $referenced.stop));
 			}
 		)//pr_NakedType_reg
 		(
@@ -1371,7 +1371,7 @@ locals [Reference reference]
 )
 {
 	$value = new Referenced_Value($reference);
-	$value.setLocation(new Location(actualFile, $a.start, $a.start));
+	$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 };
 
 pr_BuiltinType_reg returns [ASN1Type type]
@@ -1404,7 +1404,7 @@ locals [Reference reference]
 )
 {
 	$type = new Referenced_Type($reference);
-	$type.setLocation(new Location(actualFile, $a.start, $a.start));
+	$type.setLocation(new Location(actualFile, $a.start, $a.stop));
 };
 
 pr_Constraints returns[Constraints constraints]
@@ -1654,7 +1654,7 @@ pr_SelectionType returns [Selection_Type type]
 {
 	Identifier identifier = new Identifier(Identifier_type.ID_ASN, $start.getText(), new Location(actualFile, $start, $start));
 	$type = new Selection_Type(identifier, $a.type);
-	$type.setLocation(new Location(actualFile, $start, $a.start));
+	$type.setLocation(new Location(actualFile, $start, $a.stop));
 };
 
 pr_EnumeratedType returns [ASN1_Enumerated_Type type]
@@ -1900,7 +1900,7 @@ pr_ChoiceValue returns [Choice_Value value]
 	identifier = new Identifier(Identifier_type.ID_ASN, $start.getText(), new Location(actualFile, $start, $start));
 	if ($a.value != null) {
 		$value = new Choice_Value(identifier, $a.value);
-		$value.setLocation(new Location(actualFile, $start, $a.start));
+		$value.setLocation(new Location(actualFile, $start, $a.stop));
 	}
 };
 
@@ -2032,7 +2032,7 @@ pr_UpperFromObj returns [InformationFromObj fromObj]
 )
 {
 	$fromObj = new InformationFromObj($a.reference, $b.fieldName);
-	$fromObj.setLocation(new Location(actualFile, $a.start, $b.start));
+	$fromObj.setLocation(new Location(actualFile, $a.start, $b.stop));
 };
 
 pr_DefdUpper returns [Reference reference]
@@ -2049,7 +2049,7 @@ pr_DefdUpper returns [Reference reference]
 )
 {
 	if($reference != null){
-		$reference.setLocation(new Location(actualFile, $a.start, $block != null ? $block:$a.start));
+		$reference.setLocation(new Location(actualFile, $a.start, $block != null ? $block:$a.stop));
 	}
 };
 
@@ -2222,14 +2222,14 @@ pr_Lower_FromObjs returns [InformationFromObj fromObj]
 )
 {
 	$fromObj = new InformationFromObj($a.reference, $b.fieldName);
-	$fromObj.setLocation(new Location(actualFile, $a.start, $b.start));
+	$fromObj.setLocation(new Location(actualFile, $a.start, $b.stop));
 };
 
 pr_Upper_FromObjs  returns[InformationFromObj fromObj]
 locals [Token end, Defined_Reference ref, FieldName fieldName]
 @init { $ref = null; $fieldName = null; $fromObj = null; }:
 (
-	a = pr_SimplDefdUpper	{$ref = $a.reference; $end = $a.start;}
+	a = pr_SimplDefdUpper	{$ref = $a.reference; $end = $a.stop;}
 	(
 		block = BLOCK	//if there is block then pr_PardUpper_FromObjs, if not pr_SimplUpper_FromObjs
 		{
@@ -2239,8 +2239,8 @@ locals [Token end, Defined_Reference ref, FieldName fieldName]
 	)?
 	DOT
 	(	
-		b1 = pr_FieldNameLower	{ $end = $b1.start; $fieldName = $b1.fieldName; }
-	|	b2 = pr_FieldNameUpper	{ $end = $b2.start; $fieldName = $b2.fieldName; }
+		b1 = pr_FieldNameLower	{ $end = $b1.stop; $fieldName = $b1.fieldName; }
+	|	b2 = pr_FieldNameUpper	{ $end = $b2.stop; $fieldName = $b2.fieldName; }
 		(	
 			DOT
 			(	
@@ -2566,7 +2566,7 @@ locals [Token referenceEnd, Identifier identifier, ASN1Type type, boolean is_uni
 					|	pr_RefdLower_reg
 					|	DOT
 						(
-							d41 = pr_FieldNameLower	{ $fieldName = $d41.fieldName; $referenceEnd = $d41.start; }
+							d41 = pr_FieldNameLower	{ $fieldName = $d41.fieldName; $referenceEnd = $d41.stop; }
 						|	d42 = pr_FieldNameUpper	{ $fieldName = $d42.fieldName; }
 							(
 								DOT
@@ -2624,7 +2624,7 @@ locals [Token referenceEnd, Identifier identifier, ASN1Type type, boolean is_uni
 					)
 				|	DOT
 					(	
-						a2 = pr_FieldNameLower	{ $fieldName = $a2.fieldName; $referenceEnd = $a2.start; }
+						a2 = pr_FieldNameLower	{ $fieldName = $a2.fieldName; $referenceEnd = $a2.stop; }
 					|	a21 = pr_FieldNameUpper { $fieldName = $a21.fieldName; }
 						(	DOT
 							(	
@@ -2699,7 +2699,7 @@ locals [Values values]
 {
 	if ($values != null) {
 		$value = new SequenceOf_Value($values);
-		$value.setLocation(new Location(actualFile, $a.start, $a.start));
+		$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 	}
 };
 
@@ -2747,7 +2747,7 @@ locals [Values values]
 {
 	if ($values != null) {
 		$value = new SetOf_Value($values);
-		$value.setLocation(new Location(actualFile, $a.start, $a.start));
+		$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 	}
 };
 
@@ -2769,7 +2769,7 @@ locals [NamedValues namedValues]
 {
 	if ($namedValues != null) {
 		$value = new Sequence_Value($namedValues);
-		$value.setLocation(new Location(actualFile, $a.start, $a.start));
+		$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 	}
 };
 
@@ -2802,7 +2802,7 @@ locals [Value value]
 {
 	Identifier identifier = new Identifier(Identifier_type.ID_ASN, $a.getText(), new Location(actualFile, $a, $a));
 	$namedValue = new NamedValue(identifier, $value);
-	$namedValue.setLocation(new Location(actualFile, $a, $b.start == null ? $a : $b.start));
+	$namedValue.setLocation(new Location(actualFile, $a, $b.start == null ? $a : $b.stop));
 };
 
 pr_special_SetValue returns [Set_Value value]
@@ -2823,7 +2823,7 @@ locals [NamedValues namedValues]
 {
 	if ($namedValues != null) {
 		$value = new Set_Value($namedValues);
-		$value.setLocation(new Location(actualFile, $a.start, $a.start));
+		$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 	}
 };
 
@@ -2838,7 +2838,7 @@ pr_ObjectIdentifierValue returns[ObjectIdentifier_Value value]
 @init { $value = new ObjectIdentifier_Value(); }:
 	a = pr_ObjIdComponentList[$value]
 {
-	$value.setLocation(new Location(actualFile, $a.start, $a.start));
+	$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 };
 
 pr_ObjIdComponentList [ObjectIdentifier_Value value]
@@ -2871,7 +2871,7 @@ locals [Value value]
 		$value = $c.value;
 		if ($value != null) {
 			$objidComponent = new ObjectIdentifierComponent($value);
-			$objidComponent.setLocation(new Location(actualFile, $c.start, $c.start));
+			$objidComponent.setLocation(new Location(actualFile, $c.start, $c.stop));
 		}
 	}
 );
@@ -2885,7 +2885,7 @@ locals [Value value]
 	{
 		if ($value != null) {
 			$objidComponent = new ObjectIdentifierComponent($value);
-			$objidComponent.setLocation(new Location(actualFile, $b.start, $b.start));
+			$objidComponent.setLocation(new Location(actualFile, $b.start, $b.stop));
 		}
 	}
 );
@@ -2898,7 +2898,7 @@ locals [Reference reference]
 )
 {
 	$value = new Referenced_Value($reference);
-	$value.setLocation(new Location(actualFile, $a.start, $a.start));
+	$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 };
 
 pr_NameAndNumberForm returns[ObjectIdentifierComponent objidComponent]
@@ -2946,7 +2946,7 @@ pr_RelativeOIDValue returns[RelativeObjectIdentifier_Value value = new RelativeO
 @init { $value = new RelativeObjectIdentifier_Value(); } :
 	a = pr_RelativeOIDComponentList[$value]
 {
-	$value.setLocation(new Location(actualFile, $a.start, $a.start));
+	$value.setLocation(new Location(actualFile, $a.start, $a.stop));
 };
 
 pr_RelativeOIDComponentList [RelativeObjectIdentifier_Value value]
@@ -2972,7 +2972,7 @@ locals [Value value]
 		$value = $b.value;
 		if ($value != null) {
 			$objidComponent = new ObjectIdentifierComponent($value);
-			$objidComponent.setLocation(new Location(actualFile, $b.start, $b.start));}
+			$objidComponent.setLocation(new Location(actualFile, $b.start, $b.stop));}
 		}
 );
 
@@ -3053,7 +3053,10 @@ locals [NamedType_Helper helper, CompField field]
 	{
 		$helper = $a.helper;
 		$field = new CompField($helper.identifier, $helper.type, false, null);
-		$componentTypeList.addComponentType(new RegularComponentType($field));
+		$field.setLocation(new Location(actualFile, $a.start, $a.stop));
+		RegularComponentType componentType = new RegularComponentType($field);
+		componentType.setLocation(new Location(actualFile, $a.start, $a.stop));
+		$componentTypeList.addComponentType(componentType);
 	}
 	(
 		COMMA
@@ -3061,7 +3064,10 @@ locals [NamedType_Helper helper, CompField field]
 		{
 			$helper = $b.helper;
 			$field = new CompField($helper.identifier, $helper.type, false, null);
-		 	$componentTypeList.addComponentType(new RegularComponentType($field));
+			$field.setLocation(new Location(actualFile, $a.start, $b.stop));
+			RegularComponentType componentType2 = new RegularComponentType($field);
+			componentType2.setLocation(new Location(actualFile, $a.start, $b.stop));
+		 	$componentTypeList.addComponentType(componentType2);
 		}
 	)*
 );
@@ -3115,7 +3121,10 @@ locals [ComponentTypeList componentTypeList, NamedType_Helper helper]
 	{
 		$helper = $b.helper;
 		CompField compField = new CompField($helper.identifier, $helper.type, false, null);
-		$extensionAddition = new RegularComponentType(compField);
+		compField.setLocation(new Location(actualFile, $b.start, $b.stop));
+		RegularComponentType componentType = new RegularComponentType(compField);
+		componentType.setLocation(new Location(actualFile, $b.start, $b.stop));
+		$extensionAddition = componentType;
 	}
 );
 
@@ -3242,7 +3251,9 @@ locals [CompField compField, ASN1Type type]
 	{
 		$compField = $a.compField;
 		if($compField != null){
+			$compField.setLocation(new Location(actualFile, $a.start, $a.stop));
 			$componentType = new RegularComponentType($compField);
+			$componentType.setLocation(new Location(actualFile, $a.start, $a.stop));
 		}
 	}
 |	COMPONENTS
@@ -3252,7 +3263,8 @@ locals [CompField compField, ASN1Type type]
 		$type = $b.type;
 		if ($type != null) {
 			$componentType = new ComponentsOfComponentType($type);
-			$componentType.setLocation(new Location(actualFile, $b.start, $b.start));
+			$componentType.setLocation(new Location(actualFile, $b.start, $b.stop));
+			$componentType.setLocation(new Location(actualFile, $b.start, $b.stop));
 		}
 	}
 );
@@ -3301,7 +3313,7 @@ pr_special_ObjectSetSpec returns [ObjectSet_definition definition]
 	EOF
 )
 {
-	if ($definition != null) { $definition.setLocation(new Location(actualFile, $a.start, $a.start)); }
+	if ($definition != null) { $definition.setLocation(new Location(actualFile, $a.start, $a.stop)); }
 };
 
 pr_ObjectSetSpec returns [ObjectSet_definition definition]
@@ -3348,7 +3360,7 @@ locals [IObjectSet_Element element]
 )
 {
 	if ($definition != null) {
-		$definition.setLocation(new Location(actualFile, $a.start, $a.start == null ? $b.start : $a.start));
+		$definition.setLocation(new Location(actualFile, $a.start, $a.stop == null ? $b.stop : $a.stop));
 	}
 };
 
@@ -3361,7 +3373,7 @@ locals [Reference reference]
 	{
 		$reference = $b.reference;
 		Referenced_ObjectSet temp = new Referenced_ObjectSet($reference);
-		temp.setLocation(new Location(actualFile, $b.start, $b.start));
+		temp.setLocation(new Location(actualFile, $b.start, $b.stop));
 		$element = temp;
 	}
 );

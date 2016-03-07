@@ -49,6 +49,7 @@ public final class OutputAnalyzer {
 	private IProject project;
 
 	private boolean processedErrorMessages;
+	private int externalErrorCode = 0;
 
 	static final Pattern BASE_TITAN_ERROR_PATTERN = Pattern.compile("[ ]*(.+):(.+):[ ]+(error|warning|note):[ ]+(.+)");
 	private final Matcher baseTITANErrorMatcher = BASE_TITAN_ERROR_PATTERN.matcher("");
@@ -70,6 +71,9 @@ public final class OutputAnalyzer {
 	private final Matcher baseGCCErrorMatcher1 = BASE_GCC_ERROR_PATTERN_1.matcher("");
 	static final Pattern BASE_GCC_ERROR_PATTERN_2 = Pattern.compile("[ ]*(.+):(\\d+):(\\d+):[ ]+(.+)");
 	private final Matcher baseGCCErrorMatcher2 = BASE_GCC_ERROR_PATTERN_2.matcher("");
+	
+	static final Pattern BASE_LINKER_ERROR_PATTERN_1 = Pattern.compile("^collect2:[ ]+error:[ ]+ld[ ]+returned[ ]+([1-9])[ ]+exit.*");
+	private final Matcher baseLinkerErrorMatcher1 = BASE_LINKER_ERROR_PATTERN_1.matcher("");
 
 	private static final String ERROR = "error";
 	private static final String WARNING = "warning";
@@ -99,6 +103,14 @@ public final class OutputAnalyzer {
 	public boolean hasProcessedErrorMessages() {
 		return processedErrorMessages;
 	}
+	
+	/**
+	 * @return the error code from the external operation
+	 * */
+	public int getExternalErrorCode() {
+		return externalErrorCode;
+	}
+	
 
 	/**
 	 * Disposes the objects that were buffered to speed up marker creation.
@@ -185,6 +197,10 @@ public final class OutputAnalyzer {
 			return addTITANMarker(baseGCCErrorMatcher2.group(1), Integer.parseInt(baseGCCErrorMatcher2.group(2)),
 					Integer.parseInt(baseGCCErrorMatcher2.group(3)), Integer.parseInt(baseGCCErrorMatcher2.group(2)),
 					Integer.parseInt(baseGCCErrorMatcher2.group(3)) + 1, WARNING, baseGCCErrorMatcher2.group(4));
+		} else if (baseLinkerErrorMatcher1.reset(line).matches()) {
+			processedErrorMessages = true;
+			externalErrorCode = Integer.parseInt(baseLinkerErrorMatcher1.group(1));
+			return true;
 		}
 		return false;
 	}

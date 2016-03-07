@@ -87,15 +87,15 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 		return settings.get(index);
 	}
 
-	public boolean hasSetting(final CompilationTimeStamp timestamp, final String error_type) {
+	public boolean hasSetting(final CompilationTimeStamp timestamp, final String errorType) {
 		check(timestamp);
-		return settingAll != null || settingMap.containsKey(error_type);
+		return settingAll != null || settingMap.containsKey(errorType);
 	}
 
-	public String getHandling(final CompilationTimeStamp timestamp, final String error_type) {
+	public String getHandling(final CompilationTimeStamp timestamp, final String errorType) {
 		check(timestamp);
-		if (settingMap.containsKey(error_type)) {
-			return settingMap.get(error_type).getErrorHandling();
+		if (settingMap.containsKey(errorType)) {
+			return settingMap.get(errorType).getErrorHandling();
 		} else if (settingAll != null) {
 			return settingAll.getErrorHandling();
 		}

@@ -32,7 +32,6 @@ import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.FieldSubReference;
-import org.eclipse.titan.designer.AST.IReferencingElement;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
@@ -56,7 +55,6 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
-import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
@@ -75,7 +73,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * 
  * @author Kristof Szabados
  * */
-public abstract class Definition extends Assignment implements IAppendableSyntax, IIncrementallyUpdateable, IReferencingElement {
+public abstract class Definition extends Assignment implements IAppendableSyntax, IIncrementallyUpdateable {
 	private static final String SHOULD_BE_PRIVATE = "{0} is referenced only locally, it should be private";
 
 	protected WithAttributesPath withAttributesPath = null;
@@ -86,6 +84,7 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 
 	private Location commentLocation = null;
 
+	//TODO this should be removed as the same functionality is present in Titanium as codesmell.
 	public List<String> referingHere = new ArrayList<String>();
 
 	private static boolean markOccurrences;
@@ -323,42 +322,6 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 								typeArray = new ArrayList<IType>();
 								boolean validIndexes = definitionType.getSubrefsAsArray(timestamp, reference, 1,
 										subrefsArray, typeArray);
-								/*
-								 * // debug
-								 * stuff
-								 * StringBuilder
-								 * sb = new
-								 * StringBuilder
-								 * ();
-								 * sb.append(
-								 * '['); for
-								 * (IType t:
-								 * type_array) {
-								 * if
-								 * (sb.length(
-								 * )>1)
-								 * sb.append
-								 * (',');
-								 * sb.append
-								 * (t.get_typename
-								 * ()); }
-								 * sb.append
-								 * (']');
-								 * actual_qualifier
-								 * .
-								 * getLocation()
-								 * .
-								 * reportSemanticWarning
-								 * (
-								 * "subrefs_array = "
-								 * +
-								 * subrefs_array
-								 * .toString()+
-								 * "  type_array = "
-								 * +
-								 * sb.toString()
-								 * );
-								 */
 								if (!validIndexes) {
 									fieldType = null;
 									subrefsArray = null;
@@ -581,11 +544,6 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	@Override
 	public boolean shouldMarkOccurrences() {
 		return markOccurrences;
-	}
-
-	@Override
-	public Declaration getDeclaration() {
-		return Declaration.createInstance(this);
 	}
 	
 	private static ErroneousAttributeSpecification parseErrAttrSpecString(final AttributeSpecification aAttrSpec) {

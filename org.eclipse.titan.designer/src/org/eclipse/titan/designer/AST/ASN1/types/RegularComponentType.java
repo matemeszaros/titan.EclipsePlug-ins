@@ -77,7 +77,7 @@ public final class RegularComponentType extends ComponentType {
 	}
 
 	@Override
-	public void trCompsof(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain, final boolean is_set) {
+	public void trCompsof(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain, final boolean isSet) {
 	}
 
 	@Override

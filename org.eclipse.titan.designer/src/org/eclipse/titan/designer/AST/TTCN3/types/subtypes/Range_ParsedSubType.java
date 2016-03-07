@@ -28,11 +28,11 @@ public final class Range_ParsedSubType extends ParsedSubType {
 	private Value max;
 	private boolean maxExclusive;
 
-	public Range_ParsedSubType(final Value min, final boolean min_exclusive, final Value max, final boolean max_exclusive) {
+	public Range_ParsedSubType(final Value min, final boolean minExclusive, final Value max, final boolean maxExclusive) {
 		this.min = min;
-		this.minExclusive = min_exclusive;
+		this.minExclusive = minExclusive;
 		this.max = max;
-		this.maxExclusive = max_exclusive;
+		this.maxExclusive = maxExclusive;
 	}
 
 	@Override

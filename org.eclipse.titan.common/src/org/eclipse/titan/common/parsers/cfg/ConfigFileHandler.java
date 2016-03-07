@@ -267,6 +267,7 @@ public final class ConfigFileHandler {
 		if (analyzer.isLogFileNameDefined()) {
 			logFileNameDefined = true;
 			mLogFileName  = analyzer.getLogFileName();
+			localAddress = analyzer.getLocalAddress();
 		}
 		LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot() );
 		if ( rootNode != null ) {

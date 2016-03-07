@@ -58,18 +58,18 @@ public final class Def_Timer extends Definition {
 	private static final String KIND = "timer";
 
 	private final ArrayDimensions dimensions;
-	private final Value default_duration;
+	private final Value defaultDuration;
 
-	public Def_Timer(final Identifier identifier, final ArrayDimensions dimensions, final Value default_duration) {
+	public Def_Timer(final Identifier identifier, final ArrayDimensions dimensions, final Value defaultDuration) {
 		super(identifier);
 		this.dimensions = dimensions;
-		this.default_duration = default_duration;
+		this.defaultDuration = defaultDuration;
 
 		if (dimensions != null) {
 			dimensions.setFullNameParent(this);
 		}
-		if (default_duration != null) {
-			default_duration.setFullNameParent(this);
+		if (defaultDuration != null) {
+			defaultDuration.setFullNameParent(this);
 		}
 	}
 
@@ -84,8 +84,8 @@ public final class Def_Timer extends Definition {
 		if (dimensions != null) {
 			dimensions.setMyScope(scope);
 		}
-		if (default_duration != null) {
-			default_duration.setMyScope(scope);
+		if (defaultDuration != null) {
+			defaultDuration.setMyScope(scope);
 		}
 	}
 
@@ -95,7 +95,7 @@ public final class Def_Timer extends Definition {
 
 		if (dimensions == child) {
 			return builder.append(FULLNAMEPART1);
-		} else if (default_duration == child) {
+		} else if (defaultDuration == child) {
 			return builder.append(FULLNAMEPART2);
 		}
 
@@ -149,13 +149,13 @@ public final class Def_Timer extends Definition {
 	 * @return true if the timer has a default duration, false otherwise.
 	 * */
 	public boolean hasDefaultDuration(final CompilationTimeStamp timestamp, final Reference reference) {
-		if (default_duration == null) {
+		if (defaultDuration == null) {
 			return false;
 		} else if (dimensions == null || reference == null) {
 			return true;
 		}
 
-		IValue v = default_duration;
+		IValue v = defaultDuration;
 		List<ISubReference> subreferences = reference.getSubreferences();
 		int nofDimensions = dimensions.size();
 		int nofReferences = subreferences.size() - 1;
@@ -203,25 +203,25 @@ public final class Def_Timer extends Definition {
 			dimensions.check(timestamp);
 		}
 
-		if (default_duration != null) {
+		if (defaultDuration != null) {
 			if (dimensions == null) {
-				default_duration.setLoweridToReference(timestamp);
-				Type_type tempType = default_duration.getExpressionReturntype(timestamp,
+				defaultDuration.setLoweridToReference(timestamp);
+				Type_type tempType = defaultDuration.getExpressionReturntype(timestamp,
 						isLocal() ? Expected_Value_type.EXPECTED_DYNAMIC_VALUE : Expected_Value_type.EXPECTED_STATIC_VALUE);
 
 				switch (tempType) {
 				case TYPE_REAL:
-					IValue last = default_duration.getValueRefdLast(timestamp, null);
+					IValue last = defaultDuration.getValueRefdLast(timestamp, null);
 					if (!last.isUnfoldable(timestamp)) {
 						Real_Value real = (Real_Value) last;
 						double value = real.getValue();
 						if (value < 0.0f) {
-							default_duration.getLocation().reportSemanticError(
+							defaultDuration.getLocation().reportSemanticError(
 									MessageFormat.format(NEGATIVDURATIONERROR, value));
 						} else if (real.isPositiveInfinity()) {
 							final String message = MessageFormat.format(INFINITYDURATIONERROR,
 									real.createStringRepresentation());
-							default_duration.getLocation()
+							defaultDuration.getLocation()
 									.reportSemanticError(message
 											);
 						}
@@ -233,7 +233,7 @@ public final class Def_Timer extends Definition {
 					location.reportSemanticError(OPERANDERROR);
 				}
 			} else {
-				checkArrayDuration(default_duration, 0);
+				checkArrayDuration(defaultDuration, 0);
 			}
 		}
 
@@ -245,7 +245,7 @@ public final class Def_Timer extends Definition {
 		lastTimeChecked = timestamp;
 	}
 
-	private void checkArrayDuration(final IValue duration, final int start_dimension) {
+	private void checkArrayDuration(final IValue duration, final int startDimension) {
 		// FIXME implement support for dimension handling
 	}
 
@@ -283,22 +283,22 @@ public final class Def_Timer extends Definition {
 			return false;
 		}
 
-		if (default_duration != null) {
-			if (otherTimer.default_duration != null) {
-				if (!default_duration.isUnfoldable(timestamp) && !otherTimer.default_duration.isUnfoldable(timestamp)
-						&& !default_duration.checkEquality(timestamp, otherTimer.default_duration)) {
+		if (defaultDuration != null) {
+			if (otherTimer.defaultDuration != null) {
+				if (!defaultDuration.isUnfoldable(timestamp) && !otherTimer.defaultDuration.isUnfoldable(timestamp)
+						&& !defaultDuration.checkEquality(timestamp, otherTimer.defaultDuration)) {
 					final String message = MessageFormat
 							.format("Local timer `{0}'' and the timer inherited from component type `{1}'' have different default durations",
 									identifier.getDisplayName(), otherTimer.getMyScope().getFullName());
-					default_duration.getLocation().reportSemanticWarning(message);
+					defaultDuration.getLocation().reportSemanticWarning(message);
 				}
 			} else {
 				final String message = MessageFormat
 						.format("Local timer `{0}'' has default duration, but the timer inherited from component type `{1}'' does not",
 								identifier.getDisplayName(), otherTimer.getMyScope().getFullName());
-				default_duration.getLocation().reportSemanticWarning(message);
+				defaultDuration.getLocation().reportSemanticWarning(message);
 			}
-		} else if (otherTimer.default_duration != null) {
+		} else if (otherTimer.defaultDuration != null) {
 			location.reportSemanticWarning(MessageFormat.format(
 					"Local timer `{0}'' does not have default duration, but the timer inherited from component type `{1}'' has",
 					identifier.getDisplayName(), otherTimer.getMyScope().getFullName()));
@@ -337,13 +337,9 @@ public final class Def_Timer extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.addAll(referingHere);
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
-
 			int result = 1;
 			Location tempIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(tempIdentifier) || reparser.isExtending(tempIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(tempIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				result = r.parseAndSetNameChanged();
@@ -356,9 +352,9 @@ public final class Def_Timer extends Definition {
 					dimensions.updateSyntax(reparser, false);
 				}
 
-				if (default_duration != null) {
-					default_duration.updateSyntax(reparser, false);
-					reparser.updateLocation(default_duration.getLocation());
+				if (defaultDuration != null) {
+					defaultDuration.updateSyntax(reparser, false);
+					reparser.updateLocation(defaultDuration.getLocation());
 				}
 
 				if (withAttributesPath != null) {
@@ -377,9 +373,9 @@ public final class Def_Timer extends Definition {
 			dimensions.updateSyntax(reparser, false);
 		}
 
-		if (default_duration != null) {
-			default_duration.updateSyntax(reparser, false);
-			reparser.updateLocation(default_duration.getLocation());
+		if (defaultDuration != null) {
+			defaultDuration.updateSyntax(reparser, false);
+			reparser.updateLocation(defaultDuration.getLocation());
 		}
 
 		if (withAttributesPath != null) {
@@ -394,8 +390,8 @@ public final class Def_Timer extends Definition {
 		if (dimensions != null) {
 			dimensions.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (default_duration != null) {
-			default_duration.findReferences(referenceFinder, foundIdentifiers);
+		if (defaultDuration != null) {
+			defaultDuration.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
@@ -407,7 +403,7 @@ public final class Def_Timer extends Definition {
 		if (dimensions != null && !dimensions.accept(v)) {
 			return false;
 		}
-		if (default_duration != null && !default_duration.accept(v)) {
+		if (defaultDuration != null && !defaultDuration.accept(v)) {
 			return false;
 		}
 		return true;

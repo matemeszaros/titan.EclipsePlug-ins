@@ -38,15 +38,15 @@ public final class Activate_Referenced_Statement extends Statement {
 	private static final String FULLNAMEPART2 = ".<parameters>";
 	private static final String STATEMENT_NAME = "activate";
 
-	private final Value dereferedValue;
+	private final Value dereferredValue;
 	private final ParsedActualParameters actualParameterList;
 
-	public Activate_Referenced_Statement(final Value dereferedValue, final ParsedActualParameters actualParameterList) {
-		this.dereferedValue = dereferedValue;
+	public Activate_Referenced_Statement(final Value dereferredValue, final ParsedActualParameters actualParameterList) {
+		this.dereferredValue = dereferredValue;
 		this.actualParameterList = actualParameterList;
 
-		if (dereferedValue != null) {
-			dereferedValue.setFullNameParent(this);
+		if (dereferredValue != null) {
+			dereferredValue.setFullNameParent(this);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setFullNameParent(this);
@@ -67,7 +67,7 @@ public final class Activate_Referenced_Statement extends Statement {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (dereferedValue == child) {
+		if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (actualParameterList == child) {
 			return builder.append(FULLNAMEPART2);
@@ -79,8 +79,8 @@ public final class Activate_Referenced_Statement extends Statement {
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (dereferedValue != null) {
-			dereferedValue.setMyScope(scope);
+		if (dereferredValue != null) {
+			dereferredValue.setMyScope(scope);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setMyScope(scope);
@@ -96,13 +96,13 @@ public final class Activate_Referenced_Statement extends Statement {
 		isErroneous = false;
 		lastTimeChecked = timestamp;
 
-		if (dereferedValue == null) {
+		if (dereferredValue == null) {
 			setIsErroneous();
 			return;
 		}
 
-		dereferedValue.setLoweridToReference(timestamp);
-		IType type = dereferedValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+		dereferredValue.setLoweridToReference(timestamp);
+		IType type = dereferredValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 		if (type != null) {
 			type = type.getTypeRefdLast(timestamp);
 		}
@@ -113,13 +113,13 @@ public final class Activate_Referenced_Statement extends Statement {
 		}
 
 		if (!Type_type.TYPE_ALTSTEP.equals(type.getTypetype())) {
-			dereferedValue.getLocation().reportSemanticError(MessageFormat.format(ALTSTEPEXPECTED, type.getTypename()));
+			dereferredValue.getLocation().reportSemanticError(MessageFormat.format(ALTSTEPEXPECTED, type.getTypename()));
 			setIsErroneous();
 			return;
 		}
 
 		if (((Altstep_Type) type).isRunsOnSelf()) {
-			dereferedValue.getLocation().reportSemanticError(RUNONSELFERROR);
+			dereferredValue.getLocation().reportSemanticError(RUNONSELFERROR);
 			setIsErroneous();
 			return;
 		}
@@ -148,9 +148,9 @@ public final class Activate_Referenced_Statement extends Statement {
 			throw new ReParseException();
 		}
 
-		if (dereferedValue != null) {
-			dereferedValue.updateSyntax(reparser, false);
-			reparser.updateLocation(dereferedValue.getLocation());
+		if (dereferredValue != null) {
+			dereferredValue.updateSyntax(reparser, false);
+			reparser.updateLocation(dereferredValue.getLocation());
 		}
 		if (actualParameterList != null) {
 			actualParameterList.updateSyntax(reparser, false);
@@ -160,8 +160,8 @@ public final class Activate_Referenced_Statement extends Statement {
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (dereferedValue != null) {
-			dereferedValue.findReferences(referenceFinder, foundIdentifiers);
+		if (dereferredValue != null) {
+			dereferredValue.findReferences(referenceFinder, foundIdentifiers);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.findReferences(referenceFinder, foundIdentifiers);
@@ -170,7 +170,7 @@ public final class Activate_Referenced_Statement extends Statement {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (dereferedValue != null && !dereferedValue.accept(v)) {
+		if (dereferredValue != null && !dereferredValue.accept(v)) {
 			return false;
 		}
 		if (actualParameterList != null && !actualParameterList.accept(v)) {

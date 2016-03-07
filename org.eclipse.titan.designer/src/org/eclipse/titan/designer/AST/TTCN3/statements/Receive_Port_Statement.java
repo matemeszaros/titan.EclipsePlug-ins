@@ -178,7 +178,7 @@ public final class Receive_Port_Statement extends Statement {
 	 *                the timestamp of the actual semantic check cycle.
 	 * @param origin
 	 *                the original statement.
-	 * @param statement_name
+	 * @param statementName
 	 *                the name of the original statement.
 	 * @param portReference
 	 *                the port reference.
@@ -191,7 +191,7 @@ public final class Receive_Port_Statement extends Statement {
 	 * @param redirectSender
 	 *                the sender redirection of the statement.
 	 * */
-	public static void checkReceivingStatement(final CompilationTimeStamp timestamp, final Statement origin, final String statement_name,
+	public static void checkReceivingStatement(final CompilationTimeStamp timestamp, final Statement origin, final String statementName,
 			final Reference portReference, final TemplateInstance receiveParameter, final TemplateInstance fromClause,
 			final Reference redirectValue, final Reference redirectSender) {
 		Port_Type portType = Port_Utility.checkPortReference(timestamp, origin, portReference);
@@ -201,7 +201,7 @@ public final class Receive_Port_Statement extends Statement {
 				PortTypeBody body = portType.getPortBody();
 				if (OperationModes.OP_Procedure.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
-							MessageFormat.format(MESSAGEBASEOPERATIONONPROCEDUREPORT, statement_name,
+							MessageFormat.format(MESSAGEBASEOPERATIONONPROCEDUREPORT, statementName,
 									portType.getTypename()));
 				} else if (body.getInMessages() == null) {
 					portReference.getLocation().reportSemanticError(
@@ -225,7 +225,7 @@ public final class Receive_Port_Statement extends Statement {
 				TypeSet inMessages = portTypeBody.getInMessages();
 				if (OperationModes.OP_Procedure.equals(portTypeBody.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
-							MessageFormat.format(RECEIVEONPORT, statement_name, portType.getTypename()));
+							MessageFormat.format(RECEIVEONPORT, statementName, portType.getTypename()));
 				} else if (inMessages != null) {
 					if (inMessages.getNofTypes() == 1) {
 						messageType = inMessages.getTypeByIndex(0);
@@ -255,10 +255,10 @@ public final class Receive_Port_Statement extends Statement {
 				}
 			} else if (portReference == null) {
 				// any port
-				receiveParameter.getLocation().reportSemanticError(MessageFormat.format(ANYPORTWITHPARAMETER, statement_name));
+				receiveParameter.getLocation().reportSemanticError(MessageFormat.format(ANYPORTWITHPARAMETER, statementName));
 				if (redirectValue != null) {
 					redirectValue.getLocation().reportSemanticError(
-							MessageFormat.format(RECEIVEWITHVALUEREDIRECT, statement_name));
+							MessageFormat.format(RECEIVEWITHVALUEREDIRECT, statementName));
 				}
 			}
 

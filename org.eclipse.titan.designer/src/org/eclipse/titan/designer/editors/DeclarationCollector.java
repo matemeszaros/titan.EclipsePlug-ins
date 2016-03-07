@@ -17,26 +17,19 @@ import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Group;
-import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 
 /**
  * @author Kristof Szabados
  * */
 public final class DeclarationCollector {
-	/**
-	 * A project parser, used by the collector to reach other modules from
-	 * the given project. Can be null !!!
-	 */
-	private final ProjectSourceParser projectSourceParser;
 
 	/** the reference to identify. */
 	private final Reference refrence;
 
 	private final List<DeclarationCollectionHelper> collected;
 
-	public DeclarationCollector(final Reference reference, final ProjectSourceParser projectSourceParser) {
+	public DeclarationCollector(final Reference reference) {
 		this.refrence = reference;
-		this.projectSourceParser = projectSourceParser;
 
 		collected = new ArrayList<DeclarationCollectionHelper>();
 	}
@@ -56,10 +49,6 @@ public final class DeclarationCollector {
 
 	public List<DeclarationCollectionHelper> getCollected() {
 		return collected;
-	}
-
-	public ProjectSourceParser getProjectParser() {
-		return projectSourceParser;
 	}
 
 	public void addDeclaration(final String description, final Location location, final Scope scope) {

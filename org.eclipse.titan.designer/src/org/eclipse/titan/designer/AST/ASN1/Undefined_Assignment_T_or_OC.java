@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.ASN1;
 
+import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Reference;
@@ -62,8 +63,8 @@ public final class Undefined_Assignment_T_or_OC extends Undefined_Assignment {
 			reference.setMyScope(rightScope);
 			if (identifier.isvalidAsnObjectClassReference()
 					&& reference.refersToSettingType(timestamp, Setting_type.S_OC, temporalReferenceChain)) {
-				realAssignment = new ObjectClass_Assignment(identifier, ass_pard, new ObjectClass_refd(reference));
-				// ass_pard = null;
+				realAssignment = new ObjectClass_Assignment(identifier, assPard, new ObjectClass_refd(reference));
+				// assPard = null;
 				// asstype = Assignment.A_OC;
 			} else if (identifier.isvalidAsnTyperef()
 					&& (reference.refersToSettingType(timestamp, Setting_type.S_T, temporalReferenceChain) || reference
@@ -71,8 +72,8 @@ public final class Undefined_Assignment_T_or_OC extends Undefined_Assignment {
 				final Referenced_Type type = new Referenced_Type(reference);
 				type.setLocation(reference.getLocation());
 
-				realAssignment = new Type_Assignment(identifier, ass_pard, type);
-				// ass_pard = null;
+				realAssignment = new Type_Assignment(identifier, assPard, type);
+				// assPard = null;
 				// asstype = A_TYPE;
 			}
 		}
@@ -96,5 +97,16 @@ public final class Undefined_Assignment_T_or_OC extends Undefined_Assignment {
 	@Override
 	protected ASN1Assignment internalNewInstance(final Identifier identifier) {
 		return new Undefined_Assignment_T_or_OC(identifier, null, reference.newInstance());
+	}
+
+	@Override
+	protected boolean memberAccept(ASTVisitor v) {
+		if (!super.memberAccept(v)) {
+			return false;
+		}
+		if (reference != null && !reference.accept(v)) {
+			return false;
+		}
+		return true;
 	}
 }

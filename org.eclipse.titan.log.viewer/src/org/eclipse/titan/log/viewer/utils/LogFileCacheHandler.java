@@ -39,9 +39,9 @@ import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.utils.FileUtils;
+import org.eclipse.titan.common.utils.IOUtils;
 import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
 import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
 import org.eclipse.titan.log.viewer.exceptions.UserException;
@@ -54,8 +54,6 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
-
-import org.eclipse.titan.common.utils.IOUtils;
 
 /**
  * This class is responsible for creating and updating the log file cache
@@ -619,7 +617,7 @@ public final class LogFileCacheHandler {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						MessageDialog.openInformation(new Shell(Display.getDefault()),
+						MessageDialog.openInformation(null,
 								Messages.getString("OpenTextTableProjectsViewMenuAction.8"),
 								Messages.getString("OpenTextTableProjectsViewMenuAction.9"));
 					}

@@ -9,15 +9,6 @@ package org.eclipse.titan.log.viewer.utils;
 
 import static org.eclipse.titan.common.utils.StringUtils.isNullOrEmpty;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,12 +21,30 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.utils.IOUtils;
+import org.eclipse.titan.common.utils.Joiner;
+import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
+import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
+import org.eclipse.titan.log.viewer.preferences.PreferenceConstants;
+import org.eclipse.titan.log.viewer.preferences.PreferencesHandler;
+import org.eclipse.titan.log.viewer.preferences.data.KeywordColor;
 import org.eclipse.ui.PlatformUI;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -45,15 +54,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.utils.IOUtils;
-import org.eclipse.titan.common.utils.Joiner;
-import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
-import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
-import org.eclipse.titan.log.viewer.preferences.PreferenceConstants;
-import org.eclipse.titan.log.viewer.preferences.PreferencesHandler;
-import org.eclipse.titan.log.viewer.preferences.data.KeywordColor;
 
 /**
  * Helper class for import and export of preferences via xml files
@@ -331,7 +331,7 @@ public final class ImportExportUtils {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openError(new Shell(Display.getDefault()),
+					MessageDialog.openError(null,
 							Messages.getString("ImportExportUtils.2"), Messages.getString("ImportExportUtils.4"));
 				}
 			});
@@ -374,7 +374,7 @@ public final class ImportExportUtils {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openError(new Shell(Display.getDefault()),
+					MessageDialog.openError(null,
 							Messages.getString("ImportExportUtils.2"), Messages.getString("ImportExportUtils.3"));
 				}
 			});

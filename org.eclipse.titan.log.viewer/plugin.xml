@@ -1,540 +1,520 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2015 Ericsson Telecom AB
+ Copyright (c) 2000-2016 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<?eclipse version="3.2"?>
+<?eclipse version="4.4"?>
 <plugin>
-      <extension
-	     id="org.eclipse.titan.log.viewer.TitanLogProject"
-	     name="Titan Log Viewer Project Nature"
-	     point="org.eclipse.core.resources.natures">
-      	 <runtime>
-         	<run class="org.eclipse.titan.log.viewer.natures.TitanLogProject"/>
-      	 </runtime>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.titan.log.viewer.preferences.PreferenceInitializer"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.eclipse.titan.log.viewer.factories.PerspectiveFactory"
-            icon="icons/titan.gif"
-            id="org.eclipse.titan.log.viewer.factories.PerspectiveFactory"
-            name="TITAN Log Viewer"/>
-   </extension>
-   <extension
-         point="org.eclipse.help.toc">
-      <toc
-            file="toc.xml"
-            primary="true"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.decorators">
-      <decorator
-            adaptable="true"
-            class="org.eclipse.titan.log.viewer.views.navigator.FileSizeDecorator"
-            id="org.eclipse.titan.log.viewer.views.navigator.FileSizeDecorator"
-            label="TITAN Log Viewer file size decorator"
-            lightweight="true"
-            state="true">
-         <enablement>
-        	<objectClass name="org.eclipse.core.resources.IFile"/>
-         </enablement>
-      </decorator>
-   </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="org.eclipse.titan.log.viewer.preferences.pages.GeneralSettingsPrefPage"
-            id="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            name="TITAN Log Viewer">
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.ComponentsVisualOrderPrefPage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.VisualComponentsOrderPrefPage"
-            name="Components Visual Order"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredComponentsPrefPage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.FilteredComponentsPrefPage"
-            name="Filtered Components"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSignalsPrefPage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.FilteredSignalsPrefPage"
-            name="Filtered Signals"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredFunctionsPrefPage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.FilteredFunctionsPrefPage"
-            name="Filtered Functions"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSilentEventPrefPage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.FilteredSilentEventsPage"
-            name="Filtered Silent Events"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.HighlightKeywordsPage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.HighlightKeywordsPage"
-            name="Color Keywords"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
-            name="Setverdict"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
-            name="Filtered Ports"/>
-      <page
-            category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.DecipheringPreferencePage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.DecipheringPreferencePage"
-            name="Message Deciphering"/>
-   </extension>
-      <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            class="org.eclipse.titan.log.viewer.preferences.pages.GeneralSettingsPrefPage"
-            id="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            name="TITAN Log Viewer">
-          <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.ComponentsVisualOrderPrefPage"
-            id="org.eclipse.titan.log.viewer.properties.CompVisOrderPage"
-            name="Components Visual Order">
-         <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredComponentsPrefPage"
-            id="org.eclipse.titan.log.viewer.properties.FilteredCompPage"
-            name="Filtered Components">
-         <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSignalsPrefPage"
-            id="org.eclipse.titan.log.viewer.properties.FilteredSignalsPage"
-            name="Filtered Signals">
-         <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredFunctionsPrefPage"
-            id="org.eclipse.titan.log.viewer.properties.FilteredFunctionsPage"
-            name="Filtered Functions">
-         <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSilentEventPrefPage"
-            id="org.eclipse.titan.log.viewer.properties.FilteredSilentEventsPage"
-            name="Filtered Silent Events">
-         <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.HighlightKeywordsPage"
-            id="org.eclipse.titan.log.viewer.properties.HighlightKeywordsPage"
-            name="Color Keywords">
-          <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
-            name="Setverdict">
-          <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-      <page
-            category="org.eclipse.titan.log.viewer.properties.GeneralPage"
-            class="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
-            id="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
-            name="Filtered Ports">
-          <filter
-            name="projectNature"
-            value="org.eclipse.titan.log.viewer.TitanLogProject">
-          </filter>
-          <enabledWhen>
-            <instanceof
-              value="org.eclipse.core.resources.IProject">
-            </instanceof>
-          </enabledWhen>
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <category
-            id="org.eclipse.titan.log.viewer.views.category"
-            name="TITAN Log Viewer"/>
-      <view
-            allowMultiple="true"
-            category="org.eclipse.titan.log.viewer.views.category"
-            class="org.eclipse.titan.log.viewer.views.MSCView"
-            icon="icons/msc.gif"
-            id="org.eclipse.titan.log.viewer.views.MSCView"
-            name="MSC"/>
-      <view
-            allowMultiple="false"
-            category="org.eclipse.titan.log.viewer.views.category"
-            class="org.eclipse.titan.log.viewer.views.DetailsView"
-            icon="icons/details.gif"
-            id="org.eclipse.titan.log.viewer.views.DetailsView"
-            name="Value"/>
-      <view
-            allowMultiple="true"
-            category="org.eclipse.titan.log.viewer.views.category"
-            class="org.eclipse.titan.log.viewer.views.text.table.TextTableView"
-            icon="icons/table_view.gif"
-            id="org.eclipse.titan.log.viewer.views.text.table.TextTableView"
-            name="Text Table"/>
-      <view
-            allowMultiple="true"
-            category="org.eclipse.titan.log.viewer.views.category"
-            class="org.eclipse.titan.log.viewer.views.StatisticalView"
-            icon="icons/statistics.gif"
-            id="org.eclipse.titan.log.viewer.views.StatisticalView"
-            name="Statistical"/>
-   </extension>
-   <extension
-         point="org.eclipse.search.searchPages">
-      <page
-            showScopeSection="true"
-            canSearchEnclosingProjects="true"
-            label="TITAN Log files"
-            class="org.eclipse.titan.log.viewer.views.LogSearchPage"
-            icon="icons/search.gif"
-            extensions="log:100"
-            sizeHint="650,200"
-            id="org.eclipse.titan.log.viewer.search.LogSearchPage">
-      </page>
-   </extension>
-   <extension
-		id="LogSearchPage"
-	    point="org.eclipse.search.searchResultViewPages">
-	 	<viewPage
-	  		id="org.eclipse.titan.log.viewer.search.LogSearchViewPage"
-	  		searchResultClass="org.eclipse.titan.log.viewer.search.LogSearchResult"
-	  		class="org.eclipse.titan.log.viewer.views.LogSearchResultPage">
-	 	</viewPage>
-   </extension>
-<extension
-		point="org.eclipse.ui.actionSets">
-	<actionSet
-		label="TITAN Log files"
-		visible="false"
-		id="org.eclipse.titan.log.viewer.search.SearchActionSet">
-		
-		<!-- see http://bugs.eclipse.org/bugs/show_bug.cgi?id=15684    -->
-		<!-- Note: The menu (re-) definition has to be here due to bug: -->
-		<!-- =================================================================== -->
-		<!-- Search Menu                                                         -->
-		<!-- =================================================================== -->
-		<menu
-					label="Search"
-					path="navigate"
-					id="org.eclipse.search.menu">
-					<groupMarker name="internalDialogGroup"/>   <!-- not to be used by clients  -->
-					<groupMarker name="dialogGroup"/>           <!-- to be used by clients      -->
-					<separator name="fileSearchContextMenuActionsGroup"/> <!-- to be used by clients      -->
-					<separator name="contextMenuActionsGroup"/> <!-- to be used by clients -->
-					<separator name="occurencesActionsGroup"/> <!-- to be used by clients -->
-					<separator name="extraSearchGroup"/> <!-- to be used by clients -->
-		</menu>
-		<!-- =================================================================== -->
-		 
-		<action
-			label="TITAN Log files"
-			icon="icons/search.gif"
-			class="org.eclipse.titan.log.viewer.actions.OpenLogSearchPageAction"
-			menubarPath="org.eclipse.search.menu/dialogGroup"
-			id="org.eclipse.titan.log.viewer.actions.OpenLogSearchPage">
-		</action>
-	</actionSet>
-</extension>
+  <extension id="org.eclipse.titan.log.viewer.TitanLogProject"
+    name="Titan Log Viewer Project Nature" point="org.eclipse.core.resources.natures">
+    <runtime>
+      <run class="org.eclipse.titan.log.viewer.natures.TitanLogProject" />
+    </runtime>
+  </extension>
+  <extension point="org.eclipse.core.runtime.preferences">
+    <initializer
+      class="org.eclipse.titan.log.viewer.preferences.PreferenceInitializer" />
+  </extension>
+  <extension point="org.eclipse.ui.perspectives">
+    <perspective
+      class="org.eclipse.titan.log.viewer.factories.PerspectiveFactory"
+      icon="icons/titan.gif" id="org.eclipse.titan.log.viewer.factories.PerspectiveFactory"
+      name="TITAN Log Viewer" />
+  </extension>
+  <extension point="org.eclipse.help.toc">
+    <toc file="toc.xml" primary="true" />
+  </extension>
+  <extension point="org.eclipse.ui.decorators">
+    <decorator adaptable="true"
+      class="org.eclipse.titan.log.viewer.views.navigator.FileSizeDecorator"
+      id="org.eclipse.titan.log.viewer.views.navigator.FileSizeDecorator"
+      label="TITAN Log Viewer file size decorator" lightweight="true"
+      state="true">
+      <enablement>
+        <objectClass name="org.eclipse.core.resources.IFile" />
+      </enablement>
+    </decorator>
+  </extension>
+  <extension point="org.eclipse.ui.preferencePages">
+    <page
+      class="org.eclipse.titan.log.viewer.preferences.pages.GeneralSettingsPrefPage"
+      id="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      name="TITAN Log Viewer">
+    </page>
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.ComponentsVisualOrderPrefPage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.VisualComponentsOrderPrefPage"
+      name="Components Visual Order" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredComponentsPrefPage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.FilteredComponentsPrefPage"
+      name="Filtered Components" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSignalsPrefPage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.FilteredSignalsPrefPage"
+      name="Filtered Signals" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredFunctionsPrefPage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.FilteredFunctionsPrefPage"
+      name="Filtered Functions" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSilentEventPrefPage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.FilteredSilentEventsPage"
+      name="Filtered Silent Events" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.HighlightKeywordsPage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.HighlightKeywordsPage"
+      name="Color Keywords" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
+      name="Setverdict" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
+      name="Filtered Ports" />
+    <page
+      category="org.eclipse.titan.log.viewer.preferences.TitanLogViewerPreferencePage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.DecipheringPreferencePage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.DecipheringPreferencePage"
+      name="Message Deciphering" />
+  </extension>
+  <extension point="org.eclipse.ui.propertyPages">
+    <page
+      class="org.eclipse.titan.log.viewer.preferences.pages.GeneralSettingsPrefPage"
+      id="org.eclipse.titan.log.viewer.properties.GeneralPage" name="TITAN Log Viewer">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.ComponentsVisualOrderPrefPage"
+      id="org.eclipse.titan.log.viewer.properties.CompVisOrderPage"
+      name="Components Visual Order">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredComponentsPrefPage"
+      id="org.eclipse.titan.log.viewer.properties.FilteredCompPage"
+      name="Filtered Components">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSignalsPrefPage"
+      id="org.eclipse.titan.log.viewer.properties.FilteredSignalsPage"
+      name="Filtered Signals">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredFunctionsPrefPage"
+      id="org.eclipse.titan.log.viewer.properties.FilteredFunctionsPage"
+      name="Filtered Functions">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredSilentEventPrefPage"
+      id="org.eclipse.titan.log.viewer.properties.FilteredSilentEventsPage"
+      name="Filtered Silent Events">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.HighlightKeywordsPage"
+      id="org.eclipse.titan.log.viewer.properties.HighlightKeywordsPage"
+      name="Color Keywords">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.SetverdictPreferencePage"
+      name="Setverdict">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+    <page category="org.eclipse.titan.log.viewer.properties.GeneralPage"
+      class="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
+      id="org.eclipse.titan.log.viewer.preferences.pages.FilteredPortsPreferencePage"
+      name="Filtered Ports">
+      <filter name="projectNature" value="org.eclipse.titan.log.viewer.TitanLogProject">
+      </filter>
+      <enabledWhen>
+        <instanceof value="org.eclipse.core.resources.IProject">
+        </instanceof>
+      </enabledWhen>
+    </page>
+  </extension>
+  <extension point="org.eclipse.ui.views">
+    <category id="org.eclipse.titan.log.viewer.views.category"
+      name="TITAN Log Viewer" />
+    <view allowMultiple="true"
+      category="org.eclipse.titan.log.viewer.views.category" class="org.eclipse.titan.log.viewer.views.MSCView"
+      icon="icons/msc.gif" id="org.eclipse.titan.log.viewer.views.MSCView"
+      name="MSC" />
+    <view allowMultiple="false"
+      category="org.eclipse.titan.log.viewer.views.category" class="org.eclipse.titan.log.viewer.views.DetailsView"
+      icon="icons/details.gif" id="org.eclipse.titan.log.viewer.views.DetailsView"
+      name="Value" />
+    <view allowMultiple="true"
+      category="org.eclipse.titan.log.viewer.views.category"
+      class="org.eclipse.titan.log.viewer.views.text.table.TextTableView"
+      icon="icons/table_view.gif" id="org.eclipse.titan.log.viewer.views.text.table.TextTableView"
+      name="Text Table" />
+    <view allowMultiple="true"
+      category="org.eclipse.titan.log.viewer.views.category" class="org.eclipse.titan.log.viewer.views.StatisticalView"
+      icon="icons/statistics.gif" id="org.eclipse.titan.log.viewer.views.StatisticalView"
+      name="Statistical" />
+  </extension>
+  <extension point="org.eclipse.search.searchPages">
+    <page showScopeSection="true" canSearchEnclosingProjects="true"
+      label="TITAN Log files" class="org.eclipse.titan.log.viewer.views.LogSearchPage"
+      icon="icons/search.gif" extensions="log:100" sizeHint="650,200"
+      id="org.eclipse.titan.log.viewer.search.LogSearchPage">
+    </page>
+  </extension>
+  <extension id="LogSearchPage" point="org.eclipse.search.searchResultViewPages">
+    <viewPage id="org.eclipse.titan.log.viewer.search.LogSearchViewPage"
+      searchResultClass="org.eclipse.titan.log.viewer.search.LogSearchResult"
+      class="org.eclipse.titan.log.viewer.views.LogSearchResultPage">
+    </viewPage>
+  </extension>
+  <extension point="org.eclipse.ui.actionSets">
+    <actionSet label="TITAN Log files" visible="false"
+      id="org.eclipse.titan.log.viewer.search.SearchActionSet">
 
-<extension 
-	point="org.eclipse.ui.perspectiveExtensions">
-		<perspectiveExtension targetID="org.eclipse.titan.log.viewer.factories.PerspectiveFactory">
-	<actionSet id="org.eclipse.titan.log.viewer.search.SearchActionSet"/>
-		</perspectiveExtension>
-</extension>
-
-
-<extension point="org.eclipse.ui.bindings"><key commandId="org.eclipse.titan.log.viewer.enter" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="CR"/>
-</extension>
-   <extension point="org.eclipse.ui.commands"><command id="org.eclipse.titan.log.viewer.enter" name="Enter"/>
-</extension>
-   <extension
-    point="org.eclipse.ui.popupMenus">
-    <objectContribution
-      objectClass="org.eclipse.core.resources.IFile"
-      adaptable = "true"
-      nameFilter="*.log"
-      id="org.eclipse.titan.log.viewer.objectContribution1">
-      <menu
-        id = "TITAN_log_viewer_popup_Menu"
-        label = "TITAN Log Viewer">
-        <separator name = "group1"/>
-        <separator name = "group2"/>
+      <!-- see http://bugs.eclipse.org/bugs/show_bug.cgi?id=15684 -->
+      <!-- Note: The menu (re-) definition has to be here due to bug: -->
+      <!-- =================================================================== -->
+      <!-- Search Menu -->
+      <!-- =================================================================== -->
+      <menu label="Search" path="navigate" id="org.eclipse.search.menu">
+        <groupMarker name="internalDialogGroup" />   <!-- not to be used by clients -->
+        <groupMarker name="dialogGroup" />           <!-- to be used by clients -->
+        <separator name="fileSearchContextMenuActionsGroup" /> <!-- to be used by clients -->
+        <separator name="contextMenuActionsGroup" /> <!-- to be used by clients -->
+        <separator name="occurencesActionsGroup" /> <!-- to be used by clients -->
+        <separator name="extraSearchGroup" /> <!-- to be used by clients -->
       </menu>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.ExtractTestCasesMenuAction"
-        icon="icons/testcases.gif"
-        label="Extract Test Cases"
-        class="org.eclipse.titan.log.viewer.actions.ExtractTestCasesMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu/group1"
-        enablesFor="1">
+      <!-- =================================================================== -->
+
+      <action label="TITAN Log files" icon="icons/search.gif"
+        class="org.eclipse.titan.log.viewer.actions.OpenLogSearchPageAction"
+        menubarPath="org.eclipse.search.menu/dialogGroup"
+        id="org.eclipse.titan.log.viewer.actions.OpenLogSearchPage">
       </action>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.ExtractComponentsMenuAction"
-        icon="icons/fetch_components.gif"
-        label="Extract Components"
-        class="org.eclipse.titan.log.viewer.actions.ExtractComponentsMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu/group1"
-        enablesFor="1">
-      </action>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
-        icon="icons/table_view.gif"
-        label="Open Text Table View"
-        class="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu/group1"
-        enablesFor="1">
-      </action>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
+    </actionSet>
+  </extension>
+
+  <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+      targetID="org.eclipse.titan.log.viewer.factories.PerspectiveFactory">
+      <actionSet id="org.eclipse.titan.log.viewer.search.SearchActionSet" />
+    </perspectiveExtension>
+  </extension>
+
+
+  <extension point="org.eclipse.ui.bindings">
+    <key commandId="org.eclipse.titan.log.viewer.enter" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CR" />
+  </extension>
+  <extension point="org.eclipse.ui.commands">
+    <command id="org.eclipse.titan.log.viewer.enter" name="Enter" />
+  </extension>
+
+  <extension point="org.eclipse.ui.commands">
+    <command
+      defaultHandler="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
+      id="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
+      name="Open Statistical View" />
+    <command
+      defaultHandler="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
+      id="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
+      name="Open Text Table View" />
+    <command
+      defaultHandler="org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction"
+      id="org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction"
+      name="Open MSC View" />
+    <command
+      defaultHandler="org.eclipse.titan.log.viewer.actions.ExtractComponentsMenuAction"
+      id="org.eclipse.titan.log.viewer.actions.ExtractComponentsMenuAction"
+      name="Extract Components" />
+    <command
+      defaultHandler="org.eclipse.titan.log.viewer.actions.ExtractTestCasesMenuAction"
+      id="org.eclipse.titan.log.viewer.actions.ExtractTestCasesMenuAction"
+      name="Extract Test Cases" />
+    <command
+      defaultHandler="org.eclipse.titan.log.viewer.actions.CloseAllConnectedViewMenuAction"
+      id="org.eclipse.titan.log.viewer.actions.CloseAllConnectedViewMenuAction"
+      name="Close all connected views" />
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <menu label="Titan Log Viewer">
+        <command
+          commandId="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
+          icon="icons/statistics.gif"
+          id="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
+          label="Open Statistical View" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="and"  ifEmpty="false">
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.log.viewer.TitanLogProject" />
+                  <test property="org.eclipse.core.resources.extension"
+                    value="log" />
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command
+          commandId="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
+          icon="icons/table_view.gif"
+          id="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
+          label="Open Text Table View" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="and" ifEmpty="false">
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.log.viewer.TitanLogProject" />
+                  <test property="org.eclipse.core.resources.extension"
+                    value="log" />
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command
+          commandId="org.eclipse.titan.log.viewer.actions.ExtractComponentsMenuAction"
+          icon="icons/fetch_components.gif"
+          id="org.eclipse.titan.log.viewer.actions.ExtractComponentsMenuAction"
+          label="Extract Components" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="and" ifEmpty="false">
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.log.viewer.TitanLogProject" />
+                  <test property="org.eclipse.core.resources.extension"
+                    value="log" />
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command
+          commandId="org.eclipse.titan.log.viewer.actions.ExtractTestCasesMenuAction"
+          icon="icons/testcases.gif"
+          id="org.eclipse.titan.log.viewer.actions.ExtractTestCasesMenuAction"
+          label="Extract Test Cases" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="and" ifEmpty="false">
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.log.viewer.TitanLogProject" />
+                  <test property="org.eclipse.core.resources.extension"
+                    value="log" />
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <separator name="org.eclipse.titan.log.viewer.separator1"
+          visible="true">
+        </separator>
+        <command
+          commandId="org.eclipse.titan.log.viewer.actions.CloseAllConnectedViewMenuAction"
+          icon="icons/delete.gif"
+          id="org.eclipse.titan.log.viewer.actions.CloseAllConnectedViewMenuAction"
+          label="Close all connected views" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="and" ifEmpty="false">
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.log.viewer.TitanLogProject" />
+                  <test property="org.eclipse.core.resources.extension"
+                    value="log" />
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+      </menu>
+    </menuContribution>
+  </extension>
+  <extension point="org.eclipse.ui.navigator.navigatorContent">
+    <navigatorContent id="org.eclipse.titan.log.viewer.logfileContent"
+      name="TITAN Log file" activeByDefault="true"
+      contentProvider="org.eclipse.titan.log.viewer.views.navigator.LogFileContentProvider"
+      labelProvider="org.eclipse.titan.log.viewer.views.navigator.LogFileLabelProvider"
+      priority="high">
+      <enablement>
+        <and>
+          <instanceof value="org.eclipse.core.resources.IFile" />
+          -->
+          <test property="org.eclipse.core.resources.extension"
+            value="log" />
+        </and>
+      </enablement>
+    </navigatorContent>
+  </extension>
+
+  <extension point="org.eclipse.ui.navigator.navigatorContent">
+    <navigatorContent id="org.eclipse.titan.log.viewer.TestCaseContent"
+      name="TITAN Test Case" activeByDefault="true"
+      contentProvider="org.eclipse.titan.log.viewer.views.navigator.LogFileContentProvider"
+      labelProvider="org.eclipse.titan.log.viewer.views.navigator.TestCasesViewerLabelProvider"
+      priority="highest">
+      <enablement>
+        <instanceof value="org.eclipse.titan.log.viewer.parsers.data.TestCase" />
+      </enablement>
+    </navigatorContent>
+  </extension>
+
+  <extension point="org.eclipse.ui.navigator.navigatorContent">
+    <actionProvider
+      class="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider"
+      id="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider.open"
+      priority="highest">
+      <enablement>
+        <and>
+          <instanceof
+            value="org.eclipse.titan.log.viewer.parsers.data.TestCase">
+          </instanceof>
+        </and>
+      </enablement>
+    </actionProvider>
+  </extension>
+  <extension point="org.eclipse.ui.navigator.viewer">
+    <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+      <includes>
+        <actionExtension
+          pattern="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider.open">
+        </actionExtension>
+      </includes>
+    </viewerActionBinding>
+  </extension>
+
+  <extension point="org.eclipse.ui.navigator.viewer">
+    <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+      <includes>
+        <actionExtension
+          pattern="org.eclipse.titan.log.viewer.actions.LogFileActionProvider.open" />
+      </includes>
+    </viewerActionBinding>
+  </extension>
+
+  <extension point="org.eclipse.ui.navigator.viewer">
+    <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+      <includes>
+        <contentExtension pattern="org.eclipse.titan.log.viewer.logfileContent" />
+        <actionExtension
+          pattern="org.eclipse.titan.log.viewer.actions.LogFileActionProvider" />
+        <contentExtension pattern="org.eclipse.titan.log.viewer.TestCaseContent" />
+        <actionExtension
+          pattern="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider" />
+        <actionExtension pattern="org.eclipse.ui.navigator.resources.*" />
+      </includes>
+    </viewerContentBinding>
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <command
+        commandId="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
         icon="icons/statistics.gif"
-        label="Open Statistical View"
-        class="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu/group1"
-        enablesFor="+">
-      </action>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.CloseAllConnectedViewMenuAction"
-        icon="icons/delete.gif"
-        label="Close all connected views"
-        class="org.eclipse.titan.log.viewer.actions.CloseAllConnectedViewMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu/group2"
-        enablesFor="1">
-      </action>
-    </objectContribution>
-    </extension> 
-    <extension
-         point="org.eclipse.ui.navigator.navigatorContent">
-      <navigatorContent
-         id="org.eclipse.titan.log.viewer.logfileContent"
-         name="TITAN Log file"
-         activeByDefault="true"
-         contentProvider="org.eclipse.titan.log.viewer.views.navigator.LogFileContentProvider"
-         labelProvider="org.eclipse.titan.log.viewer.views.navigator.LogFileLabelProvider"
-         priority="high">
-         <enablement>
-            <and>
-                 <instanceof value="org.eclipse.core.resources.IFile" /> -->
-                 <test property="org.eclipse.core.resources.extension" value="log" />
-             </and>
-         </enablement>
-      </navigatorContent>
-    </extension>
-    
-   <extension
-         point="org.eclipse.ui.navigator.navigatorContent">
-      <navigatorContent
-         id="org.eclipse.titan.log.viewer.TestCaseContent"
-         name="TITAN Test Case"
-         activeByDefault="true"
-         contentProvider="org.eclipse.titan.log.viewer.views.navigator.LogFileContentProvider"
-         labelProvider="org.eclipse.titan.log.viewer.views.navigator.TestCasesViewerLabelProvider"
-         priority="highest">
-         <enablement>
-             <instanceof value="org.eclipse.titan.log.viewer.parsers.data.TestCase" />
-         </enablement>
-      </navigatorContent>
-   </extension>
-   
-<extension
-      point="org.eclipse.ui.navigator.navigatorContent">
-   <actionProvider
-         class="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider"
-         id="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider.open"
-         priority="highest">
-      <enablement>
-         <and>
-            <instanceof
-                  value="org.eclipse.titan.log.viewer.parsers.data.TestCase">
-            </instanceof>
-         </and>
-      </enablement>
-   </actionProvider>
-</extension>
-<extension
-      point="org.eclipse.ui.navigator.viewer">
-   <viewerActionBinding
-         viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-      <includes>
-         <actionExtension
-               pattern="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider.open">
-         </actionExtension>
-      </includes>
-   </viewerActionBinding>
-</extension>
-
-<extension
-      point="org.eclipse.ui.navigator.navigatorContent">
-   <actionProvider
-         class="org.eclipse.titan.log.viewer.actions.LogFileActionProvider"
-         id="org.eclipse.titan.log.viewer.actions.LogFileActionProvider.open"
-         overrides="org.eclipse.ui.navigator.resources.OpenActions"
-         priority="highest">
-      <enablement>
-         <and>
-            <instanceof
-                  value="org.eclipse.core.resources.IFile">
-            </instanceof>
-            <test
-                  property="org.eclipse.core.resources.extension"
-                  value="log">
-            </test>
-         </and>
-      </enablement>
-   </actionProvider>
-</extension>
-<extension
-      point="org.eclipse.ui.navigator.viewer">
-   <viewerActionBinding
-         viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-      <includes>
-         <actionExtension
-               pattern="org.eclipse.titan.log.viewer.actions.LogFileActionProvider.open" />
-      </includes>
-   </viewerActionBinding>
-</extension>
-
-   <extension
-         point="org.eclipse.ui.navigator.viewer">
-      <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-         <includes>
-            <contentExtension pattern="org.eclipse.titan.log.viewer.logfileContent"/>
-            <actionExtension pattern="org.eclipse.titan.log.viewer.actions.LogFileActionProvider" />
-            <contentExtension pattern="org.eclipse.titan.log.viewer.TestCaseContent"/>
-            <actionExtension pattern="org.eclipse.titan.log.viewer.actions.TestCaseActionProvider" />
-            <actionExtension pattern="org.eclipse.ui.navigator.resources.*" />
-         </includes>
-      </viewerContentBinding>
-   </extension>
-
-  <extension
-    point="org.eclipse.ui.popupMenus">
-    <objectContribution
-      objectClass="org.eclipse.titan.log.viewer.parsers.data.TestCase"
-      adaptable = "true"
-      id="org.eclipse.titan.log.viewer.objectContributionForTestCase">
-      <menu
-        id = "TITAN_log_viewer_popup_Menu_TestCase"
-        label = "TITAN Log Viewer">
-      </menu>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
-        icon="icons/table_view.gif"
-        label="Open Text Table View"
-        class="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu"
-        enablesFor="1">
-      </action>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction"
+        id="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
+        label="Open Statistical View" mode="FORCE_TEXT">
+        <visibleWhen checkEnabled="false">
+          <with variable="selection">
+            <iterate operator="and" ifEmpty="false">
+              <adapt
+                type="org.eclipse.titan.log.viewer.parsers.data.TestCase">
+              </adapt>
+            </iterate>
+          </with>
+        </visibleWhen>
+      </command>
+      <command
+        commandId="org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction"
         icon="icons/msc.gif"
-        label="Open MSC View"
-        class="org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu"
-        enablesFor="1">
-      </action>
-      <action
-        id="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
-        icon="icons/statistics.gif"
-        label="Open Statistical View"
-        class="org.eclipse.titan.log.viewer.actions.OpenStatisticalViewMenuAction"
-        menubarPath = "TITAN_log_viewer_popup_Menu"
-        enablesFor="+">
-      </action>
-    </objectContribution>
+        id="org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction"
+        label="Open MSC View" mode="FORCE_TEXT">
+        <visibleWhen checkEnabled="false">
+          <with variable="selection">
+            <iterate operator="and" ifEmpty="false">
+              <adapt
+                type="org.eclipse.titan.log.viewer.parsers.data.TestCase">
+              </adapt>
+            </iterate>
+          </with>
+        </visibleWhen>
+      </command>
+      <command
+        commandId="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
+        icon="icons/table_view.gif"
+        id="org.eclipse.titan.log.viewer.actions.OpenTextTableProjectsViewMenuAction"
+        label="Open Text Table View" mode="FORCE_TEXT">
+        <visibleWhen checkEnabled="false">
+          <with variable="selection">
+            <iterate operator="and" ifEmpty="false">
+              <adapt
+                type="org.eclipse.titan.log.viewer.parsers.data.TestCase">
+              </adapt>
+            </iterate>
+          </with>
+        </visibleWhen>
+      </command>
+    </menuContribution>
   </extension>
 </plugin>

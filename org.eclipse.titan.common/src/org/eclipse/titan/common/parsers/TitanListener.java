@@ -23,7 +23,7 @@ public class TitanListener extends BaseErrorListener {
 	public TitanListener() {
 		this.errorsStored = new ArrayList<SyntacticErrorStorage>();
 	}
-	public TitanListener(ArrayList<SyntacticErrorStorage> storage) {
+	public TitanListener(List<SyntacticErrorStorage> storage) {
 		this.errorsStored = storage;
 	}
 	

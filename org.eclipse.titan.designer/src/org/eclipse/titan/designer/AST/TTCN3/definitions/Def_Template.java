@@ -83,7 +83,7 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 
 	private final Type type;
 
-	private final TemplateRestriction.Restriction_type template_restriction;
+	private final TemplateRestriction.Restriction_type templateRestriction;
 
 	/**
 	 * The formal parameter list. Can be null, in that case this template is
@@ -115,13 +115,13 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 	private CompilationTimeStamp recursiveDerivationChecked;
 	private NamedBridgeScope bridgeScope = null;
 
-	public Def_Template(final TemplateRestriction.Restriction_type template_restriction, final Identifier identifier, final Type type,
-			final FormalParameterList formalParList, final Reference derived_reference, final TTCN3Template body) {
+	public Def_Template(final TemplateRestriction.Restriction_type templateRestriction, final Identifier identifier, final Type type,
+			final FormalParameterList formalParList, final Reference derivedReference, final TTCN3Template body) {
 		super(identifier);
-		this.template_restriction = template_restriction;
+		this.templateRestriction = templateRestriction;
 		this.type = type;
 		this.formalParList = formalParList;
-		this.derivedReference = derived_reference;
+		this.derivedReference = derivedReference;
 		this.body = body;
 
 		if (type != null) {
@@ -130,8 +130,8 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 		if (formalParList != null) {
 			formalParList.setMyDefinition(this);
 		}
-		if (derived_reference != null) {
-			derived_reference.setFullNameParent(this);
+		if (derivedReference != null) {
+			derivedReference.setFullNameParent(this);
 		}
 		if (body != null) {
 			body.setFullNameParent(this);
@@ -375,9 +375,9 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 		tempBody.checkRecursions(timestamp, tempReferenceChain);
 		tempReferenceChain.release();
 
-		if (template_restriction != TemplateRestriction.Restriction_type.TR_NONE) {
+		if (templateRestriction != TemplateRestriction.Restriction_type.TR_NONE) {
 			TemplateRestriction.check(timestamp, this, tempBody, null);
-			if (formalParList != null && template_restriction != TemplateRestriction.Restriction_type.TR_PRESENT) {
+			if (formalParList != null && templateRestriction != TemplateRestriction.Restriction_type.TR_PRESENT) {
 				int nofFps = formalParList.getNofParameters();
 				for (int i = 0; i < nofFps; i++) {
 					FormalParameter fp = formalParList.getParameterByIndex(i);
@@ -389,7 +389,7 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 						continue;
 					}
 					TemplateRestriction.Restriction_type fpTemplateRestriction = fp.getTemplateRestriction();
-					switch (template_restriction) {
+					switch (templateRestriction) {
 					case TR_VALUE:
 					case TR_OMIT:
 						switch (fpTemplateRestriction) {
@@ -633,20 +633,16 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 
 	@Override
 	public TemplateRestriction.Restriction_type getTemplateRestriction() {
-		return template_restriction;
+		return templateRestriction;
 	}
 
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.addAll(referingHere);
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
-
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();

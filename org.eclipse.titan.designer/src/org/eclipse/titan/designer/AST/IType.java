@@ -10,14 +10,13 @@ package org.eclipse.titan.designer.AST;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.titan.designer.AST.Type.CompatibilityLevel;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.types.subtypes.ParsedSubType;
 import org.eclipse.titan.designer.AST.TTCN3.types.subtypes.SubType;
-import org.eclipse.titan.designer.AST.Type.CompatibilityLevel;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -198,14 +197,14 @@ public interface IType extends IGovernor, IIdentifierContainer, IVisitableNode, 
 		/** true if the value to be checked is an element of a string */
 		public final boolean str_elem;
 
-		public ValueCheckingOptions(final Expected_Value_type expected_value, final boolean incomplete_allowed, final boolean omit_allowed,
-				final boolean sub_check, final boolean implicit_omit, final boolean str_elem) {
-			this.expected_value = expected_value;
-			this.incomplete_allowed = incomplete_allowed;
-			this.omit_allowed = omit_allowed;
-			this.sub_check = sub_check;
-			this.implicit_omit = implicit_omit;
-			this.str_elem = str_elem;
+		public ValueCheckingOptions(final Expected_Value_type expectedValue, final boolean incompleteAllowed, final boolean omitAllowed,
+				final boolean subCheck, final boolean implicitOmit, final boolean strElem) {
+			this.expected_value = expectedValue;
+			this.incomplete_allowed = incompleteAllowed;
+			this.omit_allowed = omitAllowed;
+			this.sub_check = subCheck;
+			this.implicit_omit = implicitOmit;
+			this.str_elem = strElem;
 		}
 	}
 
@@ -336,7 +335,7 @@ public interface IType extends IGovernor, IIdentifierContainer, IVisitableNode, 
 
 	/**
 	 * Calculates the list of field types traversed, in type_array and their
-	 * local indices in subrefs_array parameters. Must be used only after
+	 * local indices in subrefsArray parameters. Must be used only after
 	 * getFieldType() was already successfully invoked.. It can be used only
 	 * when all array indexes are foldable, otherwise it returns false.
 	 * 
@@ -616,8 +615,6 @@ public interface IType extends IGovernor, IIdentifierContainer, IVisitableNode, 
 	Type_type getTypetypeTtcn3();
 
 	Assignment getDefiningAssignment();
-
-	Definition getDefiningDefinition();
 
 	// TODO declaration and proposal collecting should not belong here
 	/**

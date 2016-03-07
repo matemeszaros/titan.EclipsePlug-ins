@@ -16,6 +16,7 @@ import org.eclipse.titan.designer.AST.IVisitableNode;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Reference;
+import org.eclipse.titan.designer.AST.ASN1.ASN1Assignment;
 
 /**
  * This class is similar to {@link ASTLocationChainVisitor} except it aborts as
@@ -23,6 +24,7 @@ import org.eclipse.titan.designer.AST.Reference;
  * 
  * @author Szabolcs Beres
  */
+//FIXME why identifierFinderVisitor if it searches for references ?
 public class IdentifierFinderVisitor extends ASTVisitor {
 	private IReferencingElement reference = null;
 	private ISubReference subReference = null;
@@ -35,6 +37,13 @@ public class IdentifierFinderVisitor extends ASTVisitor {
 
 	@Override
 	public int visit(IVisitableNode node) {
+		if (node instanceof ASN1Assignment) {
+			ASN1Assignment assignment = (ASN1Assignment) node;
+			if(assignment.getAssPard() != null) {
+				return V_SKIP;
+			}
+		}
+
 		if (node instanceof ILocateableNode) {
 			final Location loc = ((ILocateableNode) node).getLocation();
 			if (loc == null) {

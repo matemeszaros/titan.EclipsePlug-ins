@@ -319,13 +319,13 @@ public final class ProjectBuildPropertyPage extends PropertyPage {
 			internalMakefileCreationTab.setMakefileGenerationEnabled(generateInternalMakefileButton.getSelection());
 			makeAttributesTab.setMakefileGenerationEnabled(true);
 			generateInternalMakefileButton.setEnabled(true);
-			updateSymlinkLessbuild(true);
+			updateSymlinkLessbuild(generateInternalMakefileButton.getSelection());
 		} else {
 			makefileCreationTab.setMakefileGenerationEnabled(false);
 			internalMakefileCreationTab.setMakefileGenerationEnabled(false);
 			makeAttributesTab.setMakefileGenerationEnabled(false);
 			generateInternalMakefileButton.setEnabled(false);
-			updateSymlinkLessbuild(false);
+			updateSymlinkLessbuild(generateInternalMakefileButton.getSelection());
 		}
 
 	}

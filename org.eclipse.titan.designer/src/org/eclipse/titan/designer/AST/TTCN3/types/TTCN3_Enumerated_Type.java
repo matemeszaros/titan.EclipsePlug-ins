@@ -34,6 +34,7 @@ import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Template_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.subtypes.SubType;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
@@ -312,10 +313,11 @@ public final class TTCN3_Enumerated_Type extends Type implements ITypeWithCompon
 			final boolean isModified, final boolean implicitOmit) {
 		registerUsage(template);
 		template.setMyGovernor(this);
-
-		template.getLocation().reportSemanticError(MessageFormat.format(TEMPLATENOTALLOWED, template.getTemplateTypeName()));
-		template.setIsErroneous(true);
-
+		
+		if (!Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype()) && !Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype())) {
+			template.getLocation().reportSemanticError(MessageFormat.format(TEMPLATENOTALLOWED, template.getTemplateTypeName()));
+			template.setIsErroneous(true);
+		}
 		if (template.getLengthRestriction() != null) {
 			template.getLocation().reportSemanticError(LENGTHRESTRICTIONNOTALLOWED);
 			template.setIsErroneous(true);

@@ -102,13 +102,13 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		return KIND;
 	}
 
-	private final Assignment_type assignment_type;
+	private final Assignment_type assignmentType;
 	private final FormalParameterList formalParList;
-	private final Reference runs_on_ref;
+	private final Reference runsOnRef;
 	private Component_Type runsOnType = null;
 	private final Type returnType;
 	private final boolean returnsTemplate;
-	private final TemplateRestriction.Restriction_type template_restriction;
+	private final TemplateRestriction.Restriction_type templateRestriction;
 	private final StatementBlock block;
 	private EncodingPrototype_type prototype;
 	private Type inputType;
@@ -118,21 +118,21 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 	private boolean isStartable;
 	private NamedBridgeScope bridgeScope = null;
 
-	public Def_Function(final Identifier identifier, final FormalParameterList formalParameters, final Reference runs_on_ref,
-			final Type returnType, final boolean returnsTemplate, final TemplateRestriction.Restriction_type template_restriction,
+	public Def_Function(final Identifier identifier, final FormalParameterList formalParameters, final Reference runsOnRef,
+			final Type returnType, final boolean returnsTemplate, final TemplateRestriction.Restriction_type templateRestriction,
 			final StatementBlock block) {
 		super(identifier);
-		assignment_type = (returnType == null) ? Assignment_type.A_FUNCTION : (returnsTemplate ? Assignment_type.A_FUNCTION_RTEMP
+		assignmentType = (returnType == null) ? Assignment_type.A_FUNCTION : (returnsTemplate ? Assignment_type.A_FUNCTION_RTEMP
 				: Assignment_type.A_FUNCTION_RVAL);
 		this.formalParList = formalParameters;
 		if (formalParList != null) {
 			formalParList.setMyDefinition(this);
 			formalParList.setFullNameParent(this);
 		}
-		this.runs_on_ref = runs_on_ref;
+		this.runsOnRef = runsOnRef;
 		this.returnType = returnType;
 		this.returnsTemplate = returnsTemplate;
-		this.template_restriction = template_restriction;
+		this.templateRestriction = templateRestriction;
 		this.block = block;
 
 		this.prototype = EncodingPrototype_type.NONE;
@@ -143,8 +143,8 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 			block.setMyDefinition(this);
 			block.setFullNameParent(this);
 		}
-		if (runs_on_ref != null) {
-			runs_on_ref.setFullNameParent(this);
+		if (runsOnRef != null) {
+			runsOnRef.setFullNameParent(this);
 		}
 		if (returnType != null) {
 			returnType.setFullNameParent(this);
@@ -157,14 +157,14 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 
 	@Override
 	public Assignment_type getAssignmentType() {
-		return assignment_type;
+		return assignmentType;
 	}
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (runs_on_ref == child) {
+		if (runsOnRef == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (formalParList == child) {
 			return builder.append(FULLNAMEPART2);
@@ -234,8 +234,8 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		bridgeScope.setScopeMacroName(identifier.getDisplayName());
 
 		super.setMyScope(bridgeScope);
-		if (runs_on_ref != null) {
-			runs_on_ref.setMyScope(bridgeScope);
+		if (runsOnRef != null) {
+			runsOnRef.setMyScope(bridgeScope);
 		}
 		formalParList.setMyScope(bridgeScope);
 		if (returnType != null) {
@@ -276,8 +276,8 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		lastTimeChecked = timestamp;
 		isStartable = false;
 
-		if (runs_on_ref != null) {
-			runsOnType = runs_on_ref.chkComponentypeReference(timestamp);
+		if (runsOnRef != null) {
+			runsOnType = runsOnRef.chkComponentypeReference(timestamp);
 			if (runsOnType != null) {
 				Scope formalParlistPreviosScope = formalParList.getParentScope();
 				if (formalParlistPreviosScope instanceof RunsOnScope
@@ -320,7 +320,7 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		}
 
 		// decision of startability
-		isStartable = runs_on_ref != null;
+		isStartable = runsOnRef != null;
 		isStartable &= formalParList.getStartability();
 		if (isStartable && returnType != null && returnType.isComponentInternal(timestamp)) {
 			isStartable = false;
@@ -389,7 +389,7 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 			return true;
 		}
 
-		if (runs_on_ref == null) {
+		if (runsOnRef == null) {
 			errorLocation.reportSemanticError(MessageFormat.format(
 					"Function `{0}'' cannot be started on parallel test component because it does not have a `runs on'' clause",
 					getFullName()));
@@ -563,7 +563,7 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 				location.reportSemanticError(MessageFormat.format(
 						"The function must have a return type for attribute `prototype({0})''", prototype.getName()));
 			} else {
-				if (Assignment_type.A_FUNCTION_RTEMP.equals(assignment_type)) {
+				if (Assignment_type.A_FUNCTION_RTEMP.equals(assignmentType)) {
 					returnType.getLocation()
 							.reportSemanticError(
 									MessageFormat.format(
@@ -588,8 +588,8 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		}
 
 		// checking the runs on clause
-		if (runsOnType != null && runs_on_ref != null) {
-			runs_on_ref.getLocation().reportSemanticError(
+		if (runsOnType != null && runsOnRef != null) {
+			runsOnRef.getLocation().reportSemanticError(
 					MessageFormat.format("The function cannot have `runs on'' clause for attribute `prototype({0})''",
 							prototype.getName()));
 		}
@@ -686,19 +686,16 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 
 	@Override
 	public TemplateRestriction.Restriction_type getTemplateRestriction() {
-		return template_restriction;
+		return templateRestriction;
 	}
 
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
-
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
@@ -706,7 +703,6 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 				// damage handled
 				if (result == 0) {
 					enveloped = true;
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				} else {
 					removeBridge();
 					throw new ReParseException(result);
@@ -722,7 +718,6 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 						formalParList.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(formalParList.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -730,16 +725,15 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 				}
 			}
 
-			if (runs_on_ref != null) {
+			if (runsOnRef != null) {
 				if (enveloped) {
-					runs_on_ref.updateSyntax(reparser, false);
-					reparser.updateLocation(runs_on_ref.getLocation());
-				} else if (reparser.envelopsDamage(runs_on_ref.getLocation())) {
+					runsOnRef.updateSyntax(reparser, false);
+					reparser.updateLocation(runsOnRef.getLocation());
+				} else if (reparser.envelopsDamage(runsOnRef.getLocation())) {
 					try {
-						runs_on_ref.updateSyntax(reparser, true);
+						runsOnRef.updateSyntax(reparser, true);
 						enveloped = true;
-						reparser.updateLocation(runs_on_ref.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
+						reparser.updateLocation(runsOnRef.getLocation());
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -756,7 +750,6 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 						returnType.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(returnType.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -789,7 +782,6 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 						withAttributesPath.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(withAttributesPath.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -812,9 +804,9 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 			reparser.updateLocation(formalParList.getLocation());
 		}
 
-		if (runs_on_ref != null) {
-			runs_on_ref.updateSyntax(reparser, false);
-			reparser.updateLocation(runs_on_ref.getLocation());
+		if (runsOnRef != null) {
+			runsOnRef.updateSyntax(reparser, false);
+			reparser.updateLocation(runsOnRef.getLocation());
 		}
 
 		if (returnType != null) {
@@ -852,8 +844,8 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		if (returnType != null) {
 			returnType.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (runs_on_ref != null) {
-			runs_on_ref.findReferences(referenceFinder, foundIdentifiers);
+		if (runsOnRef != null) {
+			runsOnRef.findReferences(referenceFinder, foundIdentifiers);
 		}
 		if (block != null) {
 			block.findReferences(referenceFinder, foundIdentifiers);
@@ -871,7 +863,7 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		if (returnType != null && !returnType.accept(v)) {
 			return false;
 		}
-		if (runs_on_ref != null && !runs_on_ref.accept(v)) {
+		if (runsOnRef != null && !runsOnRef.accept(v)) {
 			return false;
 		}
 		if (block != null && !block.accept(v)) {

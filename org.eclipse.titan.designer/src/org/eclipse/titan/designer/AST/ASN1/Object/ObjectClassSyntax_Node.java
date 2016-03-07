@@ -46,8 +46,8 @@ public abstract class ObjectClassSyntax_Node implements ILocateableNode {
 		return isBuilded;
 	}
 
-	public final void setIsBuilded(final boolean is_builded) {
-		this.isBuilded = is_builded;
+	public final void setIsBuilded(final boolean isBuilded) {
+		this.isBuilded = isBuilded;
 	}
 
 	public abstract String getDisplayName();

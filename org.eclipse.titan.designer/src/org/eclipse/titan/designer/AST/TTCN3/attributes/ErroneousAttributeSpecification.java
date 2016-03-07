@@ -59,11 +59,11 @@ public final class ErroneousAttributeSpecification implements ILocateableNode, I
 	// set by check() or null if tmpl_inst is invalid or omit
 	private IValue value = null;
 
-	public ErroneousAttributeSpecification(final Indicator_Type indicator, final boolean isRaw, final TemplateInstance tmpl_inst,
+	public ErroneousAttributeSpecification(final Indicator_Type indicator, final boolean isRaw, final TemplateInstance templateInst,
 			final boolean hasAllKeyword) {
 		this.indicator = indicator;
 		this.isRaw = isRaw;
-		this.templateInst = tmpl_inst;
+		this.templateInst = templateInst;
 		this.hasAllKeyword = hasAllKeyword;
 	}
 

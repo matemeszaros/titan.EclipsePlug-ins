@@ -103,7 +103,7 @@ public final class ProposalCollector {
 	 * @param targetIdentifierType
 	 *                the type identifiers should use to display their
 	 *                content
-	 * @param context_id
+	 * @param contextId
 	 *                the identifier of the context where the proposals will
 	 *                be inserted
 	 * @param contextType
@@ -116,9 +116,9 @@ public final class ProposalCollector {
 	 * @param offset
 	 *                the offset on which the reference starts
 	 * */
-	public ProposalCollector(final Identifier_type targetIdentifierType, final String context_id, final TemplateContextType contextType,
+	public ProposalCollector(final Identifier_type targetIdentifierType, final String contextId, final TemplateContextType contextType,
 			final IDocument doc, final Reference ref, final int offset) {
-		this(targetIdentifierType, null, context_id, contextType, doc, ref, offset);
+		this(targetIdentifierType, null, contextId, contextType, doc, ref, offset);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public final class ProposalCollector {
 	 * @param projectSourceParser
 	 *                the projects parser or null. Used to collect
 	 *                definitions from imported modules too.
-	 * @param context_id
+	 * @param contextId
 	 *                the identifier of the context where the proposals will
 	 *                be inserted
 	 * @param contextType
@@ -144,11 +144,11 @@ public final class ProposalCollector {
 	 * @param offset
 	 *                the offset on which the reference starts
 	 * */
-	public ProposalCollector(final Identifier_type targetIdentifierType, final ProjectSourceParser projectSourceParser, final String context_id,
+	public ProposalCollector(final Identifier_type targetIdentifierType, final ProjectSourceParser projectSourceParser, final String contextId,
 			final TemplateContextType contextType, final IDocument doc, final Reference ref, final int offset) {
 		this.targetIdentifierType = targetIdentifierType;
 		this.projectSourceParser = projectSourceParser;
-		this.contextId = context_id;
+		this.contextId = contextId;
 		reference = ref;
 
 		List<ISubReference> subreferences = ref.getSubreferences();

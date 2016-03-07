@@ -109,21 +109,21 @@ public final class ValueRange extends ASTNode implements IIncrementallyUpdateabl
 	 * 
 	 * @param timestamp
 	 *                the actual semantic checking cycle
-	 * @param expected_value
+	 * @param expectedValue
 	 *                the kind of the value to be expected.
 	 * 
 	 * @return the governor of the value range
 	 * */
-	public IType getExpressionGovernor(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public IType getExpressionGovernor(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (min != null) {
-			IType type = min.getExpressionGovernor(timestamp, expected_value);
+			IType type = min.getExpressionGovernor(timestamp, expectedValue);
 			if (type != null) {
 				return type;
 			}
 		}
 
 		if (max != null) {
-			IType type = max.getExpressionGovernor(timestamp, expected_value);
+			IType type = max.getExpressionGovernor(timestamp, expectedValue);
 			if (type != null) {
 				return type;
 			}
@@ -137,21 +137,21 @@ public final class ValueRange extends ASTNode implements IIncrementallyUpdateabl
 	 * 
 	 * @param timestamp
 	 *                the actual semantic checking cycle
-	 * @param expected_value
+	 * @param expectedValue
 	 *                the kind of the value to be expected.
 	 * 
 	 * @return the returning type of the value range
 	 * */
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (min != null) {
-			Type_type type = min.getExpressionReturntype(timestamp, expected_value);
+			Type_type type = min.getExpressionReturntype(timestamp, expectedValue);
 			if (!Type_type.TYPE_UNDEFINED.equals(type)) {
 				return type;
 			}
 		}
 
 		if (max != null) {
-			Type_type type = max.getExpressionReturntype(timestamp, expected_value);
+			Type_type type = max.getExpressionReturntype(timestamp, expectedValue);
 			if (!Type_type.TYPE_UNDEFINED.equals(type)) {
 				return type;
 			}

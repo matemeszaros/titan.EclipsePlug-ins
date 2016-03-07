@@ -59,10 +59,10 @@ public abstract class LengthRestriction extends ASTNode implements ILocateableNo
 	 * 
 	 * @param timestamp
 	 *                the time stamp of the actual semantic check cycle.
-	 * @param expected_value
+	 * @param expectedValue
 	 *                the value kind expected.
 	 * */
-	public abstract void check(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value);
+	public abstract void check(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue);
 
 	/**
 	 * Checks if the length restriction is valid for the array type.

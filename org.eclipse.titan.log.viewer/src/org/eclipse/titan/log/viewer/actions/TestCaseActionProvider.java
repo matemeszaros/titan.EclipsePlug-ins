@@ -16,11 +16,11 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
 public class TestCaseActionProvider extends CommonActionProvider {
 
-	private OpenMSCViewMenuAction openTestCaseAction;
+	private OpenMSCViewAction openTestCaseAction;
 	
 	@Override
 	public void init(final ICommonActionExtensionSite site) {
-		openTestCaseAction = new OpenMSCViewMenuAction();
+		openTestCaseAction = new OpenMSCViewAction();
 	}
 
 	@Override

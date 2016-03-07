@@ -104,16 +104,16 @@ public final class TypeMappings extends ASTNode implements ILocateableNode {
 	/**
 	 * Copy over the mappings from the provided mapping list.
 	 * 
-	 * @param other_mappings
+	 * @param otherMappings
 	 *                the other list of mappings.
 	 * */
-	public void copyMappings(final TypeMappings other_mappings) {
-		for (int i = 0, size = other_mappings.getNofMappings(); i < size; i++) {
-			mappings.add(other_mappings.getMappingByIndex(i));
+	public void copyMappings(final TypeMappings otherMappings) {
+		for (int i = 0, size = otherMappings.getNofMappings(); i < size; i++) {
+			mappings.add(otherMappings.getMappingByIndex(i));
 		}
 
 		// join the locations
-		getLocation().setEndOffset(other_mappings.getLocation().getEndOffset());
+		getLocation().setEndOffset(otherMappings.getLocation().getEndOffset());
 	}
 
 	/**

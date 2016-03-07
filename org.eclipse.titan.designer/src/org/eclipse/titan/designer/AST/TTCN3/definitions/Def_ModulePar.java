@@ -56,18 +56,18 @@ public final class Def_ModulePar extends Definition {
 	}
 
 	private final Type type;
-	private final Value default_value;
+	private final Value defaultValue;
 
-	public Def_ModulePar(final Identifier identifier, final Type type, final Value default_value) {
+	public Def_ModulePar(final Identifier identifier, final Type type, final Value defaultValue) {
 		super(identifier);
 		this.type = type;
-		this.default_value = default_value;
+		this.defaultValue = defaultValue;
 
 		if (type != null) {
 			type.setFullNameParent(this);
 		}
-		if (default_value != null) {
-			default_value.setFullNameParent(this);
+		if (defaultValue != null) {
+			defaultValue.setFullNameParent(this);
 		}
 	}
 
@@ -77,7 +77,7 @@ public final class Def_ModulePar extends Definition {
 	}
 	
 	public Value getDefaultValue() {
-		return default_value;
+		return defaultValue;
 	}
 	
 
@@ -87,7 +87,7 @@ public final class Def_ModulePar extends Definition {
 
 		if (type == child) {
 			return builder.append(FULLNAMEPART1);
-		} else if (default_value == child) {
+		} else if (defaultValue == child) {
 			return builder.append(FULLNAMEPART2);
 		}
 
@@ -100,8 +100,8 @@ public final class Def_ModulePar extends Definition {
 		if (type != null) {
 			type.setMyScope(scope);
 		}
-		if (default_value != null) {
-			default_value.setMyScope(scope);
+		if (defaultValue != null) {
+			defaultValue.setMyScope(scope);
 		}
 	}
 
@@ -175,9 +175,9 @@ public final class Def_ModulePar extends Definition {
 			break;
 		}
 
-		if (default_value != null) {
-			default_value.setMyGovernor(type);
-			IValue temporalValue = type.checkThisValueRef(timestamp, default_value);
+		if (defaultValue != null) {
+			defaultValue.setMyGovernor(type);
+			IValue temporalValue = type.checkThisValueRef(timestamp, defaultValue);
 			type.checkThisValue(timestamp, temporalValue, new ValueCheckingOptions(Expected_Value_type.EXPECTED_CONSTANT, true, false,
 					true, hasImplicitOmitAttribute(timestamp), false));
 		}
@@ -238,12 +238,10 @@ public final class Def_ModulePar extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
@@ -251,7 +249,6 @@ public final class Def_ModulePar extends Definition {
 				// damage handled
 				if (result == 0) {
 					enveloped = true;
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				} else {
 					throw new ReParseException(result);
 				}
@@ -265,18 +262,17 @@ public final class Def_ModulePar extends Definition {
 					type.updateSyntax(reparser, true);
 					enveloped = true;
 					reparser.updateLocation(type.getLocation());
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				}
 			}
 
-			if (default_value != null) {
+			if (defaultValue != null) {
 				if (enveloped) {
-					default_value.updateSyntax(reparser, false);
-					reparser.updateLocation(default_value.getLocation());
-				} else if (reparser.envelopsDamage(default_value.getLocation())) {
-					default_value.updateSyntax(reparser, true);
+					defaultValue.updateSyntax(reparser, false);
+					reparser.updateLocation(defaultValue.getLocation());
+				} else if (reparser.envelopsDamage(defaultValue.getLocation())) {
+					defaultValue.updateSyntax(reparser, true);
 					enveloped = true;
-					reparser.updateLocation(default_value.getLocation());
+					reparser.updateLocation(defaultValue.getLocation());
 				}
 			}
 
@@ -288,7 +284,6 @@ public final class Def_ModulePar extends Definition {
 					withAttributesPath.updateSyntax(reparser, true);
 					enveloped = true;
 					reparser.updateLocation(withAttributesPath.getLocation());
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				}
 			}
 
@@ -306,9 +301,9 @@ public final class Def_ModulePar extends Definition {
 			reparser.updateLocation(type.getLocation());
 		}
 
-		if (default_value != null) {
-			default_value.updateSyntax(reparser, false);
-			reparser.updateLocation(default_value.getLocation());
+		if (defaultValue != null) {
+			defaultValue.updateSyntax(reparser, false);
+			reparser.updateLocation(defaultValue.getLocation());
 		}
 
 		if (withAttributesPath != null) {
@@ -323,8 +318,8 @@ public final class Def_ModulePar extends Definition {
 		if (type != null) {
 			type.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (default_value != null) {
-			default_value.findReferences(referenceFinder, foundIdentifiers);
+		if (defaultValue != null) {
+			defaultValue.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
@@ -336,7 +331,7 @@ public final class Def_ModulePar extends Definition {
 		if (type != null && !type.accept(v)) {
 			return false;
 		}
-		if (default_value != null && !default_value.accept(v)) {
+		if (defaultValue != null && !defaultValue.accept(v)) {
 			return false;
 		}
 		return true;

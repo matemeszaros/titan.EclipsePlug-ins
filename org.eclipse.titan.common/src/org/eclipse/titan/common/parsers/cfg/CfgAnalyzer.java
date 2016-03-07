@@ -66,6 +66,11 @@ public final class CfgAnalyzer {
 	private LoggingSectionHandler loggingSectionHandler = null;
 	private ParserRuleContext mParseTreeRoot = null;
 	private String mLogFileName = null;
+	private Integer mTcpPort = null;
+	private String mLocalAddress = null;
+	private Double mKillTimer = null;
+	private Integer mNumHcs = null;
+	private Boolean mUnixDomainSocket = null;
 	
 	public List<TITANMarker> getWarnings() {
 		return warnings;
@@ -81,6 +86,26 @@ public final class CfgAnalyzer {
 
 	public String getLogFileName() {
 		return mLogFileName;
+	}
+	
+	public Integer getTcpPort() {
+		return mTcpPort;
+	}
+  
+	public String getLocalAddress() {
+		return mLocalAddress;
+	}
+  
+	public Double getKillTimer() {
+		return mKillTimer;
+	}
+  
+	public Integer getNumHcs() {
+		return mNumHcs;
+	}
+	
+	public Boolean isUnixDomainSocketEnabled() {
+		return mUnixDomainSocket;
 	}
 	
 	public Map<String, CfgDefinitionInformation> getDefinitions(){
@@ -146,11 +171,9 @@ public final class CfgAnalyzer {
 	public List<SyntacticErrorStorage> getErrorStorage() {
 		if (!lexerListener.getErrorsStored().isEmpty() && parserListener.getErrorsStored().isEmpty()) {
 			return lexerListener.getErrorsStored();
-		}
-		else if (lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
+		} else if (lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
 			return parserListener.getErrorsStored();
-		}
-		else if (!lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
+		} else if (!lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
 			if (lexerListener.addAll(parserListener.getErrorsStored())) {
 				return lexerListener.getErrorsStored();
 			}
@@ -186,8 +209,7 @@ public final class CfgAnalyzer {
 		Reader reader = null;
 		if (null != code) {
 			reader = new StringReader(code);
-		}
-		else if (null != file) {
+		} else if (null != file) {
 			try {
 				reader = new BufferedReader(new InputStreamReader(file.getContents(), StandardCharsets.UTF8));
 			} catch (CoreException e) {
@@ -217,7 +239,8 @@ public final class CfgAnalyzer {
 		//TODO: implement: fill rootInterval if needed
 		
 		definitions = parser.getDefinitions();
-		mExecuteElements = parser.getExecuteElements();
+		final CfgParseResult cfgParseResult = parser.getCfgParseResult();
+		mExecuteElements = cfgParseResult.getExecuteElements();
 		includeFiles = parser.getIncludeFiles();
 		
 		// fill handlers
@@ -233,8 +256,12 @@ public final class CfgAnalyzer {
 		defineSectionHandler = parser.getDefineSectionHandler();
 		loggingSectionHandler = parser.getLoggingSectionHandler();
 		
-		logFileNameDefined = parser.isLogFileDefined();
-		mLogFileName  = parser.getLogFileName();
+		logFileNameDefined = cfgParseResult.isLogFileDefined();
+		mLogFileName  = cfgParseResult.getLogFileName();
+		mTcpPort = cfgParseResult.getTcpPort();
+		mLocalAddress = cfgParseResult.getLocalAddress();
+		mKillTimer = cfgParseResult.getKillTimer();
+		mNumHcs = cfgParseResult.getNumHcs();
+		mUnixDomainSocket = cfgParseResult.isUnixDomainSocket();
 	}
-
 }

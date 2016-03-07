@@ -108,8 +108,8 @@ public final class UnrestrictedString_Type extends ASN1Type implements IReferenc
 	}
 
 	@Override
-	public void checkThisTemplate(final CompilationTimeStamp timestamp, final ITTCN3Template template, final boolean is_modified,
-			final boolean implicit_omit) {
+	public void checkThisTemplate(final CompilationTimeStamp timestamp, final ITTCN3Template template, final boolean isModified,
+			final boolean implicitOmit) {
 		registerUsage(template);
 		template.setMyGovernor(this);
 
@@ -122,7 +122,7 @@ public final class UnrestrictedString_Type extends ASN1Type implements IReferenc
 
 	@Override
 	public IType getFieldType(final CompilationTimeStamp timestamp, final Reference reference, final int actualSubReference,
-			final Expected_Value_type expected_index, final IReferenceChain refChain, final boolean interrupt_if_optional) {
+			final Expected_Value_type expectedIndex, final IReferenceChain refChain, final boolean interruptIfOptional) {
 		final List<ISubReference> subreferences = reference.getSubreferences();
 		if (subreferences.size() <= actualSubReference) {
 			return this;

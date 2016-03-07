@@ -226,7 +226,7 @@ public final class StringSizeAndValueListConstraint extends SubtypeConstraint {
 			}
 		}
 		// drop ret_val.has_values elements that are elements of the
-		// ret_val.size_constraint set
+		// ret_val.sizeConstraint set
 		for (Iterator<String> i = returnValue.hasValues.iterator(); i.hasNext();) {
 			String str = i.next();
 			if (returnValue.sizeConstraint.isElement(new SizeLimit(str.length() / type.elemSize()))) {
@@ -234,7 +234,7 @@ public final class StringSizeAndValueListConstraint extends SubtypeConstraint {
 			}
 		}
 		// drop ret_val.not_values elements that are not elements of the
-		// ret_val.size_constraint set
+		// ret_val.sizeConstraint set
 		for (Iterator<String> i = returnValue.notValues.iterator(); i.hasNext();) {
 			String str = i.next();
 			if (!returnValue.sizeConstraint.isElement(new SizeLimit(str.length() / type.elemSize()))) {

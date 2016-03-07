@@ -27,13 +27,13 @@ public final class EncodeTypeMappingTarget extends TypeMappingTarget {
 	private static final String FULLNAMEPART1 = ".<target_type>";
 	private static final String FULLNAMEPART2 = ".<errorbehavior>";
 
-	private final Type target_type;
+	private final Type targetType;
 	private final EncodeAttribute encodeAttribute;
 	private final ErrorBehaviorAttribute errorBehaviorAttribute;
 
-	public EncodeTypeMappingTarget(final Type target_type, final ExtensionAttribute encodeAttribute,
+	public EncodeTypeMappingTarget(final Type targetType, final ExtensionAttribute encodeAttribute,
 			final ErrorBehaviorAttribute errorBehaviorAttribute) {
-		this.target_type = target_type;
+		this.targetType = targetType;
 		if (encodeAttribute instanceof EncodeAttribute) {
 			this.encodeAttribute = (EncodeAttribute) encodeAttribute;
 		} else {
@@ -54,7 +54,7 @@ public final class EncodeTypeMappingTarget extends TypeMappingTarget {
 
 	@Override
 	public Type getTargetType() {
-		return target_type;
+		return targetType;
 	}
 
 	public Encoding_type getCodingType() {
@@ -89,7 +89,7 @@ public final class EncodeTypeMappingTarget extends TypeMappingTarget {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (target_type == child) {
+		if (targetType == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (errorBehaviorAttribute == child) {
 			return builder.append(FULLNAMEPART2);
@@ -101,8 +101,8 @@ public final class EncodeTypeMappingTarget extends TypeMappingTarget {
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (target_type != null) {
-			target_type.setMyScope(scope);
+		if (targetType != null) {
+			targetType.setMyScope(scope);
 		}
 	}
 
@@ -114,8 +114,8 @@ public final class EncodeTypeMappingTarget extends TypeMappingTarget {
 
 		lastTimeChecked = timestamp;
 
-		if (target_type != null) {
-			target_type.check(timestamp);
+		if (targetType != null) {
+			targetType.check(timestamp);
 		}
 		// FIXME implement once has_encoding is available.
 		if (errorBehaviorAttribute != null) {
@@ -125,14 +125,14 @@ public final class EncodeTypeMappingTarget extends TypeMappingTarget {
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (target_type != null) {
-			target_type.findReferences(referenceFinder, foundIdentifiers);
+		if (targetType != null) {
+			targetType.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (target_type != null && !target_type.accept(v)) {
+		if (targetType != null && !targetType.accept(v)) {
 			return false;
 		}
 		if (encodeAttribute != null && !encodeAttribute.accept(v)) {

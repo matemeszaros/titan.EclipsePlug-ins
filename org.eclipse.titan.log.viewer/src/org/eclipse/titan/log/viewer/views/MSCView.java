@@ -540,6 +540,10 @@ public class MSCView extends ViewPart implements ILogViewerView {
 		IAction switchToTextTable = new Action() {
 			@Override
 			public void run() {
+				if (logFileMetaData == null) {
+					return;
+				}
+
 				TextTableViewHelper.open(logFileMetaData.getProjectName(), logFileMetaData.getProjectRelativePath(), getSelectedRecordNumber());
 			}
 		};

@@ -656,6 +656,7 @@ public class Reconciler implements IReconciler {
 	 * reimplement this method.
 	 */
 	protected final void initialProcess() {
+		dirtyRegionQueue.clear();
 		reconcilingStrategy.initialReconcile();
 	}
 

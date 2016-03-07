@@ -43,18 +43,18 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 	private static final String FULLNAMEPART3 = ".timerValue";
 	private static final String STATEMENT_NAME = "execute";
 
-	private final Value dereferedValue;
+	private final Value dereferredValue;
 	private final ParsedActualParameters actualParameterList;
 	private final Value timerValue;
 
-	public Referenced_Testcase_Instance_Statement(final Value dereferedValue, final ParsedActualParameters actualParameterList,
+	public Referenced_Testcase_Instance_Statement(final Value dereferredValue, final ParsedActualParameters actualParameterList,
 			final Value timerValue) {
-		this.dereferedValue = dereferedValue;
+		this.dereferredValue = dereferredValue;
 		this.actualParameterList = actualParameterList;
 		this.timerValue = timerValue;
 
-		if (dereferedValue != null) {
-			dereferedValue.setFullNameParent(this);
+		if (dereferredValue != null) {
+			dereferredValue.setFullNameParent(this);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setFullNameParent(this);
@@ -78,7 +78,7 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (dereferedValue == child) {
+		if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (actualParameterList == child) {
 			return builder.append(FULLNAMEPART2);
@@ -92,8 +92,8 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (dereferedValue != null) {
-			dereferedValue.setMyScope(scope);
+		if (dereferredValue != null) {
+			dereferredValue.setMyScope(scope);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setMyScope(scope);
@@ -111,11 +111,11 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 
 		lastTimeChecked = timestamp;
 
-		if (dereferedValue == null) {
+		if (dereferredValue == null) {
 			return;
 		}
 
-		IValue temporalValue = dereferedValue.setLoweridToReference(timestamp);
+		IValue temporalValue = dereferredValue.setLoweridToReference(timestamp);
 		IType type = temporalValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 		if (type != null) {
 			type = type.getTypeRefdLast(timestamp);
@@ -125,7 +125,7 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 		}
 
 		if (!Type_type.TYPE_TESTCASE.equals(type.getTypetype())) {
-			dereferedValue.getLocation().reportSemanticError(
+			dereferredValue.getLocation().reportSemanticError(
 					MessageFormat.format(
 							"A value of type testcase was expected in the argument of `derefers()'' instead of `{0}''",
 							type.getTypename()));
@@ -133,7 +133,7 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 		}
 
 		if (myStatementBlock.getScopeRunsOn() != null) {
-			dereferedValue.getLocation().reportSemanticError(DEFINITIONWITHOUTRUNSONEXPECTED);
+			dereferredValue.getLocation().reportSemanticError(DEFINITIONWITHOUTRUNSONEXPECTED);
 			return;
 		}
 
@@ -173,9 +173,9 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 			throw new ReParseException();
 		}
 
-		if (dereferedValue != null) {
-			dereferedValue.updateSyntax(reparser, false);
-			reparser.updateLocation(dereferedValue.getLocation());
+		if (dereferredValue != null) {
+			dereferredValue.updateSyntax(reparser, false);
+			reparser.updateLocation(dereferredValue.getLocation());
 		}
 
 		if (actualParameterList != null) {
@@ -191,8 +191,8 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (dereferedValue != null) {
-			dereferedValue.findReferences(referenceFinder, foundIdentifiers);
+		if (dereferredValue != null) {
+			dereferredValue.findReferences(referenceFinder, foundIdentifiers);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.findReferences(referenceFinder, foundIdentifiers);
@@ -204,7 +204,7 @@ public final class Referenced_Testcase_Instance_Statement extends Statement {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (dereferedValue != null && !dereferedValue.accept(v)) {
+		if (dereferredValue != null && !dereferredValue.accept(v)) {
 			return false;
 		}
 		if (actualParameterList != null && !actualParameterList.accept(v)) {

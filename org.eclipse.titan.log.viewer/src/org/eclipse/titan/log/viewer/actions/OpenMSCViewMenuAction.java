@@ -12,13 +12,15 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -48,10 +50,10 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 
-public class OpenMSCViewMenuAction extends Action implements IActionDelegate, ISelectionChangedListener {
-	
-	private static final String NAME = Messages.getString("OpenMSCViewMenuAction.0"); //$NON-NLS-1$
+public class OpenMSCViewMenuAction extends AbstractHandler implements IActionDelegate, ISelectionChangedListener {
+
 	private IStructuredSelection selection;
 	private LogFileMetaData logFileMetaData;
 	private int recordToSelect = -1;
@@ -60,15 +62,32 @@ public class OpenMSCViewMenuAction extends Action implements IActionDelegate, IS
 	 * Constructor
 	 */
 	public OpenMSCViewMenuAction() {
-		super(NAME);
 	}
 
 	@Override
-	public void run() {
+	public void run(final IAction action) {
+		run(selection);
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection tempSelection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+		if (!(tempSelection instanceof IStructuredSelection)) {
+			return null;
+		}
+
+		selection = (IStructuredSelection) tempSelection;
+
+		run(selection);
+
+		return null;
+	}
+
+	public void run(final IStructuredSelection selection) {
 		if (!isEnabled()) {
 			return;
 		}
-		Object element = this.selection.getFirstElement();
+		Object element = selection.getFirstElement();
 		if (!(element instanceof TestCase)) {
 			return;
 		}
@@ -240,11 +259,6 @@ public class OpenMSCViewMenuAction extends Action implements IActionDelegate, IS
 		part.setLogFileMetaData(OpenMSCViewMenuAction.this.logFileMetaData);
 		final PreferencesHolder preferences = PreferencesHandler.getInstance().getPreferences(this.logFileMetaData.getProjectName());
 		part.setModel(model, getFirstRowToSelect(preferences, model));
-	}
-
-	@Override
-	public void run(final IAction action) {
-		run();
 	}
 
 	@Override

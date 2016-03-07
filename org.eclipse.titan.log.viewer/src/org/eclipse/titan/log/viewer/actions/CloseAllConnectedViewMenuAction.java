@@ -7,8 +7,10 @@
  ******************************************************************************/
 package org.eclipse.titan.log.viewer.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -18,6 +20,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * Menu action for closing the opened views of the selected log file
@@ -25,9 +28,8 @@ import org.eclipse.ui.PlatformUI;
  */
 // TODO this action should handle selected test cases as well
 // TODO this action should handle multiple selection
-public class CloseAllConnectedViewMenuAction extends Action implements IActionDelegate {
+public class CloseAllConnectedViewMenuAction extends AbstractHandler implements IActionDelegate {
 
-	private static final String NAME = "Close all connected views";  //$NON-NLS-1$
 	private IStructuredSelection selection;
 	private IFile logFile;
 	
@@ -35,11 +37,28 @@ public class CloseAllConnectedViewMenuAction extends Action implements IActionDe
 	 * Constructor
 	 */
 	public CloseAllConnectedViewMenuAction() {
-		super(NAME);
 	}
 	
 	@Override
 	public void run(final IAction action) {
+		run(selection);
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection tempSelection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+		if (!(tempSelection instanceof IStructuredSelection)) {
+			return null;
+		}
+
+		selection = (IStructuredSelection) tempSelection;
+
+		run(selection);
+
+		return null;
+	}
+
+	public void run(final IStructuredSelection selection) {
 		if (this.selection == null) {
 			return;
 		}

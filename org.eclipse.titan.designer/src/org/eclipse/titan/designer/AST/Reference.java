@@ -78,8 +78,8 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	/**
 	 * The assignment referred to by this reference.
 	 * */
-	private Assignment referedAssignment;
-	private CompilationTimeStamp lastTimeChecked;
+	protected Assignment referredAssignment;
+	protected CompilationTimeStamp lastTimeChecked;
 
 	/**
 	 * Stores whether this reference is used on the left hand side of an
@@ -120,7 +120,7 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	 *         Might be outdated information.
 	 * */
 	public Assignment getAssOld() {
-		return referedAssignment;
+		return referredAssignment;
 	}
 
 	/**
@@ -202,11 +202,11 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	/**
 	 * Sets the erroneousness of the setting.
 	 * 
-	 * @param is_erroneous
+	 * @param isErroneous
 	 *                set the erroneousness property of the references.
 	 * */
-	public void setIsErroneous(final boolean is_erroneous) {
-		isErroneous = is_erroneous;
+	public void setIsErroneous(final boolean isErroneous) {
+		this.isErroneous = isErroneous;
 	}
 
 	/**
@@ -355,7 +355,7 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	 * Clears the cache of this reference.
 	 **/
 	public void clear() {
-		referedAssignment = null;
+		referredAssignment = null;
 		lastTimeChecked = null;
 	}
 
@@ -437,43 +437,43 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 		}
 
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp) && !checkParameterList) {
-			return referedAssignment;
+			return referredAssignment;
 		}
 
 		detectedModuleId = false;
 		detectModid();
 
-		referedAssignment = myScope.getAssBySRef(timestamp, this);
+		referredAssignment = myScope.getAssBySRef(timestamp, this);
 
-		if (referedAssignment != null) {
-			referedAssignment.check(timestamp);
-			referedAssignment.setUsed();
+		if (referredAssignment != null) {
+			referredAssignment.check(timestamp);
+			referredAssignment.setUsed();
 
-			if (referedAssignment instanceof Definition) {
+			if (referredAssignment instanceof Definition) {
 				String referingModuleName = getMyScope().getModuleScope().getName();
-				if (!((Definition) referedAssignment).referingHere.contains(referingModuleName)) {
-					((Definition) referedAssignment).referingHere.add(referingModuleName);
+				if (!((Definition) referredAssignment).referingHere.contains(referingModuleName)) {
+					((Definition) referredAssignment).referingHere.add(referingModuleName);
 				}
 			}
 		}
 
-		if (referedAssignment != null && checkParameterList) {
+		if (referredAssignment != null && checkParameterList) {
 			FormalParameterList formalParameterList = null;
 
-			if (referedAssignment instanceof IParameterisedAssignment) {
-				formalParameterList = ((IParameterisedAssignment) referedAssignment).getFormalParameterList();
+			if (referredAssignment instanceof IParameterisedAssignment) {
+				formalParameterList = ((IParameterisedAssignment) referredAssignment).getFormalParameterList();
 			}
 			if (formalParameterList == null) {
 				if (!subReferences.isEmpty() && subReferences.get(0) instanceof ParameterisedSubReference) {
 					final String message = MessageFormat.format("The referenced {0} cannot have actual parameters",
-							referedAssignment.getDescription());
+							referredAssignment.getDescription());
 					getLocation().reportSemanticError(message);
 				}
 			} else {
 				if (!subReferences.isEmpty()) {
 					ISubReference firstSubReference = subReferences.get(0);
 					if (firstSubReference instanceof ParameterisedSubReference) {
-						formalParameterList.check(timestamp, referedAssignment.getAssignmentType());
+						formalParameterList.check(timestamp, referredAssignment.getAssignmentType());
 						isErroneous = ((ParameterisedSubReference) firstSubReference).checkParameters(timestamp,
 								formalParameterList);
 					} else {
@@ -482,11 +482,11 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 						// to a template having formal
 						// parameters, where each has
 						// default values
-						if (!Assignment.Assignment_type.A_TEMPLATE.equals(referedAssignment.getAssignmentType())
+						if (!Assignment.Assignment_type.A_TEMPLATE.equals(referredAssignment.getAssignmentType())
 								|| !formalParameterList.hasOnlyDefaultValues()) {
 							final String message = MessageFormat.format(
 									"Reference to parameterized definition `{0}'' without actual parameter list",
-									referedAssignment.getIdentifier().getDisplayName());
+									referredAssignment.getIdentifier().getDisplayName());
 							getLocation().reportSemanticError(message);
 						}
 					}
@@ -496,7 +496,7 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 
 		lastTimeChecked = timestamp;
 
-		return referedAssignment;
+		return referredAssignment;
 	}
 
 	/**
@@ -787,18 +787,18 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 		for (ISubReference sr : subReferences) {
 			sr.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (referedAssignment == null) {
+		if (referredAssignment == null) {
 			return;
 		}
 		if (referenceFinder.fieldId == null) {
 			// we are searching for the assignment itself
-			if (referenceFinder.assignment != referedAssignment) {
+			if (referenceFinder.assignment != referredAssignment) {
 				return;
 			}
 			foundIdentifiers.add(new Hit(getId(), this));
 		} else {
 			// we are searching for a field of a type
-			IType t = referedAssignment.getType(CompilationTimeStamp.getBaseTimestamp());
+			IType t = referredAssignment.getType(CompilationTimeStamp.getBaseTimestamp());
 			if (t == null) {
 				return;
 			}

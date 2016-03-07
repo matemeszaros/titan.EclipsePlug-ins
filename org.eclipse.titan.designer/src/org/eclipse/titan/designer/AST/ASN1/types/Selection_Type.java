@@ -174,8 +174,8 @@ public final class Selection_Type extends ASN1Type implements IReferencingType {
 	}
 
 	@Override
-	public void checkThisTemplate(final CompilationTimeStamp timestamp, final ITTCN3Template template, final boolean is_modified,
-			final boolean implicit_omit) {
+	public void checkThisTemplate(final CompilationTimeStamp timestamp, final ITTCN3Template template, final boolean isModified,
+			final boolean implicitOmit) {
 		registerUsage(template);
 
 		if (getIsErroneous(timestamp)) {
@@ -184,7 +184,7 @@ public final class Selection_Type extends ASN1Type implements IReferencingType {
 
 		final IType tempType = getTypeRefdLast(timestamp);
 		if (tempType != this) {
-			tempType.checkThisTemplate(timestamp, template, is_modified, implicit_omit);
+			tempType.checkThisTemplate(timestamp, template, isModified, implicitOmit);
 		}
 	}
 
@@ -251,18 +251,18 @@ public final class Selection_Type extends ASN1Type implements IReferencingType {
 
 	@Override
 	public IType getFieldType(final CompilationTimeStamp timestamp, final Reference reference, final int actualSubReference,
-			final Expected_Value_type expected_index, final IReferenceChain refChain, final boolean interrupt_if_optional) {
+			final Expected_Value_type expectedIndex, final IReferenceChain refChain, final boolean interruptIfOptional) {
 		if (null == lastTimeChecked) {
 			check(CompilationTimeStamp.getBaseTimestamp());
 		}
 
 		if (null != referencedLast && this != referencedLast) {
 			final Expected_Value_type internalExpectation =
-					(expected_index == Expected_Value_type.EXPECTED_TEMPLATE) ? Expected_Value_type.EXPECTED_DYNAMIC_VALUE
-					: expected_index;
+					(expectedIndex == Expected_Value_type.EXPECTED_TEMPLATE) ? Expected_Value_type.EXPECTED_DYNAMIC_VALUE
+					: expectedIndex;
 
 			return referencedLast.getFieldType(timestamp, reference, actualSubReference, internalExpectation, refChain,
-					interrupt_if_optional);
+					interruptIfOptional);
 		}
 
 		return null;

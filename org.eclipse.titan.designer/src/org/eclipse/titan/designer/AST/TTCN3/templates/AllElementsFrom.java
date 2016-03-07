@@ -128,8 +128,8 @@ public class AllElementsFrom extends TemplateBody {
 					break;
 				case TYPE_TTCN3_SEQUENCE:
 					// it = ((TTCN3_Sequence_Type) rt).getFieldType(timestamp,
-					// reference, actualSubReference, expected_index,
-					// interrupt_if_optional)
+					// reference, actualSubReference, expectedIndex,
+					// interruptIfOptional)
 					break;
 				default:
 					template.getLocation().reportSemanticError(LISTEXPECTED);

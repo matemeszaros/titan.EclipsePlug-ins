@@ -16,7 +16,7 @@ public final class IntegerLimit extends LimitType {
 	public static final IntegerLimit MAXIMUM = new IntegerLimit(ValueType.PLUS_INFINITY);
 	public static final IntegerLimit MINIMUM = new IntegerLimit(ValueType.MINUS_INFINITY);
 
-	private final ValueType value_type;
+	private final ValueType valueType;
 	private final BigInteger value;
 
 	public enum ValueType {
@@ -24,12 +24,12 @@ public final class IntegerLimit extends LimitType {
 	}
 
 	public IntegerLimit(final BigInteger value) {
-		value_type = ValueType.NUMBER;
+		valueType = ValueType.NUMBER;
 		this.value = value;
 	}
 
-	public IntegerLimit(final ValueType value_type) {
-		this.value_type = value_type;
+	public IntegerLimit(final ValueType valueType) {
+		this.valueType = valueType;
 		value = BigInteger.ZERO;
 	}
 
@@ -40,23 +40,23 @@ public final class IntegerLimit extends LimitType {
 
 	@Override
 	public LimitType decrement() {
-		return (value_type == ValueType.NUMBER) ? new IntegerLimit(value.subtract(BigInteger.ONE)) : this;
+		return (valueType == ValueType.NUMBER) ? new IntegerLimit(value.subtract(BigInteger.ONE)) : this;
 	}
 
 	@Override
 	public LimitType increment() {
-		return (value_type == ValueType.NUMBER) ? new IntegerLimit(value.add(BigInteger.ONE)) : this;
+		return (valueType == ValueType.NUMBER) ? new IntegerLimit(value.add(BigInteger.ONE)) : this;
 	}
 
 	@Override
 	public boolean isAdjacent(final LimitType other) {
 		final IntegerLimit il = (IntegerLimit) other;
-		return ((value_type == ValueType.NUMBER) && (il.value_type == ValueType.NUMBER) && value.add(BigInteger.ONE).equals(il.value));
+		return ((valueType == ValueType.NUMBER) && (il.valueType == ValueType.NUMBER) && value.add(BigInteger.ONE).equals(il.value));
 	}
 
 	@Override
 	public void toString(final StringBuilder sb) {
-		switch (value_type) {
+		switch (valueType) {
 		case MINUS_INFINITY:
 			sb.append("-infinity");
 			break;
@@ -72,13 +72,13 @@ public final class IntegerLimit extends LimitType {
 	@Override
 	public int compareTo(final LimitType other) {
 		final IntegerLimit il = (IntegerLimit) other;
-		switch (value_type) {
+		switch (valueType) {
 		case MINUS_INFINITY:
-			return (il.value_type == ValueType.MINUS_INFINITY) ? 0 : -1;
+			return (il.valueType == ValueType.MINUS_INFINITY) ? 0 : -1;
 		case PLUS_INFINITY:
-			return (il.value_type == ValueType.PLUS_INFINITY) ? 0 : 1;
+			return (il.valueType == ValueType.PLUS_INFINITY) ? 0 : 1;
 		default:
-			switch (il.value_type) {
+			switch (il.valueType) {
 			case MINUS_INFINITY:
 				return 1;
 			case PLUS_INFINITY:
@@ -101,7 +101,7 @@ public final class IntegerLimit extends LimitType {
 
 		final IntegerLimit other = (IntegerLimit) obj;
 
-		return value_type == other.value_type && value.equals(other.value);
+		return valueType == other.valueType && value.equals(other.value);
 	}
 
 	@Override

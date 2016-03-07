@@ -9,7 +9,6 @@ package org.eclipse.titan.log.viewer.exceptions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.log.viewer.utils.Constants;
 import org.eclipse.titan.log.viewer.utils.Messages;
@@ -39,7 +38,7 @@ public final class TitanLogExceptionHandler {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openError(new Shell(Display.getDefault()), Messages.getString("TitanLogExceptionHandler.0"), userException.getMessage());
+					MessageDialog.openError(null, Messages.getString("TitanLogExceptionHandler.0"), userException.getMessage());
 				}
 			});
 		} else if (exception instanceof TechnicalException) {
@@ -47,7 +46,7 @@ public final class TitanLogExceptionHandler {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openError(new Shell(Display.getDefault()), Messages.getString("TitanLogExceptionHandler.1"), technicalException.getMessage());
+					MessageDialog.openError(null, Messages.getString("TitanLogExceptionHandler.1"), technicalException.getMessage());
 					ErrorReporter.logExceptionStackTrace(technicalException);
 				}
 			});
@@ -56,7 +55,7 @@ public final class TitanLogExceptionHandler {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openError(new Shell(Display.getDefault()), Messages.getString("TitanLogExceptionHandler.2"), otherException.getMessage());
+					MessageDialog.openError(null, Messages.getString("TitanLogExceptionHandler.2"), otherException.getMessage());
 					ErrorReporter.logExceptionStackTrace(otherException);
 				}
 			});

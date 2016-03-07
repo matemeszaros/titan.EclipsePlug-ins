@@ -29,15 +29,15 @@ public final class Function_Applied_Statement extends Statement {
 	private static final String FULLNAMEPART2 = ".<parameters>";
 	private static final String STATEMENT_NAME = "function type application";
 
-	private final Value dereferedValue;
+	private final Value dereferredValue;
 	private final ParsedActualParameters actualParameterList;
 
-	public Function_Applied_Statement(final Value dereferedValue, final ParsedActualParameters actualParameterList) {
-		this.dereferedValue = dereferedValue;
+	public Function_Applied_Statement(final Value dereferredValue, final ParsedActualParameters actualParameterList) {
+		this.dereferredValue = dereferredValue;
 		this.actualParameterList = actualParameterList;
 
-		if (dereferedValue != null) {
-			dereferedValue.setFullNameParent(this);
+		if (dereferredValue != null) {
+			dereferredValue.setFullNameParent(this);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setFullNameParent(this);
@@ -58,7 +58,7 @@ public final class Function_Applied_Statement extends Statement {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (dereferedValue == child) {
+		if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (actualParameterList == child) {
 			return builder.append(FULLNAMEPART2);
@@ -70,8 +70,8 @@ public final class Function_Applied_Statement extends Statement {
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (dereferedValue != null) {
-			dereferedValue.setMyScope(scope);
+		if (dereferredValue != null) {
+			dereferredValue.setMyScope(scope);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setMyScope(scope);
@@ -93,9 +93,9 @@ public final class Function_Applied_Statement extends Statement {
 			throw new ReParseException();
 		}
 
-		if (dereferedValue != null) {
-			dereferedValue.updateSyntax(reparser, false);
-			reparser.updateLocation(dereferedValue.getLocation());
+		if (dereferredValue != null) {
+			dereferredValue.updateSyntax(reparser, false);
+			reparser.updateLocation(dereferredValue.getLocation());
 		}
 
 		if (actualParameterList != null) {
@@ -106,8 +106,8 @@ public final class Function_Applied_Statement extends Statement {
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (dereferedValue != null) {
-			dereferedValue.findReferences(referenceFinder, foundIdentifiers);
+		if (dereferredValue != null) {
+			dereferredValue.findReferences(referenceFinder, foundIdentifiers);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.findReferences(referenceFinder, foundIdentifiers);
@@ -116,7 +116,7 @@ public final class Function_Applied_Statement extends Statement {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (dereferedValue != null && !dereferedValue.accept(v)) {
+		if (dereferredValue != null && !dereferredValue.accept(v)) {
 			return false;
 		}
 		if (actualParameterList != null && !actualParameterList.accept(v)) {

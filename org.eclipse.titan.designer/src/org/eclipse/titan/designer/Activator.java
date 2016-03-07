@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -51,6 +52,7 @@ import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.titan.designer.properties.PropertyNotificationManager;
+import org.eclipse.titan.designer.properties.data.ProjectBuildPropertyData;
 import org.eclipse.titan.designer.properties.data.ProjectFileHandler;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IActivityManager;
@@ -323,7 +325,6 @@ public final class Activator extends AbstractUIPlugin {
 
 				if ((projectDelta.getFlags() & IResourceDelta.DESCRIPTION) != 0) {
 					TITANBuilder.markProjectForRebuild(project);
-					GlobalParser.getProjectSourceParser(project).setFullSemanticAnalysisNeeded();
 				}
 
 				if (projectDelta.getKind() == IResourceDelta.ADDED) {
@@ -381,9 +382,47 @@ public final class Activator extends AbstractUIPlugin {
 							} catch (CoreException e) {
 								ErrorReporter.logExceptionStackTrace(e);
 							}
-							tempVisitor.reportOutdatedFiles();
-							GlobalParser.getProjectSourceParser(project).analyzeAll(false);
-							// It is of no importance when this analysis will run, or end for that matter.
+							final WorkspaceJob[] outdatingJobs = tempVisitor.reportOutdatedFiles();
+
+							WorkspaceJob analyzeAfterOutdating = new WorkspaceJob("analyzeAfterOutdating") {
+								@Override
+								public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+									//Wait for reportOutdatedFiles() to finish
+									try {
+										for (WorkspaceJob job : outdatingJobs) {
+											if(job != null) {
+												job.join();
+											}
+										}
+									} catch (InterruptedException e) {
+										ErrorReporter.logExceptionStackTrace(e);
+									}
+
+									GlobalParser.getProjectSourceParser(project).analyzeAll(false);
+									// It is of no importance when this analysis will run, or end for that matter.
+
+									boolean usesInternal;
+									try {
+										usesInternal = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+												ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)));
+									} catch (CoreException e) {
+										usesInternal = false;
+									}
+									if (usesInternal) {
+										TITANBuilder.markProjectForRebuild(project);
+										TITANBuilder.removeMakefile(project, false);
+									}
+
+									return Status.OK_STATUS;
+								}
+							};
+							analyzeAfterOutdating.setPriority(Job.LONG);
+							analyzeAfterOutdating.setUser(false);
+							analyzeAfterOutdating.setSystem(true);
+							analyzeAfterOutdating.setRule(project.getWorkspace().getRuleFactory().refreshRule(project));
+							analyzeAfterOutdating.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
+							analyzeAfterOutdating.schedule();
+
 							return Status.OK_STATUS;
 						}
 					};

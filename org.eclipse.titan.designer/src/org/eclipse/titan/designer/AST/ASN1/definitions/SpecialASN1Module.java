@@ -210,16 +210,16 @@ public final class SpecialASN1Module {
 	 * Parses the special internal assignments to build their semantic
 	 * representation.
 	 * 
-	 * @param input_code
+	 * @param inputCode
 	 *                the code to parse.
 	 * @param identifier
 	 *                the identifier for the assignment to be created.
 	 * 
 	 * @return the parsed assignment.
 	 */
-	public static ASN1Assignment parseSpecialInternalAssignment(final String input_code, final Identifier identifier) {
+	public static ASN1Assignment parseSpecialInternalAssignment(final String inputCode, final Identifier identifier) {
 		ASN1Assignment assignment = null;
-		StringReader reader = new StringReader(input_code);
+		StringReader reader = new StringReader(inputCode);
 		CharStream charStream = new UnbufferedCharStream(reader);
 		Asn1Lexer lexer = new Asn1Lexer(charStream);
 		lexer.setTokenFactory(new TokenWithIndexAndSubTokensFactory(true));

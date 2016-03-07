@@ -182,9 +182,9 @@ public final class Referenced_Template extends TTCN3Template {
 	 * reference too.
 	 *
 	 * @param timestamp
-	 *            the time stamp of the actual semantic check cycle.
+	 *                the time stamp of the actual semantic check cycle.
 	 * @param referenceChain
-	 *            the reference chain used to detect cyclic references.
+	 *                the reference chain used to detect cyclic references.
 	 *
 	 * @return the template referenced
 	 * */
@@ -263,13 +263,13 @@ public final class Referenced_Template extends TTCN3Template {
 	}
 
 	/**
-	 * Returns whether in the chain of referenced templates there is one which
-	 * was defined to have the implicit omit attribute set
+	 * Returns whether in the chain of referenced templates there is one
+	 * which was defined to have the implicit omit attribute set
 	 *
 	 * @param timestamp
-	 *            the time stamp of the actual semantic check cycle.
+	 *                the time stamp of the actual semantic check cycle.
 	 * @param referenceChain
-	 *            the ReferenceChain used to detect circular references
+	 *                the ReferenceChain used to detect circular references
 	 *
 	 * @return true if it has, false otherwise.
 	 * */
@@ -369,7 +369,7 @@ public final class Referenced_Template extends TTCN3Template {
 		TypeCompatibilityInfo info = new TypeCompatibilityInfo(type, governor, true);
 
 		if (!type.isCompatible(timestamp, governor, info, null, null)) {
-			IType last = type.getTypeRefdLast(timestamp);
+			IType last = type.getTypeRefdLast(timestamp); 
 
 			switch (last.getTypetype()) {
 			case TYPE_PORT:
@@ -405,9 +405,9 @@ public final class Referenced_Template extends TTCN3Template {
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed,
 			final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		if (reference != null) {
@@ -444,7 +444,7 @@ public final class Referenced_Template extends TTCN3Template {
 
 	@Override
 	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
+		checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
 		if (reference != null) {
 			Assignment ass = reference.getRefdAssignment(timestamp, true);
 			switch (ass.getAssignmentType()) {

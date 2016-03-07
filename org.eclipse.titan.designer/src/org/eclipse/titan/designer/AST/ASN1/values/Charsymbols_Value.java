@@ -44,7 +44,7 @@ public final class Charsymbols_Value extends Value {
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		return null;
 	}
 
@@ -79,7 +79,7 @@ public final class Charsymbols_Value extends Value {
 	}
 
 	@Override
-	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		return false;
 	}

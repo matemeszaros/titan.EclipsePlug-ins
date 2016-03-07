@@ -23,8 +23,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.Interval;
 import org.eclipse.titan.common.parsers.cfg.CfgDefinitionInformation;
@@ -184,7 +182,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 	 */
 	public Object openCollectionListDialog(final List<?> collected) {
 		OpenDeclarationLabelProvider labelProvider = new OpenDeclarationLabelProvider();
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(new Shell(Display.getDefault()), labelProvider);
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, labelProvider);
 		dialog.setTitle("Open");
 		dialog.setMessage("Select the element to open");
 		dialog.setElements(collected.toArray());
@@ -269,8 +267,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			if (reference == null) {
 				return false;
 			}
-			DeclarationCollector declarationCollector = new DeclarationCollector(reference, GlobalParser.getProjectSourceParser(file
-					.getProject()));
+			DeclarationCollector declarationCollector = new DeclarationCollector(reference);
 			ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
 			String exactModuleName = refParser.getExactModuleName();
 

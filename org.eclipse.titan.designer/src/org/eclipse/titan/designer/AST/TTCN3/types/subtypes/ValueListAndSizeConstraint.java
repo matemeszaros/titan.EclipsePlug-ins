@@ -42,8 +42,8 @@ public final class ValueListAndSizeConstraint extends SubtypeConstraint {
 	}
 
 	/** size range */
-	public ValueListAndSizeConstraint(final SizeLimit l_begin, final SizeLimit l_end) {
-		sizeConstraint = new RangeListConstraint(l_begin, l_end);
+	public ValueListAndSizeConstraint(final SizeLimit lBegin, final SizeLimit lEnd) {
+		sizeConstraint = new RangeListConstraint(lBegin, lEnd);
 		hasValues = new ValueListConstraint();
 		notValues = new ValueListConstraint();
 	}
@@ -57,11 +57,11 @@ public final class ValueListAndSizeConstraint extends SubtypeConstraint {
 		return returnValue;
 	}
 
-	public ValueListAndSizeConstraint setOperation(final SubtypeConstraint other, final boolean is_union) {
+	public ValueListAndSizeConstraint setOperation(final SubtypeConstraint other, final boolean isUnion) {
 		ValueListAndSizeConstraint o = (ValueListAndSizeConstraint) other;
 		ValueListAndSizeConstraint returnValue = new ValueListAndSizeConstraint();
-		returnValue.sizeConstraint = sizeConstraint.setOperation(o.sizeConstraint, is_union);
-		if (is_union) {
+		returnValue.sizeConstraint = sizeConstraint.setOperation(o.sizeConstraint, isUnion);
+		if (isUnion) {
 			// V1+V2
 			returnValue.hasValues = hasValues.union(o.hasValues);
 			// ~S1*N2
@@ -86,10 +86,10 @@ public final class ValueListAndSizeConstraint extends SubtypeConstraint {
 		returnValue.hasValues = returnValue.hasValues.except(vlc);
 		returnValue.notValues = returnValue.notValues.except(vlc);
 		// drop ret_val.has_values elements that are elements of the
-		// ret_val.size_constraint set
+		// ret_val.sizeConstraint set
 		returnValue.hasValues = returnValue.hasValues.remove(returnValue.sizeConstraint, true);
 		// drop ret_val.not_values elements that are not elements of the
-		// ret_val.size_constraint set
+		// ret_val.sizeConstraint set
 		returnValue.notValues = returnValue.notValues.remove(returnValue.sizeConstraint, false);
 		return returnValue;
 	}

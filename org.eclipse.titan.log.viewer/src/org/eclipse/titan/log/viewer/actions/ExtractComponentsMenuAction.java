@@ -11,16 +11,16 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
 import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
@@ -35,37 +35,51 @@ import org.eclipse.titan.log.viewer.utils.ResourcePropertyHandler;
 import org.eclipse.titan.log.viewer.utils.SelectionUtils;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * This action extracts components from a TITAN log file, and adds
  * the components to the Components Visual Order list
  */
-public class ExtractComponentsMenuAction extends Action implements IActionDelegate {
+//TODO remove unnecessary functions after conversion
+public class ExtractComponentsMenuAction extends AbstractHandler implements IActionDelegate {
 
-	private static final String NAME = Messages.getString("FetchComponentsAction.0"); //$NON-NLS-1$
-	private IStructuredSelection selection;
+	private ISelection selection;
 	
 	public ExtractComponentsMenuAction() {
-		super(NAME);
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+
+		run(selection);
+
+		return null;
 	}
 
 	@Override
 	public void run(final IAction action) {
+		run(selection);
+	}
+
+
+	public void run(final ISelection selection) {
 		List<String> components = null;
-		if (this.selection == null) {
+		if (selection == null) {
 			return;
 		}
-		if (!SelectionUtils.isSelectionALogFile(this.selection)) {
+		if (!SelectionUtils.isSelectionALogFile(selection)) {
 			return;
 		}
-		IFile logFile = SelectionUtils.selectionToIFile(this.selection);
+		IFile logFile = SelectionUtils.selectionToIFile(selection);
 		if (logFile == null) {
 			return;
 		}
 		
 		try {
 			ExtractComponentsAction extractCompAction = new ExtractComponentsAction(logFile);
-			new ProgressMonitorDialog(new Shell(Display.getDefault())).run(false, false, extractCompAction);
+			new ProgressMonitorDialog(null).run(false, false, extractCompAction);
 			components = extractCompAction.getComponents();
 		} catch (InvocationTargetException e) {
 			ErrorReporter.logExceptionStackTrace(e);
@@ -109,7 +123,7 @@ public class ExtractComponentsMenuAction extends Action implements IActionDelega
 		if (preferences.getOpenPropAfterCompExt()) {
 			// Open dialog
 			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(
-					new Shell(Display.getDefault()), logFile.getProject(), PreferenceConstants.PAGE_ID_COMP_VIS_ORDER_PAGE, null, null);
+					null, logFile.getProject(), PreferenceConstants.PAGE_ID_COMP_VIS_ORDER_PAGE, null, null);
 			Object currentPage = dialog.getSelectedPage();
 			if (currentPage instanceof ComponentsVisualOrderPrefPage) {
 				ComponentsVisualOrderPrefPage componentsVisualOrderPrefPage = (ComponentsVisualOrderPrefPage) currentPage;

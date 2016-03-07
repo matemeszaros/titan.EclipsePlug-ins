@@ -10,6 +10,7 @@ package org.eclipse.titan.designer.AST.ASN1.Object;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -45,12 +46,12 @@ public final class ObjectClassSyntax_Builder extends ObjectClassSyntax_Visitor {
 				token = aBlock.getTokenList().get(i);
 
 				if (token.getType() == Asn1Lexer.LEFTVERSIONBRACKETS) {
-					org.antlr.v4.runtime.CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
+					CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
 					token2.setType(Asn1Lexer.SQUAREOPEN);
 					internalTokens.add(token2);
 					internalTokens.add(token2);
 				} else if (token.getType() == Asn1Lexer.RIGHTVERSIONBRACKETS) {
-					org.antlr.v4.runtime.CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
+					CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
 					token2.setType(Asn1Lexer.SQUARECLOSE);
 					internalTokens.add(token2);
 					internalTokens.add(token2);

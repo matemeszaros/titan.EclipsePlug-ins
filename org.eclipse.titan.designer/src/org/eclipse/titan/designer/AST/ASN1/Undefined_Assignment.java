@@ -37,8 +37,8 @@ public abstract class Undefined_Assignment extends ASN1Assignment {
 	/** the classified assignment. */
 	protected ASN1Assignment realAssignment;
 
-	public Undefined_Assignment(final Identifier id, final Ass_pard ass_pard) {
-		super(id, ass_pard);
+	public Undefined_Assignment(final Identifier id, final Ass_pard assPard) {
+		super(id, assPard);
 	}
 
 	@Override
@@ -66,11 +66,11 @@ public abstract class Undefined_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public final void setRightScope(final Scope right_scope) {
+	public final void setRightScope(final Scope rightScope) {
 		if (null != realAssignment) {
-			realAssignment.setRightScope(right_scope);
+			realAssignment.setRightScope(rightScope);
 		}
-		this.rightScope = right_scope;
+		this.rightScope = rightScope;
 	}
 
 	@Override
@@ -122,8 +122,8 @@ public abstract class Undefined_Assignment extends ASN1Assignment {
 
 		lastTimeChecked = timestamp;
 
-		if (null != ass_pard) {
-			ass_pard.check(timestamp);
+		if (null != assPard) {
+			assPard.check(timestamp);
 			return;
 		}
 
@@ -134,7 +134,7 @@ public abstract class Undefined_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public final boolean isAssignmentType(final CompilationTimeStamp timestamp, final Assignment_type assignment_type,
+	public final boolean isAssignmentType(final CompilationTimeStamp timestamp, final Assignment_type assignmentType,
 			final IReferenceChain referenceChain) {
 		check(timestamp);
 
@@ -142,7 +142,7 @@ public abstract class Undefined_Assignment extends ASN1Assignment {
 			return false;
 		}
 
-		return getIsErroneous() ? false : realAssignment.isAssignmentType(timestamp, assignment_type, referenceChain);
+		return getIsErroneous() ? false : realAssignment.isAssignmentType(timestamp, assignmentType, referenceChain);
 	}
 
 	/**
@@ -207,10 +207,7 @@ public abstract class Undefined_Assignment extends ASN1Assignment {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (identifier != null && !identifier.accept(v)) {
-			return false;
-		}
-		if (ass_pard != null && !ass_pard.accept(v)) {
+		if (!super.memberAccept(v)) {
 			return false;
 		}
 		if (realAssignment != null && !realAssignment.accept(v)) {

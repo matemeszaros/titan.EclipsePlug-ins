@@ -22,10 +22,10 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * */
 public final class Default_ActualParameter extends ActualParameter {
 	// generated value
-	private final ActualParameter default_actualParameter;
+	private final ActualParameter defaultActualParameter;
 
-	public Default_ActualParameter(final ActualParameter default_actualParameter) {
-		this.default_actualParameter = default_actualParameter;
+	public Default_ActualParameter(final ActualParameter defaultActualParameter) {
+		this.defaultActualParameter = defaultActualParameter;
 	}
 
 	@Override
@@ -34,14 +34,14 @@ public final class Default_ActualParameter extends ActualParameter {
 	}
 
 	public ActualParameter getActualParameter() {
-		return default_actualParameter;
+		return defaultActualParameter;
 	}
 
 	@Override
 	public void checkRecursions(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
-		if (default_actualParameter != null) {
+		if (defaultActualParameter != null) {
 			referenceChain.markState();
-			default_actualParameter.checkRecursions(timestamp, referenceChain);
+			defaultActualParameter.checkRecursions(timestamp, referenceChain);
 			referenceChain.previousState();
 		}
 	}
@@ -55,8 +55,8 @@ public final class Default_ActualParameter extends ActualParameter {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (default_actualParameter != null) {
-			if (!default_actualParameter.accept(v)) {
+		if (defaultActualParameter != null) {
+			if (!defaultActualParameter.accept(v)) {
 				return false;
 			}
 		}

@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -32,8 +31,6 @@ import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.titan.common.logging.ErrorReporter;
@@ -42,10 +39,12 @@ import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Identifier;
+import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.NamedBridgeScope;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.SubScopeVisitor;
 import org.eclipse.titan.designer.AST.ASN1.definitions.ASN1Module;
@@ -53,8 +52,6 @@ import org.eclipse.titan.designer.AST.ASN1.types.ASN1_Choice_Type;
 import org.eclipse.titan.designer.AST.ASN1.types.ASN1_Enumerated_Type;
 import org.eclipse.titan.designer.AST.ASN1.types.ASN1_Sequence_Type;
 import org.eclipse.titan.designer.AST.ASN1.types.ASN1_Set_Type;
-import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Enumerated_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Set_Seq_Choice_BaseType;
 import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
@@ -71,6 +68,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.ui.IEditorPart;
 
 /**
+ * FIXME component variables are not handled correctly
  * @author Adam Delic
  * */
 public class RenameRefactoring extends Refactoring {
@@ -78,18 +76,17 @@ public class RenameRefactoring extends Refactoring {
 	public static final String NORECOGNISABLEMODULENAME = "The name of the module in the file `{0}'' could not be identified";
 	public static final String EXCLUDEDFROMBUILD = "The name of the module in the file `{0}'' could not be identified, the file is excluded from build";
 	public static final String NOTFOUNDMODULE = "The module `{0}'' could not be found";
-	public static final String PROJECTCONTAINSERRORS = "The project contains errors, please fix the errors before refactoring";
-	public static final String PROJECTCONTAINSTTCNPPFILES = "The project contains .ttcnpp files";
+	public static final String PROJECTCONTAINSERRORS = "The project `{0}'' contains errors, which might corrupt the result of the refactoring";
+	public static final String PROJECTCONTAINSTTCNPPFILES = "The project `{0}'' contains .ttcnpp files, which might corrupt the result of the refactoring";
 	public static final String FIELDALREADYEXISTS = "Field with name `{0}'' already exists in type `{1}''";
 	public static final String DEFINITIONALREADYEXISTS = "Name conflict:"
 			+ " definition with name `{0}'' already exists in the scope of the selected definition or in one of its parent scopes";
 	public static final String DEFINITIONALREADYEXISTS2 = "Name conflict:"
 			+ " definition with name `{0}'' already exists in module `{1}'' at line {2}";
 
-	private static final String MINIMISEWARNING = "Minimise memory usage is on, it can cause unexpected behaviour in the refactoring process!\n"
-			+ "This function is not supported with the memory minimise option, "
-			+ "we do not take any responsibility for it.\n"
-			+ "Would you like to continue anyway?";
+	private static final String MINIMISEWARNING = "Minimise memory usage is enabled, which can cause unexpected behaviour in the refactoring process!\n"
+			+ "Refactoring is not supported with the memory minimise option turned on, "
+			+ "we do not take any responsibility for it.";
 
 	final IFile file;
 	final Module module;
@@ -131,33 +128,35 @@ public class RenameRefactoring extends Refactoring {
 		// TITANDebugConsole.getConsole().newMessageStream().println(v.getScopeTreeAsHTMLPage());
 
 		RefactoringStatus result = new RefactoringStatus();
-		final boolean enableRiskyRefactoring = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-				PreferenceConstants.ENABLERISKYREFACTORING, false, null);
-		if (!enableRiskyRefactoring) {
-			try {
-				pm.beginTask("Checking preconditions...", 2);
-				// check that there are no ttcnpp files in the
-				// project
-				if (hasTtcnppFiles(file.getProject())) {
-					result.addError(PROJECTCONTAINSTTCNPPFILES);
-				}
-				pm.worked(1);
-				// check that there are no error markers in the
-				// project
-				IMarker[] markers = file.getProject().findMarkers(null, true, IResource.DEPTH_INFINITE);
-				for (IMarker marker : markers) {
-					if (IMarker.SEVERITY_ERROR == marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR)) {
-						result.addError(PROJECTCONTAINSERRORS);
-						break;
-					}
-				}
-				pm.worked(1);
-			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(e);
-				result.addFatalError(e.getMessage());
-			} finally {
-				pm.done();
+		try {
+			pm.beginTask("Checking preconditions...", 3);
+			// check that there are no ttcnpp files in the
+			// project
+			if (hasTtcnppFiles(file.getProject())) {//FIXME actually all referencing and referenced projects need to be checked too !
+				result.addError(MessageFormat.format(PROJECTCONTAINSTTCNPPFILES, file.getProject()));
 			}
+			pm.worked(1);
+			// check that there are no error markers in the
+			// project
+			IMarker[] markers = file.getProject().findMarkers(null, true, IResource.DEPTH_INFINITE);
+			for (IMarker marker : markers) {
+				if (IMarker.SEVERITY_ERROR == marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR)) {
+					result.addError(MessageFormat.format(PROJECTCONTAINSERRORS, file.getProject()));
+					break;
+				}
+			}
+			pm.worked(1);
+
+			final IPreferencesService prefs = Platform.getPreferencesService();
+			if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MINIMISEMEMORYUSAGE, false, null)) {
+				result.addError(MINIMISEWARNING);
+			}
+			pm.worked(1);
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace(e);
+			result.addFatalError(e.getMessage());
+		} finally {
+			pm.done();
 		}
 		return result;
 	}
@@ -172,12 +171,13 @@ public class RenameRefactoring extends Refactoring {
 		idsMap = rf.findAllReferences(module, projectSourceParser, pm, reportDebugInformation);
 		// add the referred identifier to the map of found identifiers
 		Identifier refdIdentifier = rf.getReferredIdentifier();
-		if (idsMap.containsKey(module)) {
-			idsMap.get(module).add(new Hit(refdIdentifier));
+		Module refdModule = rf.assignment.getMyScope().getModuleScope();
+		if (idsMap.containsKey(refdModule)) {
+			idsMap.get(refdModule).add(new Hit(refdIdentifier));
 		} else {
 			ArrayList<Hit> identifierList = new ArrayList<Hit>();
 			identifierList.add(new Hit(refdIdentifier));
-			idsMap.put(module, identifierList);
+			idsMap.put(refdModule, identifierList);
 		}
 
 		// check if there are name collisions in any of the affected
@@ -333,21 +333,6 @@ public class RenameRefactoring extends Refactoring {
 			return;
 		}
 
-		final boolean[] memoryUsageAnswer = new boolean[] { false };
-
-		if (Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MINIMISEMEMORYUSAGE, false,
-				null)) {
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					memoryUsageAnswer[0] = MessageDialog.openQuestion(new Shell(Display.getDefault()), "Warning", MINIMISEWARNING);
-				}
-			});
-			if (!memoryUsageAnswer[0]) {
-				return;
-			}
-		}
-
 		final IPreferencesService prefs = Platform.getPreferencesService();
 		final boolean reportDebugInformation = prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
@@ -413,6 +398,7 @@ public class RenameRefactoring extends Refactoring {
 		} catch (InterruptedException irex) {
 			// operation was canceled
 		} finally {
+			//TODO no longer needed after analyzer is updated
 			projectSourceParser.reportOutdating(file);
 			projectSourceParser.analyzeAll();
 		}
@@ -431,6 +417,7 @@ public class RenameRefactoring extends Refactoring {
 	protected static ReferenceFinder findOccurrencesLocationBased(final Module module, final int offset) {
 		final IdentifierFinderVisitor visitor = new IdentifierFinderVisitor(offset);
 		module.accept(visitor);
+		//FIXME the thing to be refactored might be a field ... not a definition
 		final Declaration def = visitor.getReferencedDeclaration();
 
 		if (def == null || !def.shouldMarkOccurrences()) {

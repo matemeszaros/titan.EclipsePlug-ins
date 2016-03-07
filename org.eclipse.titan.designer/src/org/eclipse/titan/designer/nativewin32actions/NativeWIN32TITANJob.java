@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.titan.designer.core.TITANJob;
+import org.eclipse.titan.designer.license.License;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -60,10 +61,13 @@ public final class NativeWIN32TITANJob extends TITANJob {
 		final IPreferencesService service = Platform.getPreferencesService();
 		final String pathOfTITAN = service.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.TITAN_INSTALLATION_PATH, "",
 				null);
-		final String licenseFilePath = service.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.LICENSE_FILE_PATH, "",
-				null);
+		
 		final Map<String, String> env = pb.environment();
-		env.put(TTCN3_LICENSE_FILE_KEY, licenseFilePath);
+		if(License.isLicenseNeeded()) {
+			final String licenseFilePath = 
+					service.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.LICENSE_FILE_PATH, "", null);
+			env.put(TTCN3_LICENSE_FILE_KEY, licenseFilePath);
+		}
 		env.put(TTCN3_DIR_KEY, pathOfTITAN);
 	}
 

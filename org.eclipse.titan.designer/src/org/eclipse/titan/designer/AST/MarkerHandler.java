@@ -682,7 +682,7 @@ public final class MarkerHandler {
 					resources.add(file);
 				}
 			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(MARKER_HANDLING_ERROR, e);
+				//be silent, perhaps it already has been removed
 			}
 		}
 
@@ -710,7 +710,7 @@ public final class MarkerHandler {
 					resources.add(file);
 				}
 			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(MARKER_HANDLING_ERROR, e);
+				//be silent, perhaps it already has been removed
 			}
 		}
 

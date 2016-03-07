@@ -36,9 +36,9 @@ public interface ISetting extends IASTNode, ILocateableNode {
 	/**
 	 * Sets the erroneousness of the setting.
 	 *
-	 * @param is_erroneous the value to set.
+	 * @param isErroneous the value to set.
 	 * */
-	void setIsErroneous(final boolean is_erroneous);
+	void setIsErroneous(final boolean isErroneous);
 
 	/**
 	 * @return the internal type of the setting

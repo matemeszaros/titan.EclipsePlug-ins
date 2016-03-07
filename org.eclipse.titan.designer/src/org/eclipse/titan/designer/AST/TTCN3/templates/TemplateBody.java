@@ -140,8 +140,8 @@ public class TemplateBody implements ITemplateListItem {
 
 	@Override
 	public ITTCN3Template setTemplatetype(CompilationTimeStamp timestamp,
-			Template_type new_type) {
-		return template.setTemplatetype(timestamp,new_type);
+			Template_type newType) {
+		return template.setTemplatetype(timestamp, newType);
 	}
 
 	@Override
@@ -189,9 +189,9 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void checkRestrictionCommon(String definitionName,
+	public void checkRestrictionCommon(final CompilationTimeStamp timestamp, String definitionName,
 			Restriction_type templateRestriction, final Location usageLocation) {
-		template.checkRestrictionCommon(definitionName, templateRestriction, usageLocation);	
+		template.checkRestrictionCommon(timestamp, definitionName, templateRestriction, usageLocation);	
 	}
 
 	@Override
@@ -219,8 +219,8 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void setIsErroneous(boolean is_erroneous) {
-		template.setIsErroneous(is_erroneous);
+	public void setIsErroneous(boolean isErroneous) {
+		template.setIsErroneous(isErroneous);
 		
 	}
 

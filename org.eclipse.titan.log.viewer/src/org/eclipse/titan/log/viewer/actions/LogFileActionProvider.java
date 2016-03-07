@@ -20,6 +20,7 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonMenuConstants;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 
+//FIXME check if this class is needed at all
 public class LogFileActionProvider extends CommonActionProvider {
 	private OpenTextTableProjectsViewMenuAction openLogFileAction;
 	private ICommonViewerWorkbenchSite viewSite = null;
@@ -37,7 +38,7 @@ public class LogFileActionProvider extends CommonActionProvider {
 		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 		if (selection.size() == 1 && selection.getFirstElement() instanceof IFile) {
 			openLogFileAction.selectionChanged(null, selection);
-			actionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, openLogFileAction);
+//			actionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, openLogFileAction);
 		}
 	}
 
@@ -51,7 +52,7 @@ public class LogFileActionProvider extends CommonActionProvider {
 
 		openLogFileAction.selectionChanged(null, selection);
 		if (openLogFileAction.isEnabled()) {
-			menu.insertAfter(ICommonMenuConstants.GROUP_OPEN, openLogFileAction);
+//			menu.insertAfter(ICommonMenuConstants.GROUP_OPEN, openLogFileAction);
 		}
 		addOpenWithMenu(menu);
 		

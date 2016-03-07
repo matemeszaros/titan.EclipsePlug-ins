@@ -137,10 +137,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 
 		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(project);
 		sourceParser.updateSyntax(editedFile, reparser);
-		sourceParser.addModulesToBeSemanticallyAnalyzed(reparser.moduleToBeReanalysed);
-		if (reparser.fullAnalysysNeeded) {
-			sourceParser.setFullSemanticAnalysisNeeded();
-		}
+
 		if (!editor.isSemanticCheckingDelayed()) {
 			sourceParser.analyzeAll();
 
@@ -180,13 +177,13 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		fullReconciliation(true);
 	}
 
-	private void fullReconciliation(final boolean is_initial) {
+	private void fullReconciliation(final boolean isInitial) {
 		actualCode = new StringBuilder(document.get());
 		
 		GlobalIntervalHandler.putInterval(document, null);
 		IPreferencesService prefs = Platform.getPreferencesService();
 		if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.USEONTHEFLYPARSING, true, null)) {
-			analyze(is_initial);
+			analyze(isInitial);
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
@@ -199,7 +196,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		}
 	}
 
-	public void analyze(final boolean is_initial) {
+	public void analyze(final boolean isInitial) {
 		final IFile editedFile = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 		if (editedFile == null || ResourceExclusionHelper.isExcluded(editedFile)) {
 			return;
@@ -219,8 +216,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		});
 
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		projectSourceParser.setFullSemanticAnalysisNeeded();
-		if (is_initial || !editor.isSemanticCheckingDelayed()) {
+		if (isInitial || !editor.isSemanticCheckingDelayed()) {
 			projectSourceParser.reportOutdating(editedFile);
 			projectSourceParser.analyzeAll();
 

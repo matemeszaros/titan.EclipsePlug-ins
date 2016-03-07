@@ -25,7 +25,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.utils.SelectionUtils;
 import org.eclipse.titan.designer.Activator;
@@ -149,8 +148,7 @@ public final class NatureConverter extends AbstractHandler implements IObjectAct
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					Shell shell = new Shell(Display.getDefault());
-					PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(shell, tempProject, GeneralConstants.PROJECT_PROPERTY_PAGE, null, null);
+					PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(null, tempProject, GeneralConstants.PROJECT_PROPERTY_PAGE, null, null);
 					if (dialog != null) {
 						dialog.open();
 					}
@@ -160,7 +158,7 @@ public final class NatureConverter extends AbstractHandler implements IObjectAct
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					if (MessageDialog.openConfirm(new Shell(Display.getDefault()), NATURE_REMOVAL_TITLE, NATURE_REMOVAL_MESSAGE
+					if (MessageDialog.openConfirm(null, NATURE_REMOVAL_TITLE, NATURE_REMOVAL_MESSAGE
 							+ tempProject.getName() + '?')) {
 						natureIds.remove(index);
 						description.setNatureIds(natureIds.toArray(new String[natureIds.size()]));

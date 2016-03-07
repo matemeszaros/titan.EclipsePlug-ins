@@ -10,7 +10,6 @@ package org.eclipse.titanium.error;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
@@ -47,14 +46,14 @@ public class ErrorMessage {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog err = new MessageDialog(new Shell(Display.getDefault()), windowTitle, null, message, dialogType,
+				MessageDialog err = new MessageDialog(null, windowTitle, null, message, dialogType,
 						new String[] { IDialogConstants.OK_LABEL, buttonTitle }, 0) {
 					@Override
 					protected void buttonPressed(int buttonId) {
 						super.buttonPressed(buttonId);
 
 						if (buttonId == 1) {
-							PreferencesUtil.createPreferenceDialogOn(new Shell(Display.getDefault()), pageName, null,
+							PreferencesUtil.createPreferenceDialogOn(null, pageName, null,
 									null).open();
 						}
 					}
@@ -78,7 +77,7 @@ public class ErrorMessage {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog err = new MessageDialog(new Shell(Display.getDefault()), title, null, message, dialogType,
+				MessageDialog err = new MessageDialog(null, title, null, message, dialogType,
 						new String[] { IDialogConstants.OK_LABEL }, 0);
 				err.open();
 			}

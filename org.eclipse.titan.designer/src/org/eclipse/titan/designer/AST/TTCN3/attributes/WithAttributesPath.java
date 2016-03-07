@@ -122,7 +122,7 @@ public final class WithAttributesPath implements ILocateableNode, IIncrementally
 	 * @param timestamp
 	 *                the timestamp of the actual semantic check cycle.
 	 */
-	public void checkGlobalAttributes(final CompilationTimeStamp timestamp, final boolean erroneous_allowed) {
+	public void checkGlobalAttributes(final CompilationTimeStamp timestamp, final boolean erroneousAllowed) {
 		if (lastTimeGlobalChecked != null && !lastTimeGlobalChecked.isLess(timestamp)) {
 			return;
 		}
@@ -134,7 +134,7 @@ public final class WithAttributesPath implements ILocateableNode, IIncrementally
 		}
 
 		SingleWithAttribute tempAttribute;
-		if (!erroneous_allowed) {
+		if (!erroneousAllowed) {
 			for (int i = 0, size = attributes.getNofElements(); i < size; i++) {
 				tempAttribute = attributes.getAttribute(i);
 				if (tempAttribute.getAttributeType() == Attribute_Type.Erroneous_Attribute) {

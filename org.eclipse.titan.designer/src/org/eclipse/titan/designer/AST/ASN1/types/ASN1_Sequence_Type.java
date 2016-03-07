@@ -800,18 +800,18 @@ public final class ASN1_Sequence_Type extends ASN1_Set_Seq_Choice_BaseType {
 
 	/** Parses the block as if it were the block of a sequence. */
 	private void parseBlockSequence() {
-		Asn1Parser parserV4 = null;
+		Asn1Parser parser = null;
 		if (null != mBlock) {
-			parserV4 = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+			parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		}
-		if (null == parserV4) {
+		if (null == parser) {
 			return;
 		}
 		components = null;
 
 		if (null != mBlock) {
-			components = parserV4.pr_special_ComponentTypeLists().list;
-			List<SyntacticErrorStorage> errors = parserV4.getErrorStorage();
+			components = parser.pr_special_ComponentTypeLists().list;
+			List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 			if (null != errors && !errors.isEmpty()) {
 				//isErroneous = true;
 				components = null;

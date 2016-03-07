@@ -23,7 +23,6 @@ import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.For_Loop_Definitions;
-import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock.ReturnStatus_type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Boolean_Value;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;

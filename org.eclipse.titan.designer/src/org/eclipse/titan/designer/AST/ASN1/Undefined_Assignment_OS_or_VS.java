@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.ASN1;
 
+import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Reference;
@@ -31,8 +32,8 @@ public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 	protected final Reference reference;
 	private final Block mBlock;
 	
-	public Undefined_Assignment_OS_or_VS(final Identifier id, final Ass_pard ass_pard, final Reference reference, final Block aBlock) {
-		super(id, ass_pard);
+	public Undefined_Assignment_OS_or_VS(final Identifier id, final Ass_pard assPard, final Reference reference, final Block aBlock) {
+		super(id, assPard);
 		this.reference = reference;
 		this.mBlock = aBlock;
 
@@ -58,9 +59,9 @@ public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 
 	@Override
 	protected void classifyAssignment(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
-		final boolean new_chain = null == referenceChain;
+		final boolean newChain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (new_chain) {
+		if (newChain) {
 			temporalReferenceChain = ReferenceChain.getInstance(CIRCULARASSIGNMENTCHAIN, true);
 		} else {
 			temporalReferenceChain = referenceChain;
@@ -75,9 +76,9 @@ public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 				if (!reference.refersToSettingType(timestamp, Setting_type.S_ERROR, temporalReferenceChain)) {
 					if (identifier.isvalidAsnObjectSetReference()
 							&& reference.refersToSettingType(timestamp, Setting_type.S_OC, temporalReferenceChain)) {
-						realAssignment = new ObjectSet_Assignment(identifier, ass_pard, new ObjectClass_refd(reference),
+						realAssignment = new ObjectSet_Assignment(identifier, assPard, new ObjectClass_refd(reference),
 								newObjectSetDefinitionInstance());
-						// ass_pard = null;
+						// assPard = null;
 						// left = null;
 						// right = null;
 						// asstype = A_OS;
@@ -104,7 +105,7 @@ public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 			realAssignment.setFullNameParent(this);
 		}
 
-		if (new_chain) {
+		if (newChain) {
 			temporalReferenceChain.release();
 		} else {
 			temporalReferenceChain.previousState();
@@ -116,6 +117,17 @@ public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 	}
 
 	private ValueSet_Assignment newValueSetAssignmentInstance( final Referenced_Type aType ) {
-		return new ValueSet_Assignment(identifier, ass_pard, aType, mBlock);
+		return new ValueSet_Assignment(identifier, assPard, aType, mBlock);
+	}
+	
+	@Override
+	protected boolean memberAccept(ASTVisitor v) {
+		if (!super.memberAccept(v)) {
+			return false;
+		}
+		if (reference != null && !reference.accept(v)) {
+			return false;
+		}
+		return true;
 	}
 }

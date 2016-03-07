@@ -239,9 +239,9 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 
 	@Override
 	public IType getFieldType(final CompilationTimeStamp timestamp, final Reference reference, final int actualSubReference,
-			final Expected_Value_type expected_index, final boolean interrupt_if_optional) {
+			final Expected_Value_type expectedIndex, final boolean interruptIfOptional) {
 		IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
-		IType temp = getFieldType(timestamp, reference, actualSubReference, expected_index, chain, interrupt_if_optional);
+		IType temp = getFieldType(timestamp, reference, actualSubReference, expectedIndex, chain, interruptIfOptional);
 		chain.release();
 
 		return temp;
@@ -413,15 +413,15 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 	public void checkThisValue(final CompilationTimeStamp timestamp, final IValue value, final ValueCheckingOptions valueCheckingOptions) {
 		value.setIsErroneous(false);
 
-		Definition def = getDefiningDefinition();
-		if (def != null) {
+		final Assignment assignment = getDefiningAssignment();
+		if (assignment != null && assignment instanceof Definition) {
 			final Scope scope = value.getMyScope();
 			if (scope != null) {
 				final Module module = scope.getModuleScope();
 				if (module != null) {
 					final String referingModuleName = module.getName();
-					if (!def.referingHere.contains(referingModuleName)) {
-						def.referingHere.add(referingModuleName);
+					if (!((Definition)assignment).referingHere.contains(referingModuleName)) {
+						((Definition)assignment).referingHere.add(referingModuleName);
 					}
 				} else {
 					ErrorReporter.logError("The value `" + value.getFullName() + "' does not appear to be in a module");
@@ -511,11 +511,11 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			return;
 		}
 
-		Definition def = getDefiningDefinition();
-		if (def != null) {
+		final Assignment myAssignment = getDefiningAssignment();
+		if (myAssignment != null && myAssignment instanceof Definition) {
 			String referingModuleName = value.getMyScope().getModuleScope().getName();
-			if (!def.referingHere.contains(referingModuleName)) {
-				def.referingHere.add(referingModuleName);
+			if (!((Definition)myAssignment).referingHere.contains(referingModuleName)) {
+				((Definition)myAssignment).referingHere.add(referingModuleName);
 			}
 		}
 
@@ -929,11 +929,11 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 	 *                the template to use.
 	 * */
 	protected void registerUsage(final ITTCN3Template template) {
-		final Definition def = getDefiningDefinition();
-		if (def != null) {
+		final Assignment assignment = getDefiningAssignment();
+		if (assignment != null && assignment instanceof Definition) {
 			String referingModuleName = template.getMyScope().getModuleScope().getName();
-			if (!def.referingHere.contains(referingModuleName)) {
-				def.referingHere.add(referingModuleName);
+			if (!((Definition)assignment).referingHere.contains(referingModuleName)) {
+				((Definition)assignment).referingHere.add(referingModuleName);
 			}
 		}
 	}
@@ -1310,22 +1310,14 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 
 	@Override
 	public Assignment getDefiningAssignment() {
-		INamedNode parent = getNameParent();
-		while (parent != null && !(parent instanceof Assignment)) {
-			parent = parent.getNameParent();
+		if(getMyScope() == null) {
+			return null;
 		}
 
-		return (Assignment) parent;
-	}
+		Module module = getMyScope().getModuleScope();
+		Assignment assignment = module.getEnclosingAssignment(getLocation().getOffset());
 
-	@Override
-	public Definition getDefiningDefinition() {
-		INamedNode parent = getNameParent();
-		while (parent != null && !(parent instanceof Definition)) {
-			parent = parent.getNameParent();
-		}
-
-		return (Definition) parent;
+		return assignment;
 	}
 
 	@Override

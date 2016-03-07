@@ -41,12 +41,12 @@ public final class Function_Reference_Value extends Value {
 
 	private Definition referredFunction;
 
-	public Function_Reference_Value(final Def_Function referedFunction) {
-		this.referredFunction = referedFunction;
+	public Function_Reference_Value(final Def_Function referredFunction) {
+		this.referredFunction = referredFunction;
 	}
 
-	public Function_Reference_Value(final Def_Extfunction referedFunction) {
-		this.referredFunction = referedFunction;
+	public Function_Reference_Value(final Def_Extfunction referredFunction) {
+		this.referredFunction = referredFunction;
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public final class Function_Reference_Value extends Value {
 		return builder.toString();
 	}
 
-	public Definition getReferedFunction() {
+	public Definition getReferredFunction() {
 		return referredFunction;
 	}
 
@@ -110,7 +110,7 @@ public final class Function_Reference_Value extends Value {
 		referenceChain.release();
 
 		return Value_type.FUNCTION_REFERENCE_VALUE.equals(last.getValuetype())
-				&& referredFunction == ((Function_Reference_Value) last).getReferedFunction();
+				&& referredFunction == ((Function_Reference_Value) last).getReferredFunction();
 	}
 
 	@Override

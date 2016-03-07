@@ -713,44 +713,6 @@ public final class ProjectSourceParser {
 	/**
 	 * Internal function.
 	 * <p>
-	 * Does the analysis of the projects in an incremental fashion. - no
-	 * syntax check (this should have already been done.) - does the
-	 * semantic checking based on data collected at syntax checking time,
-	 * and previous semantic checking.
-	 * 
-	 * @param monitor
-	 *                the progress monitor to provide feedback to the user
-	 *                about the progress.
-	 * */
-	private IStatus internalIncrementalAnalysis(final IProgressMonitor monitor) {
-		if (!checkConfigurationRequirements(project, GeneralConstants.ONTHEFLY_SEMANTIC_MARKER)) {
-			return Status.OK_STATUS;
-		}
-
-		// Do the analyzes in the determined order.
-		CompilationTimeStamp compilationCounter = CompilationTimeStamp.getNewCompilationCounter();
-
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
-		internalMonitor.beginTask("Analysis of projects", 1);
-		IPreferencesService preferenceService = Platform.getPreferencesService();
-		boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-				PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
-		if (reportDebugInformation) {
-			TITANDebugConsole.println("On-the-fly analyzation of project " + project.getName() + " started");
-		}
-
-		syntacticAnalyzer.internalDoAnalyzeSyntactically(new SubProgressMonitor(internalMonitor, 1));
-		semanticAnalyzer.analyzeSemanticallyIncrementally(new SubProgressMonitor(internalMonitor, 1), compilationCounter);
-
-		internalMonitor.done();
-		lastTimeChecked = compilationCounter;
-
-		return Status.OK_STATUS;
-	}
-
-	/**
-	 * Internal function.
-	 * <p>
 	 * Builds the walking order of the projects from their referencing
 	 * graph, and analyzes all found to be related to the actual.
 	 * 
@@ -872,11 +834,7 @@ public final class ProjectSourceParser {
 				}
 			}
 
-			List<Module> modulesSkippedGlobally = new ArrayList<Module>();
-			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
-				GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).semanticAnalyzer.internalDoAnalyzeSemantically(
-						new SubProgressMonitor(internalMonitor, 1), compilationCounter, modulesSkippedGlobally);
-			}
+			ProjectSourceSemanticAnalyzer.analyzeMultipleProjectsSemantically(tobeSemanticallyAnalyzed, internalMonitor, compilationCounter);
 		} finally {
 			for (int i = 0; i < tobeAnalyzed.size(); i++) {
 				GlobalParser.getProjectSourceParser(tobeAnalyzed.get(i)).analyzesRunning = false;
@@ -1071,11 +1029,7 @@ public final class ProjectSourceParser {
 						}
 					}
 
-					if (semanticAnalyzer.getFullAnalysisNeeded()) {
-						result = internalDoAnalyzeWithReferences(monitor);
-					} else {
-						result = internalIncrementalAnalysis(monitor);
-					}
+					result = internalDoAnalyzeWithReferences(monitor);
 
 					boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 							PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
@@ -1299,21 +1253,5 @@ public final class ProjectSourceParser {
 			Job.getJobManager().endRule(rule);
 			fullAnalyzersRunning.decrementAndGet();
 		}
-	}
-
-	/** Sets whether full analysis is needed or not. */
-	public void setFullSemanticAnalysisNeeded() {
-		semanticAnalyzer.setFullAnalysisNeeded();
-	}
-
-	/**
-	 * Adds a list of modules that must be analyzed in case of incremental
-	 * analysis.
-	 * 
-	 * @param modules
-	 *                the list of modules to be added.
-	 * */
-	public void addModulesToBeSemanticallyAnalyzed(final Set<String> modules) {
-		semanticAnalyzer.addModulesToBeReanalyzed(modules);
 	}
 }

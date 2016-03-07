@@ -34,16 +34,16 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  */
 class FieldErr_Type {
 	public Qualifier qualifier;
-	public ErroneousAttributeSpecification errAttr;
+	public ErroneousAttributeSpecification errAttrSpec;
 	public List<Integer> subrefsArray;
 	public List<IType> typeArray;
 
-	FieldErr_Type(final Qualifier qualifier, final ErroneousAttributeSpecification err_attr_spec, final List<Integer> subrefs_array,
-			final List<IType> type_array) {
+	FieldErr_Type(final Qualifier qualifier, final ErroneousAttributeSpecification errAttrSpec, final List<Integer> subrefsArray,
+			final List<IType> typeArray) {
 		this.qualifier = qualifier;
-		this.errAttr = err_attr_spec;
-		this.subrefsArray = subrefs_array;
-		this.typeArray = type_array;
+		this.errAttrSpec = errAttrSpec;
+		this.subrefsArray = subrefsArray;
+		this.typeArray = typeArray;
 	}
 }
 
@@ -120,8 +120,8 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 		Qualifier omitAfterQualifier = null;
 		Map<Integer, List<FieldErr_Type>> embeddedFieldArrayMap = new HashMap<Integer, List<FieldErr_Type>>();
 		for (FieldErr_Type actualFieldErr : fldArray) {
-			Indicator_Type actIndicator = actualFieldErr.errAttr.getIndicator();
-			boolean isOmit = actualFieldErr.errAttr.isOmit();
+			Indicator_Type actIndicator = actualFieldErr.errAttrSpec.getIndicator();
+			boolean isOmit = actualFieldErr.errAttrSpec.isOmit();
 			if (actualFieldErr.subrefsArray.size() <= level) {
 				ErrorReporter.INTERNAL_ERROR();
 				return erroneousDescr;
@@ -309,13 +309,13 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 						actualFieldErr.qualifier.getDisplayName());
 				switch (actIndicator) {
 				case Before_Indicator:
-					evs.before = actualFieldErr.errAttr;
+					evs.before = actualFieldErr.errAttrSpec;
 					break;
 				case Value_Indicator:
-					evs.value = actualFieldErr.errAttr;
+					evs.value = actualFieldErr.errAttrSpec;
 					break;
 				case After_Indicator:
-					evs.after = actualFieldErr.errAttr;
+					evs.after = actualFieldErr.errAttrSpec;
 					break;
 				default:
 					ErrorReporter.INTERNAL_ERROR();

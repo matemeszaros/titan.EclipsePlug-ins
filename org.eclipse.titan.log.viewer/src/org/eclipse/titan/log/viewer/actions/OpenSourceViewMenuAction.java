@@ -17,7 +17,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
 import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
@@ -30,10 +29,10 @@ import org.eclipse.titan.log.viewer.readers.ValueReader;
 import org.eclipse.titan.log.viewer.utils.ActionUtils;
 import org.eclipse.titan.log.viewer.utils.LogFileCacheHandler;
 import org.eclipse.titan.log.viewer.utils.Messages;
-import org.eclipse.titan.log.viewer.views.text.table.TextTableView;
 import org.eclipse.titan.log.viewer.views.msc.model.EventObject;
 import org.eclipse.titan.log.viewer.views.msc.model.EventSelection;
 import org.eclipse.titan.log.viewer.views.msc.ui.actions.OpenSourceAction;
+import org.eclipse.titan.log.viewer.views.text.table.TextTableView;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -156,7 +155,7 @@ public class OpenSourceViewMenuAction extends SelectionProviderAction {
 						@Override
 						public void run() {
 							MessageDialog.openError(
-									new Shell(Display.getDefault()),
+									null,
 									"Error opening source", "This log file is not generated with source location information inserted. And it really does not seem to contain source location information"); //$NON-NLS-1$
 						}
 					});
@@ -164,7 +163,7 @@ public class OpenSourceViewMenuAction extends SelectionProviderAction {
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							MessageDialog.openError(new Shell(Display.getDefault()), "Error opening source", "This log record does not seem to contain source location information"); //$NON-NLS-1$
+							MessageDialog.openError(null, "Error opening source", "This log record does not seem to contain source location information"); //$NON-NLS-1$
 						}
 					});
 				}

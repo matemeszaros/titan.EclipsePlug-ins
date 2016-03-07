@@ -196,12 +196,12 @@ public final class ImportModule extends ModuleImportation {
 			propCollector.addProposal(identifier, ImageCache.getImage(getOutlineIcon()), KIND);
 		}
 
-		final Module savedReferedModule = referredModule;
-		if (savedReferedModule != null) {
-			Assignments assignments = savedReferedModule.getAssignments();
+		final Module savedReferredModule = referredModule;
+		if (savedReferredModule != null) {
+			Assignments assignments = savedReferredModule.getAssignments();
 			for (int i = 0, size = assignments.getNofAssignments(); i < size; i++) {
 				Assignment temporalAssignment = assignments.getAssignmentByIndex(i);
-				if (savedReferedModule.isVisible(CompilationTimeStamp.getBaseTimestamp(), targetModuleId, temporalAssignment)) {
+				if (savedReferredModule.isVisible(CompilationTimeStamp.getBaseTimestamp(), targetModuleId, temporalAssignment)) {
 					temporalAssignment.addProposal(propCollector, 0);
 				}
 			}
@@ -220,19 +220,19 @@ public final class ImportModule extends ModuleImportation {
 	 * */
 	@Override
 	public void addDeclaration(final DeclarationCollector declarationCollector, final Identifier targetModuleId) {
-		final Module savedReferedModule = referredModule;
-		if (savedReferedModule != null) {
-			Assignments assignments = savedReferedModule.getAssignments();
+		final Module savedReferredModule = referredModule;
+		if (savedReferredModule != null) {
+			Assignments assignments = savedReferredModule.getAssignments();
 			for (int i = 0; i < assignments.getNofAssignments(); i++) {
 				Assignment temporalAssignment = assignments.getAssignmentByIndex(i);
-				if (savedReferedModule.isVisible(CompilationTimeStamp.getBaseTimestamp(), targetModuleId, temporalAssignment)) {
+				if (savedReferredModule.isVisible(CompilationTimeStamp.getBaseTimestamp(), targetModuleId, temporalAssignment)) {
 					temporalAssignment.addDeclaration(declarationCollector, 0);
 				}
 			}
 			Identifier moduleId = declarationCollector.getReference().getModuleIdentifier();
 			List<ISubReference> subrefs = declarationCollector.getReference().getSubreferences();
 			if (moduleId == null && subrefs.size() == 1 && identifier.getName().equals(subrefs.get(0).getId().getName())) {
-				declarationCollector.addDeclaration(savedReferedModule.getIdentifier().getDisplayName(), savedReferedModule
+				declarationCollector.addDeclaration(savedReferredModule.getIdentifier().getDisplayName(), savedReferredModule
 						.getIdentifier().getLocation(), (Scope) null);
 			}
 		}

@@ -12,8 +12,8 @@ package org.eclipse.titan.designer.AST.TTCN3.types.subtypes;
  * */
 public final class EmptyStringSet extends StringSubtypeTreeElement {
 
-	public EmptyStringSet(final StringType string_type) {
-		super(string_type);
+	public EmptyStringSet(final StringType stringType) {
+		super(stringType);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public final class EmptyStringSet extends StringSubtypeTreeElement {
 
 	@Override
 	public SubtypeConstraint complement() {
-		return new FullStringSet(string_type);
+		return new FullStringSet(stringType);
 	}
 
 	@Override

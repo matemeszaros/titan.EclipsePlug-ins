@@ -60,6 +60,8 @@ public final class Component_Type extends Type {
 	private static final String COMPONENTVALUEEXPECTED = "Component value was expected";
 	private static final String TEMPLATENOTALLOWED = "{0} cannot be used for type `{1}''";
 	private static final String LENGTHRESTRICTIONNOTALLOWED = "Length restriction is not allowed for type `{0}''";
+	private static final String INVALIDSUBREFERENCE = "Referencing fields of a component is not allowed";
+	
 
 	private static final String[] SIMPLE_COMPONENT_PROPOSALS = new String[] {"alive", "create;", "create alive;", "done", "kill;", "killed",
 			"running", "stop;" };
@@ -227,7 +229,7 @@ public final class Component_Type extends Type {
 			return null;
 		case fieldSubReference:
 			subreference.getLocation().reportSemanticError(
-					MessageFormat.format(FieldSubReference.INVALIDSUBREFERENCE, ((FieldSubReference) subreference).getId().getDisplayName(),
+					MessageFormat.format(INVALIDSUBREFERENCE, ((FieldSubReference) subreference).getId().getDisplayName(),
 							getTypename()));
 			return null;
 		case parameterisedSubReference:

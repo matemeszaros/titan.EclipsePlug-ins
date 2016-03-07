@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.ASN1;
 
+import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Reference;
@@ -35,8 +36,8 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 	private final Block mBlock;
 	private final Reference objectReference;
 
-	public Undefined_Assignment_O_or_V(final Identifier id, final Ass_pard ass_pard, final Reference reference, final Block aBlock) {
-		super(id, ass_pard);
+	public Undefined_Assignment_O_or_V(final Identifier id, final Ass_pard assPard, final Reference reference, final Block aBlock) {
+		super(id, assPard);
 		this.reference = reference;
 		this.mBlock = aBlock;
 		objectReference = null;
@@ -49,8 +50,8 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 		}
 	}
 
-	public Undefined_Assignment_O_or_V(final Identifier id, final Ass_pard ass_pard, final Reference reference, final Reference reference2) {
-		super(id, ass_pard);
+	public Undefined_Assignment_O_or_V(final Identifier id, final Ass_pard assPard, final Reference reference, final Reference reference2) {
+		super(id, assPard);
 		this.reference = reference;
 		mBlock = null;
 		objectReference = reference2;
@@ -76,9 +77,9 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 
 	@Override
 	protected void classifyAssignment(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
-		final boolean new_chain = null == referenceChain;
+		final boolean newChain = null == referenceChain;
 		IReferenceChain temporalReferenceChain;
-		if (new_chain) {
+		if (newChain) {
 			temporalReferenceChain = ReferenceChain.getInstance(CIRCULARASSIGNMENTCHAIN, true);
 		} else {
 			temporalReferenceChain = referenceChain;
@@ -101,11 +102,11 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 					if (null != mBlock) {
 						final Object_Definition obj = new Object_Definition(mBlock);
 						// obj.setLocation(right1);
-						realAssignment = new Object_Assignment(identifier, ass_pard, oc, obj);
+						realAssignment = new Object_Assignment(identifier, assPard, oc, obj);
 					} else if (null != objectReference) {
 						final ReferencedObject obj = new ReferencedObject(objectReference);
 						obj.setLocation(objectReference.getLocation());
-						realAssignment = new Object_Assignment(identifier, ass_pard, oc, obj);
+						realAssignment = new Object_Assignment(identifier, assPard, oc, obj);
 					}
 				} else if (identifier.isvalidAsnValueReference()
 						&& (reference.refersToSettingType(timestamp, Setting_type.S_T, temporalReferenceChain) || reference
@@ -114,11 +115,11 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 					if (null != mBlock) {
 						final Value value = new Undefined_Block_Value(mBlock);
 						value.setLocation(mBlock.getLocation());
-						realAssignment = new Value_Assignment(identifier, ass_pard, type, value);
+						realAssignment = new Value_Assignment(identifier, assPard, type, value);
 					} else if (null != objectReference) {
 						final Value value = new Undefined_LowerIdentifier_Value(objectReference.getId().newInstance());
 						value.setLocation(objectReference.getLocation());
-						realAssignment = new Value_Assignment(identifier, ass_pard, type, value);
+						realAssignment = new Value_Assignment(identifier, assPard, type, value);
 					}
 				}
 			}
@@ -133,7 +134,7 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 			realAssignment.setFullNameParent(this);
 		}
 
-		if (new_chain) {
+		if (newChain) {
 			temporalReferenceChain.release();
 		} else {
 			temporalReferenceChain.previousState();
@@ -147,5 +148,19 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 		} 
 
 		return new Undefined_Assignment_O_or_V(identifier, null, reference.newInstance(), objectReference.newInstance());
+	}
+	
+	@Override
+	protected boolean memberAccept(ASTVisitor v) {
+		if (!super.memberAccept(v)) {
+			return false;
+		}
+		if (reference != null && !reference.accept(v)) {
+			return false;
+		}
+		if (objectReference != null && !objectReference.accept(v)) {
+			return false;
+		}
+		return true;
 	}
 }

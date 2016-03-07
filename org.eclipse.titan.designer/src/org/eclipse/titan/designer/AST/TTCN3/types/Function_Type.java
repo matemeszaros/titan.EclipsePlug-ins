@@ -342,7 +342,7 @@ public final class Function_Type extends Type {
 		Assignment assignment = null;
 		switch (last.getValuetype()) {
 		case FUNCTION_REFERENCE_VALUE:
-			assignment = ((Function_Reference_Value) last).getReferedFunction();
+			assignment = ((Function_Reference_Value) last).getReferredFunction();
 			if (assignment == null) {
 				value.setIsErroneous(true);
 				return;

@@ -29,11 +29,11 @@ public final class RealLimit extends LimitType {
 	public static final RealLimit MAXIMUM = new RealLimit(Double.POSITIVE_INFINITY);
 	public static final RealLimit MINIMUM = new RealLimit(Double.NEGATIVE_INFINITY);
 
-	private final ValueType value_type;
+	private final ValueType valueType;
 	private final double value;
 
 	private RealLimit(final ValueType vt, final double d) {
-		value_type = vt;
+		valueType = vt;
 		value = d;
 	}
 
@@ -41,7 +41,7 @@ public final class RealLimit extends LimitType {
 		if (Double.isNaN(d)) {
 			ErrorReporter.INTERNAL_ERROR("NaN range limit");
 		}
-		value_type = ValueType.EXACT;
+		valueType = ValueType.EXACT;
 		value = d;
 	}
 
@@ -51,7 +51,7 @@ public final class RealLimit extends LimitType {
 
 	@Override
 	public LimitType decrement() {
-		switch (value_type) {
+		switch (valueType) {
 		case UPPER:
 			return new RealLimit(value);
 		default:
@@ -66,7 +66,7 @@ public final class RealLimit extends LimitType {
 
 	@Override
 	public LimitType increment() {
-		switch (value_type) {
+		switch (valueType) {
 		case LOWER:
 			return new RealLimit(value);
 		default:
@@ -77,12 +77,12 @@ public final class RealLimit extends LimitType {
 	@Override
 	public boolean isAdjacent(final LimitType other) {
 		RealLimit rl = (RealLimit) other;
-		return ((Double.compare(value, rl.value) == 0) && ((value_type.value() + 1) == rl.value_type.value()));
+		return ((Double.compare(value, rl.value) == 0) && ((valueType.value() + 1) == rl.valueType.value()));
 	}
 
 	@Override
 	public void toString(final StringBuilder sb) {
-		if (value_type != ValueType.EXACT) {
+		if (valueType != ValueType.EXACT) {
 			sb.append('!');
 		}
 		sb.append(value);
@@ -94,7 +94,7 @@ public final class RealLimit extends LimitType {
 		// compare the double values with "natural ordering" compare,
 		// where -0.0 < 0.0 ... INF < NaN
 		final int rv = Double.compare(value, rl.value);
-		return (rv != 0) ? rv : (value_type.value() - rl.value_type.value());
+		return (rv != 0) ? rv : (valueType.value() - rl.valueType.value());
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public final class RealLimit extends LimitType {
 
 		final RealLimit other = (RealLimit) obj;
 
-		return value_type == other.value_type && Double.compare(value, other.value) == 0;
+		return valueType == other.valueType && Double.compare(value, other.value) == 0;
 	}
 
 	@Override

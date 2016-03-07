@@ -43,6 +43,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 	private Button suppressWarnings;
 	private Button quietly;
 	private Button omitInValueList;
+	private Button warningsForBadVariants;
 
 	//private Composite namingRuleComposite;
 	//private ComboFieldEditor namingRules;
@@ -69,6 +70,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 			suppressWarnings.dispose();
 			quietly.dispose();
 			omitInValueList.dispose();
+			warningsForBadVariants.dispose();
 		}
 	}
 
@@ -129,7 +131,10 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 		
 		omitInValueList = new Button(mainComposite, SWT.CHECK);
 		omitInValueList.setText("Allow 'omit' in template value lists (legacy behavior) (-M)");
-
+		
+		warningsForBadVariants = new Button(mainComposite, SWT.CHECK);
+		warningsForBadVariants.setText("Display warnings instead of errors for invalid variants (-E)");
+		
 		return mainComposite;
 	}
 
@@ -155,6 +160,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 		suppressWarnings.setEnabled(enabled);
 		quietly.setEnabled(enabled);
 		omitInValueList.setEnabled(enabled);
+		warningsForBadVariants.setEnabled(enabled);
 	}
 
 	@Override
@@ -217,6 +223,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 		suppressWarnings.setSelection(false);
 		quietly.setSelection(false);
 		omitInValueList.setSelection(false);
+		warningsForBadVariants.setSelection(false);
 	}
 
 	@Override
@@ -303,6 +310,10 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 			temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY));
 			omitInValueList.setSelection("true".equals(temp) ? true : false);
+			
+			temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+					TITANFlagsOptionsData.WARNINGS_FOR_BAD_VARIANTS_PROPERTY));
+			warningsForBadVariants.setSelection("true".equals(temp) ? true : false);
 
 		} catch (CoreException e) {			
 			performDefaults();
@@ -330,6 +341,7 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 			setProperty(project, TITANFlagsOptionsData.SUPPRESS_WARNINGS_PROPERTY, suppressWarnings.getSelection() ? "true" : "false");
 			setProperty(project, TITANFlagsOptionsData.QUIETLY_PROPERTY, quietly.getSelection() ? "true" : "false");
 			setProperty(project, TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY ,  omitInValueList.getSelection() ? "true" : "false");
+			setProperty(project, TITANFlagsOptionsData.WARNINGS_FOR_BAD_VARIANTS_PROPERTY,  warningsForBadVariants.getSelection() ? "true" : "false");
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);
 			return false;

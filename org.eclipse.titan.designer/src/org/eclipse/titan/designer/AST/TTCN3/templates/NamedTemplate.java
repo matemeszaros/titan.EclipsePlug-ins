@@ -177,6 +177,9 @@ public final class NamedTemplate extends ASTNode implements ILocateableNode, IIn
 		INamedNode inamedNode = getNameParent();
 
 		while (!(inamedNode instanceof Named_Template_List)) {
+			if( inamedNode == null) {
+				return null; //FIXME: this is just a temp solution! find the reason!
+			}
 			inamedNode = inamedNode.getNameParent();
 		}
 

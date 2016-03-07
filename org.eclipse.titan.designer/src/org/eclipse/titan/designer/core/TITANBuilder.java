@@ -1149,7 +1149,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		}
 
 		internalMonitor.done();
-		if (buildJob.foundErrors()) {
+		if (buildJob.foundErrors() || internalMonitor.isCanceled()) {
 			if (getProject() != null && (kind == FULL_BUILD || kind == INCREMENTAL_BUILD)) {
 				final IProject project2 = getProject();
 				WorkspaceJob op = new WorkspaceJob("Touching the project") {

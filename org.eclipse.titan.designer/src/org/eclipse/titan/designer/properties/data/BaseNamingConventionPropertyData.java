@@ -62,7 +62,7 @@ public final class BaseNamingConventionPropertyData {
 	 *                the property list to use
 	 * @param tags
 	 *                the TAGS to use
-	 * @param default_values
+	 * @param defaultValues
 	 *                the default values to use
 	 * */
 	public static void loadProperties(final Node root, final IResource resource, final String qualifier, final String[] properties,
@@ -105,12 +105,6 @@ public final class BaseNamingConventionPropertyData {
 	 *                the document used for creating the tree nodes
 	 * @param resource
 	 *                the resource to work on
-	 * @param properties
-	 *                the property list to use
-	 * @param tags
-	 *                the TAGS to use
-	 * @param default_values
-	 *                the default values to use
 	 * @param qualifier
 	 *                the qualifier to access the properties
 	 * @param properties
@@ -196,10 +190,6 @@ public final class BaseNamingConventionPropertyData {
 	 * @param saveDefaultValues
 	 *                whether the default values should be forced to be
 	 *                added to the output.
-	 * @param tags
-	 *                the list of TAGS to use.
-	 * @param default_values
-	 *                the list of default values to use.
 	 * @param xmlNode
 	 *                the XML node under which the new nodes should get
 	 * @param properties

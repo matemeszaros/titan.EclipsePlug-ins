@@ -62,7 +62,7 @@ public final class Named_Integer_Value extends Value {
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		// actually this should never be called
 		return Type_type.TYPE_INTEGER;
 	}
@@ -100,7 +100,7 @@ public final class Named_Integer_Value extends Value {
 	}
 
 	@Override
-	public IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		if (null != calculatedValue) {
 			return calculatedValue;
@@ -110,7 +110,7 @@ public final class Named_Integer_Value extends Value {
 	}
 
 	@Override
-	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		return true;
 	}
@@ -128,9 +128,9 @@ public final class Named_Integer_Value extends Value {
 	}
 
 	@Override
-	public Value setValuetype(final CompilationTimeStamp timestamp, final Value_type new_type) {
+	public Value setValuetype(final CompilationTimeStamp timestamp, final Value_type newType) {
 		// the conversion is done in ASN1_Integer_Type#check_this_value
-		return super.setValuetype(timestamp, new_type);
+		return super.setValuetype(timestamp, newType);
 	}
 
 	@Override

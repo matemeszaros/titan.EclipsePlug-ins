@@ -84,23 +84,23 @@ public final class TemplateRestriction {
 	}
 
 	/**
-	 * Checks if needed_tr is satisfied by refd_tr.
+	 * Checks if neededTemplateRestriction is satisfied by refd_tr.
 	 *
-	 * @param needed_tr the restriction that should be satisfied.
-	 * @param refd_tr the restriction that should be satisfying.
+	 * @param neededTemplateRestriction the restriction that should be satisfied.
+	 * @param refdTemplateRestriction the restriction that should be satisfying.
 	 *
-	 * @return true if needed_tr is satisfied by refd_tr, false otherwise.
+	 * @return true if neededTemplateRestriction is satisfied by refd_tr, false otherwise.
 	 * */
-	public static boolean isLessRestrictive(final Restriction_type needed_tr, final Restriction_type refd_tr) {
-		switch (needed_tr) {
+	public static boolean isLessRestrictive(final Restriction_type neededTemplateRestriction, final Restriction_type refdTemplateRestriction) {
+		switch (neededTemplateRestriction) {
 		case TR_NONE:
 			return false;
 		case TR_VALUE:
-			return refd_tr != Restriction_type.TR_VALUE;
+			return refdTemplateRestriction != Restriction_type.TR_VALUE;
 		case TR_OMIT:
-			return refd_tr != Restriction_type.TR_VALUE && refd_tr != Restriction_type.TR_OMIT;
+			return refdTemplateRestriction != Restriction_type.TR_VALUE && refdTemplateRestriction != Restriction_type.TR_OMIT;
 		case TR_PRESENT:
-			return refd_tr != Restriction_type.TR_VALUE && refd_tr != Restriction_type.TR_PRESENT;
+			return refdTemplateRestriction != Restriction_type.TR_VALUE && refdTemplateRestriction != Restriction_type.TR_PRESENT;
 		default:
 			return true;
 		}

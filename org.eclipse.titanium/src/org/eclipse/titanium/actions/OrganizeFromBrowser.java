@@ -223,7 +223,6 @@ class OrganizeImportsOp implements IRunnableWithProgress {
 		}
 
 		for (IProject project : projects) {
-			GlobalParser.getProjectSourceParser(project).setFullSemanticAnalysisNeeded();
 			GlobalParser.getProjectSourceParser(project).analyzeAll();
 		}
 

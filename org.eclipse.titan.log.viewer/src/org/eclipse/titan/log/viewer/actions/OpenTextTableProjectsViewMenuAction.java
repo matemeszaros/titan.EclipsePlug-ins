@@ -11,29 +11,30 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IActionDelegate;
-
 import org.eclipse.titan.log.viewer.extractors.TestCaseEvent;
 import org.eclipse.titan.log.viewer.parsers.data.TestCase;
 import org.eclipse.titan.log.viewer.utils.LogFileCacheHandler;
-import org.eclipse.titan.log.viewer.utils.Messages;
 import org.eclipse.titan.log.viewer.utils.SelectionUtils;
 import org.eclipse.titan.log.viewer.views.text.table.TextTableViewHelper;
+import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * Menu action for opening the text table view from the Projects tab in the Navigator view
  *
  */
-public class OpenTextTableProjectsViewMenuAction extends Action implements IActionDelegate, Observer {
+//TODO remove unnecessary functions after conversion
+public class OpenTextTableProjectsViewMenuAction extends AbstractHandler implements IActionDelegate, Observer {
 
-	private static final String NAME = Messages.getString("OpenTextTableMenuAction.0"); //$NON-NLS-1$
 	private IStructuredSelection selection;
 	private IProgressMonitor monitor;
 	private int lastWorked;
@@ -43,12 +44,29 @@ public class OpenTextTableProjectsViewMenuAction extends Action implements IActi
 	 * Constructor
 	 */
 	public OpenTextTableProjectsViewMenuAction() {
-		super(NAME);
 	}
 
 	@Override
-	public void run() {
-		if (this.selection == null) {
+	public void run(final IAction action) {
+		run(selection);
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection tempSelection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+		if (!(tempSelection instanceof IStructuredSelection)) {
+			return null;
+		}
+
+		selection = (IStructuredSelection) tempSelection;
+
+		run(selection);
+
+		return null;
+	}
+
+	public void run(final IStructuredSelection selection) {
+		if (selection == null) {
 			return;
 		}
 		
@@ -73,11 +91,6 @@ public class OpenTextTableProjectsViewMenuAction extends Action implements IActi
 			return;
 		}
 		TextTableViewHelper.open(projectName, projectRelativePath, logRecordToSelect);
-	}
-	
-	@Override
-	public void run(final IAction action) {
-		run();
 	}
 
 	@Override

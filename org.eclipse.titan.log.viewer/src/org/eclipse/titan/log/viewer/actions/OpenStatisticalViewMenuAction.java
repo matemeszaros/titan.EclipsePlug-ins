@@ -18,9 +18,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -28,7 +30,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.log.viewer.exceptions.TechnicalException;
 import org.eclipse.titan.log.viewer.exceptions.TitanLogExceptionHandler;
@@ -50,14 +51,15 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * Menu action for opening the statistical view from the Projects tab in the Navigator view
  *
  */
-public class OpenStatisticalViewMenuAction extends Action implements IActionDelegate, Observer {
+//TODO remove unnecessary functions after conversion
+public class OpenStatisticalViewMenuAction extends AbstractHandler implements IActionDelegate, Observer {
 
-	private static final String NAME = Messages.getString("OpenStatisticalViewMenuAction.6");  //$NON-NLS-1$
 	private IStructuredSelection selection;
 	private IProgressMonitor monitor;
 	private int lastWorked;
@@ -67,17 +69,29 @@ public class OpenStatisticalViewMenuAction extends Action implements IActionDele
 	private TestCaseExtractor testCaseExtractor;
 
 	public OpenStatisticalViewMenuAction() {
-		super(NAME);
 		testCaseExtractor = new TestCaseExtractor();
 	}
 
 	@Override
 	public void run(final IAction action) {
-		run();
+		run(selection);
 	}
 
 	@Override
-	public void run() {
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		ISelection tempSelection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+		if (!(tempSelection instanceof IStructuredSelection)) {
+			return null;
+		}
+
+		selection = (IStructuredSelection) tempSelection;
+
+		run(selection);
+
+		return null;
+	}
+
+	public void run(final IStructuredSelection selection) {
 		this.logFileMetaData = null;
 		this.logFileIsSupported = true;
 		if (this.selection == null) {
@@ -187,7 +201,7 @@ public class OpenStatisticalViewMenuAction extends Action implements IActionDele
 
 	private void processLogFile() {
 		try {
-			new ProgressMonitorDialog(new Shell(Display.getDefault())).run(false, false, new IRunnableWithProgress() {
+			new ProgressMonitorDialog(null).run(false, false, new IRunnableWithProgress() {
 				@Override
 				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					OpenStatisticalViewMenuAction.this.monitor = monitor;
@@ -224,7 +238,7 @@ public class OpenStatisticalViewMenuAction extends Action implements IActionDele
 							Display.getDefault().asyncExec(new Runnable() {
 								@Override
 								public void run() {
-									MessageDialog.openInformation(new Shell(Display.getDefault()),
+									MessageDialog.openInformation(null,
 											Messages.getString("OpenStatisticalViewMenuAction.2"),
 											Messages.getString("OpenStatisticalViewMenuAction.1"));
 								}

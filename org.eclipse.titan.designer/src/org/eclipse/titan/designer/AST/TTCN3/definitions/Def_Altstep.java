@@ -62,17 +62,17 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 	}
 
 	private final FormalParameterList formalParList;
-	private final Reference runs_on_ref;
+	private final Reference runsOnRef;
 	private Component_Type runsOnType = null;
 	private final StatementBlock block;
 	private final AltGuards altGuards;
 	private NamedBridgeScope bridgeScope = null;
 
-	public Def_Altstep(final Identifier identifier, final FormalParameterList formalParameters, final Reference runs_on_ref,
+	public Def_Altstep(final Identifier identifier, final FormalParameterList formalParameters, final Reference runsOnRef,
 			final StatementBlock block, final AltGuards altGuards) {
 		super(identifier);
 		this.formalParList = formalParameters;
-		this.runs_on_ref = runs_on_ref;
+		this.runsOnRef = runsOnRef;
 		this.block = block;
 		this.altGuards = altGuards;
 
@@ -80,8 +80,8 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 			formalParList.setMyDefinition(this);
 			formalParList.setFullNameParent(this);
 		}
-		if (runs_on_ref != null) {
-			runs_on_ref.setFullNameParent(this);
+		if (runsOnRef != null) {
+			runsOnRef.setFullNameParent(this);
 		}
 		if (block != null) {
 			block.setMyDefinition(this);
@@ -106,7 +106,7 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 
 		if (formalParList == child) {
 			return builder.append(FULLNAMEPART1);
-		} else if (runs_on_ref == child) {
+		} else if (runsOnRef == child) {
 			return builder.append(FULLNAMEPART2);
 		} else if (block == child) {
 			return builder.append(FULLNAMEPART3);
@@ -158,8 +158,8 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 		bridgeScope.setScopeMacroName(identifier.getDisplayName());
 
 		super.setMyScope(bridgeScope);
-		if (runs_on_ref != null) {
-			runs_on_ref.setMyScope(bridgeScope);
+		if (runsOnRef != null) {
+			runsOnRef.setMyScope(bridgeScope);
 		}
 		formalParList.setMyScope(bridgeScope);
 		if (block != null) {
@@ -198,8 +198,8 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 
 		T3Doc.check(this.getCommentLocation(), KIND);
 
-		if (runs_on_ref != null) {
-			runsOnType = runs_on_ref.chkComponentypeReference(timestamp);
+		if (runsOnRef != null) {
+			runsOnType = runsOnRef.chkComponentypeReference(timestamp);
 			if (runsOnType != null) {
 				Scope formalParlistPreviosScope = formalParList.getParentScope();
 				if (formalParlistPreviosScope instanceof RunsOnScope
@@ -359,12 +359,10 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
@@ -372,7 +370,6 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 				// damage handled
 				if (result == 0) {
 					enveloped = true;
-					reparser.moduleToBeReanalysed.addAll(referingHere);
 				} else {
 					removeBridge();
 					throw new ReParseException(result);
@@ -388,7 +385,6 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 						formalParList.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(formalParList.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -396,16 +392,15 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 				}
 			}
 
-			if (runs_on_ref != null) {
+			if (runsOnRef != null) {
 				if (enveloped) {
-					runs_on_ref.updateSyntax(reparser, false);
-					reparser.updateLocation(runs_on_ref.getLocation());
-				} else if (reparser.envelopsDamage(runs_on_ref.getLocation())) {
+					runsOnRef.updateSyntax(reparser, false);
+					reparser.updateLocation(runsOnRef.getLocation());
+				} else if (reparser.envelopsDamage(runsOnRef.getLocation())) {
 					try {
-						runs_on_ref.updateSyntax(reparser, true);
+						runsOnRef.updateSyntax(reparser, true);
 						enveloped = true;
-						reparser.updateLocation(runs_on_ref.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
+						reparser.updateLocation(runsOnRef.getLocation());
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -454,7 +449,6 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 						withAttributesPath.updateSyntax(reparser, true);
 						enveloped = true;
 						reparser.updateLocation(withAttributesPath.getLocation());
-						reparser.moduleToBeReanalysed.addAll(referingHere);
 					} catch (ReParseException e) {
 						removeBridge();
 						throw e;
@@ -477,9 +471,9 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 			reparser.updateLocation(formalParList.getLocation());
 		}
 
-		if (runs_on_ref != null) {
-			runs_on_ref.updateSyntax(reparser, false);
-			reparser.updateLocation(runs_on_ref.getLocation());
+		if (runsOnRef != null) {
+			runsOnRef.updateSyntax(reparser, false);
+			reparser.updateLocation(runsOnRef.getLocation());
 		}
 
 		if (block != null) {
@@ -514,8 +508,8 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 		if (formalParList != null) {
 			formalParList.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (runs_on_ref != null) {
-			runs_on_ref.findReferences(referenceFinder, foundIdentifiers);
+		if (runsOnRef != null) {
+			runsOnRef.findReferences(referenceFinder, foundIdentifiers);
 		}
 		if (block != null) {
 			block.findReferences(referenceFinder, foundIdentifiers);
@@ -533,7 +527,7 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 		if (formalParList != null && !formalParList.accept(v)) {
 			return false;
 		}
-		if (runs_on_ref != null && !runs_on_ref.accept(v)) {
+		if (runsOnRef != null && !runsOnRef.accept(v)) {
 			return false;
 		}
 		if (block != null && !block.accept(v)) {

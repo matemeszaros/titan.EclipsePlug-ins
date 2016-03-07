@@ -39,6 +39,10 @@ public final class PreferenceConstantValues {
 	public static final String COMPILEROPTIONSTAY = "Stay unchanged";
 	public static final String COMPILEROPTIONOUTDATE = "Become outdated";
 	public static final String COMPILEROPTIONREMOVE = "Are removed";
+	
+	// options for selecting the broken parts to analyze
+	public static final String MODULESELECTIONORIGINAL = "Original";
+	public static final String BROKENPARTSVIAREFERENCES = "Broken parts via references";
 
 	// options for the designer on how compiler and designer markers interact
 	public static final String ONTHEFLYOPTIONSTAY = "Stay";

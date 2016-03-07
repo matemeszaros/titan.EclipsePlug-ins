@@ -7,8 +7,6 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.ttcn3editor;
 
-import java.util.List;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -19,22 +17,14 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Module;
-import org.eclipse.titan.designer.AST.ASN1.definitions.ASN1Module;
 import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.core.TITANNature;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.declarationsearch.IdentifierFinderVisitor;
-import org.eclipse.titan.designer.editors.DeclarationCollectionHelper;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
-import org.eclipse.titan.designer.editors.OpenDeclarationHelper;
-import org.eclipse.titan.designer.editors.OpenDeclarationLabelProvider;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
@@ -45,7 +35,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
@@ -106,79 +95,6 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 		this.targetEditor = targetEditor;
 	}
 
-	private void getDeclarationWithoutVisitor(final int offset, final boolean reportDebugInformation, final IFile file) {
-		DeclarationCollector declarationCollector = OpenDeclarationHelper.findVisibleDeclarations(targetEditor, new TTCN3ReferenceParser(
-				false), ((TTCN3Editor) targetEditor).getDocument(), offset, false);
-
-		if (declarationCollector == null) {
-			return;
-		}
-
-		DeclarationCollectionHelper declaration = null;
-		List<DeclarationCollectionHelper> collected = declarationCollector.getCollected();
-		if (collected.isEmpty()) {
-			if (reportDebugInformation) {
-				TITANDebugConsole.println("No visible elements found");
-			}
-			ProjectSourceParser projectSourceParser1 = GlobalParser.getProjectSourceParser(file.getProject());
-			for (String moduleName2 : projectSourceParser1.getKnownModuleNames()) {
-				Module module2 = projectSourceParser1.getModuleByName(moduleName2);
-				if (module2 != null && module2 instanceof ASN1Module) {
-					module2.getAssignments().addDeclaration(declarationCollector);
-				}
-			}
-
-			if (declarationCollector.getCollectionSize() == 0) {
-				targetEditor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(NOTTTCN3DECLARATION);
-				return;
-			}
-
-			if (reportDebugInformation) {
-				TITANDebugConsole.println("Elements were only found in not visible modules");
-			}
-
-			OpenDeclarationLabelProvider labelProvider = new OpenDeclarationLabelProvider();
-			ElementListSelectionDialog dialog = new ElementListSelectionDialog(new Shell(Display.getDefault()), labelProvider);
-			dialog.setTitle("Open");
-			dialog.setMessage("Select the element to open");
-			dialog.setElements(collected.toArray());
-			if (dialog.open() == Window.OK) {
-				if (reportDebugInformation) {
-					TITANDebugConsole.println("Selected: " + dialog.getFirstResult());
-				}
-				declaration = (DeclarationCollectionHelper) dialog.getFirstResult();
-			}
-		} else {
-			declaration = collected.get(0);
-		}
-		if (reportDebugInformation) {
-			for (DeclarationCollectionHelper foundDeclaration : collected) {
-				TITANDebugConsole.println("Assignment:" + foundDeclaration.location.getFile() + ": "
-						+ foundDeclaration.location.getOffset() + " - "
-						+ foundDeclaration.location.getEndOffset());
-			}
-		}
-
-		if (declaration != null) {
-			selectAndRevealDeclaration(declaration.location);
-		}
-	}
-
-	private void getDeclarationVisitor(final Module module, final IdentifierFinderVisitor visitor, final boolean reportDebugInformation) {
-
-		module.accept(visitor);
-		final Declaration decl = visitor.getReferencedDeclaration();
-		if (decl == null) {
-			if (reportDebugInformation) {
-				TITANDebugConsole.println("No visible elements found");
-			}
-			return;
-		}
-
-		selectAndRevealDeclaration(decl.getIdentifier().getLocation());
-
-	}
-
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		targetEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -207,7 +123,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 		}
 
 		if (ResourceExclusionHelper.isExcluded(file)) {
-			MessageDialog.openError(new Shell(Display.getDefault()), "Open Declaration does not work within excluded resources",
+			MessageDialog.openError(null, "Open Declaration does not work within excluded resources",
 					"This module is excluded from build. To use the Open Declaration "
 							+ "feature please click on the 'Toggle exclude from build state' in the context menu of the Project Explorer. ");
 			return;
@@ -228,8 +144,6 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			offset = ((TTCN3Editor) targetEditor).getCarretOffset();
 		}
 
-		IdentifierFinderVisitor visitor = new IdentifierFinderVisitor(offset);
-
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
 
 		final String ttcn3ModuleName = projectSourceParser.containedModule(file);
@@ -243,19 +157,18 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			return;
 		}
 
-		// ToDo: In case of minimize memory usage, the code reverts to
-		// non visitor type of get declaration.
-		// Think it over.
-		// if
-		// (Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-		// PreferenceConstants.MINIMISEMEMORYUSAGE, true, null)) {
-		//
-		// getDeclarationWithoutVisitor(offset, reportDebugInformation,
-		// file);
+		IdentifierFinderVisitor visitor = new IdentifierFinderVisitor(offset);
+		module.accept(visitor);
+		final Declaration decl = visitor.getReferencedDeclaration();
+		if (decl == null) {
+			if (reportDebugInformation) {
+				TITANDebugConsole.println("No visible elements found");
+			}
+			return;
+		}
 
-		// } else {
-		getDeclarationVisitor(module, visitor, reportDebugInformation);
-		// }
+		selectAndRevealDeclaration(decl.getIdentifier().getLocation());
+
 		return;
 	}
 }

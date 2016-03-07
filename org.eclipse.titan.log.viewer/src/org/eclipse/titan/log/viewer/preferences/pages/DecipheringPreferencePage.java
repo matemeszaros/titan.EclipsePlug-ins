@@ -202,7 +202,7 @@ public class DecipheringPreferencePage extends LogViewerPreferenceRootPage {
 				@Override
 				public void run() {
 					MessageDialog.openError(
-							new Shell(Display.getDefault()),
+							null,
 							"Invalid file",
 							"The file can not be found");
 				}
@@ -218,7 +218,7 @@ public class DecipheringPreferencePage extends LogViewerPreferenceRootPage {
 				@Override
 				public void run() {
 					MessageDialog.openError(
-							new Shell(Display.getDefault()),
+							null,
 							"Error while importing the rulesets",
 							e.getMessage());
 				}

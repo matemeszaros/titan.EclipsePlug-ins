@@ -26,7 +26,6 @@ import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportationChain;
 import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.Reference;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.core.LoadBalancingUtilities;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
@@ -41,6 +40,8 @@ import org.eclipse.titan.designer.parsers.ProjectStructureDataCollector;
  * @author Kristof Szabados
  */
 public final class Imports extends ASTNode implements IOutlineElement, ILocateableNode {
+	private static final String DUPLICATEIMPORTFIRST = "Duplicate import from module `{0}'' was first declared here";
+	private static final String DUPLICATEIMPORTREPEATED = "Duplicate import from module `{0}'' was declared here again";
 	private static final String TTCN3IMPORT = "An ASN.1 module cannot import from a TTCN-3 module";
 	private static final String SELFIMPORT = "A module cannot import from itself";
 
@@ -77,7 +78,7 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 		if (null != importedModule && null != importedModule.getIdentifier() && null != importedModule.getIdentifier().getName()) {
 			importedModule.setProject(project);
 			importedModules_v.add(importedModule);
-		}
+		} 
 	}
 
 	/**
@@ -192,18 +193,13 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 				continue;
 			}
 
-			// check the imports recursively
-			referenceChain.markState();
-			importModule.checkImports(timestamp, referenceChain, moduleStack);
-			referenceChain.previousState();
-
 			String name = identifier.getName();
 			if (importedModules_map.containsKey(name)) {
 				final Location importedLocation = importedModules_map.get(name).getIdentifier().getLocation();
-				importedLocation.reportSingularSemanticError(MessageFormat.format(TTCN3Module.DUPLICATEIMPORTFIRST,
+				importedLocation.reportSingularSemanticError(MessageFormat.format(DUPLICATEIMPORTFIRST,
 						identifier.getDisplayName()));
 				identifier.getLocation().reportSemanticError(
-						MessageFormat.format(TTCN3Module.DUPLICATEIMPORTREPEATED, identifier.getDisplayName()));
+						MessageFormat.format(DUPLICATEIMPORTREPEATED, identifier.getDisplayName()));
 			} else {
 				importedModules_map.put(name, importModule);
 			}
@@ -226,6 +222,14 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 			}
 			importModule.setUnhandledChange(false);
 			LoadBalancingUtilities.astNodeChecked();
+		}
+		
+		for (ImportModule importModule : importedModules_v) {
+			// check the imports recursively
+			referenceChain.markState();
+			importModule.checkImports(timestamp, referenceChain, moduleStack);
+			referenceChain.previousState();
+
 		}
 	}
 

@@ -1,48 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2015 Ericsson Telecom AB
+ Copyright (c) 2000-2016 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<?eclipse version="3.2"?>
+<?eclipse version="4.4"?>
 <fragment>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            id="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
-            objectClass="org.eclipse.core.resources.IFile">
-         <menu
-               id="TITAN_popup_Menu"
-               label="TITAN"
-               path="additions">
-            <separator
-                  name="group2">
-            </separator>
-         </menu>
-         <action
-               class="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
-               enablesFor="+"
-               id="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
-               label="Generate checklist from file"
-               menubarPath="TITAN_popup_Menu/group2">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
-         id="org.eclipse.titan.regressiontests.HeadlessRunner"
-         name="Headless runner"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            cardinality="singleton-global"
-            thread="main"
-            visible="true">
-         <run
-              class="org.eclipse.titan.regressiontests.HeadlessRunner">
-        </run>
-      </application>
-   </extension>
+  <extension point="org.eclipse.ui.commands">
+    <command
+      defaultHandler="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
+      id="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
+      name="Generate checklist from file" />
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution
+      locationURI="popup:org.eclipse.titan.designer.TitanMenu?endof=additions">
+      <command
+        commandId="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
+        id="org.eclipse.titan.regressiontests.tools.ChecklistGenerator"
+        label="Generate checklist from file" mode="FORCE_TEXT">
+        <visibleWhen checkEnabled="false">
+          <with variable="selection">
+            <iterate operator="and" ifEmpty="false">
+              <adapt type="org.eclipse.core.resources.IFile">
+              </adapt>
+            </iterate>
+          </with>
+        </visibleWhen>
+      </command>
+    </menuContribution>
+  </extension>
+  <extension id="org.eclipse.titan.regressiontests.HeadlessRunner"
+    name="Headless runner" point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titan.regressiontests.HeadlessRunner">
+      </run>
+    </application>
+  </extension>
 
 </fragment>

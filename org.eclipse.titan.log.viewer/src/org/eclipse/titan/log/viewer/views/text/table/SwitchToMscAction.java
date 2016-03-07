@@ -20,17 +20,16 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.log.viewer.Activator;
-import org.eclipse.titan.log.viewer.actions.OpenMSCViewMenuAction;
+import org.eclipse.titan.log.viewer.actions.OpenMSCViewAction;
 import org.eclipse.titan.log.viewer.extractors.TestCaseExtractor;
 import org.eclipse.titan.log.viewer.models.LogFileMetaData;
 import org.eclipse.titan.log.viewer.parsers.data.TestCase;
 import org.eclipse.titan.log.viewer.utils.Constants;
 import org.eclipse.titan.log.viewer.utils.LogFileCacheHandler;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 
 class SwitchToMscAction extends Action {
 	private TextTableView textTableView;
@@ -91,7 +90,7 @@ class SwitchToMscAction extends Action {
 			return;
 		}
 
-		final OpenMSCViewMenuAction openMSCAction = new OpenMSCViewMenuAction();
+		final OpenMSCViewAction openMSCAction = new OpenMSCViewAction();
 		openMSCAction.selectionChanged(null, new StructuredSelection(testCases.get(testCaseNumber)));
 		openMSCAction.setFirstRow(recordNumber);
 		openMSCAction.run();

@@ -11,18 +11,19 @@ import java.util.List;
 
 import org.eclipse.titan.designer.AST.ASTNode;
 import org.eclipse.titan.designer.AST.ASTVisitor;
+import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.ILocateableNode;
-import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferencingElement;
 import org.eclipse.titan.designer.AST.ISubReference;
-import org.eclipse.titan.designer.AST.ITypeWithComponents;
+import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Value;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.editors.DeclarationCollector;
@@ -202,14 +203,15 @@ public final class EnumItem extends ASTNode implements ILocateableNode, IIncreme
 
 	@Override
 	public Declaration getDeclaration() {
-		INamedNode inamedNode = getNameParent();
-
-		while (!(inamedNode instanceof TTCN3_Enumerated_Type)) {
-			inamedNode = inamedNode.getNameParent();
+		Module module = getMyScope().getModuleScope();
+		Assignment assignment = module.getEnclosingAssignment(getLocation().getOffset());
+		IType type = assignment.getType(CompilationTimeStamp.getBaseTimestamp());
+		
+		if(!(type instanceof TTCN3_Enumerated_Type)) {
+			return null;
 		}
 
-		TTCN3_Enumerated_Type type = (TTCN3_Enumerated_Type) inamedNode;
-		Identifier id = ((ITypeWithComponents) type).getComponentIdentifierByName(getId());
-		return Declaration.createInstance(type.getDefiningAssignment(), id);
+		Identifier id = ((TTCN3_Enumerated_Type) type).getComponentIdentifierByName(getId());
+		return Declaration.createInstance(assignment, id);
 	}
 }

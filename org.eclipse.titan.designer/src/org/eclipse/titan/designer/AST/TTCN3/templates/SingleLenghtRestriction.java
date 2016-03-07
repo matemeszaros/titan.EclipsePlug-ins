@@ -85,7 +85,7 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 	}
 
 	@Override
-	public void check(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public void check(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
@@ -97,7 +97,7 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 		}
 		value.setMyGovernor(integer);
 		IValue last = integer.checkThisValueRef(timestamp, value);
-		integer.checkThisValue(timestamp, last, new ValueCheckingOptions(expected_value, false, false, true, false, false));
+		integer.checkThisValue(timestamp, last, new ValueCheckingOptions(expectedValue, false, false, true, false, false));
 
 		IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		last = last.getValueRefdLast(timestamp, chain);

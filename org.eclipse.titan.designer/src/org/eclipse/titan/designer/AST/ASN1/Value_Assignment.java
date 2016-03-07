@@ -44,8 +44,8 @@ public final class Value_Assignment extends ASN1Assignment {
 	/** right. */
 	private final Value value;
 
-	public Value_Assignment(final Identifier id, final Ass_pard ass_pard, final IASN1Type type, final Value value) {
-		super(id, ass_pard);
+	public Value_Assignment(final Identifier id, final Ass_pard assPard, final IASN1Type type, final Value value) {
+		super(id, assPard);
 		this.type = type;
 		this.value = value;
 
@@ -82,9 +82,9 @@ public final class Value_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public void setRightScope(final Scope right_scope) {
+	public void setRightScope(final Scope rightScope) {
 		if (null != value) {
-			value.setMyScope(right_scope);
+			value.setMyScope(rightScope);
 		}
 	}
 
@@ -107,7 +107,7 @@ public final class Value_Assignment extends ASN1Assignment {
 	}
 
 	public IValue getValue() {
-		if (null != ass_pard) {
+		if (null != assPard) {
 			location.reportSemanticError(MessageFormat.format("`{0}'' is a parameterized value assignment", getFullName()));
 			return null;
 		}
@@ -127,8 +127,8 @@ public final class Value_Assignment extends ASN1Assignment {
 
 		lastTimeChecked = timestamp;
 
-		if (null != ass_pard) {
-			ass_pard.check(timestamp);
+		if (null != assPard) {
+			assPard.check(timestamp);
 			return;
 		}
 
@@ -144,12 +144,12 @@ public final class Value_Assignment extends ASN1Assignment {
 		}
 
 		value.setMyGovernor(type);
-		final IValue temp_value = type.checkThisValueRef(timestamp, value);
-		type.checkThisValue(timestamp, temp_value, new ValueCheckingOptions(Expected_Value_type.EXPECTED_CONSTANT, false, false, true, true,
+		final IValue tempValue = type.checkThisValueRef(timestamp, value);
+		type.checkThisValue(timestamp, tempValue, new ValueCheckingOptions(Expected_Value_type.EXPECTED_CONSTANT, false, false, true, true,
 				false));
 
 		final IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
-		temp_value.checkRecursions(timestamp, chain);
+		tempValue.checkRecursions(timestamp, chain);
 		chain.release();
 	}
 
@@ -173,8 +173,8 @@ public final class Value_Assignment extends ASN1Assignment {
 		}
 
 		if (subrefs.size() == i + 1 && identifier.getName().toLowerCase().startsWith(subrefs.get(i).getId().getName().toLowerCase())) {
-			final String proposal_kind = UNKNOWNASSIGNMENT;
-			propCollector.addProposal(identifier, " - " + proposal_kind, ImageCache.getImage(getOutlineIcon()), proposal_kind);
+			final String proposalKind = UNKNOWNASSIGNMENT;
+			propCollector.addProposal(identifier, " - " + proposalKind, ImageCache.getImage(getOutlineIcon()), proposalKind);
 		} else if (subrefs.size() > i + 1 && null != type && identifier.getName().equals(subrefs.get(i).getId().getName())) {
 			// perfect match
 			type.addProposal(propCollector, i + 1);
@@ -214,10 +214,7 @@ public final class Value_Assignment extends ASN1Assignment {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (identifier != null && !identifier.accept(v)) {
-			return false;
-		}
-		if (ass_pard != null && !ass_pard.accept(v)) {
+		if (!super.memberAccept(v)) {
 			return false;
 		}
 		if (type != null && !type.accept(v)) {

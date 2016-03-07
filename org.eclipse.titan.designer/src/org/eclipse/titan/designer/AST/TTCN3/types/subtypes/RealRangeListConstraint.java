@@ -16,53 +16,53 @@ package org.eclipse.titan.designer.AST.TTCN3.types.subtypes;
  * @author Adam Delic
  */
 public final class RealRangeListConstraint extends SubtypeConstraint {
-	private final boolean has_nan;
+	private final boolean hasNan;
 	private final RangeListConstraint rlc;
 
 	/** empty set constructor */
 	public RealRangeListConstraint() {
-		has_nan = false;
+		hasNan = false;
 		rlc = new RangeListConstraint(LimitType.Type.REAL);
 	}
 
 	/** single value set */
 	public RealRangeListConstraint(final Double d) {
 		if (Double.isNaN(d)) {
-			has_nan = true;
+			hasNan = true;
 			rlc = new RangeListConstraint(LimitType.Type.REAL);
 			return;
 		}
-		has_nan = false;
+		hasNan = false;
 		rlc = new RangeListConstraint(new RealLimit(d));
 	}
 
 	/** value range set */
-	public RealRangeListConstraint(final RealLimit rl_begin, final RealLimit rl_end) {
-		has_nan = false;
-		rlc = new RangeListConstraint(rl_begin, rl_end);
+	public RealRangeListConstraint(final RealLimit rlBegin, final RealLimit rlEnd) {
+		hasNan = false;
+		rlc = new RangeListConstraint(rlBegin, rlEnd);
 	}
 
-	private RealRangeListConstraint(final boolean has_nan, final RangeListConstraint rlc) {
-		this.has_nan = has_nan;
+	private RealRangeListConstraint(final boolean hasNan, final RangeListConstraint rlc) {
+		this.hasNan = hasNan;
 		this.rlc = rlc;
 	}
 
 	@Override
 	public RealRangeListConstraint complement() {
-		return new RealRangeListConstraint(!has_nan, rlc.complement());
+		return new RealRangeListConstraint(!hasNan, rlc.complement());
 	}
 
 	@Override
 	public RealRangeListConstraint intersection(final SubtypeConstraint other) {
 		RealRangeListConstraint o = (RealRangeListConstraint) other;
-		return new RealRangeListConstraint(has_nan && o.has_nan, rlc.intersection(o.rlc));
+		return new RealRangeListConstraint(hasNan && o.hasNan, rlc.intersection(o.rlc));
 	}
 
 	@Override
 	public boolean isElement(final Object o) {
 		Double d = (Double) o;
 		if (d.isNaN()) {
-			return has_nan;
+			return hasNan;
 		}
 
 		return rlc.isElement(new RealLimit(d));
@@ -70,25 +70,25 @@ public final class RealRangeListConstraint extends SubtypeConstraint {
 
 	@Override
 	public TernaryBool isEmpty() {
-		return rlc.isEmpty().and(TernaryBool.fromBool(!has_nan));
+		return rlc.isEmpty().and(TernaryBool.fromBool(!hasNan));
 	}
 
 	@Override
 	public TernaryBool isEqual(final SubtypeConstraint other) {
 		RealRangeListConstraint o = (RealRangeListConstraint) other;
-		return rlc.isEqual(o.rlc).and(TernaryBool.fromBool(has_nan == o.has_nan));
+		return rlc.isEqual(o.rlc).and(TernaryBool.fromBool(hasNan == o.hasNan));
 	}
 
 	@Override
 	public TernaryBool isFull() {
-		return rlc.isFull().and(TernaryBool.fromBool(has_nan));
+		return rlc.isFull().and(TernaryBool.fromBool(hasNan));
 	}
 
 	@Override
 	public void toString(final StringBuilder sb) {
 		sb.append('(');
 		rlc.toString(sb, false);
-		if (has_nan) {
+		if (hasNan) {
 			if (rlc.isEmpty() != TernaryBool.TTRUE) {
 				sb.append(", ");
 			}
@@ -100,7 +100,7 @@ public final class RealRangeListConstraint extends SubtypeConstraint {
 	@Override
 	public RealRangeListConstraint union(final SubtypeConstraint other) {
 		RealRangeListConstraint o = (RealRangeListConstraint) other;
-		return new RealRangeListConstraint(has_nan || o.has_nan, rlc.union(o.rlc));
+		return new RealRangeListConstraint(hasNan || o.hasNan, rlc.union(o.rlc));
 	}
 
 }

@@ -38,7 +38,7 @@ public final class TITANInstallationValidator {
 			super.buttonPressed(buttonId);
 
 			if (buttonId == 1) {
-				PreferencesUtil.createPreferenceDialogOn(new Shell(Display.getDefault()),
+				PreferencesUtil.createPreferenceDialogOn(null,
 						"org.eclipse.titan.designer.preferences.pages.TITANPreferencePage", null, null).open();
 			}
 		}
@@ -48,8 +48,8 @@ public final class TITANInstallationValidator {
 	private TITANInstallationValidator() {
 	}
 
-	public static boolean check(final boolean force_dialog) {
-		if (!force_dialog && wasChecked) {
+	public static boolean check(final boolean forceDialog) {
+		if (!forceDialog && wasChecked) {
 			return wasCorrect;
 		}
 
@@ -64,7 +64,7 @@ public final class TITANInstallationValidator {
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					InstallationErrorDialog dialog = new InstallationErrorDialog(new Shell(Display.getDefault()),
+					InstallationErrorDialog dialog = new InstallationErrorDialog(null,
 							"Checking for installed TITAN failed", "The installation path of TITAN is not set.\n\n"
 									+ CORRECTION_STRING);
 					dialog.open();
@@ -86,7 +86,7 @@ public final class TITANInstallationValidator {
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					InstallationErrorDialog dialog = new InstallationErrorDialog(new Shell(Display.getDefault()),
+					InstallationErrorDialog dialog = new InstallationErrorDialog(null,
 							"Checking for installed TITAN failed", "No TITAN was found at " + installationPath + "\n\n"
 									+ CORRECTION_STRING);
 					dialog.open();

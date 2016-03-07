@@ -47,8 +47,10 @@ public final class SelfComponentExpression extends Expression_Value {
 
 	@Override
 	public IType getExpressionGovernor(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
-		if (myGovernor != null) {
-			return myGovernor;
+		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
+			if (myGovernor != null) {
+				return myGovernor;
+			}
 		}
 
 		if (myScope == null) {

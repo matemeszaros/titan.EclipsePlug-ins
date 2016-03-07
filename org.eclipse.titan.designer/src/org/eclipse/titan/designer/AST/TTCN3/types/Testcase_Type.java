@@ -244,7 +244,7 @@ public final class Testcase_Type extends Type {
 		Def_Testcase testcase = null;
 		switch (last.getValuetype()) {
 		case TESTCASE_REFERENCE_VALUE:
-			testcase = ((Testcase_Reference_Value) last).getReferedTestcase();
+			testcase = ((Testcase_Reference_Value) last).getReferredTestcase();
 			if (testcase == null) {
 				setIsErroneous(true);
 				return;

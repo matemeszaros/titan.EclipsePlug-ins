@@ -59,7 +59,7 @@ public final class Named_Bits extends Value {
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (null == lastTimeChecked || lastTimeChecked.isLess(timestamp)) {
 			return Type_type.TYPE_UNDEFINED;
 		}
@@ -68,7 +68,7 @@ public final class Named_Bits extends Value {
 			return Type_type.TYPE_UNDEFINED;
 		}
 
-		return realValue.getExpressionReturntype(timestamp, expected_value);
+		return realValue.getExpressionReturntype(timestamp, expectedValue);
 	}
 
 	public int getNofIds() {
@@ -92,8 +92,8 @@ public final class Named_Bits extends Value {
 		return identifierMap.containsKey(id.getName());
 	}
 
-	public void setRealValue(final Bitstring_Value real_value) {
-		this.realValue = real_value;
+	public void setRealValue(final Bitstring_Value realValue) {
+		this.realValue = realValue;
 	}
 
 	@Override
@@ -139,23 +139,23 @@ public final class Named_Bits extends Value {
 	}
 
 	@Override
-	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		if (null == realValue || realValue.getIsErroneous(timestamp)) {
 			return true;
 		}
 
-		return realValue.isUnfoldable(timestamp, expected_value, referenceChain);
+		return realValue.isUnfoldable(timestamp, expectedValue, referenceChain);
 	}
 
 	@Override
-	public IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value,
+	public IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
 		if (null == realValue || realValue.getIsErroneous(timestamp)) {
 			return this;
 		}
 
-		return realValue.getValueRefdLast(timestamp, expected_value, referenceChain);
+		return realValue.getValueRefdLast(timestamp, expectedValue, referenceChain);
 	}
 
 	@Override

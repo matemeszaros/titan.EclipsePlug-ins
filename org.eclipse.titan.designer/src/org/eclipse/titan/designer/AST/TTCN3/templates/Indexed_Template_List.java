@@ -15,12 +15,12 @@ import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
+import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
-import org.eclipse.titan.designer.AST.Scope;
-import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.AST.TTCN3.types.Array_Type;
@@ -317,9 +317,9 @@ public final class Indexed_Template_List extends TTCN3Template {
 	@Override
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		for (int i = 0, size = indexedTemplates.getNofTemplates(); i < size; i++) {

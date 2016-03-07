@@ -89,7 +89,7 @@ public final class OrganizeImports {
 	 */
 	public static Location findReferenceInProject(final Reference reference, final IProject project) {
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		DeclarationCollector declarationCollector = new DeclarationCollector(reference, projectSourceParser);
+		DeclarationCollector declarationCollector = new DeclarationCollector(reference);
 		for (String moduleName : projectSourceParser.getKnownModuleNames()) {
 			Module m = projectSourceParser.getModuleByName(moduleName);
 			if (m != null) {

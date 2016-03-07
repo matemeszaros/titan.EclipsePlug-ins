@@ -191,14 +191,14 @@ public interface IValue extends IGovernedSimple, IIdentifierContainer, IVisitabl
 	 *
 	 * @param timestamp
 	 *                the time stamp of the actual semantic check cycle.
-	 * @param expected_value
+	 * @param expectedValue
 	 *                the kind of the value to be expected.
 	 * @param referenceChain
 	 *                the reference chain to detect circular references.
 	 *
 	 * @return true if the value is unfoldable, false if it is foldable
 	 * */
-	boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value, final IReferenceChain referenceChain);
+	boolean isUnfoldable(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue, final IReferenceChain referenceChain);
 
 	/**
 	 * Returns the referenced field value for structured values, or itself
@@ -226,13 +226,13 @@ public interface IValue extends IGovernedSimple, IIdentifierContainer, IVisitabl
 	 *
 	 * @param timestamp
 	 *                the time stamp of the actual semantic check cycle.
-	 * @param new_type
+	 * @param newType
 	 *                the new value_type the new value should belong to.
 	 *
 	 * @return the new value of the provided kind if the conversion is
 	 *         possible, or this value otherwise.
 	 * */
-	IValue setValuetype(final CompilationTimeStamp timestamp, final Value_type new_type);
+	IValue setValuetype(final CompilationTimeStamp timestamp, final Value_type newType);
 
 	/**
 	 * Checks whether this value is defining itself in a recursive way. This

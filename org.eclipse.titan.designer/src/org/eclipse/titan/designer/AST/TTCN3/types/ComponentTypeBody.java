@@ -104,6 +104,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	 * */
 	private Map<String, Definition> attributeGainedDefinitions = new HashMap<String, Definition>();
 
+	/** the with attributes of the definition does not belong to the componentTypeBody naturally !*/
 	private WithAttributesPath withAttributesPath;
 
 	// the component type to which this body belongs.
@@ -596,6 +597,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		lastUniquenessCheck = timestamp;
 
 		compatibleBodies.clear();
+		definitions.checkUniqueness();
 
 		addDefinitionsOfExtendsParents(timestamp);
 		addDefinitionsOfExtendAttributeParents(timestamp);
@@ -660,7 +662,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 						}
 					}
 				} else {
-					extendsGainedDefinitions.put(definition.getIdentifier().getName(), definition);
+					extendsGainedDefinitions.put(name, definition);
 
 					if (!definition.getMyScope().getModuleScope().equals(parentScope.getModuleScope())) {
 						if (parentScope.hasAssignmentWithId(timestamp, definition.getIdentifier())) {
@@ -900,9 +902,6 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		if (attrExtendsReferences != null) {
 			attrExtendsReferences.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (withAttributesPath != null) {
-			withAttributesPath.findReferences(referenceFinder, foundIdentifiers);
-		}
 	}
 
 	@Override
@@ -928,11 +927,6 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		}
 		if (attrExtendsReferences != null) {
 			if (!attrExtendsReferences.accept(v)) {
-				return false;
-			}
-		}
-		if (withAttributesPath != null) {
-			if (!withAttributesPath.accept(v)) {
 				return false;
 			}
 		}

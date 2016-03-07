@@ -25,13 +25,13 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * */
 public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 
-	private final Type target_type;
+	private final Type targetType;
 	private final DecodeAttribute decodeAttribute;
 	private final ErrorBehaviorAttribute errorBehaviorAttribute;
 
-	public DecodeTypeMappingTarget(final Type target_type, final ExtensionAttribute decodeAttribute,
+	public DecodeTypeMappingTarget(final Type targetType, final ExtensionAttribute decodeAttribute,
 			final ErrorBehaviorAttribute errorBehaviorAttribute) {
-		this.target_type = target_type;
+		this.targetType = targetType;
 		if (decodeAttribute instanceof DecodeAttribute) {
 			this.decodeAttribute = (DecodeAttribute) decodeAttribute;
 		} else {
@@ -52,7 +52,7 @@ public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 
 	@Override
 	public Type getTargetType() {
-		return target_type;
+		return targetType;
 	}
 
 	public Encoding_type getCodingType() {
@@ -87,7 +87,7 @@ public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (target_type == child) {
+		if (targetType == child) {
 			return builder.append(".<target_type>");
 		} else if (errorBehaviorAttribute == child) {
 			return builder.append(".<errorbehavior>");
@@ -99,8 +99,8 @@ public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (target_type != null) {
-			target_type.setMyScope(scope);
+		if (targetType != null) {
+			targetType.setMyScope(scope);
 		}
 	}
 
@@ -112,8 +112,8 @@ public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 
 		lastTimeChecked = timestamp;
 
-		if (target_type != null) {
-			target_type.check(timestamp);
+		if (targetType != null) {
+			targetType.check(timestamp);
 		}
 		// FIXME implement once has_encoding is available.
 		if (errorBehaviorAttribute != null) {
@@ -123,14 +123,14 @@ public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		if (target_type != null) {
-			target_type.findReferences(referenceFinder, foundIdentifiers);
+		if (targetType != null) {
+			targetType.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (target_type != null && !target_type.accept(v)) {
+		if (targetType != null && !targetType.accept(v)) {
 			return false;
 		}
 		if (decodeAttribute != null && !decodeAttribute.accept(v)) {

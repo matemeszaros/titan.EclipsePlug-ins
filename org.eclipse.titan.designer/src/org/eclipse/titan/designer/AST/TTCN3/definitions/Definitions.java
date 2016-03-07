@@ -23,7 +23,6 @@ import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IOutlineElement;
-import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Module;
@@ -368,6 +367,30 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			LoadBalancingUtilities.astNodeChecked();
 		}
 	}
+	
+	/**
+	 * Experimental method for BrokenPartsViaInvertedImports.
+	 */
+	public void checkWithDefinitions(final CompilationTimeStamp timestamp, final List<Assignment> assignments) {
+		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
+			return;
+		}
+
+		checkUniqueness(timestamp);
+		checkGroups(timestamp);
+
+		lastCompilationTimeStamp = timestamp;
+		
+		for (Iterator<Assignment> iterator = assignments.iterator(); iterator.hasNext();) {
+			Assignment assignmentFrom  = iterator.next();
+			if(definitionMap.containsKey(assignmentFrom.getIdentifier().getName())) {
+				assignmentFrom.check(timestamp);
+				LoadBalancingUtilities.astNodeChecked();
+			}
+		}
+		
+	}
+	
 
 	@Override
 	public void postCheck() {
@@ -437,21 +460,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	@Override
 	public void addProposal(final ProposalCollector propCollector) {
 		if (propCollector.getReference().getModuleIdentifier() == null) {
-			// ToDo:code completition does not work most of the time
-			// it would be needed HQ66225
-			// test implementation
-			if (lastCompilationTimeStamp != null) {
-				IType preType = null;
-				for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
-					iterator.next().addProposal(propCollector, 0);
-					IType type = definitions.get(0).getType(lastCompilationTimeStamp);
-					if (type != null) {
-						if (type != preType) {
-							type.addProposal(propCollector, 0);
-							preType = type;
-						}
-					}
-				}
+			for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
+				iterator.next().addProposal(propCollector, 0);
 			}
 		}
 		super.addProposal(propCollector);
@@ -777,13 +787,17 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				Location tempLocation = temp.getLocation();
 				if (reparser.isAffected(tempLocation)) {
 					try {
-						temp.updateSyntax(reparser, enveloped && reparser.envelopsDamage(tempLocation));
+						boolean isDamaged = enveloped && reparser.envelopsDamage(tempLocation);
+						temp.updateSyntax(reparser, isDamaged);
 						if (reparser.getNameChanged()) {
 							if (doubleDefinitions != null) {
 								doubleDefinitions.clear();
 							}
 							lastUniquenessCheckTimeStamp = null;
 							reparser.setNameChanged(false);
+						}
+						if(isDamaged) {
+							temp.resetLastTimeChecked();
 						}
 					} catch (ReParseException e) {
 						if (e.getDepth() == 1) {
@@ -892,9 +906,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 						localImports, allFriends, localFriends, controlParts);
 
 				if ( parser.isErrorListEmpty() ) {
-					if (!allDefinitions.isEmpty()) {
-						aReparser.fullAnalysysNeeded = true;
-					}
 					addDefinitions(allDefinitions);
 					if (doubleDefinitions != null) {
 						doubleDefinitions.clear();
@@ -902,21 +913,17 @@ public final class Definitions extends Assignments implements ILocateableNode {
 					lastUniquenessCheckTimeStamp = null;
 
 					for (ImportModule impmod : allImports) {
-						aReparser.fullAnalysysNeeded = true;
 						module.addImportedModule(impmod);
 					}
 
 					for (Group group : localGroups) {
-						aReparser.fullAnalysysNeeded = true;
 						addGroup(group);
 					}
 
 					for (FriendModule friend : allFriends) {
-						aReparser.fullAnalysysNeeded = true;
 						module.addFriendModule(friend);
 					}
 					if (controlParts != null && controlParts.size() == 1) {
-						aReparser.fullAnalysysNeeded = true;
 						((TTCN3Module) parentScope).addControlpart(controlParts.get(0));
 					}
 				}
@@ -941,7 +948,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		for (int i = groups.size() - 1; i >= 0; i--) {
 			Group temp = groups.get(i);
 			if (reparser.isDamaged(temp.getLocation())) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temp.getLocation());
 				groups.remove(i);
 			}
@@ -950,7 +956,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		for (int i = importedModules.size() - 1; i >= 0; i--) {
 			ImportModule temp = importedModules.get(i);
 			if (reparser.isDamaged(temp.getLocation())) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temp.getLocation());
 				importedModules.remove(i);
 			}
@@ -959,7 +964,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		for (int i = friendModules.size() - 1; i >= 0; i--) {
 			FriendModule temp = friendModules.get(i);
 			if (reparser.isDamaged(temp.getLocation())) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temp.getLocation());
 				friendModules.remove(i);
 			}
@@ -968,8 +972,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
 			Definition temp = iterator.next();
 			if (reparser.isDamaged(temp.getLocation())) {
-				reparser.fullAnalysysNeeded = true;
-				reparser.moduleToBeReanalysed.addAll(temp.referingHere);
 				reparser.extendDamagedRegion(temp.getLocation());
 				definitions.remove(temp);
 			}

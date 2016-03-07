@@ -1,642 +1,449 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2000-2015 Ericsson Telecom AB
+ Copyright (c) 2000-2016 Ericsson Telecom AB
 
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Eclipse Public License v1.0
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<?eclipse version="3.4"?>
+<?eclipse version="4.4"?>
 <plugin>
   <!-- Popup menu in the browser view -->
 
-  <!-- extensions of the graph part-->
-  <extension
-    point="org.eclipse.ui.editors">
-    <editor
-          class="org.eclipse.titanium.graph.gui.windows.ModuleGraphEditor"
-          contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-          default="false"
-          icon="resources/icons/titan.gif"
-          id="org.eclipse.titanium.graph.editors.ModuleGraphEditor"
-          name="module dependency graph">
+  <!-- extensions of the graph part -->
+  <extension point="org.eclipse.ui.editors">
+    <editor class="org.eclipse.titanium.graph.gui.windows.ModuleGraphEditor"
+      contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+      default="false" icon="resources/icons/titan.gif"
+      id="org.eclipse.titanium.graph.editors.ModuleGraphEditor" name="module dependency graph">
     </editor>
     <editor
-          class="org.eclipse.titanium.graph.gui.windows.ComponentGraphEditor"
-          contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-          default="false"
-          icon="resources/icons/titan.gif"
-          id="org.eclipse.titanium.graph.editors.ComponentGraphEditor"
-          name="component dependency graph">
+      class="org.eclipse.titanium.graph.gui.windows.ComponentGraphEditor"
+      contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+      default="false" icon="resources/icons/titan.gif"
+      id="org.eclipse.titanium.graph.editors.ComponentGraphEditor" name="component dependency graph">
     </editor>
   </extension>
-  <extension
-    point="org.eclipse.ui.views">
-    <category 
-      id="org.eclipse.titanium"
-      name="Titanium">
+  <extension point="org.eclipse.ui.views">
+    <category id="org.eclipse.titanium" name="Titanium">
     </category>
-    <view
-	  allowMultiple="false"
-	  category="org.eclipse.titanium"
-	  class="org.eclipse.titanium.graph.gui.windows.SatelliteView"
-	  icon="resources/icons/titan.gif"
-	  id="org.eclipse.titanium.graph.gui.windows.SatelliteView"
-	  name="Satellite View"
-	  restorable="true">
+    <view allowMultiple="false" category="org.eclipse.titanium"
+      class="org.eclipse.titanium.graph.gui.windows.SatelliteView" icon="resources/icons/titan.gif"
+      id="org.eclipse.titanium.graph.gui.windows.SatelliteView" name="Satellite View"
+      restorable="true">
     </view>
   </extension>
- 
-  <!-- Metrics, code smell markers and organize import -->  
-  <extension
-        id="org.eclipse.titanium.applications.ClearAllProjects"
-        point="org.eclipse.core.runtime.applications">
-     <application
-           cardinality="singleton-global"
-           thread="main"
-           visible="true">
-        <run
-              class="org.eclipse.titanium.applications.ClearAllProjects">
-        </run>
-     </application>
-  </extension>
-  <extension
-        id="org.eclipse.titanium.applications.ImportProjectsFromPrj"
-        point="org.eclipse.core.runtime.applications">
-     <application
-           cardinality="singleton-global"
-           thread="main"
-           visible="true">
-        <run
-              class="org.eclipse.titanium.applications.ImportProjectsFromPrj">
-        </run>
-     </application>
-  </extension>
-    <extension
-        id="org.eclipse.titanium.applications.ImportProjectsFromTpd"
-        point="org.eclipse.core.runtime.applications">
-     <application
-           cardinality="singleton-global"
-           thread="main"
-           visible="true">
-        <run
-              class="org.eclipse.titanium.applications.ImportProjectsFromTpd">
-        </run>
-     </application>
-  </extension>
-  <extension
-    id="org.eclipse.titanium.applications.ExportAllCodeSmells"
+
+  <!-- Metrics, code smell markers and organize import -->
+  <extension id="org.eclipse.titanium.applications.ClearAllProjects"
     point="org.eclipse.core.runtime.applications">
-    <application
-      cardinality="singleton-global"
-      thread="main"
+    <application cardinality="singleton-global" thread="main"
       visible="true">
-      <run
-        class="org.eclipse.titanium.applications.ExportAllCodeSmells">
+      <run class="org.eclipse.titanium.applications.ClearAllProjects">
       </run>
-      </application>
+    </application>
+  </extension>
+  <extension id="org.eclipse.titanium.applications.ImportProjectsFromPrj"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.ImportProjectsFromPrj">
+      </run>
+    </application>
+  </extension>
+  <extension id="org.eclipse.titanium.applications.ImportProjectsFromTpd"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.ImportProjectsFromTpd">
+      </run>
+    </application>
+  </extension>
+  <extension id="org.eclipse.titanium.applications.ExportAllCodeSmells"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.ExportAllCodeSmells">
+      </run>
+    </application>
   </extension>
   <extension
     id="org.eclipse.titanium.applications.ExportAllCodeSmellsToCSV"
     point="org.eclipse.core.runtime.applications">
-    <application
-      cardinality="singleton-global"
-      thread="main"
+    <application cardinality="singleton-global" thread="main"
       visible="true">
-    <run
-      class="org.eclipse.titanium.applications.ExportAllCodeSmellsToCSV">
-    </run>
-  </application>
+      <run class="org.eclipse.titanium.applications.ExportAllCodeSmellsToCSV">
+      </run>
+    </application>
   </extension>
   <extension
     id="org.eclipse.titanium.applications.MergeExportedMarkerTables"
     point="org.eclipse.core.runtime.applications">
-    <application
-      cardinality="singleton-global"
-      thread="main"
+    <application cardinality="singleton-global" thread="main"
       visible="true">
-      <run
-        class="org.eclipse.titanium.applications.MergeExportedMarkerTables">
+      <run class="org.eclipse.titanium.applications.MergeExportedMarkerTables">
       </run>
     </application>
   </extension>
-  <extension
-    id="org.eclipse.titanium.applications.ExportDataForSonar"
+  <extension id="org.eclipse.titanium.applications.ExportDataForSonar"
     point="org.eclipse.core.runtime.applications">
-    <application
-      cardinality="singleton-global"
-      thread="main"
+    <application cardinality="singleton-global" thread="main"
       visible="true">
-      <run
-        class="org.eclipse.titanium.applications.ExportDataForSonar">
+      <run class="org.eclipse.titanium.applications.ExportDataForSonar">
       </run>
     </application>
   </extension>
-  
+
   <!-- Preference pages -->
-  <extension
-    point="org.eclipse.core.runtime.preferences">
-    <initializer class="org.eclipse.titanium.preferences.PreferenceInitializer"/>
+  <extension point="org.eclipse.core.runtime.preferences">
+    <initializer
+      class="org.eclipse.titanium.preferences.PreferenceInitializer" />
   </extension>
   <extension point="org.eclipse.ui.preferencePages">
     <page
       id="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage"
       class="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage"
-      name="Titanium Preferences"/>
+      name="Titanium Preferences" />
     <page
       id="org.eclipse.titanium.preferences.pages.OrganizeImportPreferencePage"
       class="org.eclipse.titanium.preferences.pages.OrganizeImportPreferencePage"
       name="Imports"
-      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage"/>
-    <page
-      id="org.eclipse.titanium.preferences.pages.MetricsPreferencePage"
+      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage" />
+    <page id="org.eclipse.titanium.preferences.pages.MetricsPreferencePage"
       class="org.eclipse.titanium.preferences.pages.MetricsPreferencePage"
       name="Metrics"
-      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage"/> 
-    <page
-      id="org.eclipse.titanium.preferences.pages.MarkersPreferencePage"
+      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage" />
+    <page id="org.eclipse.titanium.preferences.pages.MarkersPreferencePage"
       class="org.eclipse.titanium.preferences.pages.MarkersPreferencePage"
       name="Code smells"
-      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage"/> 
+      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage" />
     <page
       id="org.eclipse.titanium.preferences.pages.RiskFactorPreferencePage"
       class="org.eclipse.titanium.preferences.pages.RiskFactorPreferencePage"
       name="Project risk factor"
-      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage"/> 
+      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage" />
     <page
       id="org.eclipse.titanium.preferences.pages.MetricsLimitPreferencePage"
       class="org.eclipse.titanium.preferences.pages.MetricsLimitPreferencePage"
       name="Limits"
-      category="org.eclipse.titanium.preferences.pages.MetricsPreferencePage"/> 
+      category="org.eclipse.titanium.preferences.pages.MetricsPreferencePage" />
     <page
       id="org.eclipse.titanium.preferences.pages.MetricsViewPreferencePage"
       class="org.eclipse.titanium.preferences.pages.MetricsViewPreferencePage"
       name="Metrics view"
-      category="org.eclipse.titanium.preferences.pages.MetricsPreferencePage"/> 
+      category="org.eclipse.titanium.preferences.pages.MetricsPreferencePage" />
     <page
       id="org.eclipse.titanium.preferences.pages.ModuleGraphPreferencePage"
       class="org.eclipse.titanium.preferences.pages.GraphMetricsPage"
-      name="Metrics"
-      category="org.eclipse.titanium.preferences.pages.GraphPreferencePage"/>
-    <page
-      id="org.eclipse.titanium.preferences.pages.GraphPreferencePage"
+      name="Metrics" category="org.eclipse.titanium.preferences.pages.GraphPreferencePage" />
+    <page id="org.eclipse.titanium.preferences.pages.GraphPreferencePage"
       class="org.eclipse.titanium.preferences.pages.GraphPreferencePage"
       name="Graph"
-      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage"/>
-    <page
-      id="org.eclipse.titanium.ClusterCategory"
+      category="org.eclipse.titanium.preferences.pages.TitaniumPreferencePage" />
+    <page id="org.eclipse.titanium.ClusterCategory"
       class="org.eclipse.titanium.preferences.pages.GraphClusterPage"
-      name="Clusters"
-      category="org.eclipse.titanium.preferences.pages.GraphPreferencePage"/>
+      name="Clusters" category="org.eclipse.titanium.preferences.pages.GraphPreferencePage" />
     <page
       id="org.eclipse.titanium.preferences.pages.GraphClusterFolderNamePage"
       class="org.eclipse.titanium.preferences.pages.GraphClusterFolderNamePage"
-      name="Using module location"
-      category="org.eclipse.titanium.ClusterCategory"/>
+      name="Using module location" category="org.eclipse.titanium.ClusterCategory" />
     <page
       id="org.eclipse.titanium.preferences.pages.GraphClusterRegexpPage"
       class="org.eclipse.titanium.preferences.pages.GraphClusterRegexpPage"
-      name="Using regular expressions"
-      category="org.eclipse.titanium.ClusterCategory"/>
-    <page
-      id="org.eclipse.titanium.preferences.pages.GraphClusterAutoPage"
+      name="Using regular expressions" category="org.eclipse.titanium.ClusterCategory" />
+    <page id="org.eclipse.titanium.preferences.pages.GraphClusterAutoPage"
       class="org.eclipse.titanium.preferences.pages.GraphClusterAutoPage"
-      name="Automatic method"
-      category="org.eclipse.titanium.ClusterCategory"/>
+      name="Automatic method" category="org.eclipse.titanium.ClusterCategory" />
     <page
       id="org.eclipse.titanium.preferences.pages.GraphClusterModuleNamePage"
       class="org.eclipse.titanium.preferences.pages.GraphClusterModuleNamePage"
-      name="Using module names"
-      category="org.eclipse.titanium.ClusterCategory"/>
-    <page
-          category="org.eclipse.titanium.preferences.pages.MarkersPreferencePage"
-          class="org.eclipse.titanium.preferences.pages.RepairTimePage"
-          id="org.eclipse.titanium.preferences.pages.RepairTimePage"
-          name="Code smell repair times">
+      name="Using module names" category="org.eclipse.titanium.ClusterCategory" />
+    <page category="org.eclipse.titanium.preferences.pages.MarkersPreferencePage"
+      class="org.eclipse.titanium.preferences.pages.RepairTimePage" id="org.eclipse.titanium.preferences.pages.RepairTimePage"
+      name="Code smell repair times">
     </page>
   </extension>
-  <extension
-    point="org.eclipse.ui.preferenceTransfer">
-    <transfer
-      icon="resources/icons/titan.gif"
-      name="Titanium preferences"
+  <extension point="org.eclipse.ui.preferenceTransfer">
+    <transfer icon="resources/icons/titan.gif" name="Titanium preferences"
       id="org.eclipse.titanium.preferences.export.all">
       <mapping scope="instance">
-        <entry node="org.eclipse.titanium"/>
+        <entry node="org.eclipse.titanium" />
       </mapping>
       <description>
-Export preferences of Titanium, including setting of
- - organize import
- - code smells
- - source code metrics
+        Export preferences of Titanium, including setting of
+        - organize import
+        - code smells
+        - source code metrics
       </description>
     </transfer>
   </extension>
-  
+
   <!-- Commands -->
-  <extension
-    point="org.eclipse.ui.commands">
-    <category
-	  id="org.eclipse.titanium.commands.Commands"
-      name="Titanium commands"/>
-    <command
-      categoryId="org.eclipse.titanium.commands.Commands"
+  <extension point="org.eclipse.ui.commands">
+    <category id="org.eclipse.titanium.commands.Commands" name="Titanium commands" />
+    <command categoryId="org.eclipse.titanium.commands.Commands"
       description="Add necessary and remove unused imports. Effects of this action can be tuned in the Titanium &gt; Imports preference page."
-      id="org.eclipse.titanium.commands.OrganizeImportsCommand"
-      name="Organize imports"/>
-    <command
-      categoryId="org.eclipse.titanium.commands.Commands"
-      description="Check a module for code smells"
-      id="org.eclipse.titanium.commands.CheckCodeSmellsCommand"
+      id="org.eclipse.titanium.commands.OrganizeImportsCommand" name="Organize imports" />
+    <command categoryId="org.eclipse.titanium.commands.Commands"
+      description="Check a module for code smells" id="org.eclipse.titanium.commands.CheckCodeSmellsCommand"
       defaultHandler="org.eclipse.titanium.actions.CheckCodeSmells"
-      name="Check code smells"/>
-    <command
-          categoryId="org.eclipse.titanium.commands.Commands"
-          description="Search for graph node"
-          id="org.eclipse.titanium.commands.GraphSearch"
-          name="Graph Search">
+      name="Check code smells" />
+    <command categoryId="org.eclipse.titanium.commands.Commands"
+      description="Search for graph node" id="org.eclipse.titanium.commands.GraphSearch"
+      name="Graph Search">
     </command>
-    <command
-          categoryId="org.eclipse.titanium.commands.Commands"
-          description="Save graph to pajek"
-          id="org.eclipse.titanium.commands.GraphSave"
-          name="GraphSave">
+    <command categoryId="org.eclipse.titanium.commands.Commands"
+      description="Save graph to pajek" id="org.eclipse.titanium.commands.GraphSave"
+      name="GraphSave">
     </command>
-    <command
-          categoryId="org.eclipse.titanium.commands.Commands"
-          description="Export of graph to image"
-          id="org.eclipse.titanium.commands.GraphExport"
-          name="GraphExport">
+    <command categoryId="org.eclipse.titanium.commands.Commands"
+      description="Export of graph to image" id="org.eclipse.titanium.commands.GraphExport"
+      name="GraphExport">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.ModuleGraphAction"
-          id="org.eclipse.titanium.actions.ModuleGraphAction"
-          name="GenerateModuleGraph">
+    <command defaultHandler="org.eclipse.titanium.actions.ModuleGraphAction"
+      id="org.eclipse.titanium.actions.ModuleGraphAction" name="GenerateModuleGraph">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.ComponentGraphAction"
-          id="org.eclipse.titanium.actions.ComponentGraphAction"
-          name="GenerateComponentGraph">
+    <command defaultHandler="org.eclipse.titanium.actions.ComponentGraphAction"
+      id="org.eclipse.titanium.actions.ComponentGraphAction" name="GenerateComponentGraph">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.ExportProblems"
-          id="org.eclipse.titanium.actions.ExportProblems"
-          name="ExportMarkers">
+    <command defaultHandler="org.eclipse.titanium.actions.ExportProblems"
+      id="org.eclipse.titanium.actions.ExportProblems" name="ExportMarkers">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.ExportDataForSonarAction"
-          id="org.eclipse.titanium.actions.ExportDataForSonarAction"
-          name="ExportDataForSonarAction">
+    <command defaultHandler="org.eclipse.titanium.actions.ExportDataForSonarAction"
+      id="org.eclipse.titanium.actions.ExportDataForSonarAction" name="ExportDataForSonarAction">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.MetricsViewOpener"
-          id="org.eclipse.titanium.actions.ViewMetrics"
-          name="ViewMetrics">
+    <command defaultHandler="org.eclipse.titanium.actions.MetricsViewOpener"
+      id="org.eclipse.titanium.actions.ViewMetrics" name="ViewMetrics">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.TopViewOpener"
-          id="org.eclipse.titanium.actions.ViewTopRiskMetrics"
-          name="ViewTopRiskMetrics">
+    <command defaultHandler="org.eclipse.titanium.actions.TopViewOpener"
+      id="org.eclipse.titanium.actions.ViewTopRiskMetrics" name="ViewTopRiskMetrics">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.OrganizeFromBrowser"
-          id="org.eclipse.titanium.actions.OrganizeFromBrowser"
-          name="OrganizeFromBrowser">
+    <command defaultHandler="org.eclipse.titanium.actions.OrganizeFromBrowser"
+      id="org.eclipse.titanium.actions.OrganizeFromBrowser" name="OrganizeFromBrowser">
     </command>
-    <command
-          defaultHandler="org.eclipse.titanium.actions.OrganizeFromEditor"
-          id="org.eclipse.titanium.commands.OrganizeImports"
-          name="OrganizeImports">
+    <command defaultHandler="org.eclipse.titanium.actions.OrganizeFromEditor"
+      id="org.eclipse.titanium.commands.OrganizeImports" name="OrganizeImports">
     </command>
   </extension>
-  
+
   <!-- Key bindings -->
-  <extension
-    point="org.eclipse.ui.bindings">
-    <key
-      commandId="org.eclipse.titanium.commands.OrganizeImportsCommand"
+  <extension point="org.eclipse.ui.bindings">
+    <key commandId="org.eclipse.titanium.commands.OrganizeImportsCommand"
       contextId="org.eclipse.titan.designer.editors.TTCN3EditorScope"
       schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-      sequence="CTRL+SHIFT+O"/>
-    <key
-          commandId="org.eclipse.titanium.commands.GraphSearch"
-          contextId="org.eclipse.titanium.contexts.GraphContext"
-          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="CTRL+F">
+      sequence="CTRL+SHIFT+O" />
+    <key commandId="org.eclipse.titanium.commands.GraphSearch"
+      contextId="org.eclipse.titanium.contexts.GraphContext" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+F">
     </key>
-    <key
-          commandId="org.eclipse.titanium.commands.GraphSave"
-          contextId="org.eclipse.titanium.contexts.GraphContext"
-          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="CTRL+S">
+    <key commandId="org.eclipse.titanium.commands.GraphSave"
+      contextId="org.eclipse.titanium.contexts.GraphContext" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+S">
     </key>
-    <key
-          commandId="org.eclipse.titanium.commands.GraphExport"
-          contextId="org.eclipse.titanium.contexts.GraphContext"
-          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="CTRL+E">
+    <key commandId="org.eclipse.titanium.commands.GraphExport"
+      contextId="org.eclipse.titanium.contexts.GraphContext" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      sequence="CTRL+E">
     </key>
   </extension>
-  
-  <!-- Editor actions --> 
-  
-  <!-- Views--> 
-  <extension
-    point="org.eclipse.ui.views">
-    <view
-      id="org.eclipse.titanium.metrics.view"
-      name="Metrics View"
-      icon="resources/icons/metrics_view.gif"
-      class="org.eclipse.titanium.metrics.view.MetricsView"
-      category="org.eclipse.titanium"/>
-    <view
-	  id="org.eclipse.titanium.metrics.topview"
-	  name="Top riskiest modules"
-      icon="resources/icons/metrics_top_worst.gif"
-	  class="org.eclipse.titanium.metrics.topview.TopView"
-	  category="org.eclipse.titanium"/>
+
+  <!-- Editor actions -->
+
+  <!-- Views -->
+  <extension point="org.eclipse.ui.views">
+    <view id="org.eclipse.titanium.metrics.view" name="Metrics View"
+      icon="resources/icons/metrics_view.gif" class="org.eclipse.titanium.metrics.view.MetricsView"
+      category="org.eclipse.titanium" />
+    <view id="org.eclipse.titanium.metrics.topview" name="Top riskiest modules"
+      icon="resources/icons/metrics_top_worst.gif" class="org.eclipse.titanium.metrics.topview.TopView"
+      category="org.eclipse.titanium" />
   </extension>
-  <extension
-    point="org.eclipse.core.resources.markers"
-    id="org.eclipse.titanium.markers.CodeSmellMarker"
-    name="Titanium code smells">
-    <super type="org.eclipse.core.resources.problemmarker"/>
-    <attribute name="problem"/>  
+  <extension point="org.eclipse.core.resources.markers"
+    id="org.eclipse.titanium.markers.CodeSmellMarker" name="Titanium code smells">
+    <super type="org.eclipse.core.resources.problemmarker" />
+    <attribute name="problem" />
   </extension>
-  <extension
-    point="org.eclipse.core.resources.markers"
-    id="org.eclipse.titanium.markers.ProjectCodeSmellMarker"
-    name="Titanium code smells (global to project)">
-    <super type="org.eclipse.titanium.markers.CodeSmellMarker"/>
-    <attribute name="problem"/>  
+  <extension point="org.eclipse.core.resources.markers"
+    id="org.eclipse.titanium.markers.ProjectCodeSmellMarker" name="Titanium code smells (global to project)">
+    <super type="org.eclipse.titanium.markers.CodeSmellMarker" />
+    <attribute name="problem" />
   </extension>
-  <extension
-    point="org.eclipse.core.resources.markers"
-    id="org.eclipse.titanium.markers.ModuleCodeSmellMarker"
-    name="Titanium code smells (local to a module)">
-    <super type="org.eclipse.titanium.markers.CodeSmellMarker"/>
-    <attribute name="problem"/>  
+  <extension point="org.eclipse.core.resources.markers"
+    id="org.eclipse.titanium.markers.ModuleCodeSmellMarker" name="Titanium code smells (local to a module)">
+    <super type="org.eclipse.titanium.markers.CodeSmellMarker" />
+    <attribute name="problem" />
   </extension>
-  
-  <extension
-        id="org.eclipse.titanium.applications.SaveModuleNet"
-        point="org.eclipse.core.runtime.applications">
-     <application
-           cardinality="singleton-global"
-           thread="main"
-           visible="true">
-        <run
-              class="org.eclipse.titanium.applications.SaveModuleNet">
-        </run>
+
+  <extension id="org.eclipse.titanium.applications.SaveModuleNet"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.SaveModuleNet">
+      </run>
     </application>
   </extension>
-  <extension
-    point="org.eclipse.titan.designer.extensions.post_analyze">
-    <client
-      class="org.eclipse.titanium.markers.utils.ExecuteAnalyzer">
+  <extension point="org.eclipse.titan.designer.extensions.post_analyze">
+    <client class="org.eclipse.titanium.markers.utils.ExecuteAnalyzer">
     </client>
   </extension>
   <extension point="org.eclipse.help.toc">
-    <toc file="toc.xml" primary="true"/>
+    <toc file="toc.xml" primary="true" />
   </extension>
-  <extension
-        point="org.eclipse.ui.contexts">
-     <context
-           id="org.eclipse.titanium.contexts.GraphContext"
-           name="GraphEditorContext"
-           parentId="org.eclipse.ui.contexts.window">
-     </context>
+  <extension point="org.eclipse.ui.contexts">
+    <context id="org.eclipse.titanium.contexts.GraphContext"
+      name="GraphEditorContext" parentId="org.eclipse.ui.contexts.window">
+    </context>
   </extension>
-  <extension
-        id="org.eclipse.titanium.applications.SaveComponentNet"
-        point="org.eclipse.core.runtime.applications">
-     <application
-           cardinality="singleton-global"
-           thread="main"
-           visible="true">
-        <run
-              class="org.eclipse.titanium.applications.SaveComponentNet">
-        </run>
-     </application>
+  <extension id="org.eclipse.titanium.applications.SaveComponentNet"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.SaveComponentNet">
+      </run>
+    </application>
   </extension>
-  <extension
-        point="org.eclipse.ui.menus">
-     <menuContribution
-           locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-        <menu
-              id="org.eclipse.titanium.menu.ProjectMenu2"
-              label="Titanium">
-           <command
-                 commandId="org.eclipse.titanium.actions.OrganizeFromBrowser"
-                 label="Organize imports"
-                 mode="FORCE_TEXT">
-              <visibleWhen
-                    checkEnabled="false">
-                 <with
-                       variable="selection">
-                    <iterate
-                          operator="or">
-                       <adapt
-                             type="org.eclipse.core.resources.IResource">
-                          <test
-                                property="org.eclipse.core.resources.projectNature"
-                                value="org.eclipse.titan.designer.core.TITANNature">
-                          </test>
-                       </adapt>
-                    </iterate>
-                 </with>
-              </visibleWhen>
-           </command>
-           <separator
-                 name="metrics"
-                 visible="true">
-           </separator>
-           <command
-                 commandId="org.eclipse.titanium.actions.ViewMetrics"
-                 label="View metrics"
-                 mode="FORCE_TEXT">
-              <visibleWhen
-                    checkEnabled="false">
-                 <with
-                       variable="selection">
-                    <iterate
-                          operator="or">
-                       <adapt
-                             type="org.eclipse.core.resources.IProject">
-                          <test
-                                property="org.eclipse.core.resources.projectNature"
-                                value="org.eclipse.titan.designer.core.TITANNature">
-                          </test>
-                       </adapt>
-                    </iterate>
-                 </with>
-              </visibleWhen>
-           </command>
-           <command
-                 commandId="org.eclipse.titanium.actions.ViewTopRiskMetrics"
-                 label="View top risk metrics"
-                 mode="FORCE_TEXT">
-              <visibleWhen
-                    checkEnabled="false">
-                 <with
-                       variable="selection">
-                    <iterate
-                          operator="or">
-                       <adapt
-                             type="org.eclipse.core.resources.IProject">
-                          <test
-                                property="org.eclipse.core.resources.projectNature"
-                                value="org.eclipse.titan.designer.core.TITANNature">
-                          </test>
-                       </adapt>
-                    </iterate>
-                 </with>
-              </visibleWhen>
-           </command>
-           <separator
-                 name="marker"
-                 visible="true">
-           </separator>
-           <command
-                 commandId="org.eclipse.titanium.actions.ExportProblems"
-                 label="Export problem markers to xls"
-                 mode="FORCE_TEXT">
-              <visibleWhen
-                    checkEnabled="false">
-                 <with
-                       variable="selection">
-                    <iterate
-                          operator="or">
-                       <adapt
-                             type="org.eclipse.core.resources.IResource">
-                          <test
-                                property="org.eclipse.core.resources.projectNature"
-                                value="org.eclipse.titan.designer.core.TITANNature">
-                          </test>
-                       </adapt>
-                    </iterate>
-                 </with>
-              </visibleWhen>
-           </command>
-           <command
-                 commandId="org.eclipse.titanium.actions.ExportDataForSonarAction"
-                 label="Export data for SonarQube"
-                 mode="FORCE_TEXT">
-              <visibleWhen
-                    checkEnabled="false">
-                 <with
-                       variable="selection">
-                    <iterate
-                          operator="or">
-                       <adapt
-                             type="org.eclipse.core.resources.IProject">
-                          <test
-                                property="org.eclipse.core.resources.projectNature"
-                                value="org.eclipse.titan.designer.core.TITANNature">
-                          </test>
-                       </adapt>
-                    </iterate>
-                 </with>
-              </visibleWhen>
-           </command>
-           <separator
-                 name="graph"
-                 visible="true">
-           </separator>
-           <command
-                 commandId="org.eclipse.titanium.actions.ModuleGraphAction"
-                 label="Draw module structure"
-                 mode="FORCE_TEXT">
-              <visibleWhen
-                    checkEnabled="false">
-                 <with
-                       variable="selection">
-                    <iterate
-                          operator="or">
-                       <adapt
-                             type="org.eclipse.core.resources.IProject">
-                          <test
-                                property="org.eclipse.core.resources.projectNature"
-                                value="org.eclipse.titan.designer.core.TITANNature">
-                          </test>
-                       </adapt>
-                    </iterate>
-                 </with>
-              </visibleWhen>
-           </command>
-           <command
-                 commandId="org.eclipse.titanium.actions.ComponentGraphAction"
-                 label="Draw component structure"
-                 mode="FORCE_TEXT">
-              <visibleWhen
-                    checkEnabled="false">
-                 <with
-                       variable="selection">
-                    <iterate
-                          operator="or">
-                       <adapt
-                             type="org.eclipse.core.resources.IProject">
-                          <test
-                                property="org.eclipse.core.resources.projectNature"
-                                value="org.eclipse.titan.designer.core.TITANNature">
-                          </test>
-                       </adapt>
-                    </iterate>
-                 </with>
-              </visibleWhen>
-           </command>
-        </menu>
-     </menuContribution>
-     <menuContribution
-           allPopups="true"
-           locationURI="popup:org.eclipse.titan.designer.editors.ttcn3editor.context?after=additions">
-        <menu
-              label="Titanium">
-           <command
-                 commandId="org.eclipse.titanium.commands.OrganizeImports"
-                 icon="resources/icons/titan.gif"
-                 id="org.eclipse.titanium.commands.OrganizeImports"
-                 label="Organize imports">
-           </command>
-        </menu>
-     </menuContribution>
-     <menuContribution
-           allPopups="true"
-           locationURI="popup:org.eclipse.titan.designer.editors.ttcn3ppeditor.context?after=additions">
-        <menu
-              label="Titanium">
-           <command
-                 commandId="org.eclipse.titanium.commands.OrganizeImports"
-                 icon="resources/icons/titan.gif"
-                 id="org.eclipse.titanium.commands.OrganizeImports"
-                 label="Organize imports">
-           </command>
-        </menu>
-     </menuContribution>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <menu id="org.eclipse.titanium.menu.ProjectMenu2" label="Titanium">
+        <command commandId="org.eclipse.titanium.actions.OrganizeFromBrowser"
+          label="Organize imports" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IResource">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <separator name="metrics" visible="true">
+        </separator>
+        <command commandId="org.eclipse.titanium.actions.ViewMetrics"
+          label="View metrics" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IProject">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command commandId="org.eclipse.titanium.actions.ViewTopRiskMetrics"
+          label="View top risk metrics" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IProject">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <separator name="marker" visible="true">
+        </separator>
+        <command commandId="org.eclipse.titanium.actions.ExportProblems"
+          label="Export problem markers to xls" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IResource">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command commandId="org.eclipse.titanium.actions.ExportDataForSonarAction"
+          label="Export data for SonarQube" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IProject">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <separator name="graph" visible="true">
+        </separator>
+        <command commandId="org.eclipse.titanium.actions.ModuleGraphAction"
+          label="Draw module structure" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IProject">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command commandId="org.eclipse.titanium.actions.ComponentGraphAction"
+          label="Draw component structure" mode="FORCE_TEXT">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IProject">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+      </menu>
+    </menuContribution>
+    <menuContribution allPopups="true"
+      locationURI="popup:org.eclipse.titan.designer.editors.ttcn3editor.context?after=additions">
+      <menu label="Titanium">
+        <command commandId="org.eclipse.titanium.commands.OrganizeImports"
+          icon="resources/icons/titan.gif" id="org.eclipse.titanium.commands.OrganizeImports"
+          label="Organize imports">
+        </command>
+      </menu>
+    </menuContribution>
+    <menuContribution allPopups="true"
+      locationURI="popup:org.eclipse.titan.designer.editors.ttcn3ppeditor.context?after=additions">
+      <menu label="Titanium">
+        <command commandId="org.eclipse.titanium.commands.OrganizeImports"
+          icon="resources/icons/titan.gif" id="org.eclipse.titanium.commands.OrganizeImports"
+          label="Organize imports">
+        </command>
+      </menu>
+    </menuContribution>
   </extension>
-  <extension
-        id="org.eclipse.titanium.applications.SaveModuleDot"
-        point="org.eclipse.core.runtime.applications">
-     <application
-           cardinality="singleton-global"
-           thread="main"
-           visible="true">
-        <run
-              class="org.eclipse.titanium.applications.SaveModuleDot">
-        </run>
-     </application>
+  <extension id="org.eclipse.titanium.applications.SaveModuleDot"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.SaveModuleDot">
+      </run>
+    </application>
   </extension>
-  <extension
-        id="org.eclipse.titanium.applications.SaveComponentDot"
-        point="org.eclipse.core.runtime.applications">
-     <application
-           cardinality="singleton-global"
-           thread="main"
-           visible="true">
-        <run
-              class="org.eclipse.titanium.applications.SaveComponentDot">
-        </run>
-     </application>
+  <extension id="org.eclipse.titanium.applications.SaveComponentDot"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.SaveComponentDot">
+      </run>
+    </application>
   </extension>
 </plugin>

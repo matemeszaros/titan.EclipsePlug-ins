@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.Activator;
 import org.eclipse.titan.common.graphics.ImageCache;
 import org.eclipse.titan.common.log.merge.LogMerger;
@@ -123,7 +122,7 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 	 * target of the merge.
 	 */
 	private void displayOutputSelectionDialog() {
-		final FileDialog dialog = new FileDialog(new Shell(Display.getDefault()), SWT.SAVE);
+		final FileDialog dialog = new FileDialog(null, SWT.SAVE);
 		if (staticOutput != null) {
 			dialog.setFileName(staticOutput.getName());
 			dialog.setFilterPath(staticOutput.getParent());
@@ -212,7 +211,7 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 				"Overwrite" };
 
 		MessageDialogWithToggle msgDialog = new MessageDialogWithToggle(
-				new Shell(Display.getDefault()),
+				null,
 				"File already exists",
 				null,
 				"An error occured during log file merging. The file '"

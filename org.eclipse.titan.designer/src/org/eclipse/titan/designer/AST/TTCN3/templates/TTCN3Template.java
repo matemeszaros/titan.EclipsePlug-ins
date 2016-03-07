@@ -56,7 +56,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 public abstract class TTCN3Template extends GovernedSimple implements IReferenceChainElement, ITTCN3Template, IIncrementallyUpdateable {
 	protected static final String RESTRICTIONERROR = "Restriction on {0} does not allow usage of `{1}''";
 	protected static final String OMITRESTRICTIONERROR = "Restriction 'omit' on {0} does not allow usage of `{1}''";
-	protected static final String VALUERESTRICTIONERROR = "Restriction 'value' on {0} does not allow usage of `{1}''";
+	protected static final String VALUERESTRICTIONERROR = "Restriction ''value'' on {0} does not allow usage of {1}";
 	protected static final String PRESENTRESTRICTIONERROR = "Restriction 'present' on {0} does not allow usage of `{1}''";
 	private static final String LENGTHRESTRICTIONERROR = "Restriction on {0} does not allow usage of length restriction";
 
@@ -972,9 +972,13 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	 *                the location to be used for reporting errors
 	 * */
 	@Override
-	public final void checkRestrictionCommon(final String definitionName, final TemplateRestriction.Restriction_type templateRestriction, final Location usageLocation) {
+	public final void checkRestrictionCommon(final CompilationTimeStamp timestamp, final String definitionName, final TemplateRestriction.Restriction_type templateRestriction, final Location usageLocation) {
 		switch (templateRestriction) {
 		case TR_VALUE:
+			if (!isValue(timestamp)) {
+				usageLocation.reportSemanticError(MessageFormat.format(VALUERESTRICTIONERROR, definitionName, "not completely initialized template"));
+			}
+			//Intentional fall-through
 		case TR_OMIT:
 			if (lengthRestriction != null) {
 				usageLocation.reportSemanticError(MessageFormat.format(LENGTHRESTRICTIONERROR, definitionName));
@@ -984,7 +988,7 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 			}
 			break;
 		case TR_PRESENT:
-			if (isIfpresent) {
+			if (isIfpresent || getTemplateReferencedLast(timestamp).isIfpresent) {
 				usageLocation.reportSemanticError(MessageFormat.format(PRESENTRESTRICTIONERROR, definitionName, "ifpresent"));
 			}
 			break;
@@ -1015,9 +1019,9 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	@Override
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		usageLocation.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
@@ -1063,7 +1067,7 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	 */
 	@Override
 	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
+		checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
 		return false;
 	}
 

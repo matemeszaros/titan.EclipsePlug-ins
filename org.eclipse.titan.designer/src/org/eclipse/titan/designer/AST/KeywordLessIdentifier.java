@@ -12,21 +12,21 @@ package org.eclipse.titan.designer.AST;
  * */
 public final class KeywordLessIdentifier extends Identifier {
 
-	public KeywordLessIdentifier(final Identifier_type id_type, final String name) {
-		this(id_type, name, NULL_Location.INSTANCE);
+	public KeywordLessIdentifier(final Identifier_type idType, final String name) {
+		this(idType, name, NULL_Location.INSTANCE);
 	}
 
-	public KeywordLessIdentifier(final Identifier_type id_type, final String name, final Location location) {
-		this(id_type, 	name, location, true);
+	public KeywordLessIdentifier(final Identifier_type idType, final String name, final Location location) {
+		this(idType, 	name, location, true);
 	}
 
-	protected KeywordLessIdentifier(final Identifier_type id_type, final String name,
+	protected KeywordLessIdentifier(final Identifier_type idType, final String name,
 			final Location location, final boolean dontregister) {
-		type = id_type;
+		type = idType;
 		this.location = location;
 
 		String realName;
-		switch(id_type) {
+		switch(idType) {
 		case ID_ASN:
 			if (name.length() > 0 && name.charAt(0) == '&') {
 				realName = Identifier_Internal_Data.asnToName(name.substring(1));

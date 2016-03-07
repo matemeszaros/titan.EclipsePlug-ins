@@ -426,17 +426,6 @@ public abstract class TTCN3_Set_Seq_Choice_BaseType extends Type implements ITyp
 		if (subreferences.size() <= i) {
 			return;
 		}
-
-		//ToDo:code completition does not work most of the time it would be needed HQ66225
-		//     test implementation
-		if (compFieldMap != null) {
-			int nofComponents = this.getNofComponents();
-			for (int j = 0; j < nofComponents; j++) {
-				Identifier id = this.getComponentIdentifierByIndex(j);
-				propCollector.addProposal(id, null, "");
-			}
-		}
-
 		ISubReference subreference = subreferences.get(i);
 		if (Subreference_type.fieldSubReference.equals(subreference.getReferenceType())) {
 			if (subreferences.size() > i + 1) {

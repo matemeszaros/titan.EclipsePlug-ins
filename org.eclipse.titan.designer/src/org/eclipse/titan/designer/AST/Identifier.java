@@ -544,18 +544,18 @@ public class Identifier implements ILocateableNode, IVisitableNode {
 
 	}
 
-	public Identifier(final Identifier_type id_type, final String name) {
-		this(id_type, name, NULL_Location.INSTANCE, false);
+	public Identifier(final Identifier_type idType, final String name) {
+		this(idType, name, NULL_Location.INSTANCE, false);
 	}
 
-	public Identifier(final Identifier_type id_type, final String name, final Location location) {
-		this(id_type, name, location, false);
+	public Identifier(final Identifier_type idType, final String name, final Location location) {
+		this(idType, name, location, false);
 	}
 
-	public Identifier(final Identifier_type id_type, final String name, final Location location, final boolean dontregister) {
-		this.type = id_type;
+	public Identifier(final Identifier_type idType, final String name, final Location location, final boolean dontregister) {
+		this.type = idType;
 		this.location = location;
-		switch(id_type) {
+		switch(idType) {
 		case ID_ASN:
 			if (ID_MAP_ASN.containsKey(name)) {
 				idData = ID_MAP_ASN.get(name);
@@ -680,12 +680,12 @@ public class Identifier implements ILocateableNode, IVisitableNode {
 	}
 
 	/**
-	 * @param id_type the type of identifier to be checked for.
+	 * @param idType the type of identifier to be checked for.
 	 *
 	 * @return whether this identifier is valid in a context
 	 * */
-	public final boolean getHasValid(final Identifier_type id_type) {
-		switch(id_type) {
+	public final boolean getHasValid(final Identifier_type idType) {
+		switch(idType) {
 		case ID_NAME:
 			return !Identifier_Internal_Data.INVALID_STRING.equals(getName());
 		case ID_TTCN:

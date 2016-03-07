@@ -108,14 +108,7 @@ public final class Configuration extends TextSourceViewerConfiguration {
 
 	@Override
 	public ITextHover getTextHover(final ISourceViewer sourceViewer, final String contentType, final int stateMask) {
-		// IPreferencesService prefs = Platform.getPreferencesService();
-		// if (prefs.getBoolean(Activator.PLUGIN_ID,
-		// PreferenceConstants.TREATTTCNPPASTTCN, false, null)) {
 		return new org.eclipse.titan.designer.editors.ttcn3editor.TextHover(sourceViewer, editor);
-		// }
-
-		// return new
-		// org.eclipse.titan.designer.editors.TextHover(sourceViewer);
 	}
 
 	@Override
@@ -130,17 +123,9 @@ public final class Configuration extends TextSourceViewerConfiguration {
 			strategy.setEditor(editor);
 
 			IPreferencesService prefs = Platform.getPreferencesService();
-			// if (prefs.getBoolean(Activator.PLUGIN_ID,
-			// PreferenceConstants.TREATTTCNPPASTTCN, false, null))
-			// {
 			reconciler = new MonoReconciler(strategy, prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 					PreferenceConstants.USEINCREMENTALPARSING, false, null));
 			reconciler.setProgressMonitor(new NullProgressMonitor());
-			// } else {
-			// reconciler = new MonoReconciler(strategy, false);
-			// reconciler.setProgressMonitor(new
-			// NullProgressMonitor());
-			// }
 			editor.setReconciler(reconciler);
 
 			int timeout = prefs.getInt(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.RECONCILERTIMEOUT, 1, null);

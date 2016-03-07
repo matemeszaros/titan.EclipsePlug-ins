@@ -33,8 +33,8 @@ public final class ValueSet_Assignment extends ASN1Assignment {
 	/** right */
 	private final Block mBlock;
 
-	public ValueSet_Assignment(final Identifier id, final Ass_pard ass_pard, final IASN1Type type, final Block aBlock) {
-		super(id, ass_pard);
+	public ValueSet_Assignment(final Identifier id, final Ass_pard assPard, final IASN1Type type, final Block aBlock) {
+		super(id, assPard);
 		this.type = type;
 		this.mBlock = aBlock;
 
@@ -58,7 +58,7 @@ public final class ValueSet_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public void setRightScope(final Scope right_scope) {
+	public void setRightScope(final Scope rightScope) {
 
 	}
 
@@ -117,10 +117,7 @@ public final class ValueSet_Assignment extends ASN1Assignment {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (identifier != null && !identifier.accept(v)) {
-			return false;
-		}
-		if (ass_pard != null && !ass_pard.accept(v)) {
+		if (!super.memberAccept(v)) {
 			return false;
 		}
 		if (type != null && !type.accept(v)) {

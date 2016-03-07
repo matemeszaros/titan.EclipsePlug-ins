@@ -55,20 +55,20 @@ public final class Def_Var extends Definition {
 	private static final String KIND = " variable definition";
 
 	private final Type type;
-	private final Value initial_value;
+	private final Value initialValue;
 
 	private boolean wasAssigned;
 
-	public Def_Var(final Identifier identifier, final Type type, final Value initial_value) {
+	public Def_Var(final Identifier identifier, final Type type, final Value initialValue) {
 		super(identifier);
 		this.type = type;
-		this.initial_value = initial_value;
+		this.initialValue = initialValue;
 
 		if (type != null) {
 			type.setFullNameParent(this);
 		}
-		if (initial_value != null) {
-			initial_value.setFullNameParent(this);
+		if (initialValue != null) {
+			initialValue.setFullNameParent(this);
 		}
 	}
 
@@ -83,7 +83,7 @@ public final class Def_Var extends Definition {
 
 		if (type == child) {
 			return builder.append(FULLNAMEPART1);
-		} else if (initial_value == child) {
+		} else if (initialValue == child) {
 			return builder.append(FULLNAMEPART2);
 		}
 
@@ -96,8 +96,8 @@ public final class Def_Var extends Definition {
 		if (type != null) {
 			type.setMyScope(scope);
 		}
-		if (initial_value != null) {
-			initial_value.setMyScope(scope);
+		if (initialValue != null) {
+			initialValue.setMyScope(scope);
 		}
 	}
 
@@ -143,7 +143,7 @@ public final class Def_Var extends Definition {
 	}
 
 	public Value getInitialValue() {
-		return initial_value;
+		return initialValue;
 	}
 
 	@Override
@@ -192,9 +192,9 @@ public final class Def_Var extends Definition {
 			break;
 		}
 
-		if (initial_value != null) {
-			initial_value.setMyGovernor(type);
-			IValue temporalValue = type.checkThisValueRef(timestamp, initial_value);
+		if (initialValue != null) {
+			initialValue.setMyGovernor(type);
+			IValue temporalValue = type.checkThisValueRef(timestamp, initialValue);
 			if (isLocal()) {
 				type.checkThisValue(timestamp, temporalValue, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE,
 						true, false, true, false, false));
@@ -209,7 +209,7 @@ public final class Def_Var extends Definition {
 	public void postCheck() {
 		super.postCheck();
 		if (!wasAssigned) {
-			if (initial_value != null && !initial_value.getIsErroneous(lastTimeChecked) && !initial_value.isUnfoldable(lastTimeChecked)) {
+			if (initialValue != null && !initialValue.getIsErroneous(lastTimeChecked) && !initialValue.isUnfoldable(lastTimeChecked)) {
 				final String message = MessageFormat.format("The {0} seems to be never written, maybe it could be a constant",
 						getDescription());
 				final String option = Platform.getPreferencesService().getString(ProductConstants.PRODUCT_ID_DESIGNER,
@@ -249,23 +249,23 @@ public final class Def_Var extends Definition {
 			return false;
 		}
 
-		if (initial_value != null) {
-			if (otherVariable.initial_value != null) {
-				if (!initial_value.isUnfoldable(timestamp) && !otherVariable.initial_value.isUnfoldable(timestamp)
-						&& !initial_value.checkEquality(timestamp, otherVariable.initial_value)) {
+		if (initialValue != null) {
+			if (otherVariable.initialValue != null) {
+				if (!initialValue.isUnfoldable(timestamp) && !otherVariable.initialValue.isUnfoldable(timestamp)
+						&& !initialValue.checkEquality(timestamp, otherVariable.initialValue)) {
 					final String message = MessageFormat
 							.format("Local variable `{0}'' and the variable inherited from component type `{1}'' have different values",
 									identifier.getDisplayName(), otherVariable.getMyScope().getFullName());
-					initial_value.getLocation().reportSemanticWarning(message);
+					initialValue.getLocation().reportSemanticWarning(message);
 				}
 			} else {
-				initial_value.getLocation()
+				initialValue.getLocation()
 						.reportSemanticWarning(
 								MessageFormat.format(
 										"Local variable `{0}'' has initial value, but the variable inherited from component type `{1}'' does not",
 										identifier.getDisplayName(), otherVariable.getMyScope().getFullName()));
 			}
-		} else if (otherVariable.initial_value != null) {
+		} else if (otherVariable.initialValue != null) {
 			location.reportSemanticWarning(MessageFormat
 					.format("Local variable `{0}'' does not have initial value, but the variable inherited from component type `{1}'' has",
 							identifier.getDisplayName(), otherVariable.getMyScope().getFullName()));
@@ -314,15 +314,11 @@ public final class Def_Var extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
-			reparser.moduleToBeReanalysed.addAll(referingHere);
-			reparser.moduleToBeReanalysed.add(getMyScope().getModuleScope().getName());
-
 			boolean enveloped = false;
 			int result = 1;
 
 			Location temporalIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(temporalIdentifier) || reparser.isExtending(temporalIdentifier)) {
-				reparser.fullAnalysysNeeded = true;
 				reparser.extendDamagedRegion(temporalIdentifier);
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				result = r.parseAndSetNameChanged();
@@ -346,14 +342,14 @@ public final class Def_Var extends Definition {
 				}
 			}
 
-			if (initial_value != null) {
+			if (initialValue != null) {
 				if (enveloped) {
-					initial_value.updateSyntax(reparser, false);
-					reparser.updateLocation(initial_value.getLocation());
-				} else if (reparser.envelopsDamage(initial_value.getLocation())) {
-					initial_value.updateSyntax(reparser, true);
+					initialValue.updateSyntax(reparser, false);
+					reparser.updateLocation(initialValue.getLocation());
+				} else if (reparser.envelopsDamage(initialValue.getLocation())) {
+					initialValue.updateSyntax(reparser, true);
 					enveloped = true;
-					reparser.updateLocation(initial_value.getLocation());
+					reparser.updateLocation(initialValue.getLocation());
 				}
 			}
 
@@ -370,9 +366,9 @@ public final class Def_Var extends Definition {
 			reparser.updateLocation(type.getLocation());
 		}
 
-		if (initial_value != null) {
-			initial_value.updateSyntax(reparser, false);
-			reparser.updateLocation(initial_value.getLocation());
+		if (initialValue != null) {
+			initialValue.updateSyntax(reparser, false);
+			reparser.updateLocation(initialValue.getLocation());
 		}
 	}
 
@@ -382,8 +378,8 @@ public final class Def_Var extends Definition {
 		if (type != null) {
 			type.findReferences(referenceFinder, foundIdentifiers);
 		}
-		if (initial_value != null) {
-			initial_value.findReferences(referenceFinder, foundIdentifiers);
+		if (initialValue != null) {
+			initialValue.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
@@ -395,7 +391,7 @@ public final class Def_Var extends Definition {
 		if (type != null && !type.accept(v)) {
 			return false;
 		}
-		if (initial_value != null && !initial_value.accept(v)) {
+		if (initialValue != null && !initialValue.accept(v)) {
 			return false;
 		}
 		return true;

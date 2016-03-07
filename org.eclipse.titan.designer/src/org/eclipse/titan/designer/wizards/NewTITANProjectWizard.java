@@ -28,16 +28,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.path.TITANPathUtilities;
 import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.core.TITANNature;
@@ -320,8 +316,7 @@ public final class NewTITANProjectWizard extends BasicNewResourceWizard implemen
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				Shell shell = new Shell(Display.getDefault());
-				PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(shell, newProject,
+				PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(null, newProject,
 						GeneralConstants.PROJECT_PROPERTY_PAGE, null, null);
 				if (dialog != null) {
 					dialog.open();

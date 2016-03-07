@@ -164,12 +164,12 @@ public final class Invoke_Template extends TTCN3Template {
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expected_value) {
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
 		if (getIsErroneous(timestamp) || value == null) {
 			return Type_type.TYPE_UNDEFINED;
 		}
 
-		IType type = value.getExpressionGovernor(timestamp, expected_value);
+		IType type = value.getExpressionGovernor(timestamp, expectedValue);
 		if (type == null) {
 			return Type_type.TYPE_UNDEFINED;
 		}
@@ -252,9 +252,9 @@ public final class Invoke_Template extends TTCN3Template {
 	@Override
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		if (omitAllowed) {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
 		} else {
-			checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
 		return false;

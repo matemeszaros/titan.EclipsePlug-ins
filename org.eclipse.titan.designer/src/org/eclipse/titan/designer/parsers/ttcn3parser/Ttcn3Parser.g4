@@ -913,7 +913,7 @@ pr_NestedFunctionTypeDef returns[Type type = null]
 	ReturnType_Helper helper = null;
 	Type returnType = null;
 	boolean returnsTemplate = false;
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 	Configuration_Helper confighelper = new Configuration_Helper();
 }:
 (	col = pr_FunctionKeyword
@@ -926,7 +926,7 @@ pr_NestedFunctionTypeDef returns[Type type = null]
 				if( helper != null ) {
 					returnType = helper.type;
 					returnsTemplate = helper.returnsTemplate;
-					template_restriction = helper.templateRestriction;
+					templateRestriction = helper.templateRestriction;
 				}
 			}
 	)?
@@ -934,7 +934,7 @@ pr_NestedFunctionTypeDef returns[Type type = null]
 {
 	if(parList == null) { parList = new FormalParameterList(new ArrayList<FormalParameter>()); }
 	parList.setLocation(getLocation( $start1.start, $end1.stop));
-	$type = new Function_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf, returnType, returnsTemplate, template_restriction);
+	$type = new Function_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf, returnType, returnsTemplate, templateRestriction);
 	$type.setLocation(getLocation( $start, getStopToken()));
 };
 
@@ -1292,18 +1292,18 @@ pr_ValueOrRange returns[ParsedSubType parsedSubType = null]:
 
 pr_RangeDef returns[ParsedSubType parsedSubType = null]
 @init {
-	boolean min_exclusive = false;
-	boolean max_exclusive = false;
+	boolean minExclusive = false;
+	boolean maxExclusive = false;
 }:
-(	( pr_ExcludeBound { min_exclusive = true; } )?
+(	( pr_ExcludeBound { minExclusive = true; } )?
 	min = pr_LowerBound
 	RANGEOP
-	( pr_ExcludeBound { max_exclusive = true; } )?
+	( pr_ExcludeBound { maxExclusive = true; } )?
 	max = pr_UpperBound
 )
 {
 	if ( $min.value != null && $max.value != null ) {
-		$parsedSubType = new Range_ParsedSubType( $min.value, min_exclusive, $max.value, max_exclusive );
+		$parsedSubType = new Range_ParsedSubType( $min.value, minExclusive, $max.value, maxExclusive );
 	}
 };
 
@@ -1667,7 +1667,7 @@ pr_FunctionTypeDef returns[Def_Type def_type = null]
 	ReturnType_Helper helper = null;
 	Type returnType = null;
 	boolean returnsTemplate = false;
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 	Configuration_Helper confighelper = new Configuration_Helper();
 }:
 (	col = pr_FunctionKeyword
@@ -1681,7 +1681,7 @@ pr_FunctionTypeDef returns[Def_Type def_type = null]
 				if(helper != null) {
 					returnType = helper.type;
 					returnsTemplate = helper.returnsTemplate;
-					template_restriction = helper.templateRestriction;
+					templateRestriction = helper.templateRestriction;
 				}
 			}
 	)?
@@ -1690,7 +1690,7 @@ pr_FunctionTypeDef returns[Def_Type def_type = null]
 	if($i.identifier != null) {
 		if(parList == null) { parList = new FormalParameterList(new ArrayList<FormalParameter>()); }
 		parList.setLocation(getLocation( $start1.start, $end1.stop));
-		Type type = new Function_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf, returnType, returnsTemplate, template_restriction);
+		Type type = new Function_Type(parList, confighelper.runsonReference, confighelper.runsOnSelf, returnType, returnsTemplate, templateRestriction);
 		type.setLocation(getLocation( $col.start, getStopToken()));
 		$def_type = new Def_Type($i.identifier, type);
 	}
@@ -1751,21 +1751,21 @@ pr_TestcaseTypeDef returns[Def_Type def_type = null]
 
 pr_TemplateDef returns[Def_Template def_template = null]
 @init {
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 	Template_definition_helper helper = new Template_definition_helper();
-	Reference derived_reference = null;
+	Reference derivedReference = null;
 	TemplateBody body = null;
 }:
 (	col = pr_TemplateKeyword
-	( t = pr_TemplateRestriction { template_restriction = $t.template_restriction; } )?
+	( t = pr_TemplateRestriction { templateRestriction = $t.templateRestriction; } )?
 	pr_BaseTemplate[helper]
-	( d = pr_DerivedDef { derived_reference = $d.reference; } )?
+	( d = pr_DerivedDef { derivedReference = $d.reference; } )?
 	pr_AssignmentChar
 	b = pr_TemplateBody
 )
 {
 	if(helper.identifier != null && helper.type != null && $b.body != null) {
-		$def_template = new Def_Template(template_restriction, helper.identifier, helper.type, helper.formalParList, derived_reference, $b.body.getTemplate());
+		$def_template = new Def_Template(templateRestriction, helper.identifier, helper.type, helper.formalParList, derivedReference, $b.body.getTemplate());
 		$def_template.setLocation(getLocation( $col.start, $b.stop));
 		$def_template.setCommentLocation(lexer.getLastCommentLocation());
 	}
@@ -2360,7 +2360,7 @@ pr_FunctionDef returns[Def_Function def_func = null]
 	ReturnType_Helper returnHelper = null;
 	Type returnType = null;
 	boolean returnsTemplate = false;
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 	Location commentLocation = lexer.getLastCommentLocation();
 	if (commentLocation != null) {
 		lexer.clearLastCommentLocation();
@@ -2377,7 +2377,7 @@ pr_FunctionDef returns[Def_Function def_func = null]
 			if(returnHelper != null) {
 				returnType = returnHelper.type;
 				returnsTemplate = returnHelper.returnsTemplate;
-				template_restriction = returnHelper.templateRestriction;
+				templateRestriction = returnHelper.templateRestriction;
 			}
 		}
 	)?
@@ -2387,7 +2387,7 @@ pr_FunctionDef returns[Def_Function def_func = null]
 	if($i.identifier != null && statementBlock != null) {
 		if(parameters == null) { parameters = new FormalParameterList(new ArrayList<FormalParameter>()); }
 		parameters.setLocation(getLocation( $start1.start, $end.stop));
-		$def_func = new Def_Function($i.identifier, parameters, runsonHelper.runsonReference, returnType, returnsTemplate, template_restriction, statementBlock);
+		$def_func = new Def_Function($i.identifier, parameters, runsonHelper.runsonReference, returnType, returnsTemplate, templateRestriction, statementBlock);
 		$def_func.setLocation(getLocation( $col.start, $s.stop));
 		$def_func.setCommentLocation(commentLocation);
 	}
@@ -2421,16 +2421,16 @@ pr_ReturnType returns[ReturnType_Helper helper]
 @init {
 	$helper = new ReturnType_Helper();
 	boolean returnsTemplate = false;
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 }:
 (	col = RETURN
-	( tr = pr_TemplateOptRestricted { returnsTemplate = true; template_restriction = $tr.template_restriction; } )?
+	( tr = pr_TemplateOptRestricted { returnsTemplate = true; templateRestriction = $tr.templateRestriction; } )?
 	t = pr_Type
 )
 {
 	$helper.type = $t.type;
 	$helper.returnsTemplate = returnsTemplate;
-	$helper.templateRestriction = template_restriction;
+	$helper.templateRestriction = templateRestriction;
 };
 
 pr_RunsOnSpec [Configuration_Helper helper]:
@@ -2849,15 +2849,15 @@ pr_SystemKeyword:
 
 pr_TestcaseInstanceOp returns[Value value = null]
 @init {
-	Value dereferedValue = null;
-	boolean isDerefered = false;
+	Value dereferredValue = null;
+	boolean isDereferred = false;
 	Reference temporalReference = null;
 	ParsedActualParameters parameters = null;
 	Value timerValue = null;
 }:
 (	col = EXECUTE
 	pr_LParen
-	(	dv = pr_DereferOp	{ dereferedValue = $dv.value; isDerefered = true; }
+	(	dv = pr_DereferOp	{ dereferredValue = $dv.value; isDereferred = true; }
 	|	tr = pr_FunctionRef { temporalReference = $tr.reference; }
 	)
 	parstart = pr_LParen
@@ -2874,8 +2874,8 @@ pr_TestcaseInstanceOp returns[Value value = null]
 	}
 	parameters.setLocation(getLocation( $parstart.start, $parend.stop));
 
-	if(isDerefered) {
-		$value = new ExecuteDereferedExpression(dereferedValue, parameters, timerValue);
+	if(isDereferred) {
+		$value = new ExecuteDereferedExpression(dereferredValue, parameters, timerValue);
 	} else if(temporalReference != null) {
 		Location temporalLocation = temporalReference.getLocation();
 		ISubReference subReference = temporalReference.removeLastSubReference();
@@ -2891,15 +2891,15 @@ pr_TestcaseInstanceOp returns[Value value = null]
 
 pr_TestcaseInstanceStatement returns[Statement statement = null]
 @init {
-	Value dereferedValue = null;
-	boolean isDerefered = false;
+	Value dereferredValue = null;
+	boolean isDereferred = false;
 	Reference temporalReference = null;
 	ParsedActualParameters parameters = null;
 	Value timerValue = null;
 }:
 (	col = EXECUTE
 	pr_LParen
-	(	dv = pr_DereferOp	{ dereferedValue = $dv.value; isDerefered = true; }
+	(	dv = pr_DereferOp	{ dereferredValue = $dv.value; isDereferred = true; }
 	|	tr = pr_FunctionRef { temporalReference = $tr.reference; }
 	)
 	parstart = pr_LParen
@@ -2916,8 +2916,8 @@ pr_TestcaseInstanceStatement returns[Statement statement = null]
 	}
 	parameters.setLocation(getLocation( $parstart.start, $parend.stop));
 
-	if(isDerefered) {
-		$statement = new Referenced_Testcase_Instance_Statement(dereferedValue, parameters, timerValue);
+	if(isDereferred) {
+		$statement = new Referenced_Testcase_Instance_Statement(dereferredValue, parameters, timerValue);
 		$statement.setLocation(getLocation( $col, $endcol.stop));
 	} else if(temporalReference != null) {
 		Location temporalLocation = temporalReference.getLocation();
@@ -3547,7 +3547,7 @@ pr_ExtFunctionDef returns [Def_Extfunction def_extfunction = null]
 	FormalParameterList parameters = null;
 	Type returnType = null;
 	boolean returnsTemplate = false;
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 }:
 (	col = pr_ExtKeyword
 	pr_FunctionKeyword
@@ -3560,7 +3560,7 @@ pr_ExtFunctionDef returns [Def_Extfunction def_extfunction = null]
 				if(helper != null) {
 					returnType = helper.type;
 					returnsTemplate = helper.returnsTemplate;
-					template_restriction = helper.templateRestriction;
+					templateRestriction = helper.templateRestriction;
 				}
 			}
 	)?
@@ -3569,7 +3569,7 @@ pr_ExtFunctionDef returns [Def_Extfunction def_extfunction = null]
 	if($i.identifier != null) {
 		if(parameters == null) { parameters = new FormalParameterList(new ArrayList<FormalParameter>()); }
 		parameters.setLocation(getLocation( $start1.start, $enda.stop));
-		$def_extfunction = new Def_Extfunction($i.identifier, parameters,  returnType, returnsTemplate, template_restriction);
+		$def_extfunction = new Def_Extfunction($i.identifier, parameters,  returnType, returnsTemplate, templateRestriction);
 		$def_extfunction.setLocation(getLocation( $start, getStopToken()));
 	}
 };
@@ -3827,12 +3827,12 @@ pr_VarInstance returns[List<Definition> definitions]
 @init {
 	$definitions = new ArrayList<Definition>();
 	List<Identifier> identifiers = null;
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 }:
 (	col = pr_VarKeyword
-	(	tr = pr_TemplateOptRestricted { template_restriction = $tr.template_restriction; }
+	(	tr = pr_TemplateOptRestricted { templateRestriction = $tr.templateRestriction; }
 		t = pr_Type
-		pr_TempVarList[ $definitions, $t.type, template_restriction ]
+		pr_TempVarList[ $definitions, $t.type, templateRestriction ]
 	|	t2 = pr_Type
 		pr_VarList[ $definitions, $t2.type ]
 	)
@@ -3850,14 +3850,14 @@ pr_VarInstance returns[List<Definition> definitions]
 	}
 };
 
-pr_TempVarList [List<Definition> definitions, Type type, TemplateRestriction.Restriction_type template_restriction]:
-(	pr_SingleTempVarInstance[definitions, type, template_restriction]
+pr_TempVarList [List<Definition> definitions, Type type, TemplateRestriction.Restriction_type templateRestriction]:
+(	pr_SingleTempVarInstance[definitions, type, templateRestriction]
 	(	pr_Comma
-		pr_SingleTempVarInstance[definitions, type, template_restriction]
+		pr_SingleTempVarInstance[definitions, type, templateRestriction]
 	)*
 );
 
-pr_SingleTempVarInstance [List<Definition> definitions, Type type, TemplateRestriction.Restriction_type template_restriction]
+pr_SingleTempVarInstance [List<Definition> definitions, Type type, TemplateRestriction.Restriction_type templateRestriction]
 @init {
 	TemplateBody body = null;
 	ArrayDimensions dimensions = null;
@@ -3878,7 +3878,7 @@ pr_SingleTempVarInstance [List<Definition> definitions, Type type, TemplateRestr
 			}
 		}
 
-		Definition definition = new Def_Var_Template( $template_restriction, $i.identifier, tempType, body != null ? body.getTemplate() : null );
+		Definition definition = new Def_Var_Template( $templateRestriction, $i.identifier, tempType, body != null ? body.getTemplate() : null );
 		definition.setLocation(getLocation( $start, getStopToken()));
 		$definitions.add(definition);
 	}
@@ -4156,8 +4156,8 @@ pr_ConnectStatement returns[Connect_Statement statement = null]:
 )
 {
 	if($h.helper != null) {
-		$statement = new Connect_Statement(	$h.helper.componentReference1, $h.helper.portReference1,
-											$h.helper.componentReference2, $h.helper.portReference2	);
+		$statement = new Connect_Statement(	$h.helper.componentReference1, new PortReference($h.helper.portReference1),
+											$h.helper.componentReference2, new PortReference($h.helper.portReference2) );
 		$statement.setLocation(getLocation( $col.start, $h.stop));
 	}
 };
@@ -4209,7 +4209,7 @@ pr_DisconnectStatement returns[Disconnect_Statement statement = null]
 	if(helper != null && helper.componentReference1 != null &&
 		helper.portReference1 != null && helper.componentReference2 != null &&
 		helper.portReference2 != null) {
-		$statement = new Disconnect_Statement(helper.componentReference1, helper.portReference1, helper.componentReference2, helper.portReference2);
+		$statement = new Disconnect_Statement(helper.componentReference1, new PortReference(helper.portReference1), helper.componentReference2, new PortReference(helper.portReference2));
 		$statement.setLocation(getLocation( $col.start, $h.stop));
 	} else {
 		reportUnsupportedConstruct( "Disconnect operation on multiple connections is not currently supported", $col.start, $col.stop );
@@ -4267,8 +4267,8 @@ pr_MapStatement returns[Map_Statement statement = null]:
 )
 {
 	if($h.helper != null) {
-		$statement = new Map_Statement( $h.helper.componentReference1, $h.helper.portReference1,
-									   $h.helper.componentReference2, $h.helper.portReference2 );
+		$statement = new Map_Statement( $h.helper.componentReference1, new PortReference($h.helper.portReference1),
+									   $h.helper.componentReference2, new PortReference($h.helper.portReference2) );
 		$statement.setLocation(getLocation( $col.start, $h.stop));
 	}
 };
@@ -4290,7 +4290,7 @@ pr_UnmapStatement returns[Unmap_Statement statement = null]
 	if(helper != null && helper.componentReference1 != null &&
 		helper.portReference1 != null && helper.componentReference2 != null &&
 		helper.portReference2 != null) {
-		$statement = new Unmap_Statement(helper.componentReference1, helper.portReference1, helper.componentReference2, helper.portReference2);
+		$statement = new Unmap_Statement(helper.componentReference1, new PortReference(helper.portReference1), helper.componentReference2, new PortReference(helper.portReference2));
 		$statement.setLocation(getLocation( $col.start, $h.stop));
 	} else {
 		reportUnsupportedConstruct( "Unmap operation on multiple mappings is not currently supported", $col.start, $col.stop );
@@ -4304,7 +4304,7 @@ pr_UnmapKeyword:
 pr_StartTCStatement returns[Statement statement = null]
 @init {
 	Value component = null;
-	Value dereferedValue = null;
+	Value dereferredValue = null;
 	Reference functionref = null;
 	ParsedActualParameters parameters = null;
 }:
@@ -4312,13 +4312,13 @@ pr_StartTCStatement returns[Statement statement = null]
 	pr_Dot
 	START
 	pr_LParen
-	(	(	dv = pr_DereferOp { dereferedValue = $dv.value; }
+	(	(	dv = pr_DereferOp { dereferredValue = $dv.value; }
 			a1=pr_LParen
 			( p = pr_FunctionActualParList { parameters = $p.parsedParameters; } )?
 			a2=pr_RParen
 			{	if(parameters == null) { parameters = new ParsedActualParameters();	}
 				parameters.setLocation(getLocation( $a1.start, $a2.stop));
-				$statement = new Start_Referenced_Component_Statement( component, dereferedValue, parameters );
+				$statement = new Start_Referenced_Component_Statement( component, dereferredValue, parameters );
 			}
 		)		
 		|	f = pr_FunctionInstance
@@ -4755,7 +4755,7 @@ pr_ParamSpec returns[Parameter_Redirect redirect = null]:
 
 pr_ParamAssignmentList returns[Parameter_Redirect redirect = null]:
 (	col = pr_LParen
-	(	assignments = pr_AssignmentList	{ $redirect = new AssignmentList_Parameter_Redirect($assignments.parameter_assignments); }
+	(	assignments = pr_AssignmentList	{ $redirect = new AssignmentList_Parameter_Redirect($assignments.parameterAssignments); }
 	|	entries = pr_VariableList	{ $redirect = new VariableList_Parameter_Redirect($entries.entries); }
 	)
 	endcol = pr_RParen
@@ -4766,14 +4766,14 @@ pr_ParamAssignmentList returns[Parameter_Redirect redirect = null]:
 	}
 };
 
-pr_AssignmentList returns[Parameter_Assignments parameter_assignments = null]:
+pr_AssignmentList returns[Parameter_Assignments parameterAssignments = null]:
 (	p = pr_VariableAssignment
-		{	$parameter_assignments = new Parameter_Assignments();
-			if( $p.param_assignment != null ) { $parameter_assignments.add( $p.param_assignment ); }
+		{	$parameterAssignments = new Parameter_Assignments();
+			if( $p.param_assignment != null ) { $parameterAssignments.add( $p.param_assignment ); }
 		}
 	(	pr_Comma
 		p = pr_VariableAssignment
-			{ if( $p.param_assignment != null ) { $parameter_assignments.add( $p.param_assignment ); } }
+			{ if( $p.param_assignment != null ) { $parameterAssignments.add( $p.param_assignment ); } }
 	)*
 );
 
@@ -4996,7 +4996,7 @@ pr_AnyKeyword:
 pr_TimerStatements returns[Statement statement = null]
 @init {
 	Value timerValue = null;
-	Value dereferedValue = null;
+	Value dereferredValue = null;
     ParsedActualParameters parameters = null;
 }:
 (	r = pr_TimerRef
@@ -5006,7 +5006,7 @@ pr_TimerStatements returns[Statement statement = null]
 	|	START
 		(	pr_LParen
 			(	tv = pr_TimerValue { timerValue = $tv.value; }
-			| 	dv = pr_DereferOp { dereferedValue = $dv.value; }
+			| 	dv = pr_DereferOp { dereferredValue = $dv.value; }
                 a1=pr_LParen
                 	( p = pr_FunctionActualParList { parameters = $p.parsedParameters; } )?
                 a2=pr_RParen
@@ -5016,10 +5016,10 @@ pr_TimerStatements returns[Statement statement = null]
 			)
 			pr_RParen
 		)?
-		{      if(dereferedValue != null) {
+		{      if(dereferredValue != null) {
                            Value component = new Referenced_Value( $r.reference );
                            component.setLocation( getLocation( $r.start, $r.stop ) );
-                           $statement = new Start_Referenced_Component_Statement( component, dereferedValue, parameters );
+                           $statement = new Start_Referenced_Component_Statement( component, dereferredValue, parameters );
                      } else {
                            $statement = new Unknown_Start_Statement( $r.reference, timerValue );
                      }
@@ -5336,15 +5336,15 @@ pr_Macro returns[Macro_Value value = null]:
 
 pr_FormalValuePar returns[FormalParameter parameter = null]
 @init {
-	Assignment_type assignment_type = Assignment_type.A_PAR_VAL;
+	Assignment_type assignmentType = Assignment_type.A_PAR_VAL;
 	boolean isLazy = false;
 	TemplateInstance default_value = null;
 	Location commentLocation = lexer.getLastCommentLocation();
 }:
-(	(	IN { assignment_type = Assignment_type.A_PAR_VAL_IN; }
+(	(	IN { assignmentType = Assignment_type.A_PAR_VAL_IN; }
 		( TITANSPECIFICLAZY { isLazy = true; } )?
-	|	INOUT { assignment_type = Assignment_type.A_PAR_VAL_INOUT; }
-	|	OUT { assignment_type = Assignment_type.A_PAR_VAL_OUT; }
+	|	INOUT { assignmentType = Assignment_type.A_PAR_VAL_INOUT; }
+	|	OUT { assignmentType = Assignment_type.A_PAR_VAL_OUT; }
 	|	TITANSPECIFICLAZY { isLazy = true; }
 	)?
 	t = pr_Type
@@ -5362,7 +5362,7 @@ pr_FormalValuePar returns[FormalParameter parameter = null]
 	)?
 )
 {
-	$parameter = new FormalParameter(TemplateRestriction.Restriction_type.TR_NONE, assignment_type, $t.type, $i.identifier, default_value, isLazy);
+	$parameter = new FormalParameter(TemplateRestriction.Restriction_type.TR_NONE, assignmentType, $t.type, $i.identifier, default_value, isLazy);
 	$parameter.setCommentLocation(commentLocation);
 	$parameter.setLocation(getLocation( $start, getStopToken()));
 	lexer.clearLastCommentLocation();
@@ -5387,19 +5387,19 @@ pr_FormalTimerPar returns[FormalParameter parameter = null]
 };
 
 pr_FormalTemplatePar returns[FormalParameter parameter = null]
-	locals [ Assignment_type assignment_type ]
+	locals [ Assignment_type assignmentType ]
 @init {
-	$assignment_type = Assignment_type.A_PAR_TEMP_IN;
-	TemplateRestriction.Restriction_type template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	$assignmentType = Assignment_type.A_PAR_TEMP_IN;
+	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 	boolean isLazy = false;
 	TemplateInstance default_value = null;
 }:
-(	(	IN { $assignment_type = Assignment_type.A_PAR_TEMP_IN; }
-	|	OUT { $assignment_type = Assignment_type.A_PAR_TEMP_OUT; }
-	|	INOUT { $assignment_type = Assignment_type.A_PAR_TEMP_INOUT; }
+(	(	IN { $assignmentType = Assignment_type.A_PAR_TEMP_IN; }
+	|	OUT { $assignmentType = Assignment_type.A_PAR_TEMP_OUT; }
+	|	INOUT { $assignmentType = Assignment_type.A_PAR_TEMP_INOUT; }
 	)?
-	tr = pr_TemplateOptRestricted { template_restriction = $tr.template_restriction; }
-	( { $assignment_type == Assignment_type.A_PAR_TEMP_IN }? TITANSPECIFICLAZY { isLazy = true; } )?
+	tr = pr_TemplateOptRestricted { templateRestriction = $tr.templateRestriction; }
+	( { $assignmentType == Assignment_type.A_PAR_TEMP_IN }? TITANSPECIFICLAZY { isLazy = true; } )?
 	t = pr_Type
 	i = pr_Identifier
 	(   pr_AssignmentChar
@@ -5415,27 +5415,27 @@ pr_FormalTemplatePar returns[FormalParameter parameter = null]
 	)?
 )
 {
-	$parameter = new FormalParameter(template_restriction, $assignment_type, $t.type, $i.identifier, default_value, isLazy);
+	$parameter = new FormalParameter(templateRestriction, $assignmentType, $t.type, $i.identifier, default_value, isLazy);
 	$parameter.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_TemplateOptRestricted returns[TemplateRestriction.Restriction_type template_restriction]
+pr_TemplateOptRestricted returns[TemplateRestriction.Restriction_type templateRestriction]
 @init {
-	$template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	$templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 }:
 (	pr_TemplateKeyword
-	( t = pr_TemplateRestriction { $template_restriction = $t.template_restriction; } )?
-|	OMIT { $template_restriction = TemplateRestriction.Restriction_type.TR_OMIT; }
+	( t = pr_TemplateRestriction { $templateRestriction = $t.templateRestriction; } )?
+|	OMIT { $templateRestriction = TemplateRestriction.Restriction_type.TR_OMIT; }
 );
 
-pr_TemplateRestriction returns[TemplateRestriction.Restriction_type template_restriction]
+pr_TemplateRestriction returns[TemplateRestriction.Restriction_type templateRestriction]
 @init {
-	$template_restriction = TemplateRestriction.Restriction_type.TR_NONE;
+	$templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 }:
 (	pr_LParen
-	(	OMIT    { $template_restriction = TemplateRestriction.Restriction_type.TR_OMIT; }
-	|	VALUE   { $template_restriction = TemplateRestriction.Restriction_type.TR_VALUE; }
-	|	PRESENT { $template_restriction = TemplateRestriction.Restriction_type.TR_PRESENT; }
+	(	OMIT    { $templateRestriction = TemplateRestriction.Restriction_type.TR_OMIT; }
+	|	VALUE   { $templateRestriction = TemplateRestriction.Restriction_type.TR_VALUE; }
+	|	PRESENT { $templateRestriction = TemplateRestriction.Restriction_type.TR_PRESENT; }
 	)
 	pr_RParen
 );
@@ -5976,7 +5976,7 @@ pr_BasicStatements returns[Statement statement = null]
 |       s3 = pr_String2TtcnStatement	{ $statement = $s3.statement; }
 |		s4 = pr_Int2EnumStatement		{ $statement = $s4.statement; }
 |       s5 = pr_LoopConstruct			{ $statement = $s5.statement; }
-|       s6 = pr_ConditionalConstruct	{ $statement = $s6.if_statement; }
+|       s6 = pr_ConditionalConstruct	{ $statement = $s6.ifStatement; }
 |       s7 = pr_SelectCaseConstruct		{ $statement = $s7.statement; }
 |       (	(	TITANSPECIFICTRY { exc_handling = StatementBlock.ExceptionHandling_type.EH_TRY; }
 			|	TITANSPECIFICCATCH
@@ -6793,10 +6793,10 @@ pr_DoWhileStatement returns[Statement dowhile_statement = null ]:
 	$dowhile_statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
-pr_ConditionalConstruct returns[If_Statement if_statement = null]
+pr_ConditionalConstruct returns[If_Statement ifStatement = null]
 @init {
-	If_Clauses if_clauses = new If_Clauses();
-	If_Clause if_clause = null;
+	If_Clauses ifClauses = new If_Clauses();
+	If_Clause ifClause = null;
 	StatementBlock statementblock2 = null;
 }:
 (	IF
@@ -6804,18 +6804,18 @@ pr_ConditionalConstruct returns[If_Statement if_statement = null]
 	v = pr_BooleanExpression
 	pr_RParen
 	sb = pr_StatementBlock
-	(	ei = pr_ElseIfClause { if($ei.if_clause != null) { if_clauses.addIfClause($ei.if_clause); }}	)*
+	(	ei = pr_ElseIfClause { if($ei.ifClause != null) { ifClauses.addIfClause($ei.ifClause); }}	)*
 	(	e = pr_ElseClause { statementblock2 = $e.statementblock; }	)?
 )
 {
-	If_Clause first_if_clause = new If_Clause($v.value, $sb.statementblock);
-	first_if_clause.setLocation( getLocation( $start, $sb.stop) );
-	if_clauses.addFrontIfClause(first_if_clause);
-	$if_statement = new If_Statement(if_clauses, statementblock2);
-	$if_statement.setLocation(getLocation( $start, getStopToken()));
+	If_Clause firstIfClause = new If_Clause($v.value, $sb.statementblock);
+	firstIfClause.setLocation( getLocation( $start, $sb.stop) );
+	ifClauses.addFrontIfClause(firstIfClause);
+	$ifStatement = new If_Statement(ifClauses, statementblock2);
+	$ifStatement.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_ElseIfClause returns[If_Clause if_clause = null]:
+pr_ElseIfClause returns[If_Clause ifClause = null]:
 (	col = ELSE
 	IF
 	pr_LParen
@@ -6824,8 +6824,8 @@ pr_ElseIfClause returns[If_Clause if_clause = null]:
 	sb = pr_StatementBlock
 )
 {
-	$if_clause = new If_Clause($v.value, $sb.statementblock);
-	$if_clause.setLocation( getLocation( $col, $sb.stop) );
+	$ifClause = new If_Clause($v.value, $sb.statementblock);
+	$ifClause.setLocation( getLocation( $col, $sb.stop) );
 };
 
 pr_ElseClause returns[StatementBlock statementblock = null]:

@@ -17,7 +17,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.decorators.TITANDecorator;
@@ -92,7 +91,7 @@ public class ExcludedResourcesPreferencePage extends FieldEditorPreferencePage i
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					MessageDialog.openWarning(new Shell(Display.getDefault()), "Resource exclusion settings changed",
+					MessageDialog.openWarning(null, "Resource exclusion settings changed",
 							"Resource exclusion settings have changed, the known projects have to be re-analyzed completly.\nThis might take some time.");
 				}
 			});

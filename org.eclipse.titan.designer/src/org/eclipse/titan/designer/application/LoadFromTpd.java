@@ -21,7 +21,6 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.wizards.projectFormat.TpdImporter;
@@ -71,7 +70,7 @@ public class LoadFromTpd implements IApplication {
 				}
 
 				try {
-					new ProgressMonitorDialog(new Shell(Display.getDefault())).run(true, false, new IRunnableWithProgress() {
+					new ProgressMonitorDialog(null).run(true, false, new IRunnableWithProgress() {
 
 						@Override
 						public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

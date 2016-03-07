@@ -250,7 +250,7 @@ public final class Altstep_Type extends Type {
 		Def_Altstep altstep = null;
 		switch (last.getValuetype()) {
 		case ALTSTEP_REFERENCE_VALUE:
-			altstep = ((Altstep_Reference_Value) last).getReferedAltstep();
+			altstep = ((Altstep_Reference_Value) last).getReferredAltstep();
 			if (altstep == null) {
 				setIsErroneous(true);
 				return;

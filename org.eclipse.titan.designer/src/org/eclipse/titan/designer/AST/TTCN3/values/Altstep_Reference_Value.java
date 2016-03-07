@@ -37,10 +37,10 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 public final class Altstep_Reference_Value extends Value {
 
-	private Def_Altstep referedAltstep;
+	private Def_Altstep referredAltstep;
 
-	public Altstep_Reference_Value(final Def_Altstep referedAltstep) {
-		this.referedAltstep = referedAltstep;
+	public Altstep_Reference_Value(final Def_Altstep referredAltstep) {
+		this.referredAltstep = referredAltstep;
 	}
 
 	@Override
@@ -51,12 +51,12 @@ public final class Altstep_Reference_Value extends Value {
 	@Override
 	public String createStringRepresentation() {
 		StringBuilder builder = new StringBuilder("refers(");
-		builder.append(referedAltstep.getAssignmentName()).append(')');
+		builder.append(referredAltstep.getAssignmentName()).append(')');
 		return builder.toString();
 	}
 
-	public Def_Altstep getReferedAltstep() {
-		return referedAltstep;
+	public Def_Altstep getReferredAltstep() {
+		return referredAltstep;
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public final class Altstep_Reference_Value extends Value {
 		referenceChain.release();
 
 		return Value_type.ALTSTEP_REFERENCE_VALUE.equals(last.getValuetype())
-				&& referedAltstep == ((Altstep_Reference_Value) last).getReferedAltstep();
+				&& referredAltstep == ((Altstep_Reference_Value) last).getReferredAltstep();
 	}
 
 	@Override

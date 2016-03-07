@@ -8,9 +8,10 @@
 package org.eclipse.titan.designer.AST.TTCN3.templates;
 
 import java.text.MessageFormat;
-
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IType.Type_type;
+import org.eclipse.titan.designer.AST.IValue;
+import org.eclipse.titan.designer.AST.IValue.Value_type;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
@@ -82,17 +83,24 @@ public final class ComplementedList_Template extends CompositeTemplate {
 	@Override
 	public void checkThisTemplateGeneric(final CompilationTimeStamp timestamp, final IType type, final boolean isModified,
 			final boolean allowOmit, final boolean allowAnyOrOmit, final boolean subCheck, final boolean implicitOmit) {
+		
+		if(type == null){
+			return;
+		}
+		
+		boolean allowOmitInValueList = allowOmitInValueList(allowOmit);
+		
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			ITemplateListItem component = templates.getTemplateByIndex(i);
 			component.setMyGovernor(type);
 			ITTCN3Template temporalComponent = type.checkThisTemplateRef(timestamp, component);
-			temporalComponent.checkThisTemplateGeneric(timestamp, type, false, allowOmit, true, subCheck, implicitOmit);
+			temporalComponent.checkThisTemplateGeneric(timestamp, type, false, allowOmitInValueList, true, subCheck, implicitOmit);
 
 			if (Template_type.ANY_OR_OMIT.equals(temporalComponent.getTemplatetype())) {
 				component.getLocation().reportSemanticWarning(ANYOROMITWARNING);
 			}
 		}
-
+		
 		checkLengthRestriction(timestamp, type);
 		if (!allowOmit && isIfpresent) {
 			location.reportSemanticError("`ifpresent' is not allowed here");
@@ -102,13 +110,46 @@ public final class ComplementedList_Template extends CompositeTemplate {
 		}
 	}
 
+	/**
+	 * If ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY is switched on 
+	 * and has AnyOrOmit (=AnyOrNone) or omit in the list then accepted, otherwise not
+	 */
 	@Override
 	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp, final String definitionName, final Location usageLocation) {
-		checkRestrictionCommon(definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
-		
-		//TODO: if ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY is switched on and has any or omit in the list then accepted, otherwise not
-		//Old solution has been removed	
-		
+		checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_PRESENT, usageLocation);
+
+		boolean allowOmitInValueList = allowOmitInValueList(true);
+		if(allowOmitInValueList) {
+			boolean hasAnyOrOmit = false;
+			for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
+				ITemplateListItem component = templates.getTemplateByIndex(i);
+				
+				// === if OMIT_VALUE then hasOmitValue=true and break ====
+				// componentType == ITTCN3Template.Template_type.OMIT_VALUE does not work
+				// TODO: put this if-block to a higher level
+				//TODO: avoid NPE (?) 
+				if(component instanceof TemplateBody) {
+					ITTCN3Template template = ((TemplateBody) component).getTemplate();
+					if(Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype())){
+						IValue value = ((SpecificValue_Template) template).getSpecificValue();
+						if( Value_type.OMIT_VALUE.equals(value.getValuetype())){
+							hasAnyOrOmit = true;
+							break;
+						}
+					}
+				}
+				TTCN3Template.Template_type componentType =  component.getTemplatetype();
+				if (ITTCN3Template.Template_type.ANY_OR_OMIT.equals(componentType)) {
+					hasAnyOrOmit = true;
+					break;
+				}
+
+			}
+			if (!hasAnyOrOmit) {
+				location.reportSemanticError(MessageFormat.format(RESTRICTIONERROR+" without omit or AnyValueOrNone in the list", definitionName, getTemplateTypeName()));
+				return false;
+			}
+		}
 		// some basic check was performed, always needs runtime check
 		return true;
 	}

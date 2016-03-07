@@ -41,19 +41,19 @@ public final class Unknown_Applied_Statement extends Statement {
 	private static final String FULLNAMEPART2 = ".<parameters>";
 	private static final String STATEMENT_NAME = "function or altstep type application";
 
-	private final Value dereferedValue;
+	private final Value dereferredValue;
 	private final ParsedActualParameters actualParameterList;
 
 	private Statement realStatement;
 	/** The index of this statement in its parent statement block. */
 	private int statementIndex;
 
-	public Unknown_Applied_Statement(final Value dereferedValue, final ParsedActualParameters actualParameterList) {
-		this.dereferedValue = dereferedValue;
+	public Unknown_Applied_Statement(final Value dereferredValue, final ParsedActualParameters actualParameterList) {
+		this.dereferredValue = dereferredValue;
 		this.actualParameterList = actualParameterList;
 
-		if (dereferedValue != null) {
-			dereferedValue.setFullNameParent(this);
+		if (dereferredValue != null) {
+			dereferredValue.setFullNameParent(this);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setFullNameParent(this);
@@ -74,7 +74,7 @@ public final class Unknown_Applied_Statement extends Statement {
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
 
-		if (dereferedValue == child) {
+		if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (actualParameterList == child) {
 			return builder.append(FULLNAMEPART2);
@@ -86,8 +86,8 @@ public final class Unknown_Applied_Statement extends Statement {
 	@Override
 	public void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		if (dereferedValue != null) {
-			dereferedValue.setMyScope(scope);
+		if (dereferredValue != null) {
+			dereferredValue.setMyScope(scope);
 		}
 		if (actualParameterList != null) {
 			actualParameterList.setMyScope(scope);
@@ -108,12 +108,12 @@ public final class Unknown_Applied_Statement extends Statement {
 
 		lastTimeChecked = timestamp;
 
-		if (dereferedValue == null) {
+		if (dereferredValue == null) {
 			return;
 		}
 
-		dereferedValue.setLoweridToReference(timestamp);
-		IType type = dereferedValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
+		dereferredValue.setLoweridToReference(timestamp);
+		IType type = dereferredValue.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 		if (type != null) {
 			type = type.getTypeRefdLast(timestamp);
 		}
@@ -127,7 +127,7 @@ public final class Unknown_Applied_Statement extends Statement {
 		switch (type.getTypetype()) {
 		case TYPE_FUNCTION:
 			if (realStatement == null || !Statement_type.S_FUNCTION_APPLIED.equals(realStatement.getType())) {
-				realStatement = new Function_Applied_Statement(dereferedValue, actualParameterList);
+				realStatement = new Function_Applied_Statement(dereferredValue, actualParameterList);
 				realStatement.setFullNameParent(this);
 				realStatement.setLocation(location);
 				realStatement.setMyStatementBlock(getMyStatementBlock(), statementIndex);
@@ -145,7 +145,7 @@ public final class Unknown_Applied_Statement extends Statement {
 			break;
 		case TYPE_ALTSTEP:
 			if (realStatement == null || !Statement_type.S_ALTSTEP_APPLIED.equals(realStatement.getType())) {
-				realStatement = new Altstep_Applied_Statement(dereferedValue, actualParameterList);
+				realStatement = new Altstep_Applied_Statement(dereferredValue, actualParameterList);
 				realStatement.setFullNameParent(this);
 				realStatement.setLocation(location);
 				realStatement.setMyStatementBlock(getMyStatementBlock(), statementIndex);
@@ -156,7 +156,7 @@ public final class Unknown_Applied_Statement extends Statement {
 			formalParameterList.checkActualParameterList(timestamp, actualParameterList, tempActualParameters);
 			break;
 		default:
-			dereferedValue.getLocation().reportSemanticError(MessageFormat.format(FUNCTIONORALTSTEPVALUEXPECTED, type.getTypename()));
+			dereferredValue.getLocation().reportSemanticError(MessageFormat.format(FUNCTIONORALTSTEPVALUEXPECTED, type.getTypename()));
 			break;
 		}
 
@@ -178,9 +178,9 @@ public final class Unknown_Applied_Statement extends Statement {
 			throw new ReParseException();
 		}
 
-		if (dereferedValue != null) {
-			dereferedValue.updateSyntax(reparser, false);
-			reparser.updateLocation(dereferedValue.getLocation());
+		if (dereferredValue != null) {
+			dereferredValue.updateSyntax(reparser, false);
+			reparser.updateLocation(dereferredValue.getLocation());
 		}
 
 		if (actualParameterList != null) {
@@ -194,8 +194,8 @@ public final class Unknown_Applied_Statement extends Statement {
 		if (realStatement != null) {
 			realStatement.findReferences(referenceFinder, foundIdentifiers);
 		} else {
-			if (dereferedValue != null) {
-				dereferedValue.findReferences(referenceFinder, foundIdentifiers);
+			if (dereferredValue != null) {
+				dereferredValue.findReferences(referenceFinder, foundIdentifiers);
 			}
 			if (actualParameterList != null) {
 				actualParameterList.findReferences(referenceFinder, foundIdentifiers);
@@ -208,7 +208,7 @@ public final class Unknown_Applied_Statement extends Statement {
 		if (realStatement != null) {
 			return realStatement.accept(v);
 		} else {
-			if (dereferedValue != null && !dereferedValue.accept(v)) {
+			if (dereferredValue != null && !dereferredValue.accept(v)) {
 				return false;
 			}
 			if (actualParameterList != null && !actualParameterList.accept(v)) {

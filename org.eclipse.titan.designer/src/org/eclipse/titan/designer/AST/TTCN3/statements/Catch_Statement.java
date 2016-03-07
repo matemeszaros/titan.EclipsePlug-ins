@@ -206,7 +206,7 @@ public final class Catch_Statement extends Statement {
 		lastTimeChecked = timestamp;
 	}
 
-	public static void checkCatch(final CompilationTimeStamp timestamp, final Statement statement, final String statement_name,
+	public static void checkCatch(final CompilationTimeStamp timestamp, final Statement statement, final String statementName,
 			final Reference portReference, final Reference signatureReference, final TemplateInstance parameter, final boolean timeout,
 			final TemplateInstance fromClause, final Reference redirectValue, final Reference redirectSender) {
 
@@ -251,7 +251,7 @@ public final class Catch_Statement extends Statement {
 
 					if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 						portReference.getLocation().reportSemanticError(
-								MessageFormat.format(MESSAGEPORT, statement_name, portType.getTypename()));
+								MessageFormat.format(MESSAGEPORT, statementName, portType.getTypename()));
 					} else if (!body.catchAllowed(timestamp)) {
 						portReference.getLocation().reportSemanticError(
 								MessageFormat.format(PORTWITHOUTEXCEPTIONSUPPORT, portType.getTypename()));
@@ -271,7 +271,7 @@ public final class Catch_Statement extends Statement {
 
 				if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
-							MessageFormat.format(MESSAGEPORT, statement_name, portType.getTypename()));
+							MessageFormat.format(MESSAGEPORT, statementName, portType.getTypename()));
 				} else if (body.catchAllowed(timestamp)) {
 					TypeSet outSignatures = body.getOutSignatures();
 
@@ -290,11 +290,11 @@ public final class Catch_Statement extends Statement {
 				}
 			} else if (portReference == null) {
 				if (parameter != null) {
-					parameter.getLocation().reportSemanticError(MessageFormat.format(ANYPORTWITHPARAMETER, statement_name));
+					parameter.getLocation().reportSemanticError(MessageFormat.format(ANYPORTWITHPARAMETER, statementName));
 				}
 				if (redirectValue != null) {
 					redirectValue.getLocation().reportSemanticError(
-							MessageFormat.format(ANYPORTWITHVALUEREDIRECT, statement_name));
+							MessageFormat.format(ANYPORTWITHVALUEREDIRECT, statementName));
 				}
 			}
 

@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.ASN1;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
@@ -38,8 +37,8 @@ public final class Type_Assignment extends ASN1Assignment {
 	/** right. */
 	private final IASN1Type type;
 
-	public Type_Assignment(final Identifier id, final Ass_pard ass_pard, final IASN1Type type) {
-		super(id, ass_pard);
+	public Type_Assignment(final Identifier id, final Ass_pard assPard, final IASN1Type type) {
+		super(id, assPard);
 		this.type = type;
 
 		if (null != type) {
@@ -58,9 +57,9 @@ public final class Type_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public void setRightScope(final Scope right_scope) {
+	public void setRightScope(final Scope rightScope) {
 		if (null != type) {
-			type.setMyScope(right_scope);
+			type.setMyScope(rightScope);
 		}
 	}
 
@@ -74,7 +73,7 @@ public final class Type_Assignment extends ASN1Assignment {
 
 	@Override
 	public IASN1Type getType(final CompilationTimeStamp timestamp) {
-		if (null != ass_pard) {
+		if (null != assPard) {
 			//FIXME: This is commented out because Mark Occurences gives a faulty error marker
 			//It has more types...
 			//location.reportSemanticError(MessageFormat.format(PARAMETERISEDTYPE, getFullName()));
@@ -99,8 +98,8 @@ public final class Type_Assignment extends ASN1Assignment {
 
 		lastTimeChecked = timestamp;
 
-		if (null != ass_pard) {
-			ass_pard.check(timestamp);
+		if (null != assPard) {
+			assPard.check(timestamp);
 			return;
 		}
 
@@ -191,10 +190,7 @@ public final class Type_Assignment extends ASN1Assignment {
 
 	@Override
 	protected boolean memberAccept(ASTVisitor v) {
-		if (identifier != null && !identifier.accept(v)) {
-			return false;
-		}
-		if (ass_pard != null && !ass_pard.accept(v)) {
+		if (!super.memberAccept(v)) {
 			return false;
 		}
 		if (type != null && !type.accept(v)) {
