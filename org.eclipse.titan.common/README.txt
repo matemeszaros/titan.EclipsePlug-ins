@@ -5,6 +5,7 @@
 # which accompanies this distribution, and is available at
 # http://www.eclipse.org/legal/epl-v10.html
 ###############################################################################
+OUTDATED description!!!
 Location of the required ANTLR plug-in :  http://antlreclipse.sourceforge.net/updates/
 Location of the required ProGuard plug-in :  http://obfuscate4e.partmaster.de/updates/
 
