@@ -16,11 +16,15 @@ import org.antlr.v4.runtime.misc.Pair;
 public class TokenWithIndexAndSubTokensFactory implements	TokenFactory<TokenWithIndexAndSubTokens> {
 	public static final TokenFactory<TokenWithIndexAndSubTokens> DEFAULT = new TokenWithIndexAndSubTokensFactory();
 	protected final boolean copyText;
+
 	public TokenWithIndexAndSubTokensFactory() {
 		this(false);
 	}
 
-	public TokenWithIndexAndSubTokensFactory(boolean copyText) { this.copyText = copyText; }
+	public TokenWithIndexAndSubTokensFactory(boolean copyText) {
+		this.copyText = copyText;
+	}
+
 	@Override
 	public TokenWithIndexAndSubTokens create(Pair<TokenSource, CharStream> source, int type, String text,
 							  int channel, int start, int stop,
@@ -31,8 +35,7 @@ public class TokenWithIndexAndSubTokensFactory implements	TokenFactory<TokenWith
 		t.setCharPositionInLine(charPositionInLine);
 		if ( text!=null ) {
 			t.setText(text);
-		}
-		else if ( copyText && source.b != null ) {
+		} else if ( copyText && source.b != null ) {
 			t.setText(source.b.getText(Interval.of(start,stop)));
 		}
 

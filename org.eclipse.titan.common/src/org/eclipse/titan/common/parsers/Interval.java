@@ -256,7 +256,7 @@ public class Interval {
 		return -1;
 	}
 
-	private int findPairInSubIntervals(int offset) {
+	private int findPairInSubIntervals(final int offset) {
 		int lowLimit = 0;
 		int highLimit = subIntervals.size();
 		int middle;

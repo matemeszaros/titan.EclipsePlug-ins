@@ -21,8 +21,8 @@ import org.eclipse.titan.designer.AST.ASN1.ASN1Object;
 import org.eclipse.titan.designer.AST.ASN1.Block;
 import org.eclipse.titan.designer.AST.ASN1.ObjectClass;
 import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
 import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
@@ -126,7 +126,7 @@ public final class ObjectClass_Definition extends ObjectClass {
 		}
 		
 		fieldSpecifications = parser.pr_special_FieldSpecList().fieldSpecifications;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			fieldSpecifications = null;
 		
@@ -189,7 +189,7 @@ public final class ObjectClass_Definition extends ObjectClass {
 				// final part of the reference
 				final List<FieldSpecification> fieldSpecs = fieldSpecifications.getFieldSpecificationsWithPrefix(subreference.getId()
 						.getName());
-				for (FieldSpecification field : fieldSpecs) {
+				for (final FieldSpecification field : fieldSpecs) {
 					propCollector.addProposal(field.getIdentifier(), " - " + "ObjectClass field", null, "ObjectClass field");
 				}
 			}
@@ -218,7 +218,7 @@ public final class ObjectClass_Definition extends ObjectClass {
 				// final part of the reference
 				final String name = subreference.getId().getName();
 				final List<FieldSpecification> fieldSpecs = fieldSpecifications.getFieldSpecificationsWithPrefix(name);
-				for (FieldSpecification field : fieldSpecs) {
+				for (final FieldSpecification field : fieldSpecs) {
 					declarationCollector.addDeclaration(field.getIdentifier().getDisplayName(), field.getLocation(), this);
 				}
 			}
@@ -226,7 +226,7 @@ public final class ObjectClass_Definition extends ObjectClass {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (fieldSpecifications != null && !fieldSpecifications.accept(v)) {
 			return false;
 		}

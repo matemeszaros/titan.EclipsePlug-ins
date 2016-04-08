@@ -23,7 +23,7 @@ public class TitanListener extends BaseErrorListener {
 	public TitanListener() {
 		this.errorsStored = new ArrayList<SyntacticErrorStorage>();
 	}
-	public TitanListener(List<SyntacticErrorStorage> storage) {
+	public TitanListener(final List<SyntacticErrorStorage> storage) {
 		this.errorsStored = storage;
 	}
 	
@@ -32,11 +32,11 @@ public class TitanListener extends BaseErrorListener {
 	}
 	
 	@Override
-	public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine,
-			@NotNull String msg, @Nullable RecognitionException e) {
+	public void syntaxError(final @NotNull Recognizer<?, ?> recognizer, final @Nullable Object offendingSymbol, final int line, final int charPositionInLine,
+			final @NotNull String msg, final @Nullable RecognitionException e) {
 		SyntacticErrorStorage errorStorage;
 		if (offendingSymbol instanceof CommonToken) {
-			CommonToken token = (CommonToken) offendingSymbol;
+			final CommonToken token = (CommonToken) offendingSymbol;
 			errorStorage = new SyntacticErrorStorage(line, token.getStartIndex(), token.getStopIndex() + 1, msg, e);
 		} else {
 			errorStorage = new SyntacticErrorStorage(line, charPositionInLine, charPositionInLine + 1, msg, e);
@@ -48,7 +48,7 @@ public class TitanListener extends BaseErrorListener {
 		return errorsStored;
 	}
 	
-	public boolean addAll(List<SyntacticErrorStorage> errorStore) {
+	public boolean addAll(final List<SyntacticErrorStorage> errorStore) {
 		return errorsStored.addAll(errorStore);
 	}
 }

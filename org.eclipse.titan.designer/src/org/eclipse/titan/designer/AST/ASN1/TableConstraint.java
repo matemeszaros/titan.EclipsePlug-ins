@@ -442,7 +442,7 @@ public final class TableConstraint extends Constraint {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// TODO
 		return true;
 	}

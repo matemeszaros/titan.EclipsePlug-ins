@@ -7,8 +7,6 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -79,7 +77,7 @@ public final class NatureConverter extends AbstractHandler implements IObjectAct
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
 		doConvertNature(selection);
@@ -108,14 +106,11 @@ public final class NatureConverter extends AbstractHandler implements IObjectAct
 
 	private void convertNatureOnProject(final IProject tempProject) throws CoreException {
 		final IProjectDescription description = tempProject.getDescription();
-		final List<String> natureIds = new ArrayList<String>();
-		natureIds.addAll(Arrays.asList(description.getNatureIds()));
-		final int index = natureIds.indexOf(TITANNature.NATURE_ID);
-		if (index == -1) {
+
+		if (!TITANNature.hasTITANNature(tempProject)) {
 			Activator.getDefault().pauseHandlingResourceChanges();
-			natureIds.add(TITANNature.NATURE_ID);
-			natureIds.add(TITANNature.LOG_NATURE_ID);
-			description.setNatureIds(natureIds.toArray(new String[natureIds.size()]));
+
+			TITANNature.addTITANNatureToProject(description);
 			tempProject.setDescription(description, IResource.FORCE, null);
 
 			tempProject.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
@@ -160,8 +155,7 @@ public final class NatureConverter extends AbstractHandler implements IObjectAct
 				public void run() {
 					if (MessageDialog.openConfirm(null, NATURE_REMOVAL_TITLE, NATURE_REMOVAL_MESSAGE
 							+ tempProject.getName() + '?')) {
-						natureIds.remove(index);
-						description.setNatureIds(natureIds.toArray(new String[natureIds.size()]));
+						TITANNature.removeTITANNature(description);
 						try {
 							tempProject.setDescription(description, IResource.FORCE, null);
 						} catch (CoreException e) {

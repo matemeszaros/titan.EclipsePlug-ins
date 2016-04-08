@@ -30,14 +30,14 @@ public final class ConfigTreeNodeUtilities {
 	 * 		
 	 */
 	public static String toString(final LocationAST root){
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		print(builder, root);
 		return builder.toString();
 	}
 	
 	public static String toStringWithhiddenAfter(final LocationAST root){
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		print(builder, root);
 		appendHiddenAfter(builder, root);
@@ -46,7 +46,7 @@ public final class ConfigTreeNodeUtilities {
 	}
 	
 	public static String toStringWithoutChildren(final LocationAST root){
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		appendHiddenBefore(builder, root);
 		builder.append(root.getText());
@@ -54,8 +54,8 @@ public final class ConfigTreeNodeUtilities {
 		return builder.toString();
 	}
 	
-	public static String getHiddenBefore(LocationAST root){
-		StringBuilder builder = new StringBuilder();
+	public static String getHiddenBefore(final LocationAST root){
+		final StringBuilder builder = new StringBuilder();
 
 		appendHiddenBefore(builder, root);
 		
@@ -95,7 +95,7 @@ public final class ConfigTreeNodeUtilities {
 	 * */
 	public static final void moveHiddenBefore2HiddenBefore(final LocationAST from, final LocationAST to) {
 		if(from.getHiddenBefore() == null){
-			LocationAST child = from.getFirstChild();
+			final LocationAST child = from.getFirstChild();
 			if(child != null){
 				to.setHiddenBefore(child.getHiddenBefore());
 				child.setHiddenBefore(null);

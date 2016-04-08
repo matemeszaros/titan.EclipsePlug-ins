@@ -40,7 +40,7 @@ public abstract class AltGuard extends ASTNode implements ILocateableNode, IIncr
 	/** the time when this altguard was checked the last time. */
 	protected CompilationTimeStamp lastTimeChecked;
 
-	public AltGuard(final altguard_type altguardType, StatementBlock statementblock) {
+	public AltGuard(final altguard_type altguardType, final StatementBlock statementblock) {
 		super();
 		this.altguardType = altguardType;
 		this.statementblock = statementblock;

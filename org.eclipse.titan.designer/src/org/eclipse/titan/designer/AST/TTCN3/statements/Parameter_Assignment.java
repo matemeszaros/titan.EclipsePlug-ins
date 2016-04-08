@@ -92,7 +92,7 @@ public final class Parameter_Assignment extends ASTNode implements ILocateableNo
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (reference != null && !reference.accept(v)) {
 			return false;
 		}

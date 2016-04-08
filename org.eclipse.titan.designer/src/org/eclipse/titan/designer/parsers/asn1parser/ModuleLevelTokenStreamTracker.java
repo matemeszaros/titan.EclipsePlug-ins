@@ -64,7 +64,9 @@ public class ModuleLevelTokenStreamTracker extends BufferedTokenStream {
 				assert(true);
 			} else if (t.getType() == Asn1Lexer.BEGINCHAR) {
 				fetchedEOF = getBlock(first);
-				if (fetchedEOF) return ++i;
+				if (fetchedEOF) {
+					return ++i;
+				}
 				++i;
 				--n;
 			} else {

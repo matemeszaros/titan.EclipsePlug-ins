@@ -53,7 +53,7 @@ public final class Clear_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART);
@@ -76,7 +76,7 @@ public final class Clear_Statement extends Statement {
 			return;
 		}
 
-		Port_Type portType = Port_Utility.checkPortReference(timestamp, this, portReference);
+		final Port_Type portType = Port_Utility.checkPortReference(timestamp, this, portReference);
 		if (portType != null && !portType.getPortBody().hasQueue(timestamp)) {
 			portReference.getLocation().reportSemanticError(MessageFormat.format(QUEUELESSPORT, portType.getTypename()));
 		}
@@ -104,7 +104,7 @@ public final class Clear_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

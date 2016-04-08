@@ -48,7 +48,7 @@ public final class Start_Port_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART);
@@ -98,7 +98,7 @@ public final class Start_Port_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

@@ -122,7 +122,7 @@ public final class IndexedTemplates extends ASTNode implements IIncrementallyUpd
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (indexed_templates != null) {
 			for (IndexedTemplate it : indexed_templates) {
 				if (!it.accept(v)) {

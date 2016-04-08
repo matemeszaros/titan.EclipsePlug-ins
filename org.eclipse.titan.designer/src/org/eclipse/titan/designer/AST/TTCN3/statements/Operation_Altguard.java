@@ -55,7 +55,7 @@ public final class Operation_Altguard extends AltGuard {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (expression == child) {
 			return builder.append(FULLNAMEPART1);
@@ -128,9 +128,9 @@ public final class Operation_Altguard extends AltGuard {
 		}
 
 		if (expression != null) {
-			IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 
-			Type_type temporalType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temporalType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			if (!last.getIsErroneous(timestamp) && !Type_type.TYPE_BOOL.equals(temporalType)) {
 				last.getLocation().reportSemanticError(BOOLEANEXPECTED);
 				expression.setIsErroneous(true);
@@ -218,7 +218,7 @@ public final class Operation_Altguard extends AltGuard {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (expression != null) {
 			if (!expression.accept(v)) {
 				return false;

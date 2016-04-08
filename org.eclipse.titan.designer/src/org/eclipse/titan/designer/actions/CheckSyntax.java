@@ -56,7 +56,7 @@ public final class CheckSyntax extends ExternalTitanAction {
 
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		doCheckSyntax();
 
 		return null;

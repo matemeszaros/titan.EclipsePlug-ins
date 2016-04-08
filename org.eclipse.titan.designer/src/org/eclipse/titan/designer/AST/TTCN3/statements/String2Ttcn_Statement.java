@@ -60,12 +60,14 @@ public class String2Ttcn_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
+
 		if (value == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (reference == child) {
 			return builder.append(FULLNAMEPART2);
 		}
+
 		return builder;
 	}
 
@@ -88,7 +90,7 @@ public class String2Ttcn_Statement extends Statement {
 
 		if (value != null) {
 			value.setLoweridToReference(timestamp);
-			Type_type temporalType = value.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temporalType = value.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			switch (temporalType) {
 			case TYPE_CHARSTRING:
 				value.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
@@ -105,7 +107,7 @@ public class String2Ttcn_Statement extends Statement {
 		}
 
 		if (reference != null) {
-			Assignment assignment = reference.getRefdAssignment(timestamp, false);
+			final Assignment assignment = reference.getRefdAssignment(timestamp, false);
 			if (assignment == null) {
 				reference.getLocation().reportSemanticError(OPERANDERROR2);
 				setIsErroneous();
@@ -133,7 +135,7 @@ public class String2Ttcn_Statement extends Statement {
 	}
 
 	@Override
-	public void updateSyntax(TTCN3ReparseUpdater reparser, boolean isDamaged) throws ReParseException {
+	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
 			throw new ReParseException();
 		}
@@ -158,7 +160,7 @@ public class String2Ttcn_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null && !value.accept(v)) {
 			return false;
 		}

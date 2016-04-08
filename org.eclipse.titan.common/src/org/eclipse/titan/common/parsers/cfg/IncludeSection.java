@@ -17,7 +17,7 @@ public class IncludeSection implements ISection {
 	public IncludeSection() {
 	}
 	
-	public void addIncludeFileName( String aFileName ) {
+	public void addIncludeFileName(final String aFileName ) {
 		mIncludeFileNames.add(aFileName);
 	}
 

@@ -99,7 +99,7 @@ public final class Setverdict_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (verdictValue == child) {
 			return builder.append(FULLNAMEPART1);
@@ -133,11 +133,11 @@ public final class Setverdict_Statement extends Statement {
 
 		if (verdictValue != null) {
 			verdictValue.setLoweridToReference(timestamp);
-			Type_type temp = verdictValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temp = verdictValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 			switch (temp) {
 			case TYPE_VERDICT:
-				IValue last = verdictValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+				final IValue last = verdictValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 				if (Value_type.VERDICT_VALUE.equals(last.getValuetype())
 						&& Verdict_type.ERROR.equals(((Verdict_Value) last).getValue())) {
 					getLocation().reportSemanticError(ERRORCANNOTBESET);
@@ -191,7 +191,7 @@ public final class Setverdict_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (verdictValue != null && !verdictValue.accept(v)) {
 			return false;
 		}

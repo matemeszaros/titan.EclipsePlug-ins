@@ -75,7 +75,7 @@ public final class Unmap_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentReference1 == child) {
 			return builder.append(FULLNAMEPART1);
@@ -127,7 +127,7 @@ public final class Unmap_Statement extends Statement {
 			}
 		}
 
-		IValue configReference1 = componentReference1.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+		final IValue configReference1 = componentReference1.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 		if (Value_type.EXPRESSION_VALUE.equals(configReference1.getValuetype())) {
 			switch (((Expression_Value) configReference1).getOperationType()) {
 			case MTC_COMPONENT_OPERATION:
@@ -158,7 +158,7 @@ public final class Unmap_Statement extends Statement {
 			}
 		}
 
-		IValue configReference2 = componentReference2.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+		final IValue configReference2 = componentReference2.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 		if (Value_type.EXPRESSION_VALUE.equals(configReference2.getValuetype())) {
 			switch (((Expression_Value) configReference2).getOperationType()) {
 			case MTC_COMPONENT_OPERATION:
@@ -259,7 +259,7 @@ public final class Unmap_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReference1 != null && !componentReference1.accept(v)) {
 			return false;
 		}

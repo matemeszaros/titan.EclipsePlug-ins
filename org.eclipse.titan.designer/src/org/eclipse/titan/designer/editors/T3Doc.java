@@ -48,6 +48,8 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.FormalParameter;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.FormalParameterList;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.AST.TTCN3.types.TTCN3_Sequence_Type;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollectionHelper;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
@@ -303,7 +305,9 @@ public final class T3Doc {
 	}
 
 	public static void check(final Location commentLocation, final String type) {
-		if (!T3DocEnable) { return; } //just to spare time
+		if (!T3DocEnable) {
+			return;  // just to spare time
+		}
 		check(commentLocation, type, null);
 	}
 

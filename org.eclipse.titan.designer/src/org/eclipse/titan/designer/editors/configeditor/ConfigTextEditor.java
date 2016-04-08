@@ -35,8 +35,7 @@ import org.eclipse.titan.designer.editors.EditorTracker;
 import org.eclipse.titan.designer.editors.FoldingSupport;
 import org.eclipse.titan.designer.editors.IEditorWithCarretOffset;
 import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
-import org.eclipse.titan.designer.editors.Pair;
-import org.eclipse.titan.designer.editors.ToggleComment;
+import org.eclipse.titan.designer.editors.actions.ToggleComment;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -123,10 +122,7 @@ public final class ConfigTextEditor extends AbstractDecoratedTextEditor implemen
 	@Override
 	protected void configureSourceViewerDecorationSupport(final SourceViewerDecorationSupport support) {
 		super.configureSourceViewerDecorationSupport(support);
-		Pair brackets = new Pair('{', '}');
-		Pair parenthesis = new Pair('(', ')');
-		Pair index = new Pair('[', ']');
-		PairMatcher pairMatcher = new PairMatcher(new Pair[] { brackets, parenthesis, index });
+		PairMatcher pairMatcher = new PairMatcher();
 		support.setCharacterPairMatcher(pairMatcher);
 		support.setMatchingCharacterPainterPreferenceKeys(PreferenceConstants.MATCHING_BRACKET_ENABLED,
 				PreferenceConstants.COLOR_MATCHING_BRACKET);

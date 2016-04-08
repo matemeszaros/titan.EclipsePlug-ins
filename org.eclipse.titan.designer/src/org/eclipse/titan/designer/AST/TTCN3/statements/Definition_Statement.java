@@ -65,7 +65,7 @@ public final class Definition_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (definition == child) {
 			return builder.append(FULLNAMEPART);
@@ -99,7 +99,7 @@ public final class Definition_Statement extends Statement {
 
 		if (definition != null) {
 			if (myDefinition == null) {
-				ControlPart controlPart = myScope.getControlPart();
+				final ControlPart controlPart = myScope.getControlPart();
 				if (controlPart != null) {
 					definition.setAttributeParentPath(controlPart.getAttributePath());
 				}
@@ -157,7 +157,7 @@ public final class Definition_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (definition != null && !definition.accept(v)) {
 			return false;
 		}

@@ -74,7 +74,7 @@ public final class PathConverter {
 
 		final List<String> finalCommand = Arrays.asList("sh", "-c", "cygpath -u " + '\'' + path + '\'');
 
-		MessageConsoleStream stream = printCommandToDebugConsole(reportDebugInformation, outputConsole, finalCommand);
+		final MessageConsoleStream stream = printCommandToDebugConsole(reportDebugInformation, outputConsole, finalCommand);
 		final ProcessBuilder pb = new ProcessBuilder();
 		pb.redirectErrorStream(true);
 		pb.command(finalCommand);
@@ -90,7 +90,7 @@ public final class PathConverter {
 
 	}
 
-	private static String processOutput(String path, MessageConsoleStream stream, Process proc) {
+	private static String processOutput(final String path, final MessageConsoleStream stream, final Process proc) {
 		final BufferedReader stdout = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.defaultCharset()));
 		try {
 			final StringBuilder solution = new StringBuilder();
@@ -128,7 +128,7 @@ public final class PathConverter {
 		return path;
 	}
 
-	private static void printDebug(MessageConsoleStream stream, String line) {
+	private static void printDebug(final MessageConsoleStream stream, final String line) {
 		if (stream != null) {
 			stream.println(line);
 		}
@@ -154,12 +154,12 @@ public final class PathConverter {
 		return currDir.append(filePath).makeAbsolute().toOSString();
 	}
 
-	private static MessageConsoleStream printCommandToDebugConsole(boolean reportDebugInformation, MessageConsole outputConsole, List<String> command) {
+	private static MessageConsoleStream printCommandToDebugConsole(final boolean reportDebugInformation, final MessageConsole outputConsole, final List<String> command) {
 		MessageConsoleStream stream = null;
 		if (reportDebugInformation) {
 			stream = outputConsole.newMessageStream();
 
-			for (String c : command) {
+			for (final String c : command) {
 				stream.print(c + " ");
 			}
 			stream.println();

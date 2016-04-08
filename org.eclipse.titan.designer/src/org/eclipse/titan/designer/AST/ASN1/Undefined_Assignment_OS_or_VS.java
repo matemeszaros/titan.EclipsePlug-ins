@@ -76,7 +76,9 @@ public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 				if (!reference.refersToSettingType(timestamp, Setting_type.S_ERROR, temporalReferenceChain)) {
 					if (identifier.isvalidAsnObjectSetReference()
 							&& reference.refersToSettingType(timestamp, Setting_type.S_OC, temporalReferenceChain)) {
-						realAssignment = new ObjectSet_Assignment(identifier, assPard, new ObjectClass_refd(reference),
+						final ObjectClass_refd oc = new ObjectClass_refd(reference);
+						oc.setLocation(reference.getLocation());
+						realAssignment = new ObjectSet_Assignment(identifier, assPard, oc,
 								newObjectSetDefinitionInstance());
 						// assPard = null;
 						// left = null;
@@ -121,7 +123,7 @@ public final class Undefined_Assignment_OS_or_VS extends Undefined_Assignment {
 	}
 	
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

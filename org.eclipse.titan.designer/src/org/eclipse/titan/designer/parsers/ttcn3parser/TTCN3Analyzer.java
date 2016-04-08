@@ -226,7 +226,7 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 			// quit
 		}
 		
-		if (warnings.size() > 0 || mErrorsStored.size() > 0) {
+		if (!warnings.isEmpty() || !mErrorsStored.isEmpty()) {
 			//SLL mode might have failed, try LL mode
 			try {
 				CharStream charStream2 = new UnbufferedCharStream( aReader );

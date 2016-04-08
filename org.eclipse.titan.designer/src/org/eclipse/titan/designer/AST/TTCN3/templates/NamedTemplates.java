@@ -249,7 +249,7 @@ public final class NamedTemplates extends ASTNode implements IIncrementallyUpdat
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (named_templates != null) {
 			for (NamedTemplate nt : named_templates) {
 				if (!nt.accept(v)) {

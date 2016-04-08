@@ -31,8 +31,8 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 	private static final String[] VALID_HANDLINGS = { "DEFAULT", "ERROR", "WARNING", "IGNORE" };
 
 	// TODO could be optimized using real-life data
-	private ArrayList<ErrorBehaviorSetting> settings = new ArrayList<ErrorBehaviorSetting>(1);
-	private HashMap<String, ErrorBehaviorSetting> settingMap = new HashMap<String, ErrorBehaviorSetting>();
+	private final ArrayList<ErrorBehaviorSetting> settings = new ArrayList<ErrorBehaviorSetting>(1);
+	private final HashMap<String, ErrorBehaviorSetting> settingMap = new HashMap<String, ErrorBehaviorSetting>();
 	private ErrorBehaviorSetting settingAll;
 
 	/** the time when this error behavior list was checked the last time. */
@@ -40,7 +40,7 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 	private Location location;
 
 	public ErrorBehaviorList() {
-		settings = new ArrayList<ErrorBehaviorSetting>();
+		// do nothing
 	}
 
 	@Override
@@ -55,10 +55,10 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = settings.size(); i < size; i++) {
-			ErrorBehaviorSetting setting = settings.get(i);
+			final ErrorBehaviorSetting setting = settings.get(i);
 			if (setting == child) {
 				return builder.append(".<setting ").append(i + 1).append('>');
 			}
@@ -115,8 +115,8 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 		}
 
 		for (int i = 0, size = settings.size(); i < size; i++) {
-			ErrorBehaviorSetting setting = settings.get(i);
-			String errorType = setting.getErrorType();
+			final ErrorBehaviorSetting setting = settings.get(i);
+			final String errorType = setting.getErrorType();
 			if ("ALL".equals(errorType)) {
 				if (settingAll != null) {
 					setting.getLocation().reportSemanticWarning("Duplicate setting for error type `ALL'");
@@ -150,7 +150,7 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 				}
 			}
 
-			String errorHandling = setting.getErrorHandling();
+			final String errorHandling = setting.getErrorHandling();
 			boolean handlingFound = false;
 			for (String validHandling : VALID_HANDLINGS) {
 				if (validHandling.equals(errorHandling)) {
@@ -168,7 +168,7 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (settings != null) {
 			for (ErrorBehaviorSetting s : settings) {
 				if (!s.accept(v)) {

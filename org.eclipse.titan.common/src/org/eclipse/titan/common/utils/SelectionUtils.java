@@ -31,7 +31,7 @@ public final class SelectionUtils {
 	 */
 	public static List<IFile> getAccessibleFilesFromSelection(final ISelection selection) {
 		final List<IFile> result = new ArrayList<IFile>();
-		for (Object selected : getObjectsFromSelection(selection)) {
+		for (final Object selected : getObjectsFromSelection(selection)) {
 			if (selected instanceof IFile) {
 				final IFile file = (IFile) selected;
 				if (file.isAccessible()) {
@@ -50,9 +50,9 @@ public final class SelectionUtils {
 	 * @return The selected resources or an empty list if the selection is not a {@link IStructuredSelection} or there is no selected resource.
 	 */
 	public static List<IResource> getResourcesFromSelection(final ISelection selection) {
-		List<IResource> result = new ArrayList<IResource>();
+		final List<IResource> result = new ArrayList<IResource>();
 	
-		for (Object o : SelectionUtils.getObjectsFromSelection(selection)) {
+		for (final Object o : SelectionUtils.getObjectsFromSelection(selection)) {
 			if (o instanceof IResource) {
 				result.add((IResource) o);
 			}
@@ -69,9 +69,9 @@ public final class SelectionUtils {
 	 * @return The selected projects or an empty list if the selection is not a {@link IStructuredSelection} or there is no selected project
 	 */
 	public static List<IProject> getProjectsFromSelection(final ISelection selection) {
-		List<IProject> result = new ArrayList<IProject>();
+		final List<IProject> result = new ArrayList<IProject>();
 	
-		for (Object o : SelectionUtils.getObjectsFromSelection(selection)) {
+		for (final Object o : SelectionUtils.getObjectsFromSelection(selection)) {
 			if (o instanceof IProject) {
 				result.add((IProject) o);
 			}
@@ -109,10 +109,10 @@ public final class SelectionUtils {
 	 *          the types to include it he result
 	 * @return The selected instances of the given type or an empty list if the selection is not a {@link IStructuredSelection}
 	 */
-	public static<T> List<T> filterSelection(final ISelection selection, Class<T> type) {
-		List<T> result = new ArrayList<T>();
+	public static<T> List<T> filterSelection(final ISelection selection, final Class<T> type) {
+		final List<T> result = new ArrayList<T>();
 
-		for (Object o : SelectionUtils.getObjectsFromSelection(selection)) {
+		for (final Object o : SelectionUtils.getObjectsFromSelection(selection)) {
 			if (type.isInstance(o)) {
 				result.add(type.cast(o));
 			}

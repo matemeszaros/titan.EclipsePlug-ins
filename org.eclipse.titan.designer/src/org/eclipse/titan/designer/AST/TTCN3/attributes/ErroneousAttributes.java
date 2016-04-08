@@ -86,7 +86,7 @@ class ErroneousDescriptor {
  */
 public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode {
 	// type of the definition which this belongs to
-	private IType type;
+	private final IType type;
 	private List<ErroneousAttributeSpecification> errAttrSpecs = null;
 	private List<FieldErr_Type> fieldArray = null;
 	private ErroneousDescriptor erroneousDescriptorTree = null;
@@ -115,19 +115,18 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 
 	private ErroneousDescriptor buildErroneousDescriptorTree(final CompilationTimeStamp timestamp, final List<FieldErr_Type> fldArray,
 			final int level) {
-		ErroneousDescriptor erroneousDescr = new ErroneousDescriptor();
+		final ErroneousDescriptor erroneousDescr = new ErroneousDescriptor();
 		Qualifier omitBeforeQualifier = null;
 		Qualifier omitAfterQualifier = null;
-		Map<Integer, List<FieldErr_Type>> embeddedFieldArrayMap = new HashMap<Integer, List<FieldErr_Type>>();
+		final Map<Integer, List<FieldErr_Type>> embeddedFieldArrayMap = new HashMap<Integer, List<FieldErr_Type>>();
 		for (FieldErr_Type actualFieldErr : fldArray) {
-			Indicator_Type actIndicator = actualFieldErr.errAttrSpec.getIndicator();
-			boolean isOmit = actualFieldErr.errAttrSpec.isOmit();
 			if (actualFieldErr.subrefsArray.size() <= level) {
 				ErrorReporter.INTERNAL_ERROR();
 				return erroneousDescr;
 			}
-			int fieldIndex = actualFieldErr.subrefsArray.get(level);
-			IType fieldType = actualFieldErr.typeArray.get(level);
+
+			final int fieldIndex = actualFieldErr.subrefsArray.get(level);
+			final IType fieldType = actualFieldErr.typeArray.get(level);
 			if (omitBeforeQualifier != null && erroneousDescr.omitBefore != -1 && erroneousDescr.omitBefore > fieldIndex) {
 				final String message = MessageFormat.format(
 						"Field `{0}'' cannot be referenced because all fields before field `{1}'' have been omitted",
@@ -135,6 +134,7 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 				actualFieldErr.qualifier.getLocation().reportSemanticError(message);
 				continue;
 			}
+
 			if (omitAfterQualifier != null && erroneousDescr.omitAfter != -1 && erroneousDescr.omitAfter < fieldIndex) {
 				final String message = MessageFormat.format(
 						"Field `{0}'' cannot be referenced because all fields after field `{1}'' have been omitted",
@@ -142,6 +142,9 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 				actualFieldErr.qualifier.getLocation().reportSemanticError(message);
 				continue;
 			}
+
+			final Indicator_Type actIndicator = actualFieldErr.errAttrSpec.getIndicator();
+			final boolean isOmit = actualFieldErr.errAttrSpec.isOmit();
 			if (actualFieldErr.subrefsArray.size() == level + 1) {
 				// erroneous value
 				if (actualFieldErr.typeArray.size() != level + 1) {
@@ -205,7 +208,7 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 				}
 				// check for duplicate value+indicator
 				if (erroneousDescr.valuesMap.containsKey(fieldIndex)) {
-					ErroneousValues evs = erroneousDescr.valuesMap.get(fieldIndex);
+					final ErroneousValues evs = erroneousDescr.valuesMap.get(fieldIndex);
 					if ((evs.before != null && actIndicator == Indicator_Type.Before_Indicator)
 							|| (evs.value != null && actIndicator == Indicator_Type.Value_Indicator)
 							|| (evs.after != null && actIndicator == Indicator_Type.After_Indicator)) {
@@ -304,8 +307,8 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 				}
 				// if not before/after omit then save this into
 				// values_m
-				boolean hasKey = erroneousDescr.valuesMap.containsKey(fieldIndex);
-				ErroneousValues evs = hasKey ? erroneousDescr.valuesMap.get(fieldIndex) : new ErroneousValues(
+				final boolean hasKey = erroneousDescr.valuesMap.containsKey(fieldIndex);
+				final ErroneousValues evs = hasKey ? erroneousDescr.valuesMap.get(fieldIndex) : new ErroneousValues(
 						actualFieldErr.qualifier.getDisplayName());
 				switch (actIndicator) {
 				case Before_Indicator:
@@ -333,8 +336,8 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 					continue;
 				}
 				// add the embedded field to the map
-				boolean hasIndex = embeddedFieldArrayMap.containsKey(fieldIndex);
-				List<FieldErr_Type> embeddedFieldArray = hasIndex ? embeddedFieldArrayMap.get(fieldIndex)
+				final boolean hasIndex = embeddedFieldArrayMap.containsKey(fieldIndex);
+				final List<FieldErr_Type> embeddedFieldArray = hasIndex ? embeddedFieldArrayMap.get(fieldIndex)
 						: new ArrayList<FieldErr_Type>(1);
 				embeddedFieldArray.add(actualFieldErr);
 				if (!hasIndex) {
@@ -375,7 +378,7 @@ public class ErroneousAttributes implements IIdentifierContainer, IVisitableNode
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

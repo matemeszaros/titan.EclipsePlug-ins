@@ -29,10 +29,10 @@ import org.eclipse.titan.designer.editors.BracketCompletionAutoEditStrategy;
 import org.eclipse.titan.designer.editors.ClosingBracketIndentationAutoEditStrategy;
 import org.eclipse.titan.designer.editors.ColorManager;
 import org.eclipse.titan.designer.editors.ContentAssitant;
-import org.eclipse.titan.designer.editors.DoubleClickStrategy;
 import org.eclipse.titan.designer.editors.GeneralTITANAutoEditStrategy;
-import org.eclipse.titan.designer.editors.IndentationSupport;
+import org.eclipse.titan.designer.editors.HeuristicalIntervalDetector;
 import org.eclipse.titan.designer.editors.IntervallBasedDamagerRepairer;
+import org.eclipse.titan.designer.editors.actions.IndentationSupport;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**

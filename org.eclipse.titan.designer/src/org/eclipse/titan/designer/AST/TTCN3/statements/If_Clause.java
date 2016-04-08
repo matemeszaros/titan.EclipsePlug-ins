@@ -81,7 +81,7 @@ public final class If_Clause extends ASTNode implements ILocateableNode, IIncrem
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (expression == child) {
 			return builder.append(FULLNAMEPART1);
@@ -168,9 +168,9 @@ public final class If_Clause extends ASTNode implements ILocateableNode, IIncrem
 
 		boolean unreachable2 = unreachable;
 		if (expression != null) {
-			IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 
-			Type_type temporalType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temporalType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			if (!last.getIsErroneous(timestamp) && !Type_type.TYPE_UNDEFINED.equals(temporalType)) {
 				if (!Type_type.TYPE_BOOL.equals(temporalType)) {
 					last.getLocation().reportSemanticError(BOOLEANEXPECTED);
@@ -259,7 +259,7 @@ public final class If_Clause extends ASTNode implements ILocateableNode, IIncrem
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (expression != null && !expression.accept(v)) {
 			return false;
 		}

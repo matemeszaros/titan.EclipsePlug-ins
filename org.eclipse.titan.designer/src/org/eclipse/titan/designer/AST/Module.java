@@ -306,7 +306,7 @@ public abstract class Module extends Scope implements IOutlineElement, ILocateab
 	 *                the visitor object
 	 * @return false to abort, will be returned by accept()
 	 */
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier != null && !identifier.accept(v)) {
 			return false;
 		}
@@ -314,7 +314,7 @@ public abstract class Module extends Scope implements IOutlineElement, ILocateab
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

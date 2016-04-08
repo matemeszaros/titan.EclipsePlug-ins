@@ -284,7 +284,7 @@ public final class Template_List extends CompositeTemplate {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

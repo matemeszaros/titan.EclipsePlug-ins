@@ -216,7 +216,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 		return new LocationAST(mParseTreeRoot);
 	}
 
-	public void setParseTreeRoot(ParserRuleContext aParseTreeRoot) {
+	public void setParseTreeRoot(final ParserRuleContext aParseTreeRoot) {
 		mParseTreeRoot = aParseTreeRoot;
 	}
 

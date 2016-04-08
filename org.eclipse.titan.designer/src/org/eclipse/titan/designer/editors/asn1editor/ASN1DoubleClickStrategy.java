@@ -9,17 +9,51 @@ package org.eclipse.titan.designer.editors.asn1editor;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.designer.editors.DoubleClickStrategy;
+import org.eclipse.titan.designer.editors.GeneralPairMatcher;
 
 /**
  * Our double click strategy selects the word under the cursor.
  * 
  * @author Kristof Szabados
  */
-public final class ASN1DoubleClickStrategy extends DoubleClickStrategy {
+public final class ASN1DoubleClickStrategy implements ITextDoubleClickStrategy {
+	protected ITextViewer fText;
 
 	@Override
+	public final void doubleClicked(final ITextViewer part) {
+		int pos = part.getSelectedRange().x;
+		fText = part;
+
+		if (fText.getDocument().getLength() < pos) {
+			return;
+		}
+
+		if (pos < 0) {
+			return;
+		}
+
+		GeneralPairMatcher pairMatcher = new PairMatcher();
+
+		IRegion region = pairMatcher.match(fText.getDocument(), pos);
+		if (region != null) {
+			fText.setSelectedRange(region.getOffset() + 1, region.getLength() - 2);
+			return;
+		}
+
+		selectWord(pos);
+	}
+
+	/**
+	 * Searches for the actual selection range, and sets it.
+	 * 
+	 * @see #doubleClicked(ITextViewer)
+	 * @param caretPos
+	 *                The position of the mouse cursor.
+	 */
 	protected void selectWord(final int caretPos) {
 		final IDocument doc = fText.getDocument();
 		int startPos;

@@ -35,11 +35,12 @@ public final class NamedBridgeScope extends Scope {
 	}
 
 	@Override
-	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {		
+	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {	
+		//Do nothing
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT: return false;
 		case ASTVisitor.V_SKIP: return true;

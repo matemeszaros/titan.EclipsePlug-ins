@@ -27,7 +27,7 @@ public final class ModuleParameterSectionHandler {
 			return root;
 		}
 
-		public void setRoot(LocationAST root) {
+		public void setRoot(final LocationAST root) {
 			this.root = root;
 		}
 
@@ -35,7 +35,7 @@ public final class ModuleParameterSectionHandler {
 			return moduleName;
 		}
 
-		public void setModuleName(LocationAST moduleName) {
+		public void setModuleName(final LocationAST moduleName) {
 			this.moduleName = moduleName;
 		}
 
@@ -43,7 +43,7 @@ public final class ModuleParameterSectionHandler {
 			return parameterName;
 		}
 
-		public void setParameterName(LocationAST parameterName) {
+		public void setParameterName(final LocationAST parameterName) {
 			this.parameterName = parameterName;
 		}
 
@@ -51,7 +51,7 @@ public final class ModuleParameterSectionHandler {
 			return value;
 		}
 
-		public void setValue(LocationAST value) {
+		public void setValue(final LocationAST value) {
 			this.value = value;
 		}
 	}
@@ -63,7 +63,7 @@ public final class ModuleParameterSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -71,7 +71,7 @@ public final class ModuleParameterSectionHandler {
 		return moduleParameters;
 	}
 
-	public void setModuleParameters(List<ModuleParameter> moduleParameters) {
+	public void setModuleParameters(final List<ModuleParameter> moduleParameters) {
 		this.moduleParameters = moduleParameters;
 	}
 }

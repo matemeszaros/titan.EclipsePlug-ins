@@ -22,6 +22,7 @@ final class SyntaxHighlightContentProvider implements ITreeContentProvider {
 	 */
 	@Override
 	public void dispose() {
+		//Do nothing
 	}
 
 	/*
@@ -89,6 +90,7 @@ final class SyntaxHighlightContentProvider implements ITreeContentProvider {
 	 */
 	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+		//Do nothing
 	}
 
 }

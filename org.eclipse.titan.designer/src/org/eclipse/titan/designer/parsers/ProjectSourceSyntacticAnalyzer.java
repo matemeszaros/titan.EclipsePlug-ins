@@ -54,6 +54,7 @@ import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.core.TITANNature;
 import org.eclipse.titan.designer.editors.EditorTracker;
 import org.eclipse.titan.designer.editors.FoldingSupport;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
 import org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPEditor;
 import org.eclipse.titan.designer.parsers.asn1parser.ASN1Analyzer;
@@ -947,7 +948,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 	 * @param aAnalyzer analyzer, that collected the errors
 	 * @return true if it had parse errors
 	 */
-	private boolean processParserErrors(final IFile aFile, ISourceAnalyzer aAnalyzer) {
+	private boolean processParserErrors(final IFile aFile, final ISourceAnalyzer aAnalyzer) {
 		List<SyntacticErrorStorage> errors = null;
 
 		errors = aAnalyzer.getErrorStorage();

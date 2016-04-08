@@ -175,7 +175,7 @@ public final class Named_Bits extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifierList != null) {
 			for (Identifier id : identifierList) {
 				if (!id.accept(v)) {

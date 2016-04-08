@@ -201,7 +201,7 @@ public final class RelativeObjectIdentifier_Value extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (objectIdComponents != null) {
 			for (ObjectIdentifierComponent c : objectIdComponents) {
 				if (!c.accept(v)) {

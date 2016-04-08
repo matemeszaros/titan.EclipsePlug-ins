@@ -100,7 +100,7 @@ public final class ReferenceSearch {
 			return;
 		}
 
-		final ReferenceSearchQuery query = new ReferenceSearchQuery(rf, module, projectSourceParser);
+		final ReferenceSearchQuery query = new ReferenceSearchQuery(rf, module, file.getProject());
 		for (ISearchQuery runningQuery : NewSearchUI.getQueries()) {
 			NewSearchUI.cancelQuery(runningQuery);
 		}

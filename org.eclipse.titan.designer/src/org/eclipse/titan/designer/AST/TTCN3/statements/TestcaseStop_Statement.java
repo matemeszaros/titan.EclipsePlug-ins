@@ -46,7 +46,7 @@ public final class TestcaseStop_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (logArguments == child) {
 			return builder.append(FULLNAMEPART);
@@ -97,7 +97,7 @@ public final class TestcaseStop_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (logArguments != null && !logArguments.accept(v)) {
 			return false;
 		}

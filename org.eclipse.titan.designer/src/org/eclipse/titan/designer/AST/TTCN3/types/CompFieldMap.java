@@ -437,7 +437,7 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 		}
 	}
 	
-	private int reparse(TTCN3ReparseUpdater aReparser) {
+	private int reparse(final TTCN3ReparseUpdater aReparser) {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
@@ -486,7 +486,7 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (fields != null) {
 			for (CompField cf : fields) {
 				if (!cf.accept(v)) {

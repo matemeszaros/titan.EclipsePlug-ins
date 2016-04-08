@@ -51,7 +51,7 @@ public class LogFormatter {
 	private int indentationLevel;
 	private boolean insideString;
 
-	public LogFormatter(IProgressMonitor internalMonitor, FileChannel inChannel, FileChannel outChannel) {
+	public LogFormatter(final IProgressMonitor internalMonitor, final FileChannel inChannel, final FileChannel outChannel) {
 		this.internalMonitor = internalMonitor;
 		this.inChannel = inChannel;
 		this.outChannel = outChannel;
@@ -63,8 +63,8 @@ public class LogFormatter {
 		insideString = false;
 		boolean cancelled = false;
 		lastToken = LastTokenTypes.OTHER;
-		ByteBuffer inBuf = ByteBuffer.allocateDirect(IN_BUFFER_SIZE);
-		ByteBuffer outBuffer = ByteBuffer.allocate(OUT_BUFFER_SIZE);
+		final ByteBuffer inBuf = ByteBuffer.allocateDirect(IN_BUFFER_SIZE);
+		final ByteBuffer outBuffer = ByteBuffer.allocate(OUT_BUFFER_SIZE);
 		inBuf.clear();
 		while (!cancelled && inChannel.read(inBuf) != -1) {
 			if (internalMonitor.isCanceled()) {
@@ -89,7 +89,7 @@ public class LogFormatter {
 		}
 	}
 
-	private void processBuffer(ByteBuffer inBuf, ByteBuffer outBuffer) throws IOException {
+	private void processBuffer(final ByteBuffer inBuf, final ByteBuffer outBuffer) throws IOException {
 		byte temp;
 		while (inBuf.hasRemaining()) {
 			temp = inBuf.get();
@@ -107,7 +107,7 @@ public class LogFormatter {
 		}
 	}
 
-	private void outsideString(ByteBuffer inBuf, ByteBuffer outBuffer, byte temp) {
+	private void outsideString(final ByteBuffer inBuf, final ByteBuffer outBuffer, final byte temp) {
 		switch (temp) {
 		case '{':
 			if (indentationLevel > 0) {
@@ -170,7 +170,7 @@ public class LogFormatter {
 			break;
 		case '\r':
 			if (inBuf.remaining() > 0) {
-				byte temp2 = inBuf.get();
+				final byte temp2 = inBuf.get();
 				if ('\n' == temp2) {
 					if (indentationLevel > 0) {
 						if (LastTokenTypes.OTHER.equals(lastToken)) {
@@ -208,7 +208,7 @@ public class LogFormatter {
 		}
 	}
 
-	private void processInsideString(ByteBuffer inBuf, ByteBuffer outBuffer, byte temp) {
+	private void processInsideString(final ByteBuffer inBuf, final ByteBuffer outBuffer, final byte temp) {
 		outBuffer.put(temp);
 		switch (temp) {
 		case '\"':
@@ -216,7 +216,7 @@ public class LogFormatter {
 			break;
 		case '\\':
 			if (inBuf.hasRemaining()) {
-				byte temp2 = inBuf.get();
+				final byte temp2 = inBuf.get();
 				outBuffer.put(temp2);
 			}
 			break;

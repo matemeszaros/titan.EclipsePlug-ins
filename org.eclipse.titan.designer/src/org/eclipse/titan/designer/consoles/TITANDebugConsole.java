@@ -73,7 +73,7 @@ public final class TITANDebugConsole {
 		getConsole().clearConsole();
 	}
 	
-	public static void println(String message, MessageConsoleStream stream) {
+	public static void println(final String message, final MessageConsoleStream stream) {
 		if(inHeadLessMode) {
 			return;
 		}
@@ -86,11 +86,12 @@ public final class TITANDebugConsole {
 	}
 	
 	// It creates a MessageStream just for this println
-	public static void println(String... message) {
+	public static void println(final String... message) {
 		if(inHeadLessMode) {
 			return;
 		}
-		StringBuilder msg = new StringBuilder();
+
+		final StringBuilder msg = new StringBuilder();
 		for (int i = 0; i < message.length; i++) {
 			msg.append(message[i]);
 			if (i < message.length-1) {
@@ -100,7 +101,7 @@ public final class TITANDebugConsole {
 		println(msg.toString(), getConsole().newMessageStream());
 	}
 	
-	public static void print(String message, MessageConsoleStream stream) {
+	public static void print(final String message, final MessageConsoleStream stream) {
 		if(inHeadLessMode) {
 			return;
 		}
@@ -108,7 +109,7 @@ public final class TITANDebugConsole {
 	}
 	
 	// It creates a MessageStream just for this println
-	public static void print(String message) {
+	public static void print(final String message) {
 		if(inHeadLessMode) {
 			return;
 		}

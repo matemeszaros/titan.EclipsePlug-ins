@@ -46,7 +46,7 @@ public class MapJoiner {
 	 * @return a reference to this object
 	 */
 	public MapJoiner join(final Map<?, ?> mapToJoin) {
-		for (Map.Entry<?, ?> entry : mapToJoin.entrySet()) {
+		for (final Map.Entry<?, ?> entry : mapToJoin.entrySet()) {
 			join(entry.getKey(), entry.getValue());
 		}
 		return this;

@@ -62,7 +62,7 @@ public abstract class ExternalTitanAction extends AbstractHandler implements IWo
 
 	protected ISelection selection;
 
-	protected Map<String, IFile> files = new HashMap<String, IFile>();;
+	protected Map<String, IFile> files = new HashMap<String, IFile>();
 	protected File workingDir;
 	protected IProject project;
 

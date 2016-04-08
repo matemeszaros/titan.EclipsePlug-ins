@@ -38,14 +38,14 @@ public class LoadFromTpd implements IApplication {
 	}
 
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(final IApplicationContext context) throws Exception {
 		if (!GeneralConstants.DEBUG) {
 			ErrorReporter.INTERNAL_ERROR("Loading Tpd files in headless mode is in prototype mode and so should not be available in released versions yet");
 		}
 
 		Platform.getBundle("org.eclipse.titan.designer").start();
 
-		Object arguments = context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
+		final Object arguments = context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 		if (!(arguments instanceof String[])) {
 			System.out.println("A list of strings was expected as argument.");
 			return Integer.valueOf(-1);
@@ -80,7 +80,7 @@ public class LoadFromTpd implements IApplication {
 							try {
 								final TpdImporter tpdImporter = new TpdImporter(null, true);
 								final List<IProject> projectsCreated = new ArrayList<IProject>();
-								result = tpdImporter.internalFinish(projectFiles[0], false, false, projectsCreated, monitor);
+								result = tpdImporter.internalFinish(projectFiles[0], false, false, projectsCreated, monitor, null);
 							} catch (Exception e) {
 								ErrorReporter.logExceptionStackTrace(e);
 								result = false;

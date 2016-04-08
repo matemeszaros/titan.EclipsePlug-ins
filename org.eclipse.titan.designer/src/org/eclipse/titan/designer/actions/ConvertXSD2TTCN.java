@@ -68,7 +68,7 @@ public final class ConvertXSD2TTCN extends ExternalTitanAction {
 
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		doConversion();
 
 		return null;

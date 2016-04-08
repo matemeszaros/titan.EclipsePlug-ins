@@ -142,7 +142,7 @@ public final class Enumerated_Value extends Value implements IReferencingElement
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value!=null && !value.accept(v)) {
 			return false;
 		}

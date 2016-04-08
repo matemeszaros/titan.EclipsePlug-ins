@@ -11,8 +11,8 @@ import org.eclipse.titan.designer.AST.GovernedSet;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ASN1.Object.ObjectSetElementVisitor_objectCollector;
 import org.eclipse.titan.designer.AST.ASN1.Object.ObjectSet_definition;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**

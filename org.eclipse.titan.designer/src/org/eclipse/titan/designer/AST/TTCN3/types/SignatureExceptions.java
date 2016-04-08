@@ -205,7 +205,7 @@ public final class SignatureExceptions extends ASTNode implements IIncrementally
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (exceptionTypes!=null) {
 			for (Type t : exceptionTypes) {
 				if (!t.accept(v)) {

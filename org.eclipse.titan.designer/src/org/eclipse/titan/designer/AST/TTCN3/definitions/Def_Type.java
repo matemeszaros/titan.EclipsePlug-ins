@@ -37,9 +37,9 @@ import org.eclipse.titan.designer.AST.TTCN3.types.Address_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Altstep_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Function_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Testcase_Type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.extensionattributeparser.ExtensionAttributeAnalyzer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
@@ -455,7 +455,7 @@ public final class Def_Type extends Definition {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

@@ -43,7 +43,7 @@ public abstract class NewModuleOptionsWizardPage extends WizardPage {
 		
 	public static enum GeneratedModuleType { 
 		EMPTY, NAME_AND_EMPTY_BODY, SKELETON
-	};
+	}
 	
 	private static GeneratedModuleType[] GeneratedModuleTypeValues = GeneratedModuleType.values();
 	
@@ -57,7 +57,7 @@ public abstract class NewModuleOptionsWizardPage extends WizardPage {
 	private Combo generateModuleCombo;
 	private GeneratedModuleType generatedModuleType = GeneratedModuleType.NAME_AND_EMPTY_BODY;
 	
-	public NewModuleOptionsWizardPage(String title) {
+	public NewModuleOptionsWizardPage(final String title) {
 		super(title);
 	}
 
@@ -115,7 +115,7 @@ public abstract class NewModuleOptionsWizardPage extends WizardPage {
 		return generatedModuleType;
 	}
 	
-	private void setGeneratedModuleType(int index) {
+	private void setGeneratedModuleType(final int index) {
 		generatedModuleType = GeneratedModuleTypeValues[index];
 	}
 

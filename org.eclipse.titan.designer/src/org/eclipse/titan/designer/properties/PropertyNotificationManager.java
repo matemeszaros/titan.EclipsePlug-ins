@@ -62,7 +62,7 @@ public class PropertyNotificationManager {
 		final List<IPropertyChangeListener> save = new ArrayList<IPropertyChangeListener>(listeners);
 		for (final IPropertyChangeListener listener : save) {
 			SafeRunner.run(new ISafeRunnable() {
-				public void handleException(Throwable e) {
+				public void handleException(final Throwable e) {
 					// exception logged in SafeRunner#run
 				}
 

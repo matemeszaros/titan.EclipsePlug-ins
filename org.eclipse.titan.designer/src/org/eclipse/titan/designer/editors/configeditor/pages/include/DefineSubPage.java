@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
-import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler.Definition;
@@ -112,6 +111,7 @@ public final class DefineSubPage {
 		add.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
+				//Do nothing
 			}
 
 			@Override
@@ -152,6 +152,7 @@ public final class DefineSubPage {
 		remove.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
+				//Do nothing
 			}
 
 			@Override
@@ -297,7 +298,7 @@ public final class DefineSubPage {
 
 		LocationAST node;
 		item.setDefinitionName(new LocationAST("definition_name"));
-		item.getDefinitionName().setHiddenBefore(new CommonHiddenStreamToken(CfgLexer.WS, "\n"));
+		item.getDefinitionName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
 		item.getRoot().setFirstChild(item.getDefinitionName());
 		node = new LocationAST(" := ");
 		item.getDefinitionName().setNextSibling(node);

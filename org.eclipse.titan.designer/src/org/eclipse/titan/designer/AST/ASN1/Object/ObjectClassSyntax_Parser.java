@@ -232,11 +232,11 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 	private ASN1Type parseType() {
 		ASN1Type type = null;
 		if (mBlock != null) {
-			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
 			if (parser != null) {
 				type = parser.pr_special_Type().type;
 				internalIndex += parser.nof_consumed_tokens();
-				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 				if (null != errors && !errors.isEmpty()) {
 					for (int i = 0; i < errors.size(); i++) {
 						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(),
@@ -251,11 +251,11 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 
 	private boolean parseValue() {
 		if (mBlock != null) {
-			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
 			if (parser != null) {
 				parser.pr_special_Value();
 				internalIndex += parser.nof_consumed_tokens();
-				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 				if (null != errors && !errors.isEmpty()) {
 					for (int i = 0; i < errors.size(); i++) {
 						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
@@ -273,11 +273,11 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 	private ASN1Object parseObject() {
 		ASN1Object object = null;
 		if (mBlock != null) {
-			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
 			if (parser != null) {
 				object = parser.pr_special_Object().object;
 				internalIndex += parser.nof_consumed_tokens();
-				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 				if (null != errors && !errors.isEmpty()) {
 					for (int i = 0; i < errors.size(); i++) {
 						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
@@ -293,11 +293,11 @@ public final class ObjectClassSyntax_Parser extends ObjectClassSyntax_Visitor {
 	private ObjectSet parseObjectSet() {
 		ObjectSet objectSet = null;
 		if (mBlock != null) {
-			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
+			final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock, internalIndex);
 			if (parser != null) {
 				objectSet = parser.pr_special_ObjectSet().objectSet;
 				internalIndex += parser.nof_consumed_tokens();
-				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 				if (null != errors && !errors.isEmpty()) {
 					for (int i = 0; i < errors.size(); i++) {
 						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),

@@ -45,7 +45,7 @@ public final class Qualifier implements ILocateableNode, IIncrementallyUpdateabl
 	 **/
 	private Location location = NULL_Location.INSTANCE;
 
-	private List<ISubReference> subReferences;
+	private final List<ISubReference> subReferences;
 
 	/** Definition is set during semantic check or null */
 	private Definition definition = null;
@@ -66,7 +66,7 @@ public final class Qualifier implements ILocateableNode, IIncrementallyUpdateabl
 	}
 
 	public String getDisplayName() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (ISubReference subref : subReferences) {
 			subref.appendDisplayName(sb);
 		}
@@ -131,7 +131,7 @@ public final class Qualifier implements ILocateableNode, IIncrementallyUpdateabl
 	 * @return the created qualifier
 	 * */
 	public Qualifier getQualifierWithoutFirstSubRef() {
-		Qualifier temp = new Qualifier();
+		final Qualifier temp = new Qualifier();
 		temp.setLocation(new Location(getLocation()));
 		for (int i = 1; i < subReferences.size(); i++) {
 			temp.addSubReference(subReferences.get(i));
@@ -171,19 +171,19 @@ public final class Qualifier implements ILocateableNode, IIncrementallyUpdateabl
 			}
 			if (referenceFinder.fieldId != null) {
 				// we are searching for a field of a type
-				IType t = definition.getType(CompilationTimeStamp.getBaseTimestamp());
+				final IType t = definition.getType(CompilationTimeStamp.getBaseTimestamp());
 				if (t == null) {
 					return;
 				}
-				List<IType> typeArray = new ArrayList<IType>();
-				Reference reference = new Reference(null);
+				final List<IType> typeArray = new ArrayList<IType>();
+				final Reference reference = new Reference(null);
 				reference.addSubReference(new FieldSubReference(definition.getIdentifier()));
 				for (ISubReference sr : subReferences) {
 					reference.addSubReference(sr);
 				}
 				reference.setLocation(location);
 				reference.setMyScope(definition.getMyScope());
-				boolean success = t.getFieldTypesAsArray(reference, 1, typeArray);
+				final boolean success = t.getFieldTypesAsArray(reference, 1, typeArray);
 				if (!success) {
 					// TODO: maybe a partially erroneous reference could be searched too
 					return;
@@ -203,7 +203,7 @@ public final class Qualifier implements ILocateableNode, IIncrementallyUpdateabl
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

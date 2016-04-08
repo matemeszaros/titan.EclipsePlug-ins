@@ -146,7 +146,7 @@ public final class NamedParameters extends ASTNode implements ILocateableNode, I
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (namedParams != null) {
 			for (NamedParameter np : namedParams) {
 				if (!np.accept(v)) {

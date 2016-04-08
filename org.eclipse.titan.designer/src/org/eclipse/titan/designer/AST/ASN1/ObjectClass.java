@@ -12,8 +12,8 @@ import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ASN1.Object.FieldSpecifications;
 import org.eclipse.titan.designer.AST.ASN1.Object.ObjectClassSyntax_root;
 import org.eclipse.titan.designer.AST.ASN1.Object.ObjectClass_Definition;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**

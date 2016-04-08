@@ -44,7 +44,9 @@ public final class Integer_Type extends Type {
 	private static final String INCORRECTLOWERBOUNDARY = "The lower boundary cannot be +infinity";
 	private static final String INCORRECTUPPERBOUNDARY = "The upper boundary cannot be -infinity";
 	
-	private static enum  BOUNDARY_TYPE { LOWER, UPPER }
+	private static enum BOUNDARY_TYPE {
+		LOWER, UPPER
+	}
 	
 	@Override
 	public Type_type getTypetype() {
@@ -257,7 +259,7 @@ public final class Integer_Type extends Type {
 		}
 	}
 
-	private IValue checkBoundary(final CompilationTimeStamp timestamp, final Value value, BOUNDARY_TYPE btype ) {
+	private IValue checkBoundary(final CompilationTimeStamp timestamp, final Value value, final BOUNDARY_TYPE btype ) {
 		if (value == null) {
 			return null;
 		}
@@ -267,8 +269,7 @@ public final class Integer_Type extends Type {
 		checkThisValueLimit(timestamp, temp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false, false, true, false);
 		temp = temp.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 		
-		if(Value_type.REAL_VALUE.equals(temp.getValuetype()))
-		{
+		if(Value_type.REAL_VALUE.equals(temp.getValuetype())) {
 			if( ((Real_Value) temp).isNegativeInfinity() ) {
 				if( BOUNDARY_TYPE.UPPER.equals(btype)) {
 					value.getLocation().reportSemanticError(INCORRECTUPPERBOUNDARY);

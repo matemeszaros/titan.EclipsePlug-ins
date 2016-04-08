@@ -53,7 +53,7 @@ public final class ObjectIdentifier_Value extends Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		ObjectIdentifierComponent component;
 		for (int i = 0, size = objectIdComponents.size(); i < size; i++) {
@@ -73,7 +73,7 @@ public final class ObjectIdentifier_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		if (!isAsn()) {
 			builder.append("objid ");
 		}
@@ -203,7 +203,7 @@ public final class ObjectIdentifier_Value extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (objectIdComponents!=null) {
 			for (ObjectIdentifierComponent c : objectIdComponents) {
 				if (!c.accept(v)) {

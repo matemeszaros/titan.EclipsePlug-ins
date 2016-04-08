@@ -37,7 +37,7 @@ public final class LogArguments extends ASTNode implements IIncrementallyUpdatea
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = arguments.size(); i < size; i++) {
 			if (arguments.get(i) == child) {
@@ -99,7 +99,7 @@ public final class LogArguments extends ASTNode implements IIncrementallyUpdatea
 		}
 
 		for (int i = 0, size = arguments.size(); i < size; i++) {
-			LogArgument argument = arguments.get(i);
+			final LogArgument argument = arguments.get(i);
 
 			argument.updateSyntax(reparser, false);
 			reparser.updateLocation(argument.getLocation());
@@ -113,15 +113,15 @@ public final class LogArguments extends ASTNode implements IIncrementallyUpdatea
 		}
 
 		final List<LogArgument> tempList = new ArrayList<LogArgument>(arguments);
-		for (LogArgument logArgument : tempList) {
+		for (final LogArgument logArgument : tempList) {
 			logArgument.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (arguments != null) {
-			for (LogArgument la : arguments) {
+			for (final LogArgument la : arguments) {
 				if (!la.accept(v)) {
 					return false;
 				}

@@ -119,8 +119,8 @@ public final class ErrorReporter {
 	 * @return the string form of the stack trace.
 	 * */
 	public static String stackTraceToString(final StackTraceElement[] elements) {
-		StringBuilder builder = new StringBuilder();
-		for (StackTraceElement element : elements) {
+		final StringBuilder builder = new StringBuilder();
+		for (final StackTraceElement element : elements) {
 			builder.append(element).append("\n");
 		}
 		return builder.toString();
@@ -139,7 +139,7 @@ public final class ErrorReporter {
 	 * Can be used when the default logger of the platform is not available. (e.g. when unit testing)
 	 * @param newLog The logger
 	 */
-	public static void setLog(ILog newLog) {
+	public static void setLog(final ILog newLog) {
 		log = newLog;
 	}
 

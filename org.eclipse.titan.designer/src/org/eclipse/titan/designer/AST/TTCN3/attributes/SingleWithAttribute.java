@@ -38,10 +38,10 @@ public final class SingleWithAttribute implements ILocateableNode, IIncrementall
 		Invalid_Attribute
 	}
 
-	private Attribute_Type attributeType;
-	private boolean hasOverride;
-	private Qualifiers qualifiers;
-	private AttributeSpecification attributeSpecficiation;
+	private final Attribute_Type attributeType;
+	private final boolean hasOverride;
+	private final Qualifiers qualifiers;
+	private final AttributeSpecification attributeSpecficiation;
 
 	/**
 	 * The location of the whole attribute. This location encloses the
@@ -132,7 +132,7 @@ public final class SingleWithAttribute implements ILocateableNode, IIncrementall
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

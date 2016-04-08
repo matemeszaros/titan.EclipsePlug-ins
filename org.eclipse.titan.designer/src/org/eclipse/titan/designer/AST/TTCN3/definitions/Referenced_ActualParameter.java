@@ -59,7 +59,7 @@ public final class Referenced_ActualParameter extends ActualParameter {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (reference != null) {
 			if (!reference.accept(v)) {
 				return false;

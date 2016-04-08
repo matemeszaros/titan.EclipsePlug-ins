@@ -73,7 +73,7 @@ public final class Start_Timer_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (timerReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -106,23 +106,23 @@ public final class Start_Timer_Statement extends Statement {
 		checkTimerReference(timestamp, timerReference);
 
 		if (timerValue == null) {
-			Assignment assignment = timerReference.getRefdAssignment(timestamp, true);
+			final Assignment assignment = timerReference.getRefdAssignment(timestamp, true);
 			if (assignment != null && Assignment_type.A_TIMER.equals(assignment.getAssignmentType())) {
-				Def_Timer defTimer = (Def_Timer) assignment;
+				final Def_Timer defTimer = (Def_Timer) assignment;
 				if (!defTimer.hasDefaultDuration(timestamp, timerReference)) {
 					location.reportSemanticError(MessageFormat.format(MISSINGDEFAULTDURATION, assignment.getDescription()));
 				}
 			}
 		} else {
 			timerValue.setLoweridToReference(timestamp);
-			Type_type temporalType = timerValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temporalType = timerValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 			switch (temporalType) {
 			case TYPE_REAL: {
-				IValue last = timerValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+				final IValue last = timerValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 				if (!last.isUnfoldable(timestamp)) {
-					Real_Value real = (Real_Value) last;
-					double val = real.getValue();
+					final 	Real_Value real = (Real_Value) last;
+					final double val = real.getValue();
 					if (val < 0.0) {
 						timerValue.getLocation().reportSemanticError(MessageFormat.format(NEGATIVEDURATION, real));
 					} else if (real.isPositiveInfinity()) {
@@ -146,14 +146,14 @@ public final class Start_Timer_Statement extends Statement {
 			return;
 		}
 
-		Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = reference.getRefdAssignment(timestamp, true);
 		if (assignment == null) {
 			return;
 		}
 
 		switch (assignment.getAssignmentType()) {
 		case A_TIMER:
-			ArrayDimensions dimensions = ((Def_Timer) assignment).getDimensions();
+			final ArrayDimensions dimensions = ((Def_Timer) assignment).getDimensions();
 			if (dimensions != null) {
 				dimensions.checkIndices(timestamp, reference, "timer", false, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			} else if (reference.getSubreferences().size() > 1) {
@@ -203,7 +203,7 @@ public final class Start_Timer_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (timerReference != null && !timerReference.accept(v)) {
 			return false;
 		}

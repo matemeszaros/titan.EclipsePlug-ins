@@ -147,7 +147,7 @@ public final class Value_Range_Template extends TTCN3Template {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

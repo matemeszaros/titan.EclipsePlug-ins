@@ -158,7 +158,7 @@ public class ParserMarkerSupport {
 		int charStart = errorStorage.charStart;
 		int charEnd = errorStorage.charEnd;
 		String message = errorStorage.message;
-		boolean justDoIt = errorStorage.exceptionType == SyntacticErrorStorage.ExceptionType.LexerNoViableAltException;
+		boolean justDoIt = errorStorage.exceptionType == SyntacticErrorStorage.ExceptionType.LEXER_NOVIABLEALT_EXCEPTION;
 
 		try {
 			if (justDoIt && lineNumber >= 0) {
@@ -215,7 +215,7 @@ public class ParserMarkerSupport {
 		int charStart = errorStorage.charStart;
 		int charEnd = errorStorage.charEnd;
 		String message = errorStorage.message;
-		boolean justDoIt = errorStorage.exceptionType == SyntacticErrorStorage.ExceptionType.LexerNoViableAltException;
+		boolean justDoIt = errorStorage.exceptionType == SyntacticErrorStorage.ExceptionType.LEXER_NOVIABLEALT_EXCEPTION;
 
 		try {
 			if (justDoIt && lineNumber >= 0) {

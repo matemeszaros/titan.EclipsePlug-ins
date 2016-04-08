@@ -299,7 +299,7 @@ public final class CTs_EE_CTs extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentTypeList1 != null && !componentTypeList1.accept(v)) {
 			return false;
 		}

@@ -55,7 +55,7 @@ public class AllElementsFrom extends TemplateBody {
 		super();
 	}
 
-	public AllElementsFrom(TTCN3Template t) {
+	public AllElementsFrom(final TTCN3Template t) {
 		template = t;
 		// template shall be a specific value & a reference
 		// element type => check function
@@ -68,13 +68,13 @@ public class AllElementsFrom extends TemplateBody {
 	}
 
 	@Override
-	public void setMyGovernor(IType governor) {
+	public void setMyGovernor(final IType governor) {
 		myGovernor = governor;
 	}
 
 	@Override
-	public void checkThisTemplateGeneric(CompilationTimeStamp timestamp, IType type, boolean isModified, boolean allowOmit,
-			boolean allowAnyOrOmit, boolean subCheck, boolean implicitOmit) {
+	public void checkThisTemplateGeneric(final CompilationTimeStamp timestamp, final IType type, final boolean isModified, final boolean allowOmit,
+			boolean allowAnyOrOmit, final boolean subCheck, final boolean implicitOmit) {
 
 		if (template == null) {
 			ErrorReporter.INTERNAL_ERROR();
@@ -222,7 +222,7 @@ public class AllElementsFrom extends TemplateBody {
 	}
 
 	@Override
-	public boolean isValue(CompilationTimeStamp timestamp) {
+	public boolean isValue(final CompilationTimeStamp timestamp) {
 		return false;
 	}
 
@@ -260,7 +260,7 @@ public class AllElementsFrom extends TemplateBody {
 	 *
 	 * @return the number calculated.
 	 * */
-	public int getNofTemplatesNotAnyornone(CompilationTimeStamp timestamp) {
+	public int getNofTemplatesNotAnyornone(final CompilationTimeStamp timestamp) {
 		int result = 0;
 		if (template == null) {
 			ErrorReporter.INTERNAL_ERROR();

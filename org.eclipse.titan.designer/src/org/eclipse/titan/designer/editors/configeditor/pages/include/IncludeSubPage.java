@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
-import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.IncludeSectionHandler;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
@@ -262,7 +261,7 @@ public final class IncludeSubPage {
 		}
 
 		LocationAST item = new LocationAST("\"included_file\"");
-		item.setHiddenBefore(new CommonHiddenStreamToken(CfgLexer.WS, "\n"));
+		item.setHiddenBefore(new CommonHiddenStreamToken("\n"));
 
 		return item;
 	}

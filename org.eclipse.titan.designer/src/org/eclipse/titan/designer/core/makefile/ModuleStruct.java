@@ -100,7 +100,7 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 		return directory;
 	}
 
-	public void setDirectory(String directory) {
+	public void setDirectory(final String directory) {
 		this.directory = directory;
 	}
 
@@ -108,7 +108,7 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 		return originalLocation;
 	}
 
-	public void setOriginalLocation(String originalLocation) {
+	public void setOriginalLocation(final String originalLocation) {
 		this.originalLocation = originalLocation;
 	}
 
@@ -116,7 +116,7 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 
@@ -125,7 +125,7 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 		return moduleName;
 	}
 
-	public void setModuleName(String moduleName) {
+	public void setModuleName(final String moduleName) {
 		this.moduleName = moduleName;
 	}
 
@@ -133,7 +133,7 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 		return isRegular;
 	}
 
-	public void setRegular(boolean isRegular) {
+	public void setRegular(final boolean isRegular) {
 		this.isRegular = isRegular;
 	}
 }

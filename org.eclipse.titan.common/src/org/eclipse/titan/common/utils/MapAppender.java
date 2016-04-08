@@ -53,9 +53,10 @@ public class MapAppender {
 	 * 
 	 * @return the appender to be able to call this function in sequence.
 	 * */
-	public MapAppender append(Object ... items) throws IOException {
-		Joiner joiner = new Joiner(keyValueDelimiter);
+	public MapAppender append(final Object ... items) throws IOException {
+		final Joiner joiner = new Joiner(keyValueDelimiter);
 		joiner.join(Arrays.asList(items)).appendTo(simpleAppender);
+
 		return this;
 	}
 
@@ -67,9 +68,10 @@ public class MapAppender {
 	 * @return the appender to be able to call this function in sequence.
 	 * */
 	public MapAppender append(final Iterable<? extends Entry<?, ?>> iterable) throws IOException {
-		for (Map.Entry<?, ?> entry : iterable) {
+		for (final Map.Entry<?, ?> entry : iterable) {
 			append(entry.getKey(), entry.getValue());
 		}
+
 		return this;
 	}
 	

@@ -23,7 +23,6 @@ import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
-import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.SWT;
@@ -34,11 +33,11 @@ import org.eclipse.titan.designer.editors.BracketCompletionAutoEditStrategy;
 import org.eclipse.titan.designer.editors.ClosingBracketIndentationAutoEditStrategy;
 import org.eclipse.titan.designer.editors.ColorManager;
 import org.eclipse.titan.designer.editors.ContentAssitant;
-import org.eclipse.titan.designer.editors.DoubleClickStrategy;
 import org.eclipse.titan.designer.editors.GeneralTITANAutoEditStrategy;
-import org.eclipse.titan.designer.editors.IndentationSupport;
-import org.eclipse.titan.designer.editors.NonRuleBasedDamagerRepairer;
-import org.eclipse.titan.designer.editors.ttcn3editor.HeuristicalIntervalDetector;
+import org.eclipse.titan.designer.editors.HeuristicalIntervalDetector;
+import org.eclipse.titan.designer.editors.IntervallBasedDamagerRepairer;
+import org.eclipse.titan.designer.editors.actions.IndentationSupport;
+import org.eclipse.titan.designer.editors.ttcn3editor.DoubleClickStrategy;
 import org.eclipse.titan.designer.editors.ttcn3editor.SmartIndentAfterNewLineAutoEditStrategy;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -76,15 +75,9 @@ public final class Configuration extends TextSourceViewerConfiguration {
 	public IPresentationReconciler getPresentationReconciler(final ISourceViewer sourceViewer) {
 		if (presentationReconciler == null) {
 			presentationReconciler = new PresentationReconciler();
+			presentationReconciler.setDocumentPartitioning(PartitionScanner.TTCNPP_PARTITIONING);
 
-			presentationReconciler.setDocumentPartitioning(PartitionScanner.TTCN3_PARTITIONING);
-
-			NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(
-					colorManager.createAttributeFromPreference(PreferenceConstants.COLOR_COMMENTS));
-			presentationReconciler.setDamager(ndr, PartitionScanner.MULTI_LINE_COMMENT);
-			presentationReconciler.setRepairer(ndr, PartitionScanner.MULTI_LINE_COMMENT);
-
-			DefaultDamagerRepairer dr = new DefaultDamagerRepairer(new CodeScanner(colorManager));
+			IntervallBasedDamagerRepairer dr = new IntervallBasedDamagerRepairer(new CodeScanner(colorManager));
 
 			presentationReconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 			presentationReconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
@@ -99,7 +92,7 @@ public final class Configuration extends TextSourceViewerConfiguration {
 		IContentAssistProcessor pr = new org.eclipse.titan.designer.editors.ttcn3editor.ContentAssistProcessor(editor);
 
 		assistant.setContentAssistProcessor(pr, IDocument.DEFAULT_CONTENT_TYPE);
-		assistant.setDocumentPartitioning(PartitionScanner.TTCN3_PARTITIONING);
+		assistant.setDocumentPartitioning(PartitionScanner.TTCNPP_PARTITIONING);
 		assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
 		assistant.setProposalSelectorBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 

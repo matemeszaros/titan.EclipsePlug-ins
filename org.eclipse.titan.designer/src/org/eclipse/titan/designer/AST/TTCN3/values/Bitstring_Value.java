@@ -56,7 +56,7 @@ public final class Bitstring_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append('\'').append(value).append("\'B");
 
 		return builder.toString();
@@ -178,7 +178,7 @@ public final class Bitstring_Value extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// no members
 		return true;
 	}

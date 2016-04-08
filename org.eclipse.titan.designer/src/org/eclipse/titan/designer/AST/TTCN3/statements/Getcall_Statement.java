@@ -92,7 +92,7 @@ public final class Getcall_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -147,11 +147,11 @@ public final class Getcall_Statement extends Statement {
 	public static void checkGetcallStatement(final CompilationTimeStamp timestamp, final Statement statement, final String statementName,
 			final Reference portReference, final TemplateInstance parameter, final TemplateInstance fromClause,
 			final Parameter_Redirect redirect, final Reference redirectSender) {
-		Port_Type portType = Port_Utility.checkPortReference(timestamp, statement, portReference);
+		final Port_Type portType = Port_Utility.checkPortReference(timestamp, statement, portReference);
 
 		if (parameter == null) {
 			if (portType != null) {
-				PortTypeBody body = portType.getPortBody();
+				final PortTypeBody body = portType.getPortBody();
 				if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
 							MessageFormat.format(MESSAGEBASEDPORT, statementName, portType.getTypename()));
@@ -169,8 +169,8 @@ public final class Getcall_Statement extends Statement {
 			boolean signatureDetermined = false;
 			if (portType != null) {
 
-				PortTypeBody body = portType.getPortBody();
-				TypeSet inSignatures = body.getInSignatures();
+				final PortTypeBody body = portType.getPortBody();
+				final TypeSet inSignatures = body.getInSignatures();
 				if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
 							MessageFormat.format(MESSAGEBASEDPORT, statementName, portType.getTypename()));
@@ -238,7 +238,7 @@ public final class Getcall_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.SENDER);
 
 		if (redirectParameter != null) {
@@ -314,7 +314,7 @@ public final class Getcall_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

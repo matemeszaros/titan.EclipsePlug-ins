@@ -63,6 +63,7 @@ public final class CachedReferenceChain implements IReferenceChain {
 
 	@Override
 	public void release() {
+		//Do nothing
 	}
 
 	@Override

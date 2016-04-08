@@ -191,7 +191,7 @@ public final class ComponentsOfComponentType extends ComponentType {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentsOfType != null && !componentsOfType.accept(v)) {
 			return false;
 		}

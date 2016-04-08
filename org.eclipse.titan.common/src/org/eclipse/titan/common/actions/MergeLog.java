@@ -169,7 +169,7 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 		handleFileExists(originalFile);
 	}
 
-	private IPath createMergedFileName(IFile originalFile) {
+	private IPath createMergedFileName(final IFile originalFile) {
 		// original loc
 		IPath temp = originalFile.getLocation();
 		// original ext
@@ -205,12 +205,12 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 		});
 	}
 
-	private void askUserToCreateOrOverwrite(IPreferenceStore prefStore, IFile originalFile) {
+	private void askUserToCreateOrOverwrite(final IPreferenceStore prefStore, final IFile originalFile) {
 		final String[] buttonLabels = new String[] {
 				"Create a new file",
 				"Overwrite" };
 
-		MessageDialogWithToggle msgDialog = new MessageDialogWithToggle(
+		final MessageDialogWithToggle msgDialog = new MessageDialogWithToggle(
 				null,
 				"File already exists",
 				null,
@@ -268,15 +268,16 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 	 *            the original log file
 	 */
 	private File createNewFileWithUniqueName(final IFile originalFile) {
-		final String outputFileNamePrefix;
+		String temp;
 		if (originalFile.getName().endsWith(LOG_FILE_EXTENSION)) {
-			outputFileNamePrefix = originalFile.getName().substring(0, originalFile.getName().length() - LOG_FILE_EXTENSION.length())
+			temp = originalFile.getName().substring(0, originalFile.getName().length() - LOG_FILE_EXTENSION.length())
 					+ MERGED_FILENAME_SUFFIX;
 		} else {
-			outputFileNamePrefix = originalFile.getName() + MERGED_FILENAME_SUFFIX;
+			temp = originalFile.getName() + MERGED_FILENAME_SUFFIX;
 		}
 
-		File[] files = outputFile.getParentFile().listFiles(new FilenameFilter() {
+		final String outputFileNamePrefix = temp;
+		final File[] files = outputFile.getParentFile().listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(final File dir, final String name) {
 				return name.startsWith(outputFileNamePrefix);
@@ -290,7 +291,7 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 			suffix = suffix.substring(0, suffix.length() - LOG_FILE_EXTENSION.length());
 
 			try {
-				int number = Integer.parseInt(suffix);
+				final int number = Integer.parseInt(suffix);
 				if (number > max) {
 					max = number;
 				}
@@ -305,7 +306,7 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		IWorkbenchPage iwPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		final IWorkbenchPage iwPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		selection = iwPage.getSelection();
 		final List<IFile> filesToMerge = SelectionUtils.getAccessibleFilesFromSelection(selection);
 		doMerge(filesToMerge, false);
@@ -320,7 +321,7 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 	 * @param sync true if the function should wait for the merge to finish,
 	 * 	false if the function should just start the parallel thread.
 	 * */
-	private void doMerge(final List<IFile> files, boolean sync) {
+	private void doMerge(final List<IFile> files, final boolean sync) {
 		if (files.size() < 2) {
 			return;
 		}
@@ -368,10 +369,10 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 		}
 	}
 
-	private ISchedulingRule createSchedulingRule(List<IFile> files) {
+	private ISchedulingRule createSchedulingRule(final List<IFile> files) {
 		final IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 		ISchedulingRule combinedRule = null;
-		for (IFile file : files) {
+		for (final IFile file : files) {
 			combinedRule = MultiRule.combine(ruleFactory.createRule(file), combinedRule);
 		}
 		return combinedRule;
@@ -394,7 +395,7 @@ public final class MergeLog extends AbstractHandler implements IWorkbenchWindowA
 
 		final IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 		ISchedulingRule combinedRule = null;
-		for (IFile file : outputFiles) {
+		for (final IFile file : outputFiles) {
 			combinedRule = MultiRule.combine(ruleFactory.createRule(file), combinedRule);
 		}
 

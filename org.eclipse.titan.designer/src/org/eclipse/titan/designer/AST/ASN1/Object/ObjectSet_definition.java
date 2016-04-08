@@ -26,8 +26,8 @@ import org.eclipse.titan.designer.AST.ASN1.Block;
 import org.eclipse.titan.designer.AST.ASN1.IObjectSet_Element;
 import org.eclipse.titan.designer.AST.ASN1.ObjectSet;
 import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
 import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
@@ -43,7 +43,7 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 
 	private final Block mBlock;
 
-	private ArrayList<IObjectSet_Element> objectSetElements;
+	private List<IObjectSet_Element> objectSetElements;
 	protected ASN1Objects objects;
 
 	public ObjectSet_definition() {
@@ -72,19 +72,19 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 			temp = new ObjectSet_definition();
 		}
 
-		for (int i = 0; i < getObjectSetElements().size(); i++) {
-			temp.addObjectSetElement(getObjectSetElements().get(i).newOseInstance());
+		for (int i = 0; i < objectSetElements.size(); i++) {
+			temp.addObjectSetElement(objectSetElements.get(i).newOseInstance());
 		}
-		temp.getObjectSetElements().trimToSize();
+		temp.getObjectSetElements();
 
 		return temp;
 	}
 
-	public final ArrayList<IObjectSet_Element> getObjectSetElements() {
+	public final List<IObjectSet_Element> getObjectSetElements() {
 		return objectSetElements;
 	}
 
-	public final void setObjectSetElements(ArrayList<IObjectSet_Element> objectSetElements) {
+	public final void setObjectSetElements(final List<IObjectSet_Element> objectSetElements) {
 		this.objectSetElements = objectSetElements;
 	}
 	
@@ -108,15 +108,14 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 		}
 
 		definition.getObjectSetElements().clear();
-		getObjectSetElements().trimToSize();
 	}
 
 	@Override
 	public final StringBuilder getFullName(final INamedNode child) {
 		final StringBuilder builder = super.getFullName(child);
 
-		for (int i = 0; i < getObjectSetElements().size(); i++) {
-			if (getObjectSetElements().get(i) == child) {
+		for (int i = 0; i < objectSetElements.size(); i++) {
+			if (objectSetElements.get(i) == child) {
 				return builder.append(INamedNode.DOT).append(String.valueOf(i + 1));
 			}
 		}
@@ -127,14 +126,14 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 	@Override
 	public final void setMyScope(final Scope scope) {
 		super.setMyScope(scope);
-		for (IObjectSet_Element element : getObjectSetElements()) {
+		for (final IObjectSet_Element element : objectSetElements) {
 			element.setMyScopeOse(scope);
 		}
 	}
 
 	public final void addObjectSetElement(final IObjectSet_Element element) {
 		if (null != element) {
-			getObjectSetElements().add(element);
+			objectSetElements.add(element);
 		}
 	}
 
@@ -151,8 +150,7 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 		}
 
 		final ObjectSetElementVisitor_checker checker = new ObjectSetElementVisitor_checker(timestamp, location, myGovernor);
-		getObjectSetElements().trimToSize();
-		for (IObjectSet_Element element : getObjectSetElements()) {
+		for (final IObjectSet_Element element : objectSetElements) {
 			element.accept(checker);
 		}
 
@@ -163,11 +161,11 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 
 	@Override
 	public final ObjectSet_definition getRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
-		if (1 != getObjectSetElements().size()) {
+		if (1 != objectSetElements.size()) {
 			return this;
 		}
 
-		final IObjectSet_Element element = getObjectSetElements().get(0);
+		final IObjectSet_Element element = objectSetElements.get(0);
 		if (!(element instanceof Referenced_ObjectSet)) {
 			return this;
 		}
@@ -218,11 +216,11 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 	private void parseBlockObjectSetSpecifications() {
 		ObjectSet_definition temporalDefinition = null;
 		if (mBlock != null) {
-			Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+			final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 			if (parser != null) {
 				temporalDefinition = parser.pr_special_ObjectSetSpec().definition;
 				//internalIndex += parser.nof_consumed_tokens();
-				List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+				final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 				if (null != errors && !errors.isEmpty()) {
 					for (int i = 0; i < errors.size(); i++) {
 						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
@@ -237,12 +235,11 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 			return;
 		}
 
-		temporalDefinition.getObjectSetElements().trimToSize();
+		temporalDefinition.getObjectSetElements();
 		for (int i = 0; i < temporalDefinition.getObjectSetElements().size(); i++) {
 			addObjectSetElement(temporalDefinition.getObjectSetElements().get(i));
 		}
 		temporalDefinition.setObjectSetElements(null);
-		getObjectSetElements().trimToSize();
 
 		setMyScope(getMyScope());
 	}
@@ -261,9 +258,8 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 		}
 
 		final ObjectSetElementVisitor_objectCollector visitor = new ObjectSetElementVisitor_objectCollector(this, lastTimeChecked);
-		getObjectSetElements().trimToSize();
-		for (int i = 0; i < getObjectSetElements().size(); i++) {
-			getObjectSetElements().get(i).accept(visitor);
+		for (int i = 0; i < objectSetElements.size(); i++) {
+			objectSetElements.get(i).accept(visitor);
 		}
 		objects = visitor.giveObjects();
 		objects.trimToSize();
@@ -324,7 +320,7 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 	}
 
 	@Override
-	protected final boolean memberAccept(ASTVisitor v) {
+	protected final boolean memberAccept(final ASTVisitor v) {
 		// TODO: objectSetElements ?
 		if (objects != null && !objects.accept(v)) {
 			return false;

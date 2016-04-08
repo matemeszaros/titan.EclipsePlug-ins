@@ -49,7 +49,7 @@ public final class LoggingSectionHandler {
 				return false;
 			}
 
-			PluginSpecificParam p = (PluginSpecificParam) o;
+			final PluginSpecificParam p = (PluginSpecificParam) o;
 			return getParam().equals(p.getParam()) && getValue().equals(p.getValue());
 		}
 
@@ -62,7 +62,7 @@ public final class LoggingSectionHandler {
 			return root;
 		}
 
-		public void setRoot(LocationAST root) {
+		public void setRoot(final LocationAST root) {
 			this.root = root;
 		}
 
@@ -70,7 +70,7 @@ public final class LoggingSectionHandler {
 			return param;
 		}
 
-		public void setParam(LocationAST param) {
+		public void setParam(final LocationAST param) {
 			this.param = param;
 		}
 
@@ -78,7 +78,7 @@ public final class LoggingSectionHandler {
 			return value;
 		}
 
-		public void setValue(LocationAST value) {
+		public void setValue(final LocationAST value) {
 			this.value = value;
 		}
 
@@ -86,7 +86,7 @@ public final class LoggingSectionHandler {
 			return paramName;
 		}
 
-		public void setParamName(String paramName) {
+		public void setParamName(final String paramName) {
 			this.paramName = paramName;
 		}
 	}
@@ -134,7 +134,7 @@ public final class LoggingSectionHandler {
 			return logFile;
 		}
 
-		public void setLogFile(LocationAST logFile) {
+		public void setLogFile(final LocationAST logFile) {
 			this.logFile = logFile;
 		}
 
@@ -142,7 +142,7 @@ public final class LoggingSectionHandler {
 			return logFileRoot;
 		}
 
-		public void setLogFileRoot(LocationAST logFileRoot) {
+		public void setLogFileRoot(final LocationAST logFileRoot) {
 			this.logFileRoot = logFileRoot;
 		}
 
@@ -150,7 +150,7 @@ public final class LoggingSectionHandler {
 			return appendFile;
 		}
 
-		public void setAppendFile(LocationAST appendFile) {
+		public void setAppendFile(final LocationAST appendFile) {
 			this.appendFile = appendFile;
 		}
 
@@ -158,7 +158,7 @@ public final class LoggingSectionHandler {
 			return appendFileRoot;
 		}
 
-		public void setAppendFileRoot(LocationAST appendFileRoot) {
+		public void setAppendFileRoot(final LocationAST appendFileRoot) {
 			this.appendFileRoot = appendFileRoot;
 		}
 
@@ -166,7 +166,7 @@ public final class LoggingSectionHandler {
 			return timestampFormat;
 		}
 
-		public void setTimestampFormat(LocationAST timestampFormat) {
+		public void setTimestampFormat(final LocationAST timestampFormat) {
 			this.timestampFormat = timestampFormat;
 		}
 
@@ -174,7 +174,7 @@ public final class LoggingSectionHandler {
 			return timestampFormatRoot;
 		}
 
-		public void setTimestampFormatRoot(LocationAST timestampFormatRoot) {
+		public void setTimestampFormatRoot(final LocationAST timestampFormatRoot) {
 			this.timestampFormatRoot = timestampFormatRoot;
 		}
 
@@ -182,7 +182,7 @@ public final class LoggingSectionHandler {
 			return logeventTypes;
 		}
 
-		public void setLogeventTypes(LocationAST logeventTypes) {
+		public void setLogeventTypes(final LocationAST logeventTypes) {
 			this.logeventTypes = logeventTypes;
 		}
 
@@ -190,7 +190,7 @@ public final class LoggingSectionHandler {
 			return logeventTypesRoot;
 		}
 
-		public void setLogeventTypesRoot(LocationAST logeventTypesRoot) {
+		public void setLogeventTypesRoot(final LocationAST logeventTypesRoot) {
 			this.logeventTypesRoot = logeventTypesRoot;
 		}
 
@@ -198,7 +198,7 @@ public final class LoggingSectionHandler {
 			return sourceInfoFormat;
 		}
 
-		public void setSourceInfoFormat(LocationAST sourceInfoFormat) {
+		public void setSourceInfoFormat(final LocationAST sourceInfoFormat) {
 			this.sourceInfoFormat = sourceInfoFormat;
 		}
 
@@ -206,7 +206,7 @@ public final class LoggingSectionHandler {
 			return sourceInfoFormatRoot;
 		}
 
-		public void setSourceInfoFormatRoot(LocationAST sourceInfoFormatRoot) {
+		public void setSourceInfoFormatRoot(final LocationAST sourceInfoFormatRoot) {
 			this.sourceInfoFormatRoot = sourceInfoFormatRoot;
 		}
 
@@ -214,7 +214,7 @@ public final class LoggingSectionHandler {
 			return logEntityName;
 		}
 
-		public void setLogEntityName(LocationAST logEntityName) {
+		public void setLogEntityName(final LocationAST logEntityName) {
 			this.logEntityName = logEntityName;
 		}
 
@@ -222,7 +222,7 @@ public final class LoggingSectionHandler {
 			return logEntityNameRoot;
 		}
 
-		public void setLogEntityNameRoot(LocationAST logEntityNameRoot) {
+		public void setLogEntityNameRoot(final LocationAST logEntityNameRoot) {
 			this.logEntityNameRoot = logEntityNameRoot;
 		}
 
@@ -230,7 +230,7 @@ public final class LoggingSectionHandler {
 			return matchingHints;
 		}
 
-		public void setMatchingHints(LocationAST matchingHints) {
+		public void setMatchingHints(final LocationAST matchingHints) {
 			this.matchingHints = matchingHints;
 		}
 
@@ -238,7 +238,7 @@ public final class LoggingSectionHandler {
 			return matchingHintsRoot;
 		}
 
-		public void setMatchingHintsRoot(LocationAST matchingHintsRoot) {
+		public void setMatchingHintsRoot(final LocationAST matchingHintsRoot) {
 			this.matchingHintsRoot = matchingHintsRoot;
 		}
 
@@ -246,7 +246,7 @@ public final class LoggingSectionHandler {
 			return logfileNumber;
 		}
 
-		public void setLogfileNumber(LocationAST logfileNumber) {
+		public void setLogfileNumber(final LocationAST logfileNumber) {
 			this.logfileNumber = logfileNumber;
 		}
 
@@ -254,7 +254,7 @@ public final class LoggingSectionHandler {
 			return logfileNumberRoot;
 		}
 
-		public void setLogfileNumberRoot(LocationAST logfileNumberRoot) {
+		public void setLogfileNumberRoot(final LocationAST logfileNumberRoot) {
 			this.logfileNumberRoot = logfileNumberRoot;
 		}
 
@@ -262,7 +262,7 @@ public final class LoggingSectionHandler {
 			return logfileSize;
 		}
 
-		public void setLogfileSize(LocationAST logfileSize) {
+		public void setLogfileSize(final LocationAST logfileSize) {
 			this.logfileSize = logfileSize;
 		}
 
@@ -270,7 +270,7 @@ public final class LoggingSectionHandler {
 			return logfileSizeRoot;
 		}
 
-		public void setLogfileSizeRoot(LocationAST logfileSizeRoot) {
+		public void setLogfileSizeRoot(final LocationAST logfileSizeRoot) {
 			this.logfileSizeRoot = logfileSizeRoot;
 		}
 
@@ -278,7 +278,7 @@ public final class LoggingSectionHandler {
 			return diskFullAction;
 		}
 
-		public void setDiskFullAction(LocationAST diskFullAction) {
+		public void setDiskFullAction(final LocationAST diskFullAction) {
 			this.diskFullAction = diskFullAction;
 		}
 
@@ -286,7 +286,7 @@ public final class LoggingSectionHandler {
 			return diskFullActionRoot;
 		}
 
-		public void setDiskFullActionRoot(LocationAST diskFullActionRoot) {
+		public void setDiskFullActionRoot(final LocationAST diskFullActionRoot) {
 			this.diskFullActionRoot = diskFullActionRoot;
 		}
 
@@ -294,7 +294,7 @@ public final class LoggingSectionHandler {
 			return fileMaskBits;
 		}
 
-		public void setFileMaskBits(Map<LoggingBit, LocationAST> fileMaskBits) {
+		public void setFileMaskBits(final Map<LoggingBit, LocationAST> fileMaskBits) {
 			this.fileMaskBits = fileMaskBits;
 		}
 
@@ -302,7 +302,7 @@ public final class LoggingSectionHandler {
 			return fileMask;
 		}
 
-		public void setFileMask(LocationAST fileMask) {
+		public void setFileMask(final LocationAST fileMask) {
 			this.fileMask = fileMask;
 		}
 
@@ -310,7 +310,7 @@ public final class LoggingSectionHandler {
 			return fileMaskRoot;
 		}
 
-		public void setFileMaskRoot(LocationAST fileMaskRoot) {
+		public void setFileMaskRoot(final LocationAST fileMaskRoot) {
 			this.fileMaskRoot = fileMaskRoot;
 		}
 
@@ -318,7 +318,7 @@ public final class LoggingSectionHandler {
 			return consoleMaskBits;
 		}
 
-		public void setConsoleMaskBits(Map<LoggingBit, LocationAST> consoleMaskBits) {
+		public void setConsoleMaskBits(final Map<LoggingBit, LocationAST> consoleMaskBits) {
 			this.consoleMaskBits = consoleMaskBits;
 		}
 
@@ -326,7 +326,7 @@ public final class LoggingSectionHandler {
 			return consoleMask;
 		}
 
-		public void setConsoleMask(LocationAST consoleMask) {
+		public void setConsoleMask(final LocationAST consoleMask) {
 			this.consoleMask = consoleMask;
 		}
 
@@ -334,7 +334,7 @@ public final class LoggingSectionHandler {
 			return consoleMaskRoot;
 		}
 
-		public void setConsoleMaskRoot(LocationAST consoleMaskRoot) {
+		public void setConsoleMaskRoot(final LocationAST consoleMaskRoot) {
 			this.consoleMaskRoot = consoleMaskRoot;
 		}
 
@@ -342,7 +342,7 @@ public final class LoggingSectionHandler {
 			return pluginSpecificParam;
 		}
 
-		public void setPluginSpecificParam(List<PluginSpecificParam> pluginSpecificParam) {
+		public void setPluginSpecificParam(final List<PluginSpecificParam> pluginSpecificParam) {
 			this.pluginSpecificParam = pluginSpecificParam;
 		}
 
@@ -350,7 +350,7 @@ public final class LoggingSectionHandler {
 			return pluginPath;
 		}
 
-		public void setPluginPath(String pluginPath) {
+		public void setPluginPath(final String pluginPath) {
 			this.pluginPath = pluginPath;
 		}
 
@@ -358,7 +358,7 @@ public final class LoggingSectionHandler {
 			return emergencyLogging;
 		}
 
-		public void setEmergencyLogging(LocationAST emergencyLogging) {
+		public void setEmergencyLogging(final LocationAST emergencyLogging) {
 			this.emergencyLogging = emergencyLogging;
 		}
 
@@ -366,7 +366,7 @@ public final class LoggingSectionHandler {
 			return emergencyLoggingBehaviour;
 		}
 
-		public void setEmergencyLoggingBehaviour(LocationAST emergencyLoggingBehaviour) {
+		public void setEmergencyLoggingBehaviour(final LocationAST emergencyLoggingBehaviour) {
 			this.emergencyLoggingBehaviour = emergencyLoggingBehaviour;
 		}
 
@@ -374,7 +374,7 @@ public final class LoggingSectionHandler {
 			return emergencyLoggingMask;
 		}
 
-		public void setEmergencyLoggingMask(LocationAST emergencyLoggingMask) {
+		public void setEmergencyLoggingMask(final LocationAST emergencyLoggingMask) {
 			this.emergencyLoggingMask = emergencyLoggingMask;
 		}
 	}
@@ -388,7 +388,7 @@ public final class LoggingSectionHandler {
 			return loggerPluginRoot;
 		}
 
-		public void setLoggerPluginRoot(LocationAST loggerPluginRoot) {
+		public void setLoggerPluginRoot(final LocationAST loggerPluginRoot) {
 			this.loggerPluginRoot = loggerPluginRoot;
 		}
 
@@ -396,7 +396,7 @@ public final class LoggingSectionHandler {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void setName(final String name) {
 			this.name = name;
 		}
 
@@ -404,7 +404,7 @@ public final class LoggingSectionHandler {
 			return path;
 		}
 
-		public void setPath(String path) {
+		public void setPath(final String path) {
 			this.path = path;
 		}
 	}
@@ -418,7 +418,7 @@ public final class LoggingSectionHandler {
 			return loggerPluginsRoot;
 		}
 
-		public void setLoggerPluginsRoot(LocationAST loggerPluginsRoot) {
+		public void setLoggerPluginsRoot(final LocationAST loggerPluginsRoot) {
 			this.loggerPluginsRoot = loggerPluginsRoot;
 		}
 
@@ -426,7 +426,7 @@ public final class LoggingSectionHandler {
 			return loggerPluginsListRoot;
 		}
 
-		public void setLoggerPluginsListRoot(LocationAST loggerPluginsListRoot) {
+		public void setLoggerPluginsListRoot(final LocationAST loggerPluginsListRoot) {
 			this.loggerPluginsListRoot = loggerPluginsListRoot;
 		}
 
@@ -434,7 +434,7 @@ public final class LoggingSectionHandler {
 			return pluginRoots;
 		}
 
-		public void setPluginRoots(Map<String, LoggerPluginEntry> pluginRoots) {
+		public void setPluginRoots(final Map<String, LoggerPluginEntry> pluginRoots) {
 			this.pluginRoots = pluginRoots;
 		}
 	}
@@ -451,7 +451,7 @@ public final class LoggingSectionHandler {
 	}
 
 	public Set<String> getPlugins(final String componentName) {
-		Map<String,LogParamEntry> pluginsMap = loggerTree.get(componentName);
+		final Map<String,LogParamEntry> pluginsMap = loggerTree.get(componentName);
 		if (pluginsMap==null) {
 			return new HashSet<String>();
 		}
@@ -474,7 +474,8 @@ public final class LoggingSectionHandler {
 		if (!loggerTree.containsKey(tempComponentName)) {
 			loggerTree.put(tempComponentName, new HashMap<String,LogParamEntry>());
 		}
-		Map<String,LogParamEntry> pluginMap = loggerTree.get(tempComponentName);
+
+		final Map<String,LogParamEntry> pluginMap = loggerTree.get(tempComponentName);
 		if (!pluginMap.containsKey(tempPluginName)) {
 			pluginMap.put(tempPluginName, new LogParamEntry());
 		}
@@ -509,7 +510,7 @@ public final class LoggingSectionHandler {
 			return lsh;
 		}
 
-		public void setLsh(LoggingSectionHandler lsh) {
+		public void setLsh(final LoggingSectionHandler lsh) {
 			this.lsh = lsh;
 		}
 
@@ -517,7 +518,7 @@ public final class LoggingSectionHandler {
 			return componentName;
 		}
 
-		public void setComponentName(String componentName) {
+		public void setComponentName(final String componentName) {
 			this.componentName = componentName;
 		}
 
@@ -525,7 +526,7 @@ public final class LoggingSectionHandler {
 			return pluginName;
 		}
 
-		public void setPluginName(String pluginName) {
+		public void setPluginName(final String pluginName) {
 			this.pluginName = pluginName;
 		}
 	}
@@ -539,21 +540,22 @@ public final class LoggingSectionHandler {
 	}
 
 	public Object[] getComponentsTreeElementArray() {
-		List<LoggerTreeElement> rv = new ArrayList<LoggerTreeElement>();
-		for (String s : loggerTree.keySet()) {
+		final List<LoggerTreeElement> rv = new ArrayList<LoggerTreeElement>();
+		for (final String s : loggerTree.keySet()) {
 			rv.add(new LoggerTreeElement(this,s));
 		}
+
 		return rv.toArray();
 	}
 
 	public Object[] getPluginsTreeElementArray(final String componentName) {
-		List<LoggerTreeElement> rv = new ArrayList<LoggerTreeElement>();
-		Map<String,LogParamEntry> pluginsMap = loggerTree.get(componentName);
+		final List<LoggerTreeElement> rv = new ArrayList<LoggerTreeElement>();
+		final Map<String,LogParamEntry> pluginsMap = loggerTree.get(componentName);
 		if (pluginsMap==null) {
 			return new Object[] {};
 		}
 
-		for (String s : pluginsMap.keySet()) {
+		for (final String s : pluginsMap.keySet()) {
 			rv.add(new LoggerTreeElement(this,componentName,s));
 		}
 		return rv.toArray();
@@ -563,7 +565,7 @@ public final class LoggingSectionHandler {
 		return loggerPluginsTree;
 	}
 
-	public void setLoggerPluginsTree(Map<String, LoggerPluginsEntry> loggerPluginsTree) {
+	public void setLoggerPluginsTree(final Map<String, LoggerPluginsEntry> loggerPluginsTree) {
 		this.loggerPluginsTree = loggerPluginsTree;
 	}
 
@@ -571,7 +573,7 @@ public final class LoggingSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 }

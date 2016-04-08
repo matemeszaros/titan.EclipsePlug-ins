@@ -120,7 +120,7 @@ public final class Getreply_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -190,10 +190,10 @@ public final class Getreply_Statement extends Statement {
 			final Reference portReference, final TemplateInstance parameter, final TemplateInstance valueMatch,
 			final TemplateInstance fromClause, final Reference redirectValue, final Parameter_Redirect redirectParameter,
 			final Reference redirectSender) {
-		Port_Type portType = Port_Utility.checkPortReference(timestamp, source, portReference);
+		final Port_Type portType = Port_Utility.checkPortReference(timestamp, source, portReference);
 		if (parameter == null) {
 			if (portType != null) {
-				PortTypeBody body = portType.getPortBody();
+				final PortTypeBody body = portType.getPortBody();
 				if (!body.getreplyAllowed(timestamp)) {
 					if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 						portReference.getLocation().reportSemanticError(
@@ -217,12 +217,12 @@ public final class Getreply_Statement extends Statement {
 			IType signature = null;
 			boolean signatureDetermined = false;
 			if (portType != null) {
-				PortTypeBody body = portType.getPortBody();
+				final PortTypeBody body = portType.getPortBody();
 				if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
 							MessageFormat.format(GETREPLYONMESSAGEPORT, statementName, portType.getTypename()));
 				} else if (body.getreplyAllowed(timestamp)) {
-					TypeSet outSignatures = body.getOutSignatures();
+					final TypeSet outSignatures = body.getOutSignatures();
 
 					if (outSignatures.getNofTypes() == 1) {
 						signature = outSignatures.getTypeByIndex(0);
@@ -274,7 +274,7 @@ public final class Getreply_Statement extends Statement {
 
 				switch (signature.getTypetype()) {
 				case TYPE_SIGNATURE: {
-					Signature_Type signatureType = (Signature_Type) signature;
+					final Signature_Type signatureType = (Signature_Type) signature;
 					if (signatureType.isNonblocking()) {
 						final String message = MessageFormat.format(NONBLOCKINGSIGNATURE, statementName,
 								signatureType.getTypename());
@@ -327,7 +327,7 @@ public final class Getreply_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.SENDER);
 
 		if (redirectParameter != null) {
@@ -425,7 +425,7 @@ public final class Getreply_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

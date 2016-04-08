@@ -24,7 +24,7 @@ import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
  * @author Kristof Szabados
  * */
 public final class TypeMappingTargets extends ASTNode {
-	private List<TypeMappingTarget> targets;
+	private final List<TypeMappingTarget> targets;
 
 	public TypeMappingTargets() {
 		targets = new ArrayList<TypeMappingTarget>();
@@ -44,10 +44,10 @@ public final class TypeMappingTargets extends ASTNode {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = targets.size(); i < size; i++) {
-			TypeMappingTarget target = targets.get(i);
+			final TypeMappingTarget target = targets.get(i);
 			if (target == child) {
 				return builder.append(".<target ").append(i + 1).append('>');
 			}
@@ -76,7 +76,7 @@ public final class TypeMappingTargets extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (targets != null) {
 			for (TypeMappingTarget tmt : targets) {
 				if (!tmt.accept(v)) {

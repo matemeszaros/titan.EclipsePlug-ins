@@ -206,8 +206,8 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 		dialog.setMessage("Select a variable to constrain your search.");
 		
 		final List<EnvironmentVariable> variables = new ArrayList<EnvironmentVariable>(envVariables.size());
-		for (Iterator<?> i = envVariables.keySet().iterator(); i.hasNext();) {
-			EnvironmentVariable variable = new EnvironmentVariable();
+		for (final Iterator<?> i = envVariables.keySet().iterator(); i.hasNext();) {
+			final EnvironmentVariable variable = new EnvironmentVariable();
 			variable.name = (String) i.next();
 			variable.value = (String) envVariables.get(variable.name);
 
@@ -283,8 +283,7 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 			resolvedPathLabelText.setVisible(false);
 			return;
 		}
-		//TODO: To change the next lines for this one:
-		//final URI uri1 = TITANPathUtilities.getURI(target, rootPath);
+
 		final IPath path = new Path(target);
 		final IPath resolvedPath = TITANPathUtilities.resolvePath(target, rootPath);		
 		final URI uri = URIUtil.toURI(resolvedPath); 

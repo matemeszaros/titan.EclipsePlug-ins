@@ -319,7 +319,7 @@ public final class TTCN3ReparseUpdater {
 					unclosedStarting++;
 					break;
 				case ')':
-					if (!elements.isEmpty() && elements.peek().equals("(")) {
+					if (!elements.isEmpty() && "(".equals(elements.peek())) {
 						elements.pop();
 						unclosedStarting--;
 					} else {
@@ -332,7 +332,7 @@ public final class TTCN3ReparseUpdater {
 					unclosedStarting++;
 					break;
 				case ']':
-					if (!elements.isEmpty() && elements.peek().equals("[")) {
+					if (!elements.isEmpty() && "[".equals(elements.peek())) {
 						elements.pop();
 						unclosedStarting--;
 					} else {
@@ -345,7 +345,7 @@ public final class TTCN3ReparseUpdater {
 					unclosedStarting++;
 					break;
 				case '}':
-					if (!elements.isEmpty() && elements.peek().equals("{")) {
+					if (!elements.isEmpty() && "{".equals(elements.peek())) {
 						elements.pop();
 						unclosedStarting--;
 					} else {

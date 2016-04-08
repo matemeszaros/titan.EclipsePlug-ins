@@ -30,6 +30,7 @@ public final class Stop_Execution_Statement extends Statement {
 
 	@Override
 	public void setMyScope(final Scope scope) {
+		//Do nothing
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public final class Stop_Execution_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// no members
 		return true;
 	}

@@ -62,7 +62,7 @@ final class BaseDirectoryStruct implements Comparable<BaseDirectoryStruct> {
 		return directory;
 	}
 
-	public void setDirectory(IPath directory) {
+	public void setDirectory(final IPath directory) {
 		this.directory = directory;
 	}
 
@@ -70,7 +70,7 @@ final class BaseDirectoryStruct implements Comparable<BaseDirectoryStruct> {
 		return directoryName;
 	}
 
-	public void setDirectoryName(String directoryName) {
+	public void setDirectoryName(final String directoryName) {
 		this.directoryName = directoryName;
 	}
 
@@ -78,7 +78,7 @@ final class BaseDirectoryStruct implements Comparable<BaseDirectoryStruct> {
 		return hasModules;
 	}
 
-	public void setHasModules(boolean hasModules) {
+	public void setHasModules(final boolean hasModules) {
 		this.hasModules = hasModules;
 	}
 }

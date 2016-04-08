@@ -63,7 +63,9 @@ public final class Undefined_Assignment_T_or_OC extends Undefined_Assignment {
 			reference.setMyScope(rightScope);
 			if (identifier.isvalidAsnObjectClassReference()
 					&& reference.refersToSettingType(timestamp, Setting_type.S_OC, temporalReferenceChain)) {
-				realAssignment = new ObjectClass_Assignment(identifier, assPard, new ObjectClass_refd(reference));
+				final ObjectClass_refd oc = new ObjectClass_refd(reference);
+				oc.setLocation(reference.getLocation());
+				realAssignment = new ObjectClass_Assignment(identifier, assPard, oc);
 				// assPard = null;
 				// asstype = Assignment.A_OC;
 			} else if (identifier.isvalidAsnTyperef()
@@ -100,7 +102,7 @@ public final class Undefined_Assignment_T_or_OC extends Undefined_Assignment {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

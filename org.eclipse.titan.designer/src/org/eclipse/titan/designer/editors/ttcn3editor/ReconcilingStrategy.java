@@ -33,8 +33,8 @@ import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 import org.eclipse.titan.designer.graphics.ImageCache;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectConfigurationParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
@@ -379,6 +379,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 
 	@Override
 	public void setProgressMonitor(final IProgressMonitor monitor) {
+		//Do nothing
 	}
 
 	/**

@@ -42,7 +42,7 @@ import org.eclipse.titan.designer.properties.data.ProjectBuildPropertyData;
  */
 public final class MakefileGeneratorVisitor implements IResourceVisitor {
 
-	private final MakefileGenerator makefileGenerator;
+	private final InternalMakefileGenerator makefileGenerator;
 	/**
 	 * The project being processed.
 	 */
@@ -54,7 +54,7 @@ public final class MakefileGeneratorVisitor implements IResourceVisitor {
 
 	private ResourceExclusionHelper helper;
 
-	public MakefileGeneratorVisitor(MakefileGenerator makefileGenerator, final IProject project) {
+	public MakefileGeneratorVisitor(final InternalMakefileGenerator makefileGenerator, final IProject project) {
 		this.makefileGenerator = makefileGenerator;
 		this.projectVisited = project;
 		helper = new ResourceExclusionHelper();

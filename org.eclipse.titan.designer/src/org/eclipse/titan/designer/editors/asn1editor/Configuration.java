@@ -34,8 +34,8 @@ import org.eclipse.titan.designer.editors.ClosingBracketIndentationAutoEditStrat
 import org.eclipse.titan.designer.editors.ColorManager;
 import org.eclipse.titan.designer.editors.ContentAssitant;
 import org.eclipse.titan.designer.editors.GeneralTITANAutoEditStrategy;
-import org.eclipse.titan.designer.editors.IndentationSupport;
 import org.eclipse.titan.designer.editors.IntervallBasedDamagerRepairer;
+import org.eclipse.titan.designer.editors.actions.IndentationSupport;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;

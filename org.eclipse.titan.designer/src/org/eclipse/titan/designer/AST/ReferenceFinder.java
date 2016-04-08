@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
@@ -23,9 +24,11 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.RunsOnScope;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 import org.eclipse.titan.designer.AST.TTCN3.types.ComponentTypeBody;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
+import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.declarationsearch.IdentifierFinderVisitor;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.console.MessageConsoleStream;
@@ -216,12 +219,21 @@ public final class ReferenceFinder {
 
 		return localScope;
 	}
-	//FIXME should check all modules that might transitively import the definition
-	public Map<Module, List<Hit>> findAllReferences(final Module module, final ProjectSourceParser projectSourceParser,
+
+	public Map<Module, List<Hit>> findAllReferences(final Module module, final IProject project,
 			final IProgressMonitor pMonitor, final boolean reportDebugInformation) {
 		final IProgressMonitor monitor = pMonitor == null ? new NullProgressMonitor() : pMonitor;
 
-		monitor.beginTask("Searching references.", projectSourceParser.getKnownModuleNames().size());
+		List<IProject> relatedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReferencingProjects();
+		relatedProjects.addAll(ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects());
+		relatedProjects.add(project);
+		
+		int size = 0;
+		for(IProject tempProject: relatedProjects) {
+			size += GlobalParser.getProjectSourceParser(tempProject).getKnownModuleNames().size();
+		}
+
+		monitor.beginTask("Searching references.", size);
 		Map<Module, List<Hit>> foundIdsMap = new HashMap<Module, List<Hit>>();
 		// in this scope
 		//TODO this is efficient but only for local variables ... and if are not followed up by other searches
@@ -234,29 +246,33 @@ public final class ReferenceFinder {
 		// is global
 		//FIXME but if component variable ... we might have to search all related modules in all related projects.
 		if (scope instanceof Module) {
-			for (String moduleName2 : projectSourceParser.getKnownModuleNames()) {
-				if (monitor.isCanceled()) {
-					return foundIdsMap;
-				}
-
-				Module module2 = projectSourceParser.getModuleByName(moduleName2);
-				if (module2 == null) {
-					continue;
-				}
-				for (Module m : module2.getImportedModules()) {
-					if (m == scope) {
-						if (reportDebugInformation) {
-							TITANDebugConsole.println("found importing module: " + module2.getName());
-						}
-						foundIds = new ArrayList<Hit>();
-						module2.findReferences(this, foundIds);
-						if (!foundIds.isEmpty()) {
-							foundIdsMap.put(module2, foundIds);
-						}
-						break;
+			for(IProject project2 : relatedProjects) {
+				ProjectSourceParser projectSourceParser2 = GlobalParser.getProjectSourceParser(project2);
+				
+				for (String moduleName2 : projectSourceParser2.getKnownModuleNames()) {
+					if (monitor.isCanceled()) {
+						return foundIdsMap;
 					}
+
+					Module module2 = projectSourceParser2.getModuleByName(moduleName2);
+					if (module2 == null) {
+						continue;
+					}
+					for (Module m : module2.getImportedModules()) {
+						if (m == scope) {
+							if (reportDebugInformation) {
+								TITANDebugConsole.println("found importing module: " + module2.getName());
+							}
+							foundIds = new ArrayList<Hit>();
+							module2.findReferences(this, foundIds);
+							if (!foundIds.isEmpty()) {
+								foundIdsMap.put(module2, foundIds);
+							}
+							break;
+						}
+					}
+					monitor.worked(1);
 				}
-				monitor.worked(1);
 			}
 		}
 		monitor.done();

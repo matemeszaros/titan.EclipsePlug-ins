@@ -67,7 +67,7 @@ public final class SimpleTypeMappingTarget extends TypeMappingTarget {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (targetType != null && !targetType.accept(v)) {
 			return false;
 		}

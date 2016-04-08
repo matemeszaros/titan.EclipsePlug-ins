@@ -240,7 +240,7 @@ public final class Integer_Value extends Value implements Comparable<Integer_Val
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// no members
 		return true;
 	}

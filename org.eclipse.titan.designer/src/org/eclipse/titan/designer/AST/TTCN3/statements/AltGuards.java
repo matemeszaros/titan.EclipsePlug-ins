@@ -72,7 +72,7 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = altGuards.size(); i < size; i++) {
 			if (altGuards.get(i) == child) {
@@ -148,7 +148,7 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 	 * */
 	public boolean hasElse() {
 		for (int i = 0, size = altGuards.size(); i < size; i++) {
-			AltGuard guard = altGuards.get(i);
+			final AltGuard guard = altGuards.get(i);
 			if (guard.getType() == altguard_type.AG_ELSE) {
 				return true;
 			}
@@ -170,7 +170,7 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 		StatementBlock.ReturnStatus_type result = StatementBlock.ReturnStatus_type.RS_MAYBE;
 
 		for (int i = 0, size = altGuards.size(); i < size; i++) {
-			AltGuard guard = altGuards.get(i);
+			final AltGuard guard = altGuards.get(i);
 			switch (guard.hasReturn(timestamp)) {
 			case RS_NO:
 				if (result == StatementBlock.ReturnStatus_type.RS_YES) {
@@ -207,7 +207,7 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 	public void check(final CompilationTimeStamp timestamp) {
 		boolean unreachableFound = false;
 		for (int i = 0, size = altGuards.size(); i < size; i++) {
-			AltGuard guard = altGuards.get(i);
+			final AltGuard guard = altGuards.get(i);
 			guard.check(timestamp);
 
 			if (unreachableFound) {
@@ -262,8 +262,8 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 			final int damageOffset = reparser.getDamageStart();
 
 			for (int i = 0, size = altGuards.size(); i < size && !enveloped; i++) {
-				AltGuard altGuard = altGuards.get(i);
-				Location temporalLocation = altGuard.getLocation();
+				final AltGuard altGuard = altGuards.get(i);
+				final Location temporalLocation = altGuard.getLocation();
 
 				if (reparser.envelopsDamage(temporalLocation)) {
 					enveloped = true;
@@ -281,13 +281,13 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 				}
 			}
 
-			if (!enveloped) {
+			if (nofDamaged != 0) {
 				throw new ReParseException();
 			}
 
 			for (Iterator<AltGuard> iterator = altGuards.iterator(); iterator.hasNext();) {
-				AltGuard altGuard = iterator.next();
-				Location temporalLocation = altGuard.getLocation();
+				final AltGuard altGuard = iterator.next();
+				final Location temporalLocation = altGuard.getLocation();
 
 				if (reparser.isAffectedAppended(temporalLocation)) {
 					altGuard.updateSyntax(reparser, enveloped && reparser.envelopsDamage(temporalLocation));
@@ -299,7 +299,7 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 		}
 
 		for (int i = 0, size = altGuards.size(); i < size; i++) {
-			AltGuard guard = altGuards.get(i);
+			final AltGuard guard = altGuards.get(i);
 
 			guard.updateSyntax(reparser, false);
 			reparser.updateLocation(guard.getLocation());
@@ -318,7 +318,7 @@ public final class AltGuards extends ASTNode implements IIncrementallyUpdateable
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (altGuards != null) {
 			for (AltGuard ag : altGuards) {
 				if (!ag.accept(v)) {

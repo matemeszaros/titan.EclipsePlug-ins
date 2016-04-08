@@ -44,7 +44,7 @@ public final class VariableList_Parameter_Redirect extends Parameter_Redirect {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (entries == child) {
 			return builder.append(FULLNAMEPART);
@@ -64,7 +64,7 @@ public final class VariableList_Parameter_Redirect extends Parameter_Redirect {
 	@Override
 	public void checkErroneous(final CompilationTimeStamp timestamp) {
 		for (int i = 0, size = entries.getNofEntries(); i < size; i++) {
-			Variable_Entry entry = entries.getEntryByIndex(i);
+			final Variable_Entry entry = entries.getEntryByIndex(i);
 			checkVariableReference(timestamp, entry.getReference(), null);
 		}
 	}
@@ -75,15 +75,15 @@ public final class VariableList_Parameter_Redirect extends Parameter_Redirect {
 			return;
 		}
 
-		SignatureFormalParameterList parameterList = signature.getParameterList();
+		final SignatureFormalParameterList parameterList = signature.getParameterList();
 		if (parameterList.getNofParameters() == 0) {
 			getLocation().reportSemanticError(MessageFormat.format(SIGNATUREWITHOUTPARAMETERS, signature.getTypename()));
 			checkErroneous(timestamp);
 			return;
 		}
 
-		int nofVariableEntries = entries.getNofEntries();
-		int nofParameters = isOut ? parameterList.getNofOutParameters() : parameterList.getNofInParameters();
+		final int nofVariableEntries = entries.getNofEntries();
+		final int nofParameters = isOut ? parameterList.getNofOutParameters() : parameterList.getNofInParameters();
 		if (nofVariableEntries != nofParameters) {
 			getLocation().reportSemanticError(
 					MessageFormat.format(
@@ -93,9 +93,9 @@ public final class VariableList_Parameter_Redirect extends Parameter_Redirect {
 		}
 
 		for (int i = 0; i < nofVariableEntries; i++) {
-			Variable_Entry entry = entries.getEntryByIndex(i);
+			final Variable_Entry entry = entries.getEntryByIndex(i);
 			if (i < nofParameters) {
-				SignatureFormalParameter parameter = isOut ? parameterList.getOutParameterByIndex(i) : parameterList
+				final SignatureFormalParameter parameter = isOut ? parameterList.getOutParameterByIndex(i) : parameterList
 						.getInParameterByIndex(i);
 				checkVariableReference(timestamp, entry.getReference(), parameter.getType());
 			} else {
@@ -125,7 +125,7 @@ public final class VariableList_Parameter_Redirect extends Parameter_Redirect {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (entries != null && !entries.accept(v)) {
 			return false;
 		}

@@ -62,6 +62,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.EXPORT_EXCLUDE_LINKED_CONTENTS, true);
 		preferenceStore.setDefault(PreferenceConstants.EXPORT_SAVE_DEFAULT_VALUES, false);
 		preferenceStore.setDefault(PreferenceConstants.EXPORT_PACK_ALL_PROJECTS_INTO_ONE, false);
+		preferenceStore.setDefault(PreferenceConstants.USE_TPD_NAME, false);
+		preferenceStore.setDefault(PreferenceConstants.ORIG_TPD_URI, "");
 		
 		preferenceStore.setDefault(PreferenceConstants.EXPORT_AUTOMATIC_EXPORT, false);
 		preferenceStore.setDefault(PreferenceConstants.EXPORT_REQUEST_LOCATION, false);

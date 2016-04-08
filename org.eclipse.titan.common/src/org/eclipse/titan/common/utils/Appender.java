@@ -23,7 +23,7 @@ public class Appender implements Appendable {
 	 * 
 	 * @param appendable the first appendable to add to the list.
 	 * */
-	public Appender(Appendable appendable) {
+	public Appender(final Appendable appendable) {
 		this(appendable, "");
 	}
 
@@ -33,7 +33,7 @@ public class Appender implements Appendable {
 	 * @param appendable the appendable to be the first element of the list.
 	 * @param delimiter the string to be used the delimeter.
 	 * */
-	public Appender(Appendable appendable, final String delimiter) {
+	public Appender(final Appendable appendable, final String delimiter) {
 		this.appendable = appendable;
 		this.delimiter = delimiter;
 	}
@@ -85,12 +85,12 @@ public class Appender implements Appendable {
 	}
 
 	@Override
-	public Appendable append(CharSequence csq) throws IOException {
+	public Appendable append(final CharSequence csq) throws IOException {
 		return internalAppend(csq);
 	}
 
 	@Override
-	public Appendable append(CharSequence csq, int start, int end) throws IOException {
+	public Appendable append(final CharSequence csq,final  int start,final  int end) throws IOException {
 		if (csq == null) {
 			return internalAppend("null");
 		}
@@ -98,7 +98,7 @@ public class Appender implements Appendable {
 	}
 
 	@Override
-	public Appendable append(char c) throws IOException {
+	public Appendable append(final char c) throws IOException {
 		return internalAppend(c);
 	}
 	

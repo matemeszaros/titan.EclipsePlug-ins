@@ -24,16 +24,18 @@ public class InstalledProductInfoCollector implements UsageStatInfoCollector {
 
 	@Override
 	public Map<String, String> collect() {
-		String info = "plugin_start(" + new Joiner(",").join(getInstalledTitanPlugins()).toString() + ")";
-		Map<String, String> dataToSend = new HashMap<String, String>();
+		final String info = "plugin_start(" + new Joiner(",").join(getInstalledTitanPlugins()).toString() + ")";
+		final Map<String, String> dataToSend = new HashMap<String, String>();
+
 		dataToSend.put("info", info);
+
 		return dataToSend;
 	}
 
 	private static List<String> getInstalledTitanPlugins() {
 		final List<String> result = new ArrayList<String>();
 
-		String[] productIds = {
+		final String[] productIds = {
 				ProductConstants.PRODUCT_ID_COMMON,
 				ProductConstants.PRODUCT_ID_DESIGNER,
 				ProductConstants.PRODUCT_ID_EXECUTOR,

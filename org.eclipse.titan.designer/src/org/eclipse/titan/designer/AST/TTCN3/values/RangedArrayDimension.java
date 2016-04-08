@@ -68,7 +68,7 @@ public final class RangedArrayDimension extends ArrayDimension {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (lower == child) {
 			return builder.append(FULLNAMEPART1);
@@ -101,7 +101,7 @@ public final class RangedArrayDimension extends ArrayDimension {
 	public String createStringRepresentation() {
 		check(CompilationTimeStamp.getBaseTimestamp());
 
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append('[');
 		if (lower == null) {
 			builder.append("<erroneous>");
@@ -222,7 +222,7 @@ public final class RangedArrayDimension extends ArrayDimension {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (lower != null) {
 			if (!lower.accept(v)) {
 				return false;

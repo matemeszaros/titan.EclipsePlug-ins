@@ -22,7 +22,7 @@ class OtherFileStruct implements Comparable<OtherFileStruct> {
 		this.setFileName(fileName);
 	}
 
-	public StringBuilder name(String workingDirectory, boolean useAbsolutePathNames) {
+	public StringBuilder name(final String workingDirectory, final boolean useAbsolutePathNames) {
 		StringBuilder result = new StringBuilder();
 
 		if (getDirectory() == null || getDirectory().equals(workingDirectory)) {
@@ -64,7 +64,7 @@ class OtherFileStruct implements Comparable<OtherFileStruct> {
 		return directory;
 	}
 
-	public void setDirectory(String directory) {
+	public void setDirectory(final String directory) {
 		this.directory = directory;
 	}
 
@@ -72,7 +72,7 @@ class OtherFileStruct implements Comparable<OtherFileStruct> {
 		return originalLocation;
 	}
 
-	public void setOriginalLocation(String originalLocation) {
+	public void setOriginalLocation(final String originalLocation) {
 		this.originalLocation = originalLocation;
 	}
 
@@ -80,7 +80,7 @@ class OtherFileStruct implements Comparable<OtherFileStruct> {
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 }

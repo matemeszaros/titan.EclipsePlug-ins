@@ -74,7 +74,7 @@ public final class IsValueExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (templateInstance == child) {
 			return builder.append(OPERAND);
@@ -292,7 +292,7 @@ public final class IsValueExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (templateInstance != null && !templateInstance.accept(v)) {
 			return false;
 		}

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -20,7 +21,6 @@ import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
-import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
 /**
@@ -31,13 +31,13 @@ public class ReferenceSearchQuery implements ISearchQuery {
 	private ReferenceSearchResult result;
 
 	private Module module;
-	private ProjectSourceParser projectSourceParser;
+	private IProject project;
 	private ReferenceFinder referenceFinder;
 
-	public ReferenceSearchQuery(final ReferenceFinder rf, final Module module, final ProjectSourceParser projectSourceParser) {
+	public ReferenceSearchQuery(final ReferenceFinder rf, final Module module, final IProject project) {
 		this.result = new ReferenceSearchResult(this);
 		this.module = module;
-		this.projectSourceParser = projectSourceParser;
+		this.project = project;
 		this.referenceFinder = rf;
 
 	}
@@ -46,7 +46,7 @@ public class ReferenceSearchQuery implements ISearchQuery {
 	public IStatus run(final IProgressMonitor monitor) {
 		result.removeAll();
 
-		Map<Module, List<Hit>> map = referenceFinder.findAllReferences(module, projectSourceParser, monitor, false);
+		Map<Module, List<Hit>> map = referenceFinder.findAllReferences(module, project, monitor, false);
 		for (Map.Entry<Module, List<Hit>> entry : map.entrySet()) {
 			IResource resource = entry.getKey().getLocation().getFile();
 			if (!(resource instanceof IFile)) {

@@ -188,7 +188,7 @@ public final class CfgAnalyzer {
      * @param file the file to parse, and report the errors to
      * @param code the contents of an editor, or null.
      */
-	public void parse(IFile file, String code) {
+	public void parse(final IFile file, final String code) {
 		String fileName = "<unknown file>";
 		if(file != null){
 			fileName = file.getFullPath().toOSString();
@@ -217,7 +217,8 @@ public final class CfgAnalyzer {
 				return;
 			}
 		}
-		CharStream charStream = new UnbufferedCharStream(reader);
+
+		final CharStream charStream = new UnbufferedCharStream(reader);
 		lexer = new CfgLexer(charStream);
 		lexer.setTokenFactory(new CommonTokenFactory(true));
 		lexerListener = new TitanListener();
@@ -228,8 +229,8 @@ public final class CfgAnalyzer {
 		// Read this: https://groups.google.com/forum/#!topic/antlr-discussion/gsAu-6d3pKU
 		// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
 		//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
-		TokenStream tokens = new BufferedTokenStream( lexer );
-		CfgParser parser = new CfgParser(tokens);
+		final TokenStream tokens = new BufferedTokenStream( lexer );
+		final CfgParser parser = new CfgParser(tokens);
 		//parser tree is built by default
 		parserListener = new TitanListener();
 		parser.removeErrorListeners(); // remove ConsoleErrorListener

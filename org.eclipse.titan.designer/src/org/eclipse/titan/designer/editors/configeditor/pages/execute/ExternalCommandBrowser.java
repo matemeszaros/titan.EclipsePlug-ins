@@ -33,6 +33,7 @@ public final class ExternalCommandBrowser implements SelectionListener {
 
 	@Override
 	public void widgetDefaultSelected(final SelectionEvent e) {
+		//Do nothing
 	}
 
 	@Override

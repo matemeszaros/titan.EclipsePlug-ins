@@ -14,7 +14,7 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 
 /**
  * @author Kristof Szabados
@@ -47,6 +47,7 @@ public final class DocumentSetupParticipant implements IDocumentSetupParticipant
 
 			@Override
 			public void documentChanged(final DocumentEvent event) {
+				//Do nothing
 			}
 
 		});

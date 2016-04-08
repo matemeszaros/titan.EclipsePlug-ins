@@ -104,7 +104,7 @@ public final class If_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (ifClauses == child) {
 			return builder.append(FULLNAMEPART1);
@@ -226,7 +226,7 @@ public final class If_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.ELSE);
 
 		return result;
@@ -259,7 +259,7 @@ public final class If_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (ifClauses != null && !ifClauses.accept(v)) {
 			return false;
 		}

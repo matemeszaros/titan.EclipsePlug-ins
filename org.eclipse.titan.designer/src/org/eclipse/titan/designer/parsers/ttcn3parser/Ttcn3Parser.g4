@@ -1617,8 +1617,9 @@ pr_ConstDef returns[List<Definition> array = null]:
 			if (i==0) { // the location of "const Type" part belongs to the first const, no location overlapping
 				temp.getLocation().setLine( line - 1 + $col.start.getLine() );
 				Location loc = temp.getLocation();
-				loc.setOffset( $col.start );
+				loc.setOffset( offset + $col.start.getStartIndex() );
 			}
+			((Def_Const)temp).setComulativeDefinitionLocation(getLocation( $col.start, $a.stop));
 		}
 	}
 };

@@ -52,7 +52,7 @@ public class ModuleVersionAttribute extends ExtensionAttribute {
 	 * Convert the raw data.
 	 */
 	public final void parse() {
-		String versionString = versionToken.getTtcnName();
+		final String versionString = versionToken.getTtcnName();
 		if (isTemplate) {
 			if (!"RnXnn".equals(versionString)) {
 				getLocation().reportSemanticError("Version template must be exactly <RnXnn>");
@@ -67,8 +67,8 @@ public class ModuleVersionAttribute extends ExtensionAttribute {
 	}
 
 	public static String versionString(final int major, final int minor, final int patch) {
-		int[] one = { minor + "A".codePointAt(0) };
-		String rev = new String(one, 0, 1);
+		final int[] one = { minor + "A".codePointAt(0) };
+		final String rev = new String(one, 0, 1);
 		return MessageFormat.format("R{0}{1}{2}", major, rev, (patch == Integer.MAX_VALUE) ? "" : patch);
 	}
 

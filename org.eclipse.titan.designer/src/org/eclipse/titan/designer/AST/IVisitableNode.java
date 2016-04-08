@@ -16,5 +16,5 @@ public interface IVisitableNode {
 	 * @param v the visitor
 	 * @return false to abort visiting the tree, true otherwise
 	 */
-	boolean accept(ASTVisitor v);
+	boolean accept(final ASTVisitor v);
 }

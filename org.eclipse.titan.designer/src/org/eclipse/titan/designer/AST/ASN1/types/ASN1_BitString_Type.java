@@ -430,7 +430,7 @@ public final class ASN1_BitString_Type extends ASN1Type {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

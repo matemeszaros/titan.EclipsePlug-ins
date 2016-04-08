@@ -24,7 +24,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * */
 public final class Qualifiers implements IIncrementallyUpdateable, IIdentifierContainer, IVisitableNode {
-	private List<Qualifier> qualifiers;
+	private final List<Qualifier> qualifiers;
 
 	public Qualifiers() {
 		qualifiers = new ArrayList<Qualifier>(1);
@@ -102,7 +102,7 @@ public final class Qualifiers implements IIncrementallyUpdateable, IIdentifierCo
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

@@ -103,7 +103,7 @@ public final class Templates extends ASTNode implements IIncrementallyUpdateable
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (templates != null) {
 			for (TTCN3Template t : templates) {
 				if (!t.accept(v)) {

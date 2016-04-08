@@ -84,7 +84,7 @@ public final class RNDExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// no members
 		return true;
 	}

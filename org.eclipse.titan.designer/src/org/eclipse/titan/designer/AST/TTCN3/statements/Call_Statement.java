@@ -127,7 +127,7 @@ public final class Call_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -194,7 +194,7 @@ public final class Call_Statement extends Statement {
 			return;
 		}
 
-		Port_Type portType = Port_Utility.checkPortReference(timestamp, this, portReference);
+		final Port_Type portType = Port_Utility.checkPortReference(timestamp, this, portReference);
 
 		if (parameter == null) {
 			return;
@@ -204,8 +204,8 @@ public final class Call_Statement extends Statement {
 		boolean signatureTypeDetermined = false;
 		if (portType != null) {
 			// the port type is known
-			PortTypeBody portTypeBody = portType.getPortBody();
-			TypeSet outSignatures = portTypeBody.getOutSignatures();
+			final PortTypeBody portTypeBody = portType.getPortBody();
+			final TypeSet outSignatures = portTypeBody.getOutSignatures();
 			if (OperationModes.OP_Message.equals(portTypeBody.getOperationMode())) {
 				portReference.getLocation().reportSemanticError(MessageFormat.format(SENDONPORT, portType.getTypename()));
 			} else if (outSignatures != null) {
@@ -273,13 +273,13 @@ public final class Call_Statement extends Statement {
 
 		if (timerValue != null) {
 			timerValue.setLoweridToReference(timestamp);
-			Type_type temporalType = timerValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temporalType = timerValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 			switch (temporalType) {
 			case TYPE_REAL:
-				IValue last = timerValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+				final IValue last = timerValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 				if (Value_type.REAL_VALUE.equals(last.getValuetype()) && !last.getIsErroneous(timestamp)) {
-					double temp = ((Real_Value) last).getValue();
+					final double temp = ((Real_Value) last).getValue();
 					if (temp < 0) {
 						timerValue.getLocation().reportSemanticError(MessageFormat.format(CALLTIMERNEGATIVE, temp));
 					}
@@ -318,12 +318,12 @@ public final class Call_Statement extends Statement {
 	private void checkCallBody(final CompilationTimeStamp timestamp, final Port_Type portType, final IType signature) {
 		boolean hasCatchTimeout = false;
 		for (int i = 0; i < altGuards.getNofAltguards(); i++) {
-			AltGuard altGuard = altGuards.getAltguardByIndex(i);
+			final AltGuard altGuard = altGuards.getAltguardByIndex(i);
 			if (!altguard_type.AG_OP.equals(altGuard.getType())) {
 				continue;
 			}
 
-			Statement statement = ((Operation_Altguard) altGuard).getGuardStatement();
+			final Statement statement = ((Operation_Altguard) altGuard).getGuardStatement();
 			if (Statement_type.S_CATCH.equals(statement.getType())) {
 				((Catch_Statement) statement).setCallSettings(true, timerValue != null);
 				hasCatchTimeout |= ((Catch_Statement) statement).hasTimeout();
@@ -338,19 +338,19 @@ public final class Call_Statement extends Statement {
 			// the same port and same signature as the call
 			// operation.
 			for (int i = 0; i < altGuards.getNofAltguards(); i++) {
-				AltGuard altguard = altGuards.getAltguardByIndex(i);
+				final AltGuard altguard = altGuards.getAltguardByIndex(i);
 				if (!altguard_type.AG_OP.equals(altguard.getType())) {
 					continue;
 				}
 
-				Statement statement = ((Operation_Altguard) altguard).getGuardStatement();
+				final Statement statement = ((Operation_Altguard) altguard).getGuardStatement();
 				if (statement.getIsErroneous()) {
 					continue;
 				}
 
 				switch (statement.getType()) {
 				case S_GETREPLY: {
-					Reference tempPortReference = ((Getreply_Statement) statement).getPortReference();
+					final Reference tempPortReference = ((Getreply_Statement) statement).getPortReference();
 					if (tempPortReference == null) {
 						final String message = MessageFormat
 								.format("The `{0}'' operation must refer to the same port as the previous `call'' statement: `{1}'' was expected instead of `any port''",
@@ -364,9 +364,9 @@ public final class Call_Statement extends Statement {
 						tempPortReference.getLocation().reportSemanticError(message);
 					}
 
-					TemplateInstance instance = ((Getreply_Statement) statement).getReceiveParameter();
+					final TemplateInstance instance = ((Getreply_Statement) statement).getReceiveParameter();
 					if (instance != null) {
-						IType tempSignature = instance.getExpressionGovernor(timestamp,
+						final IType tempSignature = instance.getExpressionGovernor(timestamp,
 								Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 						if (signature != null && !signature.isCompatible(timestamp, tempSignature, null, null, null)) {
 							final String message = MessageFormat.format(GETRPELYTOWRONGSIGNATURE,
@@ -377,7 +377,7 @@ public final class Call_Statement extends Statement {
 					break;
 				}
 				case S_CATCH:
-					Reference tempPortReference = ((Catch_Statement) statement).getPortReference();
+					final Reference tempPortReference = ((Catch_Statement) statement).getPortReference();
 					if (tempPortReference == null) {
 						final String message = MessageFormat
 								.format("The `{0}'' operation must refer to the same port as the previous `call'' statement: `{1}'' was expected instead of `any port''",
@@ -391,7 +391,7 @@ public final class Call_Statement extends Statement {
 						tempPortReference.getLocation().reportSemanticError(message);
 					}
 
-					Signature_Type tempSignature = ((Catch_Statement) statement).getSignatureType();
+					final Signature_Type tempSignature = ((Catch_Statement) statement).getSignatureType();
 					if (tempSignature != null && signature != null
 							&& !signature.isCompatible(timestamp, tempSignature, null, null, null)) {
 						final String message = MessageFormat
@@ -431,7 +431,7 @@ public final class Call_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.BEGINCHAR);
 
 		if (toClause != null) {
@@ -495,7 +495,7 @@ public final class Call_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

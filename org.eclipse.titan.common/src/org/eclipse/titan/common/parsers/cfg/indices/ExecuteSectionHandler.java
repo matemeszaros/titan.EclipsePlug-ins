@@ -26,7 +26,7 @@ public final class ExecuteSectionHandler {
 			return root;
 		}
 
-		public void setRoot(LocationAST root) {
+		public void setRoot(final LocationAST root) {
 			this.root = root;
 		}
 
@@ -34,7 +34,7 @@ public final class ExecuteSectionHandler {
 			return moduleName;
 		}
 
-		public void setModuleName(LocationAST moduleName) {
+		public void setModuleName(final LocationAST moduleName) {
 			this.moduleName = moduleName;
 		}
 
@@ -42,7 +42,7 @@ public final class ExecuteSectionHandler {
 			return testcaseName;
 		}
 
-		public void setTestcaseName(LocationAST testcaseName) {
+		public void setTestcaseName(final LocationAST testcaseName) {
 			this.testcaseName = testcaseName;
 		}
 	}
@@ -54,7 +54,7 @@ public final class ExecuteSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -62,7 +62,7 @@ public final class ExecuteSectionHandler {
 		return executeitems;
 	}
 
-	public void setExecuteitems(List<ExecuteItem> executeitems) {
+	public void setExecuteitems(final List<ExecuteItem> executeitems) {
 		this.executeitems = executeitems;
 	}
 

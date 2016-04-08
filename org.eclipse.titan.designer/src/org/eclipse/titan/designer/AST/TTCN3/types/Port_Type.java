@@ -222,7 +222,7 @@ public final class Port_Type extends Type {
 	}
 	
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

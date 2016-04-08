@@ -23,7 +23,7 @@ public final class ComponentSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -31,7 +31,7 @@ public final class ComponentSectionHandler {
 		return components;
 	}
 
-	public void setComponents(List<Component> components) {
+	public void setComponents(final List<Component> components) {
 		this.components = components;
 	}
 
@@ -44,7 +44,7 @@ public final class ComponentSectionHandler {
 			return root;
 		}
 
-		public void setRoot(LocationAST root) {
+		public void setRoot(final LocationAST root) {
 			this.root = root;
 		}
 
@@ -52,7 +52,7 @@ public final class ComponentSectionHandler {
 			return componentName;
 		}
 
-		public void setComponentName(LocationAST componentName) {
+		public void setComponentName(final LocationAST componentName) {
 			this.componentName = componentName;
 		}
 
@@ -60,7 +60,7 @@ public final class ComponentSectionHandler {
 			return hostName;
 		}
 
-		public void setHostName(LocationAST hostName) {
+		public void setHostName(final LocationAST hostName) {
 			this.hostName = hostName;
 		}
 	}

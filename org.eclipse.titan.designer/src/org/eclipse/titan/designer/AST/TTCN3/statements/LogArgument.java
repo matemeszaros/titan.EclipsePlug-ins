@@ -127,7 +127,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 		}
 
 		if (templateInstance.getType() == null && templateInstance.getDerivedReference() == null && template.isValue(timestamp)) {
-			IValue value = template.getValue();
+			final IValue value = template.getValue();
 			final IType gov = template.getMyGovernor();
 			if (gov != null) {
 				value.setMyGovernor(gov);
@@ -137,7 +137,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			IType governor = templateInstance.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 
 			if (governor == null) {
-				ITTCN3Template temporalTemplate = template.setLoweridToReference(timestamp);
+				final ITTCN3Template temporalTemplate = template.setLoweridToReference(timestamp);
 				governor = temporalTemplate.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 			}
 
@@ -161,18 +161,18 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 	 *                the value contained in the log argument.
 	 * */
 	private void checkValue(final CompilationTimeStamp timestamp, final IValue value) {
-		IValue temp = value.setLoweridToReference(timestamp);
+		final IValue temp = value.setLoweridToReference(timestamp);
 		switch (temp.getValuetype()) {
 		case CHARSTRING_VALUE:
 			internalLogArgument = new String_InternalLogArgument(((Charstring_Value) temp).getValue());
 			break;
 		case REFERENCED_VALUE:
-			Reference reference = ((Referenced_Value) temp).getReference();
+			final Reference reference = ((Referenced_Value) temp).getReference();
 			internalLogArgument = new Reference_InternalLogArgument(reference);
 			checkReference(timestamp, reference);
 			return;
 		case EXPRESSION_VALUE:
-			Expression_Value castedValue = (Expression_Value) temp;
+			final Expression_Value castedValue = (Expression_Value) temp;
 			if (Operation_type.MATCH_OPERATION.equals(castedValue.getOperationType())) {
 				internalLogArgument = new Match_InternalLogArgument((MatchExpression) castedValue);
 			} else {
@@ -187,7 +187,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			break;
 		}
 
-		IType governor = temp.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+		final IType governor = temp.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 		if (governor == null) {
 			getLocation().reportSemanticError("Cannot determine the type of the argument");
 			isErroneous = true;
@@ -198,14 +198,14 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 		temp.setMyGovernor(governor);
 		governor.checkThisValue(timestamp, temp, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE, true, true, true, true, false));
 
-		IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+		final IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		if (ArgumentType.Value.equals(internalLogArgument.getArgumentType()) && !temp.isUnfoldable(timestamp)) {
-			IValue last = temp.getValueRefdLast(timestamp, chain);
+			final 	IValue last = temp.getValueRefdLast(timestamp, chain);
 			if (Value_type.CHARSTRING_VALUE.equals(last.getValuetype())) {
 				internalLogArgument = new String_InternalLogArgument(((Charstring_Value) last).getValue());
 			}
 		} else if (ArgumentType.Macro.equals(internalLogArgument.getArgumentType())) {
-			IValue last = temp.getValueRefdLast(timestamp, chain);
+			final IValue last = temp.getValueRefdLast(timestamp, chain);
 			switch (last.getValuetype()) {
 			case CHARSTRING_VALUE:
 				internalLogArgument = new String_InternalLogArgument(((Charstring_Value) last).getValue());
@@ -235,7 +235,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			return;
 		}
 
-		Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = reference.getRefdAssignment(timestamp, true);
 		if (assignment == null || assignment.getIsErroneous()) {
 			return;
 		}
@@ -250,7 +250,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			break;
 		case A_CONST:
 			if (assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false) != null) {
-				IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+				final IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 				if (assignment instanceof Def_Const) {
 					((Def_Const) assignment).getValue().getReferencedSubValue(timestamp, reference, 1, chain);
 				} else {
@@ -261,7 +261,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			break;
 		case A_TEMPLATE:
 			if (assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false) != null) {
-				IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+				final IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 				((Def_Template) assignment).getTemplate(timestamp).getReferencedSubTemplate(timestamp, reference, chain);
 				chain.release();
 			}
@@ -283,7 +283,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
 			break;
 		case A_PORT: {
-			ArrayDimensions dimensions = ((Def_Port) assignment).getDimensions();
+			final ArrayDimensions dimensions = ((Def_Port) assignment).getDimensions();
 			if (dimensions != null) {
 				dimensions.checkIndices(timestamp, reference, assignment.getAssignmentName(), true,
 						Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
@@ -296,7 +296,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 			break;
 		}
 		case A_TIMER: {
-			ArrayDimensions dimensions = ((Def_Timer) assignment).getDimensions();
+			final ArrayDimensions dimensions = ((Def_Timer) assignment).getDimensions();
 			if (dimensions != null) {
 				dimensions.checkIndices(timestamp, reference, assignment.getAssignmentName(), true,
 						Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
@@ -374,7 +374,7 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (templateInstance != null && !templateInstance.accept(v)) {
 			return false;
 		}

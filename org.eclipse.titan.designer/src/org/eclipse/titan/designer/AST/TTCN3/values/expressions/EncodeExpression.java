@@ -54,7 +54,7 @@ public final class EncodeExpression extends Expression_Value {
 			return "<erroneous value>";
 		}
 
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("encvalue(").append(templateInstance.createStringRepresentation()).append(')');
 		return builder.toString();
 	}
@@ -69,7 +69,7 @@ public final class EncodeExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (templateInstance == child) {
 			return builder.append(OPERAND);
@@ -202,7 +202,7 @@ public final class EncodeExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (templateInstance != null && !templateInstance.accept(v)) {
 			return false;
 		}

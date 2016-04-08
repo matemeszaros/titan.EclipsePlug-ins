@@ -54,8 +54,7 @@ import org.eclipse.titan.designer.editors.IEditorWithCarretOffset;
 import org.eclipse.titan.designer.editors.IReferenceParser;
 import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
 import org.eclipse.titan.designer.editors.OccurencesMarker;
-import org.eclipse.titan.designer.editors.Pair;
-import org.eclipse.titan.designer.editors.ToggleComment;
+import org.eclipse.titan.designer.editors.ttcn3editor.actions.ToggleComment;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.FileSaveTracker;
 import org.eclipse.titan.designer.parsers.GlobalParser;
@@ -225,7 +224,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	 * @param jobname The name of the workspace job
 	 * @author Kristof Szabados
 	 */
-	private void analyzeOpenedFile(String jobname) {
+	private void analyzeOpenedFile(final String jobname) {
 		// "file" cannot be get as a parameter!
 		final IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
 		if (file != null && isSemanticCheckingDelayed()) {
@@ -268,10 +267,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	@Override
 	protected void configureSourceViewerDecorationSupport(final SourceViewerDecorationSupport support) {
 		super.configureSourceViewerDecorationSupport(support);
-		Pair brackets = new Pair('{', '}');
-		Pair parenthesis = new Pair('(', ')');
-		Pair index = new Pair('[', ']');
-		PairMatcher pairMatcher = new PairMatcher(new Pair[] { brackets, parenthesis, index });
+		PairMatcher pairMatcher = new PairMatcher();
 		support.setCharacterPairMatcher(pairMatcher);
 		support.setMatchingCharacterPainterPreferenceKeys(PreferenceConstants.MATCHING_BRACKET_ENABLED,
 				PreferenceConstants.COLOR_MATCHING_BRACKET);

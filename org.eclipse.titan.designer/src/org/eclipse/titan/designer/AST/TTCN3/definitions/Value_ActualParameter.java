@@ -62,7 +62,7 @@ public final class Value_ActualParameter extends ActualParameter {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null) {
 			if (!value.accept(v)) {
 				return false;

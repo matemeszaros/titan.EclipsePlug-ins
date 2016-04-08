@@ -72,7 +72,7 @@ public abstract class CompositeTemplate extends TTCN3Template {
 	 *
 	 * @return the number calculated.
 	 * */
-	public int getNofTemplatesNotAnyornone(CompilationTimeStamp timestamp) {
+	public int getNofTemplatesNotAnyornone(final CompilationTimeStamp timestamp) {
 		int result = 0;
 		for (int i = 0, size = templates.getNofTemplates(); i < size; i++) {
 			ITTCN3Template template = templates.getTemplateByIndex(i);
@@ -263,7 +263,7 @@ public abstract class CompositeTemplate extends TTCN3Template {
 	 *	 project property setting 
 	 *   TITANFlagsOptionsData.ALLOW_OMIT_IN_VALUELIST_TEMPLATE_PROPERTY
 	 */ 
-	final protected boolean allowOmitInValueList(boolean allowOmit) {
+	final protected boolean allowOmitInValueList(final boolean allowOmit) {
 			if( !allowOmit ) {
 				return false;
 			}

@@ -23,7 +23,7 @@ public class FileUtils {
 	 * @param file the file to delete
 	 * @throws IOException if the file cannot be deleted
 	 */
-	public static void delete(File file) throws IOException {
+	public static void delete(final File file) throws IOException {
 		if (deleteIfExists(file)) {
 			throw new IOException("The file cannot be deleted: " + file.getAbsolutePath());
 		}
@@ -34,8 +34,8 @@ public class FileUtils {
 	 *
 	 * @param file the file to delete
 	 */
-	public static boolean deleteQuietly(File file) {
-		boolean failed = deleteIfExists(file);
+	public static boolean deleteQuietly(final File file) {
+		final boolean failed = deleteIfExists(file);
 		if (failed) {
 			ErrorReporter.logError("Cannot delete file: " + file.getPath());
 		}
@@ -43,7 +43,7 @@ public class FileUtils {
 		return !failed;
 	}
 
-	private static boolean deleteIfExists(File file) {
+	private static boolean deleteIfExists(final File file) {
 		return file.exists() && !file.delete();
 	}
 }

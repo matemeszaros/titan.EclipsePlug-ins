@@ -20,8 +20,8 @@ import org.eclipse.titan.designer.AST.NULL_Location;
  * @author Kristof Szabados
  */
 public final class ErrorBehaviorSetting extends ASTNode {
-	private String errorType;
-	private String errorHandling;
+	private final String errorType;
+	private final String errorHandling;
 
 	/**
 	 * The location of the whole setting. This location encloses the setting
@@ -52,7 +52,7 @@ public final class ErrorBehaviorSetting extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// no members
 		return true;
 	}

@@ -173,7 +173,7 @@ public final class Ass_pard implements IIdentifierContainer, IVisitableNode {
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

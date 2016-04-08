@@ -17,13 +17,16 @@ import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+
 /**
  * @author Botond Baranyi
  * */
 public final class Start_Profiler_Statement extends Statement {
 	private static final String STATEMENT_NAME = "start profiler";
 
-	public Start_Profiler_Statement() { }
+	public Start_Profiler_Statement() {
+		// Do nothing
+	}
 
 	@Override
 	public Statement_type getType() {
@@ -41,7 +44,9 @@ public final class Start_Profiler_Statement extends Statement {
 	}
 
 	@Override
-	public void setMyScope(final Scope scope) { }
+	public void setMyScope(final Scope scope) {
+		// Do nothing
+	}
 
 	@Override
 	public boolean isTerminating(final CompilationTimeStamp timestamp) {
@@ -65,10 +70,12 @@ public final class Start_Profiler_Statement extends Statement {
 	}
 
 	@Override
-	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) { }
+	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
+		// Do nothing
+	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		return true;
 	}
 }

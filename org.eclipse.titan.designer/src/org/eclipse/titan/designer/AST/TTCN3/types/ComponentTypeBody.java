@@ -47,9 +47,9 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.ExtensionAttribute.Extens
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.VisibilityModifier;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -418,7 +418,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	 * @param id the name to search for.
 	 * @return the definition reachable in the extension hierarchy or null if non found.
 	 * */
-	private Definition getAttributesInheritedDefinition(Identifier id) {
+	private Definition getAttributesInheritedDefinition(final Identifier id) {
 		if (attrExtendsReferences == null) {
 			return null;
 		}
@@ -642,7 +642,11 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			Map<String, Definition> subDefinitionMap = body.getDefinitionMap();
 			for (Definition definition : subDefinitionMap.values()) {
 				String name = definition.getIdentifier().getName();
-				if (extendsGainedDefinitions.containsKey(name)) {
+				if (definitions.hasDefinition(name)) {
+					Definition localDefinition = definitions.getDefinition(name);
+					localDefinition.getIdentifier().getLocation().reportSemanticError(MessageFormat.format(
+							LOCALINHERTANCECOLLISSION, name, definition.getMyScope().getFullName()));
+				} else if (extendsGainedDefinitions.containsKey(name)) {
 					Definition previousDefinition = extendsGainedDefinitions.get(name);
 					if (!previousDefinition.equals(definition)) {
 						// it is not the same definition inherited on two paths
@@ -905,7 +909,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

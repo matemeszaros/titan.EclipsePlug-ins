@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.titan.designer.wizards.projectFormat.TpdImporter;
 import org.eclipse.titan.regressiontests.designer.Designer_plugin_tests;
 import org.eclipse.titan.regressiontests.library.WorkspaceHandlingLibrary;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 

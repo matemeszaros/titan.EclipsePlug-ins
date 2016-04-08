@@ -74,7 +74,7 @@ public final class Unknown_Start_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (reference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -110,7 +110,7 @@ public final class Unknown_Start_Statement extends Statement {
 
 		lastTimeChecked = timestamp;
 
-		Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = reference.getRefdAssignment(timestamp, true);
 		if (assignment == null) {
 			return;
 		}
@@ -183,7 +183,7 @@ public final class Unknown_Start_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.LPAREN);
 
 		return result;
@@ -223,7 +223,7 @@ public final class Unknown_Start_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (realStatement != null) {
 			return realStatement.accept(v);
 		} else {

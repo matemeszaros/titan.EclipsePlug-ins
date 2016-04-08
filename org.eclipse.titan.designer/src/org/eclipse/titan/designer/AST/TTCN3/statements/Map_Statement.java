@@ -84,7 +84,7 @@ public final class Map_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentReference1 == child) {
 			return builder.append(FULLNAMEPART1);
@@ -118,17 +118,15 @@ public final class Map_Statement extends Statement {
 
 		IType portType1;
 		IType portType2;
-		PortTypeBody body1;
-		PortTypeBody body2;
+		PortTypeBody body1 = null;
+		PortTypeBody body2 = null;
 		boolean cref1IsTestcomponents = false;
 		boolean cref1IsSystem = false;
 		boolean cref2IsTestcomponent = false;
 		boolean cref2IsSystem = false;
 
 		portType1 = Port_Utility.checkConnectionEndpoint(timestamp, this, componentReference1, portReference1, true);
-		if (portType1 == null) {
-			body1 = null;
-		} else {
+		if (portType1 != null) {
 			body1 = ((Port_Type) portType1).getPortBody();
 			if (body1.isInternal()) {
 				componentReference1.getLocation().reportSemanticError(
@@ -139,7 +137,7 @@ public final class Map_Statement extends Statement {
 		}
 
 		if (componentReference1 != null) {
-			IValue configReference1 = componentReference1.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final IValue configReference1 = componentReference1.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 			if (Value_type.EXPRESSION_VALUE.equals(configReference1.getValuetype())) {
 				switch (((Expression_Value) configReference1).getOperationType()) {
 				case MTC_COMPONENT_OPERATION:
@@ -161,9 +159,7 @@ public final class Map_Statement extends Statement {
 		}
 
 		portType2 = Port_Utility.checkConnectionEndpoint(timestamp, this, componentReference2, portReference2, true);
-		if (portType2 == null) {
-			body2 = null;
-		} else {
+		if (portType2 != null) {
 			body2 = ((Port_Type) portType2).getPortBody();
 			if (body2.isInternal()) {
 				componentReference2.getLocation().reportSemanticError(
@@ -174,7 +170,7 @@ public final class Map_Statement extends Statement {
 		}
 
 		if (componentReference2 != null) {
-			IValue configReference2 = componentReference2.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final IValue configReference2 = componentReference2.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 			if (Value_type.EXPRESSION_VALUE.equals(configReference2.getValuetype())) {
 				switch (((Expression_Value) configReference2).getOperationType()) {
 				case MTC_COMPONENT_OPERATION:
@@ -276,7 +272,7 @@ public final class Map_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReference1 != null && !componentReference1.accept(v)) {
 			return false;
 		}

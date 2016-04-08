@@ -75,7 +75,7 @@ public final class Template_ActualParameter extends ActualParameter {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (template != null) {
 			if (!template.accept(v)) {
 				return false;

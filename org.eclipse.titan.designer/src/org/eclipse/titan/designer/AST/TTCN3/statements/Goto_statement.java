@@ -122,10 +122,10 @@ public final class Goto_statement extends Statement {
 			return;
 		}
 
-		Label_Statement labelStatement = myStatementBlock.getLabel(identifier);
+		final Label_Statement labelStatement = myStatementBlock.getLabel(identifier);
 		labelStatement.setUsed(true);
-		StatementBlock labelStatementBlock = labelStatement.getMyStatementBlock();
-		int labelIndex = labelStatement.getMyStatementBlockIndex();
+		final StatementBlock labelStatementBlock = labelStatement.getMyStatementBlock();
+		final int labelIndex = labelStatement.getMyStatementBlockIndex();
 
 		int gotoIndex;
 		if (myStatementBlock == labelStatementBlock) {
@@ -141,9 +141,9 @@ public final class Goto_statement extends Statement {
 		}
 
 		if (labelIndex > gotoIndex) {
-			boolean errorFound = false;
+			final boolean errorFound = false;
 			for (int i = gotoIndex + 1; i < labelIndex && !errorFound; i++) {
-				Statement statement = labelStatementBlock.getStatementByIndex(i);
+				final 	Statement statement = labelStatementBlock.getStatementByIndex(i);
 				if (Statement_type.S_DEF.equals(statement.getType())) {
 					location.reportSemanticError(MessageFormat.format(LOCALDEFINITIONCROSSING, identifier.getDisplayName()));
 					statement.getLocation().reportSemanticError(
@@ -184,7 +184,7 @@ public final class Goto_statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier != null && !identifier.accept(v)) {
 			return false;
 		}

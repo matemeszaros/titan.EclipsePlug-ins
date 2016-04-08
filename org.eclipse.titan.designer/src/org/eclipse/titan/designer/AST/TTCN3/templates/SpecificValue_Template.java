@@ -78,6 +78,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 
 	@Override
 	public void setLocation(final Location location) {
+		//Do nothing
 	}
 
 	@Override
@@ -492,7 +493,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

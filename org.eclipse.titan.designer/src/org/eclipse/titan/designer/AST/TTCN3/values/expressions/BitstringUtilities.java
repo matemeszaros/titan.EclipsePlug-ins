@@ -13,7 +13,7 @@ package org.eclipse.titan.designer.AST.TTCN3.values.expressions;
  * @author Kristof Szabados
  * */
 public final class BitstringUtilities {
-	static final byte[] DIGITS = new byte[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	protected static final byte[] DIGITS = new byte[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	/** private constructor to disable instantiation */
 	private BitstringUtilities() {

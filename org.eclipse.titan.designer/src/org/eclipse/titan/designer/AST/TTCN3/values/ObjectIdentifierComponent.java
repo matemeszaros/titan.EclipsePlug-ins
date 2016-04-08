@@ -130,7 +130,7 @@ public final class ObjectIdentifierComponent extends ASTNode implements ILocatea
 	 * @return the string representation of the component.
 	 * */
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		if (number != null) {
 			builder.append(number.createStringRepresentation());
 		} else if (name != null) {
@@ -601,7 +601,7 @@ public final class ObjectIdentifierComponent extends ASTNode implements ILocatea
 	 * @return the name belonging to the provided number.
 	 * */
 	private String getExpectedNameForNumber(final int number, final boolean asn1, final Nameform[] names) {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < names.length; i++) {
 			if (number == names[i].value) {
 				if (i > 0) {
@@ -657,7 +657,7 @@ public final class ObjectIdentifierComponent extends ASTNode implements ILocatea
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (name!=null && !name.accept(v)) {
 			return false;
 		}

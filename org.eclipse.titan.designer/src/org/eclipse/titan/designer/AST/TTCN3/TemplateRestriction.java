@@ -58,7 +58,7 @@ public final class TemplateRestriction {
 			return tr;
 		}
 		boolean isOptional = true;
-		Assignment ass = ref.getRefdAssignment(timestamp, false);
+		final Assignment ass = ref.getRefdAssignment(timestamp, false);
 		if (ass != null) {
 			IType type = ass.getType(timestamp);
 			if (type != null) {

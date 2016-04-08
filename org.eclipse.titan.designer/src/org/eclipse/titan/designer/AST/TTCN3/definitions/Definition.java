@@ -55,8 +55,8 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
@@ -191,6 +191,20 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 				}
 			}
 		}
+	}
+
+	/**
+	 * In TTCN-3 it is possible to use a short hand notation
+	 *  when defining several constants and variables of the same type.
+	 *  for example: const integer x :=5, j:=6;
+	 *  
+	 * In these cases the location attributed to each definition is their own minimal location.
+	 * The ComulativeDefinitionLocation is the location of the whole set of same typed definition.
+	 * 
+	 * @return the location of the same typed definition list the definition is located in. 
+	 * */
+	public Location getComulativeDefinitionLocation() {
+		return getLocation();
 	}
 
 	/**
@@ -472,17 +486,17 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 
 	@Override
 	public List<Integer> getPossibleExtensionStarterTokens() {
-		if (isLocal()) {
-			return null;
-		}
+		List<Integer> result = new ArrayList<Integer>();
 
-		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
-			List<Integer> result = new ArrayList<Integer>();
-			result.add(Ttcn3Lexer.WITH);
+		if (isLocal()) {
 			return result;
 		}
 
-		return null;
+		if (withAttributesPath == null || withAttributesPath.getAttributes() == null) {
+			result.add(Ttcn3Lexer.WITH);
+		}
+
+		return result;
 	}
 
 	@Override
@@ -528,7 +542,7 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier != null && !identifier.accept(v)) {
 			return false;
 		}

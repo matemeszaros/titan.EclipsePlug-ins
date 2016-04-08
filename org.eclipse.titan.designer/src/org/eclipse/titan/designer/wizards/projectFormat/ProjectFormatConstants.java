@@ -37,6 +37,7 @@ public final class ProjectFormatConstants {
 	public static final String REFERENCED_PROJECT_NODE = "ReferencedProject";
 	public static final String REFERENCED_PROJECT_NAME_ATTRIBUTE = "name";
 	public static final String REFERENCED_PROJECT_LOCATION_ATTRIBUTE = "projectLocationURI";
+	public static final String REFERENCED_PROJECT_TPD_NAME_ATTRIBUTE = "tpdName";
 	public static final String PACKED_REFERENCED_PROJECTS_NODE = "PackedReferencedProjects";
 	public static final String PACKED_REFERENCED_PROJECT_NODE = "PackedReferencedProject";
 

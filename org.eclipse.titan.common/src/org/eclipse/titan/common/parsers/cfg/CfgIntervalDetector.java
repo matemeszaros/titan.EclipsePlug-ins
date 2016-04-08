@@ -26,7 +26,7 @@ public final class CfgIntervalDetector extends IntervalDetector {
 	}
 	
 	public void pushInterval(final int offset, final int line, final interval_type type, final section_type sectionType) {
-		CfgInterval tempInterval = new CfgInterval(actualInterval, type, sectionType);
+		final CfgInterval tempInterval = new CfgInterval(actualInterval, type, sectionType);
 		actualInterval =  tempInterval;
 		if (rootInterval == null) {
 			rootInterval =  tempInterval;

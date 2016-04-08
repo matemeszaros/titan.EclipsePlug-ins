@@ -1484,7 +1484,7 @@ public final class PortTypeBody extends ASTNode implements ILocateableNode, IInc
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (inTypes!=null) {
 			for (IType t : inTypes) {
 				if (!t.accept(v)) {

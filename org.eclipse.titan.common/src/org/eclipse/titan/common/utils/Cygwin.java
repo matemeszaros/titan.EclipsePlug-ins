@@ -44,8 +44,8 @@ public class Cygwin {
 			}
 
 			// check if error occured:
-			Pattern regQueryOutputPattern = Pattern.compile("ERROR.*");
-			Matcher regQueryoutputMatcher = regQueryOutputPattern.matcher(regQueryOutput);
+			final Pattern regQueryOutputPattern = Pattern.compile("ERROR.*");
+			final Matcher regQueryoutputMatcher = regQueryOutputPattern.matcher(regQueryOutput);
 			if (regQueryoutputMatcher.matches()) {
 				return installed.booleanValue(); 
 			}
@@ -69,7 +69,7 @@ public class Cygwin {
 	/**
 	 * @return Returns the standard output if no exceptions and return code was 0, otherwise returns null
 	 */
-	static String executeProgram(String command) {
+	static String executeProgram(final String command) {
 		Process proc;
 		
 		try {
@@ -79,9 +79,9 @@ public class Cygwin {
 			return null;
 		}
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.defaultCharset()));
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.defaultCharset()));
 		try {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				sb.append(line);  

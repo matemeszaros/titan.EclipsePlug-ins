@@ -10,8 +10,8 @@ package org.eclipse.titan.designer.AST.ASN1.Object;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Error_Setting;
 import org.eclipse.titan.designer.AST.Identifier;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -38,18 +38,21 @@ public final class FieldSetting_Value extends FieldSetting {
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp, final FieldSpecification fieldSpecification) {
+		//Do nothing while values are missing
 	}
 
 	@Override
 	public void addDeclaration(final DeclarationCollector declarationCollector, final int i) {
+		//Do nothing while values are missing
 	}
 
 	@Override
 	public void addProposal(final ProposalCollector propCollector, final int i) {
+		//Do nothing while values are missing
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (name != null && !name.accept(v)) {
 			return false;
 		}

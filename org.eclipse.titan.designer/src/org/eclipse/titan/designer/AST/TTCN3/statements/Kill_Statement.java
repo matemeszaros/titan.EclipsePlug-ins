@@ -51,7 +51,7 @@ public final class Kill_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentReference == child) {
 			return builder.append(FULLNAMEPART);
@@ -71,7 +71,7 @@ public final class Kill_Statement extends Statement {
 	@Override
 	public boolean isTerminating(final CompilationTimeStamp timestamp) {
 		if (componentReference != null) {
-			IValue last = componentReference.getValueRefdLast(timestamp, null);
+			final IValue last = componentReference.getValueRefdLast(timestamp, null);
 			if (Value_type.EXPRESSION_VALUE.equals(last.getValuetype())) {
 				switch (((Expression_Value) last).getOperationType()) {
 				case SELF_COMPONENT_OPERATION:
@@ -119,7 +119,7 @@ public final class Kill_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReference != null && !componentReference.accept(v)) {
 			return false;
 		}

@@ -27,6 +27,7 @@ import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.RangeMarker;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.designer.editors.actions.FirstCharAction;
 
 /**
  * The TITANTemplateContext class represents a context for templates, where they

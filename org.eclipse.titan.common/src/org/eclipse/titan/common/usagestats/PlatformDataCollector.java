@@ -23,7 +23,7 @@ import org.osgi.framework.Version;
 public class PlatformDataCollector implements UsageStatInfoCollector {
 	@Override
 	public Map<String, String> collect() {
-		Map<String, String> result = collectSystemData();
+		final Map<String, String> result = collectSystemData();
 		result.put("plugin_id", ProductConstants.PRODUCT_ID_COMMON);
 		addBundleVersion(result, "eclipse", "org.eclipse.platform");
 		addBundleVersion(result, "plugin", ProductConstants.PRODUCT_ID_COMMON);
@@ -57,8 +57,9 @@ public class PlatformDataCollector implements UsageStatInfoCollector {
 		if (bundle == null) {
 			return;
 		}
+
 		final Version version = bundle.getVersion();
-		String versionString = "" + version.getMajor() + "." + version.getMinor() + "." + version.getMicro();
+		final String versionString = "" + version.getMajor() + "." + version.getMinor() + "." + version.getMicro();
 		data.put(key + "_version", versionString);
 		data.put(key + "_version_qualifier", version.getQualifier());
 	}

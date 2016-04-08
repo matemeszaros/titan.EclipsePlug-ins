@@ -104,7 +104,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return directory;
 	}
 
-	public void setDirectory(String directory) {
+	public void setDirectory(final String directory) {
 		this.directory = directory;
 	}
 
@@ -112,7 +112,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return originalSourceLocation;
 	}
 
-	public void setOriginalSourceLocation(String originalSourceLocation) {
+	public void setOriginalSourceLocation(final String originalSourceLocation) {
 		this.originalSourceLocation = originalSourceLocation;
 	}
 
@@ -120,7 +120,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return originalHeaderLocation;
 	}
 
-	public void setOriginalHeaderLocation(String originalHeaderLocation) {
+	public void setOriginalHeaderLocation(final String originalHeaderLocation) {
 		this.originalHeaderLocation = originalHeaderLocation;
 	}
 
@@ -128,7 +128,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 
@@ -136,7 +136,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return filePrefix;
 	}
 
-	public void setFilePrefix(String filePrefix) {
+	public void setFilePrefix(final String filePrefix) {
 		this.filePrefix = filePrefix;
 	}
 
@@ -144,7 +144,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return headerName;
 	}
 
-	public void setHeaderName(String headerName) {
+	public void setHeaderName(final String headerName) {
 		this.headerName = headerName;
 	}
 
@@ -152,7 +152,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return sourceName;
 	}
 
-	public void setSourceName(String sourceName) {
+	public void setSourceName(final String sourceName) {
 		this.sourceName = sourceName;
 	}
 
@@ -160,7 +160,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return hasHHSuffix;
 	}
 
-	public void setHasHHSuffix(boolean hasHHSuffix) {
+	public void setHasHHSuffix(final boolean hasHHSuffix) {
 		this.hasHHSuffix = hasHHSuffix;
 	}
 
@@ -168,7 +168,7 @@ final class UserStruct implements Comparable<UserStruct> {
 		return hasCCSuffix;
 	}
 
-	public void setHasCCSuffix(boolean hasCCSuffix) {
+	public void setHasCCSuffix(final boolean hasCCSuffix) {
 		this.hasCCSuffix = hasCCSuffix;
 	}
 }

@@ -41,6 +41,7 @@ public final class FieldSubReference implements ISubReference, ILocateableNode {
 
 	@Override
 	public void setMyScope(final Scope scope) {
+		//Do nothing
 	}
 
 	@Override
@@ -60,6 +61,7 @@ public final class FieldSubReference implements ISubReference, ILocateableNode {
 
 	@Override
 	public void setFullNameParent(final INamedNode nameParent) {
+		//Do nothing
 	}
 
 	@Override
@@ -99,10 +101,11 @@ public final class FieldSubReference implements ISubReference, ILocateableNode {
 	
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
+		//Do nothing
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT: return false;
 		case ASTVisitor.V_SKIP: return true;

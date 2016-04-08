@@ -95,7 +95,7 @@ public final class Assignment_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (reference == child) {
 			return builder.append(FULLNAMEPART);
@@ -131,7 +131,7 @@ public final class Assignment_Statement extends Statement {
 		}
 
 		reference.setUsedOnLeftHandSide();
-		Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = reference.getRefdAssignment(timestamp, true);
 		if (assignment == null || assignment.getIsErroneous()) {
 			isErroneous = true;
 			return;
@@ -145,7 +145,7 @@ public final class Assignment_Statement extends Statement {
 		case A_PAR_VAL_IN:
 			((FormalParameter) assignment).useAsLValue(reference);
 			if (template.isValue(timestamp)) {
-				IValue temporalValue = template.getValue();
+				final IValue temporalValue = template.getValue();
 				checkVarAssignment(timestamp, assignment, temporalValue);
 			} else {
 				template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
@@ -156,7 +156,7 @@ public final class Assignment_Statement extends Statement {
 		case A_PAR_VAL:
 			((FormalParameter) assignment).setWritten();
 			if (template.isValue(timestamp)) {
-				IValue temporalValue = template.getValue();
+				final IValue temporalValue = template.getValue();
 				checkVarAssignment(timestamp, assignment, temporalValue);
 				break;
 			} else {
@@ -170,7 +170,7 @@ public final class Assignment_Statement extends Statement {
 		case A_VAR:
 			((Def_Var) assignment).setWritten();
 			if (template.isValue(timestamp)) {
-				IValue temporalValue = template.getValue();
+				final 	IValue temporalValue = template.getValue();
 				checkVarAssignment(timestamp, assignment, temporalValue);
 				break;
 			} else {
@@ -201,14 +201,14 @@ public final class Assignment_Statement extends Statement {
 	}
 
 	private void checkVarAssignment(final CompilationTimeStamp timestamp, final Assignment assignment, final IValue value) {
-		IType varType = getType(timestamp, assignment);
+		final IType varType = getType(timestamp, assignment);
 
 		if (varType == null || value == null) {
 			isErroneous = true;
 			return;
 		}
 
-		IType type = varType.getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
+		final IType type = varType.getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
 		if (type == null) {
 			isErroneous = true;
 			return;
@@ -217,12 +217,12 @@ public final class Assignment_Statement extends Statement {
 		value.setMyGovernor(type);
 		IValue lastValue = type.checkThisValueRef(timestamp, value);
 
-		IReferenceChain referenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+		final IReferenceChain referenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 		lastValue = lastValue.getValueRefdLast(timestamp, referenceChain);
 		referenceChain.release();
 
 		if (Value_type.OMIT_VALUE.equals(lastValue.getValuetype())) {
-			ISubReference lastReference = reference.removeLastSubReference();
+			final ISubReference lastReference = reference.removeLastSubReference();
 
 			if (lastReference == null || lastReference.getId() == null) {
 				value.getLocation().reportSemanticError(OMITTOMANDATORYASSIGNMENT1);
@@ -230,12 +230,12 @@ public final class Assignment_Statement extends Statement {
 				reference.addSubReference(lastReference);
 				return;
 			}
-			Identifier lastField = lastReference.getId();
+			final Identifier lastField = lastReference.getId();
 
-			List<ISubReference> baseReference = reference.getSubreferences(0, reference.getSubreferences().size() - 1);
+			final List<ISubReference> baseReference = reference.getSubreferences(0, reference.getSubreferences().size() - 1);
 			reference.addSubReference(lastReference);
 
-			Reference newReference = new TemporalReference(null, baseReference);
+			final Reference newReference = new TemporalReference(null, baseReference);
 			newReference.clearStringElementReferencing();
 			IType baseType = varType.getFieldType(timestamp, newReference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
 			if (baseType == null) {
@@ -289,13 +289,13 @@ public final class Assignment_Statement extends Statement {
 				break;
 			}
 		} else {
-			boolean isStringElement = reference.refersToStringElement();
+			final boolean isStringElement = reference.refersToStringElement();
 			type.checkThisValue(timestamp, value, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE, true, false,
 					!isStringElement, false, isStringElement));
 
 			if (isStringElement) {
 				// The length of the right hand side should be 1
-				IType lastType = type.getTypeRefdLast(timestamp);
+				final IType lastType = type.getTypeRefdLast(timestamp);
 				int stringLength = 1;
 				switch (lastType.getTypetype()) {
 				case TYPE_BITSTRING:
@@ -380,9 +380,9 @@ public final class Assignment_Statement extends Statement {
 		}
 
 		template.setMyGovernor(type);
-		ITTCN3Template temporalTemplate = type.checkThisTemplateRef(timestamp, template);
+		final ITTCN3Template temporalTemplate = type.checkThisTemplateRef(timestamp, template);
 		temporalTemplate.checkThisTemplateGeneric(timestamp, type, false, true, true, true, false);
-		Assignment ass = reference.getRefdAssignment(timestamp, true);
+		final Assignment ass = reference.getRefdAssignment(timestamp, true);
 		if (ass != null && ass instanceof Definition) {
 			TemplateRestriction.check(timestamp, (Definition) ass, template, reference);
 		}
@@ -475,7 +475,7 @@ public final class Assignment_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (reference != null && !reference.accept(v)) {
 			return false;
 		}

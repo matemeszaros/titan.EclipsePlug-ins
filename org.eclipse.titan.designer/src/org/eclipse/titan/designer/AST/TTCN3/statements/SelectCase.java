@@ -64,7 +64,7 @@ public final class SelectCase extends ASTNode implements ILocateableNode, IIncre
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (templateInstances == child) {
 			return builder.append(FULLNAMEPART1);
@@ -227,7 +227,7 @@ public final class SelectCase extends ASTNode implements ILocateableNode, IIncre
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (templateInstances != null && !templateInstances.accept(v)) {
 			return false;
 		}

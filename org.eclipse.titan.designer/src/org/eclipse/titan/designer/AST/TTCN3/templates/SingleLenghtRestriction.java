@@ -205,7 +205,7 @@ public final class SingleLenghtRestriction extends LengthRestriction {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null && !value.accept(v)) {
 			return false;
 		}

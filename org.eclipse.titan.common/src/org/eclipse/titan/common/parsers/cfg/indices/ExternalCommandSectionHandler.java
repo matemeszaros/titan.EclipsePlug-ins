@@ -29,7 +29,7 @@ public final class ExternalCommandSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -37,7 +37,7 @@ public final class ExternalCommandSectionHandler {
 		return beginControlPart;
 	}
 
-	public void setBeginControlPart(LocationAST beginControlPart) {
+	public void setBeginControlPart(final LocationAST beginControlPart) {
 		this.beginControlPart = beginControlPart;
 	}
 
@@ -45,7 +45,7 @@ public final class ExternalCommandSectionHandler {
 		return beginControlPartRoot;
 	}
 
-	public void setBeginControlPartRoot(LocationAST beginControlPartRoot) {
+	public void setBeginControlPartRoot(final LocationAST beginControlPartRoot) {
 		this.beginControlPartRoot = beginControlPartRoot;
 	}
 
@@ -53,7 +53,7 @@ public final class ExternalCommandSectionHandler {
 		return endControlPart;
 	}
 
-	public void setEndControlPart(LocationAST endControlPart) {
+	public void setEndControlPart(final LocationAST endControlPart) {
 		this.endControlPart = endControlPart;
 	}
 
@@ -61,7 +61,7 @@ public final class ExternalCommandSectionHandler {
 		return endControlPartRoot;
 	}
 
-	public void setEndControlPartRoot(LocationAST endControlPartRoot) {
+	public void setEndControlPartRoot(final LocationAST endControlPartRoot) {
 		this.endControlPartRoot = endControlPartRoot;
 	}
 
@@ -69,7 +69,7 @@ public final class ExternalCommandSectionHandler {
 		return beginTestcase;
 	}
 
-	public void setBeginTestcase(LocationAST beginTestcase) {
+	public void setBeginTestcase(final LocationAST beginTestcase) {
 		this.beginTestcase = beginTestcase;
 	}
 
@@ -77,7 +77,7 @@ public final class ExternalCommandSectionHandler {
 		return beginTestcaseRoot;
 	}
 
-	public void setBeginTestcaseRoot(LocationAST beginTestcaseRoot) {
+	public void setBeginTestcaseRoot(final LocationAST beginTestcaseRoot) {
 		this.beginTestcaseRoot = beginTestcaseRoot;
 	}
 
@@ -85,7 +85,7 @@ public final class ExternalCommandSectionHandler {
 		return endTestcase;
 	}
 
-	public void setEndTestcase(LocationAST endTestcase) {
+	public void setEndTestcase(final LocationAST endTestcase) {
 		this.endTestcase = endTestcase;
 	}
 
@@ -93,7 +93,7 @@ public final class ExternalCommandSectionHandler {
 		return endTestcaseRoot;
 	}
 
-	public void setEndTestcaseRoot(LocationAST endTestcaseRoot) {
+	public void setEndTestcaseRoot(final LocationAST endTestcaseRoot) {
 		this.endTestcaseRoot = endTestcaseRoot;
 	}
 }

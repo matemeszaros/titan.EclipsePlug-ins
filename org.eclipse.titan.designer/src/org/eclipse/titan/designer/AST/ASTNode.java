@@ -169,10 +169,10 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 	 * @param v the visitor object
 	 * @return false to abort, will be returned by accept()
 	 */
-	protected abstract boolean memberAccept(ASTVisitor v);
+	protected abstract boolean memberAccept(final ASTVisitor v);
 	
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT: return false;
 		case ASTVisitor.V_SKIP: return true;

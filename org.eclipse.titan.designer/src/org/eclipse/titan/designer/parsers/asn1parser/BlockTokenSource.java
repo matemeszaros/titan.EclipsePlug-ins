@@ -56,6 +56,7 @@ public class BlockTokenSource implements TokenSource {
 
 	@Override
 	public void setTokenFactory(TokenFactory<?> arg0) {
+		//Do nothing
 	}
 		
 }

@@ -197,7 +197,7 @@ public final class ValueRange extends ASTNode implements IIncrementallyUpdateabl
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (min != null && !min.accept(v)) {
 			return false;
 		}

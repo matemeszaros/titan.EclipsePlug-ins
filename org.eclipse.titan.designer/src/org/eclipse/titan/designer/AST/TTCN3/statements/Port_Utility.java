@@ -99,7 +99,7 @@ public final class Port_Utility {
 			return null;
 		}
 
-		Assignment assignment = portReference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = portReference.getRefdAssignment(timestamp, true);
 		if (assignment == null || assignment.getIsErroneous()) {
 			return null;
 		}
@@ -107,7 +107,7 @@ public final class Port_Utility {
 		IType result = null;
 		switch (assignment.getAssignmentType()) {
 		case A_PORT:
-			ArrayDimensions dimensions = ((Def_Port) assignment).getDimensions();
+			final ArrayDimensions dimensions = ((Def_Port) assignment).getDimensions();
 			if (dimensions != null) {
 				dimensions.checkIndices(timestamp, portReference, "port", false, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			} else if (portReference.getSubreferences().size() > 1) {
@@ -159,7 +159,7 @@ public final class Port_Utility {
 			return null;
 		}
 
-		Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = reference.getRefdAssignment(timestamp, true);
 		if (assignment == null) {
 			return null;
 		}
@@ -220,7 +220,7 @@ public final class Port_Utility {
 			return null;
 		}
 
-		IValue last = value.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+		final IValue last = value.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 		switch (last.getValuetype()) {
 		case REFERENCED_VALUE:
 			break;
@@ -228,7 +228,7 @@ public final class Port_Utility {
 			value.getLocation().reportSemanticError(MessageFormat.format(NULLCOMPONENTREFERENCE, source.getStatementName()));
 			break;
 		case EXPRESSION_VALUE:
-			Expression_Value expression = (Expression_Value) last;
+			final Expression_Value expression = (Expression_Value) last;
 			switch (expression.getOperationType()) {
 			case APPLY_OPERATION:
 				if (!Type_type.TYPE_COMPONENT.equals(last.getExpressionReturntype(timestamp,
@@ -256,7 +256,7 @@ public final class Port_Utility {
 			case COMPONENT_CREATE_OPERATION:
 				break;
 			case VALUEOF_OPERATION:
-				IReferenceChain referenceChain = ReferenceChain.getInstance(
+				final IReferenceChain referenceChain = ReferenceChain.getInstance(
 								IReferenceChain.CIRCULARREFERENCE, true);
 				((ValueofExpression) expression).evaluateValue(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, referenceChain);
 				referenceChain.release();
@@ -310,29 +310,29 @@ public final class Port_Utility {
 	 * */
 	public static IType checkConnectionEndpoint(final CompilationTimeStamp timestamp, final Statement source, final Value componentReference,
 			final PortReference portReference, final boolean allowSystem) {
-		IType componentType = checkComponentReference(timestamp, source, componentReference, true, allowSystem);
+		final IType componentType = checkComponentReference(timestamp, source, componentReference, true, allowSystem);
 		if (portReference == null) {
 			return componentType;
 		}
 
 		if (componentType == null) {
 			// the component type can not be determined
-			List<ISubReference> subreferences = portReference.getSubreferences();
+			final List<ISubReference> subreferences = portReference.getSubreferences();
 			if (subreferences.size() > 1) {
 				// check array indices
 				for (int i = 0; i < subreferences.size(); i++) {
-					ISubReference subreference = subreferences.get(i);
+					final ISubReference subreference = subreferences.get(i);
 					if (subreference instanceof ArraySubReference) {
-						Value value = ((ArraySubReference) subreference).getValue();
+						final Value value = ((ArraySubReference) subreference).getValue();
 						value.setLoweridToReference(timestamp);
-						Type_type temporalType1 = value.getExpressionReturntype(timestamp,
+						final Type_type temporalType1 = value.getExpressionReturntype(timestamp,
 								Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 						switch (temporalType1) {
 						case TYPE_INTEGER: {
-							IReferenceChain referenceChain = ReferenceChain.getInstance(
+							final IReferenceChain referenceChain = ReferenceChain.getInstance(
 									IReferenceChain.CIRCULARREFERENCE, true);
-							IValue last1 = value.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE,
+							final IValue last1 = value.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE,
 									referenceChain);
 							referenceChain.release();
 							if (!last1.isUnfoldable(timestamp)
@@ -362,10 +362,10 @@ public final class Port_Utility {
 			return null;
 		}
 
-		ComponentTypeBody componentBody = ((Component_Type) componentType).getComponentBody();
+		final ComponentTypeBody componentBody = ((Component_Type) componentType).getComponentBody();
 		portReference.setBaseScope(componentBody);
 		portReference.setComponent((Component_Type) componentType);
-		Identifier portIdentifier = portReference.getId();
+		final Identifier portIdentifier = portReference.getId();
 
 		if (!componentBody.hasLocalAssignmentWithId(portIdentifier)) {
 			portReference.getLocation().reportSemanticError(
@@ -373,7 +373,7 @@ public final class Port_Utility {
 			return null;
 		}
 
-		Assignment assignment = componentBody.getLocalAssignmentById(portIdentifier);
+		final Assignment assignment = componentBody.getLocalAssignmentById(portIdentifier);
 		if (!Assignment_type.A_PORT.equals(assignment.getAssignmentType())) {
 			portReference.getLocation().reportSemanticError(
 					MessageFormat.format(DEFINITIONNOTPORT, portIdentifier.getDisplayName(), componentType.getTypename(),
@@ -381,7 +381,7 @@ public final class Port_Utility {
 			return null;
 		}
 
-		ArrayDimensions dimensions = ((Def_Port) assignment).getDimensions();
+		final ArrayDimensions dimensions = ((Def_Port) assignment).getDimensions();
 		if (dimensions != null) {
 			dimensions.checkIndices(timestamp, portReference, "port", false, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 		} else if (portReference.getSubreferences().size() > 1) {
@@ -392,9 +392,9 @@ public final class Port_Utility {
 
 		Port_Type portType = ((Def_Port) assignment).getType(timestamp);
 		if (portType != null) {
-			PortTypeBody portBody = portType.getPortBody();
+			final PortTypeBody portBody = portType.getPortBody();
 			if (PortType_type.PT_USER.equals(portBody.getPortType())) {
-				IType providerType = portBody.getProviderType();
+				final IType providerType = portBody.getProviderType();
 				if (providerType instanceof Port_Type) {
 					portType = (Port_Type) providerType;
 				}
@@ -424,14 +424,14 @@ public final class Port_Utility {
 			return null;
 		}
 
-		IType variableType = redirectSender.checkVariableReference(timestamp);
+		final IType variableType = redirectSender.checkVariableReference(timestamp);
 		if (variableType == null) {
 			return null;
 		}
 
 		if (addressType == null || !addressType.isIdentical(timestamp, variableType)) {
 			// the variableType must be a component type
-			IType last = variableType.getTypeRefdLast(timestamp);
+			final IType last = variableType.getTypeRefdLast(timestamp);
 
 			if (last.getIsErroneous(timestamp)) {
 				return null;
@@ -470,7 +470,7 @@ public final class Port_Utility {
 		if (portType != null) {
 			addressType = portType.getPortBody().getAddressType(timestamp);
 		} else if (source != null && source.getMyStatementBlock() != null) {
-			Module module = source.getMyStatementBlock().getModuleScope();
+			final Module module = source.getMyStatementBlock().getModuleScope();
 			if (module != null && module_type.TTCN3_MODULE.equals(module.getModuletype())) {
 				addressType = ((TTCN3Module) module).getAddressType(timestamp);
 			}
@@ -537,7 +537,7 @@ public final class Port_Utility {
 				if (addressType == null || !addressType.isCompatible(timestamp, fromClauseType, null, null, null)) {
 					// from_clause_type must be a component
 					// type
-					IType last = fromClauseType.getTypeRefdLast(timestamp);
+					final IType last = fromClauseType.getTypeRefdLast(timestamp);
 
 					if (last.getIsErroneous(timestamp)) {
 						fromClauseType = null;
@@ -561,7 +561,7 @@ public final class Port_Utility {
 		}
 
 		if (!senderRedirectChecked) {
-			IType senderRedirectType = checkSenderRedirect(timestamp, addressType, redirectSender);
+			final IType senderRedirectType = checkSenderRedirect(timestamp, addressType, redirectSender);
 			if (fromClauseType != null && senderRedirectType != null && !fromClauseType.isIdentical(timestamp, senderRedirectType)) {
 				final String message = MessageFormat
 						.format("The types in `from'' clause and `sender'' redirect are not the same: `{0}'' was expected instead of `{1}''",
@@ -594,7 +594,7 @@ public final class Port_Utility {
 		if (portType != null) {
 			addressType = portType.getPortBody().getAddressType(timestamp);
 		} else if (source != null) {
-			Module module = source.getMyStatementBlock().getModuleScope();
+			final Module module = source.getMyStatementBlock().getModuleScope();
 			if (module != null && module_type.TTCN3_MODULE.equals(module.getModuletype())) {
 				addressType = ((TTCN3Module) module).getAddressType(timestamp);
 			}
@@ -605,11 +605,11 @@ public final class Port_Utility {
 		} else {
 			// detect possible enumerated values (address may be an
 			// enumerated type)
-			IValue temp = addressType.checkThisValueRef(timestamp, toClause);
+			final IValue temp = addressType.checkThisValueRef(timestamp, toClause);
 			// try to figure out whether the argument is a component
 			// reference or an SUT address
 			boolean isAddress;
-			IType governor = temp.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final IType governor = temp.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			if (governor == null) {
 				isAddress = !Type_type.TYPE_COMPONENT.equals(temp.getExpressionReturntype(timestamp,
 						Expected_Value_type.EXPECTED_DYNAMIC_VALUE));
@@ -645,7 +645,7 @@ public final class Port_Utility {
 			return null;
 		}
 
-		IType variableType = redirectValue.checkVariableReference(timestamp);
+		final IType variableType = redirectValue.checkVariableReference(timestamp);
 		if (type != null && variableType != null && !type.isCompatible(timestamp, variableType, null, null, null)) {
 			redirectValue.getLocation().reportSemanticError(
 					MessageFormat.format(VALUEREDIRECTTYPEMISSMATCH, type.getTypename(), variableType.getTypename()));
@@ -713,9 +713,9 @@ public final class Port_Utility {
 			return result;
 		}
 
-		ITTCN3Template template = templateInstance.getTemplateBody();
+		final ITTCN3Template template = templateInstance.getTemplateBody();
 
-		ITTCN3Template temp = template.setLoweridToReference(timestamp);
+		final ITTCN3Template temp = template.setLoweridToReference(timestamp);
 
 		return temp.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 	}
@@ -734,7 +734,7 @@ public final class Port_Utility {
 	 *         a parameter of a sending statement
 	 * */
 	public static IType getOutgoingType(final CompilationTimeStamp timestamp, final TemplateInstance templateInstance) {
-		IType result = templateInstance.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
+		final IType result = templateInstance.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 
 		if (result != null) {
 			return result.getTypeRefdLast(timestamp);

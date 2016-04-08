@@ -71,6 +71,7 @@ public final class Undefined_Block_Value extends Value {
 
 	@Override
 	public void setLocation(final Location location) {
+		//Do nothing
 	}
 
 	@Override
@@ -419,7 +420,7 @@ public final class Undefined_Block_Value extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (realValue != null && !realValue.getIsErroneous(CompilationTimeStamp.getBaseTimestamp())) {
 			if (!realValue.accept(v)) {
 				return false;

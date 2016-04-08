@@ -321,7 +321,7 @@ public final class ControlPart extends Scope implements ILocateableNode, IAppend
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

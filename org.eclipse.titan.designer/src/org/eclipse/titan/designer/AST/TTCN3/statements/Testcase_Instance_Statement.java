@@ -67,7 +67,7 @@ public final class Testcase_Instance_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (testcaseReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -101,7 +101,7 @@ public final class Testcase_Instance_Statement extends Statement {
 			return;
 		}
 
-		Assignment assignment = testcaseReference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = testcaseReference.getRefdAssignment(timestamp, true);
 		if (assignment == null) {
 			return;
 		}
@@ -118,14 +118,14 @@ public final class Testcase_Instance_Statement extends Statement {
 
 		if (timerValue != null) {
 			timerValue.setLoweridToReference(timestamp);
-			Type_type temporalType = timerValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temporalType = timerValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 			switch (temporalType) {
 			case TYPE_REAL:
-				IValue last = timerValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+				final IValue last = timerValue.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 				if (!last.isUnfoldable(timestamp)) {
-					Real_Value real = (Real_Value) last;
-					double i = real.getValue();
+					final Real_Value real = (Real_Value) last;
+					final double i = real.getValue();
 					if (i < 0.0) {
 						timerValue.getLocation().reportSemanticError(
 								MessageFormat.format(NEGATIVEDURATION, real.createStringRepresentation()));
@@ -170,7 +170,7 @@ public final class Testcase_Instance_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (testcaseReference != null && !testcaseReference.accept(v)) {
 			return false;
 		}

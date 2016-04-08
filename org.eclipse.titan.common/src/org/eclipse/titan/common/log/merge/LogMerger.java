@@ -43,7 +43,7 @@ public class LogMerger {
 	 * @param monitor the progress monitor
 	 * @return {@code true} if the operation completed successfully, {@code false} otherwise
 	 */
-	public boolean merge(List<IFile> files, File outputFile, IProgressMonitor monitor) {
+	public boolean merge(final List<IFile> files, final File outputFile, final IProgressMonitor monitor) {
 		isErroneous = false;
 		FileUtils.deleteQuietly(outputFile);
 
@@ -72,11 +72,11 @@ public class LogMerger {
 		boolean dataProcessed = true;
 		long nofProcessedBytes = 0;
 		while (dataProcessed && !internalMonitor.isCanceled()) {
-			MergeAble earliestMergeable = getEarliestMergeAble(mergeAbles);
+			final MergeAble earliestMergeable = getEarliestMergeAble(mergeAbles);
 			dataProcessed = false;
 
 			if (earliestMergeable != null) {
-				String text = appendRecord(writer, earliestMergeable);
+				final String text = appendRecord(writer, earliestMergeable);
 				nofProcessedBytes += text.length();
 
 				if (nofProcessedBytes > tickSize) {
@@ -100,14 +100,14 @@ public class LogMerger {
 		return !isErroneous;
 	}
 
-	private String appendRecord(PrintWriter writer, MergeAble earliestMergeable) {
-		LogRecord record = earliestMergeable.getActualRecord();
+	private String appendRecord(final PrintWriter writer, final MergeAble earliestMergeable) {
+		final LogRecord record = earliestMergeable.getActualRecord();
 		writer.print(record.getTimestamp());
 		if (earliestMergeable.getComponentID() != null) {
 			writer.print(' ');
 			writer.print(earliestMergeable.getComponentID());
 		}
-		String text = record.getText();
+		final String text = record.getText();
 		writer.print(text);
 		if (text.charAt(text.length() - 1) != '\n') {
 			// If it does not end on a new line, than extend it to do so.
@@ -116,12 +116,12 @@ public class LogMerger {
 		return text;
 	}
 
-	private List<MergeAble> collectMergeAbles(List<IFile> files, File outputFile) {
+	private List<MergeAble> collectMergeAbles(final List<IFile> files, final File outputFile) {
 		final List<MergeAble> mergeAbles = new ArrayList<MergeAble>(files.size());
 		TimestampFormat commonFormat = null;
 		// try to open each file, and check if their timestamp format is the same.
 		final IPath outputPath = new Path(outputFile.getAbsolutePath());
-		for (IFile file : files) {
+		for (final IFile file : files) {
 			if (outputPath.equals(file.getLocation())) {
 				continue;
 			}
@@ -135,7 +135,7 @@ public class LogMerger {
 				isErroneous = true;
 				continue;
 			}
-			MergeAble mergeAble = new MergeAble(file, reader, true);
+			final MergeAble mergeAble = new MergeAble(file, reader, true);
 			if (mergeAble.hasNext()) {
 				if (commonFormat == null) {
 					commonFormat = mergeAble.getTimestampFormat();
@@ -174,7 +174,7 @@ public class LogMerger {
 		String smallestTimestamp = null;
 		MergeAble smallestMergeable = null;
 
-		for (MergeAble mergeAble : mergeAbles) {
+		for (final MergeAble mergeAble : mergeAbles) {
 			if (mergeAble.hasNext()) {
 				if (smallestTimestamp == null) {
 					smallestTimestamp = mergeAble.getActualRecord().getTimestamp();

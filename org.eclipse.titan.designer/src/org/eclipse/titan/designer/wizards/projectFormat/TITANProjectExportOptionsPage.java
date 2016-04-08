@@ -36,12 +36,15 @@ class TITANProjectExportOptionsPage extends WizardPage {
 	private boolean isSaveDefaultValues = false;
 	private Button packAllProjectsIntoOne;
 	private boolean isPackAllProjectsIntoOne = false;
+	private Button useTpdNameAttribute;
+	private boolean isUseTpdNameAttribute = false;
 	private IPreferencesService preferenceService = null;
 
-	public TITANProjectExportOptionsPage() {
+	public TITANProjectExportOptionsPage(final boolean useTpdName) {
 		super(TITLE);
 		preferenceService = Platform.getPreferencesService();
 		setExportPreferences();
+		isUseTpdNameAttribute = useTpdName;
 	}
 	
 	private void setExportPreferences(){
@@ -85,6 +88,10 @@ class TITANProjectExportOptionsPage extends WizardPage {
 
 	public boolean isPackAllProjectsIntoOne() {
 		return isPackAllProjectsIntoOne;
+	}
+	
+	public boolean isUseTpdNameAttribute() {
+		return isUseTpdNameAttribute;
 	}
 
 	@Override
@@ -148,6 +155,18 @@ class TITANProjectExportOptionsPage extends WizardPage {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				isPackAllProjectsIntoOne = packAllProjectsIntoOne.getSelection();
+			}
+		});
+		
+		useTpdNameAttribute = new Button(pageComposite, SWT.CHECK);
+		useTpdNameAttribute.setText("Export tpdName attribute to referenced projects");
+		useTpdNameAttribute.setToolTipText("See Referred project usage with –I switch section in the TITAN Reference guide");
+		useTpdNameAttribute.setEnabled(true);
+		useTpdNameAttribute.setSelection(isUseTpdNameAttribute);
+		useTpdNameAttribute.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				isUseTpdNameAttribute = useTpdNameAttribute.getSelection();
 			}
 		});
 

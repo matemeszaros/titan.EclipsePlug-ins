@@ -46,6 +46,7 @@ public class ExcludedResourcesPreferencePage extends FieldEditorPreferencePage i
 
 	@Override
 	public void dispose() {
+		//Do nothing
 	}
 
 	@Override

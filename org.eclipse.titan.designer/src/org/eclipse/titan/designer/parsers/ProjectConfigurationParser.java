@@ -45,6 +45,7 @@ import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.core.TITANNature;
 import org.eclipse.titan.designer.editors.EditorTracker;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
 import org.eclipse.titan.designer.editors.configeditor.ConfigFoldingSupport;

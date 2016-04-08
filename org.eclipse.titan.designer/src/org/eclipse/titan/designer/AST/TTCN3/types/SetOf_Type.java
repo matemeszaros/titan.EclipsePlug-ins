@@ -81,11 +81,7 @@ public final class SetOf_Type extends AbstractOfType {
 			//There is another chance to be compatible:
 			//If records of/sets of are strongly compatible, then the records of/sets of are compatible
 			IType last = getTypeRefdLast(timestamp);
-			if(! last.isStronglyCompatible(timestamp, lastOtherType, info, leftChain, rightChain)) {
-				return false;
-			} else {
-				return true;
-			}
+			return last.isStronglyCompatible(timestamp, lastOtherType, info, leftChain, rightChain);
 		}
 
 		switch (lastOtherType.getTypetype()) {
@@ -252,7 +248,7 @@ public final class SetOf_Type extends AbstractOfType {
 	}
 	
 	@Override
-	public boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
+	public boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, final TypeCompatibilityInfo info,
 			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain) {
 
 		IType lastOtherType = otherType.getTypeRefdLast(timestamp);

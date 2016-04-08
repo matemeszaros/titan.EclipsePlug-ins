@@ -48,8 +48,7 @@ public class PPDirectiveTokenFactory implements TokenFactory<CommonToken>{
 		t.setCharPositionInLine(charPositionInLine);
 		if ( text!=null ) {
 			t.setText(text);
-		}
-		else if ( copyText && source.b != null ) {
+		} else if ( copyText && source.b != null ) {
 			t.setText(source.b.getText(Interval.of(start,stop)));
 		}
 

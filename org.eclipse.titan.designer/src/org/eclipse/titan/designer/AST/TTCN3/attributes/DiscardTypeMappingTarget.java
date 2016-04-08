@@ -43,7 +43,7 @@ public final class DiscardTypeMappingTarget extends TypeMappingTarget {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// no members
 		return true;
 	}

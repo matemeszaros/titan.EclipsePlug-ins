@@ -19,7 +19,7 @@ public final class Assert {
 	 * @param message the exception message
 	 * @throws java.lang.IllegalArgumentException if the object is {@code null}
 	 */
-	public static void notNull(Object object, String message) {
+	public static void notNull(final Object object, final String message) {
 		if (object == null) {
 			throw new IllegalArgumentException(message);
 		}

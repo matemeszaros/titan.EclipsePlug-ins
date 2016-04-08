@@ -122,6 +122,7 @@ public final class TypingPage extends FieldEditorPreferencePage implements IWork
 
 	@Override
 	protected void createFieldEditors() {
+		//Do nothing
 	}
 
 	@Override

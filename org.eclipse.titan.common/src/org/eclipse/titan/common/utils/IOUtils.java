@@ -72,7 +72,7 @@ public final class IOUtils {
 	 * @param closeableArr the objects to close, may contain null or already closed objects
 	 */
 	public static void closeQuietly(final Closeable ... closeableArr) {
-		for (Closeable closeable : closeableArr) {
+		for (final Closeable closeable : closeableArr) {
 			closeQuietly(closeable);
 		}
 	}
@@ -85,9 +85,9 @@ public final class IOUtils {
 	 * @return the string read from the provided input stream.
 	 * */
 	public static String inputStreamToString(final InputStream input) throws IOException {
-		Reader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF8_KEY));
-		StringBuilder content = new StringBuilder();
-		char[] buffer = new char[1024];
+		final Reader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF8_KEY));
+		final StringBuilder content = new StringBuilder();
+		final char[] buffer = new char[1024];
 		int n;
 
 		while ((n = reader.read(buffer)) != -1) {

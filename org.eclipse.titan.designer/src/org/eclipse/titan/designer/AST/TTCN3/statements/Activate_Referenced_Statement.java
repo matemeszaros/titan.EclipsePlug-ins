@@ -65,7 +65,7 @@ public final class Activate_Referenced_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART1);
@@ -128,8 +128,8 @@ public final class Activate_Referenced_Statement extends Statement {
 			myStatementBlock.checkRunsOnScope(timestamp, type, this, STATEMENT_NAME);
 		}
 
-		ActualParameterList tempActualParameters = new ActualParameterList();
-		FormalParameterList formalParameterList = ((Altstep_Type) type).getFormalParameters();
+		final ActualParameterList tempActualParameters = new ActualParameterList();
+		final FormalParameterList formalParameterList = ((Altstep_Type) type).getFormalParameters();
 		if (formalParameterList.checkActualParameterList(timestamp, actualParameterList, tempActualParameters)) {
 			setIsErroneous();
 			return;
@@ -169,7 +169,7 @@ public final class Activate_Referenced_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (dereferredValue != null && !dereferredValue.accept(v)) {
 			return false;
 		}

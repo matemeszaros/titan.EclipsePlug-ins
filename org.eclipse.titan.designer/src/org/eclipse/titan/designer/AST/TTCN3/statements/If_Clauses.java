@@ -42,7 +42,7 @@ public final class If_Clauses extends ASTNode implements IIncrementallyUpdateabl
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = ifclauses.size(); i < size; i++) {
 			if (ifclauses.get(i) == child) {
@@ -198,7 +198,7 @@ public final class If_Clauses extends ASTNode implements IIncrementallyUpdateabl
 		}
 
 		for (int i = 0, size = ifclauses.size(); i < size; i++) {
-			If_Clause clause = ifclauses.get(i);
+			final If_Clause clause = ifclauses.get(i);
 
 			clause.updateSyntax(reparser, false);
 			reparser.updateLocation(clause.getLocation());
@@ -211,7 +211,7 @@ public final class If_Clauses extends ASTNode implements IIncrementallyUpdateabl
 			return;
 		}
 
-		for (If_Clause ic : ifclauses) {
+		for (final If_Clause ic : ifclauses) {
 			ic.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
@@ -236,9 +236,9 @@ public final class If_Clauses extends ASTNode implements IIncrementallyUpdateabl
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (ifclauses != null) {
-			for (If_Clause ic : ifclauses) {
+			for (final If_Clause ic : ifclauses) {
 				if (!ic.accept(v)) {
 					return false;
 				}

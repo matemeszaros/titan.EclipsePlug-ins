@@ -29,10 +29,12 @@ public final class ModuleParameterDataContentProvider implements IStructuredCont
 
 	@Override
 	public void dispose() {
+		//Do nothing
 	}
 
 	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+		//Do nothing
 	}
 
 }

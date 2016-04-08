@@ -125,7 +125,7 @@ public final class Exports extends ASTNode implements ILocateableNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// TODO
 		return true;
 	}

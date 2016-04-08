@@ -177,7 +177,7 @@ public final class ResourceExclusionHelper {
 				i++;
 			} else if (delimiter == c) {
 				results.add(tempResult.toString());
-				tempResult = new StringBuilder();
+				tempResult.setLength(0);
 				i++;
 			} else {
 				tempResult.append(c);

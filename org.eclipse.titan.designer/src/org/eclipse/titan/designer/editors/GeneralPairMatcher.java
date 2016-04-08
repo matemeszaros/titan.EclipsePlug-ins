@@ -17,7 +17,6 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.Interval;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
 
 /**
  * @author Kristof Szabados
@@ -32,7 +31,7 @@ public abstract class GeneralPairMatcher implements ICharacterPairMatcher {
 	protected int endPos;
 	protected int anchor;
 
-	protected abstract String getPertitioning();
+	protected abstract String getPartitioning();
 
 	@Override
 	public final void clear() {
@@ -65,7 +64,7 @@ public abstract class GeneralPairMatcher implements ICharacterPairMatcher {
 		partitioner = null;
 		if (document instanceof IDocumentExtension3) {
 			IDocumentExtension3 extension3 = (IDocumentExtension3) document;
-			partitioner = extension3.getDocumentPartitioner(getPertitioning());
+			partitioner = extension3.getDocumentPartitioner(getPartitioning());
 		} else {
 			partitioner = document.getDocumentPartitioner();
 		}

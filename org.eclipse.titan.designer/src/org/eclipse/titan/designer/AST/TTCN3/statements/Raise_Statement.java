@@ -92,7 +92,7 @@ public final class Raise_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -130,13 +130,13 @@ public final class Raise_Statement extends Statement {
 			return;
 		}
 
-		Port_Type portType = Port_Utility.checkPortReference(timestamp, this, portReference);
+		final Port_Type portType = Port_Utility.checkPortReference(timestamp, this, portReference);
 
 		IType signature = Port_Utility.checkSignatureReference(timestamp, signatureReference);
 
 		if (portType != null) {
-			PortTypeBody portTypeBody = portType.getPortBody();
-			TypeSet inSignatures = portTypeBody.getInSignatures();
+			final PortTypeBody portTypeBody = portType.getPortBody();
+			final TypeSet inSignatures = portTypeBody.getInSignatures();
 
 			if (OperationModes.OP_Message.equals(portTypeBody.getOperationMode())) {
 				portReference.getLocation().reportSemanticError(MessageFormat.format(RAISEONPORT, portType.getTypename()));
@@ -158,7 +158,7 @@ public final class Raise_Statement extends Statement {
 		IType exception = null;
 		boolean exceptionDetermined = false;
 		if (signature != null) {
-			SignatureExceptions exceptions = ((Signature_Type) signature).getSignatureExceptions();
+			final SignatureExceptions exceptions = ((Signature_Type) signature).getSignatureExceptions();
 
 			if (exceptions == null) {
 				signatureReference.getLocation().reportSemanticError(
@@ -172,7 +172,7 @@ public final class Raise_Statement extends Statement {
 					if (exception == null) {
 						parameter.getLocation().reportSemanticError(UNKNOWNEXCEPTIONTYPE);
 					} else {
-						int nofCompatibleTypes = exceptions.getNofCompatibleExceptions(timestamp, exception);
+						final int nofCompatibleTypes = exceptions.getNofCompatibleExceptions(timestamp, exception);
 						if (nofCompatibleTypes == 0) {
 							parameter.getLocation().reportSemanticError(
 									MessageFormat.format(TYPENOTONEXCEPTIONLIST, exception.getTypename(),
@@ -225,7 +225,7 @@ public final class Raise_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.TO);
 
 		return result;
@@ -277,7 +277,7 @@ public final class Raise_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

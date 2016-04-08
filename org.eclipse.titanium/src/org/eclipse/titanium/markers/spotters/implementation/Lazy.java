@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.commons.collections15.CollectionUtils;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
@@ -44,6 +43,8 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
  * the code might become faster if it is set as @lazy.
  * 
  * @author Peter Olah
+ * 
+ * TODO: does not check if the parameter is used as an actual parameter to a lazy formal parameter.
  */
 public class Lazy extends BaseModuleCodeSmellSpotter {
 	private static final String ERROR_MESSAGE = "The {0} parameter should {1}be @lazy";
@@ -168,6 +169,8 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 						}
 					}
 				}
+				
+				//TODO it would be more precise to check the actual parameters if parameterized references
 			}
 
 			return V_CONTINUE;
@@ -198,7 +201,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 						HashSet<FormalParameter> temp = nodes.get(index).collectRelevantReferences();
 
 						if (root instanceof StatementBlock || root instanceof Definition || root instanceof AltGuard) {
-							shouldBeEvaluated = new HashSet<FormalParameter>(CollectionUtils.union(shouldBeEvaluated, temp));
+							shouldBeEvaluated.addAll(temp);
 						} else {
 							if (((root instanceof If_Statement || root instanceof SelectCase_Statement) && nodeSize == 1)) {
 								break;
@@ -210,13 +213,14 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 							if (shouldBeEvaluated.size() == 0 && index == 0) {
 								shouldBeEvaluated.addAll(temp);
 							} else {
-								shouldBeEvaluated = new HashSet<FormalParameter>(CollectionUtils.intersection(shouldBeEvaluated, temp));
+								shouldBeEvaluated.retainAll(temp);
 							}
 						}
 					}
 				}
 
-				shouldBeEvaluated = new HashSet<FormalParameter>(CollectionUtils.union(tempStricts, CollectionUtils.union(shouldBeEvaluated, referencedFormalParameters)));
+				shouldBeEvaluated.addAll(tempStricts);
+				shouldBeEvaluated.addAll(referencedFormalParameters);
 			}
 
 			return shouldBeEvaluated;

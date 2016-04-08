@@ -27,14 +27,15 @@ import org.eclipse.titan.designer.AST.IType.ValueCheckingOptions;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Function_Type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 
 /**
@@ -236,6 +237,17 @@ public final class Def_ModulePar extends Definition {
 	}
 
 	@Override
+	public List<Integer> getPossibleExtensionStarterTokens() {
+		List<Integer> result = super.getPossibleExtensionStarterTokens();
+		
+		if (defaultValue == null) {
+			result.add(Ttcn3Lexer.ASSIGNMENTCHAR);
+		}
+
+		return result;
+	}
+
+	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
 			boolean enveloped = false;
@@ -324,7 +336,7 @@ public final class Def_ModulePar extends Definition {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

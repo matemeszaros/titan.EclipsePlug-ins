@@ -31,6 +31,7 @@ import org.eclipse.titan.designer.AST.ParameterisedSubReference;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
+import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Assignment;
@@ -48,8 +49,8 @@ import org.eclipse.titan.designer.AST.TTCN3.values.Enumerated_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Referenced_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
@@ -95,6 +96,19 @@ public final class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithCom
 	@Override
 	public final StringBuilder getProposalDescription(final StringBuilder builder) {
 		return builder.append("enumerated");
+	}
+
+	@Override
+	public void setMyScope(final Scope scope) {
+		super.setMyScope(scope);
+		if (enumerations != null) {
+			if(enumerations.enumItems1 != null) {
+				enumerations.enumItems1.setMyScope(scope);
+			}
+			if(enumerations.enumItems2 != null) {
+				enumerations.enumItems2.setMyScope(scope);
+			}
+		}
 	}
 
 	@Override
@@ -461,6 +475,17 @@ public final class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithCom
 						IMarker.SEVERITY_ERROR);
 			}
 		}
+		
+		if (enumerations != null) {
+			if(enumerations.enumItems1 != null) {
+				enumerations.enumItems1.setFullNameParent(this);
+				enumerations.enumItems1.setMyScope(getMyScope());
+			}
+			if(enumerations.enumItems2 != null) {
+				enumerations.enumItems2.setFullNameParent(this);
+				enumerations.enumItems2.setMyScope(getMyScope());
+			}
+		}
 	}
 	
 	@Override
@@ -571,7 +596,7 @@ public final class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithCom
 	}
 
 	@Override
-	protected final boolean memberAccept(ASTVisitor v) {
+	protected final boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}
@@ -587,7 +612,7 @@ public final class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithCom
 	}
 
 	@Override
-	public final Identifier getComponentIdentifierByName(Identifier identifier) {
+	public final Identifier getComponentIdentifierByName(final Identifier identifier) {
 		final EnumItem enumItem = getEnumItemWithName(identifier);
 		return enumItem == null ? null : enumItem.getId();
 	}

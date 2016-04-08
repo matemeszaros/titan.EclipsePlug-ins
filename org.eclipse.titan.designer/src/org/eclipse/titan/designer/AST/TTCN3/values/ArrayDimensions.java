@@ -53,7 +53,7 @@ public final class ArrayDimensions extends ASTNode implements IIncrementallyUpda
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0; i < dimensions.size(); i++) {
 			if (dimensions.get(i) == child) {
@@ -189,7 +189,7 @@ public final class ArrayDimensions extends ASTNode implements IIncrementallyUpda
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (dimensions != null) {
 			for (ArrayDimension dim : dimensions) {
 				if (!dim.accept(v)) {

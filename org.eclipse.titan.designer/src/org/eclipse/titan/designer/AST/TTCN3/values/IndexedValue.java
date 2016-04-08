@@ -128,7 +128,7 @@ public final class IndexedValue extends ASTNode implements ILocateableNode, IInc
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (index!=null && !index.accept(v)) {
 			return false;
 		}

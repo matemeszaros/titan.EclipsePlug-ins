@@ -25,25 +25,25 @@ public class SyntacticErrorStorage {
 	public final ExceptionType exceptionType;
 
 	public enum ExceptionType {
-		LexerNoViableAltException, NoViableAltException, InputMismatchException, FailedPredicateException, InvalidExceptionType
-	};
+		LEXER_NOVIABLEALT_EXCEPTION, NOVIABLEALT_EXCEPTION, INPUTMISMATCH_EXCEPTION, FAILEDPREDICATE_EXCEPTION, INVALID_EXCEPTIONTYPE
+	}
 
-	public SyntacticErrorStorage(final int lineNumber, final int charStart, final int charEnd, final String message, RecognitionException e) {
+	public SyntacticErrorStorage(final int lineNumber, final int charStart, final int charEnd, final String message, final RecognitionException e) {
 		this.lineNumber = lineNumber;
 		this.charStart = charStart;
 		this.charEnd = charEnd;
 		this.message = message;
 
 		if (e instanceof LexerNoViableAltException) {
-			exceptionType = ExceptionType.LexerNoViableAltException;
+			exceptionType = ExceptionType.LEXER_NOVIABLEALT_EXCEPTION;
 		} else if (e instanceof NoViableAltException) {
-			exceptionType = ExceptionType.NoViableAltException;
+			exceptionType = ExceptionType.NOVIABLEALT_EXCEPTION;
 		} else if (e instanceof FailedPredicateException) {
-			exceptionType = ExceptionType.FailedPredicateException;
+			exceptionType = ExceptionType.FAILEDPREDICATE_EXCEPTION;
 		} else if (e instanceof InputMismatchException) {
-			exceptionType = ExceptionType.InputMismatchException;
+			exceptionType = ExceptionType.INPUTMISMATCH_EXCEPTION;
 		} else {
-			exceptionType = ExceptionType.InvalidExceptionType;
+			exceptionType = ExceptionType.INVALID_EXCEPTIONTYPE;
 		}
 	}
 }

@@ -65,7 +65,7 @@ public class NewTITANProjectImportWizard extends BasicNewResourceWizard implemen
 
 					try {
 						result = tpdImporter.internalFinish(mainPage.getProjectFile(), optionsPage.isSkipExistingProjects(),
-								optionsPage.isOpenPropertiesForAllImports(), projectsCreated, monitor);
+								optionsPage.isOpenPropertiesForAllImports(), projectsCreated, monitor, mainPage.getSearchPaths());
 					} catch (Exception e) {
 						ErrorReporter.logExceptionStackTrace(e);
 						result = false;

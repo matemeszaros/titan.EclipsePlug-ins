@@ -270,16 +270,13 @@ public final class ProjectBasedBuilder {
 	}
 
 	/**
-	 * Sets for project if it should be forced to be build itself.
+	 * Sets for project that it should be forced to build itself.
 	 * 
 	 * @param project
 	 *                the project to set this attribute for.
-	 * @param value
-	 *                true if the project should be forced to rebuild, false
-	 *                otherwise.
 	 * */
-	public static void setForcedBuild(final IProject project, final Boolean value) {
-		FORCED_BUILD_SET.put(project, value);
+	public static void setForcedBuild(final IProject project) {
+		FORCED_BUILD_SET.put(project, Boolean.TRUE);
 	}
 
 	public static Boolean getForcedBuild(final IProject project) {
@@ -290,17 +287,18 @@ public final class ProjectBasedBuilder {
 		return Boolean.FALSE;
 	}
 
+	public static void clearForcedBuild(final IProject project) {
+		FORCED_BUILD_SET.remove(project);
+	}
+
 	/**
-	 * Sets for project if it should be regenerate its makefile.
+	 * Sets for project that it should regenerate its makefile.
 	 * 
 	 * @param project
 	 *                the project to set this attribute for.
-	 * @param value
-	 *                true if the project should regenerate its MAkefile,
-	 *                false otherwise.
 	 * */
-	public static void setForcedMakefileRebuild(final IProject project, final Boolean value) {
-		FORCED_MAKEFILE_REBUILD_SET.put(project, value);
+	public static void setForcedMakefileRebuild(final IProject project) {
+		FORCED_MAKEFILE_REBUILD_SET.put(project, Boolean.TRUE);
 	}
 
 	public static Boolean getForcedMakefileRebuild(final IProject project) {
@@ -309,6 +307,10 @@ public final class ProjectBasedBuilder {
 		}
 
 		return Boolean.FALSE;
+	}
+	
+	public static void clearForcedMakefileRebuild(final IProject project) {
+		FORCED_MAKEFILE_REBUILD_SET.remove(project);
 	}
 
 	/**

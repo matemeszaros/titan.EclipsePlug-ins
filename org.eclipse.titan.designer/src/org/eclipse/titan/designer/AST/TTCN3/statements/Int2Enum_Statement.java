@@ -59,12 +59,14 @@ public class Int2Enum_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
+
 		if (value == child) {
 			return builder.append(FULLNAMEPART1);
 		} else if (reference == child) {
 			return builder.append(FULLNAMEPART2);
 		}
+
 		return builder;
 	}
 
@@ -80,14 +82,14 @@ public class Int2Enum_Statement extends Statement {
 	}
 
 	@Override
-	public void check(CompilationTimeStamp timestamp) {
+	public void check(final CompilationTimeStamp timestamp) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
 
 		if (value != null) {
 			value.setLoweridToReference(timestamp);
-			Type_type temporalType = value.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final Type_type temporalType = value.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			switch (temporalType) {
 			case TYPE_INTEGER:
 			case TYPE_INTEGER_A:
@@ -105,7 +107,7 @@ public class Int2Enum_Statement extends Statement {
 		}
 
 		if (reference != null) {
-			IType refType = reference.checkVariableReference(timestamp).getTypeRefdLast(timestamp);
+			final IType refType = reference.checkVariableReference(timestamp).getTypeRefdLast(timestamp);
 			if (Type_type.TYPE_TTCN3_ENUMERATED != refType.getTypetype() && !isErroneous) {
 				value.getLocation().reportSemanticError(OPERANDERROR2);
 				setIsErroneous();
@@ -116,7 +118,7 @@ public class Int2Enum_Statement extends Statement {
 	}
 
 	@Override
-	public void updateSyntax(TTCN3ReparseUpdater reparser, boolean isDamaged) throws ReParseException {
+	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
 			throw new ReParseException();
 		}
@@ -141,7 +143,7 @@ public class Int2Enum_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null && !value.accept(v)) {
 			return false;
 		}

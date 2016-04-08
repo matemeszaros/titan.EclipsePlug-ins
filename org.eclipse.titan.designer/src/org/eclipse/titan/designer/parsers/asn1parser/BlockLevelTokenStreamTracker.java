@@ -68,7 +68,9 @@ public class BlockLevelTokenStreamTracker extends BufferedTokenStream {
 				assert(true); // TODO: remove it if it proves OK (in Lexer done it)
 			} else if (t.getType() == Asn1Lexer.BEGINCHAR) {
 				boolean exit = getBlock(first);
-				if (exit) return ++i;
+				if (exit) {
+					return ++i;
+				}
 				++i;
 				--n;
 			} else {

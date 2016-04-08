@@ -9,34 +9,17 @@ package org.eclipse.titan.designer.editors.ttcnppeditor;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IPredicateRule;
-import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
-import org.eclipse.jface.text.rules.SingleLineRule;
-import org.eclipse.jface.text.rules.Token;
 
 /**
  * @author Kristof Szabados
  * */
 public final class PartitionScanner extends RuleBasedPartitionScanner {
-	public static final String TTCN3_PARTITIONING = "__ttcn3_partitioning";
-	public static final String MULTI_LINE_COMMENT = "__ttcn3_multi_line_comment";
-	public static final String SINGLE_LINE_COMMENT = "__ttcn3_single_line_comment";
+	public static final String TTCNPP_PARTITIONING = "__ttcnpp_partitioning";
 
-	public static final String[] PARTITION_TYPES = new String[] { 
-		IDocument.DEFAULT_CONTENT_TYPE, 
-		PartitionScanner.SINGLE_LINE_COMMENT,
-		PartitionScanner.MULTI_LINE_COMMENT
-		
-		};
+	static final String[] PARTITION_TYPES = new String[] { IDocument.DEFAULT_CONTENT_TYPE, };
 
 	public PartitionScanner() {
-		IToken multiLineComment = new Token(PartitionScanner.MULTI_LINE_COMMENT);
-		IToken singleLineComment = new Token(PartitionScanner.SINGLE_LINE_COMMENT);
-		fRules = new IPredicateRule[] { 
-				new SingleLineRule("//","\n",singleLineComment, '\0',true),
-				new MultiLineRule("/*", "*/", multiLineComment, '\0', true)
-				
-				};
+		fRules = new IPredicateRule[0];
 	}
 }

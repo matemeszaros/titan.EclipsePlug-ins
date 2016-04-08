@@ -21,10 +21,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.path.TITANPathUtilities;
+import org.eclipse.titan.designer.properties.data.ProjectBuildPropertyData;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -132,8 +134,15 @@ public class TITANProjectExportWizard extends Wizard implements IExportWizard {
 		mainPage.setTitle(NEWPROJECT_TITLE);
 		mainPage.setDescription(NEWPROJECT_DESCRIPTION);
 		addPage(mainPage);
-
-		optionsPage = new TITANProjectExportOptionsPage();
+		boolean useTpdName = false;
+		 try {
+			 useTpdName = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+					ProjectBuildPropertyData.USE_TPD_NAME)) != null;
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace(e);
+		};
+		optionsPage = new TITANProjectExportOptionsPage(useTpdName);
+		
 		addPage(optionsPage);
 	}
 
@@ -166,6 +175,7 @@ public class TITANProjectExportWizard extends Wizard implements IExportWizard {
 		exporter.setExcludeLinkedContents(optionsPage.isExcludeLinkedContents());
 		exporter.setSaveDefaultValues(optionsPage.isSaveDefaultValues());
 		exporter.setPackAllProjectsIntoOne(optionsPage.isPackAllProjectsIntoOne());
+		exporter.setUseTpdNameAttribute(optionsPage.isUseTpdNameAttribute());
 
 		return exporter.saveAll();
 		

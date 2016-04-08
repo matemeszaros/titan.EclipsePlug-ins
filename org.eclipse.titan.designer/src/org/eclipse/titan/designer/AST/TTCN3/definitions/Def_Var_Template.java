@@ -28,13 +28,14 @@ import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Template_type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -304,6 +305,17 @@ public final class Def_Var_Template extends Definition {
 	}
 
 	@Override
+	public List<Integer> getPossibleExtensionStarterTokens() {
+		List<Integer> result = super.getPossibleExtensionStarterTokens();
+		
+		if (initialValue == null) {
+			result.add(Ttcn3Lexer.ASSIGNMENTCHAR);
+		}
+
+		return result;
+	}
+
+	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
 			boolean enveloped = false;
@@ -391,7 +403,7 @@ public final class Def_Var_Template extends Definition {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

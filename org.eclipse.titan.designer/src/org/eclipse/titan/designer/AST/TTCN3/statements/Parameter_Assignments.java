@@ -36,7 +36,7 @@ public final class Parameter_Assignments extends ASTNode implements IIncremental
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0; i < parameterAssignments.size(); i++) {
 			if (parameterAssignments.get(i) == child) {
@@ -76,7 +76,7 @@ public final class Parameter_Assignments extends ASTNode implements IIncremental
 		}
 
 		for (int i = 0, size = parameterAssignments.size(); i < size; i++) {
-			Parameter_Assignment assignment = parameterAssignments.get(i);
+			final Parameter_Assignment assignment = parameterAssignments.get(i);
 
 			assignment.updateSyntax(reparser, isDamaged);
 			reparser.updateLocation(assignment.getLocation());
@@ -89,15 +89,15 @@ public final class Parameter_Assignments extends ASTNode implements IIncremental
 			return;
 		}
 
-		for (Parameter_Assignment pa : parameterAssignments) {
+		for (final Parameter_Assignment pa : parameterAssignments) {
 			pa.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (parameterAssignments != null) {
-			for (Parameter_Assignment pa : parameterAssignments) {
+			for (final Parameter_Assignment pa : parameterAssignments) {
 				if (!pa.accept(v)) {
 					return false;
 				}

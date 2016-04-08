@@ -110,7 +110,7 @@ public final class ComponentTypeList extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentTypes != null) {
 			for (ComponentType ct : componentTypes) {
 				if (!ct.accept(v)) {

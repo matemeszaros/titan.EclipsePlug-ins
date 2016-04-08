@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.Activator;
-import org.eclipse.titan.designer.editors.IndentationSupport;
+import org.eclipse.titan.designer.editors.actions.IndentationSupport;
 import org.eclipse.titan.designer.preferences.PreferenceConstantValues;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -110,6 +110,7 @@ public final class IndentationPage extends FieldEditorPreferencePage implements 
 
 	@Override
 	protected void createFieldEditors() {
+		//Do nothing
 	}
 
 	@Override

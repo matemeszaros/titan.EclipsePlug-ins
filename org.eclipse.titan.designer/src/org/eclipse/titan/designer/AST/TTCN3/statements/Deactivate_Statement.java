@@ -54,7 +54,7 @@ public final class Deactivate_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (deactivate == child) {
 			return builder.append(FULLNAMEPART);
@@ -84,7 +84,7 @@ public final class Deactivate_Statement extends Statement {
 		}
 
 		deactivate.setLoweridToReference(timestamp);
-		Type_type temporalType = deactivate.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+		final Type_type temporalType = deactivate.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 		switch (temporalType) {
 		case TYPE_DEFAULT:
@@ -102,7 +102,7 @@ public final class Deactivate_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.LPAREN);
 
 		return result;
@@ -128,7 +128,7 @@ public final class Deactivate_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (deactivate != null && !deactivate.accept(v)) {
 			return false;
 		}

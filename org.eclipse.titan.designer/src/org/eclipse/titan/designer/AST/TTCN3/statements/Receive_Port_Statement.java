@@ -116,7 +116,7 @@ public final class Receive_Port_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -194,11 +194,11 @@ public final class Receive_Port_Statement extends Statement {
 	public static void checkReceivingStatement(final CompilationTimeStamp timestamp, final Statement origin, final String statementName,
 			final Reference portReference, final TemplateInstance receiveParameter, final TemplateInstance fromClause,
 			final Reference redirectValue, final Reference redirectSender) {
-		Port_Type portType = Port_Utility.checkPortReference(timestamp, origin, portReference);
+		final Port_Type portType = Port_Utility.checkPortReference(timestamp, origin, portReference);
 
 		if (receiveParameter == null) {
 			if (portType != null && Type_type.TYPE_PORT.equals(portType.getTypetype())) {
-				PortTypeBody body = portType.getPortBody();
+				final PortTypeBody body = portType.getPortBody();
 				if (OperationModes.OP_Procedure.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
 							MessageFormat.format(MESSAGEBASEOPERATIONONPROCEDUREPORT, statementName,
@@ -221,8 +221,8 @@ public final class Receive_Port_Statement extends Statement {
 
 			if (portType != null) {
 				// the port type is known
-				PortTypeBody portTypeBody = portType.getPortBody();
-				TypeSet inMessages = portTypeBody.getInMessages();
+				final PortTypeBody portTypeBody = portType.getPortBody();
+				final TypeSet inMessages = portTypeBody.getInMessages();
 				if (OperationModes.OP_Procedure.equals(portTypeBody.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
 							MessageFormat.format(RECEIVEONPORT, statementName, portType.getTypename()));
@@ -235,7 +235,7 @@ public final class Receive_Port_Statement extends Statement {
 						if (messageType == null) {
 							receiveParameter.getLocation().reportSemanticError(UNKNOWNINCOMINGMESSAGE);
 						} else {
-							int nofCompatibleTypes = inMessages.getNofCompatibleTypes(timestamp, messageType);
+							final int nofCompatibleTypes = inMessages.getNofCompatibleTypes(timestamp, messageType);
 							if (nofCompatibleTypes == 0) {
 								receiveParameter.getLocation().reportSemanticError(
 										MessageFormat.format(TYPENOTPRESENT, messageType.getTypename(),
@@ -283,7 +283,7 @@ public final class Receive_Port_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.SENDER);
 
 		if (redirectValue != null) {
@@ -359,7 +359,7 @@ public final class Receive_Port_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

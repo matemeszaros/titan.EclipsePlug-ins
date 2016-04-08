@@ -32,9 +32,9 @@ import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.core.LoadBalancingUtilities;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -137,6 +137,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	}
 
 	protected void removeGroups() {
+		//Do nothing
 	}
 
 	@Override
@@ -629,24 +630,25 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			Definition temp = iterator.next();
 			if (temp.getParentGroup() == null) {
 				Location tempLocation = temp.getLocation();
-				if (reparser.envelopsDamage(tempLocation)) {
+				Location comulativeLocation = temp.getComulativeDefinitionLocation();
+				if (tempLocation.equals(comulativeLocation) && reparser.envelopsDamage(tempLocation)) {
 					enveloped = true;
 					leftBoundary = tempLocation.getOffset();
 					rightBoundary = tempLocation.getEndOffset();
-				} else if (reparser.isDamaged(tempLocation)) {
+				} else if (reparser.isDamaged(comulativeLocation)) {
 					nofDamaged++;
-					if (reparser.getDamageStart() == tempLocation.getEndOffset()) {
+					if (reparser.getDamageStart() == comulativeLocation.getEndOffset()) {
 						lastAppendableBeforeChange = temp;
-					} else if (reparser.getDamageEnd() == tempLocation.getOffset()) {
+					} else if (reparser.getDamageEnd() == comulativeLocation.getOffset()) {
 						lastPrependableBeforeChange = temp;
 					}
 				} else {
-					if (tempLocation.getEndOffset() < damageOffset && tempLocation.getEndOffset() > leftBoundary) {
-						leftBoundary = tempLocation.getEndOffset() + 1;
+					if (comulativeLocation.getEndOffset() < damageOffset && comulativeLocation.getEndOffset() > leftBoundary) {
+						leftBoundary = comulativeLocation.getEndOffset() + 1;
 						lastAppendableBeforeChange = temp;
 					}
-					if (tempLocation.getOffset() >= damageOffset && tempLocation.getOffset() < rightBoundary) {
-						rightBoundary = tempLocation.getOffset();
+					if (comulativeLocation.getOffset() >= damageOffset && comulativeLocation.getOffset() < rightBoundary) {
+						rightBoundary = comulativeLocation.getOffset();
 						lastPrependableBeforeChange = temp;
 					}
 				}
@@ -1000,7 +1002,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

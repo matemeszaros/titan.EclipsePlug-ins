@@ -28,12 +28,12 @@ public final class Reference_InternalLogArgument extends InternalLogArgument {
 	}
 
 	@Override
-	public void checkRecursions(CompilationTimeStamp timestamp, IReferenceChain referenceChain) {
+	public void checkRecursions(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		if (reference == null) {
 			return;
 		}
 
-		Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = reference.getRefdAssignment(timestamp, true);
 		if (assignment != null) {
 			referenceChain.markState();
 			referenceChain.add(assignment);

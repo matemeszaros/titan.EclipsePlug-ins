@@ -17,7 +17,7 @@ public class EnvironmentVariableResolver {
 	private String variableStart;
 	private String variableEnd;
 
-	private EnvironmentVariableResolver(Pattern pattern, String variableStart, String variableEnd) {
+	private EnvironmentVariableResolver(final Pattern pattern, final String variableStart, final String variableEnd) {
 		this.pattern = pattern;
 		this.variableStart = variableStart;
 		this.variableEnd = variableEnd;
@@ -43,15 +43,15 @@ public class EnvironmentVariableResolver {
 		return resolve(original, envVariables, true);
 	}
 
-	private String resolve(final String original, final Map<?, ?> envVariables, boolean ignoreErrors) {
+	private String resolve(final String original, final Map<?, ?> envVariables, final boolean ignoreErrors) {
 		final Matcher matcher = pattern.matcher(original);
 		final StringBuffer builder = new StringBuffer(original.length());
 		boolean result2 = matcher.find();
 		while (result2) {
-			String keyWithStartEnd = matcher.group();
-			String key = keyWithStartEnd.substring(variableStart.length(), keyWithStartEnd.length() - 1);
+			final String keyWithStartEnd = matcher.group();
+			final String key = keyWithStartEnd.substring(variableStart.length(), keyWithStartEnd.length() - 1);
 			if (envVariables.containsKey(key)) {
-				String result3 = (String) envVariables.get(key);
+				final String result3 = (String) envVariables.get(key);
 				matcher.appendReplacement(builder, result3.replace("\\", "\\\\").replace("$", "\\$"));
 			} else {
 				if (ignoreErrors) {
@@ -67,7 +67,7 @@ public class EnvironmentVariableResolver {
 	}
 
 	public static class VariableNotFoundException extends Exception {
-		public VariableNotFoundException(String variableName) {
+		public VariableNotFoundException(final String variableName) {
 			super("Variable " + variableName + " cannot be resolved.");
 		}
 	}

@@ -122,7 +122,7 @@ public final class TypeSet extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (types != null) {
 			for (IType t : types) {
 				if (!t.accept(v)) {

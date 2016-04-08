@@ -27,8 +27,8 @@ import org.eclipse.titan.designer.AST.ModuleImportationChain;
 import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.core.LoadBalancingUtilities;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
@@ -382,7 +382,7 @@ public final class Imports extends ASTNode implements IOutlineElement, ILocateab
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (importedModules_v != null) {
 			for (ImportModule im : importedModules_v) {
 				if (!im.accept(v)) {

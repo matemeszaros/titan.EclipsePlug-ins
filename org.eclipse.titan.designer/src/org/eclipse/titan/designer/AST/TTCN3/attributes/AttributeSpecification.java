@@ -24,7 +24,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * */
 public final class AttributeSpecification implements ILocateableNode, IIncrementallyUpdateable {
-	private String specification;
+	private final String specification;
 
 	/**
 	 * The location of the whole specification. This location encloses the

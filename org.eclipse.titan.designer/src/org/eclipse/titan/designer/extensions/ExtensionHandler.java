@@ -50,7 +50,7 @@ public enum ExtensionHandler {
 		final IProgressMonitor pm = (monitor == null) ? new NullProgressMonitor() : monitor;
 		ISafeRunnable runnable = new ISafeRunnable() {
 			@Override
-			public void handleException(Throwable e) {
+			public void handleException(final Throwable e) {
 				ErrorReporter.logExceptionStackTrace("Error in client plugin while processing project `" + project.getName() + "'", e);
 			}
 

@@ -97,7 +97,7 @@ public final class ExtensionAdditionGroup extends ExtensionAddition {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (versionNumber != null && !versionNumber.accept(v)) {
 			return false;
 		}

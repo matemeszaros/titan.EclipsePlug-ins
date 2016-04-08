@@ -301,7 +301,7 @@ public final class MakefileCreationData {
 		return getDefaultTargetExecutableName(project, false);
 	}
 
-	public static String getDefaultTargetExecutableName(final IProject project, boolean isAbsolute) {
+	public static String getDefaultTargetExecutableName(final IProject project, final boolean isAbsolute) {
 		StringBuilder name = new StringBuilder();
 
 		//Absolute part of path
@@ -316,9 +316,8 @@ public final class MakefileCreationData {
 				} else {
 					TITANDebugConsole.println("Unable to get project location, returning relative path to executable");
 				}
-			}
-			catch(CoreException ce) {
-				ce.printStackTrace();
+			} catch(CoreException ce) {
+				ErrorReporter.logExceptionStackTrace(ce);
 				TITANDebugConsole.println("Exception while determining project location, returning relative path to executable");
 			}
 		}

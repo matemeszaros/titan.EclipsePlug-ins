@@ -17,7 +17,7 @@ import org.eclipse.titan.designer.AST.Reference;
  * */
 public final class UserPortTypeAttribute extends PortTypeAttribute {
 
-	private Reference reference;
+	private final Reference reference;
 
 	/** The in-mappings, can be null */
 	private TypeMappings inMappings;

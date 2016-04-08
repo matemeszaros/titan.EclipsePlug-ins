@@ -90,7 +90,7 @@ public final class IntegerLimit extends LimitType {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}

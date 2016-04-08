@@ -29,89 +29,89 @@
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoringAction"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.actions.RenameRefactoringAction"
       id="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoringAction"
       name="Rename refactoring" />
   </extension>
   <extension point="org.eclipse.ui.commands">
-    <command defaultHandler="org.eclipse.titan.designer.editors.FirstCharAction"
+    <command defaultHandler="org.eclipse.titan.designer.editors.actions.FirstCharAction"
       id="org.eclipse.titan.designer.editors.FirstCharAction" name="Line Start" />
   </extension>
   <extension point="org.eclipse.ui.commands">
-    <command defaultHandler="org.eclipse.titan.designer.editors.LastCharAction"
+    <command defaultHandler="org.eclipse.titan.designer.editors.actions.LastCharAction"
       id="org.eclipse.titan.designer.editors.LastCharAction" name="Line End" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoringAction"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.actions.RenameRefactoringAction"
       id="org.eclipse.titan.designer.editors.ttcn3editor.RenameRefactoringAction"
       name="Rename refactoring" />
   </extension>
 
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.configeditor.FirstCharAction"
+      defaultHandler="org.eclipse.titan.designer.editors.configeditor.actions.FirstCharAction"
       id="org.eclipse.titan.designer.editors.configeditor.FirstCharAction"
       name="Line Start" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.configeditor.LastCharAction"
+      defaultHandler="org.eclipse.titan.designer.editors.configeditor.actions.LastCharAction"
       id="org.eclipse.titan.designer.editors.configeditor.LastCharAction"
       name="Line End" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoringAction"
+      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.actions.RenameRefactoringAction"
       id="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoringAction"
       name="Rename refactoring" />
   </extension>
 
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.actions.OpenDeclaration"
       id="org.eclipse.titan.designer.editors.ttcn3editor.OpenDeclaration"
       name="Open Declaration" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.actions.FindReferences"
       id="org.eclipse.titan.designer.editors.ttcn3editor.FindReferences"
       name="Find References" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
+      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.actions.OpenDeclaration"
       id="org.eclipse.titan.designer.editors.asn1editor.OpenDeclaration"
       name="Open Declaration" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
+      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.actions.FindReferences"
       id="org.eclipse.titan.designer.editors.asn1editor.FindReferences"
       name="Find References" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoringAction"
+      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.actions.RenameRefactoringAction"
       id="org.eclipse.titan.designer.editors.asn1editor.RenameRefactoring"
       name="Rename refactoring" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
+      defaultHandler="org.eclipse.titan.designer.editors.configeditor.actions.OpenDeclaration"
       id="org.eclipse.titan.designer.editors.configeditor.OpenDeclaration"
       name="Open Declaration" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.actions.OpenDeclaration"
       id="org.eclipse.titan.designer.editors.ttcnppeditor.OpenDeclaration"
       name="Open Declaration" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.actions.FindReferences"
       id="org.eclipse.titan.designer.editors.ttcnppeditor.FindReferences"
       name="Find References" />
   </extension>
@@ -164,25 +164,25 @@
 
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.IndentAction"
+      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.actions.IndentAction"
       id="org.eclipse.titan.designer.editors.asn1editor.IndentAction"
       name="IndentAction" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.configeditor.IndentAction"
+      defaultHandler="org.eclipse.titan.designer.editors.configeditor.actions.IndentAction"
       id="org.eclipse.titan.designer.editors.configeditor.IndentAction"
       name="IndentAction" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.IndentAction"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.actions.IndentAction"
       id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3IndentAction"
       name="IndentAction" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.IndentAction"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.actions.IndentAction"
       id="org.eclipse.titan.designer.editors.ttcnppeditor.IndentAction"
       name="IndentAction" />
   </extension>
@@ -190,25 +190,25 @@
 
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.GotoMatchingBracketAction"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcn3editor.actions.GotoMatchingBracketAction"
       id="org.eclipse.titan.designer.editors.ttcn3editor.TTCN3GotoMatchingBracketAction"
       name="Go to Matching Bracket" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.GotoMatchingBracketAction"
+      defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.actions.GotoMatchingBracketAction"
       id="org.eclipse.titan.designer.editors.ttcnppeditor.TTCNPPGotoMatchingBracketAction"
       name="Go to Matching Bracket" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.configeditor.GotoMatchingBracketAction"
+      defaultHandler="org.eclipse.titan.designer.editors.configeditor.actions.GotoMatchingBracketAction"
       id="org.eclipse.titan.designer.editors.configeditor.ConfigGotoMatchingBracketAction"
       name="Go to Matching Bracket" />
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
-      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.GotoMatchingBracketAction"
+      defaultHandler="org.eclipse.titan.designer.editors.asn1editor.actions.GotoMatchingBracketAction"
       id="org.eclipse.titan.designer.editors.asn1editor.ASN1GotoMatchingBracketAction"
       name="Go to Matching Bracket" />
     <command defaultHandler="org.eclipse.titan.designer.actions.FindDefinitionAction"

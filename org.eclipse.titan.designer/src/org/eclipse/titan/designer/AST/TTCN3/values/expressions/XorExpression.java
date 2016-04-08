@@ -54,7 +54,7 @@ public final class XorExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append('(').append(value1.createStringRepresentation());
 		builder.append(" xor ");
 		builder.append(value2.createStringRepresentation()).append(')');
@@ -74,7 +74,7 @@ public final class XorExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (value1 == child) {
 			return builder.append(OPERAND1);
@@ -233,7 +233,7 @@ public final class XorExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value1 != null && !value1.accept(v)) {
 			return false;
 		}

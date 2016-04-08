@@ -110,6 +110,7 @@ public final class WithAttributesPath implements ILocateableNode, IIncrementally
 
 	@Override
 	public void setLocation(final Location location) {
+		//Do nothing
 	}
 
 	/**
@@ -205,8 +206,8 @@ public final class WithAttributesPath implements ILocateableNode, IIncrementally
 				}
 				break;
 			case Optional_Attribute:
-				AttributeSpecification attributeSpecification = tempAttribute.getAttributeSpecification();
-				String tempSpecification = attributeSpecification.getSpecification();
+				final AttributeSpecification attributeSpecification = tempAttribute.getAttributeSpecification();
+				final String tempSpecification = attributeSpecification.getSpecification();
 				if (!"implicit omit".equals(tempSpecification) && !"explicit omit".equals(tempSpecification)) {
 					final String message = MessageFormat
 							.format("The specification of an optional attribute can only be \"implicit omit\" or \"explicit omit\", not \"{0}\"",
@@ -341,9 +342,9 @@ public final class WithAttributesPath implements ILocateableNode, IIncrementally
 		realAttributeCache = new ArrayList<SingleWithAttribute>();
 
 		if (attributeParent != null) {
-			WithAttributesPath parentPath = attributeParent.get();
+			final WithAttributesPath parentPath = attributeParent.get();
 			if (parentPath != null) {
-				List<SingleWithAttribute> temp = parentPath.qualifierlessAttributeProcessor(timestamp);
+				final List<SingleWithAttribute> temp = parentPath.qualifierlessAttributeProcessor(timestamp);
 				realAttributeCache.addAll(temp);
 				steppedOverEncode = parentPath.hasSteppedOverEncode();
 			} else {
@@ -559,7 +560,7 @@ public final class WithAttributesPath implements ILocateableNode, IIncrementally
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

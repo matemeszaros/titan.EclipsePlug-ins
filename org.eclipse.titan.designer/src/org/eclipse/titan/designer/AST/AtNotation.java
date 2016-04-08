@@ -51,7 +51,7 @@ public final class AtNotation extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// TODO
 		return true;
 	}

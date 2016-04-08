@@ -136,7 +136,7 @@ public final class NamedValue extends ASTNode implements ILocateableNode, IIncre
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (name!=null && !name.accept(v)) {
 			return false;
 		}

@@ -30,8 +30,8 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * @author Kristof Szabados
  * */
 public final class TypeMappings extends ASTNode implements ILocateableNode {
-	private List<TypeMapping> mappings;
-	private HashMap<String, TypeMapping> mappingsMap;
+	private final List<TypeMapping> mappings;
+	private final HashMap<String, TypeMapping> mappingsMap;
 
 	/** the time when this type mapping was check the last time. */
 	private CompilationTimeStamp lastTimeChecked;
@@ -82,7 +82,7 @@ public final class TypeMappings extends ASTNode implements ILocateableNode {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = mappings.size(); i < size; i++) {
 			if (mappings.get(i) == child) {
@@ -131,12 +131,12 @@ public final class TypeMappings extends ASTNode implements ILocateableNode {
 
 		mappingsMap.clear();
 		for (int i = 0, size = mappings.size(); i < size; i++) {
-			TypeMapping mapping = mappings.get(i);
+			final TypeMapping mapping = mappings.get(i);
 			mapping.check(timestamp);
-			Type sourceType = mapping.getSourceType();
+			final Type sourceType = mapping.getSourceType();
 
 			if (sourceType != null && !sourceType.getTypeRefdLast(timestamp).getIsErroneous(timestamp)) {
-				String sourceName = sourceType.getTypename();
+				final String sourceName = sourceType.getTypename();
 				if (mappingsMap.containsKey(sourceName)) {
 					sourceType.getLocation().reportSemanticError(
 							MessageFormat.format("Duplicate mapping for type `{0}''", sourceName));
@@ -160,7 +160,7 @@ public final class TypeMappings extends ASTNode implements ILocateableNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (mappings != null) {
 			for (TypeMapping tm : mappings) {
 				if (!tm.accept(v)) {

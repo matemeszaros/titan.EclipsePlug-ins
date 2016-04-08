@@ -20,6 +20,9 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollectionHelper;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
+import org.eclipse.titan.designer.editors.actions.OpenDeclarationHelper;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 

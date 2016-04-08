@@ -72,7 +72,7 @@ public final class Disconnect_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentReference1 == child) {
 			return builder.append(FULLNAMEPART1);
@@ -184,7 +184,7 @@ public final class Disconnect_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReference1 != null && !componentReference1.accept(v)) {
 			return false;
 		}

@@ -22,7 +22,7 @@ import org.eclipse.titan.designer.core.TITANBuilder;
 public final class InvokeBuild implements IApplication {
 	
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(final IApplicationContext context) throws Exception {
 		Platform.getBundle("org.eclipse.titan.designer").start();
 		final String[] projectNames = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 

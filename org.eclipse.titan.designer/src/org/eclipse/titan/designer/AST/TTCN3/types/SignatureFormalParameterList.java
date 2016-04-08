@@ -301,7 +301,7 @@ public final class SignatureFormalParameterList extends ASTNode implements IIncr
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (parameters != null) {
 			for (SignatureFormalParameter sfp : parameters) {
 				if (!sfp.accept(v)) {

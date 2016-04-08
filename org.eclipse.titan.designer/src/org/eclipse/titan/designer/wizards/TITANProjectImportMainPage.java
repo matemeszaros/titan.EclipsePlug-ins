@@ -47,6 +47,7 @@ public class TITANProjectImportMainPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(final SelectionEvent e) {
+			//Do nothing
 		}
 
 		@Override

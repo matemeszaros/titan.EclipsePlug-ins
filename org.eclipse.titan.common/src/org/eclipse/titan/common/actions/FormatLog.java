@@ -81,7 +81,7 @@ public final class FormatLog extends AbstractHandler implements IWorkbenchWindow
 		final File source = new File(file.getLocationURI());
 		final long fileSize = source.length();
 
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+		final IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
 		internalMonitor.beginTask("formatting " + file.getName(), (int) (fileSize / LogFormatter.TICK_SIZE));
 
 		FileChannel inChannel = null;
@@ -108,12 +108,12 @@ public final class FormatLog extends AbstractHandler implements IWorkbenchWindow
 		return Status.OK_STATUS;
 	}
 
-	private FileChannel openOutputFile(URI targetPath) throws FileNotFoundException {
+	private FileChannel openOutputFile(final URI targetPath) throws FileNotFoundException {
 		FileOutputStream outfile = null;
 		try {
 			outfile = new FileOutputStream(new File(targetPath), false);
 		} catch (FileNotFoundException e) {
-			String message = "Error while opening " + targetPath + " for writing";
+			final String message = "Error while opening " + targetPath + " for writing";
 			ErrorReporter.logExceptionStackTrace(message, e);
 			throw new FileNotFoundException(message);
 		}
@@ -135,28 +135,28 @@ public final class FormatLog extends AbstractHandler implements IWorkbenchWindow
 		/** This is needed because AbstractHandler does not deal with selection, and
 		 * selectionChanged is not called.
 		*/
-		IWorkbenchPage iwPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ISelection selection = iwPage.getSelection();
+		final IWorkbenchPage iwPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		final ISelection selection = iwPage.getSelection();
 
 		files = SelectionUtils.getAccessibleFilesFromSelection(selection);
 		doFormat();
 		return null;
 	}
 
-	public void formatFiles(List<IFile> files) {
-		for (IFile file : files) {
+	public void formatFiles(final List<IFile> files) {
+		for (final IFile file : files) {
 			final URI targetPath = getTargetPath(file.getLocationURI());
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			final IFile[] targetFiles = root.findFilesForLocationURI(targetPath);
 			internalFormatter(null, file, targetPath, targetFiles);
 		}
 	}
 
-	private static URI getTargetPath(URI original) {
-		String originalFileName = URIUtil.lastSegment(URIUtil.removeFileExtension(original));
-		URI path = TitanURIUtil.removeLastSegment(original);
+	private static URI getTargetPath(final URI original) {
+		final String originalFileName = URIUtil.lastSegment(URIUtil.removeFileExtension(original));
+		final URI path = TitanURIUtil.removeLastSegment(original);
 
-		String newFilename = originalFileName + "_formatted.log";
+		final String newFilename = originalFileName + "_formatted.log";
 		return URIUtil.append(path, newFilename);
 	}
 
@@ -164,10 +164,10 @@ public final class FormatLog extends AbstractHandler implements IWorkbenchWindow
 		for (final IFile file : files) {
 			final URI targetPath = getTargetPath(file.getLocationURI());
 
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			final IFile[] targetFiles = root.findFilesForLocationURI(targetPath);
 
-			WorkspaceJob saveJob = new WorkspaceJob("Formatting log file") {
+			final WorkspaceJob saveJob = new WorkspaceJob("Formatting log file") {
 				@Override
 				public IStatus runInWorkspace(final IProgressMonitor monitor) {
 					return internalFormatter(monitor, file, targetPath, targetFiles);
@@ -182,11 +182,11 @@ public final class FormatLog extends AbstractHandler implements IWorkbenchWindow
 		}
 	}
 
-	private ISchedulingRule createRuleFromResources(IFile file, IFile[] targetFiles) {
-		IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
-		ISchedulingRule rule1 = ruleFactory.createRule(file);
+	private ISchedulingRule createRuleFromResources(final IFile file, final IFile[] targetFiles) {
+		final IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+		final ISchedulingRule rule1 = ruleFactory.createRule(file);
 		ISchedulingRule combinedRule = MultiRule.combine(rule1, null);
-		for (IFile targetFile : targetFiles) {
+		for (final IFile targetFile : targetFiles) {
 			combinedRule = MultiRule.combine(ruleFactory.createRule(targetFile), combinedRule);
 		}
 		return combinedRule;

@@ -46,12 +46,12 @@ public final class ObjectClassSyntax_Builder extends ObjectClassSyntax_Visitor {
 				token = aBlock.getTokenList().get(i);
 
 				if (token.getType() == Asn1Lexer.LEFTVERSIONBRACKETS) {
-					CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
+					final CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
 					token2.setType(Asn1Lexer.SQUAREOPEN);
 					internalTokens.add(token2);
 					internalTokens.add(token2);
 				} else if (token.getType() == Asn1Lexer.RIGHTVERSIONBRACKETS) {
-					CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
+					final CommonToken token2 = ((TokenWithIndexAndSubTokens) token).copy();
 					token2.setType(Asn1Lexer.SQUARECLOSE);
 					internalTokens.add(token2);
 					internalTokens.add(token2);
@@ -76,10 +76,10 @@ public final class ObjectClassSyntax_Builder extends ObjectClassSyntax_Visitor {
 			FieldSpecification fieldSpecification;
 			for (int i = 0; i < fieldSpecifications.getNofFieldSpecifications(); i++) {
 				fieldSpecification = fieldSpecifications.getFieldSpecificationByIndex(i).getLast();
-				ObjectClassSyntax_sequence temporalSequence = new ObjectClassSyntax_sequence(fieldSpecification.getIsOptional()
+				final ObjectClassSyntax_sequence temporalSequence = new ObjectClassSyntax_sequence(fieldSpecification.getIsOptional()
 						|| fieldSpecification.hasDefault(), true);
 
-				ObjectClassSyntax_literal literal = new ObjectClassSyntax_literal(fieldSpecification.getIdentifier().newInstance());
+				final ObjectClassSyntax_literal literal = new ObjectClassSyntax_literal(fieldSpecification.getIdentifier().newInstance());
 				literal.setLocation(fieldSpecification.getLocation());
 
 				ObjectClassSyntax_setting setting = null;
@@ -146,11 +146,12 @@ public final class ObjectClassSyntax_Builder extends ObjectClassSyntax_Visitor {
 		}
 		final List<ObjectClassSyntax_Node> nodes = parser.pr_special_ObjectClassSyntax_Builder(fieldSpecifications).nodes;
 		if (null != nodes) {
-			for (ObjectClassSyntax_Node node : nodes) {
+			for (final ObjectClassSyntax_Node node : nodes) {
 				parameter.addNode(node);
 			}
 		}
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),

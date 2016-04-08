@@ -130,7 +130,7 @@ public final class Catch_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (portReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -210,14 +210,14 @@ public final class Catch_Statement extends Statement {
 			final Reference portReference, final Reference signatureReference, final TemplateInstance parameter, final boolean timeout,
 			final TemplateInstance fromClause, final Reference redirectValue, final Reference redirectSender) {
 
-		Port_Type portType = Port_Utility.checkPortReference(timestamp, statement, portReference);
+		final Port_Type portType = Port_Utility.checkPortReference(timestamp, statement, portReference);
 		if (signatureReference == null) {
 			if (timeout) {
 				if (portReference == null) {
 					statement.getLocation().reportSemanticError(TIMEOUTONANYPORT);
 				} else {
 					if (portType != null) {
-						PortTypeBody body = portType.getPortBody();
+						final 	PortTypeBody body = portType.getPortBody();
 						// the order of checks is wrong
 						// in the compiler
 						if (OperationModes.OP_Message.equals(body.getOperationMode())) {
@@ -231,7 +231,7 @@ public final class Catch_Statement extends Statement {
 				}
 
 				if (statement instanceof Catch_Statement) {
-					Catch_Statement catchStatement = (Catch_Statement) statement;
+					final Catch_Statement catchStatement = (Catch_Statement) statement;
 					if (!catchStatement.inCall) {
 						statement.getLocation().reportSemanticError(TIMEOUTNOTPERMITTED1);
 					} else if (!catchStatement.callHasTimer) {
@@ -247,7 +247,7 @@ public final class Catch_Statement extends Statement {
 				}
 			} else {
 				if (portType != null) {
-					PortTypeBody body = portType.getPortBody();
+					final PortTypeBody body = portType.getPortBody();
 
 					if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 						portReference.getLocation().reportSemanticError(
@@ -267,13 +267,13 @@ public final class Catch_Statement extends Statement {
 			Signature_Type signature = Port_Utility.checkSignatureReference(timestamp, signatureReference);
 
 			if (portType != null) {
-				PortTypeBody body = portType.getPortBody();
+				final PortTypeBody body = portType.getPortBody();
 
 				if (OperationModes.OP_Message.equals(body.getOperationMode())) {
 					portReference.getLocation().reportSemanticError(
 							MessageFormat.format(MESSAGEPORT, statementName, portType.getTypename()));
 				} else if (body.catchAllowed(timestamp)) {
-					TypeSet outSignatures = body.getOutSignatures();
+					final TypeSet outSignatures = body.getOutSignatures();
 
 					if (signature != null) {
 						if (!outSignatures.hasType(timestamp, signature)) {
@@ -304,7 +304,7 @@ public final class Catch_Statement extends Statement {
 			final boolean[] valueRedirectChecked = new boolean[] { false };
 
 			if (signature != null) {
-				SignatureExceptions exceptions = signature.getSignatureExceptions();
+				final SignatureExceptions exceptions = signature.getSignatureExceptions();
 
 				if (exceptions == null) {
 					signatureReference.getLocation().reportSemanticError(
@@ -319,7 +319,7 @@ public final class Catch_Statement extends Statement {
 						if (exceptionType == null) {
 							parameter.getLocation().reportSemanticError(UNKNOWNEXCEPTIONTYPE);
 						} else {
-							int nofCompatibleTypes = exceptions.getNofCompatibleExceptions(timestamp, exceptionType);
+							final int nofCompatibleTypes = exceptions.getNofCompatibleExceptions(timestamp, exceptionType);
 
 							if (nofCompatibleTypes == 0) {
 								final String message = MessageFormat.format(MISSINGEXCEPTIONTYPE,
@@ -377,7 +377,7 @@ public final class Catch_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.SENDER);
 
 		if (redirectValue != null) {
@@ -461,7 +461,7 @@ public final class Catch_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (portReference != null && !portReference.accept(v)) {
 			return false;
 		}

@@ -143,6 +143,7 @@ public final class LoggingBitsSubPage {
 		consoleMaskViewer.addTreeListener(new ITreeViewerListener() {
 			@Override
 			public void treeCollapsed(final TreeExpansionEvent event) {
+				//Do nothing
 			}
 
 			@Override
@@ -226,6 +227,7 @@ public final class LoggingBitsSubPage {
 		fileMaskViewer.addTreeListener(new ITreeViewerListener() {
 			@Override
 			public void treeCollapsed(final TreeExpansionEvent event) {
+				//Do nothing
 			}
 
 			@Override

@@ -106,7 +106,7 @@ public final class ConfigFileHandler {
 		return executeElements;
 	}
 	
-	public void setEnvMap(Map<String, String> envMap){
+	public void setEnvMap(final Map<String, String> envMap){
 		environmentalVariables = envMap;
 	}
 	
@@ -132,7 +132,7 @@ public final class ConfigFileHandler {
 		resolvedASTs.clear();
 		toBeProcessedFiles.add(new Path(first));
 		while(!toBeProcessedFiles.isEmpty()){
-			Path actualFile = toBeProcessedFiles.get(0);
+			final Path actualFile = toBeProcessedFiles.get(0);
 			if(!isAlreadyProcessed(actualFile)){
 				processFile(actualFile);
 				processedFiles.add(actualFile);
@@ -141,8 +141,8 @@ public final class ConfigFileHandler {
 		}
 	}
 
-	private boolean isAlreadyProcessed(Path actualFile) {
-		for (Path processedFile : processedFiles) {
+	private boolean isAlreadyProcessed(final Path actualFile) {
+		for (final Path processedFile : processedFiles) {
 			if (processedFile.equals(actualFile)) {
 				return true;
 			}
@@ -154,10 +154,10 @@ public final class ConfigFileHandler {
 	 * Parsing, collecting includes and defines
 	 * @param actualFile the file to process
 	 */
-	private void processFile(Path actualFile) {
-		CfgAnalyzer analyzer = new CfgAnalyzer();
-		IWorkspaceRoot wroot = ResourcesPlugin.getWorkspace().getRoot();
-		IFile[] files = wroot.findFilesForLocation(actualFile);
+	private void processFile(final Path actualFile) {
+		final CfgAnalyzer analyzer = new CfgAnalyzer();
+		final IWorkspaceRoot wroot = ResourcesPlugin.getWorkspace().getRoot();
+		final IFile[] files = wroot.findFilesForLocation(actualFile);
 
 		if (files.length == 0) {
 			ErrorReporter.logError("The file " + actualFile.toOSString()
@@ -177,38 +177,7 @@ public final class ConfigFileHandler {
 	 * or in configuration files that can be reached from it via inclusion.
 	 */
 	public void processASTs() {
-		//TODO: use if we need listener, or remove
-		/*
-		if(originalASTs.isEmpty()) {
-			return;
-		}
-		
-		for ( Entry<Path,LocationAST> entry : originalASTs.entrySet() ) {
-			CfgResolverListener cfgResolver = new CfgResolverListener();
-			
-			cfgResolver.setDefinitions( definesMap );
-			cfgResolver.setEnvironmentalVariables( environmentalVariables );
-			ParserRuleContext rule = entry.getValue().getRule();
-			ParseTreeWalker walker = new ParseTreeWalker();
-			walker.walk(cfgResolver, rule);
-
-			if ( cfgResolver.getTcpPort() != null ) {
-				tcpPort = cfgResolver.getTcpPort();
-			}
-			if ( cfgResolver.getLocalAddress() != null ) {
-				localAddress = cfgResolver.getLocalAddress();
-			}
-			if ( cfgResolver.getNumHcs() != null ) {
-				numHCs = cfgResolver.getNumHcs();
-			}
-			if ( cfgResolver.getKillTimer() != null ) {
-				killTimer = cfgResolver.getKillTimer();
-			}
-			groups.putAll( cfgResolver.getGroups() );
-			components.putAll( cfgResolver.getComponents() );
-			executeElements.addAll( cfgResolver.getExecuteElements() );
-		}
-		//*/
+		//FIXME implement
 	}
 
 	/**
@@ -246,10 +215,10 @@ public final class ConfigFileHandler {
 		}
 		
 		this.disallowedNodes = disallowedNodes;
-		StringBuilder stringbuilder = new StringBuilder();
+		final StringBuilder stringbuilder = new StringBuilder();
 		stringbuilder.setLength(0);
 		
-		for(Entry<Path, LocationAST> entry:asts.entrySet()){
+		for(final Entry<Path, LocationAST> entry:asts.entrySet()){
 			stringbuilder.append(ORIGINALLY_FROM).
 				append(entry.getKey().toOSString()).append('\n');
 			if(entry.getValue() != null){
@@ -261,7 +230,7 @@ public final class ConfigFileHandler {
 		return stringbuilder;
 	}
 
-	private void parseFile(Path actualFile, CfgAnalyzer analyzer, IFile file) {
+	private void parseFile(final Path actualFile, final CfgAnalyzer analyzer, final IFile file) {
 		analyzer.directParse(file, actualFile.toOSString(), null);
 
 		if (analyzer.isLogFileNameDefined()) {
@@ -269,11 +238,12 @@ public final class ConfigFileHandler {
 			mLogFileName  = analyzer.getLogFileName();
 			localAddress = analyzer.getLocalAddress();
 		}
-		LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot() );
+
+		final LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot() );
 		if ( rootNode != null ) {
 			originalASTs.put( actualFile, rootNode );
 
-			List<String> includeFiles = analyzer.getIncludeFilePaths();
+			final List<String> includeFiles = analyzer.getIncludeFilePaths();
 			for ( String filename:includeFiles ) {
 				filename = PathConverter.getAbsolutePath( actualFile.toOSString(), filename );
 				if ( filename != null ) {
@@ -309,7 +279,7 @@ public final class ConfigFileHandler {
 		stringbuilder.append(root.getText());
 		LocationAST child = root.getFirstChild();
 		while(child != null){
-			Integer tempType = child.getType();
+			final Integer tempType = child.getType();
 			if(disallowedNodes != null && !disallowedNodes.contains(tempType)){
 				print(child, stringbuilder);
 			}

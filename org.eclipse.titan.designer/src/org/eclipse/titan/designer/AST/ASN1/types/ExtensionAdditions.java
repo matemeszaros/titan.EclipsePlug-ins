@@ -118,7 +118,7 @@ public final class ExtensionAdditions extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (extensionAdditions != null) {
 			for (ExtensionAddition ea : extensionAdditions) {
 				if (!ea.accept(v)) {

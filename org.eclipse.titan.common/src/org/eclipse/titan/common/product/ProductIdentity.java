@@ -166,14 +166,16 @@ public final class ProductIdentity implements Comparable<ProductIdentity> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
+
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		ProductIdentity other = (ProductIdentity) obj;
+
+		final ProductIdentity other = (ProductIdentity) obj;
 		return ObjectUtils.equals(magicString, other.magicString)
 				&& ObjectUtils.equals(productNumber, other.productNumber)
 				&& ObjectUtils.equals(productNumberSuffix, other.productNumberSuffix)

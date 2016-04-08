@@ -14,8 +14,8 @@ import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ASN1.IASN1Type;
 import org.eclipse.titan.designer.AST.ASN1.Object.FieldSpecification.Fieldspecification_types;
 import org.eclipse.titan.designer.AST.TTCN3.types.Boolean_Type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -85,7 +85,7 @@ public final class FieldSetting_Type extends FieldSetting {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (name != null && !name.accept(v)) {
 			return false;
 		}

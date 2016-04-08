@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -248,8 +247,6 @@ public final class SymbolicLinkHandler {
 			ErrorReporter.logExceptionStackTrace("While checking build property", e);
 		}
 
-		IContainer[] workingDirectories = ProjectBasedBuilder.getProjectBasedBuilder(resource.getProject())
-				.getWorkingDirectoryResources(true);
 		IPath workingDir = ProjectBasedBuilder.getProjectBasedBuilder(resource.getProject()).getWorkingDirectoryPath(true);
 
 		if (workingDir == null || !workingDir.toFile().exists()) {
@@ -260,14 +257,7 @@ public final class SymbolicLinkHandler {
 			return true;
 		}
 
-		TITANBuilderResourceVisitor visitor = new TITANBuilderResourceVisitor(workingDirectories);
-		try {
-			if (resource.isAccessible()) {
-				resource.accept(visitor);
-			}
-		} catch (CoreException e) {
-			ErrorReporter.logExceptionStackTrace("While visiting `" + resource.getName() + "'", e);
-		}
+		TITANBuilderResourceVisitor visitor = ProjectBasedBuilder.getProjectBasedBuilder(resource.getProject()).getResourceVisitor();
 
 		if (visitor.getFiles().isEmpty()) {
 			return true;

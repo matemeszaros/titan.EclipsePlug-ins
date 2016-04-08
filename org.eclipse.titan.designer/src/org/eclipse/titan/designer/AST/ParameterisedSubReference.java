@@ -122,7 +122,7 @@ public final class ParameterisedSubReference extends ASTNode implements ISubRefe
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier != null && !identifier.accept(v)) {
 			return false;
 		}

@@ -50,14 +50,20 @@ public final class ErroneousAttributeSpecification implements ILocateableNode, I
 		}
 	}
 
-	private Indicator_Type indicator;
-	private boolean isRaw;
-	private TemplateInstance templateInst;
-	private boolean hasAllKeyword;
+	private final Indicator_Type indicator;
+	private final boolean isRaw;
+	private final TemplateInstance templateInst;
+	private final boolean hasAllKeyword;
 	// set by check() or null if tmpl_inst is invalid or omit
 	private IType type = null;
 	// set by check() or null if tmpl_inst is invalid or omit
 	private IValue value = null;
+
+	/**
+	 * The location of the whole specification. This location encloses the
+	 * specification fully, as it is used to report errors to.
+	 **/
+	private Location location = NULL_Location.INSTANCE;
 
 	public ErroneousAttributeSpecification(final Indicator_Type indicator, final boolean isRaw, final TemplateInstance templateInst,
 			final boolean hasAllKeyword) {
@@ -71,8 +77,18 @@ public final class ErroneousAttributeSpecification implements ILocateableNode, I
 		return indicator;
 	}
 
+	@Override
+	public void setLocation(final Location location) {
+		this.location = location;
+	}
+
+	@Override
+	public Location getLocation() {
+		return location;
+	}
+
 	public boolean isOmit() {
-		ITTCN3Template templateBody = templateInst.getTemplateBody();
+		final ITTCN3Template templateBody = templateInst.getTemplateBody();
 		switch (templateBody.getTemplatetype()) {
 		case OMIT_VALUE:
 			return true;
@@ -117,7 +133,7 @@ public final class ErroneousAttributeSpecification implements ILocateableNode, I
 			return;
 		}
 		type.check(timestamp);
-		IType typeLast = type.getTypeRefdLast(timestamp);
+		final IType typeLast = type.getTypeRefdLast(timestamp);
 		if (typeLast == null || typeLast.getIsErroneous(timestamp)) {
 			type = null;
 			return;
@@ -141,7 +157,8 @@ public final class ErroneousAttributeSpecification implements ILocateableNode, I
 			type = null;
 			return;
 		}
-		ITTCN3Template templ = templateInst.getTemplateBody();
+
+		final ITTCN3Template templ = templateInst.getTemplateBody();
 		if (templ.isValue(timestamp)) {
 			value = templ.getValue();
 			value.setMyGovernor(type);
@@ -153,22 +170,6 @@ public final class ErroneousAttributeSpecification implements ILocateableNode, I
 			type = null;
 			return;
 		}
-	}
-
-	/**
-	 * The location of the whole specification. This location encloses the
-	 * specification fully, as it is used to report errors to.
-	 **/
-	private Location location = NULL_Location.INSTANCE;
-
-	@Override
-	public void setLocation(final Location location) {
-		this.location = location;
-	}
-
-	@Override
-	public Location getLocation() {
-		return location;
 	}
 
 	/**
@@ -198,7 +199,7 @@ public final class ErroneousAttributeSpecification implements ILocateableNode, I
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

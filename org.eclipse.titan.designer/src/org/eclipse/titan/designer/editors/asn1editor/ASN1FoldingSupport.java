@@ -14,7 +14,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.titan.common.parsers.Interval;
 import org.eclipse.titan.designer.editors.FoldingSupport;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 

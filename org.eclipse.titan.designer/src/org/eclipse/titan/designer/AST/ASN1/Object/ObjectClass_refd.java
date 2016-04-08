@@ -18,8 +18,8 @@ import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Object;
 import org.eclipse.titan.designer.AST.ASN1.ObjectClass;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -45,7 +45,10 @@ public final class ObjectClass_refd extends ObjectClass implements IReferenceCha
 
 	@Override
 	public ObjectClass_refd newInstance() {
-		return new ObjectClass_refd(reference);
+		final ObjectClass_refd oc = new ObjectClass_refd(reference);
+		oc.setLocation(reference.getLocation());
+
+		return oc;
 	}
 
 	@Override
@@ -176,7 +179,7 @@ public final class ObjectClass_refd extends ObjectClass implements IReferenceCha
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (reference != null && !reference.accept(v)) {
 			return false;
 		}

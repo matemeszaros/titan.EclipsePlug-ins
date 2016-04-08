@@ -57,7 +57,7 @@ public final class NamedValues extends ASTNode implements IIncrementallyUpdateab
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		NamedValue nv;
 		for (int i = 0; i < values.size(); i++) {
@@ -212,7 +212,7 @@ public final class NamedValues extends ASTNode implements IIncrementallyUpdateab
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (values!=null) {
 			for (NamedValue nv : values) {
 				if (!nv.accept(v)) {

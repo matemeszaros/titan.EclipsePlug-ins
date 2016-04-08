@@ -43,13 +43,13 @@ public class TITANCommonPreferencePage extends FieldEditorPreferencePage impleme
 
 	@Override
 	protected void createFieldEditors() {
-		Composite parent = getFieldEditorParent();
+		final Composite parent = getFieldEditorParent();
 		mergeGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 		mergeGroup.setText("Log file merge");
 		mergeGroup.setLayout(new GridLayout(1, false));
 		mergeGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-		String[][] labelAndValues = {
+		final String[][] labelAndValues = {
 				{ "Overwrite file", org.eclipse.titan.common.preferences.PreferenceConstants.LOG_MERGE_OPTIONS_OVERWRITE },
 				{ "Create a new file", org.eclipse.titan.common.preferences.PreferenceConstants.LOG_MERGE_OPTIONS_CREATE },
 				{ "Ask", org.eclipse.titan.common.preferences.PreferenceConstants.LOG_MERGE_OPTIONS_ASK } };

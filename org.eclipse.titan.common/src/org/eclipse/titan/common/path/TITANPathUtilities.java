@@ -43,7 +43,7 @@ public final class TITANPathUtilities {
 	 * @return the resolved uri.
 	 * */
 	public static URI resolvePath(final String pathToBeResolved, final URI basePath) {
-		final Map<?, ?> envVariables;
+		Map<?, ?> envVariables;
 		if (DebugPlugin.getDefault() != null) {
 			envVariables = DebugPlugin.getDefault().getLaunchManager().getNativeEnvironmentCasePreserved();
 		} else {
@@ -65,8 +65,7 @@ public final class TITANPathUtilities {
 			uri = pathVariableManager.resolveURI(uri);
 
 			if (basePath != null && uri != null && !uri.isAbsolute()) {
-				final URI mergedURI = org.eclipse.core.runtime.URIUtil.append(basePath, uri.toString());
-				return mergedURI;
+				return org.eclipse.core.runtime.URIUtil.append(basePath, uri.toString());
 			
 			} else {
 				return uri;
@@ -86,7 +85,7 @@ public final class TITANPathUtilities {
 	 * @return the resolved path.
 	 * */
 	public static IPath resolvePath(final String pathToBeResolved, final String basePath) {
-		DebugPlugin debugPlugin = DebugPlugin.getDefault();
+		final DebugPlugin debugPlugin = DebugPlugin.getDefault();
 		if (debugPlugin == null) {
 			ErrorReporter.logError("There was an error while resolving `" + pathToBeResolved + "'"
 					+ "the DebugPlugin was not yet initialized");
@@ -109,9 +108,9 @@ public final class TITANPathUtilities {
 	 * @return the resolved path.
 	 * */
 	public static IPath resolvePath(final String pathToBeResolved, final String basePath, final Map<?, ?> envVariables,
-			IPathVariableManager pathVariableManager) {
-		String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolveIgnoreErrors(pathToBeResolved, envVariables);
-		String tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);
+			final IPathVariableManager pathVariableManager) {
+		final String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolveIgnoreErrors(pathToBeResolved, envVariables);
+		final String tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);
 
 		final IPath path2 = new Path(tmp2);
 		IPath resolvedPath = pathVariableManager.resolvePath(path2);
@@ -162,7 +161,7 @@ public final class TITANPathUtilities {
 	}
 	
 	public static URI convertToAbsoluteURI(final String pathToBeConverted, final URI basePath) {
-		IPath tmp = new Path(pathToBeConverted);
+		final IPath tmp = new Path(pathToBeConverted);
 		if( basePath != null && tmp != null && !tmp.isAbsolute()) {
 			final URI convertedURI = org.eclipse.core.runtime.URIUtil.append(basePath, pathToBeConverted);
 			if(convertedURI != null) {

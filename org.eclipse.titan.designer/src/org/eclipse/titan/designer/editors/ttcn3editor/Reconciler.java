@@ -648,6 +648,7 @@ public class Reconciler implements IReconciler {
 	 * Default implementation is to do nothing.
 	 */
 	protected void aboutToBeReconciled() {
+		//Do nothing
 	}
 
 	/**
@@ -708,6 +709,7 @@ public class Reconciler implements IReconciler {
 	 * Hook that is called after the reconciler thread has been reset.
 	 */
 	protected void reconcilerReset() {
+		//Do nothing
 	}
 
 	/**

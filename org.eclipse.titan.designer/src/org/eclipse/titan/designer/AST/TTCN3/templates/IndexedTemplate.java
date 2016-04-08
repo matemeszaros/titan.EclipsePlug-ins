@@ -117,7 +117,7 @@ public final class IndexedTemplate extends ASTNode implements ILocateableNode, I
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (index != null && !index.accept(v)) {
 			return false;
 		}

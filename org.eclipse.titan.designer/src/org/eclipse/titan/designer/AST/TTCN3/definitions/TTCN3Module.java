@@ -57,10 +57,10 @@ import org.eclipse.titan.designer.AST.TTCN3.types.Referenced_Type;
 import org.eclipse.titan.designer.core.CompilerVersionInformationCollector;
 import org.eclipse.titan.designer.core.LoadBalancingUtilities;
 import org.eclipse.titan.designer.core.ProductIdentityHelper;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
 import org.eclipse.titan.designer.editors.T3Doc;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -997,7 +997,7 @@ public final class TTCN3Module extends Module {
 		});
 	}
 
-	private int reparseInsideAttributelist(TTCN3ReparseUpdater aReparser) {
+	private int reparseInsideAttributelist(final TTCN3ReparseUpdater aReparser) {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
@@ -1200,7 +1200,7 @@ public final class TTCN3Module extends Module {
 		return true;
 	}
 
-	public void setIncludedFiles(Set<IFile> includedFiles) {
+	public void setIncludedFiles(final Set<IFile> includedFiles) {
 		this.includedFiles = includedFiles;
 	}
 
@@ -1208,7 +1208,7 @@ public final class TTCN3Module extends Module {
 		return includedFiles;
 	}
 
-	public void setInactiveCodeLocations(List<Location> inactiveCodeLocations) {
+	public void setInactiveCodeLocations(final List<Location> inactiveCodeLocations) {
 		this.inactiveCodeLocations = inactiveCodeLocations;
 	}
 

@@ -20,7 +20,7 @@ public class FileFinder implements IResourceVisitor {
 	IFile targetFile = null;
 	String fileName;
 
-	public FileFinder(String fileName) {
+	public FileFinder(final String fileName) {
 		this.fileName = fileName;
 	}
 
@@ -37,9 +37,9 @@ public class FileFinder implements IResourceVisitor {
 	 * @param resource the resource to start searching at
 	 * */
 	@Override
-	public boolean visit(IResource resource) {
+	public boolean visit(final IResource resource) {
 		if (resource.getType() == IResource.FILE) {
-			IFile file = (IFile) resource;
+			final IFile file = (IFile) resource;
 			if (file.getName().equals(fileName)) {
 				targetFile = file;
 			}

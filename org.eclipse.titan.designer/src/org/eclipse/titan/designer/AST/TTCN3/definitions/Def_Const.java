@@ -29,15 +29,16 @@ import org.eclipse.titan.designer.AST.IType.ValueCheckingOptions;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.ComponentTypeBody;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 
@@ -53,6 +54,8 @@ public final class Def_Const extends Definition {
 	public static final String SIGNATURENOTALLOWED = "Constant can not be defined for signature type `{0}''";
 
 	private static final String KIND = "constant ";
+	
+	private Location comulativeDefinitionLocation = null;
 
 	public static String getKind() {
 		return KIND;
@@ -99,6 +102,19 @@ public final class Def_Const extends Definition {
 		if (value != null) {
 			value.setMyScope(scope);
 		}
+	}
+	
+	@Override
+	public Location getComulativeDefinitionLocation() {
+		if (comulativeDefinitionLocation != null) {
+			return comulativeDefinitionLocation;
+		}
+		
+		return super.getComulativeDefinitionLocation();
+	}
+
+	public void setComulativeDefinitionLocation(final Location location) {
+		this.comulativeDefinitionLocation = location;
 	}
 
 	@Override
@@ -292,6 +308,14 @@ public final class Def_Const extends Definition {
 	}
 
 	@Override
+	public List<Integer> getPossibleExtensionStarterTokens() {
+		List<Integer> result = super.getPossibleExtensionStarterTokens();
+		
+		result.add(Ttcn3Lexer.COMMA);
+		return result;
+	}
+
+	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
 			boolean enveloped = false;
@@ -374,7 +398,7 @@ public final class Def_Const extends Definition {
 		}
 	}
 
-	private int reparse(TTCN3ReparseUpdater aReparser) {
+	private int reparse(final TTCN3ReparseUpdater aReparser) {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
@@ -401,7 +425,7 @@ public final class Def_Const extends Definition {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

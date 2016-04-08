@@ -72,7 +72,7 @@ public final class Unknown_Applied_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART1);
@@ -121,7 +121,7 @@ public final class Unknown_Applied_Statement extends Statement {
 			return;
 		}
 
-		ActualParameterList tempActualParameters = new ActualParameterList();
+		final ActualParameterList tempActualParameters = new ActualParameterList();
 		FormalParameterList formalParameterList;
 
 		switch (type.getTypetype()) {
@@ -204,7 +204,7 @@ public final class Unknown_Applied_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (realStatement != null) {
 			return realStatement.accept(v);
 		} else {

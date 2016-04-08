@@ -23,6 +23,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceRuleFactory;
@@ -37,7 +40,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -45,15 +47,15 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressConstants;
 
-public class ChecklistGenerator extends Action implements IWorkbenchWindowActionDelegate {
+public class ChecklistGenerator extends AbstractHandler implements IActionDelegate {
 	static final String LOCATION_FORMAT = "line (.+)";
 	static final Pattern LOCATION_FORMAT_PATTERN = Pattern.compile(LOCATION_FORMAT);
 	
-	private ArrayList<IFile> files;
+	private ISelection selection;
 
 	// represents a testing element (a file), needed to be able to generate the tests themselves
 	final class TestSuiteElement {
@@ -79,16 +81,6 @@ public class ChecklistGenerator extends Action implements IWorkbenchWindowAction
 			this.filename = filename;
 			this.location = location;
 		}
-	}
-	
-	@Override
-	public void init(final IWorkbenchWindow window) {
-		files = new ArrayList<IFile>();
-	}
-
-	@Override
-	public void dispose() {
-		files.clear();
 	}
 	
 	/*
@@ -170,6 +162,36 @@ public class ChecklistGenerator extends Action implements IWorkbenchWindowAction
 	
 	@Override
 	public void run(final IAction action) {
+		run(selection);
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+
+		run(selection);
+
+		return null;
+	}
+
+	public void run(final ISelection selection) {
+		ArrayList<IFile> files = new ArrayList<IFile>();
+		
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection structSelection = (IStructuredSelection) selection;
+
+			files = new ArrayList<IFile>(structSelection.size());
+			
+			for (Object selected : structSelection.toList()) {
+				if (selected instanceof IFile) {
+					IFile file = (IFile) selected;
+					if (file.isAccessible()) {
+						files.add(file);
+					}
+				}
+			}
+		}
+
 		//for every selected file
 		for (int i = 0, size = files.size(); i < size; i++) {
 			final IFile file = files.get(i);
@@ -467,19 +489,10 @@ public class ChecklistGenerator extends Action implements IWorkbenchWindowAction
 
 	@Override
 	public void selectionChanged(final IAction action, final ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structSelection = (IStructuredSelection) selection;
-
-			files = new ArrayList<IFile>(structSelection.size());
-			
-			for (Object selected : structSelection.toList()) {
-				if (selected instanceof IFile) {
-					IFile file = (IFile) selected;
-					if (file.isAccessible()) {
-						files.add(file);
-					}
-				}
-			}
+		if (!(selection instanceof IStructuredSelection)) {
+			return;
 		}
+		
+		this.selection = (IStructuredSelection) selection;
 	}
 }

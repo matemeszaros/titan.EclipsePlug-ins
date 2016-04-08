@@ -1004,17 +1004,17 @@ pr_special_Enumerations returns [ASN1_Enumeration enumeration]
 );
 
 pr_Enumerations [ASN1_Enumeration enumeration]
-locals [EnumerationItems enumItems, ExceptionSpecification exceptionSpecification]
-@init	{ $enumItems = null; $exceptionSpecification = null; }:
+locals [ ExceptionSpecification exceptionSpecification]
+@init	{ $exceptionSpecification = null; }:
 (	
-	a = pr_Enumeration	{ $enumItems = $a.enumItems; $enumeration.enumItems1 = $enumItems; }
+	a = pr_Enumeration	{ $enumeration.enumItems1 = $a.enumItems; }
 	(	
 		COMMA
 		ELLIPSIS	{ $enumeration.hasEllipses = true; }
 		b = pr_ExceptionSpec { $exceptionSpecification = $b.exceptionSpecification; } 
 		(	
 			COMMA
-			c = pr_Enumeration	{ $enumItems = $c.enumItems; $enumeration.enumItems2 = $enumItems; }
+			c = pr_Enumeration	{ $enumeration.enumItems2 = $c.enumItems; }
 		)?
 	)?
 );
@@ -1292,13 +1292,11 @@ locals [Type subType, NamedType_Helper namedType_Helper, Constraint constraint, 
 	b = pr_Type { $type = $b.type; }
 );
 
-//TODO: antlr2 return null check if it is the intent
 pr_SizeConstraint returns[Constraint constraint]
 @init { $constraint = null; }:
 (	
 	SIZE
-	//a = pr_Constraint { $constraint = $a.constraint; }
-	pr_Constraint
+	a = pr_Constraint { $constraint = $a.constraint; }
 );
 
 pr_Constraint returns[Constraint constraint]
@@ -2412,6 +2410,7 @@ locals [Token col]
 |	h = pr_PatternConstraint	{ $col = $h.start; }
 );
 
+//TODO add support once values are supported
 pr_ValueRange:
 (
 	pr_LowerEndPoint

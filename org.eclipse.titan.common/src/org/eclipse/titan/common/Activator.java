@@ -25,7 +25,7 @@ public final class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = ProductConstants.PRODUCT_ID_COMMON;
 
 	/** The shared instance */
-	private static Activator plugin = null;
+	private static Activator plugin;
 	private WorkspaceJob usageStatSenderJob;
 
 	public Activator() {

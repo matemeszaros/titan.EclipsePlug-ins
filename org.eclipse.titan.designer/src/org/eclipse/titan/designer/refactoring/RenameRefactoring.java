@@ -166,9 +166,8 @@ public class RenameRefactoring extends Refactoring {
 		RefactoringStatus result = new RefactoringStatus();
 		final boolean reportDebugInformation = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
-		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
 		// search
-		idsMap = rf.findAllReferences(module, projectSourceParser, pm, reportDebugInformation);
+		idsMap = rf.findAllReferences(module, file.getProject(), pm, reportDebugInformation);
 		// add the referred identifier to the map of found identifiers
 		Identifier refdIdentifier = rf.getReferredIdentifier();
 		Module refdModule = rf.assignment.getMyScope().getModuleScope();
@@ -398,7 +397,11 @@ public class RenameRefactoring extends Refactoring {
 		} catch (InterruptedException irex) {
 			// operation was canceled
 		} finally {
-			//TODO no longer needed after analyzer is updated
+			Map<Module, List<Hit>> changed = rf.findAllReferences(module, file.getProject(), null, reportDebugInformation);
+			for(Module tempModule : changed.keySet()) {
+				ProjectSourceParser tempSourceParser = GlobalParser.getProjectSourceParser(tempModule.getProject());
+				tempSourceParser.reportOutdating((IFile)tempModule.getLocation().getFile());
+			}
 			projectSourceParser.reportOutdating(file);
 			projectSourceParser.analyzeAll();
 		}
@@ -412,7 +415,7 @@ public class RenameRefactoring extends Refactoring {
 	 *                The module to search the occurrences in
 	 * @param offset
 	 *                An offset in the module
-	 * @return The referencfinder
+	 * @return The referencefinder
 	 */
 	protected static ReferenceFinder findOccurrencesLocationBased(final Module module, final int offset) {
 		final IdentifierFinderVisitor visitor = new IdentifierFinderVisitor(offset);

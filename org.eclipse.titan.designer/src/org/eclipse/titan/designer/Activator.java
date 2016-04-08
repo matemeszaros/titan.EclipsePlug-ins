@@ -87,7 +87,7 @@ public final class Activator extends AbstractUIPlugin {
 
 		@Override
 		public boolean visit(final IResourceDelta delta) {
-			IResource resource = delta.getResource();
+			final IResource resource = delta.getResource();
 			switch (resource.getType()) {
 			case IResource.PROJECT:
 				if (delta.getKind() == IResourceDelta.REMOVED) {
@@ -116,7 +116,7 @@ public final class Activator extends AbstractUIPlugin {
 			case IResource.ROOT:
 				return true;
 			case IResource.PROJECT:
-				IProject project = delta.getResource().getProject();
+				final IProject project = delta.getResource().getProject();
 				if (TITANNature.hasTITANNature(project)) {
 					if (!projects.containsKey(project)) {
 						projects.put(project, delta);
@@ -146,14 +146,14 @@ public final class Activator extends AbstractUIPlugin {
 			case IResource.ROOT:
 				return true;
 			case IResource.PROJECT:
-				IProject project = delta.getResource().getProject();
+				final IProject project = delta.getResource().getProject();
 				if (TITANNature.hasTITANNature(project)) {
 					workingDirectories = Arrays.asList(ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryResources(false));
 					return true;
 				}
 				return false;
 			case IResource.FOLDER: 
-				IFolder folder = (IFolder) delta.getResource();
+				final IFolder folder = (IFolder) delta.getResource();
 				if (!folder.exists()) {
 					return false;
 				}
@@ -170,7 +170,7 @@ public final class Activator extends AbstractUIPlugin {
 						|| (delta.getFlags() & IResourceDelta.OPEN) == IResourceDelta.OPEN) {
 					return false;
 				}
-				IFile file = (IFile) delta.getResource();
+				final IFile file = (IFile) delta.getResource();
 				if (!file.exists()) {
 					return false;
 				}
@@ -204,9 +204,9 @@ public final class Activator extends AbstractUIPlugin {
 				return;
 			}
 
-			for (IResourceDelta delta  : eventDelta.getAffectedChildren()) {
-				IResource changedResource = delta.getResource();
-				ContentChangedFileFinder changeFinder = new ContentChangedFileFinder();
+			for (final IResourceDelta delta  : eventDelta.getAffectedChildren()) {
+				final IResource changedResource = delta.getResource();
+				final ContentChangedFileFinder changeFinder = new ContentChangedFileFinder();
 				
 				if (changedResource.getType() == IResource.PROJECT && TITANNature.hasTITANNature((IProject) changedResource)) {
 					try {
@@ -249,8 +249,8 @@ public final class Activator extends AbstractUIPlugin {
 	 */
 	protected void batchedEventHandler() {
 		projects = new HashMap<IProject, IResourceDelta>();
-		for (IResourceChangeEvent event : BATCHED_EVENTS) {
-			IResourceDelta resourceDelta = event.getDelta();
+		for (final IResourceChangeEvent event : BATCHED_EVENTS) {
+			final IResourceDelta resourceDelta = event.getDelta();
 			if (resourceDelta == null) {
 				switch (event.getType()) {
 				case IResourceChangeEvent.PRE_CLOSE:
@@ -271,7 +271,7 @@ public final class Activator extends AbstractUIPlugin {
 		}
 		BATCHED_EVENTS.clear();
 
-		IPreferencesService prefs = Platform.getPreferencesService();
+		final IPreferencesService prefs = Platform.getPreferencesService();
 
 		// for every project check if the TITANProperties file was changed or need to be changed
 		for (final IProject project : projects.keySet()) {
@@ -280,18 +280,18 @@ public final class Activator extends AbstractUIPlugin {
 				final IResourceDelta projectDelta = projects.get(project);
 				if (projectDelta.getKind() == IResourceDelta.ADDED) {
 					// new project appeared load the settings
-					ProjectFileHandler pfHandler = new ProjectFileHandler(project);
+					final ProjectFileHandler pfHandler = new ProjectFileHandler(project);
 					pfHandler.loadProjectSettings();
 					PropertyNotificationManager.firePropertyChange(project);
 					continue;
 				}
 
 				try {
-					IResourceDelta propertiesDelta = projectDelta.findMember(new Path(ProjectFileHandler.XML_TITAN_PROPERTIES_FILE));
-					DeltaVisitor visitor = new DeltaVisitor();
+					final IResourceDelta propertiesDelta = projectDelta.findMember(new Path(ProjectFileHandler.XML_TITAN_PROPERTIES_FILE));
+					final DeltaVisitor visitor = new DeltaVisitor();
 					projectDelta.accept(visitor);
 					if (visitor.hasNewOrRemovedResources()) {
-						ProjectFileHandler pfHandler = new ProjectFileHandler(project);
+						final ProjectFileHandler pfHandler = new ProjectFileHandler(project);
 						if (propertiesDelta == null || propertiesDelta.getKind() == IResourceDelta.REMOVED) {
 							// project setting file does not exist
 							pfHandler.saveProjectSettings();
@@ -302,7 +302,7 @@ public final class Activator extends AbstractUIPlugin {
 						}
 					} else {
 						if (propertiesDelta != null) {
-							ProjectFileHandler pfHandler = new ProjectFileHandler(project);
+							final ProjectFileHandler pfHandler = new ProjectFileHandler(project);
 							if (propertiesDelta.getKind() == IResourceDelta.REMOVED) {
 								// save the settings if the only change was that it was removed externally
 								pfHandler.saveProjectSettings();
@@ -318,9 +318,9 @@ public final class Activator extends AbstractUIPlugin {
 				}
 
 				// check if it needs to be built, if full analysis is needed, and that the working directory is always set as derived
-				IProject[] referencingProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getReferencingProjects();
+				final IProject[] referencingProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getReferencingProjects();
 				for (int i = 0; i < referencingProjects.length; i++) {
-					ProjectBasedBuilder.setForcedBuild(referencingProjects[i], Boolean.TRUE);
+					ProjectBasedBuilder.setForcedBuild(referencingProjects[i]);
 				}
 
 				if ((projectDelta.getFlags() & IResourceDelta.DESCRIPTION) != 0) {
@@ -328,7 +328,7 @@ public final class Activator extends AbstractUIPlugin {
 				}
 
 				if (projectDelta.getKind() == IResourceDelta.ADDED) {
-					WorkspaceJob derivedSetter = new WorkspaceJob("Derived flag setter") {
+					final WorkspaceJob derivedSetter = new WorkspaceJob("Derived flag setter") {
 						@Override
 						public IStatus runInWorkspace(final IProgressMonitor monitor) {
 							final IContainer[] workingDirectories = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryResources(true);
@@ -363,7 +363,7 @@ public final class Activator extends AbstractUIPlugin {
 				// which can be handled
 				if (project != null && project.isAccessible() && projects.get(project) != null) {
 					final IResourceDelta projectDelta = projects.get(project);
-					DeltaVisitor visitor = new DeltaVisitor();
+					final DeltaVisitor visitor = new DeltaVisitor();
 					try {
 						projectDelta.accept(visitor);
 						if (!visitor.hasNewOrRemovedResources() && (projectDelta.getFlags() & IResourceDelta.DESCRIPTION) == 0) {
@@ -373,7 +373,7 @@ public final class Activator extends AbstractUIPlugin {
 						ErrorReporter.logExceptionStackTrace(e);
 					}
 					
-					WorkspaceJob buildStarter = new WorkspaceJob("Build starter") {
+					final WorkspaceJob buildStarter = new WorkspaceJob("Build starter") {
 						@Override
 						public IStatus runInWorkspace(final IProgressMonitor monitor) {
 							GlobalDeltaVisitor tempVisitor = new GlobalDeltaVisitor(project);
@@ -386,7 +386,7 @@ public final class Activator extends AbstractUIPlugin {
 
 							WorkspaceJob analyzeAfterOutdating = new WorkspaceJob("analyzeAfterOutdating") {
 								@Override
-								public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+								public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 									//Wait for reportOutdatedFiles() to finish
 									try {
 										for (WorkspaceJob job : outdatingJobs) {
@@ -401,16 +401,24 @@ public final class Activator extends AbstractUIPlugin {
 									GlobalParser.getProjectSourceParser(project).analyzeAll(false);
 									// It is of no importance when this analysis will run, or end for that matter.
 
+									boolean generateMakefile;
 									boolean usesInternal;
 									try {
-										usesInternal = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+										generateMakefile = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+												ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY)));
+										if (generateMakefile) {
+											usesInternal = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 												ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)));
+										} else {
+											usesInternal = false;
+										}
 									} catch (CoreException e) {
+										generateMakefile = false;
 										usesInternal = false;
 									}
-									if (usesInternal) {
+									if (generateMakefile && usesInternal) {
 										TITANBuilder.markProjectForRebuild(project);
-										TITANBuilder.removeMakefile(project, false);
+										TITANBuilder.removeMakefile(project);
 									}
 
 									return Status.OK_STATUS;
@@ -419,7 +427,6 @@ public final class Activator extends AbstractUIPlugin {
 							analyzeAfterOutdating.setPriority(Job.LONG);
 							analyzeAfterOutdating.setUser(false);
 							analyzeAfterOutdating.setSystem(true);
-							analyzeAfterOutdating.setRule(project.getWorkspace().getRuleFactory().refreshRule(project));
 							analyzeAfterOutdating.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
 							analyzeAfterOutdating.schedule();
 
@@ -459,11 +466,11 @@ public final class Activator extends AbstractUIPlugin {
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		workspace.addResourceChangeListener(listener);
 		workspace.addResourceChangeListener(decoratorUpdater);
-		ISaveParticipant participant = new SaveParticipant();
-		ISavedState lastState = workspace.addSaveParticipant(ProductConstants.PRODUCT_ID_DESIGNER, participant);
+		final ISaveParticipant participant = new SaveParticipant();
+		final ISavedState lastState = workspace.addSaveParticipant(ProductConstants.PRODUCT_ID_DESIGNER, participant);
 		if (lastState != null) {
 			// TODO check if this should be run in a separate thread
 			lastState.processResourceChangeEvents(listener);
@@ -479,7 +486,7 @@ public final class Activator extends AbstractUIPlugin {
 		// initialize extension handler
 		ExtensionHandler.INSTANCE.registerContributors();
 
-		WorkspaceJob initializer = new WorkspaceJob("Initializing the TITAN toolset") {
+		final WorkspaceJob initializer = new WorkspaceJob("Initializing the TITAN toolset") {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				//TODO: preload if needed
@@ -507,7 +514,7 @@ public final class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void stop(final BundleContext context) throws Exception {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		workspace.removeResourceChangeListener(listener);
 		workspace.removeResourceChangeListener(decoratorUpdater);
 		plugin = null;
@@ -535,7 +542,7 @@ public final class Activator extends AbstractUIPlugin {
 		final IWorkbenchActivitySupport as = PlatformUI.getWorkbench().getActivitySupport();
 		final IActivityManager am = as.getActivityManager();
 		@SuppressWarnings({ "rawtypes" })
-		Set enabledActivities = new HashSet(am.getEnabledActivityIds());
+		final Set enabledActivities = new HashSet(am.getEnabledActivityIds());
 
 		final boolean activityChange = enable ? enabledActivities.add(activityId) : enabledActivities.remove(activityId);
 		if (!activityChange) {

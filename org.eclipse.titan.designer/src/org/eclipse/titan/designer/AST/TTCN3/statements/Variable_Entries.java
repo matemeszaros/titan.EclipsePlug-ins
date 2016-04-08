@@ -35,7 +35,7 @@ public final class Variable_Entries extends ASTNode implements IIncrementallyUpd
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0; i < entries.size(); i++) {
 			if (entries.get(i) == child) {
@@ -77,7 +77,7 @@ public final class Variable_Entries extends ASTNode implements IIncrementallyUpd
 		}
 
 		for (int i = 0, size = entries.size(); i < size; i++) {
-			Variable_Entry entry = entries.get(i);
+			final Variable_Entry entry = entries.get(i);
 
 			entry.updateSyntax(reparser, isDamaged);
 			reparser.updateLocation(entry.getLocation());
@@ -90,15 +90,15 @@ public final class Variable_Entries extends ASTNode implements IIncrementallyUpd
 			return;
 		}
 
-		for (Variable_Entry ve : entries) {
+		for (final Variable_Entry ve : entries) {
 			ve.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (entries != null) {
-			for (Variable_Entry ve : entries) {
+			for (final Variable_Entry ve : entries) {
 				if (!ve.accept(v)) {
 					return false;
 				}

@@ -61,7 +61,7 @@ public final class StatementBlock_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (statementblock == child) {
 			return builder.append(FULLNAMEPART);
@@ -167,7 +167,7 @@ public final class StatementBlock_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (statementblock != null && !statementblock.accept(v)) {
 			return false;
 		}

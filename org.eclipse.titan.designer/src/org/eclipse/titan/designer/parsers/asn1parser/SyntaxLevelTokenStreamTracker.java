@@ -63,7 +63,9 @@ public class SyntaxLevelTokenStreamTracker extends BufferedTokenStream {
 				// discard this Token
 			} else if (t.getType() == Asn1Lexer.SQUAREOPEN) {
 				boolean exit = getBlock(first);
-				if (exit) return ++i;
+				if (exit) {
+					return ++i;
+				}
 				++i;
 				--n;
 			} else {

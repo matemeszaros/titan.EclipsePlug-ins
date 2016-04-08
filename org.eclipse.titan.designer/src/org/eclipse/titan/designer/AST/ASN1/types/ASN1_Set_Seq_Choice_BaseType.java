@@ -26,8 +26,8 @@ import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.types.CompField;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
@@ -121,8 +121,7 @@ public abstract class ASN1_Set_Seq_Choice_BaseType extends ASN1Type implements I
 	public Location getLikelyLocation() {
 		if (mBlock != null) {
 			return mBlock.getLocation();
-		}
-		else {
+		} else {
 			return location;
 		}
 	}
@@ -145,7 +144,7 @@ public abstract class ASN1_Set_Seq_Choice_BaseType extends ASN1Type implements I
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

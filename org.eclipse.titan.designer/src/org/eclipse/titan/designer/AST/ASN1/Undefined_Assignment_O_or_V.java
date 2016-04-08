@@ -151,7 +151,7 @@ public final class Undefined_Assignment_O_or_V extends Undefined_Assignment {
 	}
 	
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

@@ -61,8 +61,7 @@ import org.eclipse.titan.designer.editors.IEditorWithCarretOffset;
 import org.eclipse.titan.designer.editors.IReferenceParser;
 import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
 import org.eclipse.titan.designer.editors.OccurencesMarker;
-import org.eclipse.titan.designer.editors.Pair;
-import org.eclipse.titan.designer.editors.ToggleComment;
+import org.eclipse.titan.designer.editors.actions.ToggleComment;
 import org.eclipse.titan.designer.editors.ttcn3editor.OutlinePage;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3FoldingSupport;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3ReferenceParser;
@@ -201,7 +200,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		configuration = new Configuration(colorManager, this);
 		setSourceViewerConfiguration(configuration);
 		DocumentSetupParticipant participant = new DocumentSetupParticipant();
-		ForwardingDocumentProvider forwardingProvider = new ForwardingDocumentProvider(PartitionScanner.TTCN3_PARTITIONING, participant,
+		ForwardingDocumentProvider forwardingProvider = new ForwardingDocumentProvider(PartitionScanner.TTCNPP_PARTITIONING, participant,
 				new TextFileDocumentProvider());
 		setDocumentProvider(forwardingProvider);
 		setEditorContextMenuId(EDITOR_CONTEXT);
@@ -262,10 +261,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 	@Override
 	protected void configureSourceViewerDecorationSupport(final SourceViewerDecorationSupport support) {
 		super.configureSourceViewerDecorationSupport(support);
-		Pair brackets = new Pair('{', '}');
-		Pair parenthesis = new Pair('(', ')');
-		Pair index = new Pair('[', ']');
-		PairMatcher pairMatcher = new PairMatcher(new Pair[] { brackets, parenthesis, index });
+		PairMatcher pairMatcher = new PairMatcher();
 		support.setCharacterPairMatcher(pairMatcher);
 		support.setMatchingCharacterPainterPreferenceKeys(PreferenceConstants.MATCHING_BRACKET_ENABLED,
 				PreferenceConstants.COLOR_MATCHING_BRACKET);
@@ -433,6 +429,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 
 			@Override
 			public void inputDocumentChanged(final IDocument oldInput, final IDocument newInput) {
+				//Do nothing
 			}
 		});
 		return viewer;
@@ -541,7 +538,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		return reconciler;
 	}
 
-	public void updateInactiveCodeAnnotations(List<Location> inactiveCodeLocations) {
+	public void updateInactiveCodeAnnotations(final List<Location> inactiveCodeLocations) {
 		if ((inactiveCodeLocations == null || inactiveCodeLocations.isEmpty())
 				&& (inactiveCodeAnnotations == null || inactiveCodeAnnotations.length == 0)) {
 			return;

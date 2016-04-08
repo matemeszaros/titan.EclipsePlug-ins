@@ -80,7 +80,7 @@ final class MergeAble implements Closeable {
 	private String getComponentID(final String fileName) {
 		int idStart = 0;
 		int idEnd = fileName.length() - 1;
-		int dashLoc = fileName.lastIndexOf('-');
+		final int dashLoc = fileName.lastIndexOf('-');
 		if (dashLoc == -1) {
 			int temp = fileName.lastIndexOf('.');
 			if (temp != -1) {
@@ -92,7 +92,7 @@ final class MergeAble implements Closeable {
 			}
 		} else {
 			idStart = dashLoc + 1;
-			int temp = fileName.indexOf('.', dashLoc);
+			final int temp = fileName.indexOf('.', dashLoc);
 			if (temp != -1) {
 				idEnd = temp;
 			}
@@ -148,7 +148,7 @@ final class MergeAble implements Closeable {
 		processLines(m, timestamp);
 	}
 
-	private void processLines(Matcher m, String timestamp) {
+	private void processLines(final Matcher m, final String timestamp) {
 		String text = null;
 		boolean found = false;
 
@@ -205,7 +205,7 @@ final class MergeAble implements Closeable {
 		return componentID;
 	}
 
-	public void setComponentID(String componentID) {
+	public void setComponentID(final String componentID) {
 		this.componentID = componentID;
 	}
 

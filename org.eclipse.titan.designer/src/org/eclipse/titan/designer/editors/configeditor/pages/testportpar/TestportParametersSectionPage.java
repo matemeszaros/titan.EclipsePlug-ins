@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
-import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHandler.TestportParameter;
@@ -148,6 +147,7 @@ public final class TestportParametersSectionPage extends FormPage {
 		add.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
+				//Do nothing
 			}
 
 			@Override
@@ -190,6 +190,7 @@ public final class TestportParametersSectionPage extends FormPage {
 		remove.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
+				//Do nothing
 			}
 
 			@Override
@@ -420,7 +421,7 @@ public final class TestportParametersSectionPage extends FormPage {
 
 		LocationAST node;
 		newTestportParameter.setComponentName(new LocationAST("component_name"));
-		newTestportParameter.getComponentName().setHiddenBefore(new CommonHiddenStreamToken(CfgLexer.WS, "\n"));
+		newTestportParameter.getComponentName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
 		newTestportParameter.getRoot().setFirstChild(newTestportParameter.getComponentName());
 		node = new LocationAST(".");
 		newTestportParameter.getComponentName().setNextSibling(node);

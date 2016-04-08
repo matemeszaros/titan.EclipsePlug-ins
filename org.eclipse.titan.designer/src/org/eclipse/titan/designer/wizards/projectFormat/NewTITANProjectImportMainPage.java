@@ -7,6 +7,12 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.wizards.projectFormat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -35,11 +41,14 @@ class NewTITANProjectImportMainPage extends WizardPage {
 			Object source = e.getSource();
 			if (source == projectFileText) {
 				handleProjectFileModified();
+			} else if(source == searchPathEnumerateTextField) {
+				handleSearchPathTextModified();
 			}
 		}
 
 		@Override
 		public void widgetDefaultSelected(final SelectionEvent e) {
+			//Do nothing
 		}
 
 		@Override
@@ -55,10 +64,13 @@ class NewTITANProjectImportMainPage extends WizardPage {
 	private Composite pageComposite;
 	private Text projectFileText;
 	private Button projectFileSelectionButton;
+	private Text searchPathEnumerateTextField;
 	/**
 	 * The project file name path, e.g  C:/MyFolder/MyProject.tpd or /MyFolder/MyProject.tpd
 	 */
 	private String projectFile;
+	private List<String> searchPaths;
+	private boolean correctSearchPaths = false;
 
 	public NewTITANProjectImportMainPage(final String name) {
 		super(name);
@@ -66,6 +78,10 @@ class NewTITANProjectImportMainPage extends WizardPage {
 
 	public String getProjectFile() {
 		return projectFile;
+	}
+	
+	public List<String> getSearchPaths() {
+		return searchPaths;
 	}
 
 	@Override
@@ -102,7 +118,20 @@ class NewTITANProjectImportMainPage extends WizardPage {
 		projectFileSelectionButton.setText("Browse..");
 		projectFileSelectionButton.setLayoutData(new GridData());
 		projectFileSelectionButton.addSelectionListener(generalListener);
+		group = new Group(parent, SWT.NONE);
+		group.setText("Search paths during importing referenced projects:");
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(gd);
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		group.setLayout(layout);
+		group.setFont(font);
+		searchPathEnumerateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+		searchPathEnumerateTextField.setLayoutData(gd);
+		searchPathEnumerateTextField.setFont(font);
+		searchPathEnumerateTextField.addModifyListener(generalListener);
 	}
+	
 
 	protected void handleProjectFileButtonSelected() {
 		FileDialog dialog = new FileDialog(getShell());
@@ -116,6 +145,17 @@ class NewTITANProjectImportMainPage extends WizardPage {
 
 	protected void handleProjectFileModified() {
 		projectFile = projectFileText.getText();
+		correctSearchPaths = checkSearchPaths();
+		BusyIndicator.showWhile(null, new Runnable() {
+			@Override
+			public void run() {
+				checkProjectFile();
+			}
+		});
+	}
+	
+	protected void handleSearchPathTextModified() {
+		correctSearchPaths = checkSearchPaths();
 		BusyIndicator.showWhile(null, new Runnable() {
 			@Override
 			public void run() {
@@ -127,9 +167,37 @@ class NewTITANProjectImportMainPage extends WizardPage {
 	/**
 	 * Check the validity of the file set as project file. And also extracts
 	 * all data from the file if it is a correct project file.
+	 * 
 	 * */
 	private void checkProjectFile() {
-		setPageComplete(projectFile != null && !"".equals(projectFile.trim()));
+		setPageComplete(projectFile != null && !"".equals(projectFile.trim()) && correctSearchPaths);
 		// TODO implement checks here if needed
+	}
+	
+	/**
+	 * Check and extract the search paths from the Text
+	 */
+	private boolean checkSearchPaths() {
+		String text = searchPathEnumerateTextField.getText().trim();
+		if (!text.isEmpty() && !text.startsWith("-I")) {
+			setErrorMessage("The search path shall start with -I.");
+			return false;
+		}
+		searchPaths = new ArrayList<String>(Arrays.asList(text.split("\\s*-I\\s*", -1)));
+		searchPaths.removeAll(Arrays.asList(null, ""));
+		for (String string : searchPaths) {
+			string = string.trim();
+			if (string.contains(" ")) {
+				setErrorMessage("The path (" + string + ")  contains whitespaces or the -I flag is missing.");
+				return false;
+			}
+			IPath path = new Path(string);
+			if (!path.isAbsolute()) {
+				setErrorMessage("The paths in the search paths must be absolute. " + string + " is not an absolute path.");
+				return false;
+			}
+		}
+		setErrorMessage(null);
+		return true;
 	}
 }

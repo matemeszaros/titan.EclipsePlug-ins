@@ -185,7 +185,7 @@ public final class ComponentTypeReferenceList extends ASTNode implements ILocate
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReferences != null) {
 			for (Reference ref : componentReferences) {
 				if (!ref.accept(v)) {

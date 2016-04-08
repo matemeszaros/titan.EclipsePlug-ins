@@ -14,12 +14,12 @@ import org.eclipse.titan.designer.editors.Pair;
  * @author Kristof Szabados
  * */
 public final class PairMatcher extends GeneralPairMatcher {
-	public PairMatcher(final Pair[] pairs) {
-		this.pairs = pairs;
+	public PairMatcher() {
+		this.pairs = new Pair[] { new Pair('{', '}'), new Pair('(', ')'), new Pair('[', ']') };
 	}
 
 	@Override
-	protected String getPertitioning() {
+	protected String getPartitioning() {
 		return PartitionScanner.ASN1_PARTITIONING;
 	}
 }

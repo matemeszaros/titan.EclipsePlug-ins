@@ -19,13 +19,12 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.Interval;
 import org.eclipse.titan.common.parsers.Interval.interval_type;
 import org.eclipse.titan.designer.AST.Reference;
+import org.eclipse.titan.designer.editors.GeneralPairMatcher;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
+import org.eclipse.titan.designer.editors.HeuristicalIntervalDetector;
 import org.eclipse.titan.designer.editors.IReferenceParser;
-import org.eclipse.titan.designer.editors.Pair;
-import org.eclipse.titan.designer.editors.ttcn3editor.HeuristicalIntervalDetector;
-import org.eclipse.titan.designer.editors.ttcn3editor.PairMatcher;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
-import org.eclipse.titan.designer.parsers.asn1parser.Asn1Lexer;
 import org.eclipse.titan.designer.parsers.asn1parser.ASN1Listener;
+import org.eclipse.titan.designer.parsers.asn1parser.Asn1Lexer;
 import org.eclipse.titan.designer.parsers.asn1parser.Asn1Parser;
 import org.eclipse.titan.designer.parsers.asn1parser.ModuleLevelTokenStreamTracker;
 import org.eclipse.titan.designer.parsers.asn1parser.TokenWithIndexAndSubTokensFactory;
@@ -42,6 +41,7 @@ public final class ASN1ReferenceParser implements IReferenceParser {
 
 	@Override
 	public final void setErrorReporting(final boolean reportErrors) {
+		//Do nothing
 	}
 
 	public final int getReplacementOffset() {
@@ -56,15 +56,12 @@ public final class ASN1ReferenceParser implements IReferenceParser {
 			return reference;
 		}
 
-		Pair parenthesis = new Pair('(', ')');
-		Pair index = new Pair('[', ']');
-
 		try {
 			char currentChar = document.getChar(ofs);
 			if (']' == currentChar || ')' == currentChar || '}' == currentChar) {
 				return reference;
 			}
-			PairMatcher pairMatcher = new PairMatcher(new Pair[] { parenthesis, index });
+			GeneralPairMatcher pairMatcher = new ASN1ReferencePairMatcher();
 
 			ofs = referenceStartOffset(ofs, document, pairMatcher);
 
@@ -96,12 +93,9 @@ public final class ASN1ReferenceParser implements IReferenceParser {
 			return reference;
 		}
 
-		Pair parenthesis = new Pair('(', ')');
-		Pair index = new Pair('[', ']');
-
 		try {
 			char currentChar = document.getChar(ofs);
-			PairMatcher pairMatcher = new PairMatcher(new Pair[] { parenthesis, index });
+			GeneralPairMatcher pairMatcher = new ASN1ReferencePairMatcher();
 
 			ofs = referenceStartOffset(ofs, document, pairMatcher);
 
@@ -137,7 +131,7 @@ public final class ASN1ReferenceParser implements IReferenceParser {
 		return reference;
 	}
 
-	private final int referenceStartOffset(final int offset, final IDocument document, final PairMatcher pairMatcher) throws BadLocationException {
+	private final int referenceStartOffset(final int offset, final IDocument document, final GeneralPairMatcher pairMatcher) throws BadLocationException {
 		Interval rootInterval = GlobalIntervalHandler.getInterval(document);
 		if (rootInterval == null) {
 			rootInterval = (new HeuristicalIntervalDetector()).buildIntervals(document);

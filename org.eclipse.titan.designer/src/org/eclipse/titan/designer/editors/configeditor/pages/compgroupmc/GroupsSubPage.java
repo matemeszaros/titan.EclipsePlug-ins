@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
-import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.GroupSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.GroupSectionHandler.Group;
@@ -468,7 +467,7 @@ public final class GroupsSubPage {
 
 		LocationAST node;
 		newGroup.setGroupName(new LocationAST("group_name"));
-		newGroup.getGroupName().setHiddenBefore(new CommonHiddenStreamToken(CfgLexer.WS, "\n"));
+		newGroup.getGroupName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
 		newGroup.getRoot().setFirstChild(newGroup.getGroupName());
 		node = new LocationAST(" := ");
 		newGroup.getGroupName().setNextSibling(node);

@@ -972,24 +972,7 @@ public final class GUIProjectImporter {
 		final IProjectDescription description = workspace.newProjectDescription(info.getName());
 
 		description.setLocationURI(targetLocation);
-
-		/*
-		 * A new project description in normal conditions does not
-		 * contain any natures but as internal behavior tends to change
-		 * without notification we can not rely on it.
-		 */
-		List<String> newIds = new ArrayList<String>();
-		newIds.addAll(Arrays.asList(description.getNatureIds()));
-		int index = newIds.indexOf(TITANNature.NATURE_ID);
-		if (index == -1) {
-			newIds.add(TITANNature.NATURE_ID);
-		}
-		index = newIds.indexOf(TITANNature.LOG_NATURE_ID);
-		if (index == -1) {
-			newIds.add(TITANNature.LOG_NATURE_ID);
-		}
-
-		description.setNatureIds(newIds.toArray(new String[newIds.size()]));
+		TITANNature.addTITANNatureToProject(description);
 
 		try {
 			createProject(description, newProjectHandle, new NullProgressMonitor());

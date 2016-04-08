@@ -158,6 +158,7 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 
 	@Override
 	public void setLocation(final Location location) {
+		//Do nothing
 	}
 
 	// Location is optimized not to store an object at it is not needed
@@ -822,7 +823,7 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (modid != null && !modid.accept(v)) {
 			return false;
 		}

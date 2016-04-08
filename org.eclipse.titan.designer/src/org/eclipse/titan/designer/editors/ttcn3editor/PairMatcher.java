@@ -9,18 +9,17 @@ package org.eclipse.titan.designer.editors.ttcn3editor;
 
 import org.eclipse.titan.designer.editors.GeneralPairMatcher;
 import org.eclipse.titan.designer.editors.Pair;
-import org.eclipse.titan.designer.editors.ttcnppeditor.PartitionScanner;
 
 /**
  * @author Kristof Szabados
  * */
 public final class PairMatcher extends GeneralPairMatcher {
-	public PairMatcher(final Pair[] pairs) {
-		this.pairs = pairs;
+	public PairMatcher() {
+		this.pairs = new Pair[] { new Pair('{', '}'), new Pair('(', ')'), new Pair('[', ']') };
 	}
 
 	@Override
-	protected String getPertitioning() {
+	protected String getPartitioning() {
 		return PartitionScanner.TTCN3_PARTITIONING;
 	}
 }

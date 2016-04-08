@@ -81,7 +81,7 @@ public final class Start_Component_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -111,8 +111,8 @@ public final class Start_Component_Statement extends Statement {
 
 		lastTimeChecked = timestamp;
 
-		Component_Type componentType = Port_Utility.checkComponentReference(timestamp, this, componentReference, false, false);
-		Assignment assignment = functionInstanceReference.getRefdAssignment(timestamp, true);
+		final Component_Type componentType = Port_Utility.checkComponentReference(timestamp, this, componentReference, false, false);
+		final Assignment assignment = functionInstanceReference.getRefdAssignment(timestamp, true);
 		if (assignment == null) {
 			return;
 		}
@@ -128,12 +128,12 @@ public final class Start_Component_Statement extends Statement {
 			return;
 		}
 
-		Def_Function function = (Def_Function) assignment;
+		final Def_Function function = (Def_Function) assignment;
 		if (!function.checkStartable(timestamp, getLocation())) {
 			return;
 		}
 
-		IType runsOnType = function.getRunsOnType(timestamp);
+		final IType runsOnType = function.getRunsOnType(timestamp);
 		if (componentType == null || runsOnType == null) {
 			return;
 		}
@@ -158,8 +158,8 @@ public final class Start_Component_Statement extends Statement {
 					break;
 				}
 				if (type instanceof IReferencingType) {
-					IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
-					IType refd = ((IReferencingType) type).getTypeRefd(timestamp, refChain);
+					final IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+					final IType refd = ((IReferencingType) type).getTypeRefd(timestamp, refChain);
 					refChain.release();
 					if (type != refd) {
 						type = refd;
@@ -213,7 +213,7 @@ public final class Start_Component_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReference != null && !componentReference.accept(v)) {
 			return false;
 		}

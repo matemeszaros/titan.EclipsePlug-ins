@@ -9,9 +9,6 @@ package org.eclipse.titan.designer.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -132,21 +129,7 @@ public final class NewTITANProjectWizard extends BasicNewResourceWizard implemen
 
 		final IProjectDescription description = workspace.newProjectDescription(tempExecutableName);
 		description.setLocationURI(location);
-
-		/*
-		 * A new project description in normal conditions does not
-		 * contain any natures but as internal behavior tends to change
-		 * without notification we can not rely on it.
-		 */
-		List<String> newIds = new ArrayList<String>();
-		newIds.addAll(Arrays.asList(description.getNatureIds()));
-		int index = newIds.indexOf(TITANNature.NATURE_ID);
-		if (index == -1) {
-			newIds.add(TITANNature.NATURE_ID);
-			newIds.add(TITANNature.LOG_NATURE_ID);
-		}
-
-		description.setNatureIds(newIds.toArray(new String[newIds.size()]));
+		TITANNature.addTITANNatureToProject(description);
 
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override

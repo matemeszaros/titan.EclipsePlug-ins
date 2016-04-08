@@ -23,8 +23,8 @@ import org.eclipse.titan.designer.AST.ASN1.IObjectSet_Element;
 import org.eclipse.titan.designer.AST.ASN1.ObjectClass;
 import org.eclipse.titan.designer.AST.ASN1.ObjectSet;
 import org.eclipse.titan.designer.AST.ASN1.ObjectSetElement_Visitor;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -214,7 +214,7 @@ public final class Referenced_ObjectSet extends ObjectSet implements IObjectSet_
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (reference != null && !reference.accept(v)) {
 			return false;
 		}

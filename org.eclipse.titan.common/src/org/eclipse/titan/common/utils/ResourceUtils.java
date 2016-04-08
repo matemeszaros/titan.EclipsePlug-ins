@@ -142,7 +142,7 @@ public class ResourceUtils {
 	 *            The resources to refresh
 	 */
 	public static void refreshResources(final List<? extends IResource> resources) {
-		for (IResource resource : resources) {
+		for (final IResource resource : resources) {
 			try {
 				resource.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 			} catch (CoreException e) {

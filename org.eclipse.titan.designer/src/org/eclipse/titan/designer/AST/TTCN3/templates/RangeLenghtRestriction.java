@@ -330,7 +330,7 @@ public final class RangeLenghtRestriction extends LengthRestriction {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (lower != null && !lower.accept(v)) {
 			return false;
 		}

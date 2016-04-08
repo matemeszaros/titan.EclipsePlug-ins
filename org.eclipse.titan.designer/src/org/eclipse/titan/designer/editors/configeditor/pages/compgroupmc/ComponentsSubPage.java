@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
-import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler.Component;
@@ -280,12 +279,12 @@ public final class ComponentsSubPage {
 
 		LocationAST node;
 		newcomponent.setComponentName(new LocationAST("component_name"));
-		newcomponent.getComponentName().setHiddenBefore(new CommonHiddenStreamToken(CfgLexer.WS, "\n"));
+		newcomponent.getComponentName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
 		newcomponent.getRoot().setFirstChild(newcomponent.getComponentName());
 		node = new LocationAST(" := ");
 		newcomponent.getComponentName().setNextSibling(node);
 		newcomponent.setHostName(new LocationAST("host_name"));
-		newcomponent.getHostName().setHiddenAfter(new CommonHiddenStreamToken(CfgLexer.WS, "\n"));
+		newcomponent.getHostName().setHiddenAfter(new CommonHiddenStreamToken("\n"));
 		node.setNextSibling(newcomponent.getHostName());
 
 		return newcomponent;

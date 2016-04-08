@@ -54,7 +54,7 @@ public final class Default_ActualParameter extends ActualParameter {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (defaultActualParameter != null) {
 			if (!defaultActualParameter.accept(v)) {
 				return false;

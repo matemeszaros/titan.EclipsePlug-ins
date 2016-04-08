@@ -109,7 +109,7 @@ public class ListOfTemplates extends ASTNode implements IIncrementallyUpdateable
 	
 	
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (templates != null) {
 			for (ITemplateListItem t : templates) {
 				if (!t.accept(v)) {

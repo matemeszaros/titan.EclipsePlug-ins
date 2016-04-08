@@ -51,7 +51,7 @@ public final class NamedTemplate extends ASTNode implements ILocateableNode, IIn
 	 * */
 	private boolean parsed;
 
-	public NamedTemplate(final Identifier name, ITemplateListItem template) {
+	public NamedTemplate(final Identifier name, final ITemplateListItem template) {
 //		final boolean parsed = true;
 //		NamedTemplate(name,template,parsed);
 		super();
@@ -65,7 +65,7 @@ public final class NamedTemplate extends ASTNode implements ILocateableNode, IIn
 		}
 	}
 	
-	public NamedTemplate(final Identifier name, TTCN3Template template) {
+	public NamedTemplate(final Identifier name, final TTCN3Template template) {
 		super();
 		this.name = name;
 		this.template = new TemplateBody(template);
@@ -89,7 +89,7 @@ public final class NamedTemplate extends ASTNode implements ILocateableNode, IIn
 		}
 	}
 	
-	public NamedTemplate(final Identifier name, TTCN3Template template, final boolean parsed) {
+	public NamedTemplate(final Identifier name, final TTCN3Template template, final boolean parsed) {
 		super();
 		this.name = name;
 		this.template.setTemplate(template);
@@ -161,7 +161,7 @@ public final class NamedTemplate extends ASTNode implements ILocateableNode, IIn
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (name != null && !name.accept(v)) {
 			return false;
 		}

@@ -46,7 +46,7 @@ public final class AssignmentList_Parameter_Redirect extends Parameter_Redirect 
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (assignments == child) {
 			return builder.append(FULLNAMEPART);
@@ -65,10 +65,10 @@ public final class AssignmentList_Parameter_Redirect extends Parameter_Redirect 
 
 	@Override
 	public void checkErroneous(final CompilationTimeStamp timestamp) {
-		HashMap<String, Parameter_Assignment> parameterMap = new HashMap<String, Parameter_Assignment>();
+		final HashMap<String, Parameter_Assignment> parameterMap = new HashMap<String, Parameter_Assignment>();
 		for (int i = 0, size = assignments.getNofParameterAssignments(); i < size; i++) {
-			Parameter_Assignment assignment = assignments.getParameterAssignmentByIndex(i);
-			String name = assignment.getIdentifier().getName();
+			final Parameter_Assignment assignment = assignments.getParameterAssignmentByIndex(i);
+			final String name = assignment.getIdentifier().getName();
 			if (parameterMap.containsKey(name)) {
 				assignment.getLocation().reportSemanticError(
 						MessageFormat.format("Duplicate redirect for parameter `{0}''", assignment.getIdentifier()
@@ -91,7 +91,7 @@ public final class AssignmentList_Parameter_Redirect extends Parameter_Redirect 
 			return;
 		}
 
-		SignatureFormalParameterList parameterList = signature.getParameterList();
+		final SignatureFormalParameterList parameterList = signature.getParameterList();
 		if (parameterList.getNofParameters() == 0) {
 			getLocation().reportSemanticError(MessageFormat.format(SIGNATUREWITHOUTPARAMETERS, signature.getTypename()));
 			checkErroneous(timestamp);
@@ -99,10 +99,10 @@ public final class AssignmentList_Parameter_Redirect extends Parameter_Redirect 
 		}
 
 		boolean errorFlag = false;
-		HashMap<String, Parameter_Assignment> parameterMap = new HashMap<String, Parameter_Assignment>();
+		final HashMap<String, Parameter_Assignment> parameterMap = new HashMap<String, Parameter_Assignment>();
 		for (int i = 0, size = assignments.getNofParameterAssignments(); i < size; i++) {
-			Parameter_Assignment assignment = assignments.getParameterAssignmentByIndex(i);
-			String name = assignment.getIdentifier().getName();
+			final Parameter_Assignment assignment = assignments.getParameterAssignmentByIndex(i);
+			final String name = assignment.getIdentifier().getName();
 			if (parameterMap.containsKey(name)) {
 				assignment.getLocation().reportSemanticError(
 						MessageFormat.format("Duplicate redirect for parameter `{0}''", assignment.getIdentifier()
@@ -117,7 +117,7 @@ public final class AssignmentList_Parameter_Redirect extends Parameter_Redirect 
 			}
 
 			if (parameterList.hasParameterWithName(name)) {
-				SignatureFormalParameter parameterTemplate = parameterList.getParameterByName(name);
+				final SignatureFormalParameter parameterTemplate = parameterList.getParameterByName(name);
 				if (isOut) {
 					if (SignatureFormalParameter.PARAM_IN == parameterTemplate.getDirection()) {
 						final String message = MessageFormat.format(
@@ -148,12 +148,12 @@ public final class AssignmentList_Parameter_Redirect extends Parameter_Redirect 
 
 		if (!errorFlag) {
 			// converting the AssignmentList to VariableList
-			Variable_Entries variableEntries = new Variable_Entries();
-			int upperLimit = isOut ? parameterList.getNofOutParameters() : parameterList.getNofInParameters();
+			final Variable_Entries variableEntries = new Variable_Entries();
+			final int upperLimit = isOut ? parameterList.getNofOutParameters() : parameterList.getNofInParameters();
 			for (int i = 0; i < upperLimit; i++) {
-				SignatureFormalParameter parameter = isOut ? parameterList.getOutParameterByIndex(i) : parameterList
+				final SignatureFormalParameter parameter = isOut ? parameterList.getOutParameterByIndex(i) : parameterList
 						.getInParameterByIndex(i);
-				String name = parameter.getIdentifier().getName();
+				final String name = parameter.getIdentifier().getName();
 				if (parameterMap.containsKey(name)) {
 					variableEntries.add(new Variable_Entry(parameterMap.get(name).getReference()));
 				} else {
@@ -184,7 +184,7 @@ public final class AssignmentList_Parameter_Redirect extends Parameter_Redirect 
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (assignments != null && !assignments.accept(v)) {
 			return false;
 		}

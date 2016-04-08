@@ -56,7 +56,7 @@ public final class Function_Applied_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (dereferredValue == child) {
 			return builder.append(FULLNAMEPART1);
@@ -115,7 +115,7 @@ public final class Function_Applied_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (dereferredValue != null && !dereferredValue.accept(v)) {
 			return false;
 		}

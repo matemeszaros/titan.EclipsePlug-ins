@@ -129,7 +129,7 @@ public final class Values extends ASTNode implements IIncrementallyUpdateable {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (isIndexed) {
 			for (int i = 0; i < indexedValues.size(); i++) {
@@ -195,7 +195,7 @@ public final class Values extends ASTNode implements IIncrementallyUpdateable {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (isIndexed) {
 			for (IndexedValue iv : indexedValues) {
 				if (!iv.accept(v)) {

@@ -28,7 +28,7 @@ public final class DefineSectionHandler {
 			return root;
 		}
 
-		public void setRoot(LocationAST root) {
+		public void setRoot(final LocationAST root) {
 			this.root = root;
 		}
 
@@ -36,7 +36,7 @@ public final class DefineSectionHandler {
 			return definitionName;
 		}
 
-		public void setDefinitionName(LocationAST definitionName) {
+		public void setDefinitionName(final LocationAST definitionName) {
 			this.definitionName = definitionName;
 		}
 
@@ -44,21 +44,21 @@ public final class DefineSectionHandler {
 			return definitionValue;
 		}
 
-		public void setDefinitionValue(LocationAST definitionValue) {
+		public void setDefinitionValue(final LocationAST definitionValue) {
 			this.definitionValue = definitionValue;
 		}
 
-		public void setDefinitionName(Token aToken) {
-			ParserRuleContext rule = new ParserRuleContext();
+		public void setDefinitionName(final Token aToken) {
+			final ParserRuleContext rule = new ParserRuleContext();
 			rule.addChild(aToken);
 			this.definitionName = new LocationAST(rule);
 		}
 
-		public void setDefinitionValue(ParserRuleContext aRule) {
+		public void setDefinitionValue(final ParserRuleContext aRule) {
 			this.definitionValue = new LocationAST(aRule);
 		}
 
-		public void setRoot(ParserRuleContext aRule) {
+		public void setRoot(final ParserRuleContext aRule) {
 			this.root = new LocationAST(aRule);
 		}
 	}
@@ -70,7 +70,7 @@ public final class DefineSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -78,12 +78,12 @@ public final class DefineSectionHandler {
 		return definitions;
 	}
 
-	public void setDefinitions(List<Definition> definitions) {
+	public void setDefinitions(final List<Definition> definitions) {
 		this.definitions = definitions;
 	}
 
-	public void setLastSectionRoot(Token aToken) {
-		ParserRuleContext rule = new ParserRuleContext();
+	public void setLastSectionRoot(final Token aToken) {
+		final ParserRuleContext rule = new ParserRuleContext();
 		rule.addChild(aToken);
 		this.lastSectionRoot = new LocationAST(rule);
 	}

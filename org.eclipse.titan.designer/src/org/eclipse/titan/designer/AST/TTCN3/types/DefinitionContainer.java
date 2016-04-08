@@ -61,7 +61,7 @@ public class DefinitionContainer implements Iterable<Definition> {
 		return definitions.iterator();
 	}
 
-	public void add(Definition definition) {
+	public void add(final Definition definition) {
 		definitions.add(definition);
 
 		String definitionName = definition.getIdentifier().getName();

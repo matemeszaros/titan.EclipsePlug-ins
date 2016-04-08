@@ -80,7 +80,7 @@ public final class Int2OctExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (value1 == child) {
 			return builder.append(OPERAND1);
@@ -273,7 +273,7 @@ public final class Int2OctExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value1 != null && !value1.accept(v)) {
 			return false;
 		}

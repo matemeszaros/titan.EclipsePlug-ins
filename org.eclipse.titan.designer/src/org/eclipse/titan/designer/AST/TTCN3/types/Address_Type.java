@@ -254,7 +254,7 @@ public final class Address_Type extends Type implements IReferencingType {
 	}
 	
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}

@@ -39,7 +39,7 @@ public final class Else_Altguard extends AltGuard {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (statementblock == child) {
 			return builder.append(FULLNAMEPART);
@@ -94,7 +94,7 @@ public final class Else_Altguard extends AltGuard {
 
 		if (statementblock != null) {
 			statementblock.check(timestamp);
-			Statement statement = statementblock.getFirstStatement();
+			final Statement statement = statementblock.getFirstStatement();
 			if (statement != null && Statement_type.S_REPEAT.equals(statement.getType())) {
 				statement.getLocation().reportSemanticWarning(BUSYWAITING);
 			}
@@ -147,7 +147,7 @@ public final class Else_Altguard extends AltGuard {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (statementblock != null) {
 			if (!statementblock.accept(v)) {
 				return false;

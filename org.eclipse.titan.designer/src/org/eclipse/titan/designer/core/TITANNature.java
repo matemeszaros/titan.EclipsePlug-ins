@@ -7,6 +7,10 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -79,6 +83,48 @@ public final class TITANNature implements IProjectNature {
 	@Override
 	public void setProject(final IProject project) {
 		this.project = project;
+	}
+
+	/**
+	 * Adds the TITAN natures to the provided project.
+	 * 
+	 * @param description the project description to receive the natures.
+	 * */
+	public static void addTITANNatureToProject(final IProjectDescription description) {
+		List<String> newIds = new ArrayList<String>();
+		newIds.addAll(Arrays.asList(description.getNatureIds()));
+		int index = newIds.indexOf(TITANNature.NATURE_ID);
+		if (index == -1) {
+			newIds.add(TITANNature.NATURE_ID);
+		}
+		index = newIds.indexOf(TITANNature.LOG_NATURE_ID);
+		if (index == -1) {
+			newIds.add(TITANNature.LOG_NATURE_ID);
+		}
+		
+		description.setNatureIds(newIds.toArray(new String[newIds.size()]));
+	}
+	
+	/**
+	 * Remove the TITAN natures from the project.
+	 * 
+	 * @param description the project description to remove the natures from.
+	 * */
+	public static void removeTITANNature(final IProjectDescription description) {
+		final List<String> natureIds = new ArrayList<String>();
+		natureIds.addAll(Arrays.asList(description.getNatureIds()));
+		
+		int index = natureIds.indexOf(TITANNature.NATURE_ID);
+		if (index != -1) {
+			natureIds.remove(index);
+		}
+		
+		index = natureIds.indexOf(TITANNature.LOG_NATURE_ID);
+		if (index != -1) {
+			natureIds.remove(index);
+		}
+
+		description.setNatureIds(natureIds.toArray(new String[natureIds.size()]));
 	}
 
 	/**

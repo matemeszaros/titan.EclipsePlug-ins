@@ -29,7 +29,7 @@ import org.eclipse.titan.designer.AST.TTCN3.templates.ValueRange;
 import org.eclipse.titan.designer.AST.TTCN3.templates.Value_Range_Template;
 import org.eclipse.titan.designer.AST.TTCN3.types.subtypes.SubType;
 import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**

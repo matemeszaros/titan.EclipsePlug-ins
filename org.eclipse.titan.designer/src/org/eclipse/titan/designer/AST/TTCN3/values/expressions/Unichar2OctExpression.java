@@ -51,7 +51,7 @@ public final class Unichar2OctExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("unichar2oct(").append(value.createStringRepresentation()).append(')');
 		return builder.toString();
 	}
@@ -66,7 +66,7 @@ public final class Unichar2OctExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (value == child) {
 			return builder.append(OPERAND);
@@ -201,7 +201,7 @@ public final class Unichar2OctExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null && !value.accept(v)) {
 			return false;
 		}

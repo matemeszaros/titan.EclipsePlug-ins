@@ -35,12 +35,12 @@ public final class CfgDefinitionInformation {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("{ ");
 		sb.append(value);
 		sb.append(", ( ");
 		boolean first = true;
-		for ( CfgLocation l : locations ) {
+		for (final CfgLocation l : locations ) {
 			if (first) {
 				first = false;
 			} else {

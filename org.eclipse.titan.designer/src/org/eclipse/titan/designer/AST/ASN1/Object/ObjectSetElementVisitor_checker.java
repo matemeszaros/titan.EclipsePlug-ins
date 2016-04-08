@@ -43,7 +43,7 @@ public final class ObjectSetElementVisitor_checker extends ObjectSetElement_Visi
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		// TODO
 		return true;
 	}

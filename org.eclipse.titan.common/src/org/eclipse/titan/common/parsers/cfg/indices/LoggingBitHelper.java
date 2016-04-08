@@ -70,7 +70,7 @@ public final class LoggingBitHelper {
 	}
 	
 	public static LoggingBit[] getFirstLevelNodes(){
-		Set<LoggingBit> temp = CHILD_RELATION.keySet();
+		final Set<LoggingBit> temp = CHILD_RELATION.keySet();
 		return temp.toArray(new LoggingBit[temp.size()]);
 	}
 	
@@ -81,10 +81,10 @@ public final class LoggingBitHelper {
 	}
 	
 	public static LoggingBit getParent(final LoggingBit bit){
-		for(LoggingBit parent: CHILD_RELATION.keySet()){
-			LoggingBit[] children = CHILD_RELATION.get(parent);
+		for(final LoggingBit parent: CHILD_RELATION.keySet()){
+			final LoggingBit[] children = CHILD_RELATION.get(parent);
 			
-			for(LoggingBit temp: children){
+			for(final LoggingBit temp: children){
 				if(bit.equals(temp)){
 					return parent;
 				}

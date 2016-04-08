@@ -15,8 +15,8 @@ import org.eclipse.titan.designer.AST.ISetting;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -52,6 +52,7 @@ public final class Erroneous_FieldSpecification extends FieldSpecification {
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
+		//Do nothing
 	}
 
 	@Override
@@ -85,7 +86,7 @@ public final class Erroneous_FieldSpecification extends FieldSpecification {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier != null && !identifier.accept(v)) {
 			return false;
 		}

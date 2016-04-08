@@ -35,7 +35,7 @@ public final class PrintingType extends ASTNode implements ILocateableNode {
 		PRETTY
 	}
 
-	private PrintingTypeEnum printingType;
+	private final PrintingTypeEnum printingType;
 
 	private CompilationTimeStamp lastTimeChecked;
 	private Location location;
@@ -56,7 +56,7 @@ public final class PrintingType extends ASTNode implements ILocateableNode {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		builder.append(".<printing>");
 
@@ -78,7 +78,7 @@ public final class PrintingType extends ASTNode implements ILocateableNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (PrintingTypeEnum.NONE == printingType) {
 			return false;
 		}

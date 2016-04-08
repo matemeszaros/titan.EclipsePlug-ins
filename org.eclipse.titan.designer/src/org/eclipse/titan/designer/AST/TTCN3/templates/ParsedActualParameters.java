@@ -164,7 +164,7 @@ public final class ParsedActualParameters extends ASTNode implements ILocateable
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (unnamedPart != null && !unnamedPart.accept(v)) {
 			return false;
 		}

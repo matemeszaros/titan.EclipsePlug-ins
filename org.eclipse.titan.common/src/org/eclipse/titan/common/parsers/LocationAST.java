@@ -22,23 +22,23 @@ public class LocationAST {
 	private CommonHiddenStreamToken mHiddenAfter;
 	private CommonHiddenStreamToken mHiddenBefore;
 	
-	public LocationAST(String aText) {
+	public LocationAST(final String aText) {
 		mRule = new ParserRuleContext();
 		setText( aText );
 	}
 
-	public LocationAST(ParserRuleContext aRule) {
+	public LocationAST(final ParserRuleContext aRule) {
 		mRule = aRule;
 	}
 
-	public LocationAST(Token aToken) {
+	public LocationAST(final Token aToken) {
 		mRule = new ParserRuleContext();
 		mRule.addChild(aToken);
 	}
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("{ ");
 		sb.append(mText+", ");
 		if ( mRule != null ) {
@@ -60,11 +60,11 @@ public class LocationAST {
 		if ( mText != null ) {
 			return mText;
 		}
-		String text = mRule != null ? mRule.getText() : null;
-		return text;
+
+		return mRule != null ? mRule.getText() : null;
 	}
 	
-	public void setText(String aText) {
+	public void setText(final String aText) {
 		mText = aText;
 	}
 	
@@ -73,7 +73,8 @@ public class LocationAST {
 	}
 	
 	public LocationAST getParent() {
-		ParserRuleContext parentRule = mRule != null ? mRule.getParent() : null;
+		final ParserRuleContext parentRule = mRule != null ? mRule.getParent() : null;
+
 		return new LocationAST( parentRule );
 	}
 
@@ -93,11 +94,11 @@ public class LocationAST {
 		}
 		
 		final ParserRuleContext firstRule = (ParserRuleContext) firstParseTree;
-		LocationAST la = new LocationAST( firstRule );
-		return la;
+
+		return new LocationAST( firstRule );
 	}
 
-	public void setFirstChild(LocationAST aNode) {
+	public void setFirstChild(final LocationAST aNode) {
 		if ( mRule == null ) {
 			return;
 		}
@@ -105,7 +106,8 @@ public class LocationAST {
 		if ( mRule.children == null ) {
 			mRule.children = new ArrayList<ParseTree>();
 		}
-		List<ParseTree> children = mRule.children;
+
+		final List<ParseTree> children = mRule.children;
 		children.set(0, aNode.getRule());
 	}
 
@@ -128,23 +130,23 @@ public class LocationAST {
 		}
 		
 		final ParserRuleContext nextRule = (ParserRuleContext) nextParseTree;
-		LocationAST la = new LocationAST( nextRule );
-		return la;
+
+		return new LocationAST( nextRule );
 
 	}
 
-	public void setNextSibling( LocationAST aNode ) {
+	public void setNextSibling(final LocationAST aNode ) {
 		final int childIndex = getChildIndex();
 		if ( childIndex < 0 ) {
 			// mRule or mRule.getParent() or mRule.getParent().children is null
 			return;
 		}
 		
-		List<ParseTree> children = mRule.getParent().children;
+		final List<ParseTree> children = mRule.getParent().children;
 		children.set(childIndex + 1, aNode.getRule());
 	}
 
-	public void addChild(LocationAST aNode) {
+	public void addChild(final LocationAST aNode) {
 		if ( mRule == null ) {
 			return;
 		}
@@ -152,7 +154,8 @@ public class LocationAST {
 		if ( mRule.children == null ) {
 			mRule.children = new ArrayList<ParseTree>();
 		}
-		List<ParseTree> children = mRule.children;
+
+		final List<ParseTree> children = mRule.children;
 		children.add(aNode.getRule());
 	}
 
@@ -161,7 +164,7 @@ public class LocationAST {
 			return;
 		}
 		
-		List<ParseTree> children = mRule.children;
+		final List<ParseTree> children = mRule.children;
 		if ( children != null ) {
 			children.clear();
 		}
@@ -171,7 +174,7 @@ public class LocationAST {
 		return mHiddenBefore;
 	}
 
-	public void setHiddenBefore(CommonHiddenStreamToken aToken) {
+	public void setHiddenBefore(final CommonHiddenStreamToken aToken) {
 		mHiddenBefore = aToken;
 	}
 
@@ -179,7 +182,7 @@ public class LocationAST {
 		return mHiddenAfter;
 	}
 
-	public void setHiddenAfter(CommonHiddenStreamToken aToken) {
+	public void setHiddenAfter(final CommonHiddenStreamToken aToken) {
 		mHiddenAfter = aToken;
 	}
 	
@@ -202,7 +205,7 @@ public class LocationAST {
 		}
 		
 		for ( int i = 0; i < parent.getChildCount(); i++ ) {
-			ParseTree child = parent.getChild(i);
+			final ParseTree child = parent.getChild(i);
 			if ( this.mRule == child ) {
 				return i;
 			}

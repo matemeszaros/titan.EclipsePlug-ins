@@ -43,7 +43,7 @@ public final class SelectCases extends ASTNode implements IIncrementallyUpdateab
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = select_cases.size(); i < size; i++) {
 			if (select_cases.get(i) == child) {
@@ -111,7 +111,7 @@ public final class SelectCases extends ASTNode implements IIncrementallyUpdateab
 		StatementBlock.ReturnStatus_type result = StatementBlock.ReturnStatus_type.RS_MAYBE;
 		boolean hasElse = false;
 		for (int i = 0, size = select_cases.size(); i < size; i++) {
-			SelectCase selectCase = select_cases.get(i);
+			final SelectCase selectCase = select_cases.get(i);
 			switch (selectCase.hasReturn(timestamp)) {
 			case RS_NO:
 				if (result == StatementBlock.ReturnStatus_type.RS_YES) {
@@ -200,15 +200,15 @@ public final class SelectCases extends ASTNode implements IIncrementallyUpdateab
 			return;
 		}
 
-		for (SelectCase sc : select_cases) {
+		for (final SelectCase sc : select_cases) {
 			sc.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (select_cases != null) {
-			for (SelectCase sc : select_cases) {
+			for (final SelectCase sc : select_cases) {
 				if (!sc.accept(v)) {
 					return false;
 				}

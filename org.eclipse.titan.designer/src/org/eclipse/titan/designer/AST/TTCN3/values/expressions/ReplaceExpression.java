@@ -123,7 +123,7 @@ public final class ReplaceExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (templateInstance1 == child) {
 			return builder.append(OPERAND1);
@@ -233,11 +233,7 @@ public final class ReplaceExpression extends Expression_Value {
 				: expectedValue;
 
 		Type_type tempType1 = null;
-		Type_type tempType2 = null;
-		Type_type tempType3 = null;
-		Type_type tempType4 = null;
 		IValue value1 = null;
-		IValue value4 = null;
 
 		if (templateInstance1 != null) {
 			ITTCN3Template temp = templateInstance1.getTemplateBody();
@@ -272,7 +268,7 @@ public final class ReplaceExpression extends Expression_Value {
 
 		if (value2 != null) {
 			value2.setLoweridToReference(timestamp);
-			tempType2 = value2.getExpressionReturntype(timestamp, expectedValue);
+			Type_type tempType2 = value2.getExpressionReturntype(timestamp, expectedValue);
 
 			switch (tempType2) {
 			case TYPE_INTEGER:
@@ -302,7 +298,7 @@ public final class ReplaceExpression extends Expression_Value {
 
 		if (value3 != null) {
 			value3.setLoweridToReference(timestamp);
-			tempType3 = value3.getExpressionReturntype(timestamp, expectedValue);
+			Type_type tempType3 = value3.getExpressionReturntype(timestamp, expectedValue);
 
 			switch (tempType3) {
 			case TYPE_INTEGER:
@@ -330,6 +326,8 @@ public final class ReplaceExpression extends Expression_Value {
 			}
 		}
 
+		Type_type tempType4 = null;
+		IValue value4 = null;
 		if (templateInstance4 != null) {
 			ITTCN3Template temp = templateInstance4.getTemplateBody();
 			
@@ -628,7 +626,7 @@ public final class ReplaceExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (templateInstance1 != null && !templateInstance1.accept(v)) {
 			return false;
 		}

@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
-import org.eclipse.titan.common.parsers.cfg.CfgLexer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler.ModuleParameter;
@@ -142,6 +141,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 		add.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
+				//Do nothing
 			}
 
 			@Override
@@ -185,6 +185,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 		remove.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
+				//Do nothing
 			}
 
 			@Override
@@ -439,7 +440,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 
 		LocationAST node;
 		newModuleParameter.setModuleName(new LocationAST("module_name"));
-		newModuleParameter.getModuleName().setHiddenBefore(new CommonHiddenStreamToken(CfgLexer.WS, "\n"));
+		newModuleParameter.getModuleName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
 		newModuleParameter.getRoot().setFirstChild(newModuleParameter.getModuleName());
 		node = new LocationAST(".");
 		newModuleParameter.getModuleName().setNextSibling(node);

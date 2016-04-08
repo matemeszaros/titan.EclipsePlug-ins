@@ -35,7 +35,7 @@ public final class AtNotations extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (atnotations != null) {
 			for (AtNotation an : atnotations) {
 				if (!an.accept(v)) {

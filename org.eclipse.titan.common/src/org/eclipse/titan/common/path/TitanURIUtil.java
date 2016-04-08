@@ -40,13 +40,14 @@ public final class TitanURIUtil {
 		return sourcePath.isPrefixOf(otherPath);
 	}
 
-	public static URI removeLastSegment(URI original) {
-		String lastSegment = URIUtil.lastSegment(original);
+	public static URI removeLastSegment(final URI original) {
+		final String lastSegment = URIUtil.lastSegment(original);
 		if (lastSegment == null) {
 			return original;
 		}
-		String originalAsString = original.toString();
-		String newAsString = originalAsString.substring(0, originalAsString.length() - lastSegment.length() - 1);
+
+		final String originalAsString = original.toString();
+		final String newAsString = originalAsString.substring(0, originalAsString.length() - lastSegment.length() - 1);
 		return URI.create(newAsString);
 	}
 }

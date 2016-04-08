@@ -7,25 +7,13 @@
  ******************************************************************************/
 package org.eclipse.titan.common.parsers;
 
-import org.antlr.v4.runtime.Token;
-
 public class CommonHiddenStreamToken {
 
 	private String mText;
-	private int mTokenType = Token.INVALID_TYPE;
-    private CommonHiddenStreamToken mHiddenBefore;
-    private CommonHiddenStreamToken mHiddenAfter;
-    
-    /**
-     * @param aTokenType token type according to CfgLexer.java (for example: CfgLexer.WS)
-     * @param aText
-     */
-	public CommonHiddenStreamToken(int aTokenType, String aText) {
-		mTokenType = aTokenType;
-		mText = aText;
-	}
+	private CommonHiddenStreamToken mHiddenBefore;
+	private CommonHiddenStreamToken mHiddenAfter;
 
-	public CommonHiddenStreamToken(String aText) {
+	public CommonHiddenStreamToken(final String aText) {
 		mText = aText;
 	}
 

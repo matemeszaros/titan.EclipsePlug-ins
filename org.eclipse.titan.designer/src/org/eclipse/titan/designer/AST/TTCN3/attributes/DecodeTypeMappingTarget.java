@@ -85,7 +85,7 @@ public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (targetType == child) {
 			return builder.append(".<target_type>");
@@ -129,7 +129,7 @@ public final class DecodeTypeMappingTarget extends TypeMappingTarget {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (targetType != null && !targetType.accept(v)) {
 			return false;
 		}

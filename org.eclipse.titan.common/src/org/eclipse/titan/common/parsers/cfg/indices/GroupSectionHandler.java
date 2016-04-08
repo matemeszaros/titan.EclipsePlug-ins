@@ -26,7 +26,7 @@ public final class GroupSectionHandler {
 			return root;
 		}
 
-		public void setRoot(LocationAST root) {
+		public void setRoot(final LocationAST root) {
 			this.root = root;
 		}
 
@@ -34,7 +34,7 @@ public final class GroupSectionHandler {
 			return groupName;
 		}
 
-		public void setGroupName(LocationAST groupName) {
+		public void setGroupName(final LocationAST groupName) {
 			this.groupName = groupName;
 		}
 
@@ -42,7 +42,7 @@ public final class GroupSectionHandler {
 			return groupItems;
 		}
 
-		public void setGroupItems(List<GroupItem> groupItems) {
+		public void setGroupItems(final List<GroupItem> groupItems) {
 			this.groupItems = groupItems;
 		}
 	}
@@ -58,7 +58,7 @@ public final class GroupSectionHandler {
 			return item;
 		}
 
-		public void setItem(LocationAST item) {
+		public void setItem(final LocationAST item) {
 			this.item = item;
 		}
 	}
@@ -70,7 +70,7 @@ public final class GroupSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -78,7 +78,7 @@ public final class GroupSectionHandler {
 		return groups;
 	}
 
-	public void setGroups(List<Group> groups) {
+	public void setGroups(final List<Group> groups) {
 		this.groups = groups;
 	}
 

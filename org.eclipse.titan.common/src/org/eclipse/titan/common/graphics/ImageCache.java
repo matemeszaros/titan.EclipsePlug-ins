@@ -16,7 +16,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  * @author Kristof Szabados
  * */
-public class ImageCache {
+public final class ImageCache {
 	private static final String ICONS_SUBDIR = "icons/";
 
 	private ImageCache() {

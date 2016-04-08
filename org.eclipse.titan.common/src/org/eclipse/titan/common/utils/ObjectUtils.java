@@ -26,21 +26,21 @@ public final class ObjectUtils {
 	/**
 	 * @see java.util.Objects#equals(Object, Object)
 	 */
-	public static boolean equals(Object o1, Object o2) {
+	public static boolean equals(final Object o1, final Object o2) {
 		return (o1 == o2) || (o1 != null && o1.equals(o2));
 	}
 
 	/**
 	 * @see java.util.Objects#hash(Object...)
 	 */
-	public static int hash(Object... objects) {
+	public static int hash(final Object... objects) {
 		return Arrays.hashCode(objects);
 	}
 
 	/**
 	 * @see java.util.Objects#hashCode(Object)
 	 */
-	public static int hashCode(Object o) {
+	public static int hashCode(final Object o) {
 		return o != null ? o.hashCode() : 0;
 	}
 }

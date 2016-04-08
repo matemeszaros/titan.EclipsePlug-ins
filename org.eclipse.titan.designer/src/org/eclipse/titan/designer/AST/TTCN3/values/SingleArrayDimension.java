@@ -69,7 +69,7 @@ public final class SingleArrayDimension extends ArrayDimension {
 	public String createStringRepresentation() {
 		check(CompilationTimeStamp.getBaseTimestamp());
 
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append('[');
 		if (value == null) {
 			builder.append("<erroneous>");
@@ -144,7 +144,7 @@ public final class SingleArrayDimension extends ArrayDimension {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null) {
 			if (!value.accept(v)) {
 				return false;

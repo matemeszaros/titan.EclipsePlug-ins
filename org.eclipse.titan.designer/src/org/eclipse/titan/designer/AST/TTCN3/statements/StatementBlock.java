@@ -51,9 +51,9 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.FormalParameter;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Statement.Statement_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Component_Type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -220,13 +220,14 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		boolean usedOnLeftSide;
 
 		FakeReference(final Reference reference) {
-			Identifier moduleId = reference.getModuleIdentifier();
+			final Identifier moduleId = reference.getModuleIdentifier();
 			if (moduleId != null) {
 				moduleName = moduleId.getTtcnName();
 			} else {
 				moduleName = null;
 			}
-			Identifier id = reference.getId();
+
+			final Identifier id = reference.getId();
 			if (id != null) {
 				definition = id.getTtcnName();
 			} else {
@@ -275,7 +276,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		}
 	}
 
-	public void setExceptionHandling(ExceptionHandling_type eh) {
+	public void setExceptionHandling(final ExceptionHandling_type eh) {
 		exceptionHandling = eh;
 	}
 
@@ -292,7 +293,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0, size = statements.size(); i < size; i++) {
 			if (statements.get(i) == child) {
@@ -378,7 +379,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	 * @param statement
 	 *                the statement to be added.
 	 * */
-	public void addStatement(final Statement statement, boolean append) {
+	public void addStatement(final Statement statement, final boolean append) {
 		if (statement != null) {
 			if (append) {
 				statements.add(statement);
@@ -409,7 +410,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		for (int i = 0, size = statements.size(); i < size; i++) {
 			statement = statements.get(i);
 
-			int position = Collections.binarySearch(this.statements, statement, STATEMENT_INSERTION_COMPARATOR);
+			final int position = Collections.binarySearch(this.statements, statement, STATEMENT_INSERTION_COMPARATOR);
 
 			if (position < 0) {
 				this.statements.add((position + 1) * -1, statement);
@@ -442,20 +443,20 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 
 	public Statement getFirstStatement() {
 		for (int i = 0, size = statements.size(); i < size; i++) {
-			Statement statement = statements.get(i);
+			final Statement statement = statements.get(i);
 			switch (statement.getType()) {
 			case S_LABEL:
 				// skip this statement
 				break;
 			case S_BLOCK: {
-				Statement firstStatement = ((StatementBlock_Statement) statement).getStatementBlock().getFirstStatement();
+				final Statement firstStatement = ((StatementBlock_Statement) statement).getStatementBlock().getFirstStatement();
 				if (firstStatement != null) {
 					return firstStatement;
 				}
 				break;
 			}
 			case S_DOWHILE: {
-				Statement firstStatement = ((DoWhile_Statement) statement).getStatementBlock().getFirstStatement();
+				final Statement firstStatement = ((DoWhile_Statement) statement).getStatementBlock().getFirstStatement();
 				if (firstStatement != null) {
 					return firstStatement;
 				}
@@ -523,7 +524,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		for (int i = 0, size = statements.size(); i < size; i++) {
 			Statement statement = statements.get(i);
 			if (Statement_type.S_GOTO.equals(statement.getType())) {
-				Goto_statement gotoStatement = (Goto_statement) statement;
+				final Goto_statement gotoStatement = (Goto_statement) statement;
 				if (gotoStatement.getJumpsForward()) {
 					// heuristics without deep analysis of
 					// the control flow graph:
@@ -558,8 +559,8 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 							&& Statement_type.S_BLOCK.equals(statements.get(i + 1).getType())
 							&& ((StatementBlock_Statement) statements.get(i + 1)).getStatementBlock()
 									.getExceptionHandling() == ExceptionHandling_type.EH_CATCH) {
-						ReturnStatus_type tryBlockReturnStatus = statement.hasReturn(timestamp);
-						ReturnStatus_type catchBlockReturnStatus = statements.get(i + 1).hasReturn(timestamp);
+						final ReturnStatus_type tryBlockReturnStatus = statement.hasReturn(timestamp);
+						final ReturnStatus_type catchBlockReturnStatus = statements.get(i + 1).hasReturn(timestamp);
 						// 3 x 3 combinations
 						if (tryBlockReturnStatus == catchBlockReturnStatus) {
 							switch (tryBlockReturnStatus) {
@@ -626,7 +627,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 			return;
 		}
 
-		Identifier identifier = definition.getIdentifier();
+		final Identifier identifier = definition.getIdentifier();
 		if (identifier == null) {
 			return;
 		}
@@ -635,7 +636,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 			definitionMap = new HashMap<String, Definition>(3);
 		}
 
-		String definitionName = identifier.getName();
+		final String definitionName = identifier.getName();
 		if (definitionMap.containsKey(definitionName)) {
 			if (definition.getLocation() != null && definitionMap.get(definitionName).getLocation() != null) {
 				final Location otherLocation = definitionMap.get(definitionName).getLocation();
@@ -651,10 +652,10 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 					definition.getLocation().reportSemanticError(
 							MessageFormat.format(HIDINGSCOPEELEMENT, identifier.getDisplayName()));
 
-					List<ISubReference> subReferences = new ArrayList<ISubReference>();
+					final List<ISubReference> subReferences = new ArrayList<ISubReference>();
 					subReferences.add(new FieldSubReference(identifier));
-					Reference reference = new Reference(null, subReferences);
-					Assignment assignment = parentScope.getAssBySRef(timestamp, reference);
+					final Reference reference = new Reference(null, subReferences);
+					final Assignment assignment = parentScope.getAssBySRef(timestamp, reference);
 					if (assignment != null && assignment.getLocation() != null) {
 						assignment.getLocation().reportSingularSemanticError(
 								MessageFormat.format(HIDDENSCOPEELEMENT, identifier.getDisplayName()));
@@ -701,8 +702,8 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 
 		if (freed && minimiseMemoryUsage) {
 			MarkerHandler.reEnableAllSemanticMarkers((IFile) location.getFile(), location.getOffset(), location.getEndOffset());
-			List<FakeReference> copy = new ArrayList<FakeReference>(referencesGoingOut);
-			for (FakeReference reference : copy) {
+			final List<FakeReference> copy = new ArrayList<FakeReference>(referencesGoingOut);
+			for (final FakeReference reference : copy) {
 				Reference tempRef;
 				if (reference.moduleName != null) {
 					tempRef = new Reference(new Identifier(Identifier_type.ID_TTCN, reference.moduleName));
@@ -711,7 +712,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 				}
 				tempRef.addSubReference(new FieldSubReference(new Identifier(Identifier_type.ID_TTCN, reference.definition)));
 				tempRef.setMyScope(this);
-				Assignment assignment = tempRef.getRefdAssignment(timestamp, false);
+				final Assignment assignment = tempRef.getRefdAssignment(timestamp, false);
 				if (assignment == null) {
 					return;
 				}
@@ -754,11 +755,11 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		boolean unreachableFound = false;
 		Statement previousStatement = null;
 		for (int i = 0, size = statements.size(); i < size; i++) {
-			Statement statement = statements.get(i);
+			final Statement statement = statements.get(i);
 			try {
 				statement.check(timestamp);
 			} catch (Exception e) {
-				Location loc = statement.getLocation();
+				final Location loc = statement.getLocation();
 				ErrorReporter.logExceptionStackTrace("An exception was thrown when analyzing the statement in file '"
 						+ loc.getFile().getLocationURI() + "' at line " + loc.getLine(), e);
 			}
@@ -831,15 +832,15 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	 * */
 	private void checkLabels(final CompilationTimeStamp timestamp) {
 		for (int i = 0, size = statements.size(); i < size; i++) {
-			Statement statement = statements.get(i);
+			final Statement statement = statements.get(i);
 			if (Statement_type.S_LABEL.equals(statement.getType())) {
-				Label_Statement labelStatement = (Label_Statement) statement;
+				final Label_Statement labelStatement = (Label_Statement) statement;
 				labelStatement.setUsed(false);
-				Identifier identifier = labelStatement.getLabelIdentifier();
+				final Identifier identifier = labelStatement.getLabelIdentifier();
 				if (hasLabel(identifier)) {
 					statement.getLocation().reportSemanticError(
 							MessageFormat.format(DUPLICATELABELAGAIN, identifier.getDisplayName()));
-					Statement statement2 = getLabel(identifier);
+					final Statement statement2 = getLabel(identifier);
 					statement2.getLocation().reportSemanticError(
 							MessageFormat.format(DUPLICATEDLABELFIRST, identifier.getDisplayName()));
 				} else {
@@ -860,9 +861,9 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	 * */
 	private void checkUnusedLabels(final CompilationTimeStamp timestamp) {
 		for (int i = 0, size = statements.size(); i < size; i++) {
-			Statement statement = statements.get(i);
+			final Statement statement = statements.get(i);
 			if (Statement_type.S_LABEL.equals(statement.getType())) {
-				Label_Statement labelStatement = (Label_Statement) statement;
+				final Label_Statement labelStatement = (Label_Statement) statement;
 				if (!labelStatement.labelIsUsed()) {
 					statement.getLocation().reportSemanticError(
 							MessageFormat.format(UNUSEDLABEL, labelStatement.getLabelIdentifier().getDisplayName()));
@@ -944,9 +945,9 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 			return null;
 		}
 
-		Def_Testcase testcase = (Def_Testcase) myDefinition;
+		final Def_Testcase testcase = (Def_Testcase) myDefinition;
 		if (isSystem) {
-			Component_Type type = testcase.getSystemType(timestamp);
+			final Component_Type type = testcase.getSystemType(timestamp);
 			if (type != null) {
 				return type;
 			}
@@ -972,7 +973,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
 		if (reference.getModuleIdentifier() != null || definitionMap == null) {
 			if (minimiseMemoryUsage) {
-				FakeReference fakeReference = new FakeReference(reference);
+				final FakeReference fakeReference = new FakeReference(reference);
 				if (!referencesGoingOut.contains(fakeReference)) {
 					referencesGoingOut.add(fakeReference);
 				}
@@ -987,7 +988,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		}
 
 		if (minimiseMemoryUsage) {
-			FakeReference fakeReference = new FakeReference(reference);
+			final FakeReference fakeReference = new FakeReference(reference);
 			if (!referencesGoingOut.contains(fakeReference)) {
 				referencesGoingOut.add(fakeReference);
 			}
@@ -999,14 +1000,14 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	@Override
 	public void addProposal(final ProposalCollector propCollector) {
 		if (definitionMap != null && propCollector.getReference().getModuleIdentifier() == null) {
-			HashMap<String, Definition> temp = new HashMap<String, Definition>(definitionMap);
-			for (Definition definition : temp.values()) {
+			final HashMap<String, Definition> temp = new HashMap<String, Definition>(definitionMap);
+			for (final Definition definition : temp.values()) {
 				definition.addProposal(propCollector, 0);
 			}
 		}
 		if (labelMap != null && propCollector.getReference().getModuleIdentifier() == null) {
-			HashMap<String, Label_Statement> temp = new HashMap<String, Label_Statement>(labelMap);
-			for (String name : temp.keySet()) {
+			final HashMap<String, Label_Statement> temp = new HashMap<String, Label_Statement>(labelMap);
+			for (final String name : temp.keySet()) {
 				propCollector.addProposal(name, name, null);
 			}
 		}
@@ -1016,7 +1017,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 
 	@Override
 	public void addSkeletonProposal(final ProposalCollector propCollector) {
-		for (SkeletonTemplateProposal templateProposal : TTCN3CodeSkeletons.STATEMENT_LEVEL_SKELETON_PROPOSALS) {
+		for (final SkeletonTemplateProposal templateProposal : TTCN3CodeSkeletons.STATEMENT_LEVEL_SKELETON_PROPOSALS) {
 			propCollector.addTemplateProposal(templateProposal.getPrefix(), templateProposal.getProposal(),
 					TTCN3CodeSkeletons.SKELETON_IMAGE);
 		}
@@ -1050,7 +1051,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		if (!isDamaged) {
 			// handle the simple case quickly
 			for (int i = 0, size = statements.size(); i < size; i++) {
-				Statement statement = statements.get(i);
+				final Statement statement = statements.get(i);
 
 				statement.updateSyntax(reparser, false);
 				reparser.updateLocation(statement.getLocation());
@@ -1066,13 +1067,13 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		int nofDamaged = 0;
 		int leftBoundary = location.getOffset() + 1;
 		int rightBoundary = location.getEndOffset() - 1;
-		int damageOffset = reparser.getDamageStart();
+		final int damageOffset = reparser.getDamageStart();
 		IAppendableSyntax lastAppendableBeforeChange = null;
 		IAppendableSyntax lastPrependableBeforeChange = null;
 
 		for (int i = 0, size = statements.size(); i < size && !enveloped; i++) {
-			Statement statement = statements.get(i);
-			Location temporalLocation = statement.getLocation();
+			final Statement statement = statements.get(i);
+			final Location temporalLocation = statement.getLocation();
 
 			if (reparser.envelopsDamage(temporalLocation)) {
 				enveloped = true;
@@ -1107,7 +1108,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		// extended we should add it to the damaged domain as the
 		// extension might be correct
 		if (lastAppendableBeforeChange != null) {
-			boolean isBeingExtended = reparser.startsWithFollow(lastAppendableBeforeChange.getPossibleExtensionStarterTokens());
+			final boolean isBeingExtended = reparser.startsWithFollow(lastAppendableBeforeChange.getPossibleExtensionStarterTokens());
 			if (isBeingExtended) {
 				leftBoundary = lastAppendableBeforeChange.getLocation().getOffset();
 				nofDamaged++;
@@ -1117,7 +1118,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		}
 
 		if (lastPrependableBeforeChange != null) {
-			List<Integer> temp = lastPrependableBeforeChange.getPossiblePrefixTokens();
+			final List<Integer> temp = lastPrependableBeforeChange.getPossiblePrefixTokens();
 
 			if (temp != null && reparser.endsWithToken(temp)) {
 				rightBoundary = lastPrependableBeforeChange.getLocation().getEndOffset();
@@ -1131,9 +1132,9 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 			removeStuffInRange(reparser);
 		}
 
-		for (Iterator<Statement> iterator = statements.iterator(); iterator.hasNext();) {
-			Statement statement = iterator.next();
-			Location temporalLocation = statement.getLocation();
+		for (final Iterator<Statement> iterator = statements.iterator(); iterator.hasNext();) {
+			final Statement statement = iterator.next();
+			final Location temporalLocation = statement.getLocation();
 
 			if (reparser.isAffectedAppended(temporalLocation)) {
 				try {
@@ -1154,7 +1155,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 
 		if (!enveloped) {
 			reparser.extendDamagedRegion(leftBoundary, rightBoundary);
-			int result = reparse( reparser );
+			final int result = reparse( reparser );
 			if (result > 1) {
 				throw new ReParseException(result - 1);
 			}
@@ -1165,7 +1166,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				List<Statement> statements = parser.pr_reparse_FunctionStatementOrDefList().statements;
+				final List<Statement> statements = parser.pr_reparse_FunctionStatementOrDefList().statements;
 				if ( parser.isErrorListEmpty() ) {
 					if (statements != null) {
 						addStatementsOrdered(statements);
@@ -1191,7 +1192,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		if (definitionMap == null) {
 			return null;
 		}
-		for (Definition definition : definitionMap.values()) {
+		for (final Definition definition : definitionMap.values()) {
 			if (definition.getLocation().containsOffset(offset)) {
 				return definition;
 			}
@@ -1206,13 +1207,13 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		}
 
 		final List<Statement> tempList = new ArrayList<Statement>(statements);
-		for (Statement statement : tempList) {
+		for (final Statement statement : tempList) {
 			statement.findReferences(referenceFinder, foundIdentifiers);
 		}
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;
@@ -1220,7 +1221,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 			return true;
 		}
 		if (statements != null) {
-			for (Statement statement : statements) {
+			for (final Statement statement : statements) {
 				if (!statement.accept(v)) {
 					return false;
 				}

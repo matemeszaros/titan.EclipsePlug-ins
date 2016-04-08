@@ -41,7 +41,7 @@ public final class ExtensionAttributeAnalyzer {
 		return attributes;
 	}
 
-	public void parse(AttributeSpecification specification) {
+	public void parse(final AttributeSpecification specification) {
 		ExtensionAttributeLexer lexer;
 		Location location = specification.getLocation();
 

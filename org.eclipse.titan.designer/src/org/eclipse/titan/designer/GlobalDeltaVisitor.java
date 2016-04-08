@@ -41,7 +41,7 @@ public final class GlobalDeltaVisitor implements IResourceDeltaVisitor {
 
 	@Override
 	public boolean visit(final IResourceDelta delta) {
-		IResource resource = delta.getResource();
+		final IResource resource = delta.getResource();
 		if (resource.getName().startsWith(GlobalParser.DOT)) {
 			return false;
 		}
@@ -50,7 +50,7 @@ public final class GlobalDeltaVisitor implements IResourceDeltaVisitor {
 			if (delta.getFlags() != IResourceDelta.MARKERS) {
 				if ((delta.getFlags() == IResourceDelta.REMOVED || !resource.isAccessible())
 						|| (!ResourceExclusionHelper.isDirectlyExcluded((IFile) resource) && GlobalParser.isSupportedExtension(resource.getFileExtension()))) {
-					IFile file = (IFile) resource;
+					final IFile file = (IFile) resource;
 					if (FileSaveTracker.isFileBeingSaved(file)) {
 						FileSaveTracker.fileSaved(file);
 					} else {
@@ -60,7 +60,7 @@ public final class GlobalDeltaVisitor implements IResourceDeltaVisitor {
 			}
 			return false;
 		case IResource.FOLDER:
-			for (IContainer workingDirectory : workingDirectories) {
+			for (final IContainer workingDirectory : workingDirectories) {
 				if (workingDirectory.equals(resource)) {
 					return false;
 				}

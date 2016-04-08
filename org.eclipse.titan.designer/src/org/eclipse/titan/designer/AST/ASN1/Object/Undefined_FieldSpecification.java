@@ -25,8 +25,8 @@ import org.eclipse.titan.designer.AST.ISetting.Setting_type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Referenced_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Referenced_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -105,7 +105,9 @@ public final class Undefined_FieldSpecification extends FieldSpecification imple
 				if (null != mDefaultSetting) {
 					defaultObjectset = new ObjectSet_definition(mDefaultSetting);
 				}
-				fieldSpecification = new ObjectSet_FieldSpecification(identifier, new ObjectClass_refd(governorReference),
+				final ObjectClass_refd oc = new ObjectClass_refd(governorReference);
+				oc.setLocation(governorReference.getLocation());
+				fieldSpecification = new ObjectSet_FieldSpecification(identifier, oc,
 						isOptional, defaultObjectset);
 			} else if (identifier.isvalidAsnObjectFieldReference()
 					&& governorReference.refersToSettingType(timestamp, Setting_type.S_OC, temporalReferenceChain)) {
@@ -236,7 +238,7 @@ public final class Undefined_FieldSpecification extends FieldSpecification imple
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier != null && !identifier.accept(v)) {
 			return false;
 		}

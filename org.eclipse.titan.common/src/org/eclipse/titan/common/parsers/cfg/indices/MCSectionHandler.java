@@ -31,7 +31,7 @@ public final class MCSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -39,7 +39,7 @@ public final class MCSectionHandler {
 		return localAddress;
 	}
 
-	public void setLocalAddress(LocationAST localAddress) {
+	public void setLocalAddress(final LocationAST localAddress) {
 		this.localAddress = localAddress;
 	}
 
@@ -47,7 +47,7 @@ public final class MCSectionHandler {
 		return localAddressRoot;
 	}
 
-	public void setLocalAddressRoot(LocationAST localAddressRoot) {
+	public void setLocalAddressRoot(final LocationAST localAddressRoot) {
 		this.localAddressRoot = localAddressRoot;
 	}
 
@@ -55,7 +55,7 @@ public final class MCSectionHandler {
 		return tcpPort;
 	}
 
-	public void setTcpPort(LocationAST tcpPort) {
+	public void setTcpPort(final LocationAST tcpPort) {
 		this.tcpPort = tcpPort;
 	}
 
@@ -63,7 +63,7 @@ public final class MCSectionHandler {
 		return tcpPortRoot;
 	}
 
-	public void setTcpPortRoot(LocationAST tcpPortRoot) {
+	public void setTcpPortRoot(final LocationAST tcpPortRoot) {
 		this.tcpPortRoot = tcpPortRoot;
 	}
 
@@ -71,7 +71,7 @@ public final class MCSectionHandler {
 		return killTimer;
 	}
 
-	public void setKillTimer(LocationAST killTimer) {
+	public void setKillTimer(final LocationAST killTimer) {
 		this.killTimer = killTimer;
 	}
 
@@ -79,7 +79,7 @@ public final class MCSectionHandler {
 		return killTimerRoot;
 	}
 
-	public void setKillTimerRoot(LocationAST killTimerRoot) {
+	public void setKillTimerRoot(final LocationAST killTimerRoot) {
 		this.killTimerRoot = killTimerRoot;
 	}
 
@@ -87,7 +87,7 @@ public final class MCSectionHandler {
 		return numHCsText;
 	}
 
-	public void setNumHCsText(LocationAST numHCsText) {
+	public void setNumHCsText(final LocationAST numHCsText) {
 		this.numHCsText = numHCsText;
 	}
 
@@ -95,7 +95,7 @@ public final class MCSectionHandler {
 		return numHCsTextRoot;
 	}
 
-	public void setNumHCsTextRoot(LocationAST numHCsTextRoot) {
+	public void setNumHCsTextRoot(final LocationAST numHCsTextRoot) {
 		this.numHCsTextRoot = numHCsTextRoot;
 	}
 
@@ -103,7 +103,7 @@ public final class MCSectionHandler {
 		return unixDomainSocket;
 	}
 
-	public void setUnixDomainSocket(LocationAST unixDomainSocket) {
+	public void setUnixDomainSocket(final LocationAST unixDomainSocket) {
 		this.unixDomainSocket = unixDomainSocket;
 	}
 
@@ -111,7 +111,7 @@ public final class MCSectionHandler {
 		return unixDomainSocketRoot;
 	}
 
-	public void setUnixDomainSocketRoot(LocationAST unixDomainSocketRoot) {
+	public void setUnixDomainSocketRoot(final LocationAST unixDomainSocketRoot) {
 		this.unixDomainSocketRoot = unixDomainSocketRoot;
 	}
 }

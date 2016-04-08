@@ -81,14 +81,15 @@ public final class TITANProjectExporter {
 	private boolean excludeLinkedContents = false;
 	private boolean saveDefaultValues = false;
 	private boolean packAllProjectsIntoOne = false;
+	private boolean useTpdNameAttribute = false;
 	private IPreferencesService preferenceService = null;
 
-	public TITANProjectExporter(IProject project) {
+	public TITANProjectExporter(final IProject project) {
 		this.project = project;
 		preferenceService = Platform.getPreferencesService();
 	}
 
-	public TITANProjectExporter(IProject project, String projectFile) {
+	public TITANProjectExporter(final IProject project, final String projectFile) {
 		this.project = project;
 		this.projectFile = projectFile;
 		preferenceService = Platform.getPreferencesService();
@@ -98,7 +99,7 @@ public final class TITANProjectExporter {
 		return projectFile;
 	}
 
-	public void setProjectFile(String value) {
+	public void setProjectFile(final String value) {
 		projectFile = value;
 	}
 
@@ -106,7 +107,7 @@ public final class TITANProjectExporter {
 		return isExcludedWorkingDirectoryContents;
 	}
 
-	public void setIsExcludedWorkingDirectoryContents(boolean value) {
+	public void setIsExcludedWorkingDirectoryContents(final boolean value) {
 		isExcludedWorkingDirectoryContents = value;
 	}
 
@@ -114,7 +115,7 @@ public final class TITANProjectExporter {
 		return isExcludedDotResources;
 	}
 
-	public void setIsExcludedDotResources(boolean value) {
+	public void setIsExcludedDotResources(final boolean value) {
 		isExcludedDotResources = value;
 	}
 
@@ -122,7 +123,7 @@ public final class TITANProjectExporter {
 		return excludeLinkedContents;
 	}
 
-	public void setExcludeLinkedContents(boolean value) {
+	public void setExcludeLinkedContents(final boolean value) {
 		excludeLinkedContents = value;
 	}
 
@@ -130,7 +131,7 @@ public final class TITANProjectExporter {
 		return saveDefaultValues;
 	}
 
-	public void setSaveDefaultValues(boolean value) {
+	public void setSaveDefaultValues(final boolean value) {
 		saveDefaultValues = value;
 	}
 
@@ -138,8 +139,16 @@ public final class TITANProjectExporter {
 		return packAllProjectsIntoOne;
 	}
 
-	public void setPackAllProjectsIntoOne(boolean value) {
+	public void setPackAllProjectsIntoOne(final boolean value) {
 		packAllProjectsIntoOne = value;
+	}
+	
+	public boolean getUseTpdNameAttribute() {
+		return useTpdNameAttribute;
+	}
+	
+	public void setUseTpdNameAttribute(boolean value) {
+		useTpdNameAttribute = value;
 	}
 
 	/**
@@ -151,8 +160,9 @@ public final class TITANProjectExporter {
 	 * @return true if project is not null otherwise return false
 	 */
 	public boolean setProjectFileFromLoadLocation() {
-		if (project == null)
+		if (project == null) {
 			return false;
+		}
 
 		try {
 			projectFile = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
@@ -162,14 +172,13 @@ public final class TITANProjectExporter {
 				return false; // It hasn't been exported yet.
 			}
 			
-			if( projectFile.startsWith("file:/"))
-			{
+			if( projectFile.startsWith("file:/")) {
 				projectFile = projectFile.substring(6);
 				project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 						ProjectBuildPropertyData.LOAD_LOCATION),projectFile);
-			} 
-			if( projectFile.matches("/[a-zA-Z]:.*"))
-			{
+			}
+
+			if( projectFile.matches("/[a-zA-Z]:.*")) {
 				projectFile = projectFile.substring(1);
 				project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 						ProjectBuildPropertyData.LOAD_LOCATION),projectFile);
@@ -383,11 +392,31 @@ public final class TITANProjectExporter {
 		final Document document = root.getOwnerDocument();
 		Element projectsElement = document.createElement(ProjectFormatConstants.REFERENCED_PROJECTS_NODE);
 		root.appendChild(projectsElement);
-
+		
 		for (final IProject tempProject : referencedProjects) {
 			Element element = document.createElement(ProjectFormatConstants.REFERENCED_PROJECT_NODE);
 			element.setAttribute(ProjectFormatConstants.REFERENCED_PROJECT_NAME_ATTRIBUTE, tempProject.getName());
 
+			boolean projectLocaltionURIset = false;
+			if (useTpdNameAttribute) {
+				String tempTpdName = null;
+				String origTpdURI = null;
+				try {
+					tempTpdName = tempProject.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+							ProjectBuildPropertyData.USE_TPD_NAME));
+					origTpdURI = tempProject.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+							ProjectBuildPropertyData.ORIG_TPD_URI));
+				} catch (CoreException e) {
+					ErrorReporter.logExceptionStackTrace(e);
+				}
+				if(tempTpdName == null || tempTpdName.length() == 0) {
+					tempTpdName = tempProject.getName() + ".tpd";
+				} else if (origTpdURI != null && origTpdURI.length() != 0){
+					element.setAttribute(ProjectFormatConstants.REFERENCED_PROJECT_LOCATION_ATTRIBUTE, origTpdURI);
+					projectLocaltionURIset = true;
+				}
+				element.setAttribute(ProjectFormatConstants.REFERENCED_PROJECT_TPD_NAME_ATTRIBUTE, tempTpdName);
+			}
 			if (!tempProject.isOpen()) {
 				ErrorReporter.parallelErrorDisplayInMessageDialog("Export failed",
 						"In order to export data on project " + project.getName() + " it's referenced project " + tempProject.getName()
@@ -411,25 +440,26 @@ public final class TITANProjectExporter {
 							+ tempProject.getName() + " must be saved first.");
 					return false;
 				}
-
-				IPath path = new Path(projectFile);
-				URI locationuri = null;
-				try {
-					locationuri = org.eclipse.core.runtime.URIUtil.fromString(location);
-					if (locationuri.getScheme() == null || locationuri.getScheme().length() <= 1) {
-						Path locationPath = new Path(location);
-						locationuri = org.eclipse.core.runtime.URIUtil.fromString("file:/" + locationPath.toString());
+				if (!projectLocaltionURIset) {
+					IPath path = new Path(projectFile);
+					URI locationuri = null;
+					try {
+						locationuri = org.eclipse.core.runtime.URIUtil.fromString(location);
+						if (locationuri.getScheme() == null || locationuri.getScheme().length() <= 1) {
+							Path locationPath = new Path(location);
+							locationuri = org.eclipse.core.runtime.URIUtil.fromString("file:/" + locationPath.toString());
+						}
+	
+					} catch (URISyntaxException e) {
+						ErrorReporter.logExceptionStackTrace(e);
+						return false;
 					}
-
-				} catch (URISyntaxException e) {
-					ErrorReporter.logExceptionStackTrace(e);
-					return false;
+	
+					path = path.removeLastSegments(1);
+					URI projecturi = URIUtil.toURI(path);
+					URI result = org.eclipse.core.runtime.URIUtil.makeRelative(locationuri, projecturi);
+					element.setAttribute(ProjectFormatConstants.REFERENCED_PROJECT_LOCATION_ATTRIBUTE, result.toString());
 				}
-
-				path = path.removeLastSegments(1);
-				URI projecturi = URIUtil.toURI(path);
-				URI result = org.eclipse.core.runtime.URIUtil.makeRelative(locationuri, projecturi);
-				element.setAttribute(ProjectFormatConstants.REFERENCED_PROJECT_LOCATION_ATTRIBUTE, result.toString());
 			} catch (CoreException e) {
 				ErrorReporter.logExceptionStackTrace(e);
 			}

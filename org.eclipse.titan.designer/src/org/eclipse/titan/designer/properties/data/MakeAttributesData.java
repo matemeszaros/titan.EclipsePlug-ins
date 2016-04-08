@@ -60,7 +60,7 @@ public final class MakeAttributesData {
 	 * @param s the original build level string
 	 * @return the corrected build level string
 	 */
-	public static String getBuildLevel(String s) {
+	public static String getBuildLevel(final String s) {
 		if (s == null) {
 			return MakeAttributesData.BUILD_LEVEL_5;
 		}

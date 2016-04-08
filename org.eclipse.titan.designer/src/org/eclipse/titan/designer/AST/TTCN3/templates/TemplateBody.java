@@ -45,15 +45,12 @@ public class TemplateBody implements ITemplateListItem {
 		template = null;
 	}
 	
-	public TemplateBody(TTCN3Template t){
+	public TemplateBody(final TTCN3Template t){
 		template = t;
 	}
-	
-	
-	
-	
+
 	@Override
-	public void copyGeneralProperties(ITTCN3Template original) {
+	public void copyGeneralProperties(final ITTCN3Template original) {
 		template.copyGeneralProperties(original);
 	}
 
@@ -68,7 +65,7 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void setMyGovernor(IType governor) {
+	public void setMyGovernor(final IType governor) {
 		template.setMyGovernor(governor);		
 	}
 
@@ -83,12 +80,12 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public ITTCN3Template setLoweridToReference(CompilationTimeStamp timestamp) {
+	public ITTCN3Template setLoweridToReference(final CompilationTimeStamp timestamp) {
 		return template.setLoweridToReference(timestamp);
 	}
 
 	@Override
-	public void setLengthRestriction(LengthRestriction lengthRestriction) {
+	public void setLengthRestriction(final LengthRestriction lengthRestriction) {
 		template.setLengthRestriction(lengthRestriction);	
 	}
 
@@ -108,70 +105,69 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void setBaseTemplate(ITTCN3Template baseTemplate) {
+	public void setBaseTemplate(final ITTCN3Template baseTemplate) {
 		template.setBaseTemplate(baseTemplate);		
 	}
 
 	@Override
 	public Completeness_type getCompletenessConditionSeof(
-			CompilationTimeStamp timestamp, boolean incompleteAllowed) {
+			final CompilationTimeStamp timestamp, final boolean incompleteAllowed) {
 		return template.getCompletenessConditionSeof(timestamp, incompleteAllowed);
 	}
 
 	@Override
 	public Completeness_type getCompletenessConditionChoice(
-			CompilationTimeStamp timestamp, boolean incompleteAllowed,
-			Identifier fieldName) {
+			final CompilationTimeStamp timestamp, final boolean incompleteAllowed,
+			final Identifier fieldName) {
 		 
 		return template.getCompletenessConditionChoice(timestamp, incompleteAllowed, fieldName);
 	}
 
 	@Override
 	public TTCN3Template getTemplateReferencedLast(
-			CompilationTimeStamp timestamp) {
+			final CompilationTimeStamp timestamp) {
 		return template.getTemplateReferencedLast(timestamp);
 	}
 
 	@Override
 	public TTCN3Template getTemplateReferencedLast(
-			CompilationTimeStamp timestamp, IReferenceChain referenceChain) {
+			final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 			return template.getTemplateReferencedLast(timestamp,referenceChain);
 	}
 
 	@Override
-	public ITTCN3Template setTemplatetype(CompilationTimeStamp timestamp,
-			Template_type newType) {
+	public ITTCN3Template setTemplatetype(final CompilationTimeStamp timestamp,
+			final Template_type newType) {
 		return template.setTemplatetype(timestamp, newType);
 	}
 
 	@Override
-	public Type_type getExpressionReturntype(CompilationTimeStamp timestamp,
-			Expected_Value_type expectedValue) {
-		
+	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp,
+			final Expected_Value_type expectedValue) {
 		return template.getExpressionReturntype(timestamp, expectedValue);
 	}
 
 	@Override
-	public IType getExpressionGovernor(CompilationTimeStamp timestamp,
-			Expected_Value_type expectedValue) {
+	public IType getExpressionGovernor(final CompilationTimeStamp timestamp,
+			final Expected_Value_type expectedValue) {
 		return template.getExpressionGovernor(timestamp, expectedValue);
 	}
 
 	@Override
-	public void checkRecursions(CompilationTimeStamp timestamp,
-			IReferenceChain referenceChain) {
+	public void checkRecursions(final CompilationTimeStamp timestamp,
+			final IReferenceChain referenceChain) {
 		template.checkRecursions(timestamp, referenceChain);	
 	}
 
 	@Override
 	public ITTCN3Template getReferencedSubTemplate(
-			CompilationTimeStamp timestamp, Reference reference,
-			IReferenceChain referenceChain) {
+			final CompilationTimeStamp timestamp, final Reference reference,
+			final IReferenceChain referenceChain) {
 		return template.getReferencedSubTemplate(timestamp, reference, referenceChain);
 	}
 
 	@Override
-	public boolean isValue(CompilationTimeStamp timestamp) {
+	public boolean isValue(final CompilationTimeStamp timestamp) {
 		return template.isValue(timestamp);
 	}
 
@@ -181,45 +177,45 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void checkThisTemplateGeneric(CompilationTimeStamp timestamp,
-			IType type, boolean isModified, boolean allowOmit,
-			boolean allowAnyOrOmit, boolean subCheck, boolean implicitOmit) {
+	public void checkThisTemplateGeneric(final CompilationTimeStamp timestamp,
+			final IType type, final boolean isModified, final boolean allowOmit,
+			final boolean allowAnyOrOmit, final boolean subCheck, final boolean implicitOmit) {
 		template.checkThisTemplateGeneric(
 				timestamp, type, isModified, allowOmit, allowAnyOrOmit, subCheck, implicitOmit);
 	}
 
 	@Override
-	public void checkRestrictionCommon(final CompilationTimeStamp timestamp, String definitionName,
-			Restriction_type templateRestriction, final Location usageLocation) {
+	public void checkRestrictionCommon(final CompilationTimeStamp timestamp, final String definitionName,
+			final Restriction_type templateRestriction, final Location usageLocation) {
 		template.checkRestrictionCommon(timestamp, definitionName, templateRestriction, usageLocation);	
 	}
 
 	@Override
-	public boolean checkValueomitRestriction(CompilationTimeStamp timestamp,
-			String definitionName, boolean omitAllowed, final Location usageLocation) {
+	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp,
+			final String definitionName, final boolean omitAllowed, final Location usageLocation) {
 		return template.checkValueomitRestriction(timestamp, definitionName, omitAllowed, usageLocation);
 	}
 
 	@Override
 	public boolean chkRestrictionNamedListBaseTemplate(
-			CompilationTimeStamp timestamp, String definitionName,
-			Set<String> checkedNames, int neededCheckedCnt, final Location usageLocation) {
+			final CompilationTimeStamp timestamp, final String definitionName,
+			final Set<String> checkedNames, final int neededCheckedCnt, final Location usageLocation) {
 			return template.chkRestrictionNamedListBaseTemplate(timestamp, definitionName, checkedNames, neededCheckedCnt, usageLocation);
 	}
 
 	@Override
-	public boolean checkPresentRestriction(CompilationTimeStamp timestamp,
+	public boolean checkPresentRestriction(final CompilationTimeStamp timestamp,
 			String definitionName, final Location usageLocation) {
 		return template.checkPresentRestriction(timestamp, definitionName, usageLocation);
 	}
 
 	@Override
-	public boolean getIsErroneous(CompilationTimeStamp timestamp) {
+	public boolean getIsErroneous(final CompilationTimeStamp timestamp) {
 		return template.getIsErroneous(timestamp);
 	}
 
 	@Override
-	public void setIsErroneous(boolean isErroneous) {
+	public void setIsErroneous(final boolean isErroneous) {
 		template.setIsErroneous(isErroneous);
 		
 	}
@@ -230,7 +226,7 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void setLocation(Location location) {
+	public void setLocation(final Location location) {
 		if(location !=null) {
 		  template.setLocation(location);
 		}
@@ -243,7 +239,7 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void setMyScope(Scope scope) {
+	public void setMyScope(final Scope scope) {
 		template.setMyScope(scope);
 	}
 
@@ -253,12 +249,12 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void setFullNameParent(INamedNode nameParent) {
+	public void setFullNameParent(final INamedNode nameParent) {
 		template.setFullNameParent(nameParent);	
 	}
 
 	@Override
-	public StringBuilder getFullName(INamedNode child) {
+	public StringBuilder getFullName(final INamedNode child) {
 		return template.getFullName(child);
 	}
 
@@ -273,12 +269,12 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		return template.accept(v);
 	}
 
 	@Override
-	public void updateSyntax(TTCN3ReparseUpdater reparser, boolean isDamaged)
+	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged)
 			throws ReParseException {
 		template.updateSyntax(reparser, isDamaged);
 		
@@ -290,8 +286,8 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void findReferences(ReferenceFinder referenceFinder,
-			List<Hit> foundIdentifiers) {
+	public void findReferences(final ReferenceFinder referenceFinder,
+			final List<Hit> foundIdentifiers) {
 		template.findReferences(referenceFinder, foundIdentifiers);
 		
 	}
@@ -305,7 +301,7 @@ public class TemplateBody implements ITemplateListItem {
 	}
 
 	@Override
-	public void checkSpecificValue(CompilationTimeStamp timestamp, boolean allowOmit) {
+	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		template.checkSpecificValue(timestamp, allowOmit);
 		
 	}
@@ -314,7 +310,7 @@ public class TemplateBody implements ITemplateListItem {
 	 * This function changes the inside template reference.
 	 * This function cannot be found in the class TTCNTemplate
 	 */
-	public void setTemplate(TTCN3Template t) {
+	public void setTemplate(final TTCN3Template t) {
 		template = t;
 		
 	}

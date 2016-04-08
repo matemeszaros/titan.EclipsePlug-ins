@@ -85,7 +85,7 @@ public final class Anytype_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append('{').append(name.getDisplayName()).append(" := ");
 		builder.append(value.createStringRepresentation()).append('}');
 
@@ -184,7 +184,7 @@ public final class Anytype_Value extends Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (value == child) {
 			builder.append('.').append(name.getDisplayName());
@@ -230,7 +230,7 @@ public final class Anytype_Value extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (name!=null && !name.accept(v)) {
 			return false;
 		}

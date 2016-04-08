@@ -20,7 +20,7 @@ public class EncodeMappingHelper {
 	public ExtensionAttribute encodeAttribute;
 	public ErrorBehaviorAttribute errorBehaviorAttribute;
 	
-	public EncodeMappingHelper(ExtensionAttribute encodeAttribute, ErrorBehaviorAttribute errorBehaviorAttribute){
+	public EncodeMappingHelper(final ExtensionAttribute encodeAttribute, final ErrorBehaviorAttribute errorBehaviorAttribute){
 		this.encodeAttribute = encodeAttribute;
 		this.errorBehaviorAttribute = errorBehaviorAttribute;
 	}

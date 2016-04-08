@@ -47,7 +47,7 @@ public final class FieldSpecifications extends ASTNode {
 	public StringBuilder getFullName(final INamedNode child) {
 		final StringBuilder builder = super.getFullName(child);
 
-		for (FieldSpecification fieldSpecification : fieldSpecifications) {
+		for (final FieldSpecification fieldSpecification : fieldSpecifications) {
 			if (fieldSpecification == child) {
 				return builder.append(INamedNode.DOT).append(fieldSpecification.getIdentifier().getDisplayName());
 			}
@@ -58,7 +58,7 @@ public final class FieldSpecifications extends ASTNode {
 
 	public void setMyObjectClass(final ObjectClass_Definition objectClassDefinition) {
 		myObjectClass = objectClassDefinition;
-		for (FieldSpecification fieldSpecification : fieldSpecifications) {
+		for (final FieldSpecification fieldSpecification : fieldSpecifications) {
 			fieldSpecification.setMyObjectClass(objectClassDefinition);
 		}
 	}
@@ -131,7 +131,7 @@ public final class FieldSpecifications extends ASTNode {
 
 		String name;
 		String displayName;
-		for (FieldSpecification fieldSpecification : fieldSpecifications) {
+		for (final FieldSpecification fieldSpecification : fieldSpecifications) {
 			name = fieldSpecification.getIdentifier().getName();
 			if (fieldSpecificationsMap.containsKey(name)) {
 				displayName = fieldSpecification.getIdentifier().getDisplayName();
@@ -144,7 +144,7 @@ public final class FieldSpecifications extends ASTNode {
 			}
 		}
 
-		for (FieldSpecification fieldSpecification : fieldSpecifications) {
+		for (final FieldSpecification fieldSpecification : fieldSpecifications) {
 			fieldSpecification.check(timestamp);
 		}
 	}
@@ -155,7 +155,7 @@ public final class FieldSpecifications extends ASTNode {
 		}
 
 		final List<FieldSpecification> results = new ArrayList<FieldSpecification>();
-		for (FieldSpecification fieldSpec : fieldSpecifications) {
+		for (final FieldSpecification fieldSpec : fieldSpecifications) {
 			if (fieldSpec.getIdentifier().getName().startsWith(prefix)) {
 				results.add(fieldSpec);
 			}
@@ -165,9 +165,9 @@ public final class FieldSpecifications extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (fieldSpecifications != null) {
-			for (FieldSpecification fs : fieldSpecifications) {
+			for (final FieldSpecification fs : fieldSpecifications) {
 				if (!fs.accept(v)) {
 					return false;
 				}

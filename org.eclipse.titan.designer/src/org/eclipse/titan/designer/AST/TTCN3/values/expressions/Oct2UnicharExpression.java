@@ -49,7 +49,7 @@ public final class Oct2UnicharExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("oct2unichar(").append(value.createStringRepresentation()).append(')');
 		return builder.toString();
 	}
@@ -64,7 +64,7 @@ public final class Oct2UnicharExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (value == child) {
 			return builder.append(OPERAND);
@@ -172,7 +172,7 @@ public final class Oct2UnicharExpression extends Expression_Value {
 
 	public static String calculateValue(final String octetString) {
 		//TODO: reimplement, based on Oct2CharExpression.oct2char()
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		byte[] bytes = octetString.getBytes();
 
 		for (int i = 0; i < bytes.length / 2; i++) {
@@ -214,7 +214,7 @@ public final class Oct2UnicharExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null && !value.accept(v)) {
 			return false;
 		}

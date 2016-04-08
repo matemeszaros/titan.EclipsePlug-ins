@@ -25,54 +25,36 @@ public class HttpPoster {
 	private String page;
 	private int port;
 
-	public HttpPoster(String host, String page, int port) {
+	public HttpPoster(final String host, final String page, final int port) {
 		this.host = host;
 		this.page = page;
 		this.port = port;
 	}
 
-	public void post(Map<String, String> data) {
-		Socket socket = null;
-		try {
-			socket = new Socket();
-			
+	public void post(final Map<String, String> data) {
+		final int[] ports = {49555, 59555, 61555, 0};
+		final Socket socket = new Socket();
+
+		for (int i = 0; i < ports.length; i++) {
 			try {
 				// try binding the first port
-				socket.bind(new InetSocketAddress(InetAddress.getLocalHost(), 49555));
+				socket.bind(new InetSocketAddress(InetAddress.getLocalHost(), ports[i]));
 			} catch (IOException e) {
-				// the first port might be occupied, try the second one
-				if (!socket.isBound()) {
+				if (socket.isBound()) {
 					try {
-						socket.bind(new InetSocketAddress(InetAddress.getLocalHost(), 59555));
-					} catch (IOException e2) {
-						// try the third one ...
-						if (!socket.isBound()) {
-							try {
-								socket.bind(new InetSocketAddress(InetAddress.getLocalHost(), 61555));
-							} catch (IOException e3) {
-								// last ditch effort ... let the system find a free port 
-								if (!socket.isBound()) {
-									socket.bind(new InetSocketAddress(InetAddress.getLocalHost(), 0));
-								} else {
-									socket.close();
-									throw e3;
-								}
-							}
-						} else {
-							socket.close();
-							throw e2;
-						}
-					}					
-				} else {
-					socket.close();
-					throw e;
+						socket.close();
+					} catch (final Exception e2) {
+						// stay silent
+					}
 				}
 			}
-			
+		}
+
+		try {
 			socket.connect(new InetSocketAddress(host, port));
 
-			String urlParameters = new MapJoiner("&", "=").join(data).toString();
-			DataOutputStream wr = new DataOutputStream(socket.getOutputStream());
+			final String urlParameters = new MapJoiner("&", "=").join(data).toString();
+			final DataOutputStream wr = new DataOutputStream(socket.getOutputStream());
 			wr.writeBytes("POST " + page + " HTTP/1.0\r\n" +
 					"Host: " + host + "\r\n" +
 					"Content-type: application/x-www-form-urlencoded\r\n" +
@@ -84,21 +66,18 @@ public class HttpPoster {
 			socket.close();
 			return;
 		} catch (final IOException e) {
-			//unable to connect, silently exit:
-			//ErrorReporter.logWarningExceptionStackTrace("IOException while sending information", e);
-			//ErrorReporter.logWarning("Cannot send user information to the statistical page");
+			//unable to connect, silently exit
 		} catch (final Exception e) {
-			//ErrorReporter.logWarningExceptionStackTrace("Unidentified problem while sending information", e);
+			//unable to connect, silently exit
 		}
 		
 		if( socket != null ) {
 			try {
 				socket.close();
 			} catch (final IOException e) {
-				//ErrorReporter.logWarningExceptionStackTrace("IOException while sending information", e);
-				//ErrorReporter.logWarning("Cannot send user information to the statistical page");
+				//silently exit
 			} catch (final Exception e) {
-				//ErrorReporter.logWarningExceptionStackTrace("Unidentified problem while sending information", e);
+				//silently exit
 			}
 		}
 	}

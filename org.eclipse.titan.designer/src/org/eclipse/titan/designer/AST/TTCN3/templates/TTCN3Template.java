@@ -1109,7 +1109,7 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (lengthRestriction != null && !lengthRestriction.accept(v)) {
 			return false;
 		}

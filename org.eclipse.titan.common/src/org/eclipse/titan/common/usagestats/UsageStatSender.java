@@ -26,7 +26,7 @@ public class UsageStatSender {
 
 	private UsageStatInfoCollector infoCollector;
 
-	public UsageStatSender(UsageStatInfoCollector infoCollector) {
+	public UsageStatSender(final UsageStatInfoCollector infoCollector) {
 		this.infoCollector = infoCollector;
 	}
 
@@ -37,7 +37,7 @@ public class UsageStatSender {
 	}
 
 	public WorkspaceJob sendAsync() {
-		WorkspaceJob job = new WorkspaceJob("Sending Usage statistics") {
+		final WorkspaceJob job = new WorkspaceJob("Sending Usage statistics") {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				sendSync();

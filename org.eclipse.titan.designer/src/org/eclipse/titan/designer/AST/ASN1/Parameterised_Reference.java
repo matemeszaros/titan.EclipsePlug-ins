@@ -219,7 +219,7 @@ public final class Parameterised_Reference extends Defined_Reference {
 	 * @param aAssPard (in) formal parameters for the conversion
 	 * @param aCompilationTimeStamp compilation timestamp
 	 */
-	private void addAssignments(Ass_pard aAssPard, CompilationTimeStamp aCompilationTimeStamp) {
+	private void addAssignments(final Ass_pard aAssPard, final CompilationTimeStamp aCompilationTimeStamp) {
 		final List<FormalParameter_Helper> formalParameters = ((Ass_pard)aAssPard).getFormalParameters(aCompilationTimeStamp);
 
 		final int nofFormalParameters = formalParameters.size();

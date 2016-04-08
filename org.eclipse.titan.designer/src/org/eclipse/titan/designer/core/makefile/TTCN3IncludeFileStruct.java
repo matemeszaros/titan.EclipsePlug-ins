@@ -17,11 +17,8 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 	private String workspaceLocation;
 	private String fileName;
 
-	public TTCN3IncludeFileStruct(final String directory,
-								  final String workspaceDirectory,                      
-								  final String originalLocation,
-								  final String workspaceLocation,
-			                      final String fileName) {
+	public TTCN3IncludeFileStruct(final String directory, final String workspaceDirectory, final String originalLocation,
+			final String workspaceLocation, final String fileName) {
 		this.setDirectory(directory);
 		this.setWorkspaceDirectory(workspaceDirectory);
 		this.setOriginalLocation(originalLocation);
@@ -29,7 +26,7 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 		this.setFileName(fileName);
 	}
 
-	public StringBuilder name(String workingDirectory, boolean useAbsolutePathNames) {
+	public StringBuilder name(final String workingDirectory, final boolean useAbsolutePathNames) {
 		StringBuilder result = new StringBuilder();
 
 		if (getDirectory() == null || getDirectory().equals(workingDirectory)) {
@@ -66,7 +63,7 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 		return directory;
 	}
 
-	public void setDirectory(String directory) {
+	public void setDirectory(final String directory) {
 		this.directory = directory;
 	}
 
@@ -74,7 +71,7 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 		return originalLocation;
 	}
 
-	public void setOriginalLocation(String originalLocation) {
+	public void setOriginalLocation(final String originalLocation) {
 		this.originalLocation = originalLocation;
 	}
 
@@ -82,7 +79,7 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 		return workspaceDirectory;
 	}
 
-	public void setWorkspaceDirectory(String workspaceDirectory) {
+	public void setWorkspaceDirectory(final String workspaceDirectory) {
 		this.workspaceDirectory = workspaceDirectory;
 	}
 
@@ -90,7 +87,7 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 		return workspaceLocation;
 	}
 
-	public void setWorkspaceLocation(String workspaceLocation) {
+	public void setWorkspaceLocation(final String workspaceLocation) {
 		this.workspaceLocation = workspaceLocation;
 	}
 
@@ -98,12 +95,12 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 	
 	@Override
-	public int compareTo(TTCN3IncludeFileStruct other) {
+	public int compareTo(final TTCN3IncludeFileStruct other) {
 		return getFileName().compareTo(other.getFileName());
 	}
 

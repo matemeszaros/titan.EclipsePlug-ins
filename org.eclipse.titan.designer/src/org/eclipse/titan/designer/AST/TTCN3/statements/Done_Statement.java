@@ -69,7 +69,7 @@ public final class Done_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentreference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -111,7 +111,7 @@ public final class Done_Statement extends Statement {
 
 		if (doneMatch != null) {
 			final boolean[] valueRedirectChecked = new boolean[] { false };
-			IType returnType = Port_Utility.getIncomingType(timestamp, doneMatch, redirect, valueRedirectChecked);
+			final IType returnType = Port_Utility.getIncomingType(timestamp, doneMatch, redirect, valueRedirectChecked);
 			if (returnType == null) {
 				doneMatch.getLocation().reportSemanticError("Cannot determine the return type for value returning done");
 			} else {
@@ -123,8 +123,8 @@ public final class Done_Statement extends Statement {
 						break;
 					}
 					if (lastType instanceof IReferencingType) {
-						IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
-						IType refd = ((IReferencingType) lastType).getTypeRefd(timestamp, refChain);
+						final IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+						final IType refd = ((IReferencingType) lastType).getTypeRefd(timestamp, refChain);
 						refChain.release();
 						if (lastType != refd) {
 							lastType = refd;
@@ -163,7 +163,7 @@ public final class Done_Statement extends Statement {
 			return null;
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
+		final List<Integer> result = new ArrayList<Integer>();
 		result.add(Ttcn3Lexer.PORTREDIRECTSYMBOL);
 
 		if (doneMatch != null) {
@@ -211,7 +211,7 @@ public final class Done_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentreference != null && !componentreference.accept(v)) {
 			return false;
 		}

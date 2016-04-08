@@ -78,6 +78,7 @@ public final class RegularComponentType extends ComponentType {
 
 	@Override
 	public void trCompsof(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain, final boolean isSet) {
+		//Do nothing
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public final class RegularComponentType extends ComponentType {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentField != null && !componentField.accept(v)) {
 			return false;
 		}

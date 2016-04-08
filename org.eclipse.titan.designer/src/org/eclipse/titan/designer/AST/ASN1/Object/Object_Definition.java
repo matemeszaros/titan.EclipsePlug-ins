@@ -23,8 +23,8 @@ import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Object;
 import org.eclipse.titan.designer.AST.ASN1.Block;
 import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
@@ -69,7 +69,7 @@ public final class Object_Definition extends ASN1Object {
 		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0; i < fieldSettings.size(); i++) {
-			FieldSetting fieldSetting = fieldSettings.get(i);
+			final FieldSetting fieldSetting = fieldSettings.get(i);
 			if (fieldSetting == child) {
 				return builder.append(INamedNode.DOT).append(fieldSetting.getName().getDisplayName());
 			}
@@ -110,7 +110,7 @@ public final class Object_Definition extends ASN1Object {
 
 		String name;
 		for (int i = 0; i < fieldSettings.size(); i++) {
-			FieldSetting fieldSetting = fieldSettings.get(i);
+			final FieldSetting fieldSetting = fieldSettings.get(i);
 			name = fieldSetting.getName().getName();
 			if (fieldSettingMap.containsKey(name)) {
 				final Location location = fieldSettingMap.get(name).getLocation();
@@ -246,7 +246,7 @@ public final class Object_Definition extends ASN1Object {
 			} else {
 				// final part of the reference
 				for (int j = 0; j < fieldSettings.size(); j++) {
-					FieldSetting fieldSetting = fieldSettings.get(i);
+					final FieldSetting fieldSetting = fieldSettings.get(i);
 					if (fieldSetting.getName().getName().startsWith(subreferenceName)) {
 						propCollector.addProposal(fieldSetting.getName(), "- Object field", null, "FieldSetting");
 					}
@@ -277,7 +277,7 @@ public final class Object_Definition extends ASN1Object {
 				// final part of the reference
 				String name;
 				for (int j = 0; j < fieldSettings.size(); j++) {
-					FieldSetting fieldSetting = fieldSettings.get(i);
+					final FieldSetting fieldSetting = fieldSettings.get(i);
 					name = fieldSetting.getName().getName();
 					if (name.startsWith(subreferenceName)) {
 						declarationCollector.addDeclaration(name, fieldSetting.getLocation(), this);
@@ -302,9 +302,9 @@ public final class Object_Definition extends ASN1Object {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (fieldSettings != null) {
-			for (FieldSetting fs : fieldSettings) {
+			for (final FieldSetting fs : fieldSettings) {
 				if (!fs.accept(v)) {
 					return false;
 				}

@@ -60,7 +60,7 @@ public final class Block implements INamedNode, IVisitableNode, Token, TokenSour
 		this.mLocation = aLocation;
 	}
 
-	public Block(List<Token> tokenList, final Location location) {
+	public Block(final List<Token> tokenList, final Location location) {
 		this( location );
 		this.tokenList = tokenList;
 	}
@@ -70,8 +70,7 @@ public final class Block implements INamedNode, IVisitableNode, Token, TokenSour
 			tokenList = ((TokenWithIndexAndSubTokens) token).getSubTokens();
 			final IFile sourceFile = ((TokenWithIndexAndSubTokens) token).getSourceFile();
 			setLocation( new Location(sourceFile, token.getLine(), token.getStartIndex(), token.getStopIndex()) );
-		}
-		else {
+		} else {
 			setLocation( NULL_Location.INSTANCE );
 			tokenList = ((TokenWithIndexAndSubTokens) token).getSubTokens();
 		}
@@ -114,7 +113,7 @@ public final class Block implements INamedNode, IVisitableNode, Token, TokenSour
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;
@@ -209,7 +208,7 @@ public final class Block implements INamedNode, IVisitableNode, Token, TokenSour
 	}
 
 	@Override
-	public void setTokenFactory(TokenFactory<?> arg0) {
+	public void setTokenFactory(final TokenFactory<?> arg0) {
 		assert(false);
 	}
 }

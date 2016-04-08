@@ -544,7 +544,7 @@ public final class SequenceOf_Value extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (values!=null && !values.accept(v)) {
 			return false;
 		}

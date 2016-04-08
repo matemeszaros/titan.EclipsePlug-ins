@@ -97,7 +97,7 @@ public final class ExcludeFromBuild extends AbstractHandler implements IObjectAc
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
 		doExclusion(selection);
@@ -134,7 +134,7 @@ public final class ExcludeFromBuild extends AbstractHandler implements IObjectAc
 	private class ExcluderWorkspaceJob extends WorkspaceJob {
 		private final IStructuredSelection structSelection;
 
-		public ExcluderWorkspaceJob(IStructuredSelection structSelection) {
+		public ExcluderWorkspaceJob(final IStructuredSelection structSelection) {
 			super("Changing the excludedness of resources");
 			this.structSelection = structSelection;
 		}

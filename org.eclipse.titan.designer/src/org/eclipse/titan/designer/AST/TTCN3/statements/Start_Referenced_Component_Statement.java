@@ -75,7 +75,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentReference == child) {
 			return builder.append(FULLNAMEPART1);
@@ -160,7 +160,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			return;
 		}
 
-		Function_Type functionType = (Function_Type) type;
+		final Function_Type functionType = (Function_Type) type;
 		if (functionType.isRunsOnSelf()) {
 			dereferredValue.getLocation().reportSemanticError("The argument cannot be a function reference with 'runs on self' clause");
 			return;
@@ -170,7 +170,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			return;
 		}
 
-		IType runsOnType = functionType.getRunsOnType(timestamp);
+		final IType runsOnType = functionType.getRunsOnType(timestamp);
 
 		if (compType != null && runsOnType != null && !runsOnType.isCompatible(timestamp, compType, null, null, null)) {
 			final String message = MessageFormat
@@ -179,7 +179,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			componentReference.getLocation().reportSemanticError(message);
 		}
 
-		IType returnType = functionType.getReturnType();
+		final IType returnType = functionType.getReturnType();
 		if (returnType != null) {
 			if (functionType.returnsTemplate()) {
 				dereferredValue.getLocation().reportSemanticWarning(
@@ -195,8 +195,8 @@ public final class Start_Referenced_Component_Statement extends Statement {
 						break;
 					}
 					if (lastType instanceof IReferencingType) {
-						IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
-						IType refd = ((IReferencingType) lastType).getTypeRefd(timestamp, refChain);
+						final IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+						final IType refd = ((IReferencingType) lastType).getTypeRefd(timestamp, refChain);
 						refChain.release();
 						if (lastType != refd) {
 							lastType = refd;
@@ -219,8 +219,8 @@ public final class Start_Referenced_Component_Statement extends Statement {
 			}
 		}
 
-		ActualParameterList tempActualParameters = new ActualParameterList();
-		FormalParameterList formalParameters = functionType.getFormalParameters();
+		final ActualParameterList tempActualParameters = new ActualParameterList();
+		final FormalParameterList formalParameters = functionType.getFormalParameters();
 		if (!formalParameters.checkActualParameterList(timestamp, parameters, tempActualParameters)) {
 			tempActualParameters.setFullNameParent(this);
 			tempActualParameters.setMyScope(getMyScope());
@@ -262,7 +262,7 @@ public final class Start_Referenced_Component_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReference != null && !componentReference.accept(v)) {
 			return false;
 		}

@@ -104,7 +104,7 @@ public final class ExtensionAndException extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (exceptionSpecification != null && !exceptionSpecification.accept(v)) {
 			return false;
 		}

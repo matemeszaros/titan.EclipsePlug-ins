@@ -37,6 +37,8 @@ public final class ProjectBuildPropertyData {
 	public static final String EMPTY_STRING = "";
 	public static final String TRUE_STRING = "true";
 	public static final String FALSE_STRING = "false";
+	public static final String USE_TPD_NAME = "useTpdName";
+	public static final String ORIG_TPD_URI = "origTpdURI";
 
 	public static final String GENERATE_MAKEFILE_PROPERTY = "generateMakefile";
 	public static final String GENERATE_INTERNAL_MAKEFILE_PROPERTY = "generateInternalMakefile";
@@ -290,9 +292,10 @@ public final class ProjectBuildPropertyData {
 	 * @param project
 	 * @param value
 	 */
-	public static void setLoadLocation(IProject project, String value) {
-		if (project == null || value == null)
+	public static void setLoadLocation(final IProject project, final String value) {
+		if (project == null || value == null) {
 			return;
+		}
 
 		try {
 			project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.LOAD_LOCATION),
@@ -309,7 +312,7 @@ public final class ProjectBuildPropertyData {
 	 * @param project
 	 * @param value
 	 */
-	public static void setProjectAlreadyExported(IProject project, boolean value) {
+	public static void setProjectAlreadyExported(final IProject project, final boolean value) {
 		if (project == null)
 			return;
 
@@ -322,5 +325,4 @@ public final class ProjectBuildPropertyData {
 		}
 
 	}
-
 }

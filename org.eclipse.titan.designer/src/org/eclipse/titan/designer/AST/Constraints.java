@@ -119,7 +119,7 @@ public final class Constraints extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (constraints != null) {
 			for (Constraint c : constraints) {
 				if (!c.accept(v)) {

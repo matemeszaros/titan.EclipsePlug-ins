@@ -27,15 +27,15 @@ public final class IncludeSectionHandler {
 	}
 
 	//TODO: remove
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(ParserRuleContext lastSectionRoot) {
+	public void setLastSectionRoot(final ParserRuleContext lastSectionRoot) {
 		this.lastSectionRoot = new LocationAST(lastSectionRoot);
 	}
 
-	public void setLastSectionRoot(Token i) {
+	public void setLastSectionRoot(final Token i) {
 		// TODO: implement
 	}
 	
@@ -43,7 +43,7 @@ public final class IncludeSectionHandler {
 		return files;
 	}
 
-	public void addFile( ParserRuleContext aIncludeFile ) {
+	public void addFile(final ParserRuleContext aIncludeFile ) {
 		files.add( new LocationAST( aIncludeFile ) );
 	}
 

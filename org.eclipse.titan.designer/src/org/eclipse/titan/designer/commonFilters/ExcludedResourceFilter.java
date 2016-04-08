@@ -68,7 +68,7 @@ public final class ExcludedResourceFilter extends org.eclipse.jface.viewers.View
 			if (helper.isExcludedByRegexp(file.getName())) {
 				return false;
 			}
-			if (file.getName().startsWith(".")) {
+			if ('.' == file.getName().charAt(0)) {
 				return false;
 			}
 			return !ResourceExclusionHelper.isDirectlyExcluded(file);
@@ -78,7 +78,7 @@ public final class ExcludedResourceFilter extends org.eclipse.jface.viewers.View
 			if (helper.isExcludedByRegexp(folder.getName())) {
 				return false;
 			}
-			if (folder.getName().startsWith(".")) {
+			if ('.' == folder.getName().charAt(0)) {
 				return false;
 			}
 			return !ResourceExclusionHelper.isDirectlyExcluded(folder);

@@ -21,8 +21,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3FoldingSupport;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectConfigurationParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
@@ -70,7 +69,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					List<Position> positions = (new TTCN3FoldingSupport()).calculatePositions(document);
+					List<Position> positions = (new ConfigFoldingSupport()).calculatePositions(document);
 					editor.updateFoldingStructure(positions);
 				}
 			});
@@ -96,6 +95,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 
 	@Override
 	public void setProgressMonitor(final IProgressMonitor monitor) {
+		//Do nothing
 	}
 
 }

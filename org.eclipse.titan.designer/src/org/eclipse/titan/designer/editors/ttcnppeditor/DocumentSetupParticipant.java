@@ -14,7 +14,7 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
+import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 
 /**
  * @author Kristof Szabados
@@ -26,7 +26,7 @@ public final class DocumentSetupParticipant implements IDocumentSetupParticipant
 		IDocumentPartitioner partitioner = new FastPartitioner(new PartitionScanner(), PartitionScanner.PARTITION_TYPES);
 		if (document instanceof IDocumentExtension3) {
 			IDocumentExtension3 extension3 = (IDocumentExtension3) document;
-			extension3.setDocumentPartitioner(PartitionScanner.TTCN3_PARTITIONING, partitioner);
+			extension3.setDocumentPartitioner(PartitionScanner.TTCNPP_PARTITIONING, partitioner);
 		} else {
 			document.setDocumentPartitioner(partitioner);
 		}
@@ -41,6 +41,7 @@ public final class DocumentSetupParticipant implements IDocumentSetupParticipant
 
 			@Override
 			public void documentChanged(final DocumentEvent event) {
+				//Do nothing
 			}
 
 		});

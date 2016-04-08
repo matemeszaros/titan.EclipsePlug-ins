@@ -34,7 +34,7 @@ public interface ITemplateListItem extends ITTCN3Template {
 	
 	public TTCN3Template getTemplate();
 
-	public boolean accept(ASTVisitor v);
+	public boolean accept(final ASTVisitor v);
 
 	public void updateSyntax(TTCN3ReparseUpdater reparser, boolean b) throws ReParseException;
 

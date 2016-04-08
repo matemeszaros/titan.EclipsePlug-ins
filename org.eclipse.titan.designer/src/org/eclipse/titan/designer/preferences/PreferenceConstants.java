@@ -45,6 +45,8 @@ public final class PreferenceConstants {
 	public static final String EXPORT_EXCLUDE_LINKED_CONTENTS = ProductConstants.PRODUCT_ID_DESIGNER + ".excludeLinkedContents";
 	public static final String EXPORT_SAVE_DEFAULT_VALUES = ProductConstants.PRODUCT_ID_DESIGNER + ".saveDefaultValues";
 	public static final String EXPORT_PACK_ALL_PROJECTS_INTO_ONE = ProductConstants.PRODUCT_ID_DESIGNER + ".packAllProjectsIntoOne";
+	public static final String USE_TPD_NAME = ProductConstants.PRODUCT_ID_DESIGNER + ".useTpdName";
+	public static final String ORIG_TPD_URI = ProductConstants.PRODUCT_ID_DESIGNER + ".origTpdURI";
 	
 	/**
 	 * Flag: Automatic export required

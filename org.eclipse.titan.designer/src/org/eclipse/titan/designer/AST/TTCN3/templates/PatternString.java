@@ -54,10 +54,11 @@ public final class PatternString implements IVisitableNode {
 	 *                must not be null.
 	 **/
 	public void checkRecursions(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
+		//Do nothing
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT:
 			return false;

@@ -15,7 +15,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override
 	public void initializeDefaultPreferences() {
-		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		final IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 
 		preferenceStore.setDefault(PreferenceConstants.LOG_MERGE_OPTIONS, PreferenceConstants.LOG_MERGE_OPTIONS_ASK);
 	}

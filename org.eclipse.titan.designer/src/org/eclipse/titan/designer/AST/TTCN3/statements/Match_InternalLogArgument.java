@@ -27,7 +27,7 @@ public final class Match_InternalLogArgument extends InternalLogArgument {
 	}
 
 	@Override
-	public void checkRecursions(CompilationTimeStamp timestamp, IReferenceChain referenceChain) {
+	public void checkRecursions(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		if (matchExpression == null) {
 			return;
 		}

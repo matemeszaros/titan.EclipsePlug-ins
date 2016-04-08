@@ -66,6 +66,7 @@ public final class Undefined_LowerIdentifier_Value extends Value {
 
 	@Override
 	public void setLocation(final Location location) {
+		//Do nothing
 	}
 
 	@Override
@@ -259,7 +260,7 @@ public final class Undefined_LowerIdentifier_Value extends Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (realValue != null) {
 			if (!realValue.accept(v)) {
 				return false;

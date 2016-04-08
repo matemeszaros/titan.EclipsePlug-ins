@@ -59,7 +59,7 @@ public final class FunctionTypeMappingTarget extends TypeMappingTarget {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (targetType == child) {
 			return builder.append(FULLNAMEPART1);
@@ -103,7 +103,7 @@ public final class FunctionTypeMappingTarget extends TypeMappingTarget {
 			return;
 		}
 
-		Assignment assignment = functionReference.getRefdAssignment(timestamp, false);
+		final Assignment assignment = functionReference.getRefdAssignment(timestamp, false);
 		if (assignment == null) {
 			return;
 		}
@@ -168,7 +168,7 @@ public final class FunctionTypeMappingTarget extends TypeMappingTarget {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (targetType != null && !targetType.accept(v)) {
 			return false;
 		}

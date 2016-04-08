@@ -28,7 +28,7 @@ public final class TestportParameterSectionHandler {
 			return root;
 		}
 
-		public void setRoot(LocationAST root) {
+		public void setRoot(final LocationAST root) {
 			this.root = root;
 		}
 
@@ -36,7 +36,7 @@ public final class TestportParameterSectionHandler {
 			return componentName;
 		}
 
-		public void setComponentName(LocationAST componentName) {
+		public void setComponentName(final LocationAST componentName) {
 			this.componentName = componentName;
 		}
 
@@ -44,7 +44,7 @@ public final class TestportParameterSectionHandler {
 			return testportName;
 		}
 
-		public void setTestportName(LocationAST testportName) {
+		public void setTestportName(final LocationAST testportName) {
 			this.testportName = testportName;
 		}
 
@@ -52,7 +52,7 @@ public final class TestportParameterSectionHandler {
 			return parameterName;
 		}
 
-		public void setParameterName(LocationAST parameterName) {
+		public void setParameterName(final LocationAST parameterName) {
 			this.parameterName = parameterName;
 		}
 
@@ -60,7 +60,7 @@ public final class TestportParameterSectionHandler {
 			return value;
 		}
 
-		public void setValue(LocationAST value) {
+		public void setValue(final LocationAST value) {
 			this.value = value;
 		}
 	}
@@ -72,7 +72,7 @@ public final class TestportParameterSectionHandler {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
@@ -80,7 +80,7 @@ public final class TestportParameterSectionHandler {
 		return testportParameters;
 	}
 
-	public void setTestportParameters(List<TestportParameter> testportParameters) {
+	public void setTestportParameters(final List<TestportParameter> testportParameters) {
 		this.testportParameters = testportParameters;
 	}
 }

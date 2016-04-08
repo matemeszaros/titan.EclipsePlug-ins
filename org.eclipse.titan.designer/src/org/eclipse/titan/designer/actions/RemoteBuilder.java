@@ -253,11 +253,11 @@ public final class RemoteBuilder extends AbstractHandler implements IObjectActio
 
 	@Override
 	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
-
+		//Do nothing
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		doRemoteBuilde();
 
 		return null;

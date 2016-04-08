@@ -40,6 +40,7 @@ public final class ExecuteSectionDropTargetListener implements DropTargetListene
 
 	@Override
 	public void dragLeave(final DropTargetEvent event) {
+		//Do nothing
 	}
 
 	@Override
@@ -101,6 +102,7 @@ public final class ExecuteSectionDropTargetListener implements DropTargetListene
 
 	@Override
 	public void dropAccept(final DropTargetEvent event) {
+		//Do nothing
 	}
 
 }

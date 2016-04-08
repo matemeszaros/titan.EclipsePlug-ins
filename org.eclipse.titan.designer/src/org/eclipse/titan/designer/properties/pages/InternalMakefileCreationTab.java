@@ -309,7 +309,7 @@ public final class InternalMakefileCreationTab {
 	 * 
 	 * @param project
 	 *                the project to save the properties to.
-	 * @return true if the save was successful, false oterwise.
+	 * @return true if the save was successful, false otherwise.
 	 * */
 	public boolean saveProperties(final IProject project) {
 		boolean result = true;

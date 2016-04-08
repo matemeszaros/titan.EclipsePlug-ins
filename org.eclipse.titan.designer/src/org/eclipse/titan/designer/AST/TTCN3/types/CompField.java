@@ -326,7 +326,7 @@ public final class CompField extends ASTNode
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (type!=null && !type.accept(v)) {
 			return false;
 		}

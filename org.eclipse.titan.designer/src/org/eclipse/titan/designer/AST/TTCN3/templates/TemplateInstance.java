@@ -427,7 +427,7 @@ public final class TemplateInstance extends ASTNode implements ILocateableNode, 
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (type != null && !type.accept(v)) {
 			return false;
 		}

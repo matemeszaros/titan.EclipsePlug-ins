@@ -784,7 +784,7 @@ public class Identifier implements ILocateableNode, IVisitableNode {
 	}
 
 	@Override
-	public boolean accept(ASTVisitor v) {
+	public boolean accept(final ASTVisitor v) {
 		switch (v.visit(this)) {
 		case ASTVisitor.V_ABORT: return false;
 		case ASTVisitor.V_SKIP: return true;

@@ -21,7 +21,7 @@ import org.eclipse.titan.designer.AST.Type;
  * */
 public final class Types extends ASTNode {
 
-	private List<Type> types;
+	private final List<Type> types;
 
 	public Types() {
 		types = new ArrayList<Type>();
@@ -40,7 +40,7 @@ public final class Types extends ASTNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (types != null) {
 			for (Type t : types) {
 				if (!t.accept(v)) {

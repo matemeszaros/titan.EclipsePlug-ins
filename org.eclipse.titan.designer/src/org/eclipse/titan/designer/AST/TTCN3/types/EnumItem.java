@@ -16,6 +16,7 @@ import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.IReferencingElement;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
+import org.eclipse.titan.designer.AST.ITypeWithComponents;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Module;
@@ -26,8 +27,8 @@ import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
@@ -191,7 +192,7 @@ public final class EnumItem extends ASTNode implements ILocateableNode, IIncreme
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier!=null && !identifier.accept(v)) {
 			return false;
 		}
@@ -203,15 +204,18 @@ public final class EnumItem extends ASTNode implements ILocateableNode, IIncreme
 
 	@Override
 	public Declaration getDeclaration() {
+		if (getMyScope() == null) {
+			return null;
+		}
 		Module module = getMyScope().getModuleScope();
 		Assignment assignment = module.getEnclosingAssignment(getLocation().getOffset());
 		IType type = assignment.getType(CompilationTimeStamp.getBaseTimestamp());
 		
-		if(!(type instanceof TTCN3_Enumerated_Type)) {
-			return null;
+		if(type instanceof ITypeWithComponents) {
+			Identifier id = ((ITypeWithComponents) type).getComponentIdentifierByName(getId());
+			return Declaration.createInstance(assignment, id);
 		}
 
-		Identifier id = ((TTCN3_Enumerated_Type) type).getComponentIdentifierByName(getId());
-		return Declaration.createInstance(assignment, id);
+		return null;
 	}
 }

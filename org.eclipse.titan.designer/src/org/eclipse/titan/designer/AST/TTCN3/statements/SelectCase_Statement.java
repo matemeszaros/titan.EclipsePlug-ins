@@ -64,7 +64,7 @@ public final class SelectCase_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (expression == child) {
 			return builder.append(FULLNAMEPART1);
@@ -116,7 +116,7 @@ public final class SelectCase_Statement extends Statement {
 		}
 
 		IValue temp = expression.setLoweridToReference(timestamp);
-		IType governor = temp.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+		final IType governor = temp.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 		if (governor == null) {
 			if (!temp.getIsErroneous(timestamp)) {
@@ -170,7 +170,7 @@ public final class SelectCase_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (expression != null && !expression.accept(v)) {
 			return false;
 		}

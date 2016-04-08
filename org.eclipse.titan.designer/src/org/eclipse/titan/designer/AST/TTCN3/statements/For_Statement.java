@@ -121,7 +121,7 @@ public final class For_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (definitions == child) {
 			return builder.append(FULLNAMEPART1);
@@ -157,7 +157,7 @@ public final class For_Statement extends Statement {
 			}
 		} else {
 			definitions.setParentScope(scope);
-			Location startLoc = definitions.getLocation();
+			final Location startLoc = definitions.getLocation();
 			Location endLoc = null;
 			if (finalExpression != null) {
 				finalExpression.setMyScope(definitions);
@@ -224,8 +224,8 @@ public final class For_Statement extends Statement {
 		}
 		if (finalExpression != null) {
 			finalExpression.setLoweridToReference(timestamp);
-			IValue lastValue = finalExpression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
-			Type_type temp = lastValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final IValue lastValue = finalExpression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final Type_type temp = lastValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 			switch (temp) {
 			case TYPE_BOOL:
@@ -391,7 +391,7 @@ public final class For_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (definitions != null && !definitions.accept(v)) {
 			return false;
 		}

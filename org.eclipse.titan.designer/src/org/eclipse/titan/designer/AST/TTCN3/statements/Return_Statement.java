@@ -63,7 +63,7 @@ public final class Return_Statement extends Statement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (template == child) {
 			return builder.append(FULLNAMEPART);
@@ -93,7 +93,7 @@ public final class Return_Statement extends Statement {
 
 		lastTimeChecked = timestamp;
 
-		Definition definition = myStatementBlock.getMyDefinition();
+		final Definition definition = myStatementBlock.getMyDefinition();
 		if (definition == null) {
 			location.reportSemanticError(USAGEINCONTROLPART);
 			return;
@@ -112,7 +112,7 @@ public final class Return_Statement extends Statement {
 				break;
 			}
 			
-			Type returnType = ((Def_Function) definition).getType(timestamp);
+			final Type returnType = ((Def_Function) definition).getType(timestamp);
 
 			switch (template.getTemplatetype()) {
 			case VALUE_LIST:
@@ -128,16 +128,12 @@ public final class Return_Statement extends Statement {
 				if (!template.isValue(timestamp)) {
 					template.getLocation().reportSemanticError(SPECIFICVALUEEXPECTED);
 					break;
-				};
+				}
 			}
 
 			// General:
 			template.setMyGovernor(returnType);
-			ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template);// FIXME:
-																									// remove
-																									// this
-																									// line
-																									// ???
+			final ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template);// FIXME: remove this line ???
 			temporalTemplate.checkThisTemplateGeneric(timestamp, returnType, false, /* isModified */
 					false, /* allowOmit */
 					true, /* allowAnyOrOmit */
@@ -151,9 +147,9 @@ public final class Return_Statement extends Statement {
 				location.reportSemanticError(MessageFormat.format(MISSINGTEMPLATE, ((Def_Function) definition).getType(timestamp)
 						.getTypename()));
 			} else {
-				Type returnType1 = ((Def_Function) definition).getType(timestamp);
+				final Type returnType1 = ((Def_Function) definition).getType(timestamp);
 				template.setMyGovernor(returnType1);
-				ITTCN3Template temporalTemplate1 = returnType1.checkThisTemplateRef(timestamp, template);
+				final ITTCN3Template temporalTemplate1 = returnType1.checkThisTemplateRef(timestamp, template);
 				temporalTemplate1.checkThisTemplateGeneric(timestamp, returnType1, true, /* isModified */
 						true, /* allowOmit */
 						true, /* allowAnyOrOmit */
@@ -209,7 +205,7 @@ public final class Return_Statement extends Statement {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (template != null && !template.accept(v)) {
 			return false;
 		}

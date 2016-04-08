@@ -27,8 +27,8 @@ import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
@@ -455,7 +455,7 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		return new ArrayList<Integer>(0);
 	}
 
-	private int reparseIdentifier(TTCN3ReparseUpdater aReparser) {
+	private int reparseIdentifier(final TTCN3ReparseUpdater aReparser) {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
@@ -464,7 +464,7 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		});
 	}
 
-	private int reparseOptionalWithStatement(TTCN3ReparseUpdater aReparser) {
+	private int reparseOptionalWithStatement(final TTCN3ReparseUpdater aReparser) {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
@@ -480,7 +480,7 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		});
 	}
 
-	private int reparseModuleDefinitionsList(TTCN3ReparseUpdater aReparser) {
+	private int reparseModuleDefinitionsList(final TTCN3ReparseUpdater aReparser) {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
@@ -934,7 +934,7 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier != null && !identifier.accept(v)) {
 			return false;
 		}

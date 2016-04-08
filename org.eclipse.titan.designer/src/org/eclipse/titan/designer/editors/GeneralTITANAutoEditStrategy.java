@@ -16,8 +16,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.titan.common.parsers.Interval;
 import org.eclipse.titan.common.parsers.Interval.interval_type;
 import org.eclipse.titan.designer.Activator;
-import org.eclipse.titan.designer.editors.ttcn3editor.HeuristicalIntervalDetector;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
+import org.eclipse.titan.designer.editors.actions.IndentationSupport;
 
 /**
  * @author Kristof Szabados

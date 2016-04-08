@@ -75,7 +75,7 @@ public final class TypeMapping extends ASTNode implements ILocateableNode {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (source_type == child) {
 			return builder.append(FULLNAMEPART);
@@ -108,11 +108,11 @@ public final class TypeMapping extends ASTNode implements ILocateableNode {
 			source_type.check(timestamp);
 		}
 
-		int nofTargets = mappingTargets.getNofTargets();
+		final int nofTargets = mappingTargets.getNofTargets();
 		boolean hasSliding = false;
 		boolean hasNonSliding = false;
 		for (int i = 0, size = nofTargets; i < size; i++) {
-			TypeMappingTarget target = mappingTargets.getTargetByIndex(i);
+			final TypeMappingTarget target = mappingTargets.getTargetByIndex(i);
 			target.check(timestamp, source_type);
 			if (nofTargets > 1) {
 				switch (target.getTypeMappingType()) {
@@ -126,8 +126,8 @@ public final class TypeMapping extends ASTNode implements ILocateableNode {
 					}
 					break;
 				case FUNCTION: {
-					Def_Function function = ((FunctionTypeMappingTarget) target).getFunction();
-					Def_Extfunction externalFunction = ((FunctionTypeMappingTarget) target).getExternalFunction();
+					final Def_Function function = ((FunctionTypeMappingTarget) target).getFunction();
+					final Def_Extfunction externalFunction = ((FunctionTypeMappingTarget) target).getExternalFunction();
 					EncodingPrototype_type prototype = EncodingPrototype_type.NONE;
 					if (function != null) {
 						prototype = function.getPrototype();
@@ -194,7 +194,7 @@ public final class TypeMapping extends ASTNode implements ILocateableNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (source_type != null && !source_type.accept(v)) {
 			return false;
 		}

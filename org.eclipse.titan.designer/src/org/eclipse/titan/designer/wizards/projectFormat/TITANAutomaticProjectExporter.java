@@ -54,7 +54,7 @@ public final class TITANAutomaticProjectExporter {
 	 * @param project reference for the project to be checked
 	 * @return true if the project is already exported, otherwise false
 	 */
-	private static boolean isAlreadyExported(IProject project) {
+	private static boolean isAlreadyExported(final IProject project) {
 		if (project == null) {
 			return false;
 		}
@@ -75,7 +75,7 @@ public final class TITANAutomaticProjectExporter {
 	 * 
 	 * @return true if the save was ordered and successful
 	 */
-	public static boolean saveAllAutomatically(IProject project) {
+	public static boolean saveAllAutomatically(final IProject project) {
 
 		if (project == null) {
 			ErrorReporter.logError("Invalid project");

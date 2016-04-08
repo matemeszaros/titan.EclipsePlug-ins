@@ -433,7 +433,7 @@ public final class InformationFromObj extends Reference {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (!super.memberAccept(v)) {
 			return false;
 		}
@@ -456,7 +456,7 @@ public final class InformationFromObj extends Reference {
 	/**
 	 * @return ObjectSet_definition
 	 */
-	protected ObjectSet_definition newObjectSetDefinitionInstance( ASN1Objects aObjects ) {
+	protected ObjectSet_definition newObjectSetDefinitionInstance(final ASN1Objects aObjects ) {
 		return new ObjectSet_definition( aObjects );
 	}
 }

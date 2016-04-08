@@ -63,11 +63,9 @@ public class ASN1Analyzer implements ISourceAnalyzer {
 	public List<SyntacticErrorStorage> getErrorStorage() {
 		if (!lexerListener.getErrorsStored().isEmpty() && parserListener.getErrorsStored().isEmpty()) {
 			return lexerListener.getErrorsStored();
-		}
-		else if (lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
+		} else if (lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
 			return parserListener.getErrorsStored();
-		}
-		else if (!lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
+		} else if (!lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
 			if (lexerListener.addAll(parserListener.getErrorsStored())) {
 				return lexerListener.getErrorsStored();
 			}

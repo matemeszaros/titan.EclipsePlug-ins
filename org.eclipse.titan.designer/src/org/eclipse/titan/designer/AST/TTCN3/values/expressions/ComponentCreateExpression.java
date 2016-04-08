@@ -79,7 +79,7 @@ public final class ComponentCreateExpression extends Expression_Value {
 			return "<erroneous value>";
 		}
 
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append(componentReference.getDisplayName());
 		builder.append(".create");
 		if (name != null || location != null) {
@@ -118,7 +118,7 @@ public final class ComponentCreateExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (componentReference == child) {
 			return builder.append(OPERAND1);
@@ -302,7 +302,7 @@ public final class ComponentCreateExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (componentReference != null && !componentReference.accept(v)) {
 			return false;
 		}

@@ -145,7 +145,7 @@ public final class TemplateInstances extends ASTNode implements ILocateableNode,
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (instances != null) {
 			for (TemplateInstance ti : instances) {
 				if (!ti.accept(v)) {

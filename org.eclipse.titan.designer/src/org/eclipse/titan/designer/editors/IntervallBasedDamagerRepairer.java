@@ -15,7 +15,6 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.titan.common.parsers.Interval;
 import org.eclipse.titan.common.parsers.Interval.interval_type;
-import org.eclipse.titan.designer.parsers.GlobalIntervalHandler;
 
 /**
  * @author Kristof Szabados

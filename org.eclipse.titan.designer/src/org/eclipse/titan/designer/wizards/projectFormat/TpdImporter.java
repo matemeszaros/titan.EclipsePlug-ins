@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +104,9 @@ public class TpdImporter {
 	private boolean wasAutoBuilding;
 	private Shell shell;
 	private final boolean headless;
+	private List<String> searchPaths;
+	private Map<String, String> tpdNameAttrMap = new HashMap<String, String>();
+	private Map<String, String> tpdURIMap = new HashMap<String, String>();
 
 	public TpdImporter(final Shell shell, final boolean headless) {
 		this.shell = shell;
@@ -122,7 +124,7 @@ public class TpdImporter {
 
 	/**
 	 * Internal function used to do the import job. It is needed to extract this
-	 * functionality i order to be able to handle erroneous situations.
+	 * functionality in order to be able to handle erroneous situations.
 	 *
 	 * @param projectFile
 	 *            the file path string of the project descriptor file (tpd)
@@ -135,11 +137,14 @@ public class TpdImporter {
 	 * @return true if the import was successful, false otherwise.
 	 * */
 	public boolean internalFinish(final String projectFile, final boolean isSkipExistingProjects,
-			final boolean isOpenPropertiesForAllImports, final List<IProject> projectsCreated, final IProgressMonitor monitor) {
+			final boolean isOpenPropertiesForAllImports, final List<IProject> projectsCreated, final IProgressMonitor monitor,
+			final List<String> searchPaths) {
 		if (projectFile == null || "".equals(projectFile.trim())) {
 			return false;
 		}
-
+		if(searchPaths != null) {
+			this.searchPaths = new ArrayList<String>(searchPaths);
+		}
 		System.setProperty(DOMImplementationRegistry.PROPERTY, ProjectFormatConstants.DOM_IMPLEMENTATION_SOURCE);
 		DOMImplementationRegistry registry = null;
 		try {
@@ -184,7 +189,7 @@ public class TpdImporter {
 		// Loading all URI Documents (tpds) 
 		// and collect projects to be imported
 		//====================================
-		if (!loadURIDocuments(resolvedProjectFileURI, null, tpdValidator)) {
+		if (!loadURIDocuments(resolvedProjectFileURI, tpdValidator)) {
 			return false;
 		}
 
@@ -235,6 +240,27 @@ public class TpdImporter {
 			IPath projectFileFolderPath = new Path(file.getPath()).removeLastSegments(1);
 			URI projectFileFolderURI = URIUtil.toURI(projectFileFolderPath);
 			Document actualDocument = projectsToImport.get(file);
+			
+			if (this.searchPaths != null && !this.searchPaths.isEmpty()) {
+				String tpdNameAttrVal = tpdNameAttrMap.get(project.getName());
+				String tpdURIVal = tpdURIMap.get(project.getName());
+				if (tpdNameAttrVal != null) {
+					try {
+						project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.USE_TPD_NAME),
+								tpdNameAttrVal);
+					} catch (CoreException e) {
+						ErrorReporter.logExceptionStackTrace("While setting `useTpdName' for project `" + project.getName() + "'", e);
+					}
+				}
+				if (tpdURIVal != null) {
+					try {
+						project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.ORIG_TPD_URI),
+								tpdURIVal);
+					} catch (CoreException e) {
+						ErrorReporter.logExceptionStackTrace("While setting `origTpdURI' for project `" + project.getName() + "'", e);
+					}
+				}
+			}
 
 			Element mainElement = actualDocument.getDocumentElement();
 			if (!loadProjectDataFromNode(mainElement, project, projectFileFolderURI)) {
@@ -282,7 +308,12 @@ public class TpdImporter {
 			internalMonitor.done();
 			return false;
 		}
-
+		try {
+			mainProject.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.USE_TPD_NAME),
+					mainProject.getName() + ".tpd");
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace("While setting `useTpdName' for project `" + mainProject.getName() + "'", e);
+		}
 		List<WorkspaceJob> jobs = new ArrayList<WorkspaceJob>();
 		List<IProject> projectsToBeConfigured;
 		if (isOpenPropertiesForAllImports) {
@@ -1004,14 +1035,12 @@ public class TpdImporter {
 	 *
 	 * @param file
 	 *            the file to load the data from.
-	 * @param source
-	 *            the source file referencing the target, or null if none - NOT USED, TO BE REMOVED
 	 * @param validator
 	 *            the xml validator. can be <code>null</code>
 	 *
 	 * @return true if there were no errors, false otherwise.
 	 * */
-	private boolean loadURIDocuments(final URI file, final URI source, final Validator validator) {
+	private boolean loadURIDocuments(final URI file, final Validator validator) {
 		if (projectsToImport.containsKey(file)) {
 			return true;
 		}
@@ -1021,8 +1050,10 @@ public class TpdImporter {
 					+ " could not be loaded");
 			return false;
 		}
-
+		
 		Document document = getDocumentFromFile(file.getPath());
+		
+		
 		if (document == null) {
 			final StringBuilder builder = new StringBuilder("It was not possible to load the imported project file: '" + file.toString()
 					+ "'\n");
@@ -1086,7 +1117,38 @@ public class TpdImporter {
 			String unresolvedProjectLocationURI = locationNode.getTextContent();
 
 			URI absoluteURI = TITANPathUtilities.convertToAbsoluteURI(unresolvedProjectLocationURI, URIUtil.toURI(projectFileFolderPath));
-			
+
+			String fileName;
+			// Determine tpdname
+			Node tpdNameNode = attributeMap.getNamedItem(ProjectFormatConstants.REFERENCED_PROJECT_TPD_NAME_ATTRIBUTE);
+			if(tpdNameNode != null) {
+				fileName = tpdNameNode.getTextContent();
+			}else {
+				fileName = projectName + ".tpd";
+			}
+			tpdNameAttrMap.put(projectName, fileName);
+			if (searchPaths != null && !searchPaths.isEmpty()) {
+				File f = new File(absoluteURI);
+				IPath unresolvedProjectLocationURIPath = new Path(unresolvedProjectLocationURI);
+				if(!unresolvedProjectLocationURIPath.isAbsolute() && (!f.exists() || f.isDirectory())) {;
+					// Try search paths
+					for (String path : searchPaths) {
+						String filePath = path;
+						if(path.charAt(path.length() - 1) != '/') {
+							filePath += "/";
+						}
+						filePath += fileName;
+						String systemPath = new Path(filePath).toOSString();
+						f = new File(systemPath);
+						// tpd found
+						if (f.exists() && !f.isDirectory()) {
+							absoluteURI = URIUtil.toURI(systemPath);
+							tpdURIMap.put(projectName, unresolvedProjectLocationURI);
+							break;
+						}
+					}
+				}
+			}
 			
 			if (absoluteURI!=null && !"file".equals(absoluteURI.getScheme())) {
 				final StringBuilder builder = new StringBuilder(
@@ -1105,7 +1167,7 @@ public class TpdImporter {
 //			if( !projectsWithUnresolvedName.containsKey(absoluteURI) ) {
 //				projectsWithUnresolvedName.put(absoluteURI, unresolvedProjectLocationURI);
 //			}
-			result &= loadURIDocuments(absoluteURI, null, validator);
+			result &= loadURIDocuments(absoluteURI, validator);
 			importChain.remove(importChain.size() - 1);
 		}
 
@@ -1152,20 +1214,7 @@ public class TpdImporter {
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IProjectDescription description = workspace.newProjectDescription(name);
 
-		/*
-		 * A new project description in normal conditions does not contain any
-		 * natures but as internal behavior tends to change without notification
-		 * we can not rely on it.
-		 */
-		List<String> newIds = new ArrayList<String>();
-		newIds.addAll(Arrays.asList(description.getNatureIds()));
-		int index = newIds.indexOf(TITANNature.NATURE_ID);
-		if (index == -1) {
-			newIds.add(TITANNature.NATURE_ID);
-			newIds.add(TITANNature.LOG_NATURE_ID);
-		}
-
-		description.setNatureIds(newIds.toArray(new String[newIds.size()]));
+		TITANNature.addTITANNatureToProject(description);
 
 		if (headless) {
 			try {

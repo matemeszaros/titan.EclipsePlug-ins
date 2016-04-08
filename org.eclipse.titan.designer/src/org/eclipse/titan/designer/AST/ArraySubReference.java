@@ -120,7 +120,7 @@ public final class ArraySubReference extends ASTNode implements ISubReference, I
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (value != null) {
 			if (!value.accept(v)) {
 				return false;

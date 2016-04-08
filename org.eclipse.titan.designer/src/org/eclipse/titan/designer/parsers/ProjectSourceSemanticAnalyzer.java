@@ -34,10 +34,11 @@ import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportationChain;
 import org.eclipse.titan.designer.AST.ASN1.Ass_pard;
-import org.eclipse.titan.designer.brokenpartsanalyzers.AnalyzerFactory;
-import org.eclipse.titan.designer.brokenpartsanalyzers.BrokenPartsChecker;
-import org.eclipse.titan.designer.brokenpartsanalyzers.IBaseAnalyzer;
-import org.eclipse.titan.designer.brokenpartsanalyzers.SelectionMethodBase;
+import org.eclipse.titan.designer.AST.brokenpartsanalyzers.BrokenPartsChecker;
+import org.eclipse.titan.designer.AST.brokenpartsanalyzers.BrokenPartsViaReferences;
+import org.eclipse.titan.designer.AST.brokenpartsanalyzers.IBaseAnalyzer;
+import org.eclipse.titan.designer.AST.brokenpartsanalyzers.SelectionAlgorithm;
+import org.eclipse.titan.designer.AST.brokenpartsanalyzers.SelectionMethodBase;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.core.TITANNature;
@@ -179,7 +180,7 @@ public class ProjectSourceSemanticAnalyzer {
 			semanticallyUptodateModules.remove(oldname);
 		}
 
-		ProjectBasedBuilder.setForcedMakefileRebuild(project, true);
+		ProjectBasedBuilder.setForcedMakefileRebuild(project);
 	}
 
 	/**
@@ -455,7 +456,7 @@ public class ProjectSourceSemanticAnalyzer {
 
 				monitor.subTask("Calculating the list of modules to be checked");
 
-				IBaseAnalyzer selectionMethod = AnalyzerFactory.getAnalyzer(compilationCounter);
+				IBaseAnalyzer selectionMethod = new BrokenPartsViaReferences(SelectionAlgorithm.BROKENREFERENCESINVERTED, compilationCounter);
 				SelectionMethodBase selectionMethodBase = (SelectionMethodBase)selectionMethod;
 				selectionMethodBase.setModules(allModules, semanticallyChecked);
 				selectionMethod.execute();

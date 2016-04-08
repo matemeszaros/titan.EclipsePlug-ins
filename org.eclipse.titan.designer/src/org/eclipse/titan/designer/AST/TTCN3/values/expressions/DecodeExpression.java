@@ -82,7 +82,7 @@ public final class DecodeExpression extends Expression_Value {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (reference1 == child || reference2 == child) {
 			return builder.append(OPERAND);
@@ -322,7 +322,7 @@ public final class DecodeExpression extends Expression_Value {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (reference1 != null && !reference1.accept(v)) {
 			return false;
 		}

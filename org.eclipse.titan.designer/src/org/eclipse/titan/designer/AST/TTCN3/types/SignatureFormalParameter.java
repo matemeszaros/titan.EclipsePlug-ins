@@ -116,7 +116,7 @@ public final class SignatureFormalParameter extends ASTNode implements ILocateab
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (identifier!=null && !identifier.accept(v)) {
 			return false;
 		}

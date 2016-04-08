@@ -29,15 +29,16 @@ public final class PreferenceUtils {
 	 * @return the combined string
 	 * @see #deserializeFromString
 	 */
-	private static String serializeToString(final Iterable<String> items, String delimiter, String escape) {
-		Joiner joiner = new Joiner(delimiter);
-		for (String item : items) {
+	private static String serializeToString(final Iterable<String> items, final String delimiter, final String escape) {
+		final Joiner joiner = new Joiner(delimiter);
+		for (final String item : items) {
 			joiner.join(escape(item, delimiter, escape));
 		}
+
 		return joiner.toString();
 	}
 
-	private static String escape(String original, String delimiter, String escape) {
+	private static String escape(final String original, final String delimiter, final String escape) {
 		return original.replace(escape, escape + escape).replace(delimiter, escape + delimiter);
 	}
 
@@ -73,10 +74,11 @@ public final class PreferenceUtils {
 	 * @param escape the escape character noting the delimiters not to be used as delimiters.
 	 * */
 	private static List<String> deserializeFromString(final String input, final char delimiter, final char escape) {
-		List<String> results = new ArrayList<String>();
+		final List<String> results = new ArrayList<String>();
 		if (StringUtils.isNullOrEmpty(input)) {
 			return results;
 		}
+
 		StringBuilder tempResult = new StringBuilder();
 		char c;
 		for (int i = 0; i < input.length(); ++i) {

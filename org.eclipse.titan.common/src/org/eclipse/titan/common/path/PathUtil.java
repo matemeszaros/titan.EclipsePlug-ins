@@ -88,7 +88,7 @@ public final class PathUtil {
 		final List<String> result = new ArrayList<String>(baseList);
 
 		while (index < relativeList.size()) {
-			String temp = relativeList.get(index);
+			final String temp = relativeList.get(index);
 			index++;
 			if ("..".equals(temp)) {
 				if (!result.isEmpty()) {

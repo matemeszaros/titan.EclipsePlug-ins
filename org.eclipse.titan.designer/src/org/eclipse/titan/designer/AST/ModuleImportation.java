@@ -10,8 +10,8 @@ package org.eclipse.titan.designer.AST;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.titan.designer.editors.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ProposalCollector;
+import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**

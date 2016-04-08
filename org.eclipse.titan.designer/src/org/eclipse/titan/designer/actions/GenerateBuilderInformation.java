@@ -74,6 +74,7 @@ public final class GenerateBuilderInformation extends AbstractHandler implements
 
 	@Override
 	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
+		//Do nothing
 	}
 
 	@Override
@@ -350,7 +351,7 @@ public final class GenerateBuilderInformation extends AbstractHandler implements
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		if (!LicenseValidator.check()) {
 			return null;
 		}
