@@ -27,7 +27,7 @@ final class UserStruct implements Comparable<UserStruct> {
 			return new StringBuilder();
 		}
 
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		if (getDirectory() != null) {
 			result.append(getDirectory()).append('/');
 		}
@@ -40,7 +40,7 @@ final class UserStruct implements Comparable<UserStruct> {
 			return new StringBuilder();
 		}
 
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		if (getDirectory() != null) {
 			result.append(getDirectory()).append('/');
 		}
@@ -53,7 +53,7 @@ final class UserStruct implements Comparable<UserStruct> {
 			return null;
 		}
 
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		if (getDirectory() != null) {
 			result.append(getDirectory()).append('/');
 		}
@@ -66,7 +66,7 @@ final class UserStruct implements Comparable<UserStruct> {
 			return null;
 		}
 
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		if (getDirectory() != null) {
 			result.append(getDirectory()).append('/');
 		}

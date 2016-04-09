@@ -27,7 +27,7 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 	}
 
 	public StringBuilder name(final String workingDirectory, final boolean useAbsolutePathNames) {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 
 		if (getDirectory() == null || getDirectory().equals(workingDirectory)) {
 			result.append(getFileName());

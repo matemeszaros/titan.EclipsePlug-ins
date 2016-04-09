@@ -27,7 +27,8 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 	}
 
 	public StringBuilder fileName() {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
+
 		if (getDirectory() != null) {
 			result.append(getDirectory()).append('/');
 		}
@@ -41,7 +42,8 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 	}
 
 	public StringBuilder generatedName(final boolean addDirectory, final String suffix, final String fileNameSuffix) {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
+
 		if (addDirectory) {
 			if (getDirectory() != null) {
 				result.append(getDirectory()).append('/');
@@ -61,7 +63,8 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 	}
 
 	public StringBuilder preprocessedName(final boolean addDirectory) {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
+
 		if (addDirectory) {
 			if (getDirectory() != null) {
 				result.append(getDirectory()).append('/');

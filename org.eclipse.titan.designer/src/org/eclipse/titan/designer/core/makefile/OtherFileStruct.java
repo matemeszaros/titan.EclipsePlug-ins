@@ -23,7 +23,7 @@ class OtherFileStruct implements Comparable<OtherFileStruct> {
 	}
 
 	public StringBuilder name(final String workingDirectory, final boolean useAbsolutePathNames) {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 
 		if (getDirectory() == null || getDirectory().equals(workingDirectory)) {
 			result.append(getFileName());

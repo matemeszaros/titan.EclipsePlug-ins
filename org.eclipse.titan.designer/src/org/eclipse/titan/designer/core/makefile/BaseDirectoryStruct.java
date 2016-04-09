@@ -24,13 +24,13 @@ final class BaseDirectoryStruct implements Comparable<BaseDirectoryStruct> {
 	}
 
 	public StringBuilder name() {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		result.append(getDirectoryName());
 		return result;
 	}
 
 	public StringBuilder originalName() {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		result.append(getDirectoryName());
 		return result;
 	}

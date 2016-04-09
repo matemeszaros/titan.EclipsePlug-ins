@@ -39,10 +39,10 @@ public class ExternalMakefileGenerator {
 	 * @param project the project to generate the Makefile for
 	 * */
 	public static List<String> createMakefilGeneratorCommand(final IProject project) {
-		boolean reportDebugInformation = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
+		final boolean reportDebugInformation = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, false, null);
 		
-		TITANBuilderResourceVisitor visitor = ProjectBasedBuilder.getProjectBasedBuilder(project).getResourceVisitor();
+		final TITANBuilderResourceVisitor visitor = ProjectBasedBuilder.getProjectBasedBuilder(project).getResourceVisitor();
 		
 		final Map<String, IFile> files = visitor.getFiles();
 		final Map<String, IFile> centralStorageFiles = visitor.getCentralStorageFiles();
@@ -50,49 +50,49 @@ public class ExternalMakefileGenerator {
 				.getFilesofReferencedProjects();
 
 		
-		List<String> command = new ArrayList<String>();
-		IPreferencesService prefs = Platform.getPreferencesService();
-		String pathOfTITAN = prefs.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.TITAN_INSTALLATION_PATH, "",
+		final List<String> command = new ArrayList<String>();
+		final IPreferencesService prefs = Platform.getPreferencesService();
+		final String pathOfTITAN = prefs.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.TITAN_INSTALLATION_PATH, "",
 				null);
-		Path makefilegenPath = new Path(pathOfTITAN + File.separatorChar + BIN_DIRECTORY + File.separatorChar + MAKEFILEGENERATOR);
+		final Path makefilegenPath = new Path(pathOfTITAN + File.separatorChar + BIN_DIRECTORY + File.separatorChar + MAKEFILEGENERATOR);
 		command.add(PathConverter.convert(makefilegenPath.toOSString(), reportDebugInformation, TITANDebugConsole.getConsole()));
 
-		String decoratorParametersLong = TITANDecorator.propertiesAsParameters(project, true);
+		final String decoratorParametersLong = TITANDecorator.propertiesAsParameters(project, true);
 		if (!EMPTY_STRING.equals(decoratorParametersLong)) {
-			String[] parameters = decoratorParametersLong.split(" ");
+			final String[] parameters = decoratorParametersLong.split(" ");
 			for (int i = 0; i < parameters.length; i++) {
 				command.add(parameters[i]);
 			}
 		}
 
-		for (String path : files.keySet()) {
+		for (final String path : files.keySet()) {
 			command.add(APOSTROPHE + path + APOSTROPHE);
 		}
 
-		IPath centralStorageDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryPath(true);
-		String centralStorageDirectory = centralStorageDirectoryPath.toOSString();
-		for (String fileName : centralStorageFiles.keySet()) {
-			IFile file = centralStorageFiles.get(fileName);
-			IProject otherProject = file.getProject();
-			IPath referencedCentralStorageDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(otherProject).getWorkingDirectoryPath(true);
-			String referencedCentralStorageDirectory = referencedCentralStorageDirectoryPath.toOSString();
-			String relativePathToDirectory = PathUtil.getRelativePath(centralStorageDirectory, referencedCentralStorageDirectory);
-			Path relativePath = new Path(relativePathToDirectory);
-			String path = relativePath.append(fileName).toOSString();
+		final IPath centralStorageDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryPath(true);
+		final String centralStorageDirectory = centralStorageDirectoryPath.toOSString();
+		for (final String fileName : centralStorageFiles.keySet()) {
+			final IFile file = centralStorageFiles.get(fileName);
+			final IProject otherProject = file.getProject();
+			final IPath referencedCentralStorageDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(otherProject).getWorkingDirectoryPath(true);
+			final String referencedCentralStorageDirectory = referencedCentralStorageDirectoryPath.toOSString();
+			final String relativePathToDirectory = PathUtil.getRelativePath(centralStorageDirectory, referencedCentralStorageDirectory);
+			final Path relativePath = new Path(relativePathToDirectory);
+			final String path = relativePath.append(fileName).toOSString();
 			command.add(APOSTROPHE + PathConverter.convert(path, reportDebugInformation, TITANDebugConsole.getConsole())
 					+ APOSTROPHE);
 		}
 
-		IPath workingDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryPath(true);
-		String workingDirectory = workingDirectoryPath.toOSString();
-		for (String fileName : referencedFiles.keySet()) {
-			IFile file = referencedFiles.get(fileName);
-			IProject otherProject = file.getProject();
-			IPath referencedWorkingDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(otherProject).getWorkingDirectoryPath(true);
-			String referencedWorkingDirectory = referencedWorkingDirectoryPath.toOSString();
-			String relativePathToDirectory = PathUtil.getRelativePath(workingDirectory, referencedWorkingDirectory);
-			Path relativePath = new Path(relativePathToDirectory);
-			String path = relativePath.append(fileName).toOSString();
+		final IPath workingDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryPath(true);
+		final String workingDirectory = workingDirectoryPath.toOSString();
+		for (final String fileName : referencedFiles.keySet()) {
+			final IFile file = referencedFiles.get(fileName);
+			final IProject otherProject = file.getProject();
+			final IPath referencedWorkingDirectoryPath = ProjectBasedBuilder.getProjectBasedBuilder(otherProject).getWorkingDirectoryPath(true);
+			final String referencedWorkingDirectory = referencedWorkingDirectoryPath.toOSString();
+			final String relativePathToDirectory = PathUtil.getRelativePath(workingDirectory, referencedWorkingDirectory);
+			final Path relativePath = new Path(relativePathToDirectory);
+			final String path = relativePath.append(fileName).toOSString();
 			command.add(APOSTROPHE + PathConverter.convert(path, reportDebugInformation, TITANDebugConsole.getConsole())
 					+ APOSTROPHE);
 		}
