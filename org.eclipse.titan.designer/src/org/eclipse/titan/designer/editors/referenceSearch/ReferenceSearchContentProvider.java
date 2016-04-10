@@ -26,7 +26,7 @@ import org.eclipse.search.ui.text.RemoveAllEvent;
 /**
  * @author Szabolcs Beres
  * */
-public class ReferenceSearchContentProvider implements ITreeContentProvider {
+public final class ReferenceSearchContentProvider implements ITreeContentProvider {
 
 	private class SearchResultListener implements ISearchResultListener {
 		@Override
@@ -111,7 +111,7 @@ public class ReferenceSearchContentProvider implements ITreeContentProvider {
 		}
 	}
 
-	protected void setResult(final ReferenceSearchResult result) {
+	private void setResult(final ReferenceSearchResult result) {
 		tree = new HashMap<IResource, ArrayList<IResource>>();
 		this.result = result;
 		for (Object child : result.getElements()) {
