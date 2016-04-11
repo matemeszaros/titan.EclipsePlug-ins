@@ -62,7 +62,7 @@ public final class ActivateDereferedExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("activate(derefers(");
+		final StringBuilder builder = new StringBuilder("activate(derefers(");
 		if (value != null) {
 			builder.append(value.createStringRepresentation());
 		}
@@ -139,8 +139,8 @@ public final class ActivateDereferedExpression extends Expression_Value {
 			return;
 		}
 
-		ActualParameterList tempActualParameters = new ActualParameterList();
-		FormalParameterList formalParameterList = ((Altstep_Type) type).getFormalParameters();
+		final ActualParameterList tempActualParameters = new ActualParameterList();
+		final FormalParameterList formalParameterList = ((Altstep_Type) type).getFormalParameters();
 		if (formalParameterList.checkActualParameterList(timestamp, actualParameterList, tempActualParameters)) {
 			setIsErroneous(true);
 			return;
