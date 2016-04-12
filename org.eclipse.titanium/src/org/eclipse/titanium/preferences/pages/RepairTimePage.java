@@ -7,9 +7,9 @@
  ******************************************************************************/
 package org.eclipse.titanium.preferences.pages;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.collections15.map.HashedMap;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -47,7 +47,7 @@ public class RepairTimePage extends PreferencePage implements IWorkbenchPreferen
 	
 	public RepairTimePage() {
 		prefStore = Activator.getDefault().getPreferenceStore();
-		storedValues = new HashedMap<ProblemType, TimeDataEntry>();
+		storedValues = new HashMap<ProblemType, TimeDataEntry>();
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class RepairTimePage extends PreferencePage implements IWorkbenchPreferen
 	}
 	
 	private void refresh() {
-		storedValues = new HashedMap<ProblemType, TimeDataEntry>();
+		storedValues = new HashMap<ProblemType, TimeDataEntry>();
 		createContents(getShell().getParent());
 	}
 	
