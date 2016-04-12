@@ -44,6 +44,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.core.CompilerVersionInformationCollector;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
+import org.eclipse.titan.designer.core.SymbolicLinkHandler;
 import org.eclipse.titan.designer.core.TITANBuilder;
 import org.eclipse.titan.designer.core.TITANNature;
 import org.eclipse.titan.designer.extensions.ExtensionHandler;
@@ -402,23 +403,16 @@ public final class Activator extends AbstractUIPlugin {
 									// It is of no importance when this analysis will run, or end for that matter.
 
 									boolean generateMakefile;
-									boolean usesInternal;
 									try {
 										generateMakefile = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 												ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY)));
-										if (generateMakefile) {
-											usesInternal = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-												ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)));
-										} else {
-											usesInternal = false;
-										}
 									} catch (CoreException e) {
 										generateMakefile = false;
-										usesInternal = false;
 									}
-									if (generateMakefile && usesInternal) {
+									if (generateMakefile) {
 										TITANBuilder.markProjectForRebuild(project);
-										TITANBuilder.removeMakefile(project);
+										SymbolicLinkHandler.createSymlinks(project);
+										TITANBuilder.regenerateMakefile(project);
 									}
 
 									return Status.OK_STATUS;
