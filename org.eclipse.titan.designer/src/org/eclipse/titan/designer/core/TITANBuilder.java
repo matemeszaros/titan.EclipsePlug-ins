@@ -402,6 +402,94 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
+	 * Forces the refresh of the Makefile. This must be done when some
+	 * project settings changed. (but only in automatic project management
+	 * mode)
+	 * 
+	 * @param project
+	 *                the project whose Makefile must be removed.
+	 * 
+	 * @return true if the operation was successful, false otherwise.
+	 */
+	public static boolean regenerateMakefile(final IProject project) {
+		return regenerateMakefile(project, new ArrayList<IProject>());
+	}
+
+	/**
+	 * Forces the refresh of the Makefile. This must be done when some
+	 * project settings changed. (but only in automatic project management
+	 * mode)
+	 * 
+	 * @param project
+	 *                the project whose Makefile must be removed.
+	 * @param processedProjects
+	 *                the list of projects already processed, to stop
+	 *                cycles.
+	 * 
+	 * @return true if the operation was successful, false otherwise.
+	 */
+	private static boolean regenerateMakefile(final IProject project, final List<IProject> processedProjects) {
+		if (!isBuilderEnabled(project)) {
+			return true;
+		}
+
+		if (processedProjects.contains(project)) {
+			return true;
+		}
+		processedProjects.add(project);
+
+		String needsMakefile = null;
+
+		try {
+			needsMakefile = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+					ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY));
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace("While checking wheather to generate makefile or not", e);
+		}
+
+		IPath workingDir = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryPath(true);
+		if (workingDir == null || !workingDir.toFile().exists()) {
+			return true;
+		}
+
+		if (TRUE.equals(needsMakefile)) {
+			boolean usesInternal;
+			try {
+				usesInternal = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+						ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)));
+			} catch (CoreException e) {
+				usesInternal = false;
+			}
+			if (usesInternal) {
+				// in case of the internal Makefile generator it
+				// is better to run it and refresh the Makefile
+				// instead of just deleting it
+				// this looks better on the user interface as
+				// the file does not disappears from the user.
+				InternalMakefileGenerator makefileGenerator = new InternalMakefileGenerator();
+				makefileGenerator.generateMakefile(project);
+			} else {
+				final TITANJob buildJob = new TITANJob(BUILD_PROCESS, new HashMap<String, IFile>(), workingDir.toFile(), project);
+				buildJob.setPriority(Job.DECORATE);
+				buildJob.setUser(true);
+				buildJob.setRule(project);
+				
+				List<String> command = ExternalMakefileGenerator.createMakefilGeneratorCommand(project);
+				buildJob.addCommand(command, CREATE_MAKEFILE);
+				
+				buildJob.schedule();
+			}
+		}
+
+		IProject[] referencedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getReferencingProjects();
+		for (IProject tempProject : referencedProjects) {
+			removeMakefile(tempProject, processedProjects);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Cleans the provided project for a rebuild. Involves cleaning,
 	 * removing the makefile and touching the project.
 	 * 
