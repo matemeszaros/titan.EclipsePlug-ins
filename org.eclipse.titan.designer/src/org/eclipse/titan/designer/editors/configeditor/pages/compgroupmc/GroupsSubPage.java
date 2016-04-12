@@ -518,8 +518,6 @@ public final class GroupsSubPage {
 				int index = selectedGroup.getGroupItems().indexOf(item);
 
 				if (index == 0) {
-					// if this is the first
-					LocationAST next;
 					if (selectedGroup.getGroupItems().size() == 1) {
 						// if it is the only one
 						// DO NOTHING
@@ -527,7 +525,7 @@ public final class GroupsSubPage {
 						return;
 					}
 
-					next = item.getItem().getNextSibling().getNextSibling();
+					LocationAST next = item.getItem().getNextSibling().getNextSibling();
 					if (next != null) {
 						LocationAST assignment = selectedGroup.getRoot().getFirstChild().getNextSibling();
 						assignment.setNextSibling(next);

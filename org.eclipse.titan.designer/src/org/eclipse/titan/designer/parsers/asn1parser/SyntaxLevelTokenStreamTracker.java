@@ -43,18 +43,18 @@ public class SyntaxLevelTokenStreamTracker extends BufferedTokenStream {
 	public int fetch (int n) {
 		if (fetchedEOF) {
 			return 0;
-		}	
-		Token t;
+		}
+
 		Token first;
 		int i = 0;
-		
+
 		if (oldList == null || index >= oldList.size()) {
 			tokens.add(new TokenWithIndexAndSubTokens(Token.EOF));
 			return ++i;
 		}
 		
 		do {
-			t = oldList.get(index++);
+			Token t = oldList.get(index++);
 			//t = tokens.get(index++);
 			first = t;
 			if (t == null) {
@@ -102,13 +102,13 @@ public class SyntaxLevelTokenStreamTracker extends BufferedTokenStream {
 	}
 
 	private boolean getBlock(Token first) {
-		Token t;
-		TokenWithIndexAndSubTokens result;
 		if(index >= oldList.size()) {
 			tokens.add(first);
 			return true;
 		}
-		t = oldList.get(index++);
+
+		TokenWithIndexAndSubTokens result;
+		Token t = oldList.get(index++);
 		List<Token> tokenList = new ArrayList<Token>();
 		int nofUnclosedParanthesis = 1;
 		while(t != null && t.getType() != Token.EOF && index < oldList.size()) {

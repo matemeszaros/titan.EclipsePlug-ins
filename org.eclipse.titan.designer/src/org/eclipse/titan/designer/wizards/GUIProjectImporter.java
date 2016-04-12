@@ -248,11 +248,12 @@ public final class GUIProjectImporter {
 		}
 
 		String documentType = document.getDoctype().getNodeName();
-		String rootNodeName = document.getDocumentElement().getNodeName();
 		if (!"TITAN_GUI_project_file".equals(documentType)) {
 			reportError("Incorrect document type `" + documentType + "' in file `" + projectFile + "'. Expected: `TITAN_GUI_project_file'", headless);
 			return null;
 		}
+
+		String rootNodeName = document.getDocumentElement().getNodeName();
 		if (!"Project".equals(rootNodeName)) {
 			reportError("Incorrect root node name `" + rootNodeName + "' in file `" + projectFile + "'. Expected root node name: `Project'", headless);
 			return null;

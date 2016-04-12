@@ -139,17 +139,20 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 	 *                Select the given region if true.
 	 */
 	private void selectAndRevealRegion(final IFile file, final int offset, final int endOffset, final boolean select) {
-		IWorkbenchPage page = targetEditor.getSite().getPage();
 		IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
 		if (desc == null) {
 			targetEditor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(EDITORNOTFOUND);
 			return;
 		}
+
+		if (!select) {
+			return;
+		}
+
 		try {
+			IWorkbenchPage page = targetEditor.getSite().getPage();
 			IEditorPart editorPart = page.openEditor(new FileEditorInput(file), desc.getId());
-			if (!select) {
-				return;
-			}
+			
 			if (editorPart != null) {
 				// Check the editor instance. It's usually a
 				// ConfigEditor and
@@ -372,8 +375,6 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 	public void handleDefinitions(final IFile file, final int offset, final IDocument document) {
 		ConfigReferenceParser refParser = new ConfigReferenceParser(false);
 		refParser.findReferenceForOpening(file, offset, document);
-		List<ConfigDeclarationCollectionHelper> collected = new ArrayList<ConfigDeclarationCollectionHelper>();
-		Map<String, CfgDefinitionInformation> definitions = GlobalParser.getConfigSourceParser(file.getProject()).getAllDefinitions();
 		String definitionName = refParser.getDefinitionName();
 
 		if (definitionName == null) {
@@ -381,8 +382,9 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			return;
 		}
 
+		List<ConfigDeclarationCollectionHelper> collected = new ArrayList<ConfigDeclarationCollectionHelper>();
+		Map<String, CfgDefinitionInformation> definitions = GlobalParser.getConfigSourceParser(file.getProject()).getAllDefinitions();
 		CfgDefinitionInformation definition = definitions.get(definitionName);
-		ConfigDeclarationCollectionHelper declaration = null;
 
 		if (definition != null) {
 			List<CfgLocation> locations = definition.getLocations();
@@ -399,6 +401,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			return;
 		}
 
+		ConfigDeclarationCollectionHelper declaration = null;
 		if (collected.size() == 1) {
 			declaration = collected.get(0);
 		} else {

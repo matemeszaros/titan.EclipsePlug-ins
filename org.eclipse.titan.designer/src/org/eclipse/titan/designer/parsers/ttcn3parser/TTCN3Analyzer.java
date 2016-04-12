@@ -144,8 +144,7 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 	 */
 	public void parse( final File aFile ) {
 		BufferedReader bufferedReader = null;
-		final int fileLength = (int)aFile.length();
-		
+
 		try {
 			bufferedReader = new BufferedReader( new FileReader( aFile ) );
 		} catch ( FileNotFoundException e ) {
@@ -153,6 +152,7 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 			return;
 		}
 
+		final int fileLength = (int)aFile.length();
 		parse( bufferedReader, fileLength, null );
 	}
 	

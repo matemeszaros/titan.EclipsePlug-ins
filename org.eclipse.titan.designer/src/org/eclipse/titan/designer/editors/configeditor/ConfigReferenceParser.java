@@ -49,12 +49,12 @@ public final class ConfigReferenceParser implements IReferenceParser {
 	public String findIncludedFileForOpening(final int offset, final IDocument document) {
 		moduleParameter = false;
 		String includeString = null;
-		int ofs = offset - 1;
-		int endoffset = offset;
 		if (-1 == offset) {
 			return includeString;
 		}
 		try {
+			int ofs = offset - 1;
+			int endoffset = offset;
 			int tempOfs = includeStartOffset(ofs, document);
 			if (-1 == tempOfs) {
 				return includeString;
@@ -77,12 +77,12 @@ public final class ConfigReferenceParser implements IReferenceParser {
 	@Override
 	public Reference findReferenceForOpening(final IFile file, final int offset, final IDocument document) {
 		Reference reference = null;
-		int ofs = offset - 1;
-		int endoffset = offset;
 		if (-1 == offset) {
 			return reference;
 		}
 		try {
+			int ofs = offset - 1;
+			int endoffset = offset;
 			int tempOfs = referenceStartOffset(ofs, document);
 			if (-1 == tempOfs) {
 				return reference;

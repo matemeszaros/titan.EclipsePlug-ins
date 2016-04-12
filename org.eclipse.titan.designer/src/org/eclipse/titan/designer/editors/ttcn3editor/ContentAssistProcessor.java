@@ -61,22 +61,20 @@ public final class ContentAssistProcessor implements IContentAssistProcessor {
 			return new ICompletionProposal[] {};
 		}
 
-		IDocument doc = viewer.getDocument();
-
 		IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 		if (file == null) {
 			return new ICompletionProposal[] {};
 		}
 
+		IDocument doc = viewer.getDocument();
 		TTCN3ReferenceParser refParser = new TTCN3ReferenceParser(true);
 		Reference ref = refParser.findReferenceForCompletion(file, offset, doc);
-
-		Scope scope = null;
 
 		if (ref == null || ref.getSubreferences().isEmpty()) {
 			return new ICompletionProposal[] {};
 		}
 
+		Scope scope = null;
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
 		String moduleName = projectSourceParser.containedModule(file);
 		if (moduleName != null) {
@@ -174,7 +172,6 @@ public final class ContentAssistProcessor implements IContentAssistProcessor {
 			propCollector.sortTillMarked();
 			propCollector.markPosition();
 		} else {
-			String fakeModule = ref.getModuleIdentifier().getName();
 			if (scope == null || !(scope instanceof StatementBlock)) {
 				if (PreferenceConstantValues.SORT_ALPHABETICALLY.equals(sortingpolicy)) {
 					propCollector.sortAll();
@@ -182,6 +179,7 @@ public final class ContentAssistProcessor implements IContentAssistProcessor {
 				return propCollector.getCompletitions();
 			}
 
+			String fakeModule = ref.getModuleIdentifier().getName();
 			if ("any component".equals(fakeModule) || "all component".equals(fakeModule)) {
 				Component_Type.addAnyorAllProposal(propCollector, 0);
 			} else if ("any port".equals(fakeModule) || "all port".equals(fakeModule)) {

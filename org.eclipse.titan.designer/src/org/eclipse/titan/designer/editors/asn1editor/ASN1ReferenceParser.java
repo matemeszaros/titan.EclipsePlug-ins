@@ -88,13 +88,11 @@ public final class ASN1ReferenceParser implements IReferenceParser {
 	public final Reference findReferenceForOpening(final IFile file, final int offset, final IDocument document) {
 		Reference reference = null;
 		ofs = offset - 1;
-		int endoffset = offset;
 		if (-1 == ofs) {
 			return reference;
 		}
 
 		try {
-			char currentChar = document.getChar(ofs);
 			GeneralPairMatcher pairMatcher = new ASN1ReferencePairMatcher();
 
 			ofs = referenceStartOffset(ofs, document, pairMatcher);
@@ -103,10 +101,11 @@ public final class ASN1ReferenceParser implements IReferenceParser {
 			// of the reference
 			ofs++;
 
+			int endoffset = offset;
 			if (endoffset >= document.getLength()) {
 				return reference;
 			}
-			currentChar = document.getChar(endoffset);
+			char currentChar = document.getChar(endoffset);
 
 			while (endoffset < document.getLength()
 					&& (Character.isLetterOrDigit(currentChar) || currentChar == '(' || currentChar == '_' || currentChar == '-')) {

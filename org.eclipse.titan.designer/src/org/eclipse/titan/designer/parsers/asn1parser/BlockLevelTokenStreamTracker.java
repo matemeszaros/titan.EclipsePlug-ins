@@ -108,13 +108,13 @@ public class BlockLevelTokenStreamTracker extends BufferedTokenStream {
 	}
 	
 	private boolean getBlock(Token first) { // return true if it were out of bond
-		Token t;
-		TokenWithIndexAndSubTokens result;
 		if(index >= oldList.size()) {
 			tokens.add(first);
 			return true;
 		}
-		t = oldList.get(index++);
+
+		TokenWithIndexAndSubTokens result;
+		Token t = oldList.get(index++);
 		List<Token> tokenList = new ArrayList<Token>();
 		int nofUnclosedParanthesis = 1;
 		while(t != null && t.getType() != Token.EOF && index < oldList.size()) {

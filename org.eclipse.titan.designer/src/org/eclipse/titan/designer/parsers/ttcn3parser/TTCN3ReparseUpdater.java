@@ -419,12 +419,11 @@ public final class TTCN3ReparseUpdater {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 
-		int result = Math.max(unclosedStarting, unclosedEnding);
-
 		if (insideSingleComment || insideMultiComment || insideString) {
 			return Integer.MAX_VALUE;
 		}
-		return result;
+
+		return Math.max(unclosedStarting, unclosedEnding);
 	}
 
 	/**

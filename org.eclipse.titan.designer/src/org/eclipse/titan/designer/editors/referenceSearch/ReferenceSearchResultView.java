@@ -129,12 +129,13 @@ public class ReferenceSearchResultView extends AbstractTextSearchViewPage {
 			getViewer().setSelection(new StructuredSelection(match));
 		}
 
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IFile file = (IFile) match.getElement();
 		IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
 		if (desc == null) {
 			return;
 		}
+
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorPart part = page.openEditor(new FileEditorInput(file), desc.getId(), false);
 		if (part != null && part instanceof ITextEditor) {
 			ITextEditor textEditor = (ITextEditor) part;

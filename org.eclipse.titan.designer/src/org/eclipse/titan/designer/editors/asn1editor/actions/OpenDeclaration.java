@@ -71,13 +71,13 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 	 *                the declaration to reveal
 	 * */
 	private void selectAndRevealDeclaration(final Location location) {
-		IWorkbenchPage page = targetEditor.getSite().getPage();
 		IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(location.getFile().getName());
 		if (desc == null) {
 			targetEditor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(ASN1EDITORNOTFOUND);
 			return;
 		}
 		try {
+			IWorkbenchPage page = targetEditor.getSite().getPage();
 			IEditorPart editorPart = page.openEditor(new FileEditorInput((IFile) location.getFile()), desc.getId());
 			if (editorPart != null && (editorPart instanceof AbstractTextEditor)) {
 				((AbstractTextEditor) editorPart).selectAndReveal(location.getOffset(),

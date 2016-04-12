@@ -66,13 +66,14 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 	 *                the declaration to reveal
 	 * */
 	private void selectAndRevealDeclaration(final Location location) {
-		IWorkbenchPage page = targetEditor.getSite().getPage();
 		IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(location.getFile().getName());
 		if (desc == null) {
 			targetEditor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(TTCNPPEDITORNOTFOUND);
 			return;
 		}
+
 		try {
+			IWorkbenchPage page = targetEditor.getSite().getPage();
 			IEditorPart editorPart = page.openEditor(new FileEditorInput((IFile) location.getFile()), desc.getId());
 			if (editorPart != null && (editorPart instanceof AbstractTextEditor)) {
 				((AbstractTextEditor) editorPart).selectAndReveal(location.getOffset(),
@@ -108,10 +109,6 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 			return;
 		}
 
-		IPreferencesService prefs = Platform.getPreferencesService();
-		boolean reportDebugInformation = prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.DISPLAYDEBUGINFORMATION,
-				true, null);
-
 		targetEditor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(null);
 
 		IFile file = (IFile) targetEditor.getEditorInput().getAdapter(IFile.class);
@@ -131,6 +128,10 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 							+ "feature please click on the 'Toggle exclude from build state' in the context menu of the Project Explorer. ");
 			return;
 		}
+
+		IPreferencesService prefs = Platform.getPreferencesService();
+		boolean reportDebugInformation = prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.DISPLAYDEBUGINFORMATION,
+				true, null);
 
 		int offset;
 		if (!selection.isEmpty() && selection instanceof TextSelection && !"".equals(((TextSelection) selection).getText())) {

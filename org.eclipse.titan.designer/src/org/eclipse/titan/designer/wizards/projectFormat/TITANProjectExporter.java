@@ -222,9 +222,6 @@ public final class TITANProjectExporter {
 			return false;
 		}
 
-		IPath projectFilePath = Path.fromOSString(projectFile);
-		URI projectFileURI = URIUtil.toURI(projectFilePath);
-
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		DocumentBuilder builder;
@@ -282,6 +279,9 @@ public final class TITANProjectExporter {
 		config.setParameter("validate-if-schema", Boolean.TRUE);
 		LSSerializer dom3Writer = domImplLS.createLSSerializer();
 		LSOutput output = domImplLS.createLSOutput();
+
+		IPath projectFilePath = Path.fromOSString(projectFile);
+		URI projectFileURI = URIUtil.toURI(projectFilePath);
 
 		try {
 			StringWriter sw = new StringWriter();
@@ -441,7 +441,6 @@ public final class TITANProjectExporter {
 					return false;
 				}
 				if (!projectLocaltionURIset) {
-					IPath path = new Path(projectFile);
 					URI locationuri = null;
 					try {
 						locationuri = org.eclipse.core.runtime.URIUtil.fromString(location);
@@ -455,6 +454,7 @@ public final class TITANProjectExporter {
 						return false;
 					}
 	
+					IPath path = new Path(projectFile);
 					path = path.removeLastSegments(1);
 					URI projecturi = URIUtil.toURI(path);
 					URI result = org.eclipse.core.runtime.URIUtil.makeRelative(locationuri, projecturi);
