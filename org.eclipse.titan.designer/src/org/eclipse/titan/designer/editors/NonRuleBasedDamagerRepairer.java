@@ -49,12 +49,12 @@ public final class NonRuleBasedDamagerRepairer implements IPresentationDamager, 
 	 *                    if the offset is invalid in this document
 	 */
 	protected int endOfLineOf(final int offset) throws BadLocationException {
-
 		IRegion info = fDocument.getLineInformationOfOffset(offset);
 		if (offset <= info.getOffset() + info.getLength()) {
 			return info.getOffset() + info.getLength();
 		}
-		int line = fDocument.getLineOfOffset(offset);
+
+		final int line = fDocument.getLineOfOffset(offset);
 		try {
 			info = fDocument.getLineInformation(line + 1);
 			return info.getOffset() + info.getLength();
@@ -67,8 +67,8 @@ public final class NonRuleBasedDamagerRepairer implements IPresentationDamager, 
 	public IRegion getDamageRegion(final ITypedRegion partition, final DocumentEvent event, final boolean documentPartitioningChanged) {
 		if (!documentPartitioningChanged) {
 			try {
-				IRegion info = fDocument.getLineInformationOfOffset(event.getOffset());
-				int start = Math.max(partition.getOffset(), info.getOffset());
+				final IRegion info = fDocument.getLineInformationOfOffset(event.getOffset());
+				final int start = Math.max(partition.getOffset(), info.getOffset());
 				int end = event.getOffset() + (event.getText() == null ? event.getLength() : event.getText().length());
 				if (info.getOffset() <= end && end <= info.getOffset() + info.getLength()) {
 					end = info.getOffset() + info.getLength();

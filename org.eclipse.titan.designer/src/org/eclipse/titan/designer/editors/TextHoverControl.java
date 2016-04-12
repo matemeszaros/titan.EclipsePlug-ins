@@ -62,7 +62,7 @@ public class TextHoverControl extends AbstractInformationControl {
 		try {
 			fBrowser = new Browser(getShell(), SWT.H_SCROLL | SWT.WRAP | SWT.MULTI);
 
-			Color color = parent.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+			final Color color = parent.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
 			fBrowser.setBackgroundMode(SWT.INHERIT_FORCE);
 			fBrowser.setBackground(color);
 		} catch (Exception e) {
@@ -110,7 +110,7 @@ public class TextHoverControl extends AbstractInformationControl {
 
 		if (input instanceof IHTMLHoverInfo) {
 			// Get the input string, then see whether it's a URL
-			IHTMLHoverInfo inputInfo = (IHTMLHoverInfo) input;
+			final IHTMLHoverInfo inputInfo = (IHTMLHoverInfo) input;
 			inputString = inputInfo.getHTMLString();
 			fIsURL = inputInfo.isURL();
 		} else if (input instanceof String) {

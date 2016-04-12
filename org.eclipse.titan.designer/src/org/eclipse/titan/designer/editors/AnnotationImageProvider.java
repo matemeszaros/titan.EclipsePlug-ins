@@ -37,8 +37,8 @@ public final class AnnotationImageProvider implements IAnnotationImageProvider {
 			return null;
 		}
 
-		MarkerAnnotation markerAnnotation = (MarkerAnnotation) annotation;
-		IMarker marker = markerAnnotation.getMarker();
+		final MarkerAnnotation markerAnnotation = (MarkerAnnotation) annotation;
+		final IMarker marker = markerAnnotation.getMarker();
 		switch (marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR)) {
 		case IMarker.SEVERITY_WARNING:
 			if (marker.getAttribute(DEPRECATED, false) || annotation.isMarkedDeleted()) {

@@ -26,10 +26,10 @@ public final class AnnotationHover implements IAnnotationHover {
 
 	@Override
 	public String getHoverInfo(final ISourceViewer sourceViewer, final int lineNumber) {
-		List<IMarker> markers = getMarkerForLine(sourceViewer, lineNumber);
-		StringBuilder builder = new StringBuilder();
+		final List<IMarker> markers = getMarkerForLine(sourceViewer, lineNumber);
+		final StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < markers.size(); i++) {
-			String message = markers.get(i).getAttribute(IMarker.MESSAGE, (String) null);
+			final String message = markers.get(i).getAttribute(IMarker.MESSAGE, (String) null);
 			if (message != null && message.trim().length() > 0) {
 				if (i != 0) {
 					// Perfect newline for TextHoverControl
@@ -57,18 +57,19 @@ public final class AnnotationHover implements IAnnotationHover {
 	 *         editor.
 	 */
 	protected List<IMarker> getMarkerForLine(final ISourceViewer sourceViewer, final int lineNumber) {
-		List<IMarker> markers = new ArrayList<IMarker>();
-		IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
+		final List<IMarker> markers = new ArrayList<IMarker>();
+		final IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
 		if (annotationModel == null) {
 			return markers;
 		}
-		Iterator<?> iterator = annotationModel.getAnnotationIterator();
+
+		final Iterator<?> iterator = annotationModel.getAnnotationIterator();
 		while (iterator.hasNext()) {
-			Object o = iterator.next();
+			final Object o = iterator.next();
 			if (o instanceof MarkerAnnotation) {
-				MarkerAnnotation actuaMarkerl = (MarkerAnnotation) o;
+				final MarkerAnnotation actuaMarkerl = (MarkerAnnotation) o;
 				try {
-					int actualLine = sourceViewer.getDocument().getLineOfOffset(
+					final int actualLine = sourceViewer.getDocument().getLineOfOffset(
 							annotationModel.getPosition(actuaMarkerl).getOffset());
 					if (actualLine == lineNumber) {
 						markers.add(actuaMarkerl.getMarker());

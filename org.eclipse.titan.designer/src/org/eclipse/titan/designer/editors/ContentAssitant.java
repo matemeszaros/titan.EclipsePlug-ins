@@ -23,7 +23,7 @@ public class ContentAssitant extends ContentAssistant {
 	private IPropertyChangeListener listener = new IPropertyChangeListener() {
 		@Override
 		public void propertyChange(final PropertyChangeEvent event) {
-			String property = event.getProperty();
+			final String property = event.getProperty();
 
 			if (PreferenceConstants.CONTENTASSISTANT_AUTO_ACTIVATION.equals(property)) {
 				enableAutoActivation((Boolean) event.getNewValue());
@@ -38,7 +38,7 @@ public class ContentAssitant extends ContentAssistant {
 	};
 
 	public ContentAssitant() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 		enableAutoActivation(store.getBoolean(PreferenceConstants.CONTENTASSISTANT_AUTO_ACTIVATION));
 		setAutoActivationDelay(store.getInt(PreferenceConstants.CONTENTASSISTANT_AUTO_ACTIVATION_DELAY));

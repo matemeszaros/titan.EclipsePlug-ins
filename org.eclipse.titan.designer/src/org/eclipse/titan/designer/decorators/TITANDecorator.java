@@ -85,18 +85,19 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 	private static IPropertyChangeListener listener = new IPropertyChangeListener() {
 
 		@Override
-		public void propertyChanged(IResource resource) {
+		public void propertyChanged(final IResource resource) {
 			if (resource instanceof IProject) {
 				if (!resource.isAccessible()){ 
 					return; 
 				}
-				IProject project = (IProject) resource;
+
+				final IProject project = (IProject) resource;
 				final List<IResource> allProjectResources = new ArrayList<IResource>();
 				try {
 					project.accept(new IResourceVisitor() {
 
 						@Override
-						public boolean visit(IResource resource) throws CoreException {
+						public boolean visit(final IResource resource) throws CoreException {
 							allProjectResources.add(resource);
 							return true;
 						}
@@ -141,12 +142,14 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 		if (element == null || !(element instanceof IProject)) {
 			return null;
 		}
-		IProject project = (IProject) element;
+
+		final IProject project = (IProject) element;
 		try {
 			if (!TITANNature.hasTITANNature(project)) {
 				return null;
 			}
-			Object o = project.getSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE);
+
+			final Object o = project.getSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE);
 			if (!Boolean.TRUE.equals(o)) {
 				return null;
 			}
@@ -155,7 +158,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 			return null;
 		}
 
-		OverlayImageIcon icon = new OverlayImageIcon(image, ImageCache.getImage(CHECK_ICON_NAME), OverlayImageIcon.Position.TOP_RIGHT);
+		final OverlayImageIcon icon = new OverlayImageIcon(image, ImageCache.getImage(CHECK_ICON_NAME), OverlayImageIcon.Position.TOP_RIGHT);
 		return icon.getImage();
 	}
 
@@ -187,17 +190,17 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 			return text;
 		}
 
-		IResource baseResource = (IResource) element;
+		final IResource baseResource = (IResource) element;
 		if (!baseResource.isAccessible()) {
 			return text;
 		}
 
-		IProject project = baseResource.getProject();
+		final IProject project = baseResource.getProject();
 		if (project == null || !project.isAccessible() || !TITANNature.hasTITANNature(project)) {
 			return text;
 		}
 
-		StringBuilder result = new StringBuilder(text);
+		final StringBuilder result = new StringBuilder(text);
 		switch (baseResource.getType()) {
 		case IResource.ROOT:
 			break;
@@ -309,12 +312,12 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 	 *         command line.
 	 */
 	public static String propertiesAsParameters(final IProject project, final boolean full) {
-		StringBuffer result = new StringBuffer();
+		final StringBuffer result = new StringBuffer();
 		boolean pendingSpace = false;
 
 		// FIXME this costs too much we should store the already
 		// calculated data
-		DecoratorVisitor visitor = new DecoratorVisitor();
+		final DecoratorVisitor visitor = new DecoratorVisitor();
 		try {
 			if (project.isAccessible()) {
 				project.accept(visitor);
@@ -325,13 +328,13 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 				result.append(ABSOLUTE_PATH_OPTION);
 			}
 
-			int nofReferencedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getReferencedProjects().length;
+			final int nofReferencedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getReferencedProjects().length;
 			boolean preProcessorOptionSet = false;
 
 			if (visitor.getHasCentralStorage() || nofReferencedProjects != 0) {
 				result.append(CENTRAL_STORAGE_OPTION);
 
-				List<IProject> reachableProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
+				final List<IProject> reachableProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
 				IProject reachableProject;
 				DecoratorVisitor visitor2;
 				boolean prePorcessorOptionFound = false;
@@ -383,7 +386,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 			String targetExecutable = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakefileCreationData.TARGET_EXECUTABLE_PROPERTY));
 			if (targetExecutable != null && targetExecutable.length() != 0) {
-				URI uri = TITANPathUtilities.resolvePath(targetExecutable, project.getLocationURI());
+				final URI uri = TITANPathUtilities.resolvePath(targetExecutable, project.getLocationURI());
 				targetExecutable = URIUtil.toPath(uri).toOSString();
 				if (pendingSpace) {
 					result.append(SPACE);
@@ -391,7 +394,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 				}
 				result.append(TARGET_EXECUTABLE_OPTION);
 				if (full) {
-					boolean reportDebugInformation = Platform.getPreferencesService().getBoolean(
+					final boolean reportDebugInformation = Platform.getPreferencesService().getBoolean(
 							ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.DISPLAYDEBUGINFORMATION, false,
 							null);
 					result.append(SPACE + '\''
@@ -417,7 +420,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 				pendingSpace = true;
 			}
 
-			String codesplittingOption = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+			final String codesplittingOption = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakefileCreationData.CODE_SPLITTING_PROPERTY));
 			if (codesplittingOption != null && codesplittingOption.length() != 0 && !GeneralConstants.NONE.equals(codesplittingOption)) {
 				if (pendingSpace) {
@@ -446,7 +449,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 			return null;
 		}
 
-		IDecoratorManager decoratorManager = Activator.getDefault().getWorkbench().getDecoratorManager();
+		final IDecoratorManager decoratorManager = Activator.getDefault().getWorkbench().getDecoratorManager();
 		if (decoratorManager.getEnabled(DECORATOR_ID)) {
 			return (TITANDecorator) decoratorManager.getLabelDecorator(DECORATOR_ID);
 		}
@@ -459,7 +462,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 	 * exclusion property of some resources change.
 	 * */
 	public static void resetExclusion() {
-		TITANDecorator decorator = getDecorator();
+		final TITANDecorator decorator = getDecorator();
 		if (decorator != null) {
 			decorator.resetMatchers();
 		}
@@ -472,7 +475,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 	 * @see #fireLabelEvent(LabelProviderChangedEvent)
 	 */
 	public static void refreshAll() {
-		TITANDecorator decorator = getDecorator();
+		final TITANDecorator decorator = getDecorator();
 		if (decorator != null) {
 			decorator.fireLabelEvent(new LabelProviderChangedEvent(decorator));
 		}
@@ -487,7 +490,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 	 * @see #fireLabelEvent(LabelProviderChangedEvent)
 	 */
 	public static void refreshSelectively(final IResource resourceToRefresh) {
-		TITANDecorator decorator = getDecorator();
+		final TITANDecorator decorator = getDecorator();
 		if (decorator != null) {
 			decorator.fireLabelEvent(new LabelProviderChangedEvent(decorator, resourceToRefresh));
 		}
@@ -503,7 +506,7 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 	 * @see #fireLabelEvent(LabelProviderChangedEvent)
 	 */
 	public static void refreshSelectively(final Object[] resourcesToRefresh) {
-		TITANDecorator decorator = getDecorator();
+		final TITANDecorator decorator = getDecorator();
 		if (decorator != null) {
 			decorator.fireLabelEvent(new LabelProviderChangedEvent(decorator, resourcesToRefresh));
 		}

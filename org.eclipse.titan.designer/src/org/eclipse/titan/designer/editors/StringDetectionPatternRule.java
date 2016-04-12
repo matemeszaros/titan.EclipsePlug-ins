@@ -209,16 +209,12 @@ public final class StringDetectionPatternRule implements IPredicateRule {
 	 * @see PatternRule#evaluate(ICharacterScanner, boolean)
 	 */
 	protected IToken doEvaluate(final ICharacterScanner scanner, final boolean resume) {
-
 		if (resume) {
-
 			if (endSequenceDetected(scanner)) {
 				return fToken;
 			}
-
 		} else {
-
-			int c = scanner.read();
+			final int c = scanner.read();
 			if (c == fStartSequence[0]) {
 				if (sequenceDetected(scanner, fStartSequence, false)) {
 					if (endSequenceDetected(scanner)) {
@@ -251,8 +247,7 @@ public final class StringDetectionPatternRule implements IPredicateRule {
 	 * @return <code>true</code> if the end sequence has been detected
 	 */
 	private boolean endSequenceDetected(final ICharacterScanner scanner) {
-
-		char[][] originalDelimiters = scanner.getLegalLineDelimiters();
+		final char[][] originalDelimiters = scanner.getLegalLineDelimiters();
 		int count = originalDelimiters.length;
 		if (fLineDelimiters == null || originalDelimiters.length != count) {
 			fSortedLineDelimiters = new char[count][];
@@ -334,7 +329,7 @@ public final class StringDetectionPatternRule implements IPredicateRule {
 	 */
 	private boolean sequenceDetected(final ICharacterScanner scanner, final char[] sequence, final boolean eofAllowed) {
 		for (int i = 1; i < sequence.length; i++) {
-			int c = scanner.read();
+			final int c = scanner.read();
 			if (c == ICharacterScanner.EOF && eofAllowed) {
 				return true;
 			} else if (c != sequence[i]) {
@@ -361,7 +356,7 @@ public final class StringDetectionPatternRule implements IPredicateRule {
 			return doEvaluate(scanner, resume);
 		}
 
-		int c = scanner.read();
+		final int c = scanner.read();
 		scanner.unread();
 		if (c == fStartSequence[0]) {
 			return (fColumn == scanner.getColumn() ? doEvaluate(scanner, resume) : Token.UNDEFINED);
