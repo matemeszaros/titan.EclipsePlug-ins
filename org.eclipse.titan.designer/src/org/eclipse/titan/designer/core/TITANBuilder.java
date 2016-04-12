@@ -834,8 +834,19 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		SymbolicLinkHandler
 				.copyExternalFileToWorkingDirectory(files, workingDir.toOSString(), new SubProgressMonitor(symboliclinkMonitor, 1));
 
-		if (!"true".equals(getProject().getPersistentProperty(
-				new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)))
+		String automaticMakefileGeneration = FALSE;
+		String useInternalMakefileGeneration = FALSE;
+		try {
+			automaticMakefileGeneration = getProject().getPersistentProperty(
+					new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY));
+			useInternalMakefileGeneration = getProject().getPersistentProperty(
+					new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+							ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY));
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace(e);
+		}
+
+		if (!"true".equals(automaticMakefileGeneration) || !"true".equals(useInternalMakefileGeneration)
 				|| !"true".equals(getProject().getPersistentProperty(
 						new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 								ProjectBuildPropertyData.SYMLINKLESS_BUILD_PROPERTY)))) {
@@ -844,10 +855,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 					deltavisitor.getLastTimeRemovedFiles(), new SubProgressMonitor(symboliclinkMonitor, 1));
 
 			SymbolicLinkHandler.addSymlinkCreationCommand(files, workingDir.toOSString(), buildJob, deltavisitor
-					.getLastTimeRemovedFiles(), new SubProgressMonitor(symboliclinkMonitor, 1), "true".equals(getProject()
-					.getPersistentProperty(
-							new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-									ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY))));
+					.getLastTimeRemovedFiles(), new SubProgressMonitor(symboliclinkMonitor, 1), "true".equals(automaticMakefileGeneration));
 		}
 		symboliclinkMonitor.done();
 
@@ -860,14 +868,6 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 				TITANDebugConsole.println("Finished building " + getProject().getName());
 			}
 			return getProject().getReferencedProjects();
-		}
-
-		String automaticMakefileGeneration = FALSE;
-		try {
-			automaticMakefileGeneration = getProject().getPersistentProperty(
-					new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY));
-		} catch (CoreException e) {
-			ErrorReporter.logExceptionStackTrace(e);
 		}
 
 		IProgressMonitor filepreparerMonitor = new SubProgressMonitor(internalMonitor, 1);
@@ -916,9 +916,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		boolean makefileWillExist = TRUE.equals(automaticMakefileGeneration) && (mandatoryMakefileRebuild || !makefileExists);
 
 		if (makefileWillExist) {
-			if (!"true".equals(getProject().getPersistentProperty(
-					new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-							ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)))) {
+			if (!"true".equals(useInternalMakefileGeneration)) {
 				IProject[] projects = getProject().getReferencedProjects();
 				for (IProject referencedProject : projects) {
 					if ("true".equals(referencedProject.getPersistentProperty(new QualifiedName(
