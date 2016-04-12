@@ -149,7 +149,7 @@ public class CharstringExtractor {
 							sb.append((char) octInt);
 						}
 					} else {
-						mErrorMessage = INVALID_ESCAPE_SEQUENCE + "'\\" + String.valueOf(c2) + "'";
+						mErrorMessage = INVALID_ESCAPE_SEQUENCE + "'\\" + c2 + "'";
 						mErrorneous = true;
 						return null;
 					}
