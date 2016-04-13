@@ -13,8 +13,8 @@ import org.eclipse.titanium.metrics.preferences.RiskMethod;
 import org.eclipse.titanium.metrics.utils.RiskLevel;
 
 public abstract class BaseRisk implements IRisk {
-	final RiskMethod method;
-	final Number[] limits;
+	protected final RiskMethod method;
+	protected final Number[] limits;
 
 	public BaseRisk(IMetricEnum metric) {
 		method = PreferenceManager.getRiskMethod(metric, false);

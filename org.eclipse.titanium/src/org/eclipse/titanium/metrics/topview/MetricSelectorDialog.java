@@ -100,7 +100,7 @@ class MetricSelectorDialog implements Runnable {
 		}
 	}
 
-	void createSection(Composite content, String title, IMetricEnum[] metrics) {
+	private void createSection(Composite content, String title, IMetricEnum[] metrics) {
 		Label header = new Label(content, 0);
 		header.setText(title);
 		GridData headerData = new GridData();

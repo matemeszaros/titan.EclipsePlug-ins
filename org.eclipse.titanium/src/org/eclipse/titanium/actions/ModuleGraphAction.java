@@ -105,7 +105,7 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 	 * Class responsible for generating a module graph for a project.
 	 * */
 	private static class Generator extends Job {
-		final IProject project;
+		private final IProject project;
 
 		Generator(final IProject project) {
 			super("Generator");

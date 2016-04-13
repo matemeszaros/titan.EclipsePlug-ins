@@ -28,11 +28,11 @@ import org.eclipse.titanium.metrics.TestcaseMetric;
  * @author poroszd
  */
 public class Metrics {
-	final Map<AltstepMetric, IMetric<Def_Altstep, AltstepMetric>> altstepMetrics;
-	final Map<FunctionMetric, IMetric<Def_Function, FunctionMetric>> functionMetrics;
-	final Map<TestcaseMetric, IMetric<Def_Testcase, TestcaseMetric>> testcaseMetrics;
-	final Map<ModuleMetric, IMetric<Module, ModuleMetric>> moduleMetrics;
-	final Map<ProjectMetric, IMetric<IProject, ProjectMetric>> projectMetrics;
+	private final Map<AltstepMetric, IMetric<Def_Altstep, AltstepMetric>> altstepMetrics;
+	private final Map<FunctionMetric, IMetric<Def_Function, FunctionMetric>> functionMetrics;
+	private final Map<TestcaseMetric, IMetric<Def_Testcase, TestcaseMetric>> testcaseMetrics;
+	private final Map<ModuleMetric, IMetric<Module, ModuleMetric>> moduleMetrics;
+	private final Map<ProjectMetric, IMetric<IProject, ProjectMetric>> projectMetrics;
 
 	/**
 	 * Create a new instance for all metrics.

@@ -33,8 +33,8 @@ import edu.uci.ics.jung.graph.Graph;
 public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements IterativeContext {
 
 	private static class ISOMVertexData {
-		int distance;
-		boolean visited;
+		private int distance;
+		private boolean visited;
 
 		protected ISOMVertexData() {
 			distance = 0;

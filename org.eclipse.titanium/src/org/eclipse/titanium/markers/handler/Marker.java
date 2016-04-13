@@ -110,7 +110,7 @@ public class Marker {
 	 * obtaining the markerRule lock on that resource. Acquiring that is the
 	 * responsibility of the caller.
 	 */
-	void show() {
+	public void show() {
 		loc.reportExternalProblem(message, severity, IMarker.PRIORITY_LOW, CodeSmellType.MARKER_ID);
 		// TODO: interface for setting more attribute of the marker, like in
 		// marker.setAttribute(CodeSmellType.PROBLEM, problemType);

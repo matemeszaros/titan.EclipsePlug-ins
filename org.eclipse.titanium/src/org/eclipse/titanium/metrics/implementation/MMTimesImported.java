@@ -15,7 +15,7 @@ import org.eclipse.titanium.metrics.MetricData;
 import org.eclipse.titanium.metrics.ModuleMetric;
 
 public class MMTimesImported extends BaseModuleMetric {
-	final Map<Module, Integer> imported = new HashMap<Module, Integer>();
+	private final Map<Module, Integer> imported = new HashMap<Module, Integer>();
 
 	public MMTimesImported() {
 		super(ModuleMetric.TIMES_IMPORTED);
