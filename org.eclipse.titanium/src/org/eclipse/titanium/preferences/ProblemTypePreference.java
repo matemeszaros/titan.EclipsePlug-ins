@@ -81,7 +81,7 @@ public enum ProblemTypePreference {
 	private String description;
 	private Set<CodeSmellType> related;
 
-	private ProblemTypePreference(String description, Set<CodeSmellType> related) {
+	private ProblemTypePreference(final String description, final Set<CodeSmellType> related) {
 		preferenceName = PREFIX + name();
 		this.description = description;
 		this.related = related;

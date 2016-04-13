@@ -41,7 +41,7 @@ public class GraphClusterPage extends FieldEditorPreferencePage implements IWork
 		noDefaultAndApplyButton();
 	}
 
-	protected Composite setupLabel(Composite page, String text, String hint) {
+	protected Composite setupLabel(final Composite page, final String text, final String hint) {
 		Group header = new Group(page, SWT.NONE);
 		header.setText(text);
 		GridLayout layout = new GridLayout();
@@ -59,14 +59,14 @@ public class GraphClusterPage extends FieldEditorPreferencePage implements IWork
 		return composite;
 	}
 
-	protected void setupBooleanEditor(Composite comp, String pref, String text, String hint) {
+	protected void setupBooleanEditor(final Composite comp, final String pref, final String text, final String hint) {
 		BooleanFieldEditor editor = new BooleanFieldEditor(pref, text, comp);
 		editor.getDescriptionControl(comp).setToolTipText(hint);
 		editor.fillIntoGrid(comp, 2);
 		addField(editor);
 	}
 
-	protected void setupIntegerEditor(Composite comp, String pref, String text, String hint) {
+	protected void setupIntegerEditor(final Composite comp, final String pref, final String text, final String hint) {
 		IntegerFieldEditor editor = new IntegerFieldEditor(pref, text, comp);
 		editor.getLabelControl(comp).setToolTipText(hint);
 		addField(editor);

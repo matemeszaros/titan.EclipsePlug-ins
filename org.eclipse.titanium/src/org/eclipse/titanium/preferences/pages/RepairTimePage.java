@@ -33,7 +33,7 @@ class TimeDataEntry{
 	public double avgTime;
 	public double maxTime;
 	
-	public TimeDataEntry(Double minTime, Double avgTime, Double maxTime){
+	public TimeDataEntry(final Double minTime, final Double avgTime, final Double maxTime){
 		this.minTime = minTime;
 		this.avgTime = avgTime;
 		this.maxTime = maxTime;
@@ -51,12 +51,12 @@ public class RepairTimePage extends PreferencePage implements IWorkbenchPreferen
 	}
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 	}
 
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(final Composite parent) {
 		Composite ret = new Composite(parent,0);
 		ret.setLayout(new GridLayout(4, false));
 		
@@ -124,19 +124,19 @@ public class RepairTimePage extends PreferencePage implements IWorkbenchPreferen
 		createContents(getShell().getParent());
 	}
 	
-	private void setAvgValue(ProblemType smell, Double value) {
+	private void setAvgValue(final ProblemType smell, final Double value) {
 		prefStore.setValue(ProblemNameToPreferenceMapper.nameSmellAvgTime(smell.toString()), value);
 	}
 	
-	private void setMinValue(ProblemType smell, Double value) {
+	private void setMinValue(final ProblemType smell, final Double value) {
 		prefStore.setValue(ProblemNameToPreferenceMapper.nameSmellMinTime(smell.toString()), value);
 	}
 	
-	private void setMaxValue(ProblemType smell, Double value) {
+	private void setMaxValue(final ProblemType smell, final Double value) {
 		prefStore.setValue(ProblemNameToPreferenceMapper.nameSmellMaxTime(smell.toString()), value);
 	}
 	
-	private void makeNewRow(Composite parent,final ProblemType codeSmell) {
+	private void makeNewRow(final Composite parent,final ProblemType codeSmell) {
 		Label lblValue = new Label(parent, SWT.NONE);
 		lblValue.setText(codeSmell.getHumanReadableName()+": ");
 		double minTime = codeSmell.getMinRepairTime();
@@ -153,7 +153,7 @@ public class RepairTimePage extends PreferencePage implements IWorkbenchPreferen
 		}
 		minText.addModifyListener(new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(final ModifyEvent e) {
 				try{
 					TimeDataEntry times = storedValues.get(codeSmell);
 					if (times != null) {
@@ -173,7 +173,7 @@ public class RepairTimePage extends PreferencePage implements IWorkbenchPreferen
 		}
 		avgText.addModifyListener(new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(final ModifyEvent e) {
 				try{
 					TimeDataEntry times = storedValues.get(codeSmell);
 					if (times != null) {
@@ -193,7 +193,7 @@ public class RepairTimePage extends PreferencePage implements IWorkbenchPreferen
 		}
 		maxText.addModifyListener(new ModifyListener() {
 			@Override
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(final ModifyEvent e) {
 				try{
 					TimeDataEntry times = storedValues.get(codeSmell);
 					if (times != null) {

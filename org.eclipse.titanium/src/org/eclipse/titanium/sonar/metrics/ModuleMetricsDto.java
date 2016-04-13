@@ -26,7 +26,7 @@ class ModuleMetricsDto {
 
 	private int complexity;
 
-	public ModuleMetricsDto(String projectRelativePath) {
+	public ModuleMetricsDto(final String projectRelativePath) {
 		this.projectRelativePath = projectRelativePath;
 	}
 
@@ -38,7 +38,7 @@ class ModuleMetricsDto {
 		return testCases;
 	}
 
-	public void setTestCases(int testCases) {
+	public void setTestCases(final int testCases) {
 		this.testCases = testCases;
 	}
 
@@ -46,7 +46,7 @@ class ModuleMetricsDto {
 		return linesOfCode;
 	}
 
-	public void setLinesOfCode(int linesOfCode) {
+	public void setLinesOfCode(final int linesOfCode) {
 		this.linesOfCode = linesOfCode;
 	}
 
@@ -54,7 +54,7 @@ class ModuleMetricsDto {
 		return lines;
 	}
 
-	public void setLines(int lines) {
+	public void setLines(final int lines) {
 		this.lines = lines;
 	}
 
@@ -66,7 +66,7 @@ class ModuleMetricsDto {
 		return altsteps;
 	}
 
-	public void setAltsteps(int altsteps) {
+	public void setAltsteps(final int altsteps) {
 		this.altsteps = altsteps;
 	}
 
@@ -74,7 +74,7 @@ class ModuleMetricsDto {
 		return functions;
 	}
 
-	public void setFunctions(int functions) {
+	public void setFunctions(final int functions) {
 		this.functions = functions;
 	}
 
@@ -82,7 +82,7 @@ class ModuleMetricsDto {
 		return complexity;
 	}
 
-	public void setComplexity(int complexity) {
+	public void setComplexity(final int complexity) {
 		this.complexity = complexity;
 	}
 
@@ -90,7 +90,7 @@ class ModuleMetricsDto {
 		return statements;
 	}
 
-	public void setStatements(int statements) {
+	public void setStatements(final int statements) {
 		this.statements = statements;
 	}
 }

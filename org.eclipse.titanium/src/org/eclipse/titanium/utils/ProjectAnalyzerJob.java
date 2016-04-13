@@ -47,7 +47,7 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 	 * @param name
 	 *            the name of the job
 	 */
-	public ProjectAnalyzerJob(String name) {
+	public ProjectAnalyzerJob(final String name) {
 		super(name);
 	}
 
@@ -106,7 +106,7 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 	 * 
 	 * @return the result of running the operation
 	 */
-	public IStatus doPreWork(IProgressMonitor monitor) {
+	public IStatus doPreWork(final IProgressMonitor monitor) {
 		return Status.OK_STATUS;
 	}
 
@@ -119,7 +119,7 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 	 * 
 	 * @return the result of running the operation
 	 */
-	public IStatus doPostWork(IProgressMonitor monitor) {
+	public IStatus doPostWork(final IProgressMonitor monitor) {
 		return Status.OK_STATUS;
 	}
 
@@ -143,7 +143,7 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 	 * @param p
 	 *            the project to analyze
 	 */
-	public void setProject(IProject p) {
+	public void setProject(final IProject p) {
 		project = p;
 	}
 
@@ -161,7 +161,7 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 	 * 
 	 * @param project
 	 */
-	public ProjectAnalyzerJob quickSchedule(IProject project) {
+	public ProjectAnalyzerJob quickSchedule(final IProject project) {
 		this.project = project;
 		setSystem(false);
 		setUser(true);

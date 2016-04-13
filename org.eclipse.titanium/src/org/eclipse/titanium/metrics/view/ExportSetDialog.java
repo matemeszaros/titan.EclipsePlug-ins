@@ -24,7 +24,7 @@ class ExportSetDialog {
 	private Display parent;
 	private RiskLevel r;
 
-	public ExportSetDialog(Display display) {
+	public ExportSetDialog(final Display display) {
 		parent = display;
 		r = null;
 	}
@@ -58,7 +58,7 @@ class ExportSetDialog {
 		bOk.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false));
 		bOk.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent event) {
+			public void widgetSelected(final SelectionEvent event) {
 				if (bAll.getSelection()) {
 					r = RiskLevel.NO;
 				} else if (bWarning.getSelection()) {

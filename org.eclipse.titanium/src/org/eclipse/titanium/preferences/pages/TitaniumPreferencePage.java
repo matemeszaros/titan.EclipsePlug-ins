@@ -35,8 +35,8 @@ public final class TitaniumPreferencePage extends PreferencePage implements IWor
 	}
 
 	@Override
-	protected Control createContents(Composite parent) {
-		Composite comp = new Composite(parent, SWT.NONE);
+	protected Control createContents(final Composite parent) {
+		final Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout(1, false));
 		comp.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
 

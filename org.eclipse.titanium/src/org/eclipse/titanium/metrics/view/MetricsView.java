@@ -157,7 +157,7 @@ public class MetricsView extends ViewPart {
 
 				new ProjectAnalyzerJob("Metrics calculations") {
 					@Override
-					public IStatus doPostWork(IProgressMonitor monitor) {
+					public IStatus doPostWork(final IProgressMonitor monitor) {
 						try {
 							data = MetricData.measure(project);
 

@@ -10,7 +10,7 @@ package org.eclipse.titanium.metrics.risk;
 import org.eclipse.titanium.metrics.IMetricEnum;
 
 public class LinearRisk extends BaseRisk {
-	public LinearRisk(IMetricEnum metric) {
+	public LinearRisk(final IMetricEnum metric) {
 		super(metric);
 	}
 
@@ -18,7 +18,7 @@ public class LinearRisk extends BaseRisk {
 	public double getRiskValue(final Number value) {
 		double risk = 0;
 		double l1, l2;
-		double val = value == null ? 0.0 : value.doubleValue();
+		final double val = value == null ? 0.0 : value.doubleValue();
 		switch (method) {
 		case NEVER:
 			risk = 1 - (1 / (val + 1));

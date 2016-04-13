@@ -22,7 +22,7 @@ import org.eclipse.titanium.preferences.pages.MetricsViewPreferencePage;
  * @author poroszd
  * 
  */
-public class PreferenceManager {
+public final class PreferenceManager {
 	private static IPreferenceStore store = null;
 	
 	private PreferenceManager() {
@@ -155,7 +155,7 @@ public class PreferenceManager {
 	 * @return a set of metrics that should be displayed in the module graph
 	 *         view.
 	 */
-	public static boolean isEnabledOnModuleGraph(IMetricEnum metric) {
+	public static boolean isEnabledOnModuleGraph(final IMetricEnum metric) {
 		return getStore().getBoolean(PreferenceConstants.nameMetricGraph(metric.id()));
 	}
 
@@ -165,7 +165,7 @@ public class PreferenceManager {
 	 * 
 	 * @return a set of metrics that should be displayed in the metrics view.
 	 */
-	public static boolean isEnabledOnView(IMetricEnum metric) {
+	public static boolean isEnabledOnView(final IMetricEnum metric) {
 		return getStore().getBoolean(PreferenceConstants.nameMetricEnabled(metric.id()));
 	}
 }

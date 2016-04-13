@@ -21,7 +21,7 @@ import org.eclipse.titanium.Activator;
 /**
  * Generic class to handle SWT resources.
  * */
-public class SWTResourceManager {
+public final class SWTResourceManager {
 
 	private static Map<ImageDescriptor, Image> imageCache = new ConcurrentHashMap<ImageDescriptor, Image>();
 	private static Map<RGB, Color> m_colorMap = new HashMap<RGB, Color>();
@@ -37,10 +37,10 @@ public class SWTResourceManager {
 	 *            the {@link RGB} value of the color
 	 * @return the {@link Color} matching the RGB value
 	 */
-	public static Color getColor(RGB rgb) {
+	public static Color getColor(final RGB rgb) {
 		Color color = m_colorMap.get(rgb);
 		if (color == null) {
-			Display display = Display.getCurrent();
+			final Display display = Display.getCurrent();
 			color = new Color(display, rgb);
 			m_colorMap.put(rgb, color);
 		}
@@ -65,7 +65,7 @@ public class SWTResourceManager {
 	 * @return the created ImageDescriptor
 	 */
 	public static Image getImage(final String name) {
-		ImageDescriptor descriptor = getImageDescriptor(name);
+		final ImageDescriptor descriptor = getImageDescriptor(name);
 		if (descriptor == null) {
 			return null;
 		}
@@ -73,7 +73,7 @@ public class SWTResourceManager {
 			return imageCache.get(descriptor);
 		}
 
-		Image image = descriptor.createImage();
+		final Image image = descriptor.createImage();
 		imageCache.put(descriptor, image);
 		return image;
 	}

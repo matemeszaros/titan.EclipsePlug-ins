@@ -45,7 +45,7 @@ public class ProjectStructureExporter {
 		private List<ResourceData> resources = new ArrayList<ResourceData>();
 
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			ResourceData data = new ResourceData();
 			switch (resource.getType()) {
 
@@ -71,7 +71,7 @@ public class ProjectStructureExporter {
 			return true;
 		}
 
-		private boolean isIgnored(IResource resource) {
+		private boolean isIgnored(final IResource resource) {
 			return ".sonar".equals(resource.getName()) || ".sonar_titanium".equals(resource.getName());
 		}
 

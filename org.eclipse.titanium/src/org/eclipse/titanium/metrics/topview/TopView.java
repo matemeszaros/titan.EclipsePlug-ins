@@ -134,7 +134,7 @@ public class TopView extends ViewPart {
 						private Set<IMetricEnum> metrics;
 
 						@Override
-						public IStatus doPreWork(IProgressMonitor monitor) {
+						public IStatus doPreWork(final IProgressMonitor monitor) {
 							// choose metrics
 							final MetricSelectorDialog mst = new MetricSelectorDialog();
 							Display.getDefault().syncExec(mst);
@@ -143,7 +143,7 @@ public class TopView extends ViewPart {
 						}
 
 						@Override
-						public IStatus doPostWork(IProgressMonitor monitor) {
+						public IStatus doPostWork(final IProgressMonitor monitor) {
 							try {
 								mw = WrapperStore.getWrapper(getProject());
 								if (!moduleTable.isDisposed()) {
@@ -208,7 +208,7 @@ public class TopView extends ViewPart {
 			namesCol.setWidth(250);
 			names.setLabelProvider(new ColumnLabelProvider() {
 				@Override
-				public String getText(Object element) {
+				public String getText(final Object element) {
 					if (!(element instanceof Module)) {
 						throw new AssertionError("Elements of the view should be modules");
 					}
@@ -227,7 +227,7 @@ public class TopView extends ViewPart {
 
 				cv.setLabelProvider(new ColumnLabelProvider() {
 					@Override
-					public Color getBackground(Object element) {
+					public Color getBackground(final Object element) {
 						if (!(element instanceof Module)) {
 							throw new AssertionError("Elements of the view should be modules");
 						}
@@ -244,7 +244,7 @@ public class TopView extends ViewPart {
 					}
 
 					@Override
-					public String getText(Object element) {
+					public String getText(final Object element) {
 						if (!(element instanceof Module)) {
 							throw new AssertionError("Elements of the view should be  modules");
 						}

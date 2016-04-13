@@ -36,13 +36,13 @@ public class GraphMetricsPage extends PreferencePage implements IWorkbenchPrefer
 	}
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 		setPreferenceStore(PreferenceManager.getStore());
 	}
 
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(final Composite parent) {
 		Composite page = new Composite(parent, 0);
 		GridLayout l = new GridLayout();
 		l.numColumns = 2;

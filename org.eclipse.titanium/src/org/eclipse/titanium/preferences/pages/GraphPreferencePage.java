@@ -26,7 +26,7 @@ public class GraphPreferencePage extends FieldEditorPreferencePage implements IW
 	}
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription("Preference page for the graphs");
 	}
 
@@ -37,7 +37,7 @@ public class GraphPreferencePage extends FieldEditorPreferencePage implements IW
 
 	@Override
 	protected void createFieldEditors() {
-		IntegerFieldEditor temp = new IntegerFieldEditor(PreferenceConstants.NO_ITERATIONS, "Maximal number of iterations: ",
+		final IntegerFieldEditor temp = new IntegerFieldEditor(PreferenceConstants.NO_ITERATIONS, "Maximal number of iterations: ",
 				getFieldEditorParent());
 		addField(temp);
 		addField(new ComboFieldEditor(PreferenceConstants.DAG_DISTANCE, "Directed layout's distance:", new String[][] {

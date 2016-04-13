@@ -15,7 +15,7 @@ import org.eclipse.titan.designer.preferences.pages.ExcludeRegexpEditor;
 
 public class ListEditor extends ExcludeRegexpEditor {
 
-	public ListEditor(String name, String labelText, Composite parent) {
+	public ListEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 	}
 

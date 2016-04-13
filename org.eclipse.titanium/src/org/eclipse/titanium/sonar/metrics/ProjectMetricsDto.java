@@ -22,7 +22,7 @@ class ProjectMetricsDto {
 	@XmlElementWrapper(name = "modules")
 	private List<ModuleMetricsDto> modules = new ArrayList<ModuleMetricsDto>();
 
-	public ProjectMetricsDto(String name) {
+	public ProjectMetricsDto(final String name) {
 		this.name = name;
 	}
 
@@ -31,7 +31,7 @@ class ProjectMetricsDto {
 	}
 
 
-	public void addModule(ModuleMetricsDto module) {
+	public void addModule(final ModuleMetricsDto module) {
 		this.modules.add(module);
 	}
 

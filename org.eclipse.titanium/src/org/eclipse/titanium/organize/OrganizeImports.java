@@ -334,7 +334,7 @@ class ImportText implements Comparable<ImportText> {
 	private final String moduleName;
 	private final String importText;
 
-	public ImportText(String moduleName, String importText) {
+	public ImportText(final String moduleName, final String importText) {
 		this.moduleName = moduleName;
 		this.importText = importText;
 	}
@@ -348,12 +348,12 @@ class ImportText implements Comparable<ImportText> {
 	}
 
 	@Override
-	public int compareTo(ImportText rhs) {
+	public int compareTo(final ImportText rhs) {
 		return moduleName.compareTo(rhs.moduleName);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == null) {
 			return false;
 		}
@@ -381,7 +381,7 @@ class ImportSelectionDialog implements Runnable {
 	private Location selected;
 	private IResource source;
 
-	public ImportSelectionDialog(Reference reference, List<DeclarationCollectionHelper> collected, final IResource source) {
+	public ImportSelectionDialog(final Reference reference, final List<DeclarationCollectionHelper> collected, final IResource source) {
 		this.reference = reference;
 		this.collected = collected;
 		this.selected = null;

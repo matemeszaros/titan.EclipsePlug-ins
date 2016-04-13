@@ -25,9 +25,9 @@ import java.io.File;
 
 public class SonarMetricsExporter {
 
-	public void export(MetricData metricData, File file) throws JAXBException {
+	public void export(final MetricData metricData, final File file) throws JAXBException {
 
-		ProjectMetricsDto project = new ProjectMetricsDto(metricData.getProject().getName());
+		final ProjectMetricsDto project = new ProjectMetricsDto(metricData.getProject().getName());
 
 		for (Module module : metricData.getModules()) {
 			ModuleMetricsDto metricModule = new ModuleMetricsDto(module.getLocation().getFile().getProjectRelativePath().toPortableString());
@@ -44,7 +44,7 @@ public class SonarMetricsExporter {
 		marshalToFile(project, file);
 	}
 
-	private int calculateComplexity(MetricData metricData, Module module) {
+	private int calculateComplexity(final MetricData metricData, final Module module) {
 		int complexity = 0;
 		for (Def_Function function : metricData.getFunctions().get(module)) {
 			complexity += metricData.get(FunctionMetric.CYCLOMATIC_COMPLEXITY, function).intValue();
@@ -62,9 +62,9 @@ public class SonarMetricsExporter {
 
 
 
-	public static void marshalToFile(Object objectToMarshal, File file) throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(objectToMarshal.getClass());
-		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+	public static void marshalToFile(final Object objectToMarshal, final File file) throws JAXBException {
+		final JAXBContext jaxbContext = JAXBContext.newInstance(objectToMarshal.getClass());
+		final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 

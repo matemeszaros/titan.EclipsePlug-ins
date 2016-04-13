@@ -44,20 +44,20 @@ public class SonarDataExporter {
 
 	private IProject project;
 
-	public SonarDataExporter(IProject project) {
+	public SonarDataExporter(final IProject project) {
 		this.project = project;
 	}
 
 	public void exportDataForProject() throws IOException {
-		URI projectLocation = project.getLocationURI();
+		final URI projectLocation = project.getLocationURI();
 		if (projectLocation == null) {
 			ErrorReporter.logError("Error while getting project uri");
 			return;
 		}
 
-		URI exportDir = URIUtil.append(projectLocation, ".sonar_titanium");
+		final URI exportDir = URIUtil.append(projectLocation, ".sonar_titanium");
 		System.out.println("Export dir is: " + exportDir.getPath());
-		File f = new File(exportDir);
+		final File f = new File(exportDir);
 		if (!f.exists() && !f.mkdirs()) {
 			throw new IOException("Cannot create output directory: " + exportDir);
 		}
@@ -76,18 +76,18 @@ public class SonarDataExporter {
 	}
 
 	private void createSrcDirIfMissing() {
-		URI srcDir = URIUtil.append(project.getLocationURI(), "src");
-		File srcDirFile = new File(srcDir);
+		final URI srcDir = URIUtil.append(project.getLocationURI(), "src");
+		final File srcDirFile = new File(srcDir);
 		if (!srcDirFile.exists()) {
 			srcDirFile.mkdirs();
 		}
 	}
 
-	private void exportMetrics(URI exportDir) throws IOException {
-		URI filePath = URIUtil.append(exportDir, "metrics.xml");
-		File f = new File(filePath);
+	private void exportMetrics(final URI exportDir) throws IOException {
+		final URI filePath = URIUtil.append(exportDir, "metrics.xml");
+		final File f = new File(filePath);
 		FileUtils.delete(f);
-		SonarMetricsExporter exporter = new SonarMetricsExporter();
+		final SonarMetricsExporter exporter = new SonarMetricsExporter();
 
 		try {
 			exporter.export(MetricData.measure(project), f);
@@ -96,28 +96,28 @@ public class SonarDataExporter {
 		}
 	}
 
-	private void exportProjectStructure(URI exportDir) throws IOException {
+	private void exportProjectStructure(final URI exportDir) throws IOException {
 
-		URI filePath = URIUtil.append(exportDir, "project_structure.csv");
-		File file = new File(filePath);
+		final URI filePath = URIUtil.append(exportDir, "project_structure.csv");
+		final File file = new File(filePath);
 		FileUtils.delete(file);
 
-		ProjectStructureExporter exporter = new ProjectStructureExporter(project);
+		final ProjectStructureExporter exporter = new ProjectStructureExporter(project);
 		exporter.saveTo(filePath);
 	}
 
 	private void createSonarPropertiesFile() throws IOException {
-		URI projectLocation = project.getLocationURI();
-		URI propertiesFileLocaiton = URIUtil.append(projectLocation, SONAR_PROJECT_PROPERTIES_FILE);
+		final URI projectLocation = project.getLocationURI();
+		final URI propertiesFileLocaiton = URIUtil.append(projectLocation, SONAR_PROJECT_PROPERTIES_FILE);
 
-		File propertiesFile = new File(propertiesFileLocaiton);
+		final File propertiesFile = new File(propertiesFileLocaiton);
 
 		if (propertiesFile.exists()) {
 			return;
 		}
 
-		String propertyFileTemplate = "/resources/" + SONAR_PROJECT_PROPERTIES_FILE;
-		InputStream stream = SonarDataExporter.class.getResourceAsStream(propertyFileTemplate);
+		final String propertyFileTemplate = "/resources/" + SONAR_PROJECT_PROPERTIES_FILE;
+		final InputStream stream = SonarDataExporter.class.getResourceAsStream(propertyFileTemplate);
 		if (stream == null) {
 			ErrorReporter.logError("Cannot find the resource " + propertyFileTemplate);
 			return;
@@ -133,18 +133,18 @@ public class SonarDataExporter {
 		}
 	}
 
-	private void exportCodeSmells(URI exportDir) throws IOException {
-		URI filePath = URIUtil.append(exportDir, "code_smells.csv");
-		File f = new File(filePath);
+	private void exportCodeSmells(final URI exportDir) throws IOException {
+		final URI filePath = URIUtil.append(exportDir, "code_smells.csv");
+		final File f = new File(filePath);
 		FileUtils.delete(f);
-		BaseProblemExporter exporter = new SingleCsvProblemExporter(project);
+		final BaseProblemExporter exporter = new SingleCsvProblemExporter(project);
 		exporter.exportMarkers(new NullProgressMonitor(), filePath.getPath(), Calendar.getInstance().getTime());
 	}
 
-	private void exportModuleDot(URI exportDir) {
-		URI filePath = URIUtil.append(exportDir, "module_graph.dot");
+	private void exportModuleDot(final URI exportDir) {
+		final URI filePath = URIUtil.append(exportDir, "module_graph.dot");
 		final ErrorHandler errorHandler = new ConsoleErrorHandler();
-		GraphGenerator generator = new ModuleGraphGenerator(project, errorHandler);
+		final GraphGenerator generator = new ModuleGraphGenerator(project, errorHandler);
 		try {
 			generator.generateGraph();
 			GraphHandler.saveGraphToDot(generator.getGraph(), filePath.getPath(),
@@ -154,10 +154,10 @@ public class SonarDataExporter {
 		}
 	}
 
-	private void exportComponentDot(URI exportDir) {
-		URI filePath = URIUtil.append(exportDir, "component_graph.dot");
+	private void exportComponentDot(final URI exportDir) {
+		final URI filePath = URIUtil.append(exportDir, "component_graph.dot");
 		final ErrorHandler errorHandler = new ConsoleErrorHandler();
-		GraphGenerator generator = new ComponentGraphGenerator(project, errorHandler);
+		final GraphGenerator generator = new ComponentGraphGenerator(project, errorHandler);
 		try {
 			generator.generateGraph();
 			GraphHandler.saveGraphToDot(generator.getGraph(), filePath.getPath(),

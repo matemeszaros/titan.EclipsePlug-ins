@@ -19,12 +19,12 @@ public class GraphClusterModuleNamePage extends GraphClusterPage implements IWor
 	private static final String DESCRIPTION = "Settings for the module name clustering tool";
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 	}
 
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(final Composite parent) {
 
 		Composite page = new Composite(parent, 0);
 		page.setLayout(new GridLayout(1, false));

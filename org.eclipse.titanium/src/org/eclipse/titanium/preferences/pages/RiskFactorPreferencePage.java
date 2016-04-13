@@ -92,12 +92,12 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 	}
 	
 	@Override
-	public void init(IWorkbench sworkbench) {
+	public void init(final IWorkbench sworkbench) {
 		setDescription(DESCRIPTION);
 	}
 	
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(final Composite parent) {
 		Composite tmpParent = new Composite(parent, 0);
 		GridData gd;
 
@@ -158,7 +158,7 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 		return tmpParent;
 	}
 
-	private void createRow(String markerName, Composite comp) {
+	private void createRow(final String markerName, final Composite comp) {
 		GridData gd;
 		Label label = new Label(comp, 0);
 		label.setText(USED_MARKERS.get(markerName));
@@ -215,11 +215,11 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 		return prefStore;
 	}
 
-	static void insertSP(CodeSmellType p) {
+	static void insertSP(final CodeSmellType p) {
 		USED_MARKERS.put(p.name(), p.getHumanReadableName());
 	}
 
-	static void insertTask(TaskType p) {
+	static void insertTask(final TaskType p) {
 		USED_MARKERS.put(p.name(), p.getHumanReadableName());
 	}
 }

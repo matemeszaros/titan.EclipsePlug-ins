@@ -27,7 +27,7 @@ public class GraphClusterFolderNamePage extends FieldEditorPreferencePage implem
 	}
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 	}
 

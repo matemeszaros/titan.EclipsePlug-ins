@@ -55,19 +55,19 @@ public final class PreferenceConstants {
 	}
 
 	// Some aid method to make accessing metric data easier:
-	public static String nameMetricEnabled(String id) {
+	public static String nameMetricEnabled(final String id) {
 		return METRIC_ENABLED + id;
 	}
 
-	public static String nameMetricRisk(String id) {
+	public static String nameMetricRisk(final String id) {
 		return METRIC_RISK_LEVEL + id;
 	}
 
-	public static String nameMetricLimits(String id) {
+	public static String nameMetricLimits(final String id) {
 		return METRIC_LIMITS + id;
 	}
 
-	public static String nameMetricGraph(String id) {
+	public static String nameMetricGraph(final String id) {
 		return METRIC_GRAPH + id;
 	}
 

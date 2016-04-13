@@ -47,7 +47,7 @@ class XLSExporter {
 		file = f;
 	}
 
-	public void write(RiskLevel r) {
+	public void write(final RiskLevel r) {
 		try {
 			HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -89,7 +89,7 @@ class XLSExporter {
 	}
 	
 	
-	protected int printChildren(Sheet sheet, IContentNode n, int col, int line) {
+	protected int printChildren(final Sheet sheet, final IContentNode n, final int col, final int line) {
 		Object[] objs = n.getChildren(data);
 		List<IContentNode> cns = new ArrayList<IContentNode>();
 		for (Object o : objs) {
@@ -123,7 +123,7 @@ class XLSExporter {
 class CNComparator implements Comparator<IContentNode> {
 	private MetricData data;
 
-	public CNComparator(MetricData data) {
+	public CNComparator(final MetricData data) {
 		this.data = data;
 	}
 

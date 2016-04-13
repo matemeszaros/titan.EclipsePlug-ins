@@ -25,7 +25,7 @@ class Comparator extends ViewerComparator {
 	private final ModuleMetricsWrapper mw;
 	private final Set<IMetricEnum> metrics;
 
-	public Comparator(final ModuleMetricsWrapper m, Set<IMetricEnum> ms) {
+	public Comparator(final ModuleMetricsWrapper m, final Set<IMetricEnum> ms) {
 		mw = m;
 		metrics = ms;
 	}

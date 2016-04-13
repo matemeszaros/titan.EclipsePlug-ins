@@ -207,7 +207,7 @@ public class SimpleRiskFieldEditor implements IRiskFieldEditor {
 	}
 
 	@Override
-	public void addRiskEditorListener(IRiskEditorListener listener) {
+	public void addRiskEditorListener(final IRiskEditorListener listener) {
 		listeners.add(listener);
 	}
 }

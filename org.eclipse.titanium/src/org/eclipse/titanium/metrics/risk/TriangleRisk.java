@@ -10,7 +10,7 @@ package org.eclipse.titanium.metrics.risk;
 import org.eclipse.titanium.metrics.IMetricEnum;
 
 public class TriangleRisk extends BaseRisk {
-	public TriangleRisk(IMetricEnum metric) {
+	public TriangleRisk(final IMetricEnum metric) {
 		super(metric);
 	}
 

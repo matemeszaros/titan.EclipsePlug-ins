@@ -26,14 +26,14 @@ public class MetricsPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	@Override
-	public void init(IWorkbench sworkbench) {
+	public void init(final IWorkbench sworkbench) {
 		setDescription(DESCRIPTION);
 		noDefaultAndApplyButton();
 	}
 
 	@Override
-	protected Control createContents(Composite parent) {
-		Composite comp = new Composite(parent, 0);
+	protected Control createContents(final Composite parent) {
+		final Composite comp = new Composite(parent, 0);
 		comp.setLayout(new FillLayout());
 		// Any global setting utilities of metrics should go here.
 		return comp;

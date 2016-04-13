@@ -19,12 +19,12 @@ public class GraphClusterAutoPage extends GraphClusterPage implements IWorkbench
 	private static final String DESCRIPTION = "Settings for the automatic clustering tool";
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 	}
 
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(final Composite parent) {
 
 		Composite page = new Composite(parent, 0);
 		page.setLayout(new GridLayout(1, false));

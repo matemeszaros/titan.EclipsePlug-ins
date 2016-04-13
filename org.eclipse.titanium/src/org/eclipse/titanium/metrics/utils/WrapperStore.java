@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IProject;
  * 
  * @author Gabor Jenei
  */
-public class WrapperStore {
+public final class WrapperStore {
 	private static Map<IProject, ModuleMetricsWrapper> wrappers = new HashMap<IProject, ModuleMetricsWrapper>();
 
 	private WrapperStore() {
@@ -32,7 +32,7 @@ public class WrapperStore {
 	 * @param project : The project where we should calculate (or simply return) metrics values
 	 * @return A new wrapper object if it doesn't exist for this project, the already constructed object otherwise
 	 */
-	public static ModuleMetricsWrapper getWrapper(IProject project) {
+	public static ModuleMetricsWrapper getWrapper(final IProject project) {
 		ModuleMetricsWrapper ret = wrappers.get(project);
 		if (ret == null) {
 			ModuleMetricsWrapper instance = new ModuleMetricsWrapper(project);
@@ -54,7 +54,7 @@ public class WrapperStore {
 	 * This method destroys the wrapper object for a given project
 	 * @param project : The project to be deleted from the store
 	 */
-	public static void deleteWrapper(IProject project) {
+	public static void deleteWrapper(final IProject project) {
 		wrappers.remove(project);
 	}
 }

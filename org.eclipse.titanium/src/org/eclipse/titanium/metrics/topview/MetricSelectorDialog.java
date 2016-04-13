@@ -71,7 +71,7 @@ class MetricSelectorDialog implements Runnable {
 		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false));
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent event) {
+			public void widgetSelected(final SelectionEvent event) {
 				okPressed();
 				shell.dispose();
 			}
@@ -100,7 +100,7 @@ class MetricSelectorDialog implements Runnable {
 		}
 	}
 
-	private void createSection(Composite content, String title, IMetricEnum[] metrics) {
+	private void createSection(final Composite content, final String title, final IMetricEnum[] metrics) {
 		Label header = new Label(content, 0);
 		header.setText(title);
 		GridData headerData = new GridData();

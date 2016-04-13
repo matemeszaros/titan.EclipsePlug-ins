@@ -12,7 +12,7 @@ import org.eclipse.titan.designer.preferences.pages.ExcludeRegexpEditor;
 
 public class RegexpEditor extends ExcludeRegexpEditor {
 
-	public RegexpEditor(String name, String labelText, Composite parent) {
+	public RegexpEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 	}
 

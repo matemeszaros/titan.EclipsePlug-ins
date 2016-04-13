@@ -31,7 +31,7 @@ import org.eclipse.titanium.preferences.pages.OrganizeImportPreferencePage;
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	@Override
 	public final void initializeDefaultPreferences() {
-		IPreferenceStore preferenceStore = getPreference();
+		final IPreferenceStore preferenceStore = getPreference();
 
 		// Import organization
 		preferenceStore.setDefault(PreferenceConstants.ORG_IMPORT_ADD, true);
@@ -198,12 +198,12 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	}
 
-	private static void setSmellImpactAndBaseLine(IPreferenceStore preferenceStore, CodeSmellType t, int imp, int bl) {
+	private static void setSmellImpactAndBaseLine(final IPreferenceStore preferenceStore, final CodeSmellType t, final int imp, final int bl) {
 		preferenceStore.setDefault(ProblemNameToPreferenceMapper.nameSmellImpact(t.name()), imp);
 		preferenceStore.setDefault(ProblemNameToPreferenceMapper.nameSmellBaseLine(t.name()), bl);
 	}
 
-	private static void setTaskImpactAndBaseLine(IPreferenceStore preferenceStore, TaskType t, int imp, int bl) {
+	private static void setTaskImpactAndBaseLine(final IPreferenceStore preferenceStore, final TaskType t, final int imp, final int bl) {
 		preferenceStore.setDefault(ProblemNameToPreferenceMapper.nameSmellImpact(t.name()), imp);
 		preferenceStore.setDefault(ProblemNameToPreferenceMapper.nameSmellBaseLine(t.name()), bl);
 	}

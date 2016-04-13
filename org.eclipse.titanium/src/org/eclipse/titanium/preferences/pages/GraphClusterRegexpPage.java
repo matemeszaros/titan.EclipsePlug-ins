@@ -26,7 +26,7 @@ public class GraphClusterRegexpPage extends FieldEditorPreferencePage implements
 	}
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 	}
 

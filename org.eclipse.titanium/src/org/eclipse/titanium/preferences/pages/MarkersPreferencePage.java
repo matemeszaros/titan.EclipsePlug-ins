@@ -312,7 +312,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 		}
 	}
 
-	private void createIntegerEditor(Composite comp, final String name, final String labelText) {
+	private void createIntegerEditor(final Composite comp, final String name, final String labelText) {
 		IntegerFieldEditor temp = new IntegerFieldEditor(name, labelText, comp);
 		temp.setPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
@@ -323,7 +323,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 		addField(temp);
 	}
 
-	private void createField(Composite comp, ProblemTypePreference type) {
+	private void createField(final Composite comp, final ProblemTypePreference type) {
 		ComboFieldEditor comboedit = new ComboFieldEditor(type.getPreferenceName(), type.getDescription(), IGNORE_WARNING_ERROR, comp);
 		comboedit.getLabelControl(comp).setToolTipText(TOOLTIP_MAPPING.get(type));
 		comboedit.setPropertyChangeListener(new IPropertyChangeListener() {
@@ -415,7 +415,7 @@ class CustomExpansionListener extends ExpansionAdapter {
 	// (current) height of the inner composite
 	private int height;
 
-	public CustomExpansionListener(Composite inner) {
+	public CustomExpansionListener(final Composite inner) {
 		super();
 		this.inner = inner;
 		Composite parent = inner;
@@ -430,7 +430,7 @@ class CustomExpansionListener extends ExpansionAdapter {
 	}
 
 	@Override
-	public void expansionStateChanging(ExpansionEvent e) {
+	public void expansionStateChanging(final ExpansionEvent e) {
 		// when closing, store the height BEFORE the collapsion happens
 		if (!e.getState()) {
 			height = inner.getSize().y;
@@ -438,7 +438,7 @@ class CustomExpansionListener extends ExpansionAdapter {
 	}
 
 	@Override
-	public void expansionStateChanged(ExpansionEvent e) {
+	public void expansionStateChanged(final ExpansionEvent e) {
 		// lay out every composite above 'inner'
 		Composite tmp = inner;
 		while (tmp.getParent() != sc) {

@@ -38,7 +38,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 	}
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 		setPreferenceStore(PreferenceManager.getStore());
 	}
@@ -72,7 +72,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 			IRiskEditorPropertyListener propertyListener = new IRiskEditorPropertyListener() {
 				
 				@Override
-				public void propertyChange(boolean valid) {
+				public void propertyChange(final boolean valid) {
 					if (!valid) {
 						setValid(false);
 						updateApplyButton();
@@ -125,7 +125,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 		return true;
 	}
 
-	public void propertyChange(boolean valid) {
+	public void propertyChange(final boolean valid) {
 		if (!valid) {
 			setValid(false);
 			updateApplyButton();
@@ -134,7 +134,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 		}
 	}
 
-	private static IRiskFieldEditor getRiskEditor(Composite parent, IMetricEnum metric) {
+	private static IRiskFieldEditor getRiskEditor(final Composite parent, final IMetricEnum metric) {
 		if (metric.equals(ModuleMetric.INSTABILITY)) {
 			return new InstabilityRiskFieldEditor(parent, metric);
 		} else {

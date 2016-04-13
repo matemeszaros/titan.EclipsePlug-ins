@@ -16,18 +16,18 @@ public abstract class BaseRisk implements IRisk {
 	protected final RiskMethod method;
 	protected final Number[] limits;
 
-	public BaseRisk(IMetricEnum metric) {
+	public BaseRisk(final IMetricEnum metric) {
 		method = PreferenceManager.getRiskMethod(metric, false);
 		limits = PreferenceManager.getLimits(metric, false);
 	}
 
 	@Override
 	public RiskLevel getRiskLevel(final Number value) {
-		double v = getRiskValue(value);
+		final double v = getRiskValue(value);
 		return risk(v);
 	}
 
-	public static RiskLevel risk(double v) {
+	public static RiskLevel risk(final double v) {
 		RiskLevel color;
 		if (v < 1) {
 			color = RiskLevel.NO;

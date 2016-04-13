@@ -13,11 +13,11 @@ import java.util.Map;
 
 import org.eclipse.titanium.markers.types.CodeSmellType;
 
-public class CodeSmellTypeToPreferenceTypeMapper {
+public final class CodeSmellTypeToPreferenceTypeMapper {
 
 	private static final Map<CodeSmellType, ProblemTypePreference> MAPPING;
 	static {
-		Map<CodeSmellType, ProblemTypePreference> m = new EnumMap<CodeSmellType, ProblemTypePreference>(CodeSmellType.class);
+		final Map<CodeSmellType, ProblemTypePreference> m = new EnumMap<CodeSmellType, ProblemTypePreference>(CodeSmellType.class);
 		for (ProblemTypePreference p : ProblemTypePreference.values()) {
 			for (CodeSmellType s : p.getRelatedProblems()) {
 				m.put(s, p);
@@ -26,7 +26,7 @@ public class CodeSmellTypeToPreferenceTypeMapper {
 		MAPPING = Collections.unmodifiableMap(m);
 	}
 
-	public static ProblemTypePreference getPreferenceType(CodeSmellType problemType) {
+	public static ProblemTypePreference getPreferenceType(final CodeSmellType problemType) {
 		return MAPPING.get(problemType);
 	}
 
