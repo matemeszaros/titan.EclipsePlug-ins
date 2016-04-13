@@ -89,8 +89,8 @@ public final class SymbolicLinkHandler {
 	 *                HashMap of files that have been removed
 	 * @param monitor
 	 *                the progress monitor to report errors to.
-	 * @param automatic
-	 *                makefile handling boolean
+	 * @param automaticMakefileManagement
+	 *                true if automatic makefile handling project property is set
 	 */
 	public static void addSymlinkCreationCommand(final Map<String, IFile> files, final String workingDirectory, final TITANJob buildJob,
 			final Map<String, IFile> lastTimeRemovedFiles, final IProgressMonitor monitor, final boolean automaticMakefileManagement) {
@@ -105,8 +105,8 @@ public final class SymbolicLinkHandler {
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, false, null);
 
 		for (IFile file : files.values()) {
-			// We do no want makefile to be symlinked
-			// BUT only if automatic makefile generation is ON
+			// We  want makefile to be symlinked
+			// except if automatic makefile generation is ON
 			if (automaticMakefileManagement) {
 				if (file.getName().contentEquals("Makefile") || file.getName().contentEquals("makefile")) {
 					continue;
@@ -274,7 +274,7 @@ public final class SymbolicLinkHandler {
 			SymbolicLinkHandler.addSymlinkCreationCommand(visitor.getFiles(), workingDir.toOSString(), buildJob,
 					new HashMap<String, IFile>(), null, "true".equals(resource.getProject().getPersistentProperty(
 							new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-									ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY))));
+									ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY))));
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace("while creating symlinks for project`" + resource.getProject() + "'", e);
 		}
