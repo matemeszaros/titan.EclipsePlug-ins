@@ -269,12 +269,11 @@ public final class SymbolicLinkHandler {
 		buildJob.setRule(resource.getProject());
 
 		try {
-			// last parameter is whether the automatic makefile
-			// generation is ON/OFF
+			final String automaticMakefileManagement = resource.getProject().getPersistentProperty(
+					new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+							ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY));
 			SymbolicLinkHandler.addSymlinkCreationCommand(visitor.getFiles(), workingDir.toOSString(), buildJob,
-					new HashMap<String, IFile>(), null, "true".equals(resource.getProject().getPersistentProperty(
-							new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-									ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY))));
+					new HashMap<String, IFile>(), null, "true".equals(automaticMakefileManagement));
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace("while creating symlinks for project`" + resource.getProject() + "'", e);
 		}
