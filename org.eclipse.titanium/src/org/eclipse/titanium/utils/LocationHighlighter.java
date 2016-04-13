@@ -31,12 +31,12 @@ public class LocationHighlighter {
 	 * Jump to the provided location and highlight it.
 	 */
 	public static void jumpToLocation(final Location location) {
-		final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		final IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(location.getFile().getName());
 		if (desc == null) {
 			return;
 		}
 		try {
+			final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			final IEditorPart editorPart = page.openEditor(new FileEditorInput((IFile) location.getFile()), desc.getId());
 			if (editorPart != null && (editorPart instanceof AbstractTextEditor)) {
 				((AbstractTextEditor) editorPart).setHighlightRange(location.getOffset(), 0, true);

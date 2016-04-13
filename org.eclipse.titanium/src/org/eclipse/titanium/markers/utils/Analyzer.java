@@ -113,13 +113,15 @@ public class Analyzer {
 	public MarkerHandler analyzeModule(IProgressMonitor monitor, Module module) {
 		SubMonitor progress = SubMonitor.convert(monitor, 100);
 		IResource res = module.getLocation().getFile();
-		IProject project = module.getProject();
+		
 		Map<IResource, List<Marker>> markers = new HashMap<IResource, List<Marker>>();
 		markers.put(res, internalAnalyzeModule(module));
 		progress.worked(80);
 		if (progress.isCanceled()) {
 			throw new OperationCanceledException();
 		}
+		
+		IProject project = module.getProject();
 		markers.put(project, internalAnalyzeProject(project));
 		progress.worked(20);
 		return new MarkerHandler(markers);

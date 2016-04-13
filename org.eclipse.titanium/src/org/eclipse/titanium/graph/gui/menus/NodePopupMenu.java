@@ -94,15 +94,18 @@ public class NodePopupMenu extends JPopupMenu {
 				if (actVisualisator == null) {
 					return;
 				}
+
 				Layout<NodeDescriptor, EdgeDescriptor> tmpLayout = actVisualisator.getGraphLayout();
 				if (tmpLayout == null) {
 					return;
 				}
-				final Graph<NodeDescriptor, EdgeDescriptor> g = actVisualisator.getGraphLayout().getGraph();
+
 				if (node == null) {
 					ErrorReporter.logError("null node attribute for NodePopupMenu");
 					return;
 				}
+
+				final Graph<NodeDescriptor, EdgeDescriptor> g = actVisualisator.getGraphLayout().getGraph();
 				Job searchJob = new Job("Searching for parallel paths...") {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
