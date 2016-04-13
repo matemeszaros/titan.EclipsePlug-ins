@@ -50,6 +50,7 @@ public final class ExternalCommandBrowser implements SelectionListener {
 			dialog.setFilterPath(filename);
 			dialog.setFileName(filename);
 		}
+
 		file = dialog.open();
 		if (file != null) {
 			String filename = PathConverter.convert(file, reportDebugInformation, TITANDebugConsole.getConsole());
