@@ -76,7 +76,7 @@ public final class LicenseValidator {
 				PreferenceConstants.LICENSE_FILE_PATH, "", null);
 		wasChecked = true;
 
-		if (licensePath == null || "".equals(licensePath)) {
+		if (licensePath == null || licensePath.trim().length() == 0) {
 			showErrorDialog("Checking for TITAN license failed", "The path of the license for TITAN is not set.\n\n" + CORRECTIONSTRING);
 			wasCorrect = false;
 			return false;
@@ -166,7 +166,7 @@ public final class LicenseValidator {
 		boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, false, null);
 
-		if (force || "".equals(resolvedLicenseFilePath)) {
+		if (force || resolvedLicenseFilePath.length() == 0) {
 			String licensePath = preferenceService.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.LICENSE_FILE_PATH,
 					"", null);
 			resolvedLicenseFilePath = PathConverter.convert(licensePath, reportDebugInformation, TITANDebugConsole.getConsole());

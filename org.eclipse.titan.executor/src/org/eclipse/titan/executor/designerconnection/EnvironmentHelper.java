@@ -94,7 +94,7 @@ public final class EnvironmentHelper {
 		}
 
 		final String temp = DesignerHelper.getTTCN3DIR();
-		if (null == temp || 0 == temp.length()) {
+		if (null == temp || 0 == temp.trim().length()) {
 			return temp;
 		}
 
@@ -115,7 +115,7 @@ public final class EnvironmentHelper {
 		}
 
 		String temp = DesignerHelper.getTTCN3DIR();
-		if (null == temp || 0 == temp.length()) {
+		if (null == temp || 0 == temp.trim().length()) {
 			return env;
 		}
 
@@ -139,7 +139,7 @@ public final class EnvironmentHelper {
 		}
 
 		String temp = DesignerHelper.getTTCN3LICENSEFILE();
-		if (null == temp || 0 == temp.length()) {
+		if (null == temp || 0 == temp.trim().length()) {
 			return env;
 		}
 

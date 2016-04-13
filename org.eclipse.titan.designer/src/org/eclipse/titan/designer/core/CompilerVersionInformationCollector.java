@@ -160,7 +160,7 @@ public final class CompilerVersionInformationCollector {
 	 *         problems.
 	 * */
 	private static CompilerInfoStruct collectVersionInformation(final String path) {
-		if (path == null || path.length() == 0) {
+		if (path == null || path.trim().length() == 0) {
 			return null;
 		}
 

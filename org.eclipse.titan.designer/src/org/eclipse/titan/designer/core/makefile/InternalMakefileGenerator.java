@@ -2228,7 +2228,7 @@ public final class InternalMakefileGenerator {
 		allProjectsUseSymbolicLinks = usingSymbolicLinks;
 
 		String temp = ResourceUtils.getPersistentProperty(project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.TARGET_EXECUTABLE_PROPERTY);
-		if (temp != null && temp.length() > 0) {
+		if (temp != null && temp.trim().length() > 0) {
 			IPath resolvedPath = TITANPathUtilities.resolvePath(temp, projectLocation);
 			etsName = PathConverter.convert(resolvedPath.toOSString(), reportDebugInformation, TITANDebugConsole.getConsole());
 		} else {
