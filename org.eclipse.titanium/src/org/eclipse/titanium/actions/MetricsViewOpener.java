@@ -27,22 +27,22 @@ public class MetricsViewOpener extends AbstractHandler implements IObjectActionD
 	private ISelection selection;
 
 	@Override
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		doOpenMetricsView();
 	}
 
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 	}
 
 	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 		//Do nothing
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
 		doOpenMetricsView();
@@ -74,7 +74,7 @@ public class MetricsViewOpener extends AbstractHandler implements IObjectActionD
 			final IViewPart mv = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.showView("org.eclipse.titanium.metrics.view");
 			if (mv instanceof MetricsView) {
-				MetricsView metricsView = (MetricsView) mv;
+				final MetricsView metricsView = (MetricsView) mv;
 				metricsView.setSelectedProject(p);
 				metricsView.startMeasuring();
 

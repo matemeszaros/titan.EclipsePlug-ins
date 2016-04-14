@@ -36,7 +36,7 @@ public final class OrganizeFromEditor extends AbstractHandler {
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
 		if (editor == null || !(editor instanceof TTCN3Editor || (editor instanceof TTCNPPEditor))) {

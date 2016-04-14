@@ -55,7 +55,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class CheckCodeSmells extends AbstractHandler {
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final IWorkbenchPage iwPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		final ISelection selection = iwPage.getSelection();
 
@@ -92,7 +92,7 @@ public class CheckCodeSmells extends AbstractHandler {
 		while (!res.isEmpty()) {
 			final IResource r = res.pollFirst();
 			if (r instanceof IProject) {
-				IProject proj = (IProject) r;
+				final IProject proj = (IProject) r;
 				projects.add(proj);
 			} else if (r instanceof IFolder) {
 				try {
@@ -128,7 +128,7 @@ public class CheckCodeSmells extends AbstractHandler {
 
 			new ProjectAnalyzerJob("Check " + project.getName() + " for code smells") {
 				@Override
-				public IStatus doPostWork(IProgressMonitor monitor) {
+				public IStatus doPostWork(final IProgressMonitor monitor) {
 					final SubMonitor progress = SubMonitor.convert(monitor, 100);
 					if (!onTheFlyEnabled) {
 						MarkerHandler mh;
@@ -152,7 +152,7 @@ public class CheckCodeSmells extends AbstractHandler {
 		for (final IProject project : files.keySet()) {
 			new ProjectAnalyzerJob("Check some files in " + project.getName() + " for code smells") {
 				@Override
-				public IStatus doPostWork(IProgressMonitor monitor) {
+				public IStatus doPostWork(final IProgressMonitor monitor) {
 					final SubMonitor progress = SubMonitor.convert(monitor, files.get(project).size());
 					if (!onTheFlyEnabled) {
 						final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);

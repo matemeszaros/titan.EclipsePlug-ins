@@ -27,15 +27,14 @@ import org.eclipse.ui.PlatformUI;
 public class ExportDataForSonarAction extends AbstractHandler {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final IWorkbenchPage iwPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-
 		final List<IProject> res = SelectionUtils.getProjectsFromSelection(iwPage.getSelection());
 
 		for (final IProject project : res) {
 			new ProjectAnalyzerJob("Exporting sonar data for project " + project.getName()) {
 				@Override
-				public IStatus doPostWork(IProgressMonitor monitor) {
+				public IStatus doPostWork(final IProgressMonitor monitor) {
 					try {
 						final SonarDataExporter exporter = new SonarDataExporter(project);
 						exporter.exportDataForProject();

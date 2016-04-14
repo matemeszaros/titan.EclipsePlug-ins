@@ -85,7 +85,7 @@ public final class OrganizeFromBrowser extends AbstractHandler implements IObjec
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
 		doOrganizeFromBrowser();
@@ -168,13 +168,13 @@ public final class OrganizeFromBrowser extends AbstractHandler implements IObjec
 class OrganizeImportsOp implements IRunnableWithProgress {
 	private final List<IFile> files;
 
-	public OrganizeImportsOp(List<IFile> files) {
+	public OrganizeImportsOp(final List<IFile> files) {
 		this.files = files;
 	}
 
 	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		Set<IProject> projects = new HashSet<IProject>();
+	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		final Set<IProject> projects = new HashSet<IProject>();
 		for (IFile f : files) {
 			projects.add(f.getProject());
 		}
@@ -204,7 +204,7 @@ class OrganizeImportsOp implements IRunnableWithProgress {
 				final TextFileChange change = OrganizeImports.organizeImportsChange(f);
 				compChange.add(change);
 				compChange.perform(new SubProgressMonitor(monitor, 1));
-				MultiTextEdit edit = (MultiTextEdit) change.getEdit();
+				final MultiTextEdit edit = (MultiTextEdit) change.getEdit();
 				if (edit != null && edit.getChildrenSize() > 0) {
 					final WorkspaceJob job = GlobalParser.getProjectSourceParser(f.getProject()).reportOutdating(f);
 					try {

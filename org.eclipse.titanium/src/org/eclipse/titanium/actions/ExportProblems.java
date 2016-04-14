@@ -82,7 +82,7 @@ public final class ExportProblems extends AbstractHandler implements IObjectActi
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		doExportProblems();
 
@@ -122,7 +122,8 @@ public final class ExportProblems extends AbstractHandler implements IObjectActi
 			final FileDialog d = new FileDialog(shell, SWT.SAVE);
 			d.setText("Export problem markers to xls");
 			d.setFilterExtensions(new String[] { "*.xls" });
-			IPath path = p.getLocation();
+
+			final IPath path = p.getLocation();
 			if (path != null) {
 				d.setFilterPath(path.toPortableString());
 			}
@@ -147,7 +148,7 @@ public final class ExportProblems extends AbstractHandler implements IObjectActi
 
 		new ProjectAnalyzerJob("Exporting reported code smells") {
 			@Override
-			public IStatus doPostWork(IProgressMonitor monitor) {
+			public IStatus doPostWork(final IProgressMonitor monitor) {
 				final BaseProblemExporter exporter = new XlsProblemExporter(getProject());
 				try {
 					exporter.exportMarkers(monitor, fileName, Calendar.getInstance().getTime());

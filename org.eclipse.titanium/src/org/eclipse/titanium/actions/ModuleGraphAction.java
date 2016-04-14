@@ -51,7 +51,7 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 	 * initializing {@link GraphEditor}
 	 */
 	@Override
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		doOpenModuleGraph();
 	}
 
@@ -59,7 +59,7 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 	 * react upon selection change
 	 */
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 	}
 
@@ -67,12 +67,12 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 	 * needless method (actually empty)
 	 */
 	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 		//Do nothing
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		
 		doOpenModuleGraph();
@@ -93,10 +93,8 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 			if (selected instanceof IProject) {
 				final IProject project = (IProject) selected;
 
-				Generator generator = new Generator(project);
-
+				final Generator generator = new Generator(project);
 				generator.schedule();
-
 			}
 		}
 	}
@@ -113,7 +111,7 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 		}
 		
 		@Override
-		protected IStatus run(IProgressMonitor monitor) {
+		protected IStatus run(final IProgressMonitor monitor) {
 			monitor.beginTask("Parsing project", 30);
 			IFile input = null;
 			try {

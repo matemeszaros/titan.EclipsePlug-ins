@@ -418,7 +418,7 @@ public final class TypeHierarchy {
 
 	@SuppressWarnings("unchecked")
 	public static Map<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]> createHierarchy() {
-		Map<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]> m =
+		final Map<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]> m =
 				new HashMap<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]>();
 		m.put(IValue.class, new Class[] { Value.class });
 		m.put(ArrayDimension.class, new Class[] { RangedArrayDimension.class, SingleArrayDimension.class });
@@ -568,6 +568,7 @@ public final class TypeHierarchy {
 		m.put(ISubReference.class, new Class[] { ParameterisedSubReference.class, ArraySubReference.class, FieldSubReference.class });
 		m.put(Parameter_Redirect.class, new Class[] { VariableList_Parameter_Redirect.class, AssignmentList_Parameter_Redirect.class });
 		m.put(ASN1_Set_Seq_Choice_BaseType.class, new Class[] { ASN1_Sequence_Type.class, ASN1_Choice_Type.class, ASN1_Set_Type.class });
+
 		return Collections.unmodifiableMap(m);
 	}
 }

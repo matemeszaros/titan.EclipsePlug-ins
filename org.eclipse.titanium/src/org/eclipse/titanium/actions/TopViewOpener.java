@@ -27,22 +27,22 @@ public class TopViewOpener extends AbstractHandler implements IObjectActionDeleg
 	private ISelection selection;
 
 	@Override
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		doOpenTopView();
 	}
 
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 	}
 
 	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 		//Do nothing
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
 		doOpenTopView();
@@ -74,7 +74,7 @@ public class TopViewOpener extends AbstractHandler implements IObjectActionDeleg
 			final IViewPart tv = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.showView("org.eclipse.titanium.metrics.topview");
 			if (tv instanceof TopView) {
-				TopView topView = (TopView) tv;
+				final TopView topView = (TopView) tv;
 				topView.setSelectedProject(p);
 				topView.startMeasuring();
 

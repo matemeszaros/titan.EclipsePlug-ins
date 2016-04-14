@@ -49,22 +49,22 @@ public class ComponentGraphAction extends AbstractHandler implements IObjectActi
 
 
 	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 		// Do nothing
 	}
 
 	@Override
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		doOpenComponentGraphForSelected();
 	}
 
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		
 		doOpenComponentGraphForSelected();
@@ -85,7 +85,7 @@ public class ComponentGraphAction extends AbstractHandler implements IObjectActi
 			if (selected instanceof IProject) {
 				final IProject project = (IProject) selected;
 
-				Job generator = new Job("Generator") {
+				final Job generator = new Job("Generator") {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						monitor.beginTask("Parsing project", 30);
