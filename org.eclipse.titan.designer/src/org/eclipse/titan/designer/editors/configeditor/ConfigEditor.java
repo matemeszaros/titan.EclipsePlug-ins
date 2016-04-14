@@ -125,7 +125,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	
 	public void refresh(final CfgAnalyzer cfgAnalyzer) {
 		//TODO: implement
-		//*
+		/*
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -147,7 +147,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 		this.errorMessage = errorMessage;
 
 		//TODO: implement
-		//*
+		/*
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -165,7 +165,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	@Override
 	protected void addPages() {
 		//TODO: implement
-		/*
+		//*
 		createTextEditorPage();
 		/*/
 		try {
@@ -224,10 +224,6 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	}
 
 	public void setTokenStream(final TokenStream aTokenStream) {
-		//TODO: remove
-		if ( aTokenStream == null ) {
-			System.out.println("ERROR: ConfigEditor.setTokenStream( null )");
-		}
 		mTokenStream = aTokenStream;
 	}
 
