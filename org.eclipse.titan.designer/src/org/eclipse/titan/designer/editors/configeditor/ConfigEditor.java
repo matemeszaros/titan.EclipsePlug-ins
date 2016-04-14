@@ -8,6 +8,7 @@
 package org.eclipse.titan.designer.editors.configeditor;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -15,6 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.LocationAST;
 import org.eclipse.titan.common.parsers.cfg.CfgAnalyzer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
@@ -52,6 +54,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	private LoggingPage mLoggingEditor;
 
 	private ParserRuleContext mParseTreeRoot;
+	private TokenStream mTokenStream;
 	
 	public ConfigEditor() {
 		editor = new ConfigTextEditor(this);
@@ -213,11 +216,15 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	}
 
 	public LocationAST getParseTreeRoot() {
-		return new LocationAST(mParseTreeRoot);
+		return new LocationAST(mParseTreeRoot, mTokenStream);
 	}
 
 	public void setParseTreeRoot(final ParserRuleContext aParseTreeRoot) {
 		mParseTreeRoot = aParseTreeRoot;
+	}
+
+	public void setTokenStream(final TokenStream aTokenStream) {
+		mTokenStream = aTokenStream;
 	}
 
 	private void updateTextualPage() {

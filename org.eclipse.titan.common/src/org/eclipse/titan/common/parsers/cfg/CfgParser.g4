@@ -3,7 +3,7 @@ parser grammar CfgParser;
 @header {
 import java.util.HashMap;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
@@ -353,7 +353,7 @@ pr_IncludeSection returns [ IncludeSection includeSection ]:
 		{	String fileName = $f.getText().substring( 1, $f.getText().length() - 1 );
 			$includeSection.addIncludeFileName( fileName );
 			mIncludeFiles.add( fileName );
-			includeSectionHandler.getFiles().add( new LocationAST($f) );
+			includeSectionHandler.getFiles().add( new TerminalNodeImpl( $f ) );
 		}
 	)*
 ;
