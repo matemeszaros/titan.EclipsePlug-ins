@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenFactory;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
@@ -65,6 +65,7 @@ public final class CfgAnalyzer {
 	private DefineSectionHandler defineSectionHandler = null;
 	private LoggingSectionHandler loggingSectionHandler = null;
 	private ParserRuleContext mParseTreeRoot = null;
+	private TokenStream mTokenStream = null;
 	private String mLogFileName = null;
 	private Integer mTcpPort = null;
 	private String mLocalAddress = null;
@@ -168,6 +169,10 @@ public final class CfgAnalyzer {
 		return mParseTreeRoot;
 	}
 
+	public TokenStream getTokenStream() {
+		return mTokenStream;
+	}
+
 	public List<SyntacticErrorStorage> getErrorStorage() {
 		if (!lexerListener.getErrorsStored().isEmpty() && parserListener.getErrorsStored().isEmpty()) {
 			return lexerListener.getErrorsStored();
@@ -225,20 +230,21 @@ public final class CfgAnalyzer {
 		lexer.removeErrorListeners(); // remove ConsoleErrorListener
 		lexer.addErrorListener(lexerListener);
 		
-		// Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
+		// 1. Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
 		// Read this: https://groups.google.com/forum/#!topic/antlr-discussion/gsAu-6d3pKU
 		// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
 		//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
-		final TokenStream tokens = new BufferedTokenStream( lexer );
+		// 2. Changed from BufferedTokenStream to CommonTokenStream, otherwise tokens with "-> channel(HIDDEN)" are not filtered out in lexer.
+		final TokenStream tokens = new CommonTokenStream( lexer );
 		final CfgParser parser = new CfgParser(tokens);
 		//parser tree is built by default
 		parserListener = new TitanListener();
 		parser.removeErrorListeners(); // remove ConsoleErrorListener
 		parser.addErrorListener(parserListener);
 		mParseTreeRoot = parser.pr_ConfigFile();
-		warnings = parser.getWarnings();
-		//TODO: implement: fill rootInterval if needed
+		mTokenStream = tokens;
 		
+		warnings = parser.getWarnings();
 		definitions = parser.getDefinitions();
 		final CfgParseResult cfgParseResult = parser.getCfgParseResult();
 		mExecuteElements = cfgParseResult.getExecuteElements();

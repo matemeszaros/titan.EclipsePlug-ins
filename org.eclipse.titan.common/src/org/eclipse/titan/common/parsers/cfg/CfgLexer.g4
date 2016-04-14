@@ -3,13 +3,13 @@ lexer grammar CfgLexer;
 @header {}
 @members{}
 
-WS:		[ \t\r\n\f]+ ->skip;
+WS:		[ \t\r\n\f]+ -> channel(HIDDEN);
 
 LINE_COMMENT:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
+) -> channel(HIDDEN);
 
 BLOCK_COMMENT:	'/*' .*? '*/' -> channel(HIDDEN);
 
@@ -41,13 +41,13 @@ COMPONENTS_SECTION1:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION1:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION1:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS1:	[ \t\r\n\f]+ ->skip;
+WS1:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT1:
 (
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT1:	'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT1:	'/*' .*? '*/' -> channel(HIDDEN);
 fragment DOT1:	'.';
 SEMICOLON1:		';';
 PLUS1:			'+';
@@ -124,13 +124,13 @@ COMPONENTS_SECTION2:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION2:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION2:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS2:	[ \t\r\n\f]+ ->skip;
+WS2:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT2:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT2:	'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT2:	'/*' .*? '*/' -> channel(HIDDEN);
 
 STRING2:		'"' .*? '"';
 
@@ -149,13 +149,13 @@ COMPONENTS_SECTION3:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION3:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION3:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS3:	[ \t\r\n\f]+ ->skip;
+WS3:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT3:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT3:		'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT3:		'/*' .*? '*/' -> channel(HIDDEN);
 SEMICOLON3:			';';
 fragment LETTER3:	[A-Z|a-z];
 fragment NUMBER3:	[0-9];
@@ -177,13 +177,13 @@ COMPONENTS_SECTION4:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION4:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION4:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS4:	[ \t\r\n\f]+ ->skip;
+WS4:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT4:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT4:	'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT4:	'/*' .*? '*/' -> channel(HIDDEN);
 STRING4:		'"' .*? '"';
  
 // define section
@@ -201,13 +201,13 @@ COMPONENTS_SECTION5:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION5:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION5:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS5:	[ \t\r\n\f]+ ->skip;
+WS5:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT5:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT5:	'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT5:	'/*' .*? '*/' -> channel(HIDDEN);
 IPV6_5:
   ( 'A'..'F' | 'a'..'f' | '0'..'9' )*
   ':' 
@@ -290,13 +290,13 @@ COMPONENTS_SECTION6:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION6:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION6:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS6:	[ \t\r\n\f]+ ->skip;
+WS6:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT6:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT6:		'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT6:		'/*' .*? '*/' -> channel(HIDDEN);
 SEMICOLON6: 		';';
 ASSIGNMENTCHAR6:	':=';
 STRING6:			'"' .*? '"';
@@ -324,18 +324,18 @@ COMPONENTS_SECTION7:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION7:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION7:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS7:	[ \t\r\n\f]+ ->skip;
+WS7:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT7:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
+) -> channel(HIDDEN);
 fragment FR_LETTER7:	[A-Za-z];
 fragment FR_NUMBER7:	[0-9];
 fragment FR_DOT7:		'.';
 fragment FR_TTCN3IDENTIFIER7:	FR_LETTER7 (FR_LETTER7 | FR_NUMBER7 | '_')*;
 TTCN3IDENTIFIER7:	FR_LETTER7 (FR_LETTER7 | FR_NUMBER7 | '_')*;
-BLOCK_COMMENT7:		'/*' .*? '*/' -> skip;
+BLOCK_COMMENT7:		'/*' .*? '*/' -> channel(HIDDEN);
 STAR7:				'*';
 PLUS7:				'+';
 MINUS7:				'-';
@@ -391,13 +391,13 @@ COMPONENTS_SECTION8:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION8:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION8:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS8:	[ \t\r\n\f]+ ->skip;
+WS8:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT8:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT8:		'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT8:		'/*' .*? '*/' -> channel(HIDDEN);
 fragment FR_LETTER8:	[A-Za-z];
 fragment FR_NUMBER8:	[0-9];
 fragment FR_DOT8:		'.';
@@ -448,13 +448,13 @@ COMPONENTS_SECTION9:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENTS
 LOGGING_SECTION9:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION9:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS9:	[ \t\r\n\f]+ ->skip;
+WS9:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT9:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT9:		'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT9:		'/*' .*? '*/' -> channel(HIDDEN);
 SEMICOLON9:			';';
 ASSIGNMENTCHAR9:	':'? '=';
 CONCATCHAR9:		'&=';
@@ -578,13 +578,13 @@ COMPONENTS_SECTION10:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENT
 LOGGING_SECTION10:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION10:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS10:	[ \t\r\n\f]+ ->skip;
+WS10:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT10:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT10:		'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT10:		'/*' .*? '*/' -> channel(HIDDEN);
 SEMICOLON10:			';';
 STAR10:					'*';
 ASSIGNMENTCHAR10:		':=';
@@ -651,13 +651,13 @@ COMPONENTS_SECTION11:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENT
 LOGGING_SECTION11:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION11:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS11:	[ \t\r\n\f]+ ->skip;
+WS11:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT11:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT11:		'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT11:		'/*' .*? '*/' -> channel(HIDDEN);
 
 TTCN_EXECUTOR1:		'TTCN_EXECUTOR';	TTCN_ERROR1:	'TTCN_ERROR';		TTCN_WARNING1:		'TTCN_WARNING';
 TTCN_PORTEVENT1:	'TTCN_PORTEVENT';	TTCN_TIMEROP1:	'TTCN_TIMEROP';		TTCN_VERDICTOP1:	'TTCN_VERDICTOP';
@@ -801,13 +801,13 @@ COMPONENTS_SECTION12:			'[COMPONENTS]'-> type(COMPONENTS_SECTION),mode(COMPONENT
 LOGGING_SECTION12:				'[LOGGING]'-> type(LOGGING_SECTION),mode(LOGGING_SECTION_MODE);
 PROFILER_SECTION12:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTION_MODE);
 
-WS12:	[ \t\r\n\f]+ ->skip;
+WS12:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT12:
 (	
 	'//' ~[\r\n]* 
 |	'#' ~[\r\n]*
-) ->skip;
-BLOCK_COMMENT12:		'/*' .*? '*/' -> skip;
+) -> channel(HIDDEN);
+BLOCK_COMMENT12:		'/*' .*? '*/' -> channel(HIDDEN);
 
 CONCATCHAR12:			'&=';
 HEX12:					[0-9|A-F|a-f];

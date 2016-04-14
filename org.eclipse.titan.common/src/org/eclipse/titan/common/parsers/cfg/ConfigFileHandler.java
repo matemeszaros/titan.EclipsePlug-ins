@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.LocationAST;
 import org.eclipse.titan.common.path.PathConverter;
 
@@ -27,7 +26,7 @@ import org.eclipse.titan.common.path.PathConverter;
  * and is extracting data from them required by the executors (actually the Main Controller)
  * 
  * @author Kristof Szabados
- * @author Arpad Lovassy 
+ * @author Arpad Lovassy
  */
 public final class ConfigFileHandler {
 	private static final String ORIGINALLY_FROM = "//This part was originally found in file: ";
@@ -181,19 +180,8 @@ public final class ConfigFileHandler {
 	}
 
 	/**
-	 * Creates the String representation of the parsed tree of the root configuration file.
-	 * Can also be used to filter out  some of its nodes before printing it to a file.
-	 * 
-	 * @see #print(org.eclipse.titan.common.parsers.LocationAST, StringBuilder)
-	 * @param disallowedNodes the list of nodes that should be left out of the process.
-	 * */
-	public StringBuilder toStringOriginal(final List<Integer> disallowedNodes){
-		return toStringInternal(originalASTs, disallowedNodes);
-	}
-
-	/**
 	 * Creates the String representation of the parsed tree of all of the parsed files.
-	 * Can be used to create a single configuration file instead of the hierarchy already exisiting.
+	 * Can be used to create a single configuration file instead of the hierarchy already existing.
 	 * 
 	 * @see #print(org.eclipse.titan.common.parsers.LocationAST, StringBuilder)
 	 * @param disallowedNodes the list of nodes that should be left out of the process.
@@ -238,8 +226,24 @@ public final class ConfigFileHandler {
 			mLogFileName  = analyzer.getLogFileName();
 			localAddress = analyzer.getLocalAddress();
 		}
-
-		final LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot() );
+		
+		if (analyzer.getTcpPort() != null) {
+			tcpPort = analyzer.getTcpPort();
+		}
+		if (analyzer.getLocalAddress() != null) {
+			localAddress = analyzer.getLocalAddress();
+		}
+		if (analyzer.getKillTimer() != null) {
+			killTimer = analyzer.getKillTimer();
+		}
+		if (analyzer.getNumHcs() != null) {
+			numHCs = analyzer.getNumHcs();
+		}
+		if (analyzer.isUnixDomainSocketEnabled() != null) {
+			unixDomainSocket = analyzer.isUnixDomainSocketEnabled();
+		}
+		
+		final LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot(), analyzer.getTokenStream() );
 		if ( rootNode != null ) {
 			originalASTs.put( actualFile, rootNode );
 
@@ -265,26 +269,8 @@ public final class ConfigFileHandler {
 	 * 
 	 * @param root the tree root to start at.
 	 */
-	private void print(final LocationAST root, final StringBuilder stringbuilder) {
-		CommonHiddenStreamToken hidden = root.getHiddenBefore();
-		if(hidden != null){
-			while(hidden.getHiddenBefore() != null){
-				hidden = hidden.getHiddenBefore();
-			}
-			while(hidden != null){
-				stringbuilder.append(hidden.getText());
-				hidden = hidden.getHiddenAfter();
-			}
-		}
-		stringbuilder.append(root.getText());
-		LocationAST child = root.getFirstChild();
-		while(child != null){
-			final Integer tempType = child.getType();
-			if(disallowedNodes != null && !disallowedNodes.contains(tempType)){
-				print(child, stringbuilder);
-			}
-			child = child.getNextSibling();
-		}
+	private void print(final LocationAST aRoot, final StringBuilder aSb) {
+		ConfigTreeNodeUtilities.print( aRoot.getRule(), aRoot.getTokenStream(), aSb, disallowedNodes );
 	}
 	
 }

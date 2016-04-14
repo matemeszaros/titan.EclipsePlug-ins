@@ -10,6 +10,7 @@ package org.eclipse.titan.designer.editors.configeditor.pages.include;
 import java.util.Iterator;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -30,8 +31,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.IncludeSectionHandler;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
@@ -110,16 +111,21 @@ public final class IncludeSubPage {
 					createNewIncludeSection();
 				}
 
-				LocationAST newItem = createNewIncludeItem();
+				ParseTree newItem = createNewIncludeItem();
 				if (newItem == null) {
 					return;
 				}
 
 				if (includeSectionHandler.getFiles().isEmpty()) {
-					includeSectionHandler.getLastSectionRoot().setNextSibling(newItem);
+					ParseTree root = includeSectionHandler.getLastSectionRoot();
+					//TODO: remove
+					//ConfigTreeNodeUtilities.addChild(root.getParent(), newItem);
+					ConfigTreeNodeUtilities.addChild(root, newItem);
 				} else {
-					LocationAST item = includeSectionHandler.getFiles().get(includeSectionHandler.getFiles().size() - 1);
-					item.setNextSibling(newItem);
+					ParseTree item = includeSectionHandler.getFiles().get(includeSectionHandler.getFiles().size() - 1);
+					//TODO: remove
+					//ConfigTreeNodeUtilities.addChild(item.getParent(), newItem);
+					ConfigTreeNodeUtilities.addChild(item, newItem);
 				}
 
 				includeSectionHandler.getFiles().add(newItem);
@@ -200,8 +206,8 @@ public final class IncludeSubPage {
 			@Override
 			public void modify(final Object element, final String property, final Object value) {
 				if (element != null && element instanceof TableItem && value instanceof String) {
-					LocationAST item = (LocationAST) ((TableItem) element).getData();
-					item.setText((String) value);
+					ParseTree item = (ParseTree) ((TableItem) element).getData();
+					ConfigTreeNodeUtilities.setText(item, (String) value);
 					includeElementsTableViewer.refresh(item);
 					editor.setDirty();
 				}
@@ -244,25 +250,22 @@ public final class IncludeSubPage {
 			return;
 		}
 
-		includeSectionHandler.setLastSectionRoot(new LocationAST("[INCLUDE]"));
-		includeSectionHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(includeSectionHandler.getLastSectionRoot());
+		includeSectionHandler.setLastSectionRoot(new AddedParseTree("\n[INCLUDE]"));
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		ConfigTreeNodeUtilities.addChild(sectionRoot, includeSectionHandler.getLastSectionRoot());
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot().getRule();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
 	}
 
-	private LocationAST createNewIncludeItem() {
+	private ParseTree createNewIncludeItem() {
 		if (includeSectionHandler == null) {
 			return null;
 		}
 
-		LocationAST item = new LocationAST("\"included_file\"");
-		item.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-
+		ParseTree item = new AddedParseTree("\n\"included_file\"");
 		return item;
 	}
 
@@ -271,8 +274,7 @@ public final class IncludeSubPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), includeSectionHandler.getLastSectionRoot()
-				.getParent());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot().getFirstChild().getRule(), includeSectionHandler.getLastSectionRoot().getParent());
 		includeSectionHandler.setLastSectionRoot((ParserRuleContext)null);
 	}
 
@@ -284,9 +286,9 @@ public final class IncludeSubPage {
 		StructuredSelection selection = (StructuredSelection) includeElementsTableViewer.getSelection();
 		// remove the selected elements
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
-			LocationAST item = (LocationAST) iterator.next();
+			ParseTree item = (ParseTree) iterator.next();
 			if (item != null) {
-				ConfigTreeNodeUtilities.removeFromChain(includeSectionHandler.getLastSectionRoot(), item);
+				ConfigTreeNodeUtilities.removeChild(includeSectionHandler.getLastSectionRoot(), item);
 				includeSectionHandler.getFiles().remove(item);
 			}
 		}

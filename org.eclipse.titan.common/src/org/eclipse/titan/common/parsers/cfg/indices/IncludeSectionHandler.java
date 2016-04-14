@@ -12,39 +12,37 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class IncludeSectionHandler {
 
-	private LocationAST lastSectionRoot = null;
-	private List<LocationAST> files = new ArrayList<LocationAST>();
+	private ParseTree mLastSectionRoot = null;
+	private List<ParseTree> mFiles = new ArrayList<ParseTree>();
 
-	public LocationAST getLastSectionRoot() {
-		return lastSectionRoot;
+	public ParseTree getLastSectionRoot() {
+		return mLastSectionRoot;
 	}
 
-	//TODO: remove
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
-		this.lastSectionRoot = lastSectionRoot;
+	public void setLastSectionRoot( final ParseTree lastSectionRoot ) {
+		this.mLastSectionRoot = lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(final ParserRuleContext lastSectionRoot) {
-		this.lastSectionRoot = new LocationAST(lastSectionRoot);
-	}
-
-	public void setLastSectionRoot(final Token i) {
-		// TODO: implement
+	public void setLastSectionRoot( final Token aToken ) {
+		mLastSectionRoot = new TerminalNodeImpl( aToken );
 	}
 	
-	public List<LocationAST> getFiles() {
-		return files;
+	public List<ParseTree> getFiles() {
+		return mFiles;
 	}
 
 	public void addFile(final ParserRuleContext aIncludeFile ) {
-		files.add( new LocationAST( aIncludeFile ) );
+		mFiles.add( aIncludeFile );
 	}
+
 
 }

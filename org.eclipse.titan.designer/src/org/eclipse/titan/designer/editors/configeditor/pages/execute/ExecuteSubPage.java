@@ -305,11 +305,10 @@ public final class ExecuteSubPage {
 		ExecuteItem item = new ExecuteSectionHandler.ExecuteItem();
 		item.setRoot(new LocationAST(""));
 
-		LocationAST node;
 		item.setModuleName(new LocationAST("module_name"));
 		item.getModuleName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
 		item.getRoot().setFirstChild(item.getModuleName());
-		node = new LocationAST(".");
+		LocationAST node = new LocationAST(".");
 		item.getModuleName().setNextSibling(node);
 		item.setTestcaseName(new LocationAST("testcase_name"));
 		node.setNextSibling(item.getTestcaseName());

@@ -7,17 +7,19 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor.pages.include;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.IncludeSectionHandler;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class IncludeSectionDropTargetListener implements DropTargetListener {
 
 	private TableViewer viewer;
@@ -57,7 +59,7 @@ public final class IncludeSectionDropTargetListener implements DropTargetListene
 			event.feedback = DND.FEEDBACK_SCROLL;
 			event.detail = DND.DROP_NONE;
 		} else {
-			if (event.item.getData() instanceof LocationAST) {
+			if (event.item.getData() instanceof ParseTree) {
 				event.feedback = DND.FEEDBACK_EXPAND | DND.FEEDBACK_SCROLL | DND.FEEDBACK_SELECT;
 			} else {
 				event.feedback = DND.FEEDBACK_INSERT_BEFORE | DND.FEEDBACK_SCROLL;
@@ -77,19 +79,19 @@ public final class IncludeSectionDropTargetListener implements DropTargetListene
 		if (IncludeItemTransfer.getInstance().isSupportedType(event.currentDataType)) {
 			if (event.item != null && viewer.getInput() != null) {
 				IncludeSectionHandler includeSectionHandler = (IncludeSectionHandler) viewer.getInput();
-				LocationAST element = (LocationAST) event.item.getData();
-				LocationAST[] items = (LocationAST[]) event.data;
+				ParseTree element = (ParseTree) event.item.getData();
+				ParseTree[] items = (ParseTree[]) event.data;
 
 				int baseindex = includeSectionHandler.getFiles().indexOf(element);
 
-				LocationAST oldSibling = element.getNextSibling();
+				final ParseTree parent = element.getParent();
+				ConfigTreeNodeUtilities.removeChild(parent, element);
+				ConfigTreeNodeUtilities.addChild(parent, element, baseindex);
 				if (items.length > 0) {
-					element.setNextSibling(items[0]);
 					for (int i = 0; i < items.length - 1; i++) {
-						items[i].setNextSibling(items[i + 1]);
 						includeSectionHandler.getFiles().add(++baseindex, items[i]);
 					}
-					items[items.length - 1].setNextSibling(oldSibling);
+					
 					includeSectionHandler.getFiles().add(++baseindex, items[items.length - 1]);
 				}
 

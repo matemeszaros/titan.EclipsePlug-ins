@@ -10,37 +10,55 @@ package org.eclipse.titan.common.parsers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 //TODO: rename to CfgParseTree, inherit from ParserRuleContext
+/**
+ * @author Kristof Szabados
+ * @author Arpad Lovassy
+ */
 public class LocationAST {
 
-	private String mText;
+	private TokenStream mTokenStream;
 	private ParserRuleContext mRule;
 	private CommonHiddenStreamToken mHiddenAfter;
 	private CommonHiddenStreamToken mHiddenBefore;
 	
-	public LocationAST(final String aText) {
-		mRule = new ParserRuleContext();
+	public LocationAST( final String aText ) {
 		setText( aText );
 	}
 
-	public LocationAST(final ParserRuleContext aRule) {
-		mRule = aRule;
+	public LocationAST( final ParserRuleContext aRule, TokenStream aTokenStream ) {
+		setRule( aRule );
+		mTokenStream = aTokenStream;
 	}
 
-	public LocationAST(final Token aToken) {
-		mRule = new ParserRuleContext();
-		mRule.addChild(aToken);
+	public LocationAST( final ParserRuleContext aRule ) {
+		setRule( aRule );
+	}
+
+	public LocationAST( final Token aToken ) {
+		setToken( aToken );
+	}
+	
+	private void setToken( Token aToken ) {
+		ParserRuleContext rule = new ParserRuleContext();
+		rule.addChild( aToken );
+		setRule( rule );
+	}
+	
+	private void setRule( ParserRuleContext aRule ) {
+		mRule = aRule;
 	}
 	
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("{ ");
-		sb.append(mText+", ");
 		if ( mRule != null ) {
 			sb.append("{ " + mRule.start + ", ");
 			sb.append("" + mRule.stop + ", ");
@@ -57,15 +75,13 @@ public class LocationAST {
 	}
 
 	public String getText() {
-		if ( mText != null ) {
-			return mText;
-		}
-
-		return mRule != null ? mRule.getText() : null;
+		String text = mRule != null ? mRule.getText() : null;
+		return text;
 	}
 	
-	public void setText(final String aText) {
-		mText = aText;
+	public void setText( final String aText ) {
+		CommonToken token = new CommonToken( 0, aText );
+		setToken( token );
 	}
 	
 	public ParserRuleContext getRule() {
@@ -75,7 +91,7 @@ public class LocationAST {
 	public LocationAST getParent() {
 		final ParserRuleContext parentRule = mRule != null ? mRule.getParent() : null;
 
-		return new LocationAST( parentRule );
+		return new LocationAST( parentRule, mTokenStream );
 	}
 
 	public LocationAST getFirstChild() {
@@ -95,7 +111,7 @@ public class LocationAST {
 		
 		final ParserRuleContext firstRule = (ParserRuleContext) firstParseTree;
 
-		return new LocationAST( firstRule );
+		return new LocationAST( firstRule, mTokenStream );
 	}
 
 	public void setFirstChild(final LocationAST aNode) {
@@ -131,7 +147,7 @@ public class LocationAST {
 		
 		final ParserRuleContext nextRule = (ParserRuleContext) nextParseTree;
 
-		return new LocationAST( nextRule );
+		return new LocationAST( nextRule, mTokenStream );
 
 	}
 
@@ -197,10 +213,13 @@ public class LocationAST {
 		
 		final ParserRuleContext parent = mRule.getParent();
 		if ( parent == null ) {
+			// no parent (root node)
 			return -1;
 		}
 		
 		if ( parent.children == null ) {
+			// it should not happen, program error:
+			//   parent's children list is not filled
 			return -1;
 		}
 		
@@ -218,8 +237,16 @@ public class LocationAST {
 	}
 
 	public int getType() {
-		// TODO: implement
+		//TODO: implement
 		return 0;
+	}
+
+	public TokenStream getTokenStream() {
+		return mTokenStream;
+	}
+
+	public void setTokenStream(TokenStream mTokenStream) {
+		this.mTokenStream = mTokenStream;
 	}
 
 }
