@@ -109,10 +109,10 @@ public final class NewTTCN3ModuleWizard extends BasicNewResourceWizard {
 					public IStatus runInWorkspace(final IProgressMonitor monitor) {
 						boolean proceedingOK = SymbolicLinkHandler.createSymlinks(newModule);
 						if (proceedingOK) {
-							proceedingOK = TITANBuilder.removeExecutable(newModule.getProject());
+							proceedingOK = TITANBuilder.regenerateMakefile(newModule.getProject());
 						}
 						if (proceedingOK) {
-							proceedingOK = TITANBuilder.removeMakefile(newModule.getProject());
+							proceedingOK = TITANBuilder.removeExecutable(newModule.getProject());
 						}
 						if (proceedingOK) {
 							TITANBuilder.invokeBuild(newModule.getProject());

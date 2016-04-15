@@ -132,10 +132,10 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 				public IStatus runInWorkspace(final IProgressMonitor monitor) {
 					boolean proceedingOK = SymbolicLinkHandler.createSymlinks(resouce);
 					if (proceedingOK) {
-						proceedingOK = TITANBuilder.removeExecutable(resouce.getProject());
+						proceedingOK = TITANBuilder.regenerateMakefile(resouce.getProject());
 					}
 					if (proceedingOK) {
-						proceedingOK = TITANBuilder.removeMakefile(resouce.getProject());
+						proceedingOK = TITANBuilder.removeExecutable(resouce.getProject());
 					}
 					if (proceedingOK) {
 						TITANBuilder.invokeBuild(resouce.getProject());
