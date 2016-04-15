@@ -19,6 +19,8 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IFile;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 }
 
 @members{
@@ -32,6 +34,12 @@ import java.util.Map;
 	private static final String DEFINITION_NOT_FOUND_FLOAT   = "No macro or environmental variable defined %s could be found, using 0.0 as a replacement value.";
 	private static final String DEFINITION_NOT_FOUND_BOOLEAN = "Could not resolve definition: %s using \"true\" as a replacement.";
 
+	// pattern for matching macro string, for example: \$a, \${a}
+	private final static Pattern PATTERN_MACRO = Pattern.compile("\\$\\s*\\{?\\s*([A-Za-z][A-Za-z0-9_]*)\\s*\\}?");
+
+	// pattern for matching typed macro string, for example: ${a, float}
+	private final static Pattern PATTERN_TYPED_MACRO = Pattern.compile("\\$\\s*\\{\\s*([A-Za-z][A-Za-z0-9_]*)\\s*,\\s*[A-Za-z][A-Za-z0-9_]*\\s*\\}");
+	
 	private List<TITANMarker> mWarnings = new ArrayList<TITANMarker>();
 	
 	private List<ISection> mSections = new ArrayList<ISection>();
@@ -191,6 +199,34 @@ import java.util.Map;
 	}
 	
 	/**
+	 * Extracts macro name from macro string
+	 * @param aMacroString macro string, for example: \$a, \${a}
+	 * @return extracted macro name without extra characters, for example: a
+	 */
+	private String getMacroName( final String aMacroString ) {
+		final Matcher m = PATTERN_MACRO.matcher( aMacroString );
+		if ( m.find() ) {
+			return m.group(1);
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Extracts macro name from typed macro string
+	 * @param aMacroString macro string, for example: \${a, float}
+	 * @return extracted macro name without extra characters, for example: a
+	 */
+	private String getTypedMacroName( final String aMacroString ) {
+		final Matcher m = PATTERN_TYPED_MACRO.matcher( aMacroString );
+		if ( m.find() ) {
+			return m.group(1);
+		} else {
+			return null;
+		}
+	}
+		
+	/**
 	 * Gets the macro value string of a macro (without type)
 	 * @param aMacroToken the macro token
 	 * @param aErrorFormatStr format strings for error messages if definition (macro or environment variable) cannot be resolved
@@ -198,11 +234,11 @@ import java.util.Map;
 	 * @return the macro value string
 	 *         or "" if macro is invalid. In this case an error marker is also created
 	 */
-	private String getMacroValue( Token aMacroToken, String aErrorFormatStr ) {
-		String definition = aMacroToken.getText().substring( 1, aMacroToken.getText().length() );
-		String value = getDefinitionValue( definition );
+	private String getMacroValue( final Token aMacroToken, final String aErrorFormatStr ) {
+		final String definition = getMacroName( aMacroToken.getText() );
+		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			String errorMsg = String.format( aErrorFormatStr, definition );
+			final String errorMsg = String.format( aErrorFormatStr, definition );
 			reportError( errorMsg, aMacroToken, aMacroToken );
 			return "";
 		}
@@ -217,11 +253,11 @@ import java.util.Map;
 	 * @return the macro value string
 	 *         or "" if macro is invalid. In this case an error marker is also created
 	 */
-	private String getMacroValue( ParserRuleContext aMacroRule, String aErrorFormatStr ) {
-		String definition = aMacroRule.getText().substring( 1, aMacroRule.getText().length() );
-		String value = getDefinitionValue( definition );
+	private String getMacroValue( final ParserRuleContext aMacroRule, final String aErrorFormatStr ) {
+		final String definition = getMacroName( aMacroRule.getText() );
+		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			String errorMsg = String.format( aErrorFormatStr, definition );
+			final String errorMsg = String.format( aErrorFormatStr, definition );
 			reportError( errorMsg, aMacroRule.start, aMacroRule.stop );
 			return "";
 		}
@@ -237,11 +273,10 @@ import java.util.Map;
 	 *         or "" if macro is invalid. In this case an error marker is also created
 	 */
 	private String getTypedMacroValue( Token aMacroToken, String aErrorFormatStr ) {
-		int commaPosition = aMacroToken.getText().indexOf( ',' );
-		String definition = aMacroToken.getText().substring( 2, commaPosition );
-		String value = getDefinitionValue( definition );
+		final String definition = getTypedMacroName( aMacroToken.getText() );
+		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			String errorMsg = String.format( aErrorFormatStr, definition );
+			final String errorMsg = String.format( aErrorFormatStr, definition );
 			reportError( errorMsg, aMacroToken, aMacroToken );
 			return "";
 		}
@@ -257,11 +292,10 @@ import java.util.Map;
 	 *         or "" if macro is invalid. In this case an error marker is also created
 	 */
 	private String getTypedMacroValue( ParserRuleContext aMacroRule, String aErrorFormatStr ) {
-		int commaPosition = aMacroRule.getText().indexOf( ',' );
-		String definition = aMacroRule.getText().substring( 2, commaPosition );
-		String value = getDefinitionValue( definition );
+		final String definition = getTypedMacroName( aMacroRule.getText() );
+		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			String errorMsg = String.format( aErrorFormatStr, definition );
+			final String errorMsg = String.format( aErrorFormatStr, definition );
 			reportError( errorMsg, aMacroRule.start, aMacroRule.stop );
 			return "";
 		}
