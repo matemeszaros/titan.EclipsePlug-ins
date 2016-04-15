@@ -17,7 +17,7 @@ import org.eclipse.titanium.graph.gui.utils.LayoutEntry;
  * 
  * @author Gabor Jenei
  */
-public class Layouts {
+public final class Layouts {
 
 	/**
 	 * layout button for ISOM layout <b><font color="red">It must be used

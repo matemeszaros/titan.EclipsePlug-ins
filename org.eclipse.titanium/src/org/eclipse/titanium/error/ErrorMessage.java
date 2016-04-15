@@ -20,7 +20,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  * @author Gabor
  * 
  */
-public class ErrorMessage {
+public final class ErrorMessage {
 	
 	public static final String LOG_ENTRY_NOTE = " (see error log for further information)";
 	

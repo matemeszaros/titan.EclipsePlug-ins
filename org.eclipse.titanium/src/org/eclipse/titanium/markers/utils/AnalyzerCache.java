@@ -16,7 +16,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
 import org.eclipse.titanium.preferences.ProblemTypePreference;
 import org.eclipse.titanium.preferences.pages.MarkersPreferencePage;
 
-public class AnalyzerCache {
+public final class AnalyzerCache {
 	/**
 	 * Private constructor.
 	 * */

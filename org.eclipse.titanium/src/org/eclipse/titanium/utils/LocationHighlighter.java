@@ -21,7 +21,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 /**
  * Helper class: helps in converting a location object into an open editor, where the location is highlighted. 
  **/
-public class LocationHighlighter {
+public final class LocationHighlighter {
 
 	private LocationHighlighter() {
 		//private constructor to disable instantiation

@@ -15,7 +15,7 @@ import java.awt.Color;
  * 
  * @author Gabor Jenei
  */
-public class NodeColours {
+public final class NodeColours {
 	public static final Color LIGHT_GREEN = new Color(137, 186, 23);
 	public static final Color DARK_GREEN = new Color(0, 123, 120);
 	public static final Color LIGHT_YELLOW = new Color(250, 187, 0);

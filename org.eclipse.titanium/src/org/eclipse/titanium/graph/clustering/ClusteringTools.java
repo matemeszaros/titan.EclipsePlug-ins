@@ -32,7 +32,7 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  * 
  * @author Gobor Daniel
  */
-public class ClusteringTools {
+public final class ClusteringTools {
 
 	private static List<String> prefixes = createPrefix();
 	
