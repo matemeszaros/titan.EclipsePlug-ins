@@ -23,8 +23,8 @@ import org.eclipse.titanium.Activator;
  * */
 public final class SWTResourceManager {
 
-	private static Map<ImageDescriptor, Image> imageCache = new ConcurrentHashMap<ImageDescriptor, Image>();
-	private static Map<RGB, Color> m_colorMap = new HashMap<RGB, Color>();
+	private static final Map<ImageDescriptor, Image> IMAGE_CACHE = new ConcurrentHashMap<ImageDescriptor, Image>();
+	private static final Map<RGB, Color> COLOR_MAP = new HashMap<RGB, Color>();
 
 	private SWTResourceManager() {
 		// disabled constructor
@@ -38,11 +38,11 @@ public final class SWTResourceManager {
 	 * @return the {@link Color} matching the RGB value
 	 */
 	public static Color getColor(final RGB rgb) {
-		Color color = m_colorMap.get(rgb);
+		Color color = COLOR_MAP.get(rgb);
 		if (color == null) {
 			final Display display = Display.getCurrent();
 			color = new Color(display, rgb);
-			m_colorMap.put(rgb, color);
+			COLOR_MAP.put(rgb, color);
 		}
 		return color;
 	}
@@ -69,12 +69,12 @@ public final class SWTResourceManager {
 		if (descriptor == null) {
 			return null;
 		}
-		if (imageCache.containsKey(descriptor)) {
-			return imageCache.get(descriptor);
+		if (IMAGE_CACHE.containsKey(descriptor)) {
+			return IMAGE_CACHE.get(descriptor);
 		}
 
 		final Image image = descriptor.createImage();
-		imageCache.put(descriptor, image);
+		IMAGE_CACHE.put(descriptor, image);
 		return image;
 	}
 }

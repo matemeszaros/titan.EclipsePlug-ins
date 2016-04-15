@@ -92,14 +92,14 @@ public class SimpleRiskFieldEditor implements IRiskFieldEditor {
 
 	@Override
 	public void load() {
-		do_load(false);
+		doLoad(false);
 		old = RiskMethod.myMethod(method.getSelectionIndex());
 		checkValid();
 	}
 
 	@Override
 	public void loadDefault() {
-		do_load(true);
+		doLoad(true);
 		old = RiskMethod.myMethod(method.getSelectionIndex());
 		checkValid();
 	}
@@ -134,7 +134,7 @@ public class SimpleRiskFieldEditor implements IRiskFieldEditor {
 		valid = (old != RiskMethod.NO_LOW_HIGH || spinners[0].getSelection() <= spinners[1].getSelection());
 	}
 
-	protected void do_load(final boolean toDefault) {
+	private void doLoad(final boolean toDefault) {
 		final RiskMethod m = PreferenceManager.getRiskMethod(owner, toDefault);
 		updateSpinners(m, toDefault);
 		method.select(m.ordinal());

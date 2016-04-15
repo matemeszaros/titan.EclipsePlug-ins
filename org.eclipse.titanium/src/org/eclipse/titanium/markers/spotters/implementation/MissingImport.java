@@ -17,7 +17,7 @@ import org.eclipse.titanium.markers.spotters.BaseModuleCodeSmellSpotter;
 import org.eclipse.titanium.markers.types.CodeSmellType;
 
 public class MissingImport extends BaseModuleCodeSmellSpotter {
-	private static String MISSING_MODULE = "There is no module with name `{0}''";
+	private static final String MISSING_MODULE = "There is no module with name `{0}''";
 
 	public MissingImport() {
 		super(CodeSmellType.MISSING_IMPORT);
