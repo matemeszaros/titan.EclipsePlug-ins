@@ -38,7 +38,7 @@ public class ComponentGraphEditor extends GraphEditor {
 	protected void initWindow() {
 		super.initWindow();
 
-		JRadioButtonMenuItem isom = Layouts.LAYOUT_ISOM.clone();
+		JRadioButtonMenuItem isom = Layouts.LAYOUT_ISOM.newInstance();
 		isom.addActionListener(layoutListener);
 		layoutGroup.add(isom);
 		layoutMenu.add(isom);
@@ -46,13 +46,13 @@ public class ComponentGraphEditor extends GraphEditor {
 		JMenu dagMenu = new JMenu("Directed layouts");
 		layoutMenu.add(dagMenu);
 
-		JRadioButtonMenuItem tdag = Layouts.LAYOUT_TDAG.clone();
+		JRadioButtonMenuItem tdag = Layouts.LAYOUT_TDAG.newInstance();
 		tdag.setSelected(true);
 		tdag.addActionListener(layoutListener);
 		dagMenu.add(tdag);
 		layoutGroup.add(tdag);
 
-		JRadioButtonMenuItem rtdag = Layouts.LAYOUT_RTDAG.clone();
+		JRadioButtonMenuItem rtdag = Layouts.LAYOUT_RTDAG.newInstance();
 		rtdag.addActionListener(layoutListener);
 		dagMenu.add(rtdag);
 		layoutGroup.add(rtdag);

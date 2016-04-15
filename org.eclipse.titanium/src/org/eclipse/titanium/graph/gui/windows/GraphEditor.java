@@ -120,7 +120,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	public GraphEditor() {
 		super();
 		handlers = new HashSet<AbstractHandler>();
-		chosenLayout = Layouts.LAYOUT_TDAG.clone();
+		chosenLayout = Layouts.LAYOUT_TDAG.newInstance();
 		errorHandler = new GUIErrorHandler();
 	}
 
@@ -466,7 +466,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 					}
 					errorHandler.reportException("Error while creating layout", exc);
 				}
-				chosenLayout = layout.clone();
+				chosenLayout = layout.newInstance();
 				monitor.done();
 			}
 		};

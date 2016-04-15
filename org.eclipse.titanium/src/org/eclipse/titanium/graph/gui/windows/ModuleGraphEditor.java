@@ -74,13 +74,13 @@ public class ModuleGraphEditor extends GraphEditor {
 	protected final JMenuItem locationKnotCluster = new JMenuItem("By module location");
 	protected final JMenuItem locationGraphCluster = new JMenuItem("By module location");
 	protected final JMenuItem closeGraphClusters = new JMenuItem("Leave cluster graph");
-	protected final JRadioButtonMenuItem isom = Layouts.LAYOUT_ISOM.clone();
-	protected final JRadioButtonMenuItem kk = Layouts.LAYOUT_KK.clone();
-	protected final JRadioButtonMenuItem fr = Layouts.LAYOUT_FR.clone();
-	protected final JRadioButtonMenuItem spring = Layouts.LAYOUT_SPRING.clone();
-	protected final JRadioButtonMenuItem circle = Layouts.LAYOUT_CIRCLE.clone();
-	protected final JRadioButtonMenuItem tdag = Layouts.LAYOUT_TDAG.clone();
-	protected final JRadioButtonMenuItem rtdag = Layouts.LAYOUT_RTDAG.clone();
+	protected final JRadioButtonMenuItem isom = Layouts.LAYOUT_ISOM.newInstance();
+	protected final JRadioButtonMenuItem kk = Layouts.LAYOUT_KK.newInstance();
+	protected final JRadioButtonMenuItem fr = Layouts.LAYOUT_FR.newInstance();
+	protected final JRadioButtonMenuItem spring = Layouts.LAYOUT_SPRING.newInstance();
+	protected final JRadioButtonMenuItem circle = Layouts.LAYOUT_CIRCLE.newInstance();
+	protected final JRadioButtonMenuItem tdag = Layouts.LAYOUT_TDAG.newInstance();
+	protected final JRadioButtonMenuItem rtdag = Layouts.LAYOUT_RTDAG.newInstance();
 	protected final JMenu metricLayoutMenu = new JMenu("Metric layouts");
 	public static final String ID = "org.eclipse.titanium.graph.editors.ModuleGraphEditor";
 

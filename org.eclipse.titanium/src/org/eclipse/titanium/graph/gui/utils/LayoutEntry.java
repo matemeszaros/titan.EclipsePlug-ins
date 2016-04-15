@@ -55,8 +55,7 @@ public class LayoutEntry extends JRadioButtonMenuItem {
 	 * In case of <code>static</code> LayoutEntry attributes this method should
 	 * be used in order to have separate event handlers.
 	 */
-	@Override
-	public LayoutEntry clone() {
+	public LayoutEntry newInstance() {
 		return new LayoutEntry(shortName, wholeName);
 	}
 
