@@ -6,8 +6,8 @@ lexer grammar CfgLexer;
 WS:		[ \t\r\n\f]+ -> channel(HIDDEN);
 
 LINE_COMMENT:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 
@@ -44,7 +44,7 @@ PROFILER_SECTION1:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 WS1:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT1:
 (
-	'//' ~[\r\n]* 
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT1:	'/*' .*? '*/' -> channel(HIDDEN);
@@ -70,7 +70,7 @@ STRINGOP1:			'&'  (('='))?;
 fragment FR_NUMBER1:[0-9];
 FLOAT1:
 (
-	FR_NUMBER1+ 
+	FR_NUMBER1+
 	(
 		'.' FR_NUMBER1+ (('E' | 'e') ('+' | '-')? FR_NUMBER1+)?
 	)
@@ -101,8 +101,7 @@ MACRO1:
 (
 	'$' FR_TTCN3IDENTIFIER1
 |	'$' '{' (WS1)? FR_TTCN3IDENTIFIER1 (WS1)? '}'
-)
-;
+);
 CSTR1: 					'charstring';
 MACRO_EXP_CSTR1:		'$' '{' (WS1)? FR_TTCN3IDENTIFIER1 (WS1)? ',' (WS1)? CSTR1 (WS1)? '}';
 STRING1:				'"' .*? '"';
@@ -126,8 +125,8 @@ PROFILER_SECTION2:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS2:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT2:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT2:	'/*' .*? '*/' -> channel(HIDDEN);
@@ -151,8 +150,8 @@ PROFILER_SECTION3:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS3:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT3:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT3:		'/*' .*? '*/' -> channel(HIDDEN);
@@ -161,8 +160,8 @@ fragment LETTER3:	[A-Z|a-z];
 fragment NUMBER3:	[0-9];
 fragment TTCN3IDENTIFIER3:	LETTER3 (LETTER3 | NUMBER3 | '_')*;
 TEST3:	TTCN3IDENTIFIER3 ('.' (TTCN3IDENTIFIER3 | '*'))?;
- 
-//ordered include section 
+
+//ordered include section
 mode ORDERED_INCLUDE_SECTION_MODE;
 MAIN_CONTROLLER4:				'[MAIN_CONTROLLER]' -> type(MAIN_CONTROLLER_SECTION),mode(MAIN_CONTROLLER_SECTION_MODE);
 INCLUDE_SECTION4:				'[INCLUDE]' -> type(INCLUDE_SECTION),mode(INCLUDE_SECTION_MODE);
@@ -179,13 +178,13 @@ PROFILER_SECTION4:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS4:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT4:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT4:	'/*' .*? '*/' -> channel(HIDDEN);
 STRING4:		'"' .*? '"';
- 
+
 // define section
 mode DEFINE_SECTION_MODE;
 MAIN_CONTROLLER5:				'[MAIN_CONTROLLER]' -> type(MAIN_CONTROLLER_SECTION),mode(MAIN_CONTROLLER_SECTION_MODE);
@@ -203,8 +202,8 @@ PROFILER_SECTION5:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS5:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT5:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT5:	'/*' .*? '*/' -> channel(HIDDEN);
@@ -246,8 +245,7 @@ STRING5:
 	|	~( '\\' | '"' )
 	)*
 	'\\"'
-)
-;
+);
 
 ID5:				'identifier';
 MACRO_ID5:			'$' '{' (WS5)? FR_TTCN3IDENTIFIER5 (WS5)? ',' (WS5)?  ID5 (WS5)? '}';
@@ -271,8 +269,7 @@ MACRO5:
 (
 	'$' FR_TTCN3IDENTIFIER5
 |	'$' '{' (WS5)? FR_TTCN3IDENTIFIER5 (WS5)? '}'
-)
-;
+);
 
 
 //external command section
@@ -292,8 +289,8 @@ PROFILER_SECTION6:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS6:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT6:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT6:		'/*' .*? '*/' -> channel(HIDDEN);
@@ -326,8 +323,8 @@ PROFILER_SECTION7:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS7:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT7:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 fragment FR_LETTER7:	[A-Za-z];
@@ -353,7 +350,7 @@ SYSTEM7:			'system';
 fragment ESCAPE7 :	'\\' (  '\\' | '\'' | '"' | '?' | 'a' | 'b' | 'f' | 'n' | 'r' | 't' | 'v' );
 STRING7:
 '"'
-(  
+(
 	ESCAPE5
 |	~('"' | '\n' | '\r')
 |	'\n'
@@ -367,8 +364,7 @@ MACRO7:
 (
 	'$' FR_TTCN3IDENTIFIER7
 |	'$' '{' (WS7)? FR_TTCN3IDENTIFIER7 (WS7)? '}'
-)
-;
+);
 ID7: 'identifier';
 INT7: 'integer';
 CSTR7: 'charstring';
@@ -393,8 +389,8 @@ PROFILER_SECTION8:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS8:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT8:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT8:		'/*' .*? '*/' -> channel(HIDDEN);
@@ -416,8 +412,7 @@ FLOAT8:
 	)
 |	'.' FR_NUMBER8+ (('E' | 'e') ('+' | '-')? FR_NUMBER8+)?
 |	FR_NUMBER8+ ('E' | 'e') ('+' | '-')? FR_NUMBER8+
-)
-;
+);
 fragment FR_HOSTNAME8:
 (
 	'A'..'Z' | 'a'..'z' | '0'..'9' | ':')
@@ -450,8 +445,8 @@ PROFILER_SECTION9:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTIO
 
 WS9:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT9:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT9:		'/*' .*? '*/' -> channel(HIDDEN);
@@ -524,15 +519,15 @@ FLOAT9:
 |	FR_NUMBER9+ ('E' | 'e') ('+' | '-')? FR_NUMBER9+
 )
 ;
-BIN9:				[01];				
+BIN9:				[01];
 BITSTRING9:			'\'' (BIN9)* '\'' 'B';
 BS9:				'bitstring';
 MACRO_BSTR9:		'$' '{' (WS9)? FR_TTCN3IDENTIFIER9 (WS9)? ',' (WS9)? BS9 (WS9)? '}';
-HEX9:				[0-9A-Fa-f];			
+HEX9:				[0-9A-Fa-f];
 HEXSTRING9:			'\'' (HEX9)* '\'' 'H';
 HS9:				'hexstring';
 MACRO_HSTR9:		'$' '{' (WS9)? FR_TTCN3IDENTIFIER9 (WS9)? ',' (WS9)? HS9 (WS9)? '}';
-OCT9:				HEX9 HEX9;			
+OCT9:				HEX9 HEX9;
 OCTETSTRING9:		'\'' (OCT9)* '\'' 'O';
 OS9:				'octetstring';
 MACRO_OSTR9:		'$' '{' (WS9)? FR_TTCN3IDENTIFIER9 (WS9)? ',' (WS9)? OS9 (WS9)? '}';
@@ -553,7 +548,7 @@ MACRO9:
 //STRING9:			'"' .*? '"';
 STRING9:
 '"'
-(  
+(
 	ESCAPE9
 |	~('"' | '\n' | '\r')
 |	'\n'
@@ -580,8 +575,8 @@ PROFILER_SECTION10:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTI
 
 WS10:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT10:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT10:		'/*' .*? '*/' -> channel(HIDDEN);
@@ -653,8 +648,8 @@ PROFILER_SECTION11:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTI
 
 WS11:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT11:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT11:		'/*' .*? '*/' -> channel(HIDDEN);
@@ -706,7 +701,7 @@ USER_UNQUALIFIED: 'USER_UNQUALIFIED'; VERDICTOP_FINAL: 'VERDICTOP_FINAL';
 VERDICTOP_GETVERDICT: 'VERDICTOP_GETVERDICT'; VERDICTOP_SETVERDICT: 'VERDICTOP_SETVERDICT';
 VERDICTOP_UNQUALIFIED: 'VERDICTOP_UNQUALIFIED'; WARNING_UNQUALIFIED: 'WARNING_UNQUALIFIED';
 
-COMPACT: 'Compact' | 'compact';  
+COMPACT: 'Compact' | 'compact';
 DETAILED: 'Detailed' | 'detailed';
 SUBCATEGORIES: 'SubCategories' | 'Subcategories' | 'subCategories' | 'subcategories';
 MTCKeyword: 'mtc';  SYSTEMKeyword: 'system';
@@ -803,8 +798,8 @@ PROFILER_SECTION12:				'[PROFILER]'-> type(PROFILER_SECTION),mode(PROFILER_SECTI
 
 WS12:	[ \t\r\n\f]+ -> channel(HIDDEN);
 LINE_COMMENT12:
-(	
-	'//' ~[\r\n]* 
+(
+	'//' ~[\r\n]*
 |	'#' ~[\r\n]*
 ) -> channel(HIDDEN);
 BLOCK_COMMENT12:		'/*' .*? '*/' -> channel(HIDDEN);
