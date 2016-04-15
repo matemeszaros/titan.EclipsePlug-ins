@@ -31,5 +31,6 @@ abstract class BaseMetric<ENTITY, METRIC extends IMetricEnum> implements IMetric
 
 	@Override
 	public void init(MetricData data) {
+		//intentionally left empty
 	}
 }
