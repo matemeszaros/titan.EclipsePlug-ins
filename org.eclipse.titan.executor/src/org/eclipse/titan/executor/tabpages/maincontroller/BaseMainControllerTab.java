@@ -76,22 +76,22 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationTab {
 	protected static final String EMPTY = "";
 	private static final String NAME = "Basic Main Controller options";
-	private static final String PROJECT = "Project:";
+	private static final String PROJECT = "Project (REQUIRED):";
 	private static final String PROJECT_TOOLTIP =
-			"This field is optional.\n" +
-					"When an existing project is select and the Designer plug-in is also present the working directory " +
+			"This field is required.\n" +
+					"When an existing project is selected and the Designer plug-in is also present the working directory " +
 					"and executable fields are filled out automatically\n  with the values set as project properties.";
 	private static final String WORKING_DIR = "Working directory:";
 	private static final String WORKING_DIR_REQUIRED = "Working directory (REQUIRED):";
 	private static final String WORKING_DIR_TOOLTIP = "The directory the main controller should be started from.";
-	private static final String EXECUTABLE = "Executable (OPTIONAL):";
+	private static final String EXECUTABLE = "Executable (REQUIRED):";
 	private static final String EXECUTABLE_TOOLTIP =
-			"This field is optional.\nThe executable file used to make the creation and validation of testsets possible.";
+			"This field is required.\nThe executable file used to make the creation and validation of testsets possible.";
 	private static final String EXECUTABLE_REQUIRED = "Executable (REQUIRED):";
 	private static final String EXECUTABLE_REQUIRED_TOOLTIP =
 			"The executable file used to execute testcases and to make the creation and validation of testsets possible.";
-	private static final String CONFIGFILE = "Configuration file (OPTIONAL):";
-	private static final String CONFIGFILE_TOOLTIP = "This field is optional.\n" +
+	private static final String CONFIGFILE = "Configuration file (REQUIRED):";
+	private static final String CONFIGFILE_TOOLTIP = "This field is required.\n" +
 			"The runtime configuration file used to describe the runtime behaviour of the executable test program.";
 	private static final String BROWSE_WORKSPACE = "Browse Workspace..";
 
@@ -711,6 +711,7 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 
 	@Override
 	public boolean isValid(ILaunchConfiguration launchConfig) {
+		
 		if (!EMPTY.equals(projectNameText.getText()) && !projectIsValid) {
 			setErrorMessage("The name of the project is not valid.");
 			return false;
@@ -723,15 +724,19 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 			setErrorMessage("The working directory is not valid.");
 			return false;
 		}
-
-		if (!EMPTY.equals(configurationFileText.getStringValue()) && !configurationFileIsValid) {
+		
+		if(EMPTY.equals(configurationFileText.getStringValue())) {
+			setErrorMessage("The configuration file must be set.");
+			return false;
+		} else if (!configurationFileIsValid) {
 			if (null != exceptions && !exceptions.isEmpty()) {
 				setErrorMessage("Problem in config file: " + exceptions.get(0).toString());
 			} else {
 				setErrorMessage("The configurationfile is not valid.");
 			}
+			return false;
 		}
-
+		setErrorMessage(null);
 		return true;
 	}
 

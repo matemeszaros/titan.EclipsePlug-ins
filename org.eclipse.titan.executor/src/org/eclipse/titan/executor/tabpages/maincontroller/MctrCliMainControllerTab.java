@@ -52,7 +52,6 @@ public final class MctrCliMainControllerTab extends BaseMainControllerTab {
 			setErrorMessage("The executable is not actually executable. Please set an executable generated for parallel mode execution as the executable.");
 			return false;
 		}
-		setErrorMessage(null);
 		return true;
 	}
 
