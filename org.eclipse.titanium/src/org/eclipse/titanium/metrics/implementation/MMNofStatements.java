@@ -25,7 +25,7 @@ public class MMNofStatements extends BaseModuleMetric {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
 				count.increase(((StatementBlock) node).getSize());
 			}
@@ -38,7 +38,7 @@ public class MMNofStatements extends BaseModuleMetric {
 	}
 
 	@Override
-	public Number measure(MetricData data, Module module) {
+	public Number measure(final MetricData data, final Module module) {
 		final Counter statements = new Counter(0);
 		final StatementCounterVisitor visitor = new StatementCounterVisitor(statements);
 		module.accept(visitor);

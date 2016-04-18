@@ -27,7 +27,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
  * 
  */
 public abstract class BaseModuleCodeSmellSpotter extends BaseCodeSmellSpotter {
-	public BaseModuleCodeSmellSpotter(CodeSmellType type) {
+	public BaseModuleCodeSmellSpotter(final CodeSmellType type) {
 		super(type);
 	}
 
@@ -41,9 +41,10 @@ public abstract class BaseModuleCodeSmellSpotter extends BaseCodeSmellSpotter {
 	 *            the node to process.
 	 * @return the list of found problems
 	 */
-	public final List<Marker> checkNode(IVisitableNode node) {
-		Problems problems = new Problems();
+	public final List<Marker> checkNode(final IVisitableNode node) {
+		final Problems problems = new Problems();
 		process(node, problems);
+
 		return problems.getMarkers();
 	}
 

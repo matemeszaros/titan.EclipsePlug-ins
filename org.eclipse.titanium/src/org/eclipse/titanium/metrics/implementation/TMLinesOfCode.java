@@ -23,8 +23,8 @@ public class TMLinesOfCode extends BaseTestcaseMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Testcase testcase) {
-		final Counter c = new Counter(0);
-		testcase.accept(new CounterVisitor(c) {
+		final Counter count = new Counter(0);
+		testcase.accept(new CounterVisitor(count) {
 			@Override
 			public int visit(final IVisitableNode node) {
 				if (node instanceof Def_Testcase) {
@@ -36,6 +36,6 @@ public class TMLinesOfCode extends BaseTestcaseMetric {
 				return V_SKIP;
 			}
 		});
-		return c.val() - testcase.getLocation().getLine() + 1;
+		return count.val() - testcase.getLocation().getLine() + 1;
 	}
 }

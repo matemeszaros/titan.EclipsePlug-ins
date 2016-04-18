@@ -25,8 +25,8 @@ public class FMDefaultActivations extends BaseFunctionMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Function function) {
-		final Counter c = new Counter(0);
-		function.accept(new CounterVisitor(c) {
+		final Counter count = new Counter(0);
+		function.accept(new CounterVisitor(count) {
 			@Override
 			public int visit(final IVisitableNode node) {
 				if (node instanceof Activate_Statement) {
@@ -42,6 +42,6 @@ public class FMDefaultActivations extends BaseFunctionMetric {
 				return V_CONTINUE;
 			}
 		});
-		return c.val();
+		return count.val();
 	}
 }

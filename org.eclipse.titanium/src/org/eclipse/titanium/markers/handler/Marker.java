@@ -47,7 +47,7 @@ public class Marker {
 	 * @param problemType
 	 *            the type of the code smell
 	 */
-	public Marker(Location loc, String message, int severity, CodeSmellType problemType) {
+	public Marker(final Location loc, final String message, final int severity, final CodeSmellType problemType) {
 		this.loc = loc;
 		this.message = message;
 		this.severity = severity;
@@ -68,7 +68,7 @@ public class Marker {
 	 * @param problemType
 	 *            the type of the code smell
 	 */
-	public Marker(IResource res, String message, int severity, CodeSmellType problemType) {
+	public Marker(final IResource res, final String message, final int severity, final CodeSmellType problemType) {
 		this.loc = new Location(res);
 		this.message = message;
 		this.severity = severity;

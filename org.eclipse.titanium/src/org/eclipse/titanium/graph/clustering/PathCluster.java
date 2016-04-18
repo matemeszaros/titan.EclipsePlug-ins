@@ -39,7 +39,7 @@ public abstract class PathCluster extends BaseCluster {
 	 * @param project
 	 *            The project the graph belongs to
 	 */
-	public PathCluster(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, IProject project) {
+	public PathCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, final IProject project) {
 		moduleGraph = graph;
 		this.project = project;
 		successful = true;
@@ -52,8 +52,8 @@ public abstract class PathCluster extends BaseCluster {
 	}
 
 	@Override
-	public boolean createClusters(IProgressMonitor monitor) {
-		IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
+	public boolean createClusters(final IProgressMonitor monitor) {
+		final IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
 		progress.beginTask("Creating clusters", IProgressMonitor.UNKNOWN);
 		init();
 		try {
@@ -116,7 +116,7 @@ public abstract class PathCluster extends BaseCluster {
 	 * @param cluster
 	 *            The cluster
 	 */
-	protected void addNodeToCluster(String name, Set<NodeDescriptor> cluster) {
+	protected void addNodeToCluster(final String name, final Set<NodeDescriptor> cluster) {
 		final NodeDescriptor v = mapNameNode.get(name);
 		cluster.add(v);
 		v.setCluster(cluster);

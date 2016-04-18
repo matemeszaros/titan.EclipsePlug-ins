@@ -55,7 +55,7 @@ public class IsBoundWithoutElse extends BaseModuleCodeSmellSpotter {
 	}
 		
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof If_Statement)) {
 			return;
 		}
@@ -94,16 +94,16 @@ public class IsBoundWithoutElse extends BaseModuleCodeSmellSpotter {
 		private final Problems problems;
 		private boolean insideNotExpr = false;	//true if last visited node was a NotExpression
 		
-		public IfConditionVisitor(Problems problems) {
+		public IfConditionVisitor(final Problems problems) {
 			this(0, problems);
 		}
-		private IfConditionVisitor(int negationsNumber, Problems problems) {
+		private IfConditionVisitor(final int negationsNumber, final Problems problems) {
 			this.negationsNumber = negationsNumber;
 			this.problems = problems;
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			//do not enter another if statements: it would cause duplicate visits
 			if (node instanceof If_Statement) {
 				return V_SKIP;

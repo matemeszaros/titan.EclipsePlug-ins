@@ -78,7 +78,7 @@ public class GUIErrorHandler implements ErrorHandler {
 	 */
 	@Override
 	public void logError(String message) {
-		collectedMessage.append(message + "\n");
+		collectedMessage.append(message).append('\n');
 	}
 
 	/**

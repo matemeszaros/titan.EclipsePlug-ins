@@ -24,7 +24,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
  * 
  */
 public abstract class BaseProjectCodeSmellSpotter extends BaseCodeSmellSpotter {
-	public BaseProjectCodeSmellSpotter(CodeSmellType type) {
+	public BaseProjectCodeSmellSpotter(final CodeSmellType type) {
 		super(type);
 	}
 
@@ -36,9 +36,10 @@ public abstract class BaseProjectCodeSmellSpotter extends BaseCodeSmellSpotter {
 	 * @param project
 	 *            the project to check with your code smell
 	 */
-	public final List<Marker> checkProject(IProject project) {
-		Problems problems = new Problems();
+	public final List<Marker> checkProject(final IProject project) {
+		final Problems problems = new Problems();
 		process(project, problems);
+
 		return problems.getMarkers();
 	}
 

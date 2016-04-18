@@ -26,7 +26,7 @@ public class ReadOnlyOutPar extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof FormalParameter) {
 			FormalParameter s = (FormalParameter) node;
 			if (s.getMyParameterList().getMyDefinition() instanceof Def_Type) {

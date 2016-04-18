@@ -28,7 +28,7 @@ import org.eclipse.titanium.markers.export.XlsProblemExporter;
 public class ExportAllCodeSmells extends InformationExporter {
 
 	@Override
-	protected boolean checkParameters(String[] args) {
+	protected boolean checkParameters(final String[] args) {
 		if (args.length == 0 || args.length > 2) {
 			System.out.println("This application takes as parameter the location of the resulting .XLS files "
 					+ "and optionally the date to be inserted into the file.");
@@ -39,7 +39,7 @@ public class ExportAllCodeSmells extends InformationExporter {
 	}
 
 	@Override
-	protected void exportInformationForProject(final String[] args, final IProject project, IProgressMonitor monitor) {
+	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
 		BaseProblemExporter exporter = new XlsProblemExporter(project);
 		try {
 			Date date;

@@ -11,7 +11,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.titanium.metrics.ProjectMetric;
 
 abstract class BaseProjectMetric extends BaseMetric<IProject, ProjectMetric> {
-	BaseProjectMetric(ProjectMetric metric) {
+	BaseProjectMetric(final ProjectMetric metric) {
 		super(metric);
 	}
 }

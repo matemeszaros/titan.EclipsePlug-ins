@@ -50,8 +50,7 @@ public class RegexpCluster extends BaseCluster {
 	 * @param graph
 	 *            The graph to be partitioned
 	 */
-	public RegexpCluster(
-			DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
+	public RegexpCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
 		moduleGraph = graph;
 		successful = true;
 
@@ -83,9 +82,9 @@ public class RegexpCluster extends BaseCluster {
 		for (String item : splittedList) {
 			try {
 				final Pattern pattern = Pattern.compile(item);
-				Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
+				final Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
 				mapPatternCluster.put(pattern.toString(), cluster);
-				Matcher matcher = pattern.matcher("");
+				final Matcher matcher = pattern.matcher("");
 				matchers.add(matcher);
 			} catch (PatternSyntaxException e) {
 				final String errorString = "At least one of the regular expressions used is not correct.\n"
@@ -109,13 +108,13 @@ public class RegexpCluster extends BaseCluster {
 	 * @param progress
 	 *            A progress monitor
 	 */
-	private void collectMatchingNodes(IProgressMonitor progress) {
+	private void collectMatchingNodes(final IProgressMonitor progress) {
 		mapNodeMatching = new HashMap<NodeDescriptor, List<String>>();
 		for (NodeDescriptor v : moduleGraph.getVertices()) {
 			final String name = v.getDisplayName();
 			progress.subTask("Checking " + name);
 
-			List<String> matching = new LinkedList<String>();
+			final List<String> matching = new LinkedList<String>();
 			for (Matcher matcher : matchers) {
 				matcher.reset(name);
 				if (matcher.matches()) {
@@ -141,27 +140,28 @@ public class RegexpCluster extends BaseCluster {
 	 * @return True if a node has more than one matching pattern.
 	 */
 	private boolean fillClusters() {
-		Set<NodeDescriptor> missing = new HashSet<NodeDescriptor>();
+		final Set<NodeDescriptor> missing = new HashSet<NodeDescriptor>();
 		mapPatternCluster.put("missing", missing);
+
 		boolean moreThanOneMatch = false;
 		for (NodeDescriptor v : moduleGraph.getVertices()) {
-			List<String> matching = mapNodeMatching.get(v);
+			final List<String> matching = mapNodeMatching.get(v);
 			if (matching.isEmpty()) {
 				missing.add(v);
 				v.setCluster(missing);
 			} else if (matching.size() == 1) {
-				Set<NodeDescriptor> cluster = mapPatternCluster.get(matching
+				final Set<NodeDescriptor> cluster = mapPatternCluster.get(matching
 						.get(0));
 				cluster.add(v);
 				v.setCluster(cluster);
 			} else {
 				moreThanOneMatch = true;
-				StringBuilder message = new StringBuilder(msg);
+				final StringBuilder message = new StringBuilder(msg);
 				message.append(v.getDisplayName()).append(":\t");
 				for (String pattern : matching) {
 					message.append("   ").append(pattern);
 				}
-				message.append("\n");
+				message.append('\n');
 				msg = message.toString();
 			}
 		}
@@ -184,8 +184,8 @@ public class RegexpCluster extends BaseCluster {
 	}
 
 	@Override
-	public boolean createClusters(IProgressMonitor monitor) {
-		IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor()
+	public boolean createClusters(final IProgressMonitor monitor) {
+		final IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor()
 				: monitor;
 		progress.beginTask("Creating clusters",
 				3 + moduleGraph.getVertexCount());

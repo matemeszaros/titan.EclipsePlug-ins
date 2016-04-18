@@ -21,9 +21,9 @@ public class FMOutEnvy extends BaseFunctionMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Function function) {
-		final Counter c = new Counter(0);
+		final Counter count = new Counter(0);
 		final Module myModule = function.getMyScope().getModuleScope();
-		function.accept(new ExternalFeatureEnvyDetector(myModule, c));
-		return c.val();
+		function.accept(new ExternalFeatureEnvyDetector(myModule, count));
+		return count.val();
 	}
 }

@@ -39,7 +39,7 @@ public class ConsoleErrorHandler implements ErrorHandler {
 	 * @param informationStream
 	 *            : The stream of information messages
 	 */
-	public ConsoleErrorHandler(PrintStream errorStream, PrintStream warningStream, PrintStream informationStream) {
+	public ConsoleErrorHandler(final PrintStream errorStream, final PrintStream warningStream, final PrintStream informationStream) {
 		this.errorStream = errorStream;
 		this.warningStream = warningStream;
 		this.informationStream = informationStream;
@@ -47,36 +47,36 @@ public class ConsoleErrorHandler implements ErrorHandler {
 	}
 
 	@Override
-	public void reportException(String context, Exception exception) {
+	public void reportException(final String context, final Exception exception) {
 		errorStream.println("An exception occured, the stack trace is:\n");
 		exception.printStackTrace(errorStream);
 	}
 
 	@Override
-	public void reportErrorMessage(String text) {
+	public void reportErrorMessage(final String text) {
 		errorStream.println(text);
 	}
 
 	@Override
-	public void reportWarning(String text) {
+	public void reportWarning(final String text) {
 		warningStream.println(text);
 	}
 
 	@Override
-	public void reportInformation(String text) {
+	public void reportInformation(final String text) {
 		informationStream.println(text);
 	}
 
 	@Override
-	public void logError(String message) {
+	public void logError(final String message) {
 		collectedMessage.append(message);
 	}
 
 	@Override
-	public void logException(Exception exception) {
+	public void logException(final Exception exception) {
 		collectedMessage.append("Exception:\n" + exception.getMessage() + "\nStack trace:\n");
 		for (StackTraceElement elem : exception.getStackTrace()) {
-			collectedMessage.append(elem.toString() + "\n");
+			collectedMessage.append(elem.toString()).append('\n');
 		}
 	}
 

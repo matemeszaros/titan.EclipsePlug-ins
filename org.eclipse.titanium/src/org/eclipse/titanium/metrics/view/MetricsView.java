@@ -208,7 +208,7 @@ public class MetricsView extends ViewPart {
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
 				// choose the set of metrics to export
-				RiskLevel r = new ExportSetDialog(parent.getDisplay()).open();
+				final RiskLevel r = new ExportSetDialog(parent.getDisplay()).open();
 				if (r == null) {
 					return;
 				}
@@ -242,7 +242,7 @@ public class MetricsView extends ViewPart {
 		inner.setHeaderVisible(true);
 		inner.setLinesVisible(true);
 
-		Map<StatColumn, TreeColumn> columns = new EnumMap<StatColumn, TreeColumn>(StatColumn.class);
+		final Map<StatColumn, TreeColumn> columns = new EnumMap<StatColumn, TreeColumn>(StatColumn.class);
 
 		final TreeColumn names = new TreeColumn(inner, SWT.LEFT);
 		names.setAlignment(SWT.LEFT);
@@ -262,7 +262,7 @@ public class MetricsView extends ViewPart {
 		browser.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(final DoubleClickEvent event) {
-				ISelection selection = event.getSelection();
+				final ISelection selection = event.getSelection();
 				if (!(selection instanceof IStructuredSelection)) {
 					return;
 				}
@@ -271,7 +271,8 @@ public class MetricsView extends ViewPart {
 				if (!(o instanceof IOpenable)) {
 					return;
 				}
-				Location loc = ((IOpenable) o).getLocation();
+
+				final Location loc = ((IOpenable) o).getLocation();
 				LocationHighlighter.jumpToLocation(loc);
 
 			}
@@ -279,7 +280,7 @@ public class MetricsView extends ViewPart {
 	}
 
 	public void setSelectedProject(final IProject project) {
-		String name = project.getName();
+		final String name = project.getName();
 		int found = -1;
 		for (int index = 0; index < projectSelector.getItemCount(); ++index) {
 			if (name.equals(projectSelector.getItem(index))) {

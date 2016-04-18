@@ -30,7 +30,7 @@ public class EdgeDescriptor implements Comparable<EdgeDescriptor>{
 	 * @param weight
 	 *            : The edge weight (can be a floating point or integer number)
 	 */
-	public EdgeDescriptor(String name, Color colour, Number weight) {
+	public EdgeDescriptor(final String name, final Color colour, final Number weight) {
 		edgeName = name;
 		edgeColour = colour;
 		this.weight = weight;
@@ -45,7 +45,7 @@ public class EdgeDescriptor implements Comparable<EdgeDescriptor>{
 	 * @param colour
 	 *            : The edge colour
 	 */
-	public EdgeDescriptor(String name, Color colour) {
+	public EdgeDescriptor(final String name, final Color colour) {
 		this(name, colour, 1);
 	}
 
@@ -56,7 +56,7 @@ public class EdgeDescriptor implements Comparable<EdgeDescriptor>{
 	 * @param name
 	 *            :
 	 */
-	public EdgeDescriptor(String name) {
+	public EdgeDescriptor(final String name) {
 		this(name, Color.black, 1);
 	}
 
@@ -66,7 +66,7 @@ public class EdgeDescriptor implements Comparable<EdgeDescriptor>{
 	 * @param col
 	 *            : The colour to set
 	 */
-	public void setColour(Color col) {
+	public void setColour(final Color col) {
 		edgeColour = col;
 	}
 
@@ -90,7 +90,7 @@ public class EdgeDescriptor implements Comparable<EdgeDescriptor>{
 	 * @param weight
 	 *            : The weight to set
 	 */
-	public void setWeight(Number weight) {
+	public void setWeight(final Number weight) {
 		this.weight = weight;
 	}
 
@@ -121,7 +121,7 @@ public class EdgeDescriptor implements Comparable<EdgeDescriptor>{
 	 *         same module
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == null) {
 			return false;
 		}
@@ -141,7 +141,7 @@ public class EdgeDescriptor implements Comparable<EdgeDescriptor>{
 	}
 
 	@Override
-	public int compareTo(EdgeDescriptor other) {
+	public int compareTo(final EdgeDescriptor other) {
 		return edgeName.compareTo(other.edgeName);
 	}
 

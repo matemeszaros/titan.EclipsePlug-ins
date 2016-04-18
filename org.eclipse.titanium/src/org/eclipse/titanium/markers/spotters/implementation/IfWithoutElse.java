@@ -24,7 +24,7 @@ public class IfWithoutElse extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof If_Statement) {
 			If_Statement s = (If_Statement) node;
 			if (s.getStatementBlock() == null && s.getIfClauses() != null && s.getIfClauses().isExactlyOne()) {

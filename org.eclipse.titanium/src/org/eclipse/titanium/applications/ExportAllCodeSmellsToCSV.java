@@ -25,7 +25,7 @@ import org.eclipse.titanium.markers.export.CsvProblemExporter;
 public class ExportAllCodeSmellsToCSV extends InformationExporter {
 
 	@Override
-	protected boolean checkParameters(String[] args) {
+	protected boolean checkParameters(final String[] args) {
 		if (args.length != 1) {
 			System.out.println("This application takes as parameter the location of the resulting CSV files.");
 			return false;
@@ -35,7 +35,7 @@ public class ExportAllCodeSmellsToCSV extends InformationExporter {
 	}
 
 	@Override
-	protected void exportInformationForProject(String[] args, IProject project, IProgressMonitor monitor) {
+	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
 		BaseProblemExporter exporter = new CsvProblemExporter(project);
 		try {
 			exporter.exportMarkers(monitor, args[0] + project.getName(), Calendar.getInstance().getTime());

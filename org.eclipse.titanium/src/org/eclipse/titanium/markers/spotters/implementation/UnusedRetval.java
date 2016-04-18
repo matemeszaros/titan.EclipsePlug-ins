@@ -29,7 +29,7 @@ public class UnusedRetval extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Unknown_Instance_Statement) {
 			Unknown_Instance_Statement u = (Unknown_Instance_Statement) node;
 			Statement s = u.getRealStatement();

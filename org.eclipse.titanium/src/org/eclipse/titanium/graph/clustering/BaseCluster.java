@@ -96,8 +96,8 @@ public abstract class BaseCluster {
 	 *            True if the nodes will be grouped, false if the cluster graph
 	 *            will be drawn
 	 */
-	public void run(IProgressMonitor monitor, boolean group) {
-		IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
+	public void run(final IProgressMonitor monitor, final boolean group) {
+		final IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
 
 		try {
 
@@ -134,7 +134,7 @@ public abstract class BaseCluster {
 	 * @param msg
 	 *            The string to display in an error message.
 	 */
-	protected void setErronous(String msg) {
+	protected void setErronous(final String msg) {
 		successful = false;
 		this.msg = msg;
 	}

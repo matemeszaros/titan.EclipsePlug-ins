@@ -20,7 +20,7 @@ import org.eclipse.titanium.metrics.MetricData;
 abstract class BaseMetric<ENTITY, METRIC extends IMetricEnum> implements IMetric<ENTITY, METRIC> {
 	private final METRIC metric;
 
-	BaseMetric(METRIC metric) {
+	BaseMetric(final METRIC metric) {
 		this.metric = metric;
 	}
 
@@ -30,7 +30,7 @@ abstract class BaseMetric<ENTITY, METRIC extends IMetricEnum> implements IMetric
 	}
 
 	@Override
-	public void init(MetricData data) {
+	public void init(final MetricData data) {
 		//intentionally left empty
 	}
 }

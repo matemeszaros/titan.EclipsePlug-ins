@@ -75,7 +75,7 @@ public class Shorthand extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Timeout_Statement) {
 			typename = NAME_TIMEOUT;
 		} else if (node instanceof Receive_Port_Statement) {
@@ -109,7 +109,7 @@ public class Shorthand extends BaseModuleCodeSmellSpotter {
 		check(s, problems);
 	}
 	
-	protected void check(Statement s, Problems problems) {
+	protected void check(final Statement s, final Problems problems) {
 		if (s == null) {
 			return;
 		}

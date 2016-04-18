@@ -34,7 +34,7 @@ public class ModuleName {
 		@Override
 		public abstract List<Class<? extends IVisitableNode>> getStartNode();
 
-		protected void check(final Identifier identifier, final Identifier moduleID, final String description, Problems problems) {
+		protected void check(final Identifier identifier, final Identifier moduleID, final String description, final Problems problems) {
 			String displayName = identifier.getDisplayName();
 			if (displayName.contains(moduleID.getDisplayName())) {
 				String msg = MessageFormat.format(REPORT, description, displayName, moduleID.getDisplayName());
@@ -46,7 +46,7 @@ public class ModuleName {
 	public static class InDef extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if ((node instanceof Definition) && !(node instanceof FormalParameter)) {
 				Definition s = (Definition) node;
 				Identifier identifier = s.getIdentifier();
@@ -66,7 +66,7 @@ public class ModuleName {
 	public static class InGroup extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Group) {
 				Group s = (Group) node;
 				Identifier identifier = s.getIdentifier();

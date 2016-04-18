@@ -21,9 +21,9 @@ public class TMInEnvy extends BaseTestcaseMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Testcase testcase) {
-		final Counter c = new Counter(0);
+		final Counter count = new Counter(0);
 		final Module myModule = testcase.getMyScope().getModuleScope();
-		testcase.accept(new InternalFeatureEnvyDetector(myModule, c));
-		return c.val();
+		testcase.accept(new InternalFeatureEnvyDetector(myModule, count));
+		return count.val();
 	}
 }

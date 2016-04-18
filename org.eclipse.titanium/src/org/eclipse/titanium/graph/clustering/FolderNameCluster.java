@@ -30,12 +30,12 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  */
 public class FolderNameCluster extends PathCluster {
 
-	public FolderNameCluster(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, IProject project) {
+	public FolderNameCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, final IProject project) {
 		super(graph, project);
 	}
 
 	@Override
-	protected void checkProject(IProgressMonitor progress) throws CoreException {
+	protected void checkProject(final IProgressMonitor progress) throws CoreException {
 		progress.subTask("Checking " + project.getName());
 		final IResource[] contents = project.members();
 		final Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
@@ -56,7 +56,7 @@ public class FolderNameCluster extends PathCluster {
 	 * @param cluster
 	 *            The cluster to add the file to
 	 */
-	protected void checkFile(IFile file, Set<NodeDescriptor> cluster) {
+	protected void checkFile(final IFile file, final Set<NodeDescriptor> cluster) {
 		final String name = parser.containedModule(file);
 		if (name == null) {
 			return;
@@ -73,7 +73,7 @@ public class FolderNameCluster extends PathCluster {
 	 *            A progress monitor
 	 * @throws CoreException
 	 */
-	protected void checkFolder(IFolder folder, IProgressMonitor monitor) throws CoreException {
+	protected void checkFolder(final IFolder folder, final IProgressMonitor monitor) throws CoreException {
 		monitor.subTask("Checking " + folder.getName());
 		final IResource[] contents = folder.members();
 		final Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
@@ -95,7 +95,7 @@ public class FolderNameCluster extends PathCluster {
 	 * @param folder
 	 *            The folder
 	 */
-	protected void addNewCluster(Set<NodeDescriptor> cluster, IFolder folder) {
+	protected void addNewCluster(final Set<NodeDescriptor> cluster, final IFolder folder) {
 		if (!cluster.isEmpty()) {
 			clusters.add(cluster);
 			mapNameCluster.put(folder.getProjectRelativePath().toOSString(), cluster);
@@ -116,7 +116,7 @@ public class FolderNameCluster extends PathCluster {
 	 *            The progress monitor
 	 * @throws CoreException
 	 */
-	protected void check(IResource content, Set<NodeDescriptor> cluster, IProgressMonitor monitor) throws CoreException {
+	protected void check(final IResource content, final Set<NodeDescriptor> cluster, final IProgressMonitor monitor) throws CoreException {
 		switch (content.getType()) {
 		case IResource.FILE:
 			checkFile((IFile) content, cluster);

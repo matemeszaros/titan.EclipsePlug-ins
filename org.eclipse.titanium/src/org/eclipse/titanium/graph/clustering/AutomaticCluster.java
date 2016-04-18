@@ -79,9 +79,8 @@ public class AutomaticCluster extends BaseCluster {
 	 * @param graph
 	 *            The module graph.
 	 */
-	public AutomaticCluster(
-			DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph,
-			IProject project) {
+	public AutomaticCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph,
+			final IProject project) {
 		this.project = project;
 		successful = true;
 		moduleGraph = graph;
@@ -125,7 +124,7 @@ public class AutomaticCluster extends BaseCluster {
 		clusternum = 0;
 
 		// remove unneeded clusters, create indices for the clusters
-		Set<Set<NodeDescriptor>> clustersToRemove = new HashSet<Set<NodeDescriptor>>();
+		final Set<Set<NodeDescriptor>> clustersToRemove = new HashSet<Set<NodeDescriptor>>();
 		for (Set<NodeDescriptor> cluster : clustersToCheck) {
 			if (cluster == null || cluster.isEmpty()) {
 				clustersToRemove.add(cluster);
@@ -146,17 +145,17 @@ public class AutomaticCluster extends BaseCluster {
 
 		// create matrix of components
 		for (int i : indices) {
-			Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+			final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 			for (int j : indices) {
 				map.put(j, 0);
 			}
 			mapBetweenArcs.put(i, map);
 		}
 		for (EdgeDescriptor e : moduleGraph.getEdges()) {
-			NodeDescriptor v = moduleGraph.getSource(e);
-			NodeDescriptor w = moduleGraph.getDest(e);
-			int i = mapClusterIndex.get(v);
-			int j = mapClusterIndex.get(w);
+			final NodeDescriptor v = moduleGraph.getSource(e);
+			final NodeDescriptor w = moduleGraph.getDest(e);
+			final int i = mapClusterIndex.get(v);
+			final int j = mapClusterIndex.get(w);
 			changeCell(i, j, 1);
 		}
 
@@ -173,7 +172,7 @@ public class AutomaticCluster extends BaseCluster {
 	 * @param k
 	 *            The change
 	 */
-	private void changeCell(int i, int j, int k) {
+	private void changeCell(final int i, final int j, final int k) {
 		final int row = i <= j ? i : j;
         final int column = i <= j ? j : i;
 		
@@ -190,7 +189,7 @@ public class AutomaticCluster extends BaseCluster {
 	 * @param k
 	 *            By how much
 	 */
-	private void changeSize(int i, int k) {
+	private void changeSize(final int i, final int k) {
 		int a = size.get(i);
 		a += k;
 		size.put(i, a);
@@ -201,7 +200,7 @@ public class AutomaticCluster extends BaseCluster {
 	 */
 	private Queue<NodeDescriptor> calculatePriorities() {
 		final Map<NodeDescriptor, Integer> priority = new HashMap<NodeDescriptor, Integer>();
-		PriorityQueue<NodeDescriptor> queue = new PriorityQueue<NodeDescriptor>(nodenum, new Comparator<NodeDescriptor>() {
+		final PriorityQueue<NodeDescriptor> queue = new PriorityQueue<NodeDescriptor>(nodenum, new Comparator<NodeDescriptor>() {
 			@Override
 			public int compare(NodeDescriptor v, NodeDescriptor w) {
 				final int priorv = priority.get(v);
@@ -217,7 +216,7 @@ public class AutomaticCluster extends BaseCluster {
 		});
 		
 		for (NodeDescriptor v : moduleGraph.getVertices()) {
-			int prio = calculatePriority(v);
+			final int prio = calculatePriority(v);
 			priority.put(v, prio);
 			queue.offer(v);
 		}
@@ -232,7 +231,7 @@ public class AutomaticCluster extends BaseCluster {
 	 * @param v
 	 *            The node
 	 */
-	private int calculatePriority(NodeDescriptor v) {
+	private int calculatePriority(final NodeDescriptor v) {
 		final int indexv = mapClusterIndex.get(v);
 		int prior = 0;
 		for (NodeDescriptor w : moduleGraph.getNeighbors(v)) {
@@ -256,9 +255,9 @@ public class AutomaticCluster extends BaseCluster {
 	 *            The index of the cluster
 	 * @return The intra-connectivity of the cluster
 	 */
-	private double A(int i) {
+	private double A(final int i) {
 		final double a = mapBetweenArcs.get(i).get(i);
-		int nodes = size.get(i);
+		final int nodes = size.get(i);
 		if (nodes > 1) {
 			return a / (nodes * (nodes));
 		}
@@ -278,7 +277,7 @@ public class AutomaticCluster extends BaseCluster {
 	 *            Second cluster
 	 * @return The inter-connectivity of the clusters
 	 */
-	private double E(int i, int j) {
+	private double E(final int i, final int j) {
 		final double a = mapBetweenArcs.get(i).get(j);
 		return a / (2 * size.get(i) * size.get(j));
 	}
@@ -295,7 +294,7 @@ public class AutomaticCluster extends BaseCluster {
 		int k = 0;
 		int e = 0;
 		if (clusternum == 1) {
-			double edgenum = moduleGraph.getEdgeCount();
+			final double edgenum = moduleGraph.getEdgeCount();
 			return edgenum / (nodenum * (nodenum));
 		}
 		double sumA = 0;
@@ -330,7 +329,7 @@ public class AutomaticCluster extends BaseCluster {
 	 * @param to
 	 *            The index of the cluster
 	 */
-	private void moveNode(NodeDescriptor v, int to) {
+	private void moveNode(final NodeDescriptor v, final int to) {
 		final int from = mapClusterIndex.get(v);
 		if (from == to) {
 			return;
@@ -343,13 +342,13 @@ public class AutomaticCluster extends BaseCluster {
 		}
 		for (EdgeDescriptor e : moduleGraph.getInEdges(v)) {
 			final NodeDescriptor u = moduleGraph.getSource(e);
-			int indexu = mapClusterIndex.get(u);
+			final int indexu = mapClusterIndex.get(u);
 			changeCell(from, indexu, -1);
 			changeCell(to, indexu, 1);
 		}
 		for (EdgeDescriptor e : moduleGraph.getOutEdges(v)) {
 			final NodeDescriptor w = moduleGraph.getDest(e);
-			int indexw = mapClusterIndex.get(w);
+			final int indexw = mapClusterIndex.get(w);
 			changeCell(indexw, from, -1);
 			changeCell(indexw, to, 1);
 		}
@@ -365,8 +364,8 @@ public class AutomaticCluster extends BaseCluster {
 	 *            The node to be moved for better clustering
 	 * @return True if the clustering did not change
 	 */
-	private boolean checkNode(NodeDescriptor v) {
-		int originalIndex = mapClusterIndex.get(v);
+	private boolean checkNode(final NodeDescriptor v) {
+		final int originalIndex = mapClusterIndex.get(v);
 		int bestIndex = mapClusterIndex.get(v);
 		double bestmq = MQ();
 		// if the cluster is too small, then move the node
@@ -394,7 +393,7 @@ public class AutomaticCluster extends BaseCluster {
 			indices.add(index);
 			size.put(index, 0);
 			// add new row and column to matrix
-			Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+			final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 			for (int j : indices) {
 				map.put(j, 0);
 			}
@@ -433,11 +432,11 @@ public class AutomaticCluster extends BaseCluster {
 	 * @return false if there was a change
 	 */
 	private boolean improve() {
-		Queue<NodeDescriptor> queue = calculatePriorities();
+		final Queue<NodeDescriptor> queue = calculatePriorities();
 		boolean optimal = true;
 		while (!queue.isEmpty()) {
-			NodeDescriptor v = queue.poll();
-			boolean check = checkNode(v);
+			final NodeDescriptor v = queue.poll();
+			final boolean check = checkNode(v);
 			optimal = optimal && check;
 		}
 		return optimal;
@@ -464,8 +463,8 @@ public class AutomaticCluster extends BaseCluster {
 	 *            A progress monitor
 	 * @return True if the clustering was successful
 	 */
-	private boolean checkCulesteringTool(BaseCluster ct,
-			IProgressMonitor progress) {
+	private boolean checkCulesteringTool(final BaseCluster ct,
+			final IProgressMonitor progress) {
 		if (ct.createClusters(new SubProgressMonitor(progress, 1))) {
 			progress.worked(1);
 			if (progress.isCanceled()) {
@@ -483,9 +482,9 @@ public class AutomaticCluster extends BaseCluster {
 	}
 
 	@Override
-	public boolean createClusters(IProgressMonitor monitor) {
+	public boolean createClusters(final IProgressMonitor monitor) {
 
-		IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
+		final IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
 		progress.beginTask("Creating clusters", 13);
 
 		if (!(checkFolder || checkRegexp || checkModulename)) {
@@ -534,8 +533,8 @@ public class AutomaticCluster extends BaseCluster {
 	 * Run the algorithm on the given clustering. If there are too many clusters
 	 * it merges them, and runs the algorithm again.
 	 */
-	private void check(Set<Set<NodeDescriptor>> clustering,
-			IProgressMonitor monitor) {
+	private void check(final Set<Set<NodeDescriptor>> clustering,
+			final IProgressMonitor monitor) {
 		clustersToCheck = clustering;
 		init();
 		monitor.beginTask("Improving clustering", maxclusters-clusternum);
@@ -582,17 +581,17 @@ public class AutomaticCluster extends BaseCluster {
 	private void createCurrentClusters() {
 		clustersToCheck = new HashSet<Set<NodeDescriptor>>();
 		for (int i : indices) {
-			Set<NodeDescriptor> cluster = mapIndexCluster.get(i);
+			final Set<NodeDescriptor> cluster = mapIndexCluster.get(i);
 			cluster.clear();
 		}
 		for (NodeDescriptor v : moduleGraph.getVertices()) {
-			Set<NodeDescriptor> cluster = mapIndexCluster.get(mapClusterIndex
+			final Set<NodeDescriptor> cluster = mapIndexCluster.get(mapClusterIndex
 					.get(v));
 			cluster.add(v);
 			v.setCluster(cluster);
 		}
 		for (int i : indices) {
-			Set<NodeDescriptor> cluster = mapIndexCluster.get(i);
+			final Set<NodeDescriptor> cluster = mapIndexCluster.get(i);
 			if (!cluster.isEmpty()) {
 				clustersToCheck.add(cluster);
 			}
@@ -602,7 +601,7 @@ public class AutomaticCluster extends BaseCluster {
 	/**
 	 * Merges the two clusters.
 	 */
-	private void mergeClusters(int from, int to) {
+	private void mergeClusters(final int from, final int to) {
 		for (NodeDescriptor v : moduleGraph.getVertices()) {
 			if (mapClusterIndex.get(v) == from) {
 				mapClusterIndex.put(v, to);
@@ -623,7 +622,7 @@ public class AutomaticCluster extends BaseCluster {
 		int bestj = -1;
 		for (int i : indices) {
 			for (int j : indices) {
-				int a = mapBetweenArcs.get(i).get(j);
+				final int a = mapBetweenArcs.get(i).get(j);
 				if (i != j && a > max) {
 					max = a;
 					besti = i;

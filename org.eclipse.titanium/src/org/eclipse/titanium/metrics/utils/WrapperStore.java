@@ -33,9 +33,10 @@ public final class WrapperStore {
 	 * @return A new wrapper object if it doesn't exist for this project, the already constructed object otherwise
 	 */
 	public static ModuleMetricsWrapper getWrapper(final IProject project) {
-		ModuleMetricsWrapper ret = wrappers.get(project);
+		final ModuleMetricsWrapper ret = wrappers.get(project);
+
 		if (ret == null) {
-			ModuleMetricsWrapper instance = new ModuleMetricsWrapper(project);
+			final ModuleMetricsWrapper instance = new ModuleMetricsWrapper(project);
 			wrappers.put(project, instance);
 			return instance;
 		} else {

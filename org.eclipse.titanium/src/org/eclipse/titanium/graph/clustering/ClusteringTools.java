@@ -61,7 +61,7 @@ public final class ClusteringTools {
 	 * @return The list of prefixes
 	 */
 	private static List<String> createPrefix() {
-		List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<String>();
 
 		final String stringList = Platform.getPreferencesService().getString(Activator.PLUGIN_ID, PreferenceConstants.CLUSTER_TRUNCATE, "", null);
 		final List<String> splittedList = ResourceExclusionHelper.intelligentSplit(stringList, '#', '\\');
@@ -73,7 +73,7 @@ public final class ClusteringTools {
 		return list;
 	}
 
-	public static String truncate(String name) {
+	public static String truncate(final String name) {
 		String best = null;
 		int size = 0;
 		for (String s : prefixes) {
@@ -101,31 +101,32 @@ public final class ClusteringTools {
 	 * @return The cluster graph
 	 */
 	public static DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> generateClusterGraph(
-			DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> moduleGraph, Map<String, Set<NodeDescriptor>> mapNameCluster) {
+			final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> moduleGraph, final Map<String, Set<NodeDescriptor>> mapNameCluster) {
 
-		Map<Set<NodeDescriptor>, ClusterNode> mapClusterNode = new HashMap<Set<NodeDescriptor>, ClusterNode>();
-		DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> clusterGraph = new DirectedSparseGraph<NodeDescriptor, EdgeDescriptor>();
+		final Map<Set<NodeDescriptor>, ClusterNode> mapClusterNode = new HashMap<Set<NodeDescriptor>, ClusterNode>();
+		final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> clusterGraph = new DirectedSparseGraph<NodeDescriptor, EdgeDescriptor>();
 		for (Entry<String, Set<NodeDescriptor>> entry : mapNameCluster.entrySet()) {  
 			final String name = entry.getKey();
 			final Set<NodeDescriptor> cluster = entry.getValue();
 			for (NodeDescriptor v : cluster) {
 				v.setCluster(cluster);
 			}
-			ClusterNode clusternode = new ClusterNode(name, cluster);
+
+			final ClusterNode clusternode = new ClusterNode(name, cluster);
 			clusterGraph.addVertex(clusternode);
 			mapClusterNode.put(cluster, clusternode);
 		}
 		for (EdgeDescriptor e : moduleGraph.getEdges()) {
 			final NodeDescriptor v = moduleGraph.getSource(e);
 			final NodeDescriptor w = moduleGraph.getDest(e);
-			Set<NodeDescriptor> clusterv = v.getCluster();
-			Set<NodeDescriptor> clusterw = w.getCluster();
+			final Set<NodeDescriptor> clusterv = v.getCluster();
+			final Set<NodeDescriptor> clusterw = w.getCluster();
 			if (clusterv == null || clusterw == null) {
 				continue;
 			}
 			if (clusterv != clusterw) {
-				ClusterNode clusterNodev = mapClusterNode.get(clusterv);
-				ClusterNode clusterNodew = mapClusterNode.get(clusterw);
+				final ClusterNode clusterNodev = mapClusterNode.get(clusterv);
+				final ClusterNode clusterNodew = mapClusterNode.get(clusterw);
 				if (clusterNodev == null || clusterNodew == null) {
 					continue;
 				}
@@ -153,9 +154,9 @@ public final class ClusteringTools {
 	 * @return The cluster graph
 	 */
 	public static DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> generateClusterGraph(
-			DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> moduleGraph, Set<Set<NodeDescriptor>> clusters) {
+			final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> moduleGraph, final Set<Set<NodeDescriptor>> clusters) {
 
-		Map<String, Set<NodeDescriptor>> mapNameCluster = new HashMap<String, Set<NodeDescriptor>>();
+		final Map<String, Set<NodeDescriptor>> mapNameCluster = new HashMap<String, Set<NodeDescriptor>>();
 		Integer i = 0;
 		for (Set<NodeDescriptor> cluster : clusters) {
 			++i;

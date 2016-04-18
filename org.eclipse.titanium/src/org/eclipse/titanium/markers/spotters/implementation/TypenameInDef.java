@@ -38,7 +38,7 @@ public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof Def_Const) &&
 				!(node instanceof Def_ExternalConst) &&
 				!(node instanceof Def_Extfunction) &&
@@ -67,7 +67,7 @@ public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 		return ret;
 	}
 
-	private void check(final Identifier identifier, final IType type, final String description, Problems problems) {
+	private void check(final Identifier identifier, final IType type, final String description, final Problems problems) {
 		if (type == null) {
 			return;
 		}

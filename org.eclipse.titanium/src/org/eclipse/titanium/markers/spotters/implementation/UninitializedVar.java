@@ -24,7 +24,7 @@ public class UninitializedVar extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Def_Var_Template) {
 			Def_Var_Template d = (Def_Var_Template)node;
 			if (d.getInitialValue() == null) {

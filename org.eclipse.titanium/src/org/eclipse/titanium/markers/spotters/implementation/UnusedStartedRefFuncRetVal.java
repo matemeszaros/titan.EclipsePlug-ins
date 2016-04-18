@@ -35,7 +35,7 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Start_Referenced_Component_Statement) {
 			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 			Start_Referenced_Component_Statement s = (Start_Referenced_Component_Statement) node;

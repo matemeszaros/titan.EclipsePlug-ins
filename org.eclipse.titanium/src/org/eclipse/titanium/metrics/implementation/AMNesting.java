@@ -20,8 +20,8 @@ public class AMNesting extends BaseAltstepMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Altstep altstep) {
-		final Counter c = new Counter(0);
-		altstep.accept(new DepthVisitor(c));
-		return c.val();
+		final Counter count = new Counter(0);
+		altstep.accept(new DepthVisitor(count));
+		return count.val();
 	}
 }

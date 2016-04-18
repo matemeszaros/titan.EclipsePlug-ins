@@ -30,7 +30,7 @@ public class MMEfferentCoupling extends BaseModuleMetric {
 	}
 
 	@Override
-	public void init(MetricData data) {
+	public void init(final MetricData data) {
 		efferentCoupling.clear();
 		for (final Module module : data.getModules()) {
 			efferentCoupling.put(module, new HashSet<Assignment>());

@@ -36,7 +36,7 @@ public class FullModuleNameCluster extends ModuleNameCluster {
 	/**
 	 * Initialize the variables for the clustering.
 	 */
-	public FullModuleNameCluster(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
+	public FullModuleNameCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
 		super(graph);
 	}
 
@@ -60,7 +60,7 @@ public class FullModuleNameCluster extends ModuleNameCluster {
 		// ALL is lost but not forgotten
 		knownNames.remove(ALL);
 		// if we sort the splitted names, and iterate over it, hopefully we get a DFS traversal of the cluster graph
-		List<String> sortedNames = new ArrayList<String>(knownNames);
+		final List<String> sortedNames = new ArrayList<String>(knownNames);
 		Collections.sort(sortedNames);
 
 		for (String name : sortedNames) {
@@ -74,9 +74,9 @@ public class FullModuleNameCluster extends ModuleNameCluster {
 	 * @param name
 	 *            The cluster / node name
 	 */
-	protected void check(String name) {
+	protected void check(final String name) {
 		while (!stack.isEmpty()) {
-			String prev = stack.peek();
+			final String prev = stack.peek();
 			if (name.startsWith(prev)) {
 				addEdge(prev, name);
 				stack.push(name);
@@ -99,12 +99,13 @@ public class FullModuleNameCluster extends ModuleNameCluster {
 	 * @param next
 	 *            Name of the child node
 	 */
-	private void addEdge(String prev, String next) {
+	private void addEdge(final String prev, final String next) {
 		ClusterNode parent = mapNameNode.get(prev);
-		ClusterNode child = new ClusterNode(next, mapNameCluster.get(next));
+		final ClusterNode child = new ClusterNode(next, mapNameCluster.get(next));
 		clusterGraph.addVertex(child);
 		mapNameNode.put(next, child);
-		ClusterEdge ce = new ClusterEdge(prev + "-" + next, 1);
+
+		final 	ClusterEdge ce = new ClusterEdge(prev + "-" + next, 1);
 		clusterGraph.addEdge(ce, parent, child);
 	}
 }

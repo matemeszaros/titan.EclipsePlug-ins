@@ -46,7 +46,7 @@ public class ConsecutiveAssignments extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof StatementBlock)) {
 			return;
 		}

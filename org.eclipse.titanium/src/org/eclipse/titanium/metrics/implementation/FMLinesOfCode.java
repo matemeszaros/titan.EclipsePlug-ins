@@ -23,8 +23,8 @@ public class FMLinesOfCode extends BaseFunctionMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Function function) {
-		final Counter c = new Counter(0);
-		function.accept(new CounterVisitor(c) {
+		final Counter count = new Counter(0);
+		function.accept(new CounterVisitor(count) {
 			@Override
 			public int visit(final IVisitableNode node) {
 				if (node instanceof Def_Function) {
@@ -35,6 +35,6 @@ public class FMLinesOfCode extends BaseFunctionMetric {
 				return V_SKIP;
 			}
 		});
-		return c.val() - function.getLocation().getLine() + 1;
+		return count.val() - function.getLocation().getLine() + 1;
 	}
 }

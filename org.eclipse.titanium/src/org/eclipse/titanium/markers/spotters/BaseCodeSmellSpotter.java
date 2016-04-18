@@ -52,14 +52,14 @@ abstract class BaseCodeSmellSpotter {
 	/** The severity of the code smell to spot */
 	private final int severity;
 
-	protected BaseCodeSmellSpotter(CodeSmellType type) {
+	protected BaseCodeSmellSpotter(final CodeSmellType type) {
 		this.type = type;
 
-		IPreferencesService prefs = Platform.getPreferencesService();
-		ProblemTypePreference pref = CodeSmellTypeToPreferenceTypeMapper.getPreferenceType(type);
+		final IPreferencesService prefs = Platform.getPreferencesService();
+		final ProblemTypePreference pref = CodeSmellTypeToPreferenceTypeMapper.getPreferenceType(type);
 		if (prefs != null) {
-			String prefName = pref.getPreferenceName();
-			String warnLevel = prefs.getString(Activator.PLUGIN_ID, prefName, GeneralConstants.IGNORE, null);
+			final String prefName = pref.getPreferenceName();
+			final String warnLevel = prefs.getString(Activator.PLUGIN_ID, prefName, GeneralConstants.IGNORE, null);
 			// Validating and parsing warnLevel
 			if (warnLevel.equals(GeneralConstants.IGNORE)) {
 				severity = IMarker.SEVERITY_INFO;
@@ -93,7 +93,7 @@ abstract class BaseCodeSmellSpotter {
 		 * @param message
 		 *            the message of the marker
 		 */
-		public void report(Location loc, String message) {
+		public void report(final Location loc, final String message) {
 			reports.add(new Marker(loc, message, severity, type));
 		}
 
@@ -105,7 +105,7 @@ abstract class BaseCodeSmellSpotter {
 		 * @param message
 		 *            the message of the marker
 		 */
-		public void report(IResource res, String message) {
+		public void report(final IResource res, final String message) {
 			reports.add(new Marker(res, message, severity, type));
 		}
 

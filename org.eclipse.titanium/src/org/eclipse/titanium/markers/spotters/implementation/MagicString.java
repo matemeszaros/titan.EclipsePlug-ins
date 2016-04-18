@@ -34,10 +34,10 @@ public class MagicString extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode n, final Problems problems) {
+	public void process(final IVisitableNode n, final Problems problems) {
 		n.accept(new ASTVisitor() {
 			@Override
-			public int visit(IVisitableNode node) {
+			public int visit(final IVisitableNode node) {
 				if (node instanceof Bitstring_Value || node instanceof Charstring_Value || node instanceof Hexstring_Value
 						|| node instanceof Octetstring_Value) {
 					String msg = MessageFormat.format(MAGIC_STRING, ((Value) node).createStringRepresentation());

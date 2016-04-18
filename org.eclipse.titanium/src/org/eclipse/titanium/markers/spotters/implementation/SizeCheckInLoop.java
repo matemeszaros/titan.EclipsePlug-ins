@@ -29,7 +29,7 @@ public class SizeCheckInLoop extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof For_Statement) {
 			For_Statement s = (For_Statement)node;
 			s.getFinalExpression().accept(new LoopVisitor(problems));
@@ -57,7 +57,7 @@ public class SizeCheckInLoop extends BaseModuleCodeSmellSpotter {
 	protected static class LoopVisitor extends ASTVisitor {
 		private final Problems problems;
 
-		public LoopVisitor(Problems problems) {
+		public LoopVisitor(final Problems problems) {
 			this.problems = problems;
 		}
 

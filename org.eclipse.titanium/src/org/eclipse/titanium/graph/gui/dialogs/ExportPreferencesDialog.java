@@ -37,7 +37,7 @@ public class ExportPreferencesDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public ExportPreferencesDialog(Shell parent) {
+	public ExportPreferencesDialog(final Shell parent) {
 		super(parent);
 		setText("Export Graph");
 	}
@@ -51,7 +51,7 @@ public class ExportPreferencesDialog extends Dialog {
 		createContents();
 		shlExportGraph.open();
 		shlExportGraph.layout();
-		Display display = getParent().getDisplay();
+		final Display display = getParent().getDisplay();
 		while (!shlExportGraph.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -74,16 +74,16 @@ public class ExportPreferencesDialog extends Dialog {
 		mode.setBounds(10, 31, 200, 23);
 		mode.select(0);
 
-		Label lblPartToExport = new Label(shlExportGraph, SWT.NONE);
+		final Label lblPartToExport = new Label(shlExportGraph, SWT.NONE);
 		lblPartToExport.setBounds(10, 10, 94, 15);
 		lblPartToExport.setText("Part to export");
 
 		shlExportGraph.setLocation(100, 100);
 
-		Button btnOk = new Button(shlExportGraph, SWT.NONE);
+		final Button btnOk = new Button(shlExportGraph, SWT.NONE);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				switch(mode.getSelectionIndex()) {
 				case 0:
 					result = ImageExportType.EXPORT_WHOLE_GRAPH;

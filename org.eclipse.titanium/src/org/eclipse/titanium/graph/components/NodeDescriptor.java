@@ -46,7 +46,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * @param loc
 	 *            : An object describing the point of declaration
 	 */
-	public NodeDescriptor(String displayName, String name, Color colour, IProject proj, boolean missing, Location loc) {
+	public NodeDescriptor(final String displayName, final String name, final Color colour, final IProject proj, final boolean missing, final Location loc) {
 		this.displayName = displayName;
 		nodeName = name;
 		nodeColour = colour;
@@ -82,7 +82,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * @param loc
 	 *            : An object describing the point of declaration
 	 */
-	public NodeDescriptor(String displayName, String name, IProject proj, boolean missing, Location loc) {
+	public NodeDescriptor(final String displayName, final String name, final IProject proj, final boolean missing, final Location loc) {
 		this(displayName, name, NodeColours.NO_VALUE_COLOUR, proj, missing, loc);
 	}
 
@@ -98,7 +98,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * @param name
 	 *            : The node's ID
 	 */
-	public NodeDescriptor(String displayName, String name) {
+	public NodeDescriptor(final String displayName, final String name) {
 		this(displayName, name, NodeColours.NO_VALUE_COLOUR, null, false, null);
 	}
 
@@ -112,7 +112,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * @param name
 	 *            : The node's ID
 	 */
-	public NodeDescriptor(String name) {
+	public NodeDescriptor(final String name) {
 		this(name, name, NodeColours.NO_VALUE_COLOUR, null, false, null);
 	}
 
@@ -153,7 +153,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * @param c
 	 *            : the new colour
 	 */
-	public void setNodeColour(Color c) {
+	public void setNodeColour(final Color c) {
 		nodeColour = c;
 	}
 
@@ -162,7 +162,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * 
 	 * @param c
 	 */
-	public void setFontColour(Color c) {
+	public void setFontColour(final Color c) {
 		fontColour = c;
 	}
 
@@ -179,7 +179,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * @param font
 	 *            : The font type to set
 	 */
-	public void setFontType(Font font) {
+	public void setFontType(final Font font) {
 		fontType = font;
 	}
 
@@ -221,11 +221,12 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 *         same module
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (!(obj instanceof NodeDescriptor)) {
 			return false;
 		}
-		NodeDescriptor instance = (NodeDescriptor) obj;
+
+		final NodeDescriptor instance = (NodeDescriptor) obj;
 		return instance.getName().equals(this.nodeName);
 	}
 
@@ -247,7 +248,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	 * @param cluster
 	 *            The set of nodes this one belongs to
 	 */
-	public void setCluster(Set<NodeDescriptor> cluster) {
+	public void setCluster(final Set<NodeDescriptor> cluster) {
 		this.cluster = cluster;
 	}
 
@@ -260,7 +261,7 @@ public class NodeDescriptor implements Comparable<NodeDescriptor> {
 	}
 
 	@Override
-	public int compareTo(NodeDescriptor other) {
+	public int compareTo(final NodeDescriptor other) {
 		return displayName.compareTo(other.displayName);
 	}
 

@@ -17,7 +17,7 @@ import org.eclipse.titanium.metrics.AltstepMetric;
  * 
  */
 abstract class BaseAltstepMetric extends BaseMetric<Def_Altstep, AltstepMetric> {
-	BaseAltstepMetric(AltstepMetric metric) {
+	BaseAltstepMetric(final AltstepMetric metric) {
 		super(metric);
 	}
 }

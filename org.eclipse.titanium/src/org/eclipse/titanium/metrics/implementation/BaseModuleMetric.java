@@ -11,7 +11,7 @@ import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titanium.metrics.ModuleMetric;
 
 abstract class BaseModuleMetric extends BaseMetric<Module, ModuleMetric> {
-	BaseModuleMetric(ModuleMetric metric) {
+	BaseModuleMetric(final ModuleMetric metric) {
 		super(metric);
 	}
 }

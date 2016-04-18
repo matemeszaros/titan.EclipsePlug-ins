@@ -30,7 +30,7 @@ public class MMAfferentCoupling extends BaseModuleMetric {
 	}
 
 	@Override
-	public void init(MetricData data) {
+	public void init(final MetricData data) {
 		afferentCoupling.clear();
 		for (final Module module : data.getModules()) {
 			afferentCoupling.put(module, new HashSet<Assignment>());
@@ -78,7 +78,7 @@ class AfferentCouplingDetector extends ASTVisitor {
 			if (assignment != null) {
 				final Module referredModule = assignment.getMyScope().getModuleScope();
 				if (!ownModule.equals(referredModule)) {
-					Set<Assignment> assignments = afferentCoupling.get(referredModule);
+					final Set<Assignment> assignments = afferentCoupling.get(referredModule);
 					if (assignments != null) {
 						assignments.add(ownAssignment);
 					}

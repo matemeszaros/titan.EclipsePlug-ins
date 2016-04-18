@@ -58,7 +58,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		// This variable indicates occurrence of Return_Statement.
 		haveToContinue = true;
 
@@ -124,7 +124,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		// Contains possible FormalParameters of StatementBloc and Statement and AltGuard.
 		private HashSet<FormalParameter> referencedFormalParameters;
 
-		public RelevantNodeBuilder(IVisitableNode node) {
+		public RelevantNodeBuilder(final IVisitableNode node) {
 			root = node;
 			referencedFormalParameters = new HashSet<FormalParameter>();
 			strictFormalParameters = new HashSet<FormalParameter>();
@@ -132,7 +132,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if ((node instanceof StatementBlock || node instanceof Statement || node instanceof AltGuard) && !node.equals(root)) {
 				RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(node);
 
@@ -185,10 +185,8 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 				return referencedFormalParameters;
 			}
 
-			if (nodes.size() == 0) {
-
+			if (nodes.isEmpty()) {
 				return referencedFormalParameters;
-
 			} else {
 
 				HashSet<FormalParameter> tempStricts = new HashSet<FormalParameter>();
@@ -210,7 +208,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 							// We have to branching because of intersections of empty and non empty set.
 							// Have to check index too!
 							// If index==0 and shouldBeEvaluated.size()==0 then we have to initialize set with addAll() method.
-							if (shouldBeEvaluated.size() == 0 && index == 0) {
+							if (shouldBeEvaluated.isEmpty() && index == 0) {
 								shouldBeEvaluated.addAll(temp);
 							} else {
 								shouldBeEvaluated.retainAll(temp);
@@ -240,7 +238,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof IParameterisedAssignment) {
 				FormalParameterList formalParameterList = ((IParameterisedAssignment) node).getFormalParameterList();
 

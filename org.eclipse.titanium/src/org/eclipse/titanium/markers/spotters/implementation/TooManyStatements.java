@@ -30,7 +30,7 @@ public class TooManyStatements extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof StatementBlock) {
 			StatementBlock s = (StatementBlock) node;
 			if (s.getSize() > reportTooManyStatementsSize) {

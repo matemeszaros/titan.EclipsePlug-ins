@@ -29,7 +29,7 @@ public class LogicInversion extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof If_Statement) {
 			final If_Statement s = (If_Statement) node;
 			if (s.getStatementBlock() == null) {

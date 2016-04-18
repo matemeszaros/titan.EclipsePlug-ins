@@ -51,7 +51,7 @@ private static final String ERR_MSG = "Select cases are not listed in incrementa
 
 
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof SelectCase_Statement)) {
 			return;
 		}
@@ -102,7 +102,7 @@ private static final String ERR_MSG = "Select cases are not listed in incrementa
 
 	}
 
-	private Boolean checkIfIntegerCasesSorted(List<Long> usedIntegerItems){
+	private Boolean checkIfIntegerCasesSorted(final List<Long> usedIntegerItems){
 		for (int i=0; i < usedIntegerItems.size()-1; ++i) {	
 			if (usedIntegerItems.get(i) > usedIntegerItems.get(i+1)) {
 				return false;

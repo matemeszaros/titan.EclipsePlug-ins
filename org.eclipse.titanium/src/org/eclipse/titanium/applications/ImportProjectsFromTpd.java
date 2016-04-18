@@ -35,7 +35,7 @@ public class ImportProjectsFromTpd implements IApplication {
 	}
 
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(final IApplicationContext context) throws Exception {
 		if (!GeneralConstants.DEBUG) {
 			ErrorReporter.INTERNAL_ERROR("Loading Tpd files in headless mode is in prototype mode "
 					+ "and so should not be available in released versions yet");

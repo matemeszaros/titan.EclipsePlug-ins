@@ -23,8 +23,8 @@ public class AMLinesOfCode extends BaseAltstepMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Altstep altstep) {
-		final Counter c = new Counter(0);
-		altstep.accept(new CounterVisitor(c) {
+		final Counter count = new Counter(0);
+		altstep.accept(new CounterVisitor(count) {
 			@Override
 			public int visit(final IVisitableNode node) {
 				if (node instanceof Def_Altstep) {
@@ -36,6 +36,6 @@ public class AMLinesOfCode extends BaseAltstepMetric {
 				return V_SKIP;
 			}
 		});
-		return c.val() - altstep.getLocation().getLine() + 1;
+		return count.val() - altstep.getLocation().getLine() + 1;
 	}
 }

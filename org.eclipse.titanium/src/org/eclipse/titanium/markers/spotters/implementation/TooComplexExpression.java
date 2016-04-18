@@ -54,7 +54,7 @@ public class TooComplexExpression {
 			}
 
 			@Override
-			public int visit(IVisitableNode node) {
+			public int visit(final IVisitableNode node) {
 				if (node instanceof Expression_Value) {
 					count++;
 				}
@@ -63,7 +63,7 @@ public class TooComplexExpression {
 			}
 		}
 
-		protected void check(IValue expression, Problems problems) {
+		protected void check(final IValue expression, final Problems problems) {
 			if (expression instanceof Expression_Value) {
 				ExpressionVisitor visitor = new ExpressionVisitor();
 				expression.accept(visitor);
@@ -79,7 +79,7 @@ public class TooComplexExpression {
 	public static class For extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof For_Statement) {
 				For_Statement s = (For_Statement) node;
 				Value expression = s.getFinalExpression();
@@ -98,7 +98,7 @@ public class TooComplexExpression {
 	public static class While extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof While_Statement) {
 				While_Statement s = (While_Statement) node;
 				Value expression = s.getExpression();
@@ -117,7 +117,7 @@ public class TooComplexExpression {
 	public static class DoWhile extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof DoWhile_Statement) {
 				DoWhile_Statement s = (DoWhile_Statement) node;
 				Value expression = s.getExpression();
@@ -136,7 +136,7 @@ public class TooComplexExpression {
 	public static class If extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof If_Clause) {
 				If_Clause s = (If_Clause) node;
 				Value expression = s.getExpression();
@@ -155,7 +155,7 @@ public class TooComplexExpression {
 	public static class Assignments extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Assignment_Statement) {
 				Assignment_Statement s = (Assignment_Statement) node;
 				CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();

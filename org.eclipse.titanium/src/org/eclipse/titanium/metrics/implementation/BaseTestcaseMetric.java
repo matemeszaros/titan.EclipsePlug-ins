@@ -11,7 +11,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Testcase;
 import org.eclipse.titanium.metrics.TestcaseMetric;
 
 abstract class BaseTestcaseMetric extends BaseMetric<Def_Testcase, TestcaseMetric> {
-	BaseTestcaseMetric(TestcaseMetric metric) {
+	BaseTestcaseMetric(final TestcaseMetric metric) {
 		super(metric);
 	}
 }

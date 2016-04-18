@@ -52,7 +52,7 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		this.problems = problems;
 		if (!(node instanceof FormalParameter)) {
 			return;
@@ -83,7 +83,7 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 	private final class NewFuncVisitor extends ASTVisitor {
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
 				StatementBlockVisitor visitor = new StatementBlockVisitor();
 				node.accept(visitor);
@@ -104,7 +104,7 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			
 			//start a new statement visitor for all statements
 			if (node instanceof Statement) {
@@ -173,7 +173,7 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (continueOne) {
 				continueOne = false;
 				return V_CONTINUE;

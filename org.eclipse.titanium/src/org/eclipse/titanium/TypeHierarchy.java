@@ -418,22 +418,22 @@ public final class TypeHierarchy {
 
 	@SuppressWarnings("unchecked")
 	public static Map<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]> createHierarchy() {
-		final Map<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]> m =
+		final Map<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]> typeMap =
 				new HashMap<Class<? extends IVisitableNode>, Class<? extends IVisitableNode>[]>();
-		m.put(IValue.class, new Class[] { Value.class });
-		m.put(ArrayDimension.class, new Class[] { RangedArrayDimension.class, SingleArrayDimension.class });
-		m.put(IVisitableNode.class, new Class[] { ImportModule.class, Symbols.class, Block.class, Ass_pard.class, Scope.class,
+		typeMap.put(IValue.class, new Class[] { Value.class });
+		typeMap.put(ArrayDimension.class, new Class[] { RangedArrayDimension.class, SingleArrayDimension.class });
+		typeMap.put(IVisitableNode.class, new Class[] { ImportModule.class, Symbols.class, Block.class, Ass_pard.class, Scope.class,
 				Identifier.class, ASTNode.class, IType.class, ImportModule.class, ParsedSubType.class, Qualifier.class,
 				EncodeAttribute.class, ErroneousAttributes.class, Qualifiers.class, ErroneousAttributeSpecification.class,
 				ErrorBehaviorAttribute.class, DecodeAttribute.class, MultipleWithAttributes.class, SingleWithAttribute.class,
 				WithAttributesPath.class, PatternString.class, ISubReference.class, IValue.class });
-		m.put(GovernedSet.class, new Class[] { ObjectSet.class });
-		m.put(GovernedSimple.class, new Class[] { Value.class, TTCN3Template.class });
-		m.put(ComponentType.class, new Class[] { RegularComponentType.class, ComponentsOfComponentType.class });
-		m.put(Setting.class, new Class[] { Governor.class, Error_Setting.class, Governed.class });
-		m.put(ActualParameter.class, new Class[] { Referenced_ActualParameter.class, Template_ActualParameter.class,
+		typeMap.put(GovernedSet.class, new Class[] { ObjectSet.class });
+		typeMap.put(GovernedSimple.class, new Class[] { Value.class, TTCN3Template.class });
+		typeMap.put(ComponentType.class, new Class[] { RegularComponentType.class, ComponentsOfComponentType.class });
+		typeMap.put(Setting.class, new Class[] { Governor.class, Error_Setting.class, Governed.class });
+		typeMap.put(ActualParameter.class, new Class[] { Referenced_ActualParameter.class, Template_ActualParameter.class,
 				Default_ActualParameter.class, Value_ActualParameter.class });
-		m.put(Statement.class, new Class[] { Continue_Statement.class, Testcase_Instance_Statement.class, Definition_Statement.class,
+		typeMap.put(Statement.class, new Class[] { Continue_Statement.class, Testcase_Instance_Statement.class, Definition_Statement.class,
 				Check_Port_Statement.class, Check_Getreply_Statement.class, Halt_Statement.class, Done_Statement.class,
 				Deactivate_Statement.class, Kill_Statement.class, Stop_Execution_Statement.class, Check_Receive_Port_Statement.class,
 				Raise_Statement.class, Label_Statement.class, Assignment_Statement.class, Altstep_Applied_Statement.class,
@@ -451,24 +451,24 @@ public final class TypeHierarchy {
 				Start_Port_Statement.class, Catch_Statement.class, Activate_Referenced_Statement.class,
 				Stop_Component_Statement.class, Map_Statement.class, Action_Statement.class, Function_Applied_Statement.class,
 				DoWhile_Statement.class, Getreply_Statement.class });
-		m.put(TTCN3Template.class, new Class[] { OmitValue_Template.class, CharString_Pattern_Template.class, AnyOrOmit_Template.class,
+		typeMap.put(TTCN3Template.class, new Class[] { OmitValue_Template.class, CharString_Pattern_Template.class, AnyOrOmit_Template.class,
 				ComplementedList_Template.class, HexString_Pattern_Template.class, Named_Template_List.class,
 				PermutationMatch_Template.class, SupersetMatch_Template.class, Invoke_Template.class, Referenced_Template.class,
 				ValueList_Template.class, SpecificValue_Template.class, Indexed_Template_List.class,
 				BitString_Pattern_Template.class, OctetString_Pattern_Template.class, SubsetMatch_Template.class,
 				UnivCharString_Pattern_Template.class, Template_List.class, Any_Value_Template.class, Value_Range_Template.class,
 				NotUsed_Template.class });
-		m.put(Scope.class, new Class[] { NamedBridgeScope.class, Module.class, Assignments.class, TTCN3Scope.class, ControlPart.class });
-		m.put(ASN1Assignment.class, new Class[] { Object_Assignment.class, Type_Assignment.class, Value_Assignment.class,
+		typeMap.put(Scope.class, new Class[] { NamedBridgeScope.class, Module.class, Assignments.class, TTCN3Scope.class, ControlPart.class });
+		typeMap.put(ASN1Assignment.class, new Class[] { Object_Assignment.class, Type_Assignment.class, Value_Assignment.class,
 				Undefined_Assignment.class, ObjectClass_Assignment.class, ValueSet_Assignment.class, ObjectSet_Assignment.class });
-		m.put(Type.class, new Class[] { ASN1Type.class, Integer_Type.class, TTCN3_Set_Seq_Choice_BaseType.class, Signature_Type.class,
+		typeMap.put(Type.class, new Class[] { ASN1Type.class, Integer_Type.class, TTCN3_Set_Seq_Choice_BaseType.class, Signature_Type.class,
 				Function_Type.class, Altstep_Type.class, Array_Type.class, Address_Type.class, TTCN3_Enumerated_Type.class,
 				Component_Type.class, Default_Type.class, HexString_Type.class, UniversalCharstring_Type.class,
 				CharString_Type.class, BitString_Type.class, Verdict_Type.class, Port_Type.class, Anytype_Type.class,
 				Testcase_Type.class });
-		m.put(ParsedSubType.class, new Class[] { Pattern_ParsedSubType.class, Range_ParsedSubType.class, Single_ParsedSubType.class,
+		typeMap.put(ParsedSubType.class, new Class[] { Pattern_ParsedSubType.class, Range_ParsedSubType.class, Single_ParsedSubType.class,
 				Length_ParsedSubType.class });
-		m.put(ASTNode.class, new Class[] { Exports.class, Imports.class, ObjectSetElement_Visitor.class, FieldSpecification.class,
+		typeMap.put(ASTNode.class, new Class[] { Exports.class, Imports.class, ObjectSetElement_Visitor.class, FieldSpecification.class,
 				FieldSetting.class, ASN1Objects.class, FieldSpecifications.class, FieldName.class, CTs_EE_CTs.class,
 				ExtensionAndException.class, ExceptionSpecification.class, ComponentTypeList.class, ExtensionAdditions.class,
 				ExtensionAddition.class, Constraints.class, Setting.class, Reference.class, AtNotations.class, Assignment.class,
@@ -485,26 +485,26 @@ public final class TypeHierarchy {
 				SelectCases.class, Parameter_Redirect.class, If_Clauses.class, Variable_Entries.class, Parameter_Assignment.class,
 				Parameter_Assignments.class, Statement.class, AltGuards.class, LogArguments.class, Variable_Entry.class,
 				SelectCase.class });
-		m.put(ObjectSetElement_Visitor.class, new Class[] { ObjectSetElementVisitor_checker.class,
+		typeMap.put(ObjectSetElement_Visitor.class, new Class[] { ObjectSetElementVisitor_checker.class,
 				ObjectSetElementVisitor_objectCollector.class });
-		m.put(ObjectClass.class, new Class[] { ObjectClass_refd.class, ObjectClass_Definition.class });
-		m.put(FieldSpecification.class, new Class[] { FixedTypeValue_FieldSpecification.class, Erroneous_FieldSpecification.class,
+		typeMap.put(ObjectClass.class, new Class[] { ObjectClass_refd.class, ObjectClass_Definition.class });
+		typeMap.put(FieldSpecification.class, new Class[] { FixedTypeValue_FieldSpecification.class, Erroneous_FieldSpecification.class,
 				Type_FieldSpecification.class, ObjectSet_FieldSpecification.class, Undefined_FieldSpecification.class,
 				Object_FieldSpecification.class });
-		m.put(ExtensionAddition.class, new Class[] { ExtensionAdditionGroup.class, ComponentType.class });
-		m.put(ASN1Object.class, new Class[] { ReferencedObject.class, Object_Definition.class });
-		m.put(IType.class, new Class[] { IASN1Type.class, Type.class });
-		m.put(ObjectSet.class, new Class[] { ObjectSet_definition.class, Referenced_ObjectSet.class });
-		m.put(AltGuard.class, new Class[] { Referenced_Altguard.class, Operation_Altguard.class, Else_Altguard.class,
+		typeMap.put(ExtensionAddition.class, new Class[] { ExtensionAdditionGroup.class, ComponentType.class });
+		typeMap.put(ASN1Object.class, new Class[] { ReferencedObject.class, Object_Definition.class });
+		typeMap.put(IType.class, new Class[] { IASN1Type.class, Type.class });
+		typeMap.put(ObjectSet.class, new Class[] { ObjectSet_definition.class, Referenced_ObjectSet.class });
+		typeMap.put(AltGuard.class, new Class[] { Referenced_Altguard.class, Operation_Altguard.class, Else_Altguard.class,
 				Invoke_Altguard.class });
-		m.put(Definition.class, new Class[] { Def_Timer.class, Def_Template.class, Def_Var.class, FormalParameter.class,
+		typeMap.put(Definition.class, new Class[] { Def_Timer.class, Def_Template.class, Def_Var.class, FormalParameter.class,
 				Def_ExternalConst.class, Def_Altstep.class, Def_Testcase.class, Def_Function.class, Def_Type.class, Def_Port.class,
 				Def_Const.class, Def_Var_Template.class, Def_ModulePar.class, Def_Extfunction.class });
-		m.put(FieldSetting.class, new Class[] { FieldSetting_ObjectSet.class, FieldSetting_Object.class, FieldSetting_Type.class,
+		typeMap.put(FieldSetting.class, new Class[] { FieldSetting_ObjectSet.class, FieldSetting_Object.class, FieldSetting_Type.class,
 				FieldSetting_Value.class });
-		m.put(Constraint.class, new Class[] { TableConstraint.class });
-		m.put(TTCN3_Set_Seq_Choice_BaseType.class, new Class[] { TTCN3_Choice_Type.class, TTCN3_Set_Type.class, TTCN3_Sequence_Type.class });
-		m.put(Value.class, new Class[] { RelativeObjectIdentifier_Value.class, Named_Bits.class, Named_Integer_Value.class,
+		typeMap.put(Constraint.class, new Class[] { TableConstraint.class });
+		typeMap.put(TTCN3_Set_Seq_Choice_BaseType.class, new Class[] { TTCN3_Choice_Type.class, TTCN3_Set_Type.class, TTCN3_Sequence_Type.class });
+		typeMap.put(Value.class, new Class[] { RelativeObjectIdentifier_Value.class, Named_Bits.class, Named_Integer_Value.class,
 				ASN1_Null_Value.class, ISO2022String_Value.class, Charsymbols_Value.class, Undefined_Block_Value.class,
 				Macro_Value.class, Referenced_Value.class, Sequence_Value.class, Expression_Value.class, Hexstring_Value.class,
 				Boolean_Value.class, UniversalCharstring_Value.class, Testcase_Reference_Value.class,
@@ -513,17 +513,17 @@ public final class TypeHierarchy {
 				Altstep_Reference_Value.class, SequenceOf_Value.class, Array_Value.class, Bitstring_Value.class, Verdict_Value.class,
 				Omit_Value.class, Enumerated_Value.class, FAT_Null_Value.class, Function_Reference_Value.class, Choice_Value.class,
 				Integer_Value.class, ObjectIdentifier_Value.class, Anytype_Value.class, SetOf_Value.class });
-		m.put(Governor.class, new Class[] { ObjectClass.class, Type.class });
-		m.put(TTCN3Scope.class, new Class[] { FormalParameterList.class, RunsOnScope.class, ComponentTypeBody.class, StatementBlock.class });
-		m.put(Assignments.class, new Class[] { ASN1Assignments.class, For_Loop_Definitions.class, Definitions.class });
-		m.put(Governed.class, new Class[] { ASN1Object.class, GovernedSet.class, GovernedSimple.class });
-		m.put(FormalParameterList.class, new Class[] { TestcaseFormalParameterList.class });
-		m.put(Identifier.class, new Class[] { KeywordLessIdentifier.class });
-		m.put(Defined_Reference.class, new Class[] { Parameterised_Reference.class });
-		m.put(Reference.class, new Class[] { Defined_Reference.class, InformationFromObj.class, TemporalReference.class });
-		m.put(TypeMappingTarget.class, new Class[] { SimpleTypeMappingTarget.class, EncodeTypeMappingTarget.class,
+		typeMap.put(Governor.class, new Class[] { ObjectClass.class, Type.class });
+		typeMap.put(TTCN3Scope.class, new Class[] { FormalParameterList.class, RunsOnScope.class, ComponentTypeBody.class, StatementBlock.class });
+		typeMap.put(Assignments.class, new Class[] { ASN1Assignments.class, For_Loop_Definitions.class, Definitions.class });
+		typeMap.put(Governed.class, new Class[] { ASN1Object.class, GovernedSet.class, GovernedSimple.class });
+		typeMap.put(FormalParameterList.class, new Class[] { TestcaseFormalParameterList.class });
+		typeMap.put(Identifier.class, new Class[] { KeywordLessIdentifier.class });
+		typeMap.put(Defined_Reference.class, new Class[] { Parameterised_Reference.class });
+		typeMap.put(Reference.class, new Class[] { Defined_Reference.class, InformationFromObj.class, TemporalReference.class });
+		typeMap.put(TypeMappingTarget.class, new Class[] { SimpleTypeMappingTarget.class, EncodeTypeMappingTarget.class,
 				DecodeTypeMappingTarget.class, DiscardTypeMappingTarget.class, FunctionTypeMappingTarget.class });
-		m.put(ASN1Type.class, new Class[] { UniversalString_Type.class, Open_Type.class, Any_Type.class, NumericString_Type.class,
+		typeMap.put(ASN1Type.class, new Class[] { UniversalString_Type.class, Open_Type.class, Any_Type.class, NumericString_Type.class,
 				External_Type.class, UTF8String_Type.class, UnrestrictedString_Type.class, Embedded_PDV_Type.class,
 				IA5String_Type.class, ObjectDescriptor_Type.class, RelativeObjectIdentifier_Type.class, BMPString_Type.class,
 				ASN1_Set_Seq_Choice_BaseType.class, ASN1_Integer_Type.class, PrintableString_Type.class, NULL_Type.class,
@@ -532,12 +532,12 @@ public final class TypeHierarchy {
 				Selection_Type.class, ASN1_BitString_Type.class, ASN1_Enumerated_Type.class, SequenceOf_Type.class,
 				Referenced_Type.class, ObjectID_Type.class, SetOf_Type.class, OctetString_Type.class, Float_Type.class,
 				Boolean_Type.class });
-		m.put(Module.class, new Class[] { ASN1Module.class, TTCN3Module.class });
-		m.put(LengthRestriction.class, new Class[] { RangeLenghtRestriction.class, SingleLenghtRestriction.class });
-		m.put(Undefined_Assignment.class, new Class[] { Undefined_Assignment_O_or_V.class, Undefined_Assignment_OS_or_VS.class,
+		typeMap.put(Module.class, new Class[] { ASN1Module.class, TTCN3Module.class });
+		typeMap.put(LengthRestriction.class, new Class[] { RangeLenghtRestriction.class, SingleLenghtRestriction.class });
+		typeMap.put(Undefined_Assignment.class, new Class[] { Undefined_Assignment_O_or_V.class, Undefined_Assignment_OS_or_VS.class,
 				Undefined_Assignment_T_or_OC.class });
-		m.put(IASN1Type.class, new Class[] { ASN1Type.class });
-		m.put(Expression_Value.class, new Class[] { RotateRightExpression.class, EqualsExpression.class, ExecuteExpression.class,
+		typeMap.put(IASN1Type.class, new Class[] { ASN1Type.class });
+		typeMap.put(Expression_Value.class, new Class[] { RotateRightExpression.class, EqualsExpression.class, ExecuteExpression.class,
 				Unichar2CharExpression.class, NotequalesExpression.class, AllComponentAliveExpression.class,
 				Not4bExpression.class, LengthofExpression.class, UnaryPlusExpression.class, Int2HexExpression.class,
 				Log2StrExpression.class, Int2BitExpression.class, ComponentAliveExpression.class, Oct2CharExpression.class,
@@ -564,11 +564,11 @@ public final class TypeHierarchy {
 				Oct2BitExpression.class, Float2IntExpression.class, IsChoosenExpression.class, MatchExpression.class,
 				Str2FloatExpression.class, EncodeExpression.class, ModuloExpression.class, OrExpression.class,
 				Bit2OctExpression.class, RNDWithValueExpression.class, RefersExpression.class, Unichar2IntExpression.class });
-		m.put(Assignment.class, new Class[] { ASN1Assignment.class, Definition.class });
-		m.put(ISubReference.class, new Class[] { ParameterisedSubReference.class, ArraySubReference.class, FieldSubReference.class });
-		m.put(Parameter_Redirect.class, new Class[] { VariableList_Parameter_Redirect.class, AssignmentList_Parameter_Redirect.class });
-		m.put(ASN1_Set_Seq_Choice_BaseType.class, new Class[] { ASN1_Sequence_Type.class, ASN1_Choice_Type.class, ASN1_Set_Type.class });
+		typeMap.put(Assignment.class, new Class[] { ASN1Assignment.class, Definition.class });
+		typeMap.put(ISubReference.class, new Class[] { ParameterisedSubReference.class, ArraySubReference.class, FieldSubReference.class });
+		typeMap.put(Parameter_Redirect.class, new Class[] { VariableList_Parameter_Redirect.class, AssignmentList_Parameter_Redirect.class });
+		typeMap.put(ASN1_Set_Seq_Choice_BaseType.class, new Class[] { ASN1_Sequence_Type.class, ASN1_Choice_Type.class, ASN1_Set_Type.class });
 
-		return Collections.unmodifiableMap(m);
+		return Collections.unmodifiableMap(typeMap);
 	}
 }

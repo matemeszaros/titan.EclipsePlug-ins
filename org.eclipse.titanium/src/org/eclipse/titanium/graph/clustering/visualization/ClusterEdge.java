@@ -23,7 +23,7 @@ public class ClusterEdge extends EdgeDescriptor {
 	 *            : The name to set (in order to make difference among distinct
 	 *            edges)
 	 */
-	public ClusterEdge(String name) {
+	public ClusterEdge(final String name) {
 		super(name);
 	}
 
@@ -36,7 +36,7 @@ public class ClusterEdge extends EdgeDescriptor {
 	 * @param edgenum
 	 *            : The number of edges among the clusters
 	 */
-	public ClusterEdge(String name, Integer edgenum) {
+	public ClusterEdge(final String name, final Integer edgenum) {
 		this(name);
 		weight = edgenum;
 	}

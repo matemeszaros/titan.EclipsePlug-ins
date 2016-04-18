@@ -55,7 +55,7 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof SelectCase_Statement)) {
 			return;
 		}
@@ -103,7 +103,7 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 		
 	}
 
-	private String getItemsNotCovered(List<Identifier> allEnumItems, List<Identifier> usedEnumItems) {
+	private String getItemsNotCovered(final List<Identifier> allEnumItems, final List<Identifier> usedEnumItems) {
 		if (allEnumItems == null || usedEnumItems == null) {
 			return "";
 		}
@@ -191,7 +191,7 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof TTCN3_Enumerated_Type) {
 				return V_CONTINUE;
 			} else if (node instanceof EnumerationItems) {

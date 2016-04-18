@@ -47,7 +47,7 @@ public class ConvertToEnum extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof SelectCase_Statement)) {
 			return;
 		}
@@ -87,7 +87,7 @@ public class ConvertToEnum extends BaseModuleCodeSmellSpotter {
 		
 		private final Problems problems;
 		
-		public CaseVisitor(Problems problems) {
+		public CaseVisitor(final Problems problems) {
 			this.problems = problems;
 		}
 

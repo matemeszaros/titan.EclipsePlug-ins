@@ -46,10 +46,10 @@ public final class ErrorMessage {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog err = new MessageDialog(null, windowTitle, null, message, dialogType,
+				final MessageDialog err = new MessageDialog(null, windowTitle, null, message, dialogType,
 						new String[] { IDialogConstants.OK_LABEL, buttonTitle }, 0) {
 					@Override
-					protected void buttonPressed(int buttonId) {
+					protected void buttonPressed(final int buttonId) {
 						super.buttonPressed(buttonId);
 
 						if (buttonId == 1) {
@@ -77,7 +77,7 @@ public final class ErrorMessage {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog err = new MessageDialog(null, title, null, message, dialogType,
+				final MessageDialog err = new MessageDialog(null, title, null, message, dialogType,
 						new String[] { IDialogConstants.OK_LABEL }, 0);
 				err.open();
 			}

@@ -40,7 +40,7 @@ public class ClusterTransformer implements Transformer<NodeDescriptor, Point2D> 
 	 * @param extSize
 	 *            : the whole size of the canvas
 	 */
-	public ClusterTransformer(Layout<NodeDescriptor, EdgeDescriptor> subLayouts, Set<Set<NodeDescriptor>> clusters, Dimension extSize) {
+	public ClusterTransformer(final Layout<NodeDescriptor, EdgeDescriptor> subLayouts, final Set<Set<NodeDescriptor>> clusters, final Dimension extSize) {
 		mainLayout = new AggregateLayout<NodeDescriptor, EdgeDescriptor>(subLayouts);
 		this.clusters = clusters;
 		mainLayout.setSize(extSize);
@@ -56,17 +56,18 @@ public class ClusterTransformer implements Transformer<NodeDescriptor, Point2D> 
 	 * @param vertices
 	 *            : the set of vertices inside the cluster
 	 */
-	protected void groupCluster(Set<NodeDescriptor> vertices) {
+	protected void groupCluster(final Set<NodeDescriptor> vertices) {
 		if (vertices.size() < mainLayout.getGraph().getVertexCount()) {
-			Point2D center = mainLayout.transform(vertices.iterator().next());
-			DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> subGraph = new DirectedSparseGraph<NodeDescriptor, EdgeDescriptor>();
+			final Point2D center = mainLayout.transform(vertices.iterator().next());
+			final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> subGraph = new DirectedSparseGraph<NodeDescriptor, EdgeDescriptor>();
 			for (NodeDescriptor v : vertices) {
 				subGraph.addVertex(v);
 			}
-			Layout<NodeDescriptor, EdgeDescriptor> subLayout = new CircleLayout<NodeDescriptor, EdgeDescriptor>(subGraph);
+
+			final Layout<NodeDescriptor, EdgeDescriptor> subLayout = new CircleLayout<NodeDescriptor, EdgeDescriptor>(subGraph);
 			subLayout.setInitializer(mainLayout);
 			// TODO Could we calculate the needed space for one cluster?
-			Dimension canvasSize = new Dimension(100, 100);
+			final Dimension canvasSize = new Dimension(100, 100);
 			subLayout.setSize(canvasSize);
 
 			mainLayout.put(subLayout, center);
@@ -81,7 +82,7 @@ public class ClusterTransformer implements Transformer<NodeDescriptor, Point2D> 
 	 *            : the node to transform to coordinates
 	 */
 	@Override
-	public Point2D transform(NodeDescriptor v) {
+	public Point2D transform(final NodeDescriptor v) {
 		return mainLayout.transform(v);
 	}
 }

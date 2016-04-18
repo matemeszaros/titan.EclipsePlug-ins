@@ -27,8 +27,8 @@ public class PrimitiveErrorHandler implements ErrorHandler {
 
 	public PrimitiveErrorHandler() {
 		try {
-			File errorLog = new File(ERROR_PATH);
-			PrintStream errorStream = new PrintStream(errorLog);
+			final File errorLog = new File(ERROR_PATH);
+			final PrintStream errorStream = new PrintStream(errorLog);
 			handler = new ConsoleErrorHandler(errorStream, errorStream, errorStream);
 		} catch (IOException ex) {
 			ErrorReporter.logExceptionStackTrace("Error while printing to " + ERROR_PATH, ex);
@@ -37,32 +37,32 @@ public class PrimitiveErrorHandler implements ErrorHandler {
 	}
 
 	@Override
-	public void reportException(String context, Exception exception) {
+	public void reportException(final String context, final Exception exception) {
 		handler.reportException(context, exception);
 	}
 
 	@Override
-	public void reportErrorMessage(String text) {
+	public void reportErrorMessage(final String text) {
 		handler.reportErrorMessage(text);
 	}
 
 	@Override
-	public void reportWarning(String text) {
+	public void reportWarning(final String text) {
 		handler.reportWarning(text);
 	}
 
 	@Override
-	public void reportInformation(String text) {
+	public void reportInformation(final String text) {
 		handler.reportInformation(text);
 	}
 
 	@Override
-	public void logError(String message) {
+	public void logError(final String message) {
 		handler.logError(message);
 	}
 
 	@Override
-	public void logException(Exception exception) {
+	public void logException(final Exception exception) {
 		handler.logException(exception);
 	}
 

@@ -64,7 +64,7 @@ public class InfoWindow extends Dialog {
 	 * @param parent
 	 *            : A reference to the parent shell
 	 */
-	public InfoWindow(NodeDescriptor node, IMetricEnum chosenMetric, Shell parent) {
+	public InfoWindow(final NodeDescriptor node, final IMetricEnum chosenMetric, final Shell parent) {
 		super(parent);
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.RESIZE);
 		shell.setSize(WINDOW_SIZE);
@@ -72,9 +72,9 @@ public class InfoWindow extends Dialog {
 		shell.setImage(SWTResourceManager.getImage("resources/icons/metrics_top_worst.gif"));
 		shell.addListener(SWT.Resize, new Listener() {
 			@Override
-			public void handleEvent(Event ev) {
+			public void handleEvent(final Event ev) {
 				if (table != null && shell != null) {
-					Point size = shell.getSize();
+					final Point size = shell.getSize();
 					table.setSize(size.x - TABLE_BORDER_SIZE.x, size.y - TABLE_BORDER_SIZE.y);
 				}
 			}
@@ -92,11 +92,11 @@ public class InfoWindow extends Dialog {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
-		TableColumn tmpCol = new TableColumn(table, SWT.NONE);
+		final TableColumn tmpCol = new TableColumn(table, SWT.NONE);
 		tmpCol.setText("Property");
 		tmpCol.setWidth(COLUMN_WIDTH);
 		for (StatColumn actCol : StatColumn.values()) {
-			TableColumn tempCol = new TableColumn(table, SWT.BORDER);
+			final TableColumn tempCol = new TableColumn(table, SWT.BORDER);
 			tempCol.setText(actCol.getName());
 			tempCol.setWidth(COLUMN_WIDTH);
 		}
@@ -110,13 +110,13 @@ public class InfoWindow extends Dialog {
 	 * @param node
 	 *            : The module to show info about.
 	 */
-	private void createContents(NodeDescriptor node) {
+	private void createContents(final NodeDescriptor node) {
 		if (node.isMissing()) {
 			errorHandler.reportErrorMessage("The module \"" + node.getDisplayName() + "\" cannot be found on the disk!");
 			return;
 		}
 
-		String shownName = node.getDisplayName();
+		final String shownName = node.getDisplayName();
 		List<String> actRow = null;
 
 		addRow(new ArrayList<String>(Arrays.asList("General Information")), Color.lightGray);
@@ -133,7 +133,7 @@ public class InfoWindow extends Dialog {
 				actRow = new ArrayList<String>();
 				actRow.add(metric.getName());
 				String val = null;
-				Number tempVal = metricsProvider.getValue(metric, module.getName());
+				final Number tempVal = metricsProvider.getValue(metric, module.getName());
 				if (tempVal != null) {
 					val = tempVal.toString();
 				}
@@ -155,10 +155,10 @@ public class InfoWindow extends Dialog {
 				}
 				actRow = new ArrayList<String>();
 				actRow.add(metric.getName());
-				Statistics stat = metricsProvider.getStats(metric, module.getName());
+				final Statistics stat = metricsProvider.getStats(metric, module.getName());
 
 				for (StatColumn actCol : StatColumn.values()) {
-					Number val = stat == null ? null : stat.get(actCol);
+					final Number val = stat == null ? null : stat.get(actCol);
 					actRow.add(val == null ? "-" : val.toString());
 				}
 
@@ -180,7 +180,7 @@ public class InfoWindow extends Dialog {
 		createContents(module);
 		shell.open();
 		shell.layout();
-		Display display = getParent().getDisplay();
+		final Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -197,8 +197,8 @@ public class InfoWindow extends Dialog {
 	 * @param rowColour
 	 *            : The background color of the row
 	 */
-	private void addRow(List<String> rowData, Color rowColour) {
-		TableItem actItem = new TableItem(table, SWT.BORDER);
+	private void addRow(final List<String> rowData, final Color rowColour) {
+		final TableItem actItem = new TableItem(table, SWT.BORDER);
 		actItem.setBackground(SWTResourceManager.getColor(new RGB(rowColour.getRed(), rowColour.getGreen(), rowColour.getBlue())));
 		String[] row = new String[rowData.size()];
 		int i = 0;

@@ -58,8 +58,8 @@ public class IncorrectRotate {
 		 * @param value1 the left operand of the expression
 		 * @param value2 the right operand of the expression
 		 */
-		protected void checkRotationOperands(Problems problems, Location location, Value value1,
-				Value value2) {
+		protected void checkRotationOperands(final Problems problems, final Location location, final Value value1,
+				final Value value2) {
 			if (value1 == null || value2 == null) {
 				return;
 			}
@@ -101,7 +101,7 @@ public class IncorrectRotate {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof RotateLeftExpression)) {
 				return;
 			}
@@ -128,7 +128,7 @@ public class IncorrectRotate {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof RotateRightExpression)) {
 				return;
 			}
@@ -153,7 +153,7 @@ public class IncorrectRotate {
 	 * @param value the first operand of the rotate operation
 	 * @return the length of the first operand if it can be determined
 	 */
-	private static long getFirstRotateOperandLength(CompilationTimeStamp ct, Value value) {
+	private static long getFirstRotateOperandLength(final CompilationTimeStamp ct, final Value value) {
 		long valueSize = 0;
 		if (value == null) {
 			return 0;

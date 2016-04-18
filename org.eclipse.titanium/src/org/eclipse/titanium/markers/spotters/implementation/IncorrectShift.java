@@ -52,8 +52,8 @@ public class IncorrectShift {
 		 * @param value1 the left operand of the expression
 		 * @param value2 the right operand of the expression
 		 */
-		protected void checkShiftOperands(Problems problems, Location location, Value value1,
-				Value value2) {
+		protected void checkShiftOperands(final Problems problems, final Location location, final Value value1,
+				final Value value2) {
 			if (value1 == null || value2 == null) {
 				return;
 			}
@@ -91,7 +91,7 @@ public class IncorrectShift {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof ShiftLeftExpression)) {
 				return;
 			}
@@ -119,7 +119,7 @@ public class IncorrectShift {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof ShiftRightExpression)) {
 				return;
 			}
@@ -144,7 +144,7 @@ public class IncorrectShift {
 	 * @param value the first operand of the shift operation
 	 * @return the length of the first operand if it can be determined
 	 */
-	private static long getFirstShiftOperandLength(CompilationTimeStamp ct, Value value) {
+	private static long getFirstShiftOperandLength(final CompilationTimeStamp ct, final Value value) {
 		long stringSize = 0;
 		if (value == null) {
 			return 0;

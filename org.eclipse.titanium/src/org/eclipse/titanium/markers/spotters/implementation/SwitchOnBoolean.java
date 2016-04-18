@@ -27,7 +27,7 @@ public class SwitchOnBoolean extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof SelectCase_Statement) {
 			SelectCase_Statement s = (SelectCase_Statement) node;
 			Value expression = s.getExpression();

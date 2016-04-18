@@ -24,7 +24,7 @@ public class UnusedImport extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof ModuleImportation) {
 			ModuleImportation s = (ModuleImportation) node;
 			if (!s.getUsedForImportation()) {

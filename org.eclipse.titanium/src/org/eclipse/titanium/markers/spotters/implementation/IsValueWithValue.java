@@ -35,7 +35,7 @@ public class IsValueWithValue extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof IsValueExpression)) {
 			return;
 		}
@@ -55,12 +55,12 @@ public class IsValueWithValue extends BaseModuleCodeSmellSpotter {
 		
 		private final Problems problems; 
 		
-		public ExpressionVisitor(Problems problems) {
+		public ExpressionVisitor(final Problems problems) {
 			this.problems = problems;
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof IsValueExpression) {
 				return V_CONTINUE;
 			} else if (node instanceof TemplateInstance) {

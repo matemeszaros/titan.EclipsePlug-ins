@@ -57,7 +57,7 @@ public class UnnecessaryControl {
 		private static final String ONE_SHOT = "This loop is executed at most once, because the body always returns";
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof For_Statement)) {
 				return;
 			}
@@ -96,7 +96,7 @@ public class UnnecessaryControl {
 	public static class While extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof While_Statement)) {
 				return;
 			}
@@ -130,7 +130,7 @@ public class UnnecessaryControl {
 	public static class DoWhile extends Base {
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof DoWhile_Statement)) {
 				return;
 			}
@@ -160,7 +160,7 @@ public class UnnecessaryControl {
 		private static final String UNREACHABLE = "Control never reaches this code because of previous effective cases(s)";
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof SelectCase_Statement)) {
 				return;
 			}
@@ -197,7 +197,7 @@ public class UnnecessaryControl {
 		private static final String UNREACHABLE = "Control never reaches this code because the conditional expression evaluates to false";
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof If_Statement)) {
 				return;
 			}
@@ -251,7 +251,7 @@ public class UnnecessaryControl {
 		private static final String AFTER_ELSE = "Control never reaches this branch of alternative because of a previous [else] branch";
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof Alt_Statement)) {
 				return;
 			}

@@ -22,14 +22,14 @@ public class MMTimesImported extends BaseModuleMetric {
 	}
 
 	@Override
-	public void init(MetricData data) {
+	public void init(final MetricData data) {
 		imported.clear();
 		for (Module module : data.getModules()) {
 			imported.put(module, 0);
 		}
 		for (Module module : data.getModules()) {
 			for (final Module imp : module.getImportedModules()) {
-				Integer count = imported.get(imp);
+				final Integer count = imported.get(imp);
 				if (count != null) {
 					imported.put(imp, count + 1);
 				}

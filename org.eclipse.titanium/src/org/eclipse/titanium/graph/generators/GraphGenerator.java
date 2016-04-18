@@ -49,10 +49,10 @@ public abstract class GraphGenerator {
 	 * @param eHandler
 	 *            : An object that implements error handling capabilities
 	 */
-	public GraphGenerator(final IProject project, ErrorHandler eHandler) {
+	public GraphGenerator(final IProject project, final ErrorHandler eHandler) {
 		labeler = new Transformer<NodeDescriptor, String>() {
 			@Override
-			public String transform(NodeDescriptor v) {
+			public String transform(final NodeDescriptor v) {
 				return v.getDisplayName();
 			}
 		};
@@ -67,7 +67,7 @@ public abstract class GraphGenerator {
 
 		graphGenerator = new Job("Graph generator") {
 			@Override
-			protected IStatus run(IProgressMonitor monitor) {
+			protected IStatus run(final IProgressMonitor monitor) {
 				try {
 					createGraph();
 				} catch (Exception ex) {

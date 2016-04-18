@@ -52,17 +52,14 @@ public class PrivateViaPublic {
 
 		protected Module actualModule;
 
-		public Base(CodeSmellType codeSmellType) {
+		public Base(final CodeSmellType codeSmellType) {
 			super(codeSmellType);
 		}
 
-		protected boolean isVisibleInActualModule(Assignment assignment) {
+		protected boolean isVisibleInActualModule(final Assignment assignment) {
 			Module assignmentModule = assignment.getMyScope().getModuleScope();
-			if (assignmentModule.equals(actualModule) ||
-				assignmentModule.isVisible(CompilationTimeStamp.getBaseTimestamp(), actualModule.getIdentifier(), assignment)) {
-				return true;
-			}
-			return false;
+			return assignmentModule.equals(actualModule) ||
+				assignmentModule.isVisible(CompilationTimeStamp.getBaseTimestamp(), actualModule.getIdentifier(), assignment);
 		}
 
 		@Override
@@ -86,7 +83,7 @@ public class PrivateViaPublic {
 		}
 
 		@Override
-		protected void process(IVisitableNode node, Problems problems) {
+		protected void process(final IVisitableNode node, final Problems problems) {
 			actualModule = (Module) node;
 			fieldCollector = new FieldCollector();
 			actualModule.accept(fieldCollector);
@@ -105,7 +102,7 @@ public class PrivateViaPublic {
 			}
 
 			@Override
-			public int visit(IVisitableNode node) {
+			public int visit(final IVisitableNode node) {
 				if (node instanceof Reference) {
 					Reference reference = (Reference) node;
 					if (reference.getSubreferences().size() > 1) {
@@ -119,12 +116,12 @@ public class PrivateViaPublic {
 		}
 
 		@Override
-		protected void check(Problems problems) {
+		protected void check(final Problems problems) {
 			checkReferences(problems);
 			checkNamedValues(problems);
 		}
 
-		private void checkReferences(Problems problems) {
+		private void checkReferences(final Problems problems) {
 
 			Iterator<Reference> referenceIterator = fieldCollector.references.iterator();
 
@@ -168,7 +165,7 @@ public class PrivateViaPublic {
 			}
 		}
 
-		private void checkNamedValues(Problems problems) {
+		private void checkNamedValues(final Problems problems) {
 			Iterator<NamedValue> namedValueIterator = fieldCollector.namedValues.iterator();
 
 			while (namedValueIterator.hasNext()) {
@@ -214,13 +211,13 @@ public class PrivateViaPublic {
 				return isPrivate;
 			}
 
-			public IdentifierToDefType(Identifier identifier) {
+			public IdentifierToDefType(final Identifier identifier) {
 				identifierToFind = identifier;
 				isPrivate = false;
 			}
 
 			@Override
-			public int visit(IVisitableNode node) {
+			public int visit(final IVisitableNode node) {
 
 				if (node instanceof CompField) {
 					CompField compField = (CompField) node;
@@ -258,7 +255,7 @@ public class PrivateViaPublic {
 		}
 
 		@Override
-		protected void process(IVisitableNode node, Problems problems) {
+		protected void process(final IVisitableNode node, final Problems problems) {
 			actualModule = (Module) node;
 			valueCollector = new ValueCollector();
 			actualModule.accept(valueCollector);
@@ -274,7 +271,7 @@ public class PrivateViaPublic {
 			}
 
 			@Override
-			public int visit(IVisitableNode node) {
+			public int visit(final IVisitableNode node) {
 				if (node instanceof SequenceOf_Value) {
 					sequenceOfValues.add((SequenceOf_Value) node);
 				}
@@ -283,11 +280,11 @@ public class PrivateViaPublic {
 		}
 
 		@Override
-		public void check(Problems problems) {
+		public void check(final Problems problems) {
 			checkSequenceOfValues(problems);
 		}
 
-		private void checkSequenceOfValues(Problems problems) {
+		private void checkSequenceOfValues(final Problems problems) {
 			Iterator<SequenceOf_Value> valueIterator = valueCollector.sequenceOfValues.iterator();
 
 			while (valueIterator.hasNext()) {

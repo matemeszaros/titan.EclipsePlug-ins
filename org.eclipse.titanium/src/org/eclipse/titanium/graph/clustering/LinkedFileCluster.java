@@ -27,14 +27,14 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  */
 public class LinkedFileCluster extends ModuleLocationCluster {
 
-	public LinkedFileCluster(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, IProject project) {
+	public LinkedFileCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, final IProject project) {
 		super(graph, project);
 	}
 
 	@Override
-	protected void checkProject(IProgressMonitor progress) throws CoreException {
+	protected void checkProject(final IProgressMonitor progress) throws CoreException {
 		progress.subTask("Cheking " + project.getName());
-		IResource[] contents = project.members();
+		final IResource[] contents = project.members();
 		for (IResource content : contents) {
 			check(content, progress);
 		}
@@ -46,7 +46,7 @@ public class LinkedFileCluster extends ModuleLocationCluster {
 	 * @param file
 	 *            The file to search
 	 */
-	protected void checkFile(IFile file) {
+	protected void checkFile(final IFile file) {
 		final String name = parser.containedModule(file);
 		if (name == null) {
 			return;
@@ -55,7 +55,7 @@ public class LinkedFileCluster extends ModuleLocationCluster {
 	}
 
 	@Override
-	protected void checkFolder(IFolder folder, IProgressMonitor monitor) throws CoreException {
+	protected void checkFolder(final IFolder folder, final IProgressMonitor monitor) throws CoreException {
 		monitor.subTask("Checking " + folder.getName());
 		final IResource[] contents = folder.members();
 		for (IResource content : contents) {
@@ -78,7 +78,7 @@ public class LinkedFileCluster extends ModuleLocationCluster {
 	 *            The progress monitor
 	 * @throws CoreException
 	 */
-	protected void check(IResource content, IProgressMonitor monitor) throws CoreException {
+	protected void check(final IResource content, final IProgressMonitor monitor) throws CoreException {
 		switch (content.getType()) {
 		case IResource.FILE:
 			checkFile((IFile) content);

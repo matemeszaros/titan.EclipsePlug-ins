@@ -38,7 +38,7 @@ public class InfiniteLoop {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof While_Statement) {
 				While_Statement s = (While_Statement) node;
 				if (s.isTerminating(null)) {
@@ -63,7 +63,7 @@ public class InfiniteLoop {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (!(node instanceof For_Statement)) {
 				return;
 			}
@@ -105,7 +105,7 @@ public class InfiniteLoop {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof DoWhile_Statement) {
 				DoWhile_Statement s = (DoWhile_Statement) node;
 				if (s.isTerminating(null)) {

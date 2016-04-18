@@ -28,7 +28,7 @@ public class IfInsteadAltguard extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof AltGuard) {
 			AltGuard ag = (AltGuard) node;
 			StatementBlock statements = ag.getStatementBlock();

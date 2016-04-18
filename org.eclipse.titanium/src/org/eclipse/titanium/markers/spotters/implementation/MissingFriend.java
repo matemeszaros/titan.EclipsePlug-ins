@@ -28,7 +28,7 @@ public class MissingFriend extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof FriendModule) {
 			FriendModule s = (FriendModule) node;
 			Identifier identifier = s.getIdentifier();

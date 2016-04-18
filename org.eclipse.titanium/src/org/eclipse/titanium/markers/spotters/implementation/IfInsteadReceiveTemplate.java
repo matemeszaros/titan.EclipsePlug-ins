@@ -33,7 +33,7 @@ public class IfInsteadReceiveTemplate extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Operation_Altguard) {
 			Operation_Altguard ag = (Operation_Altguard) node;
 			Statement action = ag.getGuardStatement();
@@ -70,7 +70,7 @@ final class SuspiciouslyUsedIf extends ASTVisitor {
 	private boolean smells;
 	private If_Clause suspicious;
 
-	public SuspiciouslyUsedIf(Receive_Port_Statement rec) {
+	public SuspiciouslyUsedIf(final Receive_Port_Statement rec) {
 		redirectValue = rec.getRedirectValue();
 		smells = false;
 		suspicious = null;
@@ -116,7 +116,7 @@ final class RefUsedInMatching extends ASTVisitor {
 	private Reference ref;
 	private boolean used;
 
-	public RefUsedInMatching(Reference ref) {
+	public RefUsedInMatching(final Reference ref) {
 		this.ref = ref;
 		used = false;
 	}
@@ -144,7 +144,7 @@ final class ContainsRef extends ASTVisitor {
 	private Identifier id;
 	public boolean contains;
 
-	public ContainsRef(Reference ref) {
+	public ContainsRef(final Reference ref) {
 		id = ref.getId();
 		contains = false;
 	}

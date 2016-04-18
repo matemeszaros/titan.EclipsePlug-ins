@@ -24,7 +24,7 @@ public class Goto extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Goto_statement) {
 			Goto_statement s = (Goto_statement) node;
 			problems.report(s.getLocation(), ERROR_MESSAGE);

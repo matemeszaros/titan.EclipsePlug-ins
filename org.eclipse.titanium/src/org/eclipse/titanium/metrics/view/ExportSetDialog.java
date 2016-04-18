@@ -34,12 +34,12 @@ class ExportSetDialog {
 		shell.setText("Choose metrics");
 		shell.setLayout(new GridLayout());
 
-		ScrolledComposite sc = new ScrolledComposite(shell, SWT.V_SCROLL);
+		final ScrolledComposite sc = new ScrolledComposite(shell, SWT.V_SCROLL);
 		sc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		Composite content = new Composite(sc, 0);
+		final Composite content = new Composite(sc, 0);
 		sc.setContent(content);
 
-		GridLayout l = new GridLayout();
+		final GridLayout l = new GridLayout();
 		content.setLayout(l);
 		content.setSize(370, 100);
 		final Label hint = new Label(content, SWT.WRAP);

@@ -39,7 +39,7 @@ public class ReceiveAnyTemplate extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Operation_Altguard) {
 			Operation_Altguard ag = (Operation_Altguard) node;
 			Statement action = ag.getGuardStatement();
@@ -90,7 +90,7 @@ final class SuperfluousTemplate extends ASTVisitor {
 	private boolean receivesAny;
 	private boolean receivesAllOfType;
 
-	public SuperfluousTemplate(Receive_Port_Statement rec) {
+	public SuperfluousTemplate(final Receive_Port_Statement rec) {
 		Port_Type port = rec.getPortType();
 		receivableType = null;
 		if (port != null) {

@@ -20,7 +20,7 @@ import org.apache.commons.collections15.Transformer;
 public 	class EdgeStroke<E> implements Transformer<E, Stroke> {
 
 	@Override
-	public Stroke transform(E e) {
+	public Stroke transform(final E e) {
 		if (e instanceof EdgeDescriptor && NodeColours.DARK_RED.equals(((EdgeDescriptor) e).getColor())) {
 			return new BasicStroke(2.0f);
 		}

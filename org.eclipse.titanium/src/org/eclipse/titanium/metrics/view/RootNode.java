@@ -42,9 +42,9 @@ class RootNode implements INode {
 
 		final List<? super IContentNode> c = new ArrayList<IContentNode>();
 		final List<IMetricEnum> subs = type.getMetrics();
-		Iterator<IMetricEnum> it = subs.iterator();
+		final Iterator<IMetricEnum> it = subs.iterator();
 		while (it.hasNext()) {
-			IMetricEnum m = it.next();
+			final IMetricEnum m = it.next();
 			if (!PreferenceManager.isEnabledOnView(m)) {
 				it.remove();
 			}

@@ -11,7 +11,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Function;
 import org.eclipse.titanium.metrics.FunctionMetric;
 
 abstract class BaseFunctionMetric extends BaseMetric<Def_Function, FunctionMetric> {
-	BaseFunctionMetric(FunctionMetric metric) {
+	BaseFunctionMetric(final FunctionMetric metric) {
 		super(metric);
 	}
 }

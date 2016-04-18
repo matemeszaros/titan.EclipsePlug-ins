@@ -49,7 +49,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (!(node instanceof For_Statement)) {
 			return;
 		}
@@ -132,7 +132,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof LengthofExpression || node instanceof SizeOfExpression) {
 				return V_CONTINUE;
 			} else if (node instanceof Value) {
@@ -164,7 +164,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		
 		private Reference parentReference;
 		
-		public StatementBlockVisitor(Reference loopVariable, List<Reference> arraysIterated) {
+		public StatementBlockVisitor(final Reference loopVariable, final List<Reference> arraysIterated) {
 			this.loopVariable = loopVariable;
 			this.arraysIterated = arraysIterated;
 			matchingReferences = new ArrayList<Reference>();
@@ -175,7 +175,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			//avoid access to nested For_Statements: Analyzer.CodeSmellVisitor will visit them directly
 			if (node instanceof For_Statement) {
 				return V_SKIP;
@@ -223,7 +223,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		 * SubReferences of 'toTest';
 		 * SubReferences are compared by their String representation.
 		 * */
-		private boolean hasSubreferencePrefix(Reference prefix, Reference toTest) {
+		private boolean hasSubreferencePrefix(final Reference prefix, final Reference toTest) {
 			if (prefix == null || toTest == null || prefix.getSubreferences() == null || toTest.getSubreferences() == null) {
 				return false;
 			}
@@ -253,10 +253,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 				}
 			}
 			//'prefix' cannot be longer than 'toTest'
-			if (itPrefix.hasNext()) {
-				return false;
-			}
-			return true;
+			return !itPrefix.hasNext();
 		}
 		
 	}
@@ -271,7 +268,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Statement) {
 				return V_CONTINUE;
 			} else if (node instanceof Assignment_Statement) {

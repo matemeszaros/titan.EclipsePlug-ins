@@ -20,8 +20,8 @@ public class FMNesting extends BaseFunctionMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Function function) {
-		final Counter c = new Counter(0);
-		function.accept(new DepthVisitor(c));
-		return c.val();
+		final Counter count = new Counter(0);
+		function.accept(new DepthVisitor(count));
+		return count.val();
 	}
 }

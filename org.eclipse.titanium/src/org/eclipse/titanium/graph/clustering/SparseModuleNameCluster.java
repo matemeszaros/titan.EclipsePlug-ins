@@ -20,12 +20,12 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  */
 public class SparseModuleNameCluster extends FullModuleNameCluster {
 
-	public SparseModuleNameCluster(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
+	public SparseModuleNameCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
 		super(graph);
 	}
 
 	@Override
-	protected void check(String name) {
+	protected void check(final String name) {
 		if (!mapNameCluster.get(name).isEmpty()) {
 			super.check(name);
 		}

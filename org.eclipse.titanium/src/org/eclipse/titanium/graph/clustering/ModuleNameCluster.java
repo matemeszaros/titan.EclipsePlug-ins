@@ -41,7 +41,7 @@ public class ModuleNameCluster extends BaseCluster {
 	/**
 	 * Initialize the variables for the clustering.
 	 */
-	public ModuleNameCluster(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
+	public ModuleNameCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph) {
 		moduleGraph = graph;
 		successful = true;
 
@@ -62,9 +62,10 @@ public class ModuleNameCluster extends BaseCluster {
 	}
 
 	@Override
-	public boolean createClusters(IProgressMonitor monitor) {
-		IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
+	public boolean createClusters(final IProgressMonitor monitor) {
+		final IProgressMonitor progress = (monitor == null) ? new NullProgressMonitor() : monitor;
 		progress.beginTask("Creating clusters", 1 + moduleGraph.getVertexCount());
+
 		if ((!checkUnderscore && !checkAlternatingCase) || depth == 0) {
 			setErronous("Module names will not be split with the current settings.\n"
 					+ "Please visit the 'Clusters' Preference page to correct it.\n");
@@ -84,7 +85,7 @@ public class ModuleNameCluster extends BaseCluster {
 	/**
 	 * Slice up the module names to guess the "package" name.
 	 */
-	private void createNames(IProgressMonitor monitor) {
+	private void createNames(final IProgressMonitor monitor) {
 		addCluster(ALL);
 		for (NodeDescriptor v : moduleGraph.getVertices()) {
 			final String name = v.getDisplayName();
@@ -95,7 +96,7 @@ public class ModuleNameCluster extends BaseCluster {
 			final int length = name.length();
 			char prev = '0';
 			while (i < length && splits < depth) {
-				char c = name.charAt(i);
+				final char c = name.charAt(i);
 				if (checkDash(prev, c)) {
 					addSubName(name, i);
 					++splits;
@@ -118,7 +119,7 @@ public class ModuleNameCluster extends BaseCluster {
 		}
 	}
 
-	private boolean checkDash(char prev, char cur) {
+	private boolean checkDash(final char prev, final char cur) {
 		return checkUnderscore && prev != '_' && (cur == '-' || cur == '_');
 	}
 
@@ -130,7 +131,7 @@ public class ModuleNameCluster extends BaseCluster {
 	 * @param i
 	 *            Position where the name is split
 	 */
-	private void addSubName(String name, int i) {
+	private void addSubName(final String name, final int i) {
 		final String word = name.substring(0, i);
 		addCluster(word);
 	}
@@ -141,7 +142,7 @@ public class ModuleNameCluster extends BaseCluster {
 	 * @param word
 	 *            The segment the cluster belongs to
 	 */
-	private void addCluster(String word) {
+	private void addCluster(final String word) {
 		if (!knownNames.contains(word)) {
 			knownNames.add(word);
 			final Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
@@ -184,7 +185,7 @@ public class ModuleNameCluster extends BaseCluster {
 
 	@Override
 	protected void createGraph() {
-		Set<String> empty = new HashSet<String>();
+		final Set<String> empty = new HashSet<String>();
 		for (String name : knownNames) {
 			if (mapNameCluster.get(name).isEmpty()) {
 				empty.add(name);

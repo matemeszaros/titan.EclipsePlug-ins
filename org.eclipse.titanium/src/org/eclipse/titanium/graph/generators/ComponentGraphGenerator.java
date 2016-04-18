@@ -52,7 +52,7 @@ public class ComponentGraphGenerator extends GraphGenerator {
 	 * @param eHandler
 	 *            : An object that implements error reporting capabilities
 	 */
-	public ComponentGraphGenerator(IProject project, ErrorHandler eHandler) {
+	public ComponentGraphGenerator(final IProject project, final ErrorHandler eHandler) {
 		super(project, eHandler);
 		if (eHandler == null) {
 			errorHandler.reportErrorMessage("The referenced error handler mustn't be null"
@@ -65,8 +65,8 @@ public class ComponentGraphGenerator extends GraphGenerator {
 
 		analyzeProject();
 
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		List<IProject> visitedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
+		final List<IProject> visitedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
 
 		for (final IProject currentProject : visitedProjects) {
 			for (String moduleName : projectSourceParser.getKnownModuleNames()) {
@@ -75,23 +75,23 @@ public class ComponentGraphGenerator extends GraphGenerator {
 		}
 	}
 
-	private void handleModule(final IProject currentProject, Module mod) {
+	private void handleModule(final IProject currentProject, final Module mod) {
 		mod.accept(new ASTVisitor() {
 			@Override
-			public int visit(IVisitableNode node) {
+			public int visit(final IVisitableNode node) {
 				if (!(node instanceof Def_Type)) {
 					return super.visit(node);
 				}
 
-				Def_Type defType = (Def_Type) node;
-				Type type = defType.getType(CompilationTimeStamp.getBaseTimestamp());
+				final Def_Type defType = (Def_Type) node;
+				final Type type = defType.getType(CompilationTimeStamp.getBaseTimestamp());
 				if (!(type instanceof Component_Type)) {
 					return super.visit(node);
 				}
 
-				Component_Type componentType = (Component_Type) type;
+				final Component_Type componentType = (Component_Type) type;
 
-				Identifier id = defType.getIdentifier();
+				final Identifier id = defType.getIdentifier();
 
 				final NodeDescriptor sourceNode = new NodeDescriptor(id.getDisplayName(), id.getName(), NodeColours.LIGHT_GREEN,
 						currentProject, false, id.getLocation());
@@ -101,10 +101,10 @@ public class ComponentGraphGenerator extends GraphGenerator {
 				}
 
 				final ComponentCollector componentCollector = new ComponentCollector(currentProject, sourceNode.getName());
-				ComponentTypeReferenceList compReferenceList = componentType.getComponentBody().getExtensions();
+				final ComponentTypeReferenceList compReferenceList = componentType.getComponentBody().getExtensions();
 				compReferenceList.accept(componentCollector);
 
-				ComponentTypeReferenceList compReferenceListAttribute = componentType.getComponentBody().getAttributeExtensions();
+				final ComponentTypeReferenceList compReferenceListAttribute = componentType.getComponentBody().getAttributeExtensions();
 				if (compReferenceListAttribute != null) {
 					compReferenceListAttribute.accept(componentCollector);
 				}
@@ -116,7 +116,7 @@ public class ComponentGraphGenerator extends GraphGenerator {
 	}
 
 	private void analyzeProject() {
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
 		if (projectSourceParser.getLastTimeChecked() == null) {
 			WorkspaceJob job = projectSourceParser.analyzeAll();
 
@@ -147,19 +147,19 @@ public class ComponentGraphGenerator extends GraphGenerator {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
-				Reference reference = (Reference) node;
-				ISetting setting = reference.getRefdSetting(CompilationTimeStamp.getBaseTimestamp());
-				Identifier id = reference.getId();
+				final Reference reference = (Reference) node;
+				final ISetting setting = reference.getRefdSetting(CompilationTimeStamp.getBaseTimestamp());
+				final Identifier id = reference.getId();
 
 				if (!labels.containsKey(id.getName())) {
-					NodeDescriptor destinationNode = new NodeDescriptor(id.getDisplayName(), id.getName(),
+					final NodeDescriptor destinationNode = new NodeDescriptor(id.getDisplayName(), id.getName(),
 							NodeColours.LIGHT_GREEN, currentProject, false, setting.getLocation());
 					graph.addVertex(destinationNode);
 					labels.put(destinationNode.getName(), destinationNode);
 				}
-				EdgeDescriptor edge = new EdgeDescriptor(sourceName + "->" + id.getName(), Color.black);
+				final EdgeDescriptor edge = new EdgeDescriptor(sourceName + "->" + id.getName(), Color.black);
 				graph.addEdge(edge, labels.get(sourceName), labels.get(id.getName()), EdgeType.DIRECTED);
 			}
 			return super.visit(node);

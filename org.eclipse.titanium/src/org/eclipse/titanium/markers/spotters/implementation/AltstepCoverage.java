@@ -50,7 +50,7 @@ public class AltstepCoverage {
 		private static final String NOT_COVERED = "This altstep does not handle all possible incoming message types.";
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Def_Altstep) {
 				Def_Altstep alt = (Def_Altstep) node;
 				Map<Identifier, Set<String>> visiblePorts = new HashMap<Identifier, Set<String>>();
@@ -88,7 +88,7 @@ public class AltstepCoverage {
 		private static final String NOT_COVERED = "This alt statement does not handle all possible incoming message types.";
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Alt_Statement) {
 				Alt_Statement alt = (Alt_Statement) node;
 				Map<Identifier, Set<String>> visiblePorts = new HashMap<Identifier, Set<String>>();
@@ -139,7 +139,7 @@ public class AltstepCoverage {
 			super(CodeSmellType.ALTSTEP_COVERAGE);
 		}
 
-		void addPortsOfComponent(Component_Type comp, Map<Identifier, Set<String>> visiblePorts) {
+		void addPortsOfComponent(final Component_Type comp, final Map<Identifier, Set<String>> visiblePorts) {
 			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 			for (Definition def : comp.getComponentBody().getDefinitions()) {
 				if (def instanceof Def_Port) {
@@ -161,7 +161,7 @@ public class AltstepCoverage {
 			}
 		}
 
-		void addPortsOfParameterList(FormalParameterList parameters, Map<Identifier, Set<String>> visiblePorts) {
+		void addPortsOfParameterList(final FormalParameterList parameters, final Map<Identifier, Set<String>> visiblePorts) {
 			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 			for (int i = 0; i < parameters.getNofParameters(); ++i) {
 				FormalParameter param = parameters.getParameterByIndex(i);
@@ -182,7 +182,7 @@ public class AltstepCoverage {
 			}
 		}
 
-		void removeHandledByGuards(AltGuards guards, Map<Identifier, Set<String>> visiblePorts) {
+		void removeHandledByGuards(final AltGuards guards, final Map<Identifier, Set<String>> visiblePorts) {
 			// We also remove those ports that are ignored (not mentioned) in
 			// the altguards,
 			// as usually they are used for sending messages, not receiving
@@ -235,7 +235,7 @@ public class AltstepCoverage {
 			}
 		}
 
-		void handleRemainingPorts(String prepend, Location reportAt, Map<Identifier, Set<String>> visiblePorts, Problems problems) {
+		void handleRemainingPorts(final String prepend, final Location reportAt, final Map<Identifier, Set<String>> visiblePorts, final Problems problems) {
 			// remove empty sets (those ports that have all their outgoing types
 			// handled:
 			Iterator<Entry<Identifier, Set<String>>> it = visiblePorts.entrySet().iterator();
@@ -257,7 +257,7 @@ public class AltstepCoverage {
 						sb.append(typeIt.next());
 					}
 					while (typeIt.hasNext()) {
-						sb.append(", " + typeIt.next());
+						sb.append(", ").append(typeIt.next());
 					}
 					sb.append("\n");
 				}

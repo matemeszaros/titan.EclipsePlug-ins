@@ -43,7 +43,7 @@ public class ModuleGraphGenerator extends GraphGenerator {
 	 * @param eHandler
 	 *            : An object that implements error reporting capabilities
 	 */
-	public ModuleGraphGenerator(IProject project, ErrorHandler eHandler) {
+	public ModuleGraphGenerator(final IProject project, final ErrorHandler eHandler) {
 		super(project, eHandler);
 		if (eHandler == null) {
 			errorHandler.reportErrorMessage("The referenced error handler mustn't be null (source: ModuleGraphGenerator)");
@@ -54,7 +54,7 @@ public class ModuleGraphGenerator extends GraphGenerator {
 	protected void createGraph() {
 
 		// analyze the project if needed
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(project);
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(project);
 		if (sourceParser.getLastTimeChecked() == null) {
 			WorkspaceJob job = sourceParser.analyzeAll();
 
@@ -74,17 +74,17 @@ public class ModuleGraphGenerator extends GraphGenerator {
 			}
 		}
 
-		List<IProject> visitedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
-		Map<String, Identifier> globalKnownModules = new HashMap<String, Identifier>();
+		final List<IProject> visitedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
+		final Map<String, Identifier> globalKnownModules = new HashMap<String, Identifier>();
 
 		for (int i = 0; i < visitedProjects.size(); ++i) {
-			IProject currentProject = visitedProjects.get(i);
-			ProjectStructureDataCollector collector = GlobalProjectStructureTracker.getDataCollector(currentProject);
+			final IProject currentProject = visitedProjects.get(i);
+			final ProjectStructureDataCollector collector = GlobalProjectStructureTracker.getDataCollector(currentProject);
 			collector.evaulateMissingModules();
 
 			// adding known modules
 			for (Identifier moduleName : collector.knownModules.values()) {
-				NodeDescriptor actNode = new NodeDescriptor(moduleName.getDisplayName(), moduleName.getName(), currentProject,
+				final NodeDescriptor actNode = new NodeDescriptor(moduleName.getDisplayName(), moduleName.getName(), currentProject,
 						false, moduleName.getLocation());
 				globalKnownModules.put(moduleName.getName(), moduleName);
 				if (!graph.containsVertex(actNode)) {
@@ -96,7 +96,7 @@ public class ModuleGraphGenerator extends GraphGenerator {
 			// adding missing modules
 			for (Identifier moduleName : collector.missingModules.values()) {
 				if (!globalKnownModules.containsKey(moduleName.getName())) {
-					NodeDescriptor actNode = new NodeDescriptor(moduleName.getDisplayName(), moduleName.getName(),
+					final NodeDescriptor actNode = new NodeDescriptor(moduleName.getDisplayName(), moduleName.getName(),
 							currentProject, true, moduleName.getLocation());
 					if (!graph.containsVertex(actNode)) {
 						graph.addVertex(actNode);
@@ -108,7 +108,7 @@ public class ModuleGraphGenerator extends GraphGenerator {
 			// building edges
 			for (String from : collector.importations.keySet()) {
 				for (String to : collector.importations.get(from)) {
-					EdgeDescriptor edge = new EdgeDescriptor(from + "->" + to, Color.black);
+					final EdgeDescriptor edge = new EdgeDescriptor(from + "->" + to, Color.black);
 					// if(!graph.containsEdge(edge))
 					graph.addEdge(edge, labels.get(from), labels.get(to), EdgeType.DIRECTED);
 				}

@@ -29,7 +29,7 @@ public class Visibility extends BaseModuleCodeSmellSpotter {
 	}
 	
 	@Override
-	protected void process(IVisitableNode node, Problems problems) {
+	protected void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof FormalParameter) {
 			return;
 		} else if (node instanceof Definition) {
@@ -54,7 +54,7 @@ public class Visibility extends BaseModuleCodeSmellSpotter {
 	}
 	
 
-	protected void check(final Identifier identifier, final String description, Problems problems) {
+	protected void check(final Identifier identifier, final String description, final Problems problems) {
 		String displayName = identifier.getDisplayName();
 		if (VISIBILITY_PATTERN.matcher(displayName).matches()) {
 			String msg = MessageFormat.format(REPORT, description, displayName);

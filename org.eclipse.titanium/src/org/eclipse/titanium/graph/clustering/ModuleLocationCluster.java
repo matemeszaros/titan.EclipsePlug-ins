@@ -26,12 +26,12 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  */
 public class ModuleLocationCluster extends FolderNameCluster {
 
-	public ModuleLocationCluster(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, IProject project) {
+	public ModuleLocationCluster(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, final IProject project) {
 		super(graph, project);
 	}
 
 	@Override
-	protected void checkFile(IFile file, Set<NodeDescriptor> cluster) {
+	protected void checkFile(final IFile file, final Set<NodeDescriptor> cluster) {
 		final String name = parser.containedModule(file);
 		if (name == null) {
 			return;
@@ -51,7 +51,7 @@ public class ModuleLocationCluster extends FolderNameCluster {
 	 * @param clustername
 	 *            The name of the cluster this file should belong to
 	 */
-	protected void checkLinkedFile(String filename, String clustername) {
+	protected void checkLinkedFile(final String filename, final String clustername) {
 		if (mapNameCluster.containsKey(clustername)) {
 			final Set<NodeDescriptor> cluster = mapNameCluster.get(clustername);
 			addNodeToCluster(filename, cluster);
@@ -64,7 +64,7 @@ public class ModuleLocationCluster extends FolderNameCluster {
 	}
 
 	@Override
-	protected void addNewCluster(Set<NodeDescriptor> cluster, IFolder folder) {
+	protected void addNewCluster(final Set<NodeDescriptor> cluster, final IFolder folder) {
 		if (!cluster.isEmpty()) {
 			clusters.add(cluster);
 			if (folder.isLinked()) {

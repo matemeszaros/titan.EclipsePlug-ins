@@ -23,7 +23,7 @@ public class UnusedGlobalDefinition extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Assignment) {
 			Assignment s = (Assignment) node;
 			if (!s.isUsed() && !s.isLocal() && !(s.getMyScope() instanceof ComponentTypeBody)) {

@@ -85,23 +85,23 @@ public class Metrics {
 		projectMetrics.put(ProjectMetric.NOF_TTCN3_MODULES, new PMNofTTCN3Modules());
 	}
 
-	public IMetric<Def_Altstep, AltstepMetric> get(AltstepMetric metric) {
+	public IMetric<Def_Altstep, AltstepMetric> get(final AltstepMetric metric) {
 		return altstepMetrics.get(metric);
 	}
 
-	public IMetric<Def_Function, FunctionMetric> get(FunctionMetric metric) {
+	public IMetric<Def_Function, FunctionMetric> get(final FunctionMetric metric) {
 		return functionMetrics.get(metric);
 	}
 
-	public IMetric<Def_Testcase, TestcaseMetric> get(TestcaseMetric metric) {
+	public IMetric<Def_Testcase, TestcaseMetric> get(final TestcaseMetric metric) {
 		return testcaseMetrics.get(metric);
 	}
 
-	public IMetric<Module, ModuleMetric> get(ModuleMetric metric) {
+	public IMetric<Module, ModuleMetric> get(final ModuleMetric metric) {
 		return moduleMetrics.get(metric);
 	}
 
-	public IMetric<IProject, ProjectMetric> get(ProjectMetric metric) {
+	public IMetric<IProject, ProjectMetric> get(final ProjectMetric metric) {
 		return projectMetrics.get(metric);
 	}
 }

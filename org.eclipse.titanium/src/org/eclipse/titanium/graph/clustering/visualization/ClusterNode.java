@@ -26,7 +26,7 @@ public class ClusterNode extends NodeDescriptor {
 	 * @param name
 	 *            : The cluster's name
 	 */
-	public ClusterNode(String name) {
+	public ClusterNode(final String name) {
 		super(name);
 		nodeColour = NodeColours.DARK_GREEN;
 	}
@@ -39,7 +39,7 @@ public class ClusterNode extends NodeDescriptor {
 	 * @param cluster
 	 *            : A set of nodes belonging to the represented cluster
 	 */
-	public ClusterNode(String name, Set<NodeDescriptor> cluster) {
+	public ClusterNode(final String name, final Set<NodeDescriptor> cluster) {
 		this(name);
 		setCluster(cluster);
 	}

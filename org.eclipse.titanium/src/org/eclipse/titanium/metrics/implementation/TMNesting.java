@@ -20,8 +20,8 @@ public class TMNesting extends BaseTestcaseMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Testcase testcase) {
-		final Counter c = new Counter(0);
-		testcase.accept(new DepthVisitor(c));
-		return c.val();
+		final Counter count = new Counter(0);
+		testcase.accept(new DepthVisitor(count));
+		return count.val();
 	}
 }

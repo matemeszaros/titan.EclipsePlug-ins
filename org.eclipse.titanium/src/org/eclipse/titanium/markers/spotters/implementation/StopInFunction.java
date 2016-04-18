@@ -26,7 +26,7 @@ public class StopInFunction extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode node, Problems problems) {
+	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Stop_Execution_Statement) {
 			Stop_Execution_Statement s = (Stop_Execution_Statement) node;
 			StatementBlock sb = s.getMyStatementBlock();

@@ -21,9 +21,9 @@ public class AMOutEnvy extends BaseAltstepMetric {
 
 	@Override
 	public Number measure(final MetricData data, final Def_Altstep altstep) {
-		final Counter c = new Counter(0);
+		final Counter count = new Counter(0);
 		final Module myModule = altstep.getMyScope().getModuleScope();
-		altstep.accept(new ExternalFeatureEnvyDetector(myModule, c));
-		return c.val();
+		altstep.accept(new ExternalFeatureEnvyDetector(myModule, count));
+		return count.val();
 	}
 }

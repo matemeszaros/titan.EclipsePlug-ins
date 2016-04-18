@@ -33,7 +33,7 @@ public class ReadOnlyLocal {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Def_Var) {
 				Def_Var s = (Def_Var) node;
 				if (!(s.getMyScope() instanceof ComponentTypeBody) && !s.getWritten()) {
@@ -63,7 +63,7 @@ public class ReadOnlyLocal {
 		}
 
 		@Override
-		public void process(IVisitableNode node, Problems problems) {
+		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Def_Var_Template) {
 				Def_Var_Template s = (Def_Var_Template) node;
 				if (!s.getWritten()) {

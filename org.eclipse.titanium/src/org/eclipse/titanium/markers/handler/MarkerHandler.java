@@ -33,7 +33,7 @@ public final class MarkerHandler {
 	private final Map<IResource, List<Marker>> markersByResource;
 	private final Map<CodeSmellType, List<Marker>> markersByType;
 
-	public MarkerHandler(Map<IResource, List<Marker>> markers) {
+	public MarkerHandler(final Map<IResource, List<Marker>> markers) {
 		markersByResource = new HashMap<IResource, List<Marker>>();
 		for (Entry<IResource, List<Marker>> entry : markers.entrySet()) {
 			for (Marker m : entry.getValue()) {
@@ -59,7 +59,7 @@ public final class MarkerHandler {
 	 *            the resource
 	 * @return the list of markers (never <code>null</code>)
 	 */
-	public List<Marker> get(IResource res) {
+	public List<Marker> get(final IResource res) {
 		return (markersByResource.get(res) == null) ? Collections.<Marker> emptyList() : Collections.unmodifiableList(markersByResource
 				.get(res));
 	}
@@ -72,7 +72,7 @@ public final class MarkerHandler {
 	 *            the code smell type
 	 * @return the list of markers (never <code>null</code>)
 	 */
-	public List<Marker> get(CodeSmellType type) {
+	public List<Marker> get(final CodeSmellType type) {
 		if (markersByType.isEmpty()) {
 			lazyInit();
 		}
@@ -86,7 +86,7 @@ public final class MarkerHandler {
 	 *            the code smell type
 	 * @return the number of occurrences
 	 */
-	public int numberOfOccurrences(CodeSmellType type) {
+	public int numberOfOccurrences(final CodeSmellType type) {
 		if (markersByType.isEmpty()) {
 			lazyInit();
 		}
@@ -137,9 +137,9 @@ public final class MarkerHandler {
 		}
 	}
 
-	private void refresh(IResource res) {
+	private void refresh(final IResource res) {
 		org.eclipse.titan.designer.AST.MarkerHandler.markMarkersForRemoval(CodeSmellType.MARKER_ID, res);
-		List<Marker> markers = markersByResource.get(res);
+		final List<Marker> markers = markersByResource.get(res);
 		if (markers != null) {
 			for (Marker m : markers) {
 				m.show();

@@ -49,7 +49,7 @@ class XLSExporter {
 
 	public void write(final RiskLevel r) {
 		try {
-			HSSFWorkbook workbook = new HSSFWorkbook();
+			final HSSFWorkbook workbook = new HSSFWorkbook();
 
 			for (final MetricGroup type : new MetricGroup[] { MetricGroup.MODULE, MetricGroup.ALTSTEP, MetricGroup.FUNCTION,MetricGroup.TESTCASE }) {
 				for (IMetricEnum metric : type.getMetrics()) {
@@ -57,13 +57,12 @@ class XLSExporter {
 						continue;
 					}
 
-					ProjectStatNode pn = new ProjectStatNode(metric);
+					final ProjectStatNode pn = new ProjectStatNode(metric);
 					if (!pn.hasChildren(data) || pn.getRiskLevel(data).compareTo(r) < 0) {
 						continue;
 					}
 
-					Sheet sheet = workbook.createSheet(getSheetName(metric));
-					
+					final Sheet sheet = workbook.createSheet(getSheetName(metric));
 					printChildren(sheet, pn, 0, 0);
 				}
 			}
@@ -83,15 +82,15 @@ class XLSExporter {
 	 * @return the sheet name of the provided metric
 	 * */
 	private String getSheetName(final IMetricEnum metric) {
-		StringBuilder builder = new StringBuilder(metric.getName());
+		final StringBuilder builder = new StringBuilder(metric.getName());
 		builder.append(" (").append(metric.groupName()).append(")");
 		return builder.length() > 31 ? builder.substring(0, 31): builder.toString(); 	
 	}
 	
 	
 	protected int printChildren(final Sheet sheet, final IContentNode n, final int col, final int line) {
-		Object[] objs = n.getChildren(data);
-		List<IContentNode> cns = new ArrayList<IContentNode>();
+		final Object[] objs = n.getChildren(data);
+		final List<IContentNode> cns = new ArrayList<IContentNode>();
 		for (Object o : objs) {
 			cns.add((IContentNode) o);
 		}
@@ -100,15 +99,14 @@ class XLSExporter {
 
 		int currentRow = line;
 		for (IContentNode c : cns) {
-			
-			Row row = sheet.createRow(currentRow++);	
-			Cell cell = row.createCell(col);		
+			final Row row = sheet.createRow(currentRow++);	
+			final Cell cell = row.createCell(col);		
 			cell.setCellValue(c.getColumnText(data, 0));
 			
 			if (c.hasChildren(data)) {	
 				currentRow = printChildren(sheet, c, col + 1, currentRow);
 			} else {								
-				Cell number = row.createCell(col + 1);
+				final Cell number = row.createCell(col + 1);
 				number.setCellValue(Double.parseDouble(c.getColumnText(data, 1)));			
 			}
 		}

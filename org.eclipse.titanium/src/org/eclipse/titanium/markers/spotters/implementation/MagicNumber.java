@@ -31,10 +31,10 @@ public class MagicNumber extends BaseModuleCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IVisitableNode n, final Problems problems) {
+	public void process(final IVisitableNode n, final Problems problems) {
 		n.accept(new ASTVisitor() {
 			@Override
-			public int visit(IVisitableNode node) {
+			public int visit(final IVisitableNode node) {
 				if (node instanceof Integer_Value) {
 					Integer_Value value = (Integer_Value) node;
 					BigInteger bigNumber = value.getValueValue();

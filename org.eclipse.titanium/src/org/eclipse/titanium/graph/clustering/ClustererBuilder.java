@@ -33,7 +33,7 @@ public class ClustererBuilder {
 	 * @param algorithm : The algorithm name
 	 * @return This object
 	 */
-	public ClustererBuilder setAlgorithm(String algorithm){
+	public ClustererBuilder setAlgorithm(final String algorithm){
 		clusterName=algorithm;
 		return this;
 	}
@@ -43,7 +43,7 @@ public class ClustererBuilder {
 	 * @param graph : The graph to be clustered
 	 * @return This object
 	 */
-	public ClustererBuilder setGraph(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph){
+	public ClustererBuilder setGraph(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph){
 		originalGraph=graph;
 		return this;
 	}
@@ -53,7 +53,7 @@ public class ClustererBuilder {
 	 * @param project : The project to set
 	 * @return This object
 	 */
-	public ClustererBuilder setProject(IProject project){
+	public ClustererBuilder setProject(final IProject project){
 		this.project=project;
 		return this;
 	}
@@ -68,7 +68,7 @@ public class ClustererBuilder {
 			throw new IllegalArgumentException("The graph parameter wasn't set for the builder");
 		}
 		
-		ConsoleErrorHandler errorHandler = new ConsoleErrorHandler();
+		final ConsoleErrorHandler errorHandler = new ConsoleErrorHandler();
 		BaseCluster clusterer=null;
 		
 		if ("modulelocation".equalsIgnoreCase(clusterName)) {

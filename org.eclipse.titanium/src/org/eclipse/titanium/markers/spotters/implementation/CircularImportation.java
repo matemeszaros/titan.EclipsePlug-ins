@@ -32,7 +32,7 @@ public class CircularImportation extends BaseProjectCodeSmellSpotter {
 	}
 
 	@Override
-	public void process(IProject project, Problems problems) {
+	public void process(final IProject project, final Problems problems) {
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
 		Set<String> knownModuleNames = projectSourceParser.getKnownModuleNames();
 		List<Module> modules = new ArrayList<Module>();
@@ -42,7 +42,7 @@ public class CircularImportation extends BaseProjectCodeSmellSpotter {
 
 		Collections.sort(modules, new Comparator<Module>() {
 			@Override
-			public int compare(Module o1, Module o2) {
+			public int compare(final Module o1, final Module o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
@@ -109,7 +109,7 @@ class CycleCheck {
 	 * @param modules
 	 *            The modules of a project.
 	 */
-	public CycleCheck(List<Module> modules) {
+	public CycleCheck(final List<Module> modules) {
 		map = new HashMap<Module, Node>();
 		for (Module module : modules) {
 			map.put(module, new Node(module));
@@ -124,7 +124,7 @@ class CycleCheck {
 		}
 	}
 
-	private void dfs(Node n) {
+	private void dfs(final Node n) {
 		n.state = State.GRAY;
 		for (Module m : n.module.getImportedModules()) {
 			Node child = map.get(m);
@@ -145,7 +145,7 @@ class CycleCheck {
 		n.state = State.BLACK;
 	}
 
-	private void newCycle(Node knot, Node n) {
+	private void newCycle(final Node knot, final Node n) {
 		List<Module> cycle = new ArrayList<Module>();
 		if (knot.module != n.module) {
 			Node p = n;
@@ -171,7 +171,7 @@ class CycleCheck {
 		/** The actual state during traversal */
 		State state;
 
-		public Node(Module module) {
+		public Node(final Module module) {
 			this.module = module;
 			parent = null;
 			state = State.WHITE;

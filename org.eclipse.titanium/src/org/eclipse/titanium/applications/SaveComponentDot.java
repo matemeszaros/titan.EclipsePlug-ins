@@ -23,7 +23,7 @@ import org.eclipse.titanium.graph.visualization.GraphHandler;
  */
 public class SaveComponentDot extends InformationExporter {
 	@Override
-	protected boolean checkParameters(String[] args) {
+	protected boolean checkParameters(final String[] args) {
 		if (args.length != 1) {
 			System.out.println("This application takes as parameter the location of the resulting .net files");
 			return false;
@@ -33,7 +33,7 @@ public class SaveComponentDot extends InformationExporter {
 	}
 	
 	@Override
-	protected void exportInformationForProject(final String[] args, final IProject project, IProgressMonitor monitor) {
+	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
 		final ErrorHandler errorHandler = new ConsoleErrorHandler();
 		GraphGenerator generator = new ComponentGraphGenerator(project, errorHandler);
 		try {

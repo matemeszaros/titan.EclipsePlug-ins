@@ -36,22 +36,22 @@ public class GraphClusterPage extends FieldEditorPreferencePage implements IWork
 	}
 
 	@Override
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setDescription(DESCRIPTION);
 		noDefaultAndApplyButton();
 	}
 
 	protected Composite setupLabel(final Composite page, final String text, final String hint) {
-		Group header = new Group(page, SWT.NONE);
+		final Group header = new Group(page, SWT.NONE);
 		header.setText(text);
-		GridLayout layout = new GridLayout();
+		final GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		header.setLayout(layout);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		header.setLayoutData(gridData);
 		header.setToolTipText(hint);
 
-		Composite composite = new Composite(header, SWT.NONE);
+		final Composite composite = new Composite(header, SWT.NONE);
 		gridData = new GridData(SWT.FILL, SWT.FILL, false, false);
 		gridData.horizontalIndent = 3;
 		composite.setLayoutData(gridData);
@@ -60,14 +60,14 @@ public class GraphClusterPage extends FieldEditorPreferencePage implements IWork
 	}
 
 	protected void setupBooleanEditor(final Composite comp, final String pref, final String text, final String hint) {
-		BooleanFieldEditor editor = new BooleanFieldEditor(pref, text, comp);
+		final BooleanFieldEditor editor = new BooleanFieldEditor(pref, text, comp);
 		editor.getDescriptionControl(comp).setToolTipText(hint);
 		editor.fillIntoGrid(comp, 2);
 		addField(editor);
 	}
 
 	protected void setupIntegerEditor(final Composite comp, final String pref, final String text, final String hint) {
-		IntegerFieldEditor editor = new IntegerFieldEditor(pref, text, comp);
+		final IntegerFieldEditor editor = new IntegerFieldEditor(pref, text, comp);
 		editor.getLabelControl(comp).setToolTipText(hint);
 		addField(editor);
 	}
