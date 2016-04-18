@@ -31,10 +31,10 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  * @author Gabor Jenei
  */
 public class SaveModuleNet extends InformationExporter {
-	private DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> g=null;
+	private DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph=null;
 	
 	@Override
-	protected boolean checkParameters(String[] args) {
+	protected boolean checkParameters(final String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage: <output path> [-c<clustering algorithm name>]");
 			System.out.println("The possible clustering algorithms are: ");
@@ -46,9 +46,9 @@ public class SaveModuleNet extends InformationExporter {
 	}
 
 	@Override
-	protected void exportInformationForProject(final String[] args, final IProject project, IProgressMonitor monitor) {
+	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
 		final ErrorHandler errorHandler = new ConsoleErrorHandler();
-		GraphGenerator generator = new ModuleGraphGenerator(project, errorHandler);
+		final GraphGenerator generator = new ModuleGraphGenerator(project, errorHandler);
 		
 		try {
 			generator.generateGraph();
@@ -60,16 +60,16 @@ public class SaveModuleNet extends InformationExporter {
 			}
 			
 			if(clusterName.isEmpty()){
-				g = generator.getGraph();
+				graph = generator.getGraph();
 			} else {
-				BaseCluster clusterer = new ClustererBuilder().
+				final BaseCluster clusterer = new ClustererBuilder().
 						setAlgorithm(clusterName).setGraph(generator.getGraph()).setProject(project).build();
 				clusterer.run(monitor, false);
-				g = clusterer.getGraph();
+				graph = clusterer.getGraph();
 			}
 
-			String fileName=args[0] + project.getName() + ".net";
-			GraphHandler.saveGraphToPajek(g, fileName);
+			final String fileName=args[0] + project.getName() + ".net";
+			GraphHandler.saveGraphToPajek(graph, fileName);
 			errorHandler.reportInformation("The graphs have been successfully saved. See results at "+
 					new File(fileName).getAbsolutePath());
 		} catch (Exception e) {

@@ -63,19 +63,19 @@ public class MetricsViewOpener extends AbstractHandler implements IObjectActionD
 			return;
 		}
 
-		final Object o = structSelection.getFirstElement();
-		if (!(o instanceof IProject)) {
+		final Object firstElement = structSelection.getFirstElement();
+		if (!(firstElement instanceof IProject)) {
 			ErrorReporter.logError("The open metrics view command needs to be called on a project ");
 			return;
 		}
 
-		final IProject p = (IProject) o;
+		final IProject project = (IProject) firstElement;
 		try {
-			final IViewPart mv = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+			final IViewPart activeView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.showView("org.eclipse.titanium.metrics.view");
-			if (mv instanceof MetricsView) {
-				final MetricsView metricsView = (MetricsView) mv;
-				metricsView.setSelectedProject(p);
+			if (activeView instanceof MetricsView) {
+				final MetricsView metricsView = (MetricsView) activeView;
+				metricsView.setSelectedProject(project);
 				metricsView.startMeasuring();
 
 			}

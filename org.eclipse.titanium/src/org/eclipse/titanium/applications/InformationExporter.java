@@ -51,7 +51,7 @@ public abstract class InformationExporter implements IApplication {
 	protected abstract void exportInformationForProject(final String[] args, final IProject project, IProgressMonitor monitor);
 	
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(final IApplicationContext context) throws Exception {
 		if (!GeneralConstants.DEBUG) {
 			ErrorReporter.INTERNAL_ERROR("Experimental functionaility for the Titanium project");
 		}
@@ -63,20 +63,20 @@ public abstract class InformationExporter implements IApplication {
 		}
 		
 		if (args.length >= 1){
-			File path = new File(args[0].substring(0, args[0].lastIndexOf(File.separator)));
+			final File path = new File(args[0].substring(0, args[0].lastIndexOf(File.separator)));
 			if (!path.exists() && !path.mkdirs()) {
 				System.err.println("Couldn't create output directory!");
 				return Integer.valueOf(-1);
 			}
 		}
 
-		List<IProject> existingProjects = getProjectsToHandle();
+		final List<IProject> existingProjects = getProjectsToHandle();
 
-		List<Job> jobs = new ArrayList<Job>();
+		final List<Job> jobs = new ArrayList<Job>();
 		for (IProject project : existingProjects) {
 			jobs.add(new ProjectAnalyzerJob("Exporting information for project " + project.getName()) {
 				@Override
-				public IStatus doPostWork(IProgressMonitor monitor) {
+				public IStatus doPostWork(final IProgressMonitor monitor) {
 					System.out.println("Exporting information for " + getProject().getName());
 					exportInformationForProject(args, getProject(), monitor);
 					return Status.OK_STATUS;
@@ -116,7 +116,7 @@ public abstract class InformationExporter implements IApplication {
 
 	protected List<IProject> getAllAccessibleProjects() {
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		List<IProject> existingProjects = new ArrayList<IProject>();
+		final List<IProject> existingProjects = new ArrayList<IProject>();
 		for (IProject project : projects) {
 			if (project.isAccessible()) {
 				existingProjects.add(project);

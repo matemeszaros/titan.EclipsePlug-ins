@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Editor;
@@ -32,19 +31,16 @@ import org.eclipse.ui.PlatformUI;
  */
 public final class OrganizeFromEditor extends AbstractHandler {
 
-	public void setActiveEditor(final IAction action, final IEditorPart targetEditor) {
-	}
-
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
-		if (editor == null || !(editor instanceof TTCN3Editor || (editor instanceof TTCNPPEditor))) {
+		if (editor == null || !(editor instanceof TTCN3Editor || editor instanceof TTCNPPEditor)) {
 			ErrorReporter.logError("The editor is not found or not a Titan TTCN-3 editor");
 			return null;
 		}
 
-		IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
+		final IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 		TextFileChange change = null;
 		try {
 			change = OrganizeImports.organizeImportsChange(file);
@@ -52,13 +48,14 @@ public final class OrganizeFromEditor extends AbstractHandler {
 			ErrorReporter.logExceptionStackTrace("Error while creating the needed import changes",e);
 			return null;
 		}
+
 		try {
 			change.perform(new NullProgressMonitor());
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace("Error while performing the needed import changes",e);
 		}
 
-		IProject project = file.getProject();
+		final IProject project = file.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(file);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
 

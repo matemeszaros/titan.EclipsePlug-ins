@@ -90,29 +90,29 @@ public class CheckCodeSmells extends AbstractHandler {
 	 */
 	private void collectResourcesToBeAnalyzed(final Deque<IResource> res, final Map<IProject, List<IFile>> files, final List<IProject> projects) {
 		while (!res.isEmpty()) {
-			final IResource r = res.pollFirst();
-			if (r instanceof IProject) {
-				final IProject proj = (IProject) r;
-				projects.add(proj);
-			} else if (r instanceof IFolder) {
+			final IResource resource = res.pollFirst();
+			if (resource instanceof IProject) {
+				final IProject project = (IProject) resource;
+				projects.add(project);
+			} else if (resource instanceof IFolder) {
 				try {
-					for (IResource r2 : ((IFolder) r).members()) {
+					for (IResource r2 : ((IFolder) resource).members()) {
 						res.addLast(r2);
 					}
 				} catch (CoreException e) {
 					ErrorReporter.logExceptionStackTrace("Error while collecting resources", e);
 				}
-			} else if (r instanceof IFile) {
-				final IFile file = (IFile) r;
+			} else if (resource instanceof IFile) {
+				final IFile file = (IFile) resource;
 				final String extension = file.getFileExtension();
 				if ("ttcn".equals(extension) || "ttcn3".equals(extension)) {
 					final IProject project = file.getProject();
-					List<IFile> ls = files.get(project);
-					if (ls == null) {
-						ls = new ArrayList<IFile>();
-						files.put(project, ls);
+					List<IFile> filesInProject = files.get(project);
+					if (filesInProject == null) {
+						filesInProject = new ArrayList<IFile>();
+						files.put(project, filesInProject);
 					}
-					ls.add(file);
+					filesInProject.add(file);
 				}
 			}
 		}
@@ -131,11 +131,11 @@ public class CheckCodeSmells extends AbstractHandler {
 				public IStatus doPostWork(final IProgressMonitor monitor) {
 					final SubMonitor progress = SubMonitor.convert(monitor, 100);
 					if (!onTheFlyEnabled) {
-						MarkerHandler mh;
+						MarkerHandler handler;
 						synchronized (project) {
-							mh = analyzer.analyzeProject(progress.newChild(100), project);
+							handler = analyzer.analyzeProject(progress.newChild(100), project);
 						}
-						mh.showAll();
+						handler.showAll();
 					}
 					return Status.OK_STATUS;
 				}
@@ -160,12 +160,12 @@ public class CheckCodeSmells extends AbstractHandler {
 							final String actualModuleName = projectSourceParser.containedModule(file);
 							final Module module = projectSourceParser.getModuleByName(actualModuleName);
 							if (module != null) {
-								MarkerHandler mh;
 								progress.subTask("Analyzing module " + module.getName());
+								MarkerHandler handler;
 								synchronized (project) {
-									mh = analyzer.analyzeModule(progress.newChild(1), module);
+									handler = analyzer.analyzeModule(progress.newChild(1), module);
 								}
-								mh.showAll();
+								handler.showAll();
 							}
 						}
 					}

@@ -26,7 +26,7 @@ import org.eclipse.titanium.markers.export.ExportedProblemMerger;
 public class MergeExportedMarkerTables implements IApplication {
 
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(final IApplicationContext context) throws Exception {
 
 		final String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 
@@ -35,7 +35,7 @@ public class MergeExportedMarkerTables implements IApplication {
 			return Integer.valueOf(-1);
 		}
 
-		List<File> files = new LinkedList<File>();
+		final List<File> files = new LinkedList<File>();
 		File file;
 		String name = null;
 
@@ -80,24 +80,24 @@ public class MergeExportedMarkerTables implements IApplication {
 	 *            The name of the output file, if null "Summary" will be the
 	 *            filename
 	 */
-	private boolean merge(List<File> files, String outfileName) {
+	private boolean merge(final List<File> files, final String outfileName) {
 		File outfile = null;
 		if (outfileName != null) {
 			outfile = new File(outfileName + ".xls");
 		} else {
 			outfile = new File("Summary.xls");
 		}
-		int i = 1;
+		int counter = 1;
 		while (outfile.exists()) {
 			if (outfileName != null) {
-				outfile = new File(outfileName + i + ".xls");
+				outfile = new File(outfileName + counter + ".xls");
 			} else {
-				outfile = new File("Summary" + i + ".xls");
+				outfile = new File("Summary" + counter + ".xls");
 			}
-			i += 1;
+			counter += 1;
 		}
 
-		ExportedProblemMerger epm = new ExportedProblemMerger(files, outfile);
+		final ExportedProblemMerger epm = new ExportedProblemMerger(files, outfile);
 		return epm.run();
 	}
 }

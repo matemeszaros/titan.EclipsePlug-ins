@@ -63,19 +63,19 @@ public class TopViewOpener extends AbstractHandler implements IObjectActionDeleg
 			return;
 		}
 
-		final Object o = structSelection.getFirstElement();
-		if (!(o instanceof IProject)) {
+		final Object firstElement = structSelection.getFirstElement();
+		if (!(firstElement instanceof IProject)) {
 			ErrorReporter.logError("The open top risk view command needs to be called on a project ");
 			return;
 		}
 
-		final IProject p = (IProject) o;
+		final IProject project = (IProject) firstElement;
 		try {
-			final IViewPart tv = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+			final IViewPart activeView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.showView("org.eclipse.titanium.metrics.topview");
-			if (tv instanceof TopView) {
-				final TopView topView = (TopView) tv;
-				topView.setSelectedProject(p);
+			if (activeView instanceof TopView) {
+				final TopView topView = (TopView) activeView;
+				topView.setSelectedProject(project);
 				topView.startMeasuring();
 
 			}

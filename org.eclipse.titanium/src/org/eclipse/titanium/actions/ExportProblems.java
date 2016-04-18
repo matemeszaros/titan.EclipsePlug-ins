@@ -99,40 +99,40 @@ public final class ExportProblems extends AbstractHandler implements IObjectActi
 			return;
 		}
 
-		final Object o = structSelection.getFirstElement();
-		if (!(o instanceof IProject)) {
+		final Object firstElement = structSelection.getFirstElement();
+		if (!(firstElement instanceof IProject)) {
 			ErrorReporter.logError("The export problems command needs to be called on a project ");
 
 			return;
 		}
 
-		final IProject p = (IProject) o;
+		final IProject project = (IProject) firstElement;
 
 		final IPreferencesService preferencesService = Platform.getPreferencesService();
 		final boolean reportDebugInformation = 
 				preferencesService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
 		if (reportDebugInformation) {
-			TITANDebugConsole.println("Problem markers are to export from " + p.getName());
+			TITANDebugConsole.println("Problem markers are to export from " + project.getName());
 		}
 
 		boolean write = false;
-		String fn;
+		String fileName;
 		final Shell shell = Display.getCurrent().getActiveShell();
 		do {
-			final FileDialog d = new FileDialog(shell, SWT.SAVE);
-			d.setText("Export problem markers to xls");
-			d.setFilterExtensions(new String[] { "*.xls" });
+			final FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+			dialog.setText("Export problem markers to xls");
+			dialog.setFilterExtensions(new String[] { "*.xls" });
 
-			final IPath path = p.getLocation();
+			final IPath path = project.getLocation();
 			if (path != null) {
-				d.setFilterPath(path.toPortableString());
+				dialog.setFilterPath(path.toPortableString());
 			}
 			final Calendar now = Calendar.getInstance();
-			d.setFileName("Problems--" + p.getName() + "--" + now.get(Calendar.YEAR) + "-" + (1 + now.get(Calendar.MONTH)) + "-"
+			dialog.setFileName("Problems--" + project.getName() + "--" + now.get(Calendar.YEAR) + "-" + (1 + now.get(Calendar.MONTH)) + "-"
 					+ now.get(Calendar.DAY_OF_MONTH));
-			fn = d.open();
-			if (fn != null) {
-				if (new File(fn).exists()) {
+			fileName = dialog.open();
+			if (fileName != null) {
+				if (new File(fileName).exists()) {
 					write = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), "File exist",
 							"This file already exists. Please confirm overwrite.");
 				} else {
@@ -144,14 +144,14 @@ public final class ExportProblems extends AbstractHandler implements IObjectActi
 			}
 		} while (!write);
 
-		final String fileName = fn;
+		final String fileName2 = fileName;
 
 		new ProjectAnalyzerJob("Exporting reported code smells") {
 			@Override
 			public IStatus doPostWork(final IProgressMonitor monitor) {
 				final BaseProblemExporter exporter = new XlsProblemExporter(getProject());
 				try {
-					exporter.exportMarkers(monitor, fileName, Calendar.getInstance().getTime());
+					exporter.exportMarkers(monitor, fileName2, Calendar.getInstance().getTime());
 					if (reportDebugInformation) {
 						TITANDebugConsole.println("Successfully exported markers to xls");
 					}
@@ -163,6 +163,6 @@ public final class ExportProblems extends AbstractHandler implements IObjectActi
 				}
 				return Status.OK_STATUS;
 			}
-		}.quickSchedule(p);
+		}.quickSchedule(project);
 	}
 }

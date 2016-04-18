@@ -24,7 +24,7 @@ public class ExportDataForSonar extends InformationExporter {
 	private List<IProject> projectsToExport = new ArrayList<IProject>();
 
 	@Override
-	protected boolean checkParameters(String[] args) {
+	protected boolean checkParameters(final String[] args) {
 		// Use Apache CLI if more functionality is needed
 		if (args.length == 0) {
 			projectsToExport = getAllAccessibleProjects();
@@ -41,10 +41,10 @@ public class ExportDataForSonar extends InformationExporter {
 			return false;
 		}
 
-		List<String> projectNames = Arrays.asList(args[1].split(","));
-		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
+		final List<String> projectNames = Arrays.asList(args[1].split(","));
+		final IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 		for (String name : projectNames) {
-			IProject project = wsRoot.getProject(name);
+			final IProject project = wsRoot.getProject(name);
 			if (!project.isAccessible()) {
 				System.out.println("Project '" + name + "' is not accessible.");
 				return false;
@@ -55,13 +55,13 @@ public class ExportDataForSonar extends InformationExporter {
 	}
 
 	private void printUsage() {
-		String applicationName = ExportDataForSonar.class.getCanonicalName();
+		final String applicationName = ExportDataForSonar.class.getCanonicalName();
 		System.out.println("Usage: ./eclipse " + applicationName + " [-p project1,project2,...,projectN]");
 	}
 
 	@Override
-	protected void exportInformationForProject(String[] args, IProject project, IProgressMonitor monitor) {
-		SonarDataExporter exporter = new SonarDataExporter(project);
+	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
+		final SonarDataExporter exporter = new SonarDataExporter(project);
 		try {
 			exporter.exportDataForProject();
 		} catch (IOException e) {

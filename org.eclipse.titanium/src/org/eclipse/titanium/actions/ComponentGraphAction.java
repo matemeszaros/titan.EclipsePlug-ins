@@ -87,7 +87,7 @@ public class ComponentGraphAction extends AbstractHandler implements IObjectActi
 
 				final Job generator = new Job("Generator") {
 					@Override
-					protected IStatus run(IProgressMonitor monitor) {
+					protected IStatus run(final IProgressMonitor monitor) {
 						monitor.beginTask("Parsing project", 30);
 						Display.getDefault().asyncExec(new Runnable() {
 							@Override

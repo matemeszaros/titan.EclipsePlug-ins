@@ -45,6 +45,7 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 	private ISelection selection;
 
 	public ModuleGraphAction() {
+		// Do nothing
 	}
 
 	/**

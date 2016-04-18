@@ -116,31 +116,31 @@ public final class OrganizeFromBrowser extends AbstractHandler implements IObjec
 		}
 
 		while (!res.isEmpty()) {
-			final IResource r = res.pollFirst();
-			if (r instanceof IProject) {
-				final IProject proj = (IProject) r;
+			final IResource resource = res.pollFirst();
+			if (resource instanceof IProject) {
+				final IProject project = (IProject) resource;
 				try {
-					for (IResource r2 : proj.members()) {
+					for (IResource r2 : project.members()) {
 						res.addLast(r2);
 					}
 				} catch (CoreException e) {
-					ErrorReporter.logExceptionStackTrace("Error while collecting members of project " + proj.getName(),e);
+					ErrorReporter.logExceptionStackTrace("Error while collecting members of project " + project.getName(),e);
 				}
 			}
-			if (r instanceof IFolder) {
+			if (resource instanceof IFolder) {
 				try {
-					final IResource[] resInFolder = ((IFolder) r).members();
-					for (IResource r2 : resInFolder) {
+					final IResource[] folder = ((IFolder) resource).members();
+					for (IResource r2 : folder) {
 						res.addLast(r2);
 					}
 				} catch (CoreException e) {
-					ErrorReporter.logExceptionStackTrace("Error while collecting members of folder " + r.getName(),e);
+					ErrorReporter.logExceptionStackTrace("Error while collecting members of folder " + resource.getName(),e);
 				}
-			} else if (r instanceof IFile) {
-				final IFile file = (IFile) r;
+			} else if (resource instanceof IFile) {
+				final IFile file = (IFile) resource;
 				final String extension = file.getFileExtension();
 				if ("ttcn".equals(extension) || "ttcn3".equals(extension)) {
-					files.add((IFile) r);
+					files.add((IFile) resource);
 				}
 			}
 		}
@@ -151,11 +151,11 @@ public final class OrganizeFromBrowser extends AbstractHandler implements IObjec
 			TITANDebugConsole.println("These files will be organized: " + files.toString());
 		}
 
-		final OrganizeImportsOp op = new OrganizeImportsOp(files);
-		final ProgressMonitorDialog pmd = new ProgressMonitorDialog(null);
+		final OrganizeImportsOp operation = new OrganizeImportsOp(files);
+		final ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(null);
 
 		try {
-			pmd.run(true, true, op);
+			progressMonitorDialog.run(true, true, operation);
 		} catch (InvocationTargetException e) {
 			ErrorReporter.logExceptionStackTrace("Error while organizing imports",e);
 		} catch (InterruptedException e) {

@@ -19,7 +19,7 @@ import org.eclipse.titan.designer.wizards.GUIProjectImporter;
 public class ImportProjectsFromPrj implements IApplication {
 
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
+	public Object start(final IApplicationContext context) throws Exception {
 		if (!GeneralConstants.DEBUG) {
 			ErrorReporter.INTERNAL_ERROR("Loading prj files in headless mode is in prototype mode "
 					+ "and so should not be available in released versions yet");
