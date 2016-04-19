@@ -10,6 +10,8 @@ package org.eclipse.titan.designer.editors.configeditor.pages.include;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -30,8 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler.Definition;
@@ -124,18 +125,12 @@ public final class DefineSubPage {
 					createNewDefineSection();
 				}
 
-				Definition newItem = createNewDefineItem();
+				final Definition newItem = createNewDefineItem();
 				if (newItem == null) {
 					return;
 				}
 
-				if (defineSectionHandler.getDefinitions().isEmpty()) {
-					defineSectionHandler.getLastSectionRoot().setNextSibling(newItem.getRoot());
-				} else {
-					Definition item = defineSectionHandler.getDefinitions().get(defineSectionHandler.getDefinitions().size() - 1);
-					item.getRoot().setNextSibling(newItem.getRoot());
-				}
-
+				ConfigTreeNodeUtilities.addChild( defineSectionHandler.getLastSectionRoot(), newItem.getRoot() );
 				defineSectionHandler.getDefinitions().add(newItem);
 
 				internalRefresh();
@@ -226,10 +221,10 @@ public final class DefineSubPage {
 
 					switch (columnIndex) {
 					case 0:
-						definition.getDefinitionName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( definition.getDefinitionName(), ((String) value).trim() );
 						break;
 					case 1:
-						definition.getDefinitionValue().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( definition.getDefinitionValue(), ((String) value).trim() );
 						break;
 					default:
 						break;
@@ -277,12 +272,12 @@ public final class DefineSubPage {
 			return;
 		}
 
-		defineSectionHandler.setLastSectionRoot(new LocationAST("[DEFINE]"));
-		defineSectionHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(defineSectionHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		defineSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[DEFINE]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot().getRule();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -293,17 +288,19 @@ public final class DefineSubPage {
 			return null;
 		}
 
-		Definition item = new DefineSectionHandler.Definition();
-		item.setRoot(new LocationAST(""));
+		final Definition item = new DefineSectionHandler.Definition();
+		final ParseTree root = new ParserRuleContext();
+		item.setRoot( root );
 
-		LocationAST node;
-		item.setDefinitionName(new LocationAST("definition_name"));
-		item.getDefinitionName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		item.getRoot().setFirstChild(item.getDefinitionName());
-		node = new LocationAST(" := ");
-		item.getDefinitionName().setNextSibling(node);
-		item.setDefinitionValue(new LocationAST("definition_value"));
-		node.setNextSibling(item.getDefinitionValue());
+		final ParseTree name = new AddedParseTree("definition_name");
+		final ParseTree value = new AddedParseTree("definition_value");
+		item.setDefinitionName( name );
+		item.setDefinitionValue( value );
+		
+		ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( "\n" ) );
+		ConfigTreeNodeUtilities.addChild( root, name );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(" := ") );
+		ConfigTreeNodeUtilities.addChild( root, value );
 
 		return item;
 	}
@@ -313,9 +310,8 @@ public final class DefineSubPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), defineSectionHandler.getLastSectionRoot()
-				.getParent());
-		defineSectionHandler.setLastSectionRoot((LocationAST)null);
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot().getRule(), defineSectionHandler.getLastSectionRoot());
+		defineSectionHandler.setLastSectionRoot((ParserRuleContext)null);
 	}
 
 	public void removeSelectedDefineItems() {
@@ -328,8 +324,7 @@ public final class DefineSubPage {
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			Definition item = (Definition) iterator.next();
 			if (item != null) {
-				ConfigTreeNodeUtilities.removeFromChain(defineSectionHandler.getLastSectionRoot(), item.getRoot());
-
+				ConfigTreeNodeUtilities.removeChild(defineSectionHandler.getLastSectionRoot(), item.getRoot());
 				defineSectionHandler.getDefinitions().remove(item);
 			}
 		}

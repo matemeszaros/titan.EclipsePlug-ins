@@ -7,11 +7,13 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor.pages.include;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler.Definition;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
@@ -83,14 +85,15 @@ public final class DefineSectionDropTargetListener implements DropTargetListener
 
 				int baseindex = defineSectionHandler.getDefinitions().indexOf(element);
 
-				LocationAST oldSibling = element.getRoot().getNextSibling();
+				
+				final ParseTree parent = defineSectionHandler.getLastSectionRoot();
+				ConfigTreeNodeUtilities.removeChild(parent, element.getRoot());
+				ConfigTreeNodeUtilities.addChild(parent, element.getRoot(), baseindex);
 				if (items.length > 0) {
-					element.getRoot().setNextSibling(items[0].getRoot());
 					for (int i = 0; i < items.length - 1; i++) {
-						items[i].getRoot().setNextSibling(items[i + 1].getRoot());
 						defineSectionHandler.getDefinitions().add(++baseindex, items[i]);
 					}
-					items[items.length - 1].getRoot().setNextSibling(oldSibling);
+					
 					defineSectionHandler.getDefinitions().add(++baseindex, items[items.length - 1]);
 				}
 

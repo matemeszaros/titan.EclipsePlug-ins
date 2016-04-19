@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.titan.common.parsers.AddedParseTree;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.IncludeSectionHandler;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
@@ -46,7 +45,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class IncludeSubPage {
 
 	private Label totalIncludeElementsLabel;
@@ -116,19 +116,12 @@ public final class IncludeSubPage {
 					return;
 				}
 
-				if (includeSectionHandler.getFiles().isEmpty()) {
-					ParseTree root = includeSectionHandler.getLastSectionRoot();
-					//TODO: remove
-					//ConfigTreeNodeUtilities.addChild(root.getParent(), newItem);
-					ConfigTreeNodeUtilities.addChild(root, newItem);
-				} else {
-					ParseTree item = includeSectionHandler.getFiles().get(includeSectionHandler.getFiles().size() - 1);
-					//TODO: remove
-					//ConfigTreeNodeUtilities.addChild(item.getParent(), newItem);
-					ConfigTreeNodeUtilities.addChild(item, newItem);
-				}
-
-				includeSectionHandler.getFiles().add(newItem);
+				ParseTree root = includeSectionHandler.getLastSectionRoot();
+				// a new line before every item
+				ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( "\n" ) );
+				ConfigTreeNodeUtilities.addChild( root, newItem );
+				
+				includeSectionHandler.getFiles().add( newItem );
 
 				internalRefresh();
 				includeElementsTable.select(includeSectionHandler.getFiles().size() - 1);
@@ -250,9 +243,10 @@ public final class IncludeSubPage {
 			return;
 		}
 
-		includeSectionHandler.setLastSectionRoot(new AddedParseTree("\n[INCLUDE]"));
 		ParserRuleContext sectionRoot = new ParserRuleContext();
-		ConfigTreeNodeUtilities.addChild(sectionRoot, includeSectionHandler.getLastSectionRoot());
+		includeSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[INCLUDE]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
 		ParserRuleContext root = editor.getParseTreeRoot().getRule();
 		if (root != null) {
@@ -265,7 +259,7 @@ public final class IncludeSubPage {
 			return null;
 		}
 
-		ParseTree item = new AddedParseTree("\n\"included_file\"");
+		ParseTree item = new AddedParseTree("\"included_file\"");
 		return item;
 	}
 
@@ -274,7 +268,7 @@ public final class IncludeSubPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot().getFirstChild().getRule(), includeSectionHandler.getLastSectionRoot().getParent());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot().getRule(), includeSectionHandler.getLastSectionRoot());
 		includeSectionHandler.setLastSectionRoot((ParserRuleContext)null);
 	}
 

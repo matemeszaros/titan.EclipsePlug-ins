@@ -1,17 +1,20 @@
 package org.eclipse.titan.common.parsers;
 
-import java.util.List;
-
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
-//NOTE: it doesn't know its start and end tokens, it just contains a string
+/**
+ * Parse tree type for adding new strings to an existing ParseTree structure,
+ * which was build during a parsing.
+ * It has no info about its start and end tokens, it just contains a string
+ * It can have children
+ * @author Arpad Lovassy
+ */
 public class AddedParseTree implements ParseTree {
 
 	private String mText;
-	public List<ParseTree> children;
 	
 	public AddedParseTree( final String aText ) {
 		mText = aText;
@@ -24,7 +27,7 @@ public class AddedParseTree implements ParseTree {
 
 	@Override
 	public int getChildCount() {
-		return children != null ? children.size() : 0;
+		return 0;
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class AddedParseTree implements ParseTree {
 
 	@Override
 	public ParseTree getChild( int i ) {
-		return children != null && i >= 0 && i < children.size() ? children.get( i ) : null;
+		return null;
 	}
 
 	@Override

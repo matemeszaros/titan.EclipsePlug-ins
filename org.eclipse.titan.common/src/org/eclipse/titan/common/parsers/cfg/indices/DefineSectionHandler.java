@@ -10,69 +10,53 @@ package org.eclipse.titan.common.parsers.cfg.indices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 /**
+ * Stores temporary config editor data of the define section
  * @author Kristof Szabados
- * */
-public final class DefineSectionHandler {
+ * @author Arpad Lovassy
+ */
+public final class DefineSectionHandler extends ConfigSectionHandlerBase {
 
 	public static class Definition {
-		private LocationAST root = null;
-		private LocationAST definitionName = null;
-		private LocationAST definitionValue = null;
+		/** definition rule */
+		private ParseTree mRoot = null;
+		private ParseTree mDefinitionName = null;
+		private ParseTree mDefinitionValue = null;
 
-		public LocationAST getRoot() {
-			return root;
+		public ParseTree getRoot() {
+			return mRoot;
 		}
 
-		public void setRoot(final LocationAST root) {
-			this.root = root;
+		public void setRoot(final ParseTree aRoot) {
+			this.mRoot = aRoot;
 		}
 
-		public LocationAST getDefinitionName() {
-			return definitionName;
+		public ParseTree getDefinitionName() {
+			return mDefinitionName;
 		}
 
-		public void setDefinitionName(final LocationAST definitionName) {
-			this.definitionName = definitionName;
+		public void setDefinitionName(final ParseTree aDefinitionName) {
+			this.mDefinitionName = aDefinitionName;
 		}
 
-		public LocationAST getDefinitionValue() {
-			return definitionValue;
+		public void setDefinitionName(final Token aDefinitionName) {
+			this.mDefinitionName = new TerminalNodeImpl( aDefinitionName );
 		}
 
-		public void setDefinitionValue(final LocationAST definitionValue) {
-			this.definitionValue = definitionValue;
+		public ParseTree getDefinitionValue() {
+			return mDefinitionValue;
 		}
 
-		public void setDefinitionName(final Token aToken) {
-			final ParserRuleContext rule = new ParserRuleContext();
-			rule.addChild(aToken);
-			this.definitionName = new LocationAST(rule);
-		}
-
-		public void setDefinitionValue(final ParserRuleContext aRule) {
-			this.definitionValue = new LocationAST(aRule);
-		}
-
-		public void setRoot(final ParserRuleContext aRule) {
-			this.root = new LocationAST(aRule);
+		public void setDefinitionValue(final ParseTree aDefinitionValue) {
+			this.mDefinitionValue = aDefinitionValue;
 		}
 	}
 
-	private LocationAST lastSectionRoot = null;
 	private List<Definition> definitions = new ArrayList<Definition>();
-
-	public LocationAST getLastSectionRoot() {
-		return lastSectionRoot;
-	}
-
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
-		this.lastSectionRoot = lastSectionRoot;
-	}
 
 	public List<Definition> getDefinitions() {
 		return definitions;
@@ -81,11 +65,4 @@ public final class DefineSectionHandler {
 	public void setDefinitions(final List<Definition> definitions) {
 		this.definitions = definitions;
 	}
-
-	public void setLastSectionRoot(final Token aToken) {
-		final ParserRuleContext rule = new ParserRuleContext();
-		rule.addChild(aToken);
-		this.lastSectionRoot = new LocationAST(rule);
-	}
-
 }

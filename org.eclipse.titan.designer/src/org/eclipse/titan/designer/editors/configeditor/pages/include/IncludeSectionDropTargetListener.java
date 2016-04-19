@@ -84,7 +84,7 @@ public final class IncludeSectionDropTargetListener implements DropTargetListene
 
 				int baseindex = includeSectionHandler.getFiles().indexOf(element);
 
-				final ParseTree parent = element.getParent();
+				final ParseTree parent = includeSectionHandler.getLastSectionRoot();
 				ConfigTreeNodeUtilities.removeChild(parent, element);
 				ConfigTreeNodeUtilities.addChild(parent, element, baseindex);
 				if (items.length > 0) {

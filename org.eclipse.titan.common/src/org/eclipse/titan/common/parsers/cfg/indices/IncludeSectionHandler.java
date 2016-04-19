@@ -11,38 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 /**
+ * Stores temporary config editor data of the include section
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
-public final class IncludeSectionHandler {
+public final class IncludeSectionHandler extends ConfigSectionHandlerBase {
 
-	private ParseTree mLastSectionRoot = null;
+	/** list of include files, which are stored as ParseTree nodes */
 	private List<ParseTree> mFiles = new ArrayList<ParseTree>();
 
-	public ParseTree getLastSectionRoot() {
-		return mLastSectionRoot;
-	}
-
-	public void setLastSectionRoot( final ParseTree lastSectionRoot ) {
-		this.mLastSectionRoot = lastSectionRoot;
-	}
-
-	public void setLastSectionRoot( final Token aToken ) {
-		mLastSectionRoot = new TerminalNodeImpl( aToken );
-	}
-	
 	public List<ParseTree> getFiles() {
 		return mFiles;
 	}
 
-	public void addFile(final ParserRuleContext aIncludeFile ) {
+	public void addFile( final ParserRuleContext aIncludeFile ) {
 		mFiles.add( aIncludeFile );
 	}
-
-
 }
