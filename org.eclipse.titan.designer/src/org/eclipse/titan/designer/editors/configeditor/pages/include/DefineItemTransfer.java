@@ -13,19 +13,21 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler.Definition;
+import org.eclipse.titan.designer.editors.configeditor.ConfigItemTransferBase;
 
 /**
  * @author Kristof Szabados
- * */
-public final class DefineItemTransfer extends ByteArrayTransfer {
+ * @author Arpad Lovassy
+ */
+public final class DefineItemTransfer extends ConfigItemTransferBase {
 	private static DefineItemTransfer instance = new DefineItemTransfer();
 	private static final String TYPE_NAME = "TITAN-DefineSectionItem-transfer-format";
 	private static final int TYPEID = registerType(TYPE_NAME);
@@ -56,13 +58,7 @@ public final class DefineItemTransfer extends ByteArrayTransfer {
 			out.writeInt(items.length);
 
 			for (int i = 0; i < items.length; i++) {
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getDefinitionName()));
-				out.writeUTF(items[i].getDefinitionName().getText());
-
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getDefinitionName().getNextSibling()));
-
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getDefinitionValue()));
-				out.writeUTF(items[i].getDefinitionValue().getText());
+				out.writeUTF( convertToString( items[i].getRoot() ) );
 			}
 			out.close();
 			bytes = byteOut.toByteArray();
@@ -90,24 +86,26 @@ public final class DefineItemTransfer extends ByteArrayTransfer {
 			for (int i = 0; i < n; i++) {
 				items[i] = new DefineSectionHandler.Definition();
 
+				final ParseTree root = new ParserRuleContext();
+				items[i].setRoot( root );
+				
 				hiddenBefore = in.readUTF();
+				ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( hiddenBefore ) );
 				name = in.readUTF();
-				items[i].setDefinitionName(new LocationAST(name));
-				items[i].getDefinitionName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore));
+				final ParseTree nameNode = new AddedParseTree( name );
+				items[i].setDefinitionName( nameNode );
+				ConfigTreeNodeUtilities.addChild( root, nameNode );
 
 				hiddenBefore = in.readUTF();
-				LocationAST node = new LocationAST(":=");
-				node.setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore));
-				items[i].getDefinitionName().setNextSibling(node);
+				ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( hiddenBefore ) );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(":=") );
 
 				hiddenBefore = in.readUTF();
+				ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( hiddenBefore ) );
 				value = in.readUTF();
-				items[i].setDefinitionValue(new LocationAST(value));
-				items[i].getDefinitionValue().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore));
-				node.setNextSibling(items[i].getDefinitionValue());
-
-				items[i].setRoot(new LocationAST(""));
-				items[i].getRoot().setFirstChild(items[i].getDefinitionName());
+				final ParseTree valueNode = new AddedParseTree( value );
+				items[i].setDefinitionValue( valueNode );
+				ConfigTreeNodeUtilities.addChild( root, valueNode );
 			}
 			return items;
 		} catch (IOException e) {
