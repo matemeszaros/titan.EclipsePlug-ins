@@ -2024,6 +2024,7 @@ pr_ArrayElementSpec returns[ TemplateBody body = null ]
 		}
 |	pr_NotUsedSymbol { $body = new TemplateBody(new NotUsed_Template()); }
 |	b = pr_TemplateBody { $body = $b.body; }
+|	t1 = pr_AllElementsFrom { $body = $t1.template; }
 )
 {
 	if($body != null) {
