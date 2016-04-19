@@ -320,10 +320,10 @@ pr_Section returns [ ISection section ]:
 {	$section = null;
 }
 (	pr_MainControllerSection
-|	i = pr_IncludeSection { $section = $i.includeSection; }
+|	i = pr_IncludeSection { $section = $i.includeSection; includeSectionHandler.setLastSectionRoot( $i.ctx ); }
 |	pr_OrderedIncludeSection
 |	pr_ExecuteSection
-|	pr_DefineSection
+|	d = pr_DefineSection { defineSectionHandler.setLastSectionRoot( $d.ctx ); }
 |	pr_ExternalCommandsSection
 |	pr_TestportParametersSection
 |	pr_GroupsSection
@@ -381,12 +381,16 @@ pr_MainControllerItemTcpPort:
 pr_IncludeSection returns [ IncludeSection includeSection ]:
 {	$includeSection = new IncludeSection();
 }
-	h = INCLUDE_SECTION	{	includeSectionHandler.setLastSectionRoot( $h );	}
+	INCLUDE_SECTION
 	( f = STRING2
 		{	String fileName = $f.getText().substring( 1, $f.getText().length() - 1 );
 			$includeSection.addIncludeFileName( fileName );
 			mIncludeFiles.add( fileName );
-			includeSectionHandler.getFiles().add( new TerminalNodeImpl( $f ) );
+			final TerminalNodeImpl node = new TerminalNodeImpl( $f );
+			node.parent = $ctx;
+			//another solution for the same thing
+			//node.parent = includeSectionHandler.getLastSectionRoot();
+			includeSectionHandler.getFiles().add( node );
 		}
 	)*
 ;
@@ -407,7 +411,7 @@ pr_ExecuteSectionItem:
 ;
 
 pr_DefineSection: 
-	h = DEFINE_SECTION	{	defineSectionHandler.setLastSectionRoot( $h );	}
+	DEFINE_SECTION
 	(	def = pr_MacroAssignment
 			{	if ( $def.definition != null ) {
 					defineSectionHandler.getDefinitions().add( $def.definition );

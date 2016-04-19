@@ -7,14 +7,15 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor.pages.include;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.titan.common.parsers.LocationAST;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class IncludeDataLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
@@ -24,8 +25,8 @@ public final class IncludeDataLabelProvider extends LabelProvider implements ITa
 
 	@Override
 	public String getColumnText(final Object element, final int columnIndex) {
-		if (element != null && element instanceof LocationAST) {
-			LocationAST item = (LocationAST) element;
+		if (element != null && element instanceof ParseTree) {
+			ParseTree item = (ParseTree) element;
 			switch (columnIndex) {
 			case 0:
 				return item.getText();

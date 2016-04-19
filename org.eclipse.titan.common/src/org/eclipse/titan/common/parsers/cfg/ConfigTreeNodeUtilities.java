@@ -10,11 +10,11 @@ package org.eclipse.titan.common.parsers.cfg;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.TokenStreamRewriter;
+import org.antlr.v4.runtime.WritableToken;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.eclipse.titan.common.parsers.AddedParseTree;
@@ -137,18 +137,6 @@ public final class ConfigTreeNodeUtilities {
 		return builder;
 	}
 	
-	private static final void appendHiddenBefore( final ParserRuleContext aRule,
-												  final CommonTokenStream aTokens ) {
-		Token firstToken = aRule.getStart();
-		List<Token> hiddenTokens = aTokens.getHiddenTokensToLeft( firstToken.getTokenIndex() );
-		StringBuilder sb = new StringBuilder();
-		for (Token token : hiddenTokens) {
-			sb.append( token.getText() );
-		}
-		TokenStreamRewriter rewriter = new TokenStreamRewriter( aTokens );
-		rewriter.insertBefore( firstToken, sb.toString() );
-	}
-	
 	private static final StringBuilder appendHiddenAfter(final StringBuilder builder, final LocationAST root) {
 		LocationAST child = root.getFirstChild();
 		
@@ -166,17 +154,6 @@ public final class ConfigTreeNodeUtilities {
 		}
 		
 		return builder;
-	}
-	
-	private static final StringBuilder appendChildren(final StringBuilder builder, final LocationAST root) {
-		LocationAST child = root.getFirstChild();
-		StringBuilder internalBuilder = builder;
-		while(child != null){
-			print(internalBuilder,child);
-			child = child.getNextSibling();
-		}
-
-		return internalBuilder;
 	}
 	
 	/**
@@ -230,6 +207,14 @@ public final class ConfigTreeNodeUtilities {
 							  final StringBuilder aSb,
 							  final List<Integer> aDisallowedNodes ) {
 		final int startIndex = aToken.getTokenIndex();
+		if ( startIndex == -1 ) {
+			// Token has no index.
+			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
+			// because token has no index in the token stream.
+			final String tokenText = aToken.getText();
+			aSb.append( tokenText != null ? tokenText : "" );
+			return;
+		}
 		int startHiddenIndex = startIndex;
 		while ( isHiddenToken( startHiddenIndex - 1, aTokenStream ) ) {
 			startHiddenIndex--;
@@ -240,12 +225,8 @@ public final class ConfigTreeNodeUtilities {
 		}
 		for ( int i = startHiddenIndex; i <= startIndex; i++ ) {
 			final Token t = aTokenStream.get( i );
-			if ( t != null ) {
-				final String tokenText = t.getText();
-				aSb.append( tokenText != null ? tokenText : "" );
-			} else {
-				//TODO: program error
-			}
+			final String tokenText = t.getText();
+			aSb.append( tokenText != null ? tokenText : "" );
 		}
 	}
 
@@ -293,28 +274,13 @@ public final class ConfigTreeNodeUtilities {
 			} else {
 				rule.children.add(aChild);
 			}
-		}
-		else if ( aParent instanceof AddedParseTree ) {
-			final AddedParseTree node = (AddedParseTree)aParent;
-			if ( node.children == null ) {
-				node.children = new ArrayList<ParseTree>();
-			}
-			if ( aIndex >= 0 ) {
-				node.children.set(aIndex, aChild);
-			} else {
-				node.children.add(aChild);
-			}
-		}
-		else if ( aParent instanceof TerminalNodeImpl ) {
-			//TODO: program error
-		}
-		else {
-			//TODO: program error
+		} else {
+			//TODO: program error: only ParserRuleContext can have children
 		}
 	}
 	
 	/**
-	 * Removes child form parent's list
+	 * Removes child from parent's list
 	 * @param aParent parent node to remove the child from
 	 * @param aChild child element to remove
 	 */
@@ -325,57 +291,66 @@ public final class ConfigTreeNodeUtilities {
 		}
 		if ( aParent instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParent;
-			if ( rule.children != null ) {
-				rule.children.remove(aChild);
+			if ( rule.children != null && aChild != null ) {
+				//delete child by text
+				final List<ParseTree> list = rule.children;
+				final int size = list.size();
+				final String childText = aChild.getText();
+				for ( int i = size - 1; i >= 0; i-- ) {
+					if ( childText.equals( list.get( i ).getText() ) ) {
+						list.remove( i );
+						break;
+					}
+				}
 			}
-		}
-		else if ( aParent instanceof AddedParseTree ) {
-			final AddedParseTree node = (AddedParseTree)aParent;
-			if ( node.children != null ) {
-				node.children.remove(aChild);
-			}
-		}
-		else if ( aParent instanceof TerminalNodeImpl ) {
-			//TODO: program error
-		}
-		else {
-			//TODO: program error
+		} else {
+			//TODO: program error: only ParserRuleContext can have children
 		}
 	}
 	
 	/**
 	 * Changes the text of a parse tree
-	 * @param aParseTree parsetree to modify
+	 * @param aParseTree parse tree to modify
 	 * @param aText new text
 	 */
 	public static void setText( final ParseTree aParseTree, final String aText ) {
-		String text = "\n" + aText;
 		if ( aParseTree == null ) {
-			//TODO: program error
-			System.out.println("ERROR: ConfigTreeNodeUtilities.setText() aParseTree == null");
+			//TODO: program error: aParseTree == null
 			return;
 		}
 		if ( aParseTree instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParseTree;
 			// in case of a rule we don't want to keep the original sub-tree structure,
-			// just delete it and replace the children with an AddedParseTree  
+			// just delete it and replace the children with an AddedParseTree
 			if ( rule.children != null ) {
 				rule.children.clear();
 			} else {
 				rule.children = new ArrayList<ParseTree>();
 			}
-			ParseTree newNode = new AddedParseTree( text );
+			ParseTree newNode = new AddedParseTree( aText );
 			addChild(rule, newNode);
-		}
-		else if ( aParseTree instanceof AddedParseTree ) {
+		} else if ( aParseTree instanceof AddedParseTree ) {
 			final AddedParseTree node = (AddedParseTree)aParseTree;
-			node.setText( text );
+			node.setText( aText );
+		} else if ( aParseTree instanceof TerminalNodeImpl ) {
+			final TerminalNodeImpl node = (TerminalNodeImpl)aParseTree;
+			final Token t = node.symbol;
+			if ( t instanceof WritableToken ) {
+				final WritableToken ct = (WritableToken)t;
+				ct.setText(aText);
+			} else {
+				//TODO: program error: unhandled token class type
+			}
+		} else {
+			//TODO: program error: unhandled ParseTree class type
 		}
-		else if ( aParseTree instanceof TerminalNodeImpl ) {
-			//TODO: program error
-		}
-		else {
-			//TODO: program error
-		}
+	}
+
+	/**
+	 * Creates a new hidden token node, which can be added to a ParseTree
+	 * @param aText token text
+	 */
+	public static TerminalNodeImpl createHiddenTokenNode( final String aText ) {
+		return new TerminalNodeImpl( new CommonToken( 0, aText ) );
 	}
 }
