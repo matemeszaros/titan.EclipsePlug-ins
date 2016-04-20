@@ -775,9 +775,26 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 
 	@Override
 	public ITTCN3Template checkThisTemplateRef(final CompilationTimeStamp timestamp, final ITTCN3Template t) {
-		if (!Template_type.SPECIFIC_VALUE.equals(t.getTemplatetype())) {
+		switch( t.getTemplatetype() ){
+		case SUPERSET_MATCH:
+		case SUBSET_MATCH:
+			IType it1 = getTypeRefdLast(timestamp);
+			Type_type tt = it1.getTypetype();
+			if(Type_type.TYPE_SEQUENCE_OF.equals(tt) || Type_type.TYPE_SET_OF.equals(tt) ) {
+				return t;
+			} else {
+				t.getLocation().reportSemanticError(
+						MessageFormat.format("{0} cannot be used for type {1}",t.getTemplateTypeName(), getTypename()));//TODO: cont here!!!
+				return t;
+			}
+				
+		case SPECIFIC_VALUE:
+			break; //cont below
+		default:
 			return t;
 		}
+				
+		//Case of specific value:
 
 		ITTCN3Template template = t;
 
@@ -920,6 +937,8 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 		}
 
 		return template;
+		
+		
 	}
 
 	/**
