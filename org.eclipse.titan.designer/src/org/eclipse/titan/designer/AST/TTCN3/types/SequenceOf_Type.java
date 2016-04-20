@@ -471,11 +471,18 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 				IReferenceChain referenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 				IValue indexLast = index.getValueRefdLast(timestamp, referenceChain);
 				referenceChain.release();
+				
+				IType tempType = TypeFactory.createType(Type_type.TYPE_INTEGER);
+				tempType.check(timestamp);
+				indexLast.setMyGovernor(tempType);
+				IValue temporalValue = tempType.checkThisValueRef(timestamp, indexLast);
+				tempType.checkThisValue(timestamp, temporalValue, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE,
+					true, false, true, false, false));
 
-				if (indexLast.getIsErroneous(timestamp) || !Value_type.INTEGER_VALUE.equals(indexLast.getValuetype())) {
+				if (indexLast.getIsErroneous(timestamp) || !Value_type.INTEGER_VALUE.equals(temporalValue.getValuetype())) {
 					checkHoles = false;
 				} else {
-					BigInteger tempIndex = ((Integer_Value) indexLast).getValueValue();
+					BigInteger tempIndex = ((Integer_Value) temporalValue).getValueValue();
 					if (tempIndex.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) == 1) {
 						index.getLocation().reportSemanticError(MessageFormat.format(
 								"A integer value less than `{0}'' was expected for indexing type `{1}'' instead of `{2}''",
@@ -637,7 +644,15 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 				IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 				IValue lastValue = indexValue.getValueRefdLast(timestamp, chain);
 				chain.release();
-				if (Value_type.INTEGER_VALUE.equals(lastValue.getValuetype())) {
+				
+				IType tempType = TypeFactory.createType(Type_type.TYPE_INTEGER);
+				tempType.check(timestamp);
+				lastValue.setMyGovernor(tempType);
+				IValue temporalValue = tempType.checkThisValueRef(timestamp, lastValue);
+				tempType.checkThisValue(timestamp, temporalValue, new ValueCheckingOptions(Expected_Value_type.EXPECTED_DYNAMIC_VALUE,
+					true, false, true, false, false));
+
+				if (!temporalValue.getIsErroneous(timestamp) && Value_type.INTEGER_VALUE.equals(temporalValue.getValuetype())) {
 					long index = ((Integer_Value) lastValue).getValue();
 					if (index > Integer.MAX_VALUE) {
 						indexValue.getLocation().reportSemanticError(
@@ -654,9 +669,6 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 							indexMap.put(index, i);
 						}
 					}
-				} else {
-					indexValue.getLocation().reportSemanticError(INTEGERINDEXEXPECTED);
-					indexValue.setIsErroneous(true);
 				}
 
 				templateComponent.setMyGovernor(getOfType());

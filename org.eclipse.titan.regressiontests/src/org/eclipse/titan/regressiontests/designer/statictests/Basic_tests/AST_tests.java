@@ -1892,7 +1892,6 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@specific_template_tests.myrecordofType' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An integer value less than `2,147,483,647' was expected for indexing type `@specific_template_tests.myrecordofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for component `4' and `2'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("The index should be an integer value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `t' in module `specific_template_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
@@ -4546,7 +4545,6 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("An integer value less than `2,147,483,647' was expected for indexing type `@template_assignment_tests.myrecordofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for component `4' and `2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("The index should be an integer value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are fewer (1) elements than it is allowed by the length restriction (at least 2)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There are more ( 6) elements than it is allowed by the length restriction (5)",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 23;
