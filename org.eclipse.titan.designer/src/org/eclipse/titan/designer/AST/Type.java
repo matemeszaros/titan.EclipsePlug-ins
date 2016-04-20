@@ -784,7 +784,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 				return t;
 			} else {
 				t.getLocation().reportSemanticError(
-						MessageFormat.format("{0} cannot be used for type {1}",t.getTemplateTypeName(), getTypename()));//TODO: cont here!!!
+						MessageFormat.format("{0} cannot be used for type {1}",t.getTemplateTypeName(), getTypename()));
 				return t;
 			}
 				
@@ -935,10 +935,8 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 		default:
 			break;
 		}
-
+		
 		return template;
-		
-		
 	}
 
 	/**
