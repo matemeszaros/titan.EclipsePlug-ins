@@ -205,22 +205,19 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 		case IResource.ROOT:
 			break;
 		case IResource.PROJECT:
-			try {
-				final IProject resource = (IProject) element;
-				if (ExcludedResourceFilter.isActive() || WorkingDirectoryFilter.isActive()) {
-					result.append("[filtered]");
-				}
+		{
+			final IProject resource = (IProject) element;
+			if (ExcludedResourceFilter.isActive() || WorkingDirectoryFilter.isActive()) {
+				result.append("[filtered]");
+			}
 
-				if (TRUE_STRING.equals(resource.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-						ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY)))) {
-					result.append(OPENING_PARENTHESIS);
-					result.append(propertiesAsParameters(resource, false));
-					result.append(CLOSING_PARENTHESIS);
-				}
-			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(e);
+			if (ProjectBuildPropertyData.useAutomaticMakefilegeneration(resource)) {
+				result.append(OPENING_PARENTHESIS);
+				result.append(propertiesAsParameters(resource, false));
+				result.append(CLOSING_PARENTHESIS);
 			}
 			break;
+		}
 		case IResource.FOLDER:
 			try {
 				final IFolder resource = (IFolder) element;

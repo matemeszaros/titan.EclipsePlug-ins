@@ -72,11 +72,9 @@ public final class MakefileGeneratorVisitor implements IResourceVisitor {
 			this.makefileGenerator.addBaseDirectory(path.toOSString());
 		}
 
-		this.makefileGenerator.setAllProjectsUseSymbolicLinks(this.makefileGenerator.isAllProjectsUseSymbolicLinks()
-				&& (!ResourceUtils.getBooleanPersistentProperty(
-				project, ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)
-				|| !ResourceUtils.getBooleanPersistentProperty(
-				project, ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.SYMLINKLESS_BUILD_PROPERTY)));
+		this.makefileGenerator.setAllProjectsUseSymbolicLinks(
+				this.makefileGenerator.isAllProjectsUseSymbolicLinks()
+				&& ProjectBuildPropertyData.useSymbolicLinks(project) );
 	}
 
 	@Override

@@ -2215,16 +2215,12 @@ public final class InternalMakefileGenerator {
 
 		useRuntime2 = ResourceUtils.getBooleanPersistentProperty(project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.FUNCTIONTESTRUNTIME_PROPERTY);
 
-
 		library = MakefileCreationData.DefaultTarget.LIBRARY.toString().equals(
 				project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 						MakefileCreationData.DEFAULT_TARGET_PROPERTY)));
 
-		usingSymbolicLinks =
-				!ResourceUtils.getBooleanPersistentProperty(
-						project, ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)
-						|| !ResourceUtils.getBooleanPersistentProperty(
-						project, ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.SYMLINKLESS_BUILD_PROPERTY);
+		usingSymbolicLinks = ProjectBuildPropertyData.useSymbolicLinks(project);
+
 		allProjectsUseSymbolicLinks = usingSymbolicLinks;
 
 		String temp = ResourceUtils.getPersistentProperty(project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.TARGET_EXECUTABLE_PROPERTY);

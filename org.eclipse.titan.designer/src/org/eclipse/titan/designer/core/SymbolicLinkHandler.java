@@ -234,20 +234,17 @@ public final class SymbolicLinkHandler {
 	 * @return true if the refresh succeeded, false otherwise.
 	 */
 	public static boolean createSymlinks(final IResource resource) {
-		if (!TITANBuilder.isBuilderEnabled(resource.getProject())) {
+		IProject rProject = resource.getProject();
+		if (!TITANBuilder.isBuilderEnabled(rProject)) {
 			return true;
 		}
 
-		try {
-			if ("true".equals(resource.getProject().getPersistentProperty(
-					new QualifiedName(ProjectBuildPropertyData.QUALIFIER, ProjectBuildPropertyData.SYMLINKLESS_BUILD_PROPERTY)))) {
-				return true;
-			}
-		} catch (CoreException e) {
-			ErrorReporter.logExceptionStackTrace("While checking build property", e);
+		if (!ProjectBuildPropertyData.useSymbolicLinks(rProject)) {
+			return true;
 		}
 
-		IPath workingDir = ProjectBasedBuilder.getProjectBasedBuilder(resource.getProject()).getWorkingDirectoryPath(true);
+
+		IPath workingDir = ProjectBasedBuilder.getProjectBasedBuilder(rProject).getWorkingDirectoryPath(true);
 
 		if (workingDir == null || !workingDir.toFile().exists()) {
 			return true;
@@ -257,26 +254,20 @@ public final class SymbolicLinkHandler {
 			return true;
 		}
 
-		TITANBuilderResourceVisitor visitor = ProjectBasedBuilder.getProjectBasedBuilder(resource.getProject()).getResourceVisitor();
+		TITANBuilderResourceVisitor visitor = ProjectBasedBuilder.getProjectBasedBuilder(rProject).getResourceVisitor();
 
 		if (visitor.getFiles().isEmpty()) {
 			return true;
 		}
 
-		TITANJob buildJob = new TITANJob(SYMBOLIC_LINK_CREATION_PROCESS, visitor.getFiles(), workingDir.toFile(), resource.getProject());
+		TITANJob buildJob = new TITANJob(SYMBOLIC_LINK_CREATION_PROCESS, visitor.getFiles(), workingDir.toFile(), rProject);
 		buildJob.setPriority(Job.DECORATE);
 		buildJob.setUser(true);
-		buildJob.setRule(resource.getProject());
+		buildJob.setRule(rProject);
 
-		try {
-			final String automaticMakefileManagement = resource.getProject().getPersistentProperty(
-					new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-							ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY));
-			SymbolicLinkHandler.addSymlinkCreationCommand(visitor.getFiles(), workingDir.toOSString(), buildJob,
-					new HashMap<String, IFile>(), null, "true".equals(automaticMakefileManagement));
-		} catch (CoreException e) {
-			ErrorReporter.logExceptionStackTrace("while creating symlinks for project`" + resource.getProject() + "'", e);
-		}
+		SymbolicLinkHandler.addSymlinkCreationCommand(visitor.getFiles(), workingDir.toOSString(), buildJob,
+					new HashMap<String, IFile>(), null, ProjectBuildPropertyData.useAutomaticMakefilegeneration(rProject) );
+
 
 		buildJob.schedule();
 
