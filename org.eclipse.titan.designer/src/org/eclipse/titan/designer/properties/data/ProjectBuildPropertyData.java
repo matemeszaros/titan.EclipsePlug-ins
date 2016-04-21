@@ -325,4 +325,92 @@ public final class ProjectBuildPropertyData {
 		}
 
 	}
+	
+	//************ Getting the state of makefile generating switches on project level*****
+	/**
+	 * Gets if automatic makefile generation is switched on in the given project.
+	 * @param project
+	 * @return
+	 */
+	public static boolean useAutomaticMakefilegeneration(final IProject project) {
+		if( project == null) {
+			return false;
+		}
+		String automaticMakefileGeneration = FALSE_STRING;
+		try{
+			automaticMakefileGeneration = project.getPersistentProperty(
+					new QualifiedName(ProjectBuildPropertyData.QUALIFIER, 
+							ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY));
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace(e);
+			return false; //?
+		}
+		return TRUE_STRING.equals(automaticMakefileGeneration);
+	}
+	/**
+	 * Gets if internal makefile generation is switched on in the given project.
+	 * 
+	 * @param project
+	 * @return true if internal makefile generation is switched on
+	 */
+	public static boolean useInternalMakefilegeneration(final IProject project) {
+		if( project == null) {
+			return false;
+		}
+		String useInternalMakefileGeneration = FALSE_STRING;
+		try{
+			useInternalMakefileGeneration = project.getPersistentProperty(
+					new QualifiedName(ProjectBuildPropertyData.QUALIFIER, 
+							ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY));
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace(e);
+			return false; //?
+		}
+		return TRUE_STRING.equals(useInternalMakefileGeneration);
+	}
+	
+	/**
+	 * Gets if symbolic link switch is switched on in the given project.
+	 * <p>
+	 * Do not use this function to decide if symbolic linking shall be performed
+	 * because this condition is necessary but not sufficient. 
+	 * Use the function useSymbolicLinks() instead of this function
+	 * </p>
+	 * @param project
+	 * @return true if symlinkless build switch is set
+	 */
+	public static boolean isSymlinklessBuildSwitchedOn(final IProject project) {
+		if( project == null) {
+			return false;
+		}
+		String symlinklessBuild = FALSE_STRING;
+		try{
+			symlinklessBuild = project.getPersistentProperty(
+					new QualifiedName(ProjectBuildPropertyData.QUALIFIER, 
+							ProjectBuildPropertyData.SYMLINKLESS_BUILD_PROPERTY));
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace(e);
+			return false; //?
+		}
+		return TRUE_STRING.equals(symlinklessBuild);
+	}
+	
+	
+	/**
+	 * Gets if symbolic links shall be generated or not in the given project.
+	 * 
+	 * @param project - the project reference
+	 * @return 	 false if the project reference is null, or
+	 * automatic makefile handling and 
+	 * internal makefilegen generation and 
+	 * symlinkless build are switched on, otherwise
+	 * true
+	 */
+	public static boolean useSymbolicLinks(final IProject project) {
+		
+		return !( useAutomaticMakefilegeneration(project) 
+				&& useInternalMakefilegeneration(project)
+				&& isSymlinklessBuildSwitchedOn(project) );
+
+	}
 }

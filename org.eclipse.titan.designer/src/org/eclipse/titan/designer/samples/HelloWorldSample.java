@@ -270,6 +270,8 @@ public class HelloWorldSample extends SampleProject {
 		final String trueString = "true";
 		try {
 			project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
+					ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY), trueString);
+			project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY), trueString);
 			project.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					ProjectBuildPropertyData.SYMLINKLESS_BUILD_PROPERTY), trueString);

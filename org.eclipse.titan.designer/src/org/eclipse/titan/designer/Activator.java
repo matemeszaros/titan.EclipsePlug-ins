@@ -402,14 +402,7 @@ public final class Activator extends AbstractUIPlugin {
 									GlobalParser.getProjectSourceParser(project).analyzeAll(false);
 									// It is of no importance when this analysis will run, or end for that matter.
 
-									boolean generateMakefile;
-									try {
-										generateMakefile = "true".equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-												ProjectBuildPropertyData.GENERATE_MAKEFILE_PROPERTY)));
-									} catch (CoreException e) {
-										generateMakefile = false;
-									}
-									if (generateMakefile) {
+									if (ProjectBuildPropertyData.useAutomaticMakefilegeneration(project)) {
 										TITANBuilder.markProjectForRebuild(project);
 										SymbolicLinkHandler.createSymlinks(project);
 										TITANBuilder.regenerateMakefile(project);

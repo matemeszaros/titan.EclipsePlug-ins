@@ -464,12 +464,7 @@ public final class ProjectBuildPropertyPage extends PropertyPage {
 						result = false;
 						continue;
 					}
-					if ("true".equals(referencedProject.getPersistentProperty(new QualifiedName(
-							ProjectBuildPropertyData.QUALIFIER,
-							ProjectBuildPropertyData.GENERATE_INTERNAL_MAKEFILE_PROPERTY)))
-							&& "true".equals(referencedProject.getPersistentProperty(new QualifiedName(
-									ProjectBuildPropertyData.QUALIFIER,
-									ProjectBuildPropertyData.SYMLINKLESS_BUILD_PROPERTY)))) {
+					if ( ! ProjectBuildPropertyData.useSymbolicLinks(referencedProject) ) {
 						setErrorMessage("Will not be able to generate a makefile to project `" + projectResource.getName()
 								+ "' with the external makefile generator as project `" + referencedProject.getName()
 								+ "' is set to build without generating symbolic links");
