@@ -53,10 +53,10 @@ public final class COptimalizationOptionsPage implements IOptionsPage {
 
 		optimalizationLevel = new ComboFieldEditor(COptimalizationOptionsData.OPTIMIZATION_LEVEL_PROPERTY, "Optimization level",
 				new String[][] { { "Unspecified", "Unspecified" }, { "None (-O0)", "None" },
-						{ "Minor optimizations (-O1)", "Minor optimizations" },
-						{ "Common optimizations (-O2)", "Common optimizations" },
-						{ "Optimize for speed (-O3)", "Optimize for speed" },
-						{ "Optimize for size (-Os)", "Optimize for size" } }, mainComposite);
+						{ "Minor optimizations (-O1)", "Minoroptimizations" },
+						{ "Common optimizations (-O2)", "Commonoptimizations" },
+						{ "Optimize for speed (-O3)", "Optimizeforspeed" },
+						{ "Optimize for size (-Os)", "Optimizeforsize" } }, mainComposite);
 
 		otherFlags = new StringFieldEditor(COptimalizationOptionsData.OTHER_OPTIMIZATION_FLAGS_PROPERTY, "Other optimization flags:",
 				mainComposite);
@@ -117,7 +117,7 @@ public final class COptimalizationOptionsPage implements IOptionsPage {
 		}
 
 		optimalizationLevel.setEnabled(true, mainComposite);
-		optimalizationLevel.setSelectedValue("Common optimizations");
+		optimalizationLevel.setSelectedValue("Commonoptimizations");
 
 		otherFlags.setEnabled(true, mainComposite);
 		otherFlags.setStringValue("");
@@ -136,14 +136,14 @@ public final class COptimalizationOptionsPage implements IOptionsPage {
 			if (temp != null && temp.length() != 0) {
 				optimalizationLevel.setSelectedValue(temp);
 			} else {
-				optimalizationLevel.setSelectedValue("Common optimizations");
+				optimalizationLevel.setSelectedValue("Commonoptimizations");
 			}
 
 			temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					COptimalizationOptionsData.OTHER_OPTIMIZATION_FLAGS_PROPERTY));
 			otherFlags.setStringValue(temp);
 		} catch (CoreException e) {
-			optimalizationLevel.setSelectedValue("Common optimizations");
+			optimalizationLevel.setSelectedValue("Commonoptimizations");
 			otherFlags.setStringValue("");
 		}
 	}
