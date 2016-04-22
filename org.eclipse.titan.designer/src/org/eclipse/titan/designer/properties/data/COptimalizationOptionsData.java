@@ -34,7 +34,7 @@ public final class COptimalizationOptionsData {
 
 	public static final String[] PROPERTIES = { OPTIMIZATION_LEVEL_PROPERTY, OTHER_OPTIMIZATION_FLAGS_PROPERTY };
 	public static final String[] TAGS = { PTIMIZATION_LEVEL_TAG, OTHER_OPTIMIZATION_FLAGS_TAG };
-	public static final String[] DEFAULT_VALUES = { "Common optimizations", "" };
+	public static final String[] DEFAULT_VALUES = { "Commonoptimizations", "" };
 
 	private COptimalizationOptionsData() {
 		// Do nothing
@@ -48,13 +48,13 @@ public final class COptimalizationOptionsData {
 			if (temp != null) {
 				if ("None".equals(temp)) {
 					builder.append(" -O0");
-				} else if ("Minor optimizations".equals(temp)) {
+				} else if ("Minoroptimizations".equals(temp)) {
 					builder.append(" -O1");
-				} else if ("Common optimizations".equals(temp)) {
+				} else if ("Commonoptimizations".equals(temp)) {
 					builder.append(" -O2");
-				} else if ("Optimize for speed".equals(temp)) {
+				} else if ("Optimizeforspeed".equals(temp)) {
 					builder.append(" -O3");
-				} else if ("Optimize for size".equals(temp)) {
+				} else if ("Optimizeforsize".equals(temp)) {
 					builder.append(" -Os");
 				}
 			}
