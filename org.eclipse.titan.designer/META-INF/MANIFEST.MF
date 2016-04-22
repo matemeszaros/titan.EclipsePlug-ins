@@ -4,7 +4,7 @@ Created-By: 23.6-b04 (Oracle Corporation)
 Bundle-ManifestVersion: 2
 Bundle-Name: TITAN_Designer Plug-in
 Bundle-SymbolicName: org.eclipse.titan.designer;singleton:=true
-Bundle-Version: 5.4.3.CRL_113_200_5_R4D_20160301-1100
+Bundle-Version: 5.5.0.CRL_113_200_5_R5A_20160422-1100
 Bundle-Activator: org.eclipse.titan.designer.Activator
 Bundle-Vendor: Eclipse Titan Project
 Require-Bundle: org.eclipse.ui,
