@@ -174,13 +174,15 @@ public final class CfgAnalyzer {
 	}
 
 	public List<SyntacticErrorStorage> getErrorStorage() {
-		if (lexerListener != null && !lexerListener.getErrorsStored().isEmpty() && parserListener != null && parserListener.getErrorsStored().isEmpty()) {
-			return lexerListener.getErrorsStored();
-		} else if (lexerListener != null && lexerListener.getErrorsStored().isEmpty() && parserListener != null && !parserListener.getErrorsStored().isEmpty()) {
-			return parserListener.getErrorsStored();
-		} else if (lexerListener != null && !lexerListener.getErrorsStored().isEmpty() && parserListener != null && !parserListener.getErrorsStored().isEmpty()) {
-			if (lexerListener.addAll(parserListener.getErrorsStored())) {
+		if (lexerListener != null && parserListener != null) {
+			if (!lexerListener.getErrorsStored().isEmpty() && parserListener.getErrorsStored().isEmpty()) {
 				return lexerListener.getErrorsStored();
+			} else if (lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
+				return parserListener.getErrorsStored();
+			} else if (!lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
+				if (lexerListener.addAll(parserListener.getErrorsStored())) {
+					return lexerListener.getErrorsStored();
+				}
 			}
 		}
 		return new ArrayList<SyntacticErrorStorage>();
