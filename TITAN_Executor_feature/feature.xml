@@ -14,7 +14,7 @@
       provider-name="Eclipse Titan Project">
 
    <description url="http://ttcn.ericsson.se/download/update_site/releasenotes.pdf">
-      CRL 113 200/5 R4D (5.4.pl3) version of the TITAN Executor
+      CRL 113 200/5 R5A (5.5.pl0) version of the TITAN Executor
 plug-in.
    </description>
 
@@ -138,7 +138,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
    </url>
 
    <requires>
-      <import feature="TITAN_Designer" version="5.4.3" match="greaterOrEqual"/>
+      <import feature="TITAN_Designer" version="5.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.debug.core"/>
