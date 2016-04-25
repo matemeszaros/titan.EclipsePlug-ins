@@ -175,17 +175,11 @@ public final class CfgAnalyzer {
 
 	public List<SyntacticErrorStorage> getErrorStorage() {
 		if (lexerListener != null && parserListener != null) {
-			if (!lexerListener.getErrorsStored().isEmpty() && parserListener.getErrorsStored().isEmpty()) {
-				return lexerListener.getErrorsStored();
-			} else if (lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
-				return parserListener.getErrorsStored();
-			} else if (!lexerListener.getErrorsStored().isEmpty() && !parserListener.getErrorsStored().isEmpty()) {
-				if (lexerListener.addAll(parserListener.getErrorsStored())) {
-					return lexerListener.getErrorsStored();
-				}
-			}
+			lexerListener.addAll(parserListener.getErrorsStored());
+			return lexerListener.getErrorsStored();
+		} else {
+			return new ArrayList<SyntacticErrorStorage>();
 		}
-		return new ArrayList<SyntacticErrorStorage>();
 	}
 	
     /**
