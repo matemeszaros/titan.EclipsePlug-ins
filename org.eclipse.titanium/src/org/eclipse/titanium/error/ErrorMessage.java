@@ -9,6 +9,7 @@ package org.eclipse.titanium.error;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
@@ -48,11 +49,12 @@ public final class ErrorMessage {
 			public void run() {
 				final MessageDialog err = new MessageDialog(null, windowTitle, null, message, dialogType,
 						new String[] { IDialogConstants.OK_LABEL, buttonTitle }, 0) {
+
 					@Override
 					protected void buttonPressed(final int buttonId) {
 						super.buttonPressed(buttonId);
 
-						if (buttonId == 1) {
+						if (buttonId == Window.CANCEL) {
 							PreferencesUtil.createPreferenceDialogOn(null, pageName, null,
 									null).open();
 						}

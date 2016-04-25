@@ -12,6 +12,7 @@ import java.io.File;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
@@ -37,7 +38,7 @@ public final class TITANInstallationValidator {
 		protected void buttonPressed(final int buttonId) {
 			super.buttonPressed(buttonId);
 
-			if (buttonId == 1) {
+			if (buttonId == Window.CANCEL) {
 				PreferencesUtil.createPreferenceDialogOn(null,
 						"org.eclipse.titan.designer.preferences.pages.TITANPreferencePage", null, null).open();
 			}
