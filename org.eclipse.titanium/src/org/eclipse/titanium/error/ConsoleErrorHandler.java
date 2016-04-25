@@ -16,10 +16,10 @@ import java.io.PrintStream;
  * @author Gabor Jenei
  */
 public class ConsoleErrorHandler implements ErrorHandler {
-	protected PrintStream errorStream;
-	protected PrintStream warningStream;
-	protected PrintStream informationStream;
-	protected StringBuilder collectedMessage;
+	private PrintStream errorStream;
+	private PrintStream warningStream;
+	private PrintStream informationStream;
+	private StringBuilder collectedMessage;
 
 	/**
 	 * This constructor sets {@link System#err} for error messages and
@@ -83,7 +83,8 @@ public class ConsoleErrorHandler implements ErrorHandler {
 	@Override
 	public void writeMessageToLog() {
 		errorStream.println(collectedMessage.toString());
-		collectedMessage = new StringBuilder();
+		collectedMessage.setLength(0);
+		collectedMessage.trimToSize();
 	}
 
 }

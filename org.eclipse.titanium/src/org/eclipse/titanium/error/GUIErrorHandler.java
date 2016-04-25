@@ -19,7 +19,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * @author Gabor Jenei
  */
 public class GUIErrorHandler implements ErrorHandler {
-	protected StringBuilder collectedMessage;
+	private StringBuilder collectedMessage;
 
 	/**
 	 * Constructor
@@ -90,7 +90,8 @@ public class GUIErrorHandler implements ErrorHandler {
 	public void writeMessageToLog() {
 		if (collectedMessage.length() != 0) {
 			ErrorReporter.logError(collectedMessage.toString());
-			collectedMessage = new StringBuilder();
+			collectedMessage.setLength(0);
+			collectedMessage.trimToSize();
 			ErrorMessage.show("Error log", "Various errors happened! For details see the error log.",MessageDialog.ERROR);
 		}
 	}

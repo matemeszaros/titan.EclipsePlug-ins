@@ -355,8 +355,6 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		}
 		processedProjects.add(project);
 
-		String needsMakefile = null;
-
 		IPath workingDir = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryPath(true);
 		if (workingDir == null || !workingDir.toFile().exists()) {
 			return true;
@@ -1092,11 +1090,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 
 		IStatus status = buildJob.runInWorkspace(new SubProgressMonitor(internalMonitor, 3));
 		try {
-			if (status.isOK()) {
-				project.setSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE, true);
-			} else {
-				project.setSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE, false);
-			}
+			project.setSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE, status.isOK());
 			TITANDecorator.refreshSelectively(project);
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace("While setting project `" + project.getName() + "' up-to-date", e);

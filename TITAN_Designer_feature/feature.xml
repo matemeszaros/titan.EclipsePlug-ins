@@ -10,7 +10,7 @@
 <feature
       id="TITAN_Designer"
       label="TITAN_Designer_Feature"
-      version="5.4.3.CRL_113_200_5_R4D_20160301-1100"
+      version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
       provider-name="Eclipse Titan Project">
 
    <description url="http://ttcn.ericsson.se/download/update_site/releasenotes.pdf">
@@ -162,21 +162,21 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="org.eclipse.titan.designer"
          download-size="3841"
          install-size="0"
-         version="5.4.3.CRL_113_200_5_R4D_20160301-1100"
+         version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.titan.help"
          download-size="10546"
          install-size="0"
-         version="5.4.3.CRL_113_200_5_R4D_20160301-1100"
+         version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.titan.common"
          download-size="532"
          install-size="0"
-         version="5.4.3.CRL_113_200_5_R4D_20160301-1100"
+         version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
          unpack="false"/>
 
 </feature>

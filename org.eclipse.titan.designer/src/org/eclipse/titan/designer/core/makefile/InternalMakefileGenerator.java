@@ -646,8 +646,8 @@ public final class InternalMakefileGenerator {
 		}
 		contents.append("# - make archive        Archives all source files.\n");
 		contents.append("# - make check          Checks the semantics of TTCN-3 and ASN.1 modules.\n");
-		contents.append("# - make port           Generates port skeletons.\n");
 		contents.append("# - make clean          Removes all generated files.\n");
+		contents.append("# - make port           Generates port skeletons.\n");
 		contents.append("# - make compile        Translates TTCN-3 and ASN.1 modules to C++.\n");
 		contents.append("# - make dep            Creates/updates dependency list.\n");
 		contents.append("# - make executable     Builds the executable test suite.\n");
@@ -675,7 +675,11 @@ public final class InternalMakefileGenerator {
 			contents.append("#\n");
 			contents.append("# Do NOT touch this line...\n");
 			contents.append("#\n");
-			contents.append(".PHONY: all archive check port clean dep executable library objects");
+			contents.append(".PHONY: all");
+			if (dynamicLinking) {
+				contents.append(" shared_objects");
+			}
+			contents.append(" executable library objects check port clean dep archive");
 			if (preprocess) {
 				contents.append(" preprocess");
 			}
@@ -710,12 +714,14 @@ public final class InternalMakefileGenerator {
 			contents.append("# The path of your toolchain including the target triplet:\n");
 			contents.append("CROSSTOOL_DIR =\n\n");
 			contents.append("# Your C++ compiler:\n");
+			contents.append("# (if you change the platform, you may need to change the compiler)\n");
 			contents.append("CXX = g++\n\n");
 		} else {
 			contents.append('\n');
 			contents.append("# Your platform: (SOLARIS, SOLARIS8, LINUX, FREEBSD or WIN32)\n");
 			contents.append("PLATFORM = ").append(platformString).append("\n\n");
 			contents.append("# Your C++ compiler:\n");
+			contents.append("# (if you change the platform, you may need to change the compiler)\n");
 			String compilerName = CCompilerOptionsData.getCompilerName(project);
 			if (compilerName == null || compilerName.length() == 0) {
 				ErrorReporter.parallelErrorDisplayInMessageDialog(
@@ -1969,7 +1975,7 @@ public final class InternalMakefileGenerator {
 		if (incrementalDependencyRefresh) {
 			// nothing to do for "dep" as such
 			contents.append(" $(DEPFILES) ;\n\n");
-			contents.append("ifeq ($(filter check port compile clean archive,$(MAKECMDGOALS)),)\n");
+			contents.append("ifeq ($(filter clean check port compile archive,$(MAKECMDGOALS)),)\n");
 			if (preprocess) {
 				// Prevent nasty infinite make loop
 				contents.append("ifeq ($(findstring preprocess,$(MAKECMDGOALS)),)\n");
