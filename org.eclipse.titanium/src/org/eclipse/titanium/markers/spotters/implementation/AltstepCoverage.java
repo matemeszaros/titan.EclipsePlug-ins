@@ -259,7 +259,7 @@ public class AltstepCoverage {
 					while (typeIt.hasNext()) {
 						sb.append(", ").append(typeIt.next());
 					}
-					sb.append("\n");
+					sb.append('\n');
 				}
 				problems.report(reportAt, sb.toString());
 			}

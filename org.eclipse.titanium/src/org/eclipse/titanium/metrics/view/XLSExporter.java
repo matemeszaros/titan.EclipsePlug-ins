@@ -37,7 +37,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  */
 class XLSExporter {
 	private File file;
-	private MetricData data;
+	private final MetricData data;
 
 	public XLSExporter(final MetricData data) {
 		this.data = data;
@@ -119,7 +119,7 @@ class XLSExporter {
 }
 
 class CNComparator implements Comparator<IContentNode> {
-	private MetricData data;
+	private final MetricData data;
 
 	public CNComparator(final MetricData data) {
 		this.data = data;

@@ -50,6 +50,8 @@ public final class PreferenceConstants {
 	public static final String CLUSTER_AUTO_REGEXP = "Auto_regexp";
 	public static final String CLUSTER_AUTO_NAME = "Auto_name";
 
+	public static final String BASE_RISK_FACTOR = "BASE_RISK_FACTOR";
+
 	/** private constructor to disable instantiation */
 	private PreferenceConstants() {
 	}
@@ -70,6 +72,4 @@ public final class PreferenceConstants {
 	public static String nameMetricGraph(final String id) {
 		return METRIC_GRAPH + id;
 	}
-
-	public static final String BASE_RISK_FACTOR = "BASE_RISK_FACTOR";
 }

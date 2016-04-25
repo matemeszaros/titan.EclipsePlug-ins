@@ -10,7 +10,6 @@ package org.eclipse.titanium.markers.handler;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.titan.designer.AST.Location;
-import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titanium.markers.types.CodeSmellType;
 
 /**

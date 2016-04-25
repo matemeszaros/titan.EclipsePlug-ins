@@ -17,7 +17,8 @@ public class LinearRisk extends BaseRisk {
 	@Override
 	public double getRiskValue(final Number value) {
 		double risk = 0;
-		double l1, l2;
+		double l1;
+		double l2;
 		final double val = value == null ? 0.0 : value.doubleValue();
 		switch (method) {
 		case NEVER:

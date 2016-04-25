@@ -208,15 +208,15 @@ public final class OrganizeImports {
 					final Module addMod = parser.getModuleByName(parser.containedModule(file));
 					final String importName = addMod.getIdentifier().getTtcnName();
 					if (!importNamesAdded.contains(importName)) {
-						StringBuilder impText = new StringBuilder("import from " + importName + " all;");
+						StringBuilder impText = new StringBuilder("import from ").append(importName).append(" all;");
 						if (importChangeMethod.equals(OrganizeImportPreferencePage.COMMENT_THEM)) {
-							impText.append(" // Added automatically to resolve " + ref.getDisplayName());
+							impText.append(" // Added automatically to resolve ").append(ref.getDisplayName());
 						}
 						newImports.add(new ImportText(importName, impText.toString() + NEWLINE));
 						importNamesAdded.add(importName);
 
 						if (reportDebug) {
-							StringBuilder sb = new StringBuilder("For " + ref.getDisplayName() + ": ");
+							StringBuilder sb = new StringBuilder("For ").append(ref.getDisplayName()).append(": ");
 							sb.append(impText.toString());
 							TITANDebugConsole.println(sb.toString());
 						}
@@ -362,11 +362,7 @@ class ImportText implements Comparable<ImportText> {
 			return false;
 		}
 
-		if (moduleName.equals(((ImportText) obj).moduleName)) {
-			return true;
-		}
-
-		return false;
+		return moduleName.equals(((ImportText) obj).moduleName);
 	}
 
 	@Override

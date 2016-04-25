@@ -58,12 +58,13 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 	 */
 	@Override
 	public final IStatus runInWorkspace(final IProgressMonitor monitor) {
-		SubMonitor progress = SubMonitor.convert(monitor, 100);
+		final SubMonitor progress = SubMonitor.convert(monitor, 100);
 		if (project == null) {
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Project not specified for ProjectAnalyzerJob");
 		}
-		ProjectSourceParser parser = GlobalParser.getProjectSourceParser(project);
-		WorkspaceJob job = parser.analyzeAll();
+
+		final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(project);
+		final WorkspaceJob job = parser.analyzeAll();
 		if (job == null) {
 			// maybe parsing is disabled
 			Display.getDefault().syncExec(new Runnable() {
@@ -72,7 +73,7 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 					final Display disp = Display.getDefault();
 					final Shell shell = new Shell(disp, SWT.SHELL_TRIM);
 					shell.setText("Unavailable operation");
-					String errorMessage = "This operation can not be executed while project parsing is disabled.\n\n"
+					final String errorMessage = "This operation can not be executed while project parsing is disabled.\n\n"
 							+ "Please enable parsing on the preference page: Window/Preferences/ TITAN Preferences/"
 							+ "On-the-fly checker/ Enable parsing of TTCN-3, ASN.1 and Runtime Configuration files";
 					MessageDialog.openInformation(shell, "Confronting settings", errorMessage);
@@ -81,7 +82,7 @@ public class ProjectAnalyzerJob extends WorkspaceJob {
 			return Status.CANCEL_STATUS;
 		}
 
-		IStatus preStatus = doPreWork(progress.newChild(20));
+		final IStatus preStatus = doPreWork(progress.newChild(20));
 		progress.setWorkRemaining(80);
 		if (!preStatus.isOK()) {
 			return preStatus;

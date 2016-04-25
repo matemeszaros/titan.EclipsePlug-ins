@@ -57,8 +57,8 @@ public class SonarDataExporter {
 
 		final URI exportDir = URIUtil.append(projectLocation, ".sonar_titanium");
 		System.out.println("Export dir is: " + exportDir.getPath());
-		final File f = new File(exportDir);
-		if (!f.exists() && !f.mkdirs()) {
+		final File file = new File(exportDir);
+		if (!file.exists() && !file.mkdirs()) {
 			throw new IOException("Cannot create output directory: " + exportDir);
 		}
 		try {
@@ -85,12 +85,12 @@ public class SonarDataExporter {
 
 	private void exportMetrics(final URI exportDir) throws IOException {
 		final URI filePath = URIUtil.append(exportDir, "metrics.xml");
-		final File f = new File(filePath);
-		FileUtils.delete(f);
+		final File file = new File(filePath);
+		FileUtils.delete(file);
 		final SonarMetricsExporter exporter = new SonarMetricsExporter();
 
 		try {
-			exporter.export(MetricData.measure(project), f);
+			exporter.export(MetricData.measure(project), file);
 		} catch (JAXBException e) {
 			new ConsoleErrorHandler().reportException("Error while exporting the project metrics", e);
 		}
@@ -135,8 +135,8 @@ public class SonarDataExporter {
 
 	private void exportCodeSmells(final URI exportDir) throws IOException {
 		final URI filePath = URIUtil.append(exportDir, "code_smells.csv");
-		final File f = new File(filePath);
-		FileUtils.delete(f);
+		final File file = new File(filePath);
+		FileUtils.delete(file);
 		final BaseProblemExporter exporter = new SingleCsvProblemExporter(project);
 		exporter.exportMarkers(new NullProgressMonitor(), filePath.getPath(), Calendar.getInstance().getTime());
 	}

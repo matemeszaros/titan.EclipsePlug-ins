@@ -17,7 +17,8 @@ public class TriangleRisk extends BaseRisk {
 	@Override
 	public double getRiskValue(final Number value) {
 		double risk = 0;
-		double l1, l2;
+		double l1;
+		double l2;
 		final double dist = 0.5 - Math.abs(value.doubleValue() - 0.5);
 		switch (method) {
 		case NEVER:

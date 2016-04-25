@@ -215,11 +215,11 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 		return prefStore;
 	}
 
-	static void insertSP(final CodeSmellType p) {
+	private static void insertSP(final CodeSmellType p) {
 		USED_MARKERS.put(p.name(), p.getHumanReadableName());
 	}
 
-	static void insertTask(final TaskType p) {
+	private static void insertTask(final TaskType p) {
 		USED_MARKERS.put(p.name(), p.getHumanReadableName());
 	}
 }

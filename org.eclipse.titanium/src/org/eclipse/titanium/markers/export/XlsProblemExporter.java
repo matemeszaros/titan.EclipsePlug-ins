@@ -166,7 +166,7 @@ public class XlsProblemExporter extends BaseProblemExporter {
 
 			Row row2 = summarySheet.createRow(2);
 			row2.createCell(0).setCellValue("Commulative Project Risk Factor");
-			int riskFactor = (new RiskFactorCalculator()).measure(project, smellCount);
+			int riskFactor = new RiskFactorCalculator().measure(project, smellCount);
 			row2.createCell(1).setCellValue(riskFactor);
 
 			summarySheet.autoSizeColumn(0);

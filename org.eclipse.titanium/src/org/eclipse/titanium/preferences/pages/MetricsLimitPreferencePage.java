@@ -49,7 +49,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 		GridLayout l = new GridLayout();
 		l.numColumns = 2;
 		page.setLayout(l);
-		for (org.eclipse.titanium.metrics.MetricGroup type : MetricGroup.values()) {
+		for (MetricGroup type : MetricGroup.values()) {
 			Label header = new Label(page, 0);
 			header.setText(type.getGroupName() + " metrics");
 			GridData headerData = new GridData();

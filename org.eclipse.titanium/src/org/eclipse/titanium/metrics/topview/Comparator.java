@@ -38,12 +38,14 @@ class Comparator extends ViewerComparator {
 		final Module m1 = (Module) e1;
 		final Module m2 = (Module) e2;
 
-		double risk1 = 0, risk2 = 0;
+		double risk1 = 0;
+		double risk2 = 0;
 		for (IMetricEnum m : metrics) {
 			risk1 += mw.getRiskValue(m, m1.getName());
 			risk2 += mw.getRiskValue(m, m2.getName());
 		}
-		double r = risk2 - risk1;
+		
+		final double r = risk2 - risk1;
 		if (r < 0.0001) {
 			return -1;
 		} else if (r > 0.0001) {

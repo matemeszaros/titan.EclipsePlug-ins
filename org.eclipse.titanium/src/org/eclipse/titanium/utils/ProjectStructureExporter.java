@@ -46,7 +46,7 @@ public class ProjectStructureExporter {
 
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
-			ResourceData data = new ResourceData();
+			final ResourceData data = new ResourceData();
 			switch (resource.getType()) {
 
 			case IResource.PROJECT:
@@ -82,7 +82,7 @@ public class ProjectStructureExporter {
 	}
 
 	public void saveTo(final URI path) throws IOException {
-		ResourceVisitor visitor = new ResourceVisitor();
+		final ResourceVisitor visitor = new ResourceVisitor();
 		try {
 			project.accept(visitor);
 		} catch (CoreException e1) {
@@ -92,7 +92,7 @@ public class ProjectStructureExporter {
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path)), "UTF-8"));
-			MapAppender appender = new MapAppender(writer, StringUtils.lineSeparator(), ";");
+			final MapAppender appender = new MapAppender(writer, StringUtils.lineSeparator(), ";");
 			for (ResourceData data : visitor.resources) {
 				appender.append(data.type, data.projectRelativePath, data.absoluteURI.toString());
 			}

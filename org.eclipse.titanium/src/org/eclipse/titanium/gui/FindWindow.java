@@ -177,10 +177,10 @@ public class FindWindow<T extends Comparable> extends Dialog {
 					noResult = false;
 				}
 
-				if (!noResult) {
-					showResultTable(true);
-				} else {
+				if (noResult) {
 					errorHandler.reportInformation("The search hasn't found such node!");
+				} else {
+					showResultTable(true);
 				}
 			}
 		});

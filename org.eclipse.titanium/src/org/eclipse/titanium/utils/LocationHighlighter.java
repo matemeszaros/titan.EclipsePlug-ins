@@ -38,7 +38,7 @@ public final class LocationHighlighter {
 		try {
 			final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			final IEditorPart editorPart = page.openEditor(new FileEditorInput((IFile) location.getFile()), desc.getId());
-			if (editorPart != null && (editorPart instanceof AbstractTextEditor)) {
+			if (editorPart != null && editorPart instanceof AbstractTextEditor) {
 				((AbstractTextEditor) editorPart).setHighlightRange(location.getOffset(), 0, true);
 			}
 

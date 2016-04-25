@@ -47,7 +47,9 @@ public class Statistics {
 	public Statistics(final double[] nums, final IMetricEnum metric, final IRisk risk) {
 		final int n = nums.length;
 		double total = 0;
-		double max, dev, mean;
+		double max;
+		double dev;
+		double mean;
 		final Set<StatColumn> stats = metric.requestedStatistics();
 		final boolean isInt = metric.isInteger();
 

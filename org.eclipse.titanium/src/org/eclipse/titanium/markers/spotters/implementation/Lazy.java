@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
@@ -71,7 +72,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		node.accept(relevantNodeBuilder);
 
 		// Evaluate tree and return with FormalParameters which have to be evaluated.
-		HashSet<FormalParameter> shouldBeEvaluated = relevantNodeBuilder.collectRelevantReferences();
+		Set<FormalParameter> shouldBeEvaluated = relevantNodeBuilder.collectRelevantReferences();
 
 		for (FormalParameter formalParameter : formalParameterCollector.getItems()) {
 			boolean isLazy = formalParameter.getIsLazy();
@@ -119,7 +120,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		private List<RelevantNodeBuilder> nodes;
 
 		// Contains possible FormalParameters of expression block of If_Statement and SelectCase_Statement.
-		private HashSet<FormalParameter> strictFormalParameters;
+		private Set<FormalParameter> strictFormalParameters;
 
 		// Contains possible FormalParameters of StatementBloc and Statement and AltGuard.
 		private HashSet<FormalParameter> referencedFormalParameters;
@@ -176,7 +177,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 			return V_CONTINUE;
 		}
 
-		public HashSet<FormalParameter> collectRelevantReferences() {
+		public Set<FormalParameter> collectRelevantReferences() {
 			HashSet<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
 
 			// After that we disregard content's of nodes
@@ -189,14 +190,14 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 				return referencedFormalParameters;
 			} else {
 
-				HashSet<FormalParameter> tempStricts = new HashSet<FormalParameter>();
+				Set<FormalParameter> tempStricts = new HashSet<FormalParameter>();
 
 				for (int index = 0, nodeSize = nodes.size(); index < nodeSize; ++index) {
 					if (haveToContinue) {
 
 						tempStricts.addAll(nodes.get(index).strictFormalParameters);
 
-						HashSet<FormalParameter> temp = nodes.get(index).collectRelevantReferences();
+						Set<FormalParameter> temp = nodes.get(index).collectRelevantReferences();
 
 						if (root instanceof StatementBlock || root instanceof Definition || root instanceof AltGuard) {
 							shouldBeEvaluated.addAll(temp);

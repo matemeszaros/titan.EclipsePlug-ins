@@ -57,7 +57,9 @@ abstract class BaseCodeSmellSpotter {
 
 		final IPreferencesService prefs = Platform.getPreferencesService();
 		final ProblemTypePreference pref = CodeSmellTypeToPreferenceTypeMapper.getPreferenceType(type);
-		if (prefs != null) {
+		if (prefs == null) {
+			severity = IMarker.SEVERITY_WARNING;
+		} else {
 			final String prefName = pref.getPreferenceName();
 			final String warnLevel = prefs.getString(Activator.PLUGIN_ID, prefName, GeneralConstants.IGNORE, null);
 			// Validating and parsing warnLevel
@@ -70,8 +72,6 @@ abstract class BaseCodeSmellSpotter {
 			} else {
 				throw new IllegalStateException("warnLevel should be one of IGNORE, WARNING or ERROR, not " + warnLevel);
 			}
-		} else {
-			severity = IMarker.SEVERITY_WARNING;
 		}
 	}
 
