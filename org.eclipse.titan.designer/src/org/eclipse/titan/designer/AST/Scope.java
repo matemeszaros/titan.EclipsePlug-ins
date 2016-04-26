@@ -498,6 +498,7 @@ public abstract class Scope implements INamedNode, IIdentifierContainer, IVisita
 	 *         reference, or null.
 	 * */
 	public abstract Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference);
+	public abstract Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, final IReferenceChain referenceChain);
 
 	/**
 	 * Searches for elements that could complete the provided prefix, and if

@@ -134,6 +134,11 @@ public abstract class ASN1Assignment extends Assignment {
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
+		check(timestamp, null);
+		}
+		
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
 		if (null != assPard) {
 			assPard.check(timestamp);
 			lastTimeChecked = timestamp;

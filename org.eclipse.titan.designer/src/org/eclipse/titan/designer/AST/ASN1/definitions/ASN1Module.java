@@ -17,6 +17,7 @@ import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Module;
@@ -240,7 +241,12 @@ public final class ASN1Module extends Module {
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		Identifier moduleId = reference.getModuleIdentifier();
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			Identifier moduleId = reference.getModuleIdentifier();
 		final Identifier id = reference.getId();
 
 		if (null == id) {

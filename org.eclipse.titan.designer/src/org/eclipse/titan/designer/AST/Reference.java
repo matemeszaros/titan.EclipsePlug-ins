@@ -433,6 +433,11 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	 *         found.
 	 * */
 	public Assignment getRefdAssignment(final CompilationTimeStamp timestamp, final boolean checkParameterList) {
+		return getRefdAssignment(timestamp, checkParameterList, null);
+	}
+		
+	
+	public Assignment getRefdAssignment(final CompilationTimeStamp timestamp, final boolean checkParameterList, final IReferenceChain referenceChain) {
 		if (myScope == null || getId() == null) {
 			return null;
 		}
@@ -440,14 +445,22 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp) && !checkParameterList) {
 			return referredAssignment;
 		}
+		
+		final boolean newChain = null == referenceChain;
+		IReferenceChain tempReferenceChain;
+		if (newChain) {
+			tempReferenceChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+		} else {
+			tempReferenceChain = referenceChain;
+		}
 
 		detectedModuleId = false;
 		detectModid();
 
-		referredAssignment = myScope.getAssBySRef(timestamp, this);
+		referredAssignment = myScope.getAssBySRef(timestamp, this, referenceChain);
 
 		if (referredAssignment != null) {
-			referredAssignment.check(timestamp);
+			referredAssignment.check(timestamp, tempReferenceChain);
 			referredAssignment.setUsed();
 
 			if (referredAssignment instanceof Definition) {

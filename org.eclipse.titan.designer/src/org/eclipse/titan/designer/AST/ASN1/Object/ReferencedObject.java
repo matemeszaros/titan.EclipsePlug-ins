@@ -82,7 +82,7 @@ public final class ReferencedObject extends ASN1Object implements IReferenceChai
 
 	public ASN1Object getRefd(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		if (referenceChain.add(this)) {
-			final Assignment assignment = reference.getRefdAssignment(timestamp, true);
+			final Assignment assignment = reference.getRefdAssignment(timestamp, true, referenceChain);
 			if (null != assignment) {
 				final ISetting setting = reference.getRefdSetting(timestamp);
 				if (null != setting && !Setting_type.S_ERROR.equals(setting.getSettingtype())) {

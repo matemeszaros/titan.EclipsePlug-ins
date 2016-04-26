@@ -20,4 +20,6 @@ public interface IGovernor extends ISetting {
 	 * @param timestamp the time stamp of the actual semantic check cycle.
 	 * */
 	void check(final CompilationTimeStamp timestamp);
+	
+	void check(final CompilationTimeStamp timestamp, IReferenceChain refChain);
 }

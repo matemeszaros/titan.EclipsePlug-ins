@@ -298,6 +298,11 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
+		check(timestamp, null);
+	}
+		
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
@@ -318,11 +323,11 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 			return;
 		}
 
-		type.check(timestamp);
+		type.check(timestamp, refChain);
 
 		if (withAttributesPath != null) {
 			withAttributesPath.checkGlobalAttributes(timestamp, true);
-			withAttributesPath.checkAttributes(timestamp, type.getTypeRefdLast(timestamp).getTypetype());
+			withAttributesPath.checkAttributes(timestamp, type.getTypeRefdLast(timestamp, refChain).getTypetype());
 		}
 
 		if (body == null) {
@@ -425,7 +430,7 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 			return;
 		}
 
-		Assignment assignment = derivedReference.getRefdAssignment(timestamp, false);
+		Assignment assignment = derivedReference.getRefdAssignment(timestamp, false, null);
 		if (assignment == null) {
 			return;
 		}

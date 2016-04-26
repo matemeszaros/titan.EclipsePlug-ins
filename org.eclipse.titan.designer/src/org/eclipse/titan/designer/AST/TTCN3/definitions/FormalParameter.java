@@ -16,6 +16,7 @@ import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
 import org.eclipse.titan.designer.AST.IType;
@@ -327,6 +328,11 @@ public final class FormalParameter extends Definition {
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
+		check(timestamp, null);
+	}
+		
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
@@ -552,7 +558,7 @@ public final class FormalParameter extends Definition {
 		ITTCN3Template template = actualParameter.getTemplateBody();
 		if (Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype()) && ((SpecificValue_Template) template).isReference()) {
 			Reference reference = ((SpecificValue_Template) template).getReference();
-			Assignment assignment = reference.getRefdAssignment(timestamp, true);
+			Assignment assignment = reference.getRefdAssignment(timestamp, true, null);
 
 			if (assignment == null) {
 				ActualParameter temp = new Value_ActualParameter(null);

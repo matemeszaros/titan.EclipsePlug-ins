@@ -18,6 +18,7 @@ import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.NULL_Location;

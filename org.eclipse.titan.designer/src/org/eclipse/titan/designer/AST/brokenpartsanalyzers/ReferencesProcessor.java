@@ -26,7 +26,7 @@ public abstract class ReferencesProcessor extends AssignmentHandler {
 	public Set<String> computeReferences(final Set<Reference> references) {
 		final Set<String> result = new HashSet<String>();
 		for (final Reference reference : references) {
-			final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+			final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false, null);
 			
 			if (assignment == null || assignment.getIdentifier() == null) {
 				// if semantic error occurs, assignment will be null
@@ -46,7 +46,7 @@ public abstract class ReferencesProcessor extends AssignmentHandler {
 				return true;
 			}
 			
-			final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+			final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false, null);
 			if(assignment == null) {
 				return true;
 			}

@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
@@ -80,7 +81,12 @@ public final class RunsOnScope extends TTCN3Scope {
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		if (componentDefinitions != null && componentDefinitions.hasLocalAssignmentWithId(reference.getId())) {
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			if (componentDefinitions != null && componentDefinitions.hasLocalAssignmentWithId(reference.getId())) {
 			return componentDefinitions.getLocalAssignmentById(reference.getId());
 		}
 		if (parentScope != null) {

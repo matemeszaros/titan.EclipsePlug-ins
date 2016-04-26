@@ -78,7 +78,12 @@ public abstract class Assignments extends Scope implements IOutlineElement, Iter
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		if (null != reference.getModuleIdentifier() || null == reference.getId()) {
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			if (null != reference.getModuleIdentifier() || null == reference.getId()) {
 			return getModuleScope().getAssBySRef(timestamp, reference);
 		}
 

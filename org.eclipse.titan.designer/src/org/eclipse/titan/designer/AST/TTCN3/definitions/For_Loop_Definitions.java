@@ -23,6 +23,7 @@ import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IOutlineElement;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
@@ -303,7 +304,12 @@ public final class For_Loop_Definitions extends Assignments implements ILocateab
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		if (reference.getModuleIdentifier() != null) {
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			if (reference.getModuleIdentifier() != null) {
 			return getModuleScope().getAssBySRef(timestamp, reference);
 		}
 
