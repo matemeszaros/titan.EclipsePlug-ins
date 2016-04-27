@@ -7,14 +7,15 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor.pages.logging;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler.LogParamEntry;
@@ -27,7 +28,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class LoggingPage extends FormPage {
 
 	private ScrolledForm form;
@@ -111,11 +113,11 @@ public final class LoggingPage extends FormPage {
 		if (loggingSectionHandler == null || loggingSectionHandler.getLastSectionRoot() != null) {
 			return;
 		}
-		loggingSectionHandler.setLastSectionRoot(new LocationAST("[LOGGING]"));
-		loggingSectionHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(loggingSectionHandler.getLastSectionRoot());
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		loggingSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[LOGGING]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -126,9 +128,8 @@ public final class LoggingPage extends FormPage {
 			return;
 		}
 		if (loggingSectionHandler.getComponents().isEmpty()) {
-			ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), loggingSectionHandler.getLastSectionRoot()
-					.getParent());
-			loggingSectionHandler.setLastSectionRoot(null);
+			ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), loggingSectionHandler.getLastSectionRoot());
+			loggingSectionHandler.setLastSectionRoot((ParserRuleContext)null);
 		}
 	}
 

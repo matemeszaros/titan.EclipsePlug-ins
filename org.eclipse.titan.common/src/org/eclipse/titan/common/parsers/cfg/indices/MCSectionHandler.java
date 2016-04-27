@@ -7,111 +7,112 @@
  ******************************************************************************/
 package org.eclipse.titan.common.parsers.cfg.indices;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class MCSectionHandler {
 
-	private LocationAST lastSectionRoot = null;
+	private ParseTree lastSectionRoot = null;
 
-	private LocationAST localAddress = null;
-	private LocationAST localAddressRoot = null;
-	private LocationAST tcpPort = null;
-	private LocationAST tcpPortRoot = null;
-	private LocationAST killTimer = null;
-	private LocationAST killTimerRoot = null;
-	private LocationAST numHCsText = null;
-	private LocationAST numHCsTextRoot = null;
-	private LocationAST unixDomainSocket = null;
-	private LocationAST unixDomainSocketRoot = null;
+	private ParseTree localAddress = null;
+	private ParseTree localAddressRoot = null;
+	private ParseTree tcpPort = null;
+	private ParseTree tcpPortRoot = null;
+	private ParseTree killTimer = null;
+	private ParseTree killTimerRoot = null;
+	private ParseTree numHCsText = null;
+	private ParseTree numHCsTextRoot = null;
+	private ParseTree unixDomainSocket = null;
+	private ParseTree unixDomainSocketRoot = null;
 
-	public LocationAST getLastSectionRoot() {
+	public ParseTree getLastSectionRoot() {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final ParseTree lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
-	public LocationAST getLocalAddress() {
+	public ParseTree getLocalAddress() {
 		return localAddress;
 	}
 
-	public void setLocalAddress(final LocationAST localAddress) {
+	public void setLocalAddress(final ParseTree localAddress) {
 		this.localAddress = localAddress;
 	}
 
-	public LocationAST getLocalAddressRoot() {
+	public ParseTree getLocalAddressRoot() {
 		return localAddressRoot;
 	}
 
-	public void setLocalAddressRoot(final LocationAST localAddressRoot) {
+	public void setLocalAddressRoot(final ParseTree localAddressRoot) {
 		this.localAddressRoot = localAddressRoot;
 	}
 
-	public LocationAST getTcpPort() {
+	public ParseTree getTcpPort() {
 		return tcpPort;
 	}
 
-	public void setTcpPort(final LocationAST tcpPort) {
+	public void setTcpPort(final ParseTree tcpPort) {
 		this.tcpPort = tcpPort;
 	}
 
-	public LocationAST getTcpPortRoot() {
+	public ParseTree getTcpPortRoot() {
 		return tcpPortRoot;
 	}
 
-	public void setTcpPortRoot(final LocationAST tcpPortRoot) {
+	public void setTcpPortRoot(final ParseTree tcpPortRoot) {
 		this.tcpPortRoot = tcpPortRoot;
 	}
 
-	public LocationAST getKillTimer() {
+	public ParseTree getKillTimer() {
 		return killTimer;
 	}
 
-	public void setKillTimer(final LocationAST killTimer) {
+	public void setKillTimer(final ParseTree killTimer) {
 		this.killTimer = killTimer;
 	}
 
-	public LocationAST getKillTimerRoot() {
+	public ParseTree getKillTimerRoot() {
 		return killTimerRoot;
 	}
 
-	public void setKillTimerRoot(final LocationAST killTimerRoot) {
+	public void setKillTimerRoot(final ParseTree killTimerRoot) {
 		this.killTimerRoot = killTimerRoot;
 	}
 
-	public LocationAST getNumHCsText() {
+	public ParseTree getNumHCsText() {
 		return numHCsText;
 	}
 
-	public void setNumHCsText(final LocationAST numHCsText) {
+	public void setNumHCsText(final ParseTree numHCsText) {
 		this.numHCsText = numHCsText;
 	}
 
-	public LocationAST getNumHCsTextRoot() {
+	public ParseTree getNumHCsTextRoot() {
 		return numHCsTextRoot;
 	}
 
-	public void setNumHCsTextRoot(final LocationAST numHCsTextRoot) {
+	public void setNumHCsTextRoot(final ParseTree numHCsTextRoot) {
 		this.numHCsTextRoot = numHCsTextRoot;
 	}
 
-	public LocationAST getUnixDomainSocket() {
+	public ParseTree getUnixDomainSocket() {
 		return unixDomainSocket;
 	}
 
-	public void setUnixDomainSocket(final LocationAST unixDomainSocket) {
+	public void setUnixDomainSocket(final ParseTree unixDomainSocket) {
 		this.unixDomainSocket = unixDomainSocket;
 	}
 
-	public LocationAST getUnixDomainSocketRoot() {
+	public ParseTree getUnixDomainSocketRoot() {
 		return unixDomainSocketRoot;
 	}
 
-	public void setUnixDomainSocketRoot(final LocationAST unixDomainSocketRoot) {
+	public void setUnixDomainSocketRoot(final ParseTree unixDomainSocketRoot) {
 		this.unixDomainSocketRoot = unixDomainSocketRoot;
 	}
 }

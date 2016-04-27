@@ -7,93 +7,94 @@
  ******************************************************************************/
 package org.eclipse.titan.common.parsers.cfg.indices;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class ExternalCommandSectionHandler {
 
-	private LocationAST lastSectionRoot = null;
+	private ParseTree lastSectionRoot = null;
 
-	private LocationAST beginControlPart = null;
-	private LocationAST beginControlPartRoot = null;
-	private LocationAST endControlPart = null;
-	private LocationAST endControlPartRoot = null;
-	private LocationAST beginTestcase = null;
-	private LocationAST beginTestcaseRoot = null;
-	private LocationAST endTestcase = null;
-	private LocationAST endTestcaseRoot = null;
+	private ParseTree beginControlPart = null;
+	private ParseTree beginControlPartRoot = null;
+	private ParseTree endControlPart = null;
+	private ParseTree endControlPartRoot = null;
+	private ParseTree beginTestcase = null;
+	private ParseTree beginTestcaseRoot = null;
+	private ParseTree endTestcase = null;
+	private ParseTree endTestcaseRoot = null;
 
-	public LocationAST getLastSectionRoot() {
+	public ParseTree getLastSectionRoot() {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final ParseTree lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 
-	public LocationAST getBeginControlPart() {
+	public ParseTree getBeginControlPart() {
 		return beginControlPart;
 	}
 
-	public void setBeginControlPart(final LocationAST beginControlPart) {
+	public void setBeginControlPart(final ParseTree beginControlPart) {
 		this.beginControlPart = beginControlPart;
 	}
 
-	public LocationAST getBeginControlPartRoot() {
+	public ParseTree getBeginControlPartRoot() {
 		return beginControlPartRoot;
 	}
 
-	public void setBeginControlPartRoot(final LocationAST beginControlPartRoot) {
+	public void setBeginControlPartRoot(final ParseTree beginControlPartRoot) {
 		this.beginControlPartRoot = beginControlPartRoot;
 	}
 
-	public LocationAST getEndControlPart() {
+	public ParseTree getEndControlPart() {
 		return endControlPart;
 	}
 
-	public void setEndControlPart(final LocationAST endControlPart) {
+	public void setEndControlPart(final ParseTree endControlPart) {
 		this.endControlPart = endControlPart;
 	}
 
-	public LocationAST getEndControlPartRoot() {
+	public ParseTree getEndControlPartRoot() {
 		return endControlPartRoot;
 	}
 
-	public void setEndControlPartRoot(final LocationAST endControlPartRoot) {
+	public void setEndControlPartRoot(final ParseTree endControlPartRoot) {
 		this.endControlPartRoot = endControlPartRoot;
 	}
 
-	public LocationAST getBeginTestcase() {
+	public ParseTree getBeginTestcase() {
 		return beginTestcase;
 	}
 
-	public void setBeginTestcase(final LocationAST beginTestcase) {
+	public void setBeginTestcase(final ParseTree beginTestcase) {
 		this.beginTestcase = beginTestcase;
 	}
 
-	public LocationAST getBeginTestcaseRoot() {
+	public ParseTree getBeginTestcaseRoot() {
 		return beginTestcaseRoot;
 	}
 
-	public void setBeginTestcaseRoot(final LocationAST beginTestcaseRoot) {
+	public void setBeginTestcaseRoot(final ParseTree beginTestcaseRoot) {
 		this.beginTestcaseRoot = beginTestcaseRoot;
 	}
 
-	public LocationAST getEndTestcase() {
+	public ParseTree getEndTestcase() {
 		return endTestcase;
 	}
 
-	public void setEndTestcase(final LocationAST endTestcase) {
+	public void setEndTestcase(final ParseTree endTestcase) {
 		this.endTestcase = endTestcase;
 	}
 
-	public LocationAST getEndTestcaseRoot() {
+	public ParseTree getEndTestcaseRoot() {
 		return endTestcaseRoot;
 	}
 
-	public void setEndTestcaseRoot(final LocationAST endTestcaseRoot) {
+	public void setEndTestcaseRoot(final ParseTree endTestcaseRoot) {
 		this.endTestcaseRoot = endTestcaseRoot;
 	}
 }

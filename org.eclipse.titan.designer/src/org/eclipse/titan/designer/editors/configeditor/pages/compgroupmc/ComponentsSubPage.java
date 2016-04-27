@@ -10,6 +10,8 @@ package org.eclipse.titan.designer.editors.configeditor.pages.compgroupmc;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -28,8 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler.Component;
@@ -44,7 +45,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class ComponentsSubPage {
 
 	private Label totalComponentsLabel;
@@ -124,10 +126,10 @@ public final class ComponentsSubPage {
 
 					switch (columnIndex) {
 					case 0:
-						component.getComponentName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( component.getComponentName(), ((String) value).trim() );
 						break;
 					case 1:
-						component.getHostName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( component.getHostName(), ((String) value).trim() );
 						break;
 					default:
 						break;
@@ -161,13 +163,7 @@ public final class ComponentsSubPage {
 					return;
 				}
 
-				if (componentsSectionHandler.getComponents().isEmpty()) {
-					componentsSectionHandler.getLastSectionRoot().setNextSibling(newComponent.getRoot());
-				} else {
-					final int size = componentsSectionHandler.getComponents().size();
-					Component component = componentsSectionHandler.getComponents().get(size - 1);
-					component.getRoot().setNextSibling(newComponent.getRoot());
-				}
+				ConfigTreeNodeUtilities.addChild( componentsSectionHandler.getLastSectionRoot(), newComponent.getRoot() );
 
 				componentsSectionHandler.getComponents().add(newComponent);
 
@@ -258,12 +254,12 @@ public final class ComponentsSubPage {
 			return;
 		}
 
-		componentsSectionHandler.setLastSectionRoot(new LocationAST("[COMPONENTS]"));
-		componentsSectionHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(componentsSectionHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		componentsSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[COMPONENTS]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -274,18 +270,20 @@ public final class ComponentsSubPage {
 			return null;
 		}
 
-		Component newcomponent = new Component();
-		newcomponent.setRoot(new LocationAST(""));
+		final Component newcomponent = new Component();
+		final ParseTree root = new ParserRuleContext();
+		newcomponent.setRoot( root );
 
-		LocationAST node;
-		newcomponent.setComponentName(new LocationAST("component_name"));
-		newcomponent.getComponentName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		newcomponent.getRoot().setFirstChild(newcomponent.getComponentName());
-		node = new LocationAST(" := ");
-		newcomponent.getComponentName().setNextSibling(node);
-		newcomponent.setHostName(new LocationAST("host_name"));
-		newcomponent.getHostName().setHiddenAfter(new CommonHiddenStreamToken("\n"));
-		node.setNextSibling(newcomponent.getHostName());
+		final ParseTree componentName = new AddedParseTree("component_name");
+		final ParseTree hostName = new AddedParseTree("host_name");
+		newcomponent.setComponentName( componentName );
+		newcomponent.setHostName( hostName );
+		
+		ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( "\n" ) );
+		ConfigTreeNodeUtilities.addChild( root, componentName );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(" := ") );
+		ConfigTreeNodeUtilities.addChild( root, hostName );
+		ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( "\n" ) );
 
 		return newcomponent;
 	}
@@ -295,8 +293,7 @@ public final class ComponentsSubPage {
 			return;
 		}
 
-		final LocationAST parent = componentsSectionHandler.getLastSectionRoot().getParent();
-		ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), parent);
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), componentsSectionHandler.getLastSectionRoot());
 		componentsSectionHandler.setLastSectionRoot(null);
 	}
 
@@ -310,7 +307,7 @@ public final class ComponentsSubPage {
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			Component component = (Component) iterator.next();
 			if (component != null) {
-				ConfigTreeNodeUtilities.removeFromChain(componentsSectionHandler.getLastSectionRoot(), component.getRoot());
+				ConfigTreeNodeUtilities.removeChild(componentsSectionHandler.getLastSectionRoot(), component.getRoot());
 				componentsSectionHandler.getComponents().remove(component);
 			}
 		}

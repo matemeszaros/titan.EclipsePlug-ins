@@ -10,6 +10,8 @@ package org.eclipse.titan.designer.editors.configeditor.pages.modulepar;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -34,8 +36,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler.ModuleParameter;
@@ -53,7 +54,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class ModuleParameterSectionPage extends FormPage {
 	private Label totalModuleParametersLabel;
 
@@ -159,13 +161,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 					return;
 				}
 
-				if (moduleParametersHandler.getModuleParameters().isEmpty()) {
-					moduleParametersHandler.getLastSectionRoot().setNextSibling(newModuleParameter.getRoot());
-				} else {
-					ModuleParameter moduleParameter = moduleParametersHandler.getModuleParameters().get(
-							moduleParametersHandler.getModuleParameters().size() - 1);
-					moduleParameter.getRoot().setNextSibling(newModuleParameter.getRoot());
-				}
+				ConfigTreeNodeUtilities.addChild(moduleParametersHandler.getLastSectionRoot(), newModuleParameter.getRoot());
 
 				moduleParametersHandler.getModuleParameters().add(newModuleParameter);
 
@@ -245,8 +241,8 @@ public final class ModuleParameterSectionPage extends FormPage {
 					if (moduleParameter.getValue() != null) {
 						if (moduleParameter.getValue().getText().length() == 0) {
 							String temp = ConfigTreeNodeUtilities.toString(moduleParameter.getValue());
-							moduleParameter.getValue().removeChildren();
-							moduleParameter.getValue().setText(temp);
+							ConfigTreeNodeUtilities.removeChildren( moduleParameter.getValue() );
+							ConfigTreeNodeUtilities.setText( moduleParameter.getValue(), temp );
 						}
 
 						parameterValueText.setText(moduleParameter.getValue().getText());
@@ -289,33 +285,16 @@ public final class ModuleParameterSectionPage extends FormPage {
 						// MODULE_NAME
 						if (moduleParameter.getModuleName() != null) {
 							String newValue = ((String) value).trim();
-							moduleParameter.getModuleName().setText(((String) value).trim());
-							if ("".equals(newValue)) {
-								moduleParameter.getModuleName().getNextSibling().setText("");
-							}
-						} else {
-							String newValue = ((String) value).trim();
-							if (newValue != null && !"".equals(newValue)) {
-
-								moduleParameter.setModuleName(new LocationAST(newValue));
-								// moduleParameter.moduleName.setHiddenBefore(new
-								// CommonHiddenStreamToken(cfgBaseLexerTokenTypes.WS,
-								// "\n"));
-
-								moduleParameter.getRoot().setFirstChild(moduleParameter.getModuleName());
-
-								LocationAST node = new LocationAST(".");
-								moduleParameter.getModuleName().setNextSibling(node);
-								ConfigTreeNodeUtilities.moveHiddenBefore2HiddenBefore(
-										moduleParameter.getParameterName(), moduleParameter.getModuleName());
-
-								node.setNextSibling(moduleParameter.getParameterName());
+							if ( newValue != null ) {
+								ConfigTreeNodeUtilities.setText( moduleParameter.getModuleName(), newValue );
+								ConfigTreeNodeUtilities.setText( moduleParameter.getSeparator(),
+										"".equals( newValue ) ? "" : "." );
 							}
 						}
 						break;
 					case 1:
 						// PARAMETER_NAME
-						moduleParameter.getParameterName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities. setText( moduleParameter.getParameterName(), ((String) value).trim() );
 						break;
 					default:
 						break;
@@ -355,7 +334,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 				}
 
 				ModuleParameter moduleParameter = (ModuleParameter) iterator.next();
-				moduleParameter.getValue().setText(parameterValueText.getText());
+				ConfigTreeNodeUtilities.setText( moduleParameter.getValue(), parameterValueText.getText() );
 
 				if (valueChanged) {
 					valueChanged = false;
@@ -419,39 +398,44 @@ public final class ModuleParameterSectionPage extends FormPage {
 			return;
 		}
 
-		moduleParametersHandler.setLastSectionRoot(new LocationAST("[MODULE_PARAMETERS]"));
-		moduleParametersHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(moduleParametersHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		moduleParametersHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[MODULE_PARAMETERS]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
 	}
 
-	private ModuleParameter createNewParameter() {
-		if (moduleParametersHandler == null) {
-			return null;
-		}
-
+	public static ModuleParameter createNewParameter( final String aModuleName,
+													  final String aParameterName,
+													  final String aValue ) {
 		ModuleParameter newModuleParameter = new ModuleParameterSectionHandler.ModuleParameter();
-		newModuleParameter.setRoot(new LocationAST(""));
+		final ParseTree root = new ParserRuleContext();
+		newModuleParameter.setRoot( root );
 
-		LocationAST node;
-		newModuleParameter.setModuleName(new LocationAST("module_name"));
-		newModuleParameter.getModuleName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		newModuleParameter.getRoot().setFirstChild(newModuleParameter.getModuleName());
-		node = new LocationAST(".");
-		newModuleParameter.getModuleName().setNextSibling(node);
-		newModuleParameter.setParameterName(new LocationAST("parameter_name"));
-		node.setNextSibling(newModuleParameter.getParameterName());
-		node = new LocationAST(" := ");
-		newModuleParameter.getParameterName().setNextSibling(node);
-		newModuleParameter.setValue(new LocationAST("value"));
-		node.setNextSibling(newModuleParameter.getValue());
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree("\n") );
+		newModuleParameter.setModuleName( new AddedParseTree( aModuleName ) );
+		ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getModuleName() );
+		
+		final boolean isModuleNameEmpty = aModuleName == null || aModuleName.isEmpty();
+		
+		newModuleParameter.setSeparator( new AddedParseTree( isModuleNameEmpty ? "" : ".") );
+		ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getSeparator() );
+
+		newModuleParameter.setParameterName( new AddedParseTree( aParameterName ) );
+		ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getParameterName() );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(" := ") );
+		newModuleParameter.setValue( new AddedParseTree( aValue ) );
+		ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getValue() );
 
 		return newModuleParameter;
+	}
+
+	private ModuleParameter createNewParameter() {
+		return createNewParameter( "module_name", "parameter_name", "value" );
 	}
 
 	private void removeModuleParameterSection() {
@@ -459,8 +443,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), moduleParametersHandler.getLastSectionRoot()
-				.getParent());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), moduleParametersHandler.getLastSectionRoot());
 		moduleParametersHandler.setLastSectionRoot(null);
 	}
 
@@ -476,7 +459,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 		for (; iterator.hasNext();) {
 			ModuleParameter moduleParameter = (ModuleParameter) iterator.next();
 			if (moduleParameter != null) {
-				ConfigTreeNodeUtilities.removeFromChain(moduleParametersHandler.getLastSectionRoot(), moduleParameter.getRoot());
+				ConfigTreeNodeUtilities.removeChild(moduleParametersHandler.getLastSectionRoot(), moduleParameter.getRoot());
 				moduleParametersHandler.getModuleParameters().remove(moduleParameter);
 			}
 		}

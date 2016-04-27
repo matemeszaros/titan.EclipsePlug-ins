@@ -10,6 +10,8 @@ package org.eclipse.titan.designer.editors.configeditor.pages.execute;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -30,8 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ExecuteSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ExecuteSectionHandler.ExecuteItem;
@@ -46,7 +47,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class ExecuteSubPage {
 
 	private Label totalExecuteElementsLabel;
@@ -151,13 +153,7 @@ public final class ExecuteSubPage {
 					return;
 				}
 
-				if (executeSectionHandler.getExecuteitems().isEmpty()) {
-					executeSectionHandler.getLastSectionRoot().setNextSibling(newItem.getRoot());
-				} else {
-					ExecuteItem lastItem = executeSectionHandler.getExecuteitems().get(
-							executeSectionHandler.getExecuteitems().size() - 1);
-					lastItem.getRoot().setNextSibling(newItem.getRoot());
-				}
+				ConfigTreeNodeUtilities.addChild(executeSectionHandler.getLastSectionRoot(), newItem.getRoot());
 
 				executeSectionHandler.getExecuteitems().add(newItem);
 
@@ -235,10 +231,10 @@ public final class ExecuteSubPage {
 
 					switch (columnIndex) {
 					case 0:
-						executeItem.getModuleName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( executeItem.getModuleName(), ((String) value).trim() );
 						break;
 					case 1:
-						executeItem.getTestcaseName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( executeItem.getTestcaseName(), ((String) value).trim() );
 						break;
 					default:
 						break;
@@ -286,12 +282,12 @@ public final class ExecuteSubPage {
 			return;
 		}
 
-		executeSectionHandler.setLastSectionRoot(new LocationAST("[EXECUTE]"));
-		executeSectionHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(executeSectionHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		executeSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[EXECUTE]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -302,17 +298,20 @@ public final class ExecuteSubPage {
 			return null;
 		}
 
-		ExecuteItem item = new ExecuteSectionHandler.ExecuteItem();
-		item.setRoot(new LocationAST(""));
+		final ExecuteItem item = new ExecuteSectionHandler.ExecuteItem();
+		final ParseTree root = new ParserRuleContext();
+		item.setRoot( root );
 
-		item.setModuleName(new LocationAST("module_name"));
-		item.getModuleName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		item.getRoot().setFirstChild(item.getModuleName());
-		LocationAST node = new LocationAST(".");
-		item.getModuleName().setNextSibling(node);
-		item.setTestcaseName(new LocationAST("testcase_name"));
-		node.setNextSibling(item.getTestcaseName());
-
+		final ParseTree moduleName = new AddedParseTree("module_name");
+		final ParseTree testcaseName = new AddedParseTree("testcase_name");
+		item.setModuleName( moduleName );
+		item.setTestcaseName( testcaseName );
+		
+		ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( "\n" ) );
+		ConfigTreeNodeUtilities.addChild( root, moduleName );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(".") );
+		ConfigTreeNodeUtilities.addChild( root, testcaseName );
+		
 		return item;
 	}
 
@@ -321,8 +320,7 @@ public final class ExecuteSubPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), executeSectionHandler.getLastSectionRoot()
-				.getParent());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), executeSectionHandler.getLastSectionRoot());
 		executeSectionHandler.setLastSectionRoot(null);
 	}
 
@@ -336,7 +334,7 @@ public final class ExecuteSubPage {
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			ExecuteItem item = (ExecuteItem) iterator.next();
 			if (item != null) {
-				ConfigTreeNodeUtilities.removeFromChain(executeSectionHandler.getLastSectionRoot(), item.getRoot());
+				ConfigTreeNodeUtilities.removeChild(executeSectionHandler.getLastSectionRoot(), item.getRoot());
 				executeSectionHandler.getExecuteitems().remove(item);
 			}
 		}

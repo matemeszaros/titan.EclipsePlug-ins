@@ -13,12 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.LocationAST;
 import org.eclipse.titan.common.path.PathConverter;
 
 /**
@@ -31,8 +32,8 @@ import org.eclipse.titan.common.path.PathConverter;
 public final class ConfigFileHandler {
 	private static final String ORIGINALLY_FROM = "//This part was originally found in file: ";
 
-	private Map<Path, LocationAST> originalASTs = new HashMap<Path, LocationAST>();
-	private Map<Path, LocationAST> resolvedASTs = new HashMap<Path, LocationAST>();
+	private Map<Path, ParseTree> originalASTs = new HashMap<Path, ParseTree>();
+	private Map<Path, ParseTree> resolvedASTs = new HashMap<Path, ParseTree>();
 	private final Map<String, CfgDefinitionInformation> definesMap = new HashMap<String, CfgDefinitionInformation>();
 	private final List<Path> processedFiles = new ArrayList<Path>();
 	private final List<Path> toBeProcessedFiles = new ArrayList<Path>();
@@ -56,6 +57,9 @@ public final class ConfigFileHandler {
 	private boolean logFileNameDefined = false;
 
 	private String mLogFileName = null;
+	
+	/** the token stream of the last parsing, it is needed to print the hidden tokens */
+	private TokenStream mTokenStream = null;
 
 	public ConfigFileHandler(){
 		// Do nothing
@@ -183,7 +187,7 @@ public final class ConfigFileHandler {
 	 * Creates the String representation of the parsed tree of all of the parsed files.
 	 * Can be used to create a single configuration file instead of the hierarchy already existing.
 	 * 
-	 * @see #print(org.eclipse.titan.common.parsers.LocationAST, StringBuilder)
+	 * @see #print(ParseTree, StringBuilder)
 	 * @param disallowedNodes the list of nodes that should be left out of the process.
 	 * */
 	public StringBuilder toStringResolved(final List<Integer> disallowedNodes){
@@ -193,11 +197,11 @@ public final class ConfigFileHandler {
 	/**
 	 * Creates the String representation of the parsed tree starting from the provided root node.
 	 * 
-	 * @see #print(org.eclipse.titan.common.parsers.LocationAST, StringBuilder)
+	 * @see #print(ParseTree, StringBuilder)
 	 * @param asts the root node of the parse tree to start from.
 	 * @param disallowedNodes the list of nodes that should be left out of the process.
 	 * */
-	private StringBuilder toStringInternal(final Map<Path, LocationAST> asts, final List<Integer> disallowedNodes){
+	private StringBuilder toStringInternal(final Map<Path, ParseTree> asts, final List<Integer> disallowedNodes){
 		if(asts == null || asts.isEmpty()){
 			return new StringBuilder();
 		}
@@ -206,7 +210,7 @@ public final class ConfigFileHandler {
 		final StringBuilder stringbuilder = new StringBuilder();
 		stringbuilder.setLength(0);
 		
-		for(final Entry<Path, LocationAST> entry:asts.entrySet()){
+		for(final Entry<Path, ParseTree> entry:asts.entrySet()){
 			stringbuilder.append(ORIGINALLY_FROM).
 				append(entry.getKey().toOSString()).append('\n');
 			if(entry.getValue() != null){
@@ -243,7 +247,9 @@ public final class ConfigFileHandler {
 			unixDomainSocket = analyzer.isUnixDomainSocketEnabled();
 		}
 		
-		final LocationAST rootNode = new LocationAST( analyzer.getParseTreeRoot(), analyzer.getTokenStream() );
+		mTokenStream = analyzer.getTokenStream();
+		
+		final ParseTree rootNode = analyzer.getParseTreeRoot();
 		if ( rootNode != null ) {
 			originalASTs.put( actualFile, rootNode );
 
@@ -269,8 +275,8 @@ public final class ConfigFileHandler {
 	 * 
 	 * @param root the tree root to start at.
 	 */
-	private void print(final LocationAST aRoot, final StringBuilder aSb) {
-		ConfigTreeNodeUtilities.print( aRoot.getRule(), aRoot.getTokenStream(), aSb, disallowedNodes );
+	private void print(final ParseTree aRoot, final StringBuilder aSb) {
+		ConfigTreeNodeUtilities.print( aRoot, mTokenStream, aSb, disallowedNodes );
 	}
 	
 }

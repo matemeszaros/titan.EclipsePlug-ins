@@ -18,8 +18,6 @@ import org.antlr.v4.runtime.WritableToken;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.eclipse.titan.common.parsers.AddedParseTree;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
 
 /**
  * Basic utility class for configuration file AST operations.
@@ -36,124 +34,40 @@ public final class ConfigTreeNodeUtilities {
 	/**
 	 * Returns the string value of the given AST subtree.
 	 * 
-	 * @param root
-	 *            the root of subtree
+	 * @param aRoot the root of subtree
 	 * @return the String value of the AST
-	 * 		
 	 */
-	public static String toString(final LocationAST root){
+	public static String toString( final ParseTree aRoot ) {
+		return aRoot.getText();
+	}
+	
+
+	public static String toStringWithhiddenAfter( final ParserRuleContext aParseTreeRoot,
+												  final TokenStream aTokenStream ) {
 		final StringBuilder builder = new StringBuilder();
 
-		print(builder, root);
+		print(builder, aParseTreeRoot, aTokenStream );
+		appendHiddenAfter(builder, aParseTreeRoot, aTokenStream );
+
 		return builder.toString();
 	}
 	
-	public static String toStringWithhiddenAfter(final LocationAST root){
-		final StringBuilder builder = new StringBuilder();
-
-		print(builder, root);
-		appendHiddenAfter(builder, root);
-
-		return builder.toString();
-	}
-	
-	public static String toStringWithoutChildren(final LocationAST root){
-		final StringBuilder builder = new StringBuilder();
-
-		appendHiddenBefore(builder, root);
-		builder.append(root.getText());
-		
-		return builder.toString();
-	}
-	
-	public static String getHiddenBefore(final LocationAST root){
-		final StringBuilder builder = new StringBuilder();
-
-		appendHiddenBefore(builder, root);
-		
-		return builder.toString();
+	private static final void print( final StringBuilder aSb,
+									 final ParserRuleContext aParseTreeRoot,
+									 final TokenStream aTokenStream ){
+		print( aParseTreeRoot, aTokenStream, aSb, null );
 	}
 	
 	/**
-	 * Removes an element from a chain of elements.
-	 * <p>
-	 * This implementation is based on the fact that the head of the list is the head of the syntactical unit.
-	 * And all direct elements of the syntactical list are his siblings.
-	 * 
-	 * It is VERY IMPORTANT to use the == operator as the equals function is not checking the objects, but their texts.
-	 * 
-	 * @param chainStart the head of the chain
-	 * @param what the element to be removed from the chain
-	 * */
-	public static final void removeFromChain(final LocationAST chainStart, final LocationAST what){
-		if(chainStart == what){
-			chainStart.setFirstChild(what.getNextSibling());
-			return;
-		}
-		
-		LocationAST node = chainStart;
-		while(node != null){
-			if(what == node.getNextSibling()){
-				node.setNextSibling(what.getNextSibling());
-				return;
-			}
-			
-			node = node.getNextSibling();
-		}
-	}
-	
-	/**
-	 * Moves the hidden before tokens of the source to the hidden before tokens of the target.
-	 * */
-	public static final void moveHiddenBefore2HiddenBefore(final LocationAST from, final LocationAST to) {
-		if(from.getHiddenBefore() == null){
-			final LocationAST child = from.getFirstChild();
-			if(child != null){
-				to.setHiddenBefore(child.getHiddenBefore());
-				child.setHiddenBefore(null);
-			}
-		}else{
-			to.setHiddenBefore(from.getHiddenBefore());
-			from.setHiddenBefore(null);
-		}
-	}
-	
-	private static final void print(final StringBuilder aSb, final LocationAST aRoot){
-		print( aRoot.getRule(), aRoot.getTokenStream(), aSb, null );
-	}
-	
-	private static final StringBuilder appendHiddenBefore(final StringBuilder builder, final LocationAST root) {
-		CommonHiddenStreamToken hidden = root.getHiddenBefore();
-		if(hidden != null){
-			while(hidden.getHiddenBefore() != null){
-				hidden = hidden.getHiddenBefore();
-			}
-			while(hidden != null){
-				builder.append(hidden.getText());
-				hidden = hidden.getHiddenAfter();
-			}
-		}
-		
-		return builder;
-	}
-	
-	private static final StringBuilder appendHiddenAfter(final StringBuilder builder, final LocationAST root) {
-		LocationAST child = root.getFirstChild();
-		
-		while(child != null && child.getNextSibling() != null){
-			child = child.getNextSibling();
-		}
-		if(child != null) {
-			appendHiddenAfter(builder, child);
-		} else {
-			CommonHiddenStreamToken hidden = root.getHiddenAfter();
-			while(hidden != null){
-				builder.append(hidden.getText());
-				hidden = hidden.getHiddenAfter();
-			}
-		}
-		
-		return builder;
+	 * Builds hidden tokens after a rule
+	 * @param aSb (in/out) StringBuilder, where the rule text is written
+	 * @param aParseTreeRoot the rule (this will NOT be printed, only the hidden tokens after it)
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 */
+	private static final void appendHiddenAfter( final StringBuilder aSb,
+												 final ParserRuleContext aParseTreeRoot,
+												 final TokenStream aTokenStream ) {
+		printHiddenAfter( aParseTreeRoot.stop, aTokenStream, aSb ); 
 	}
 	
 	/**
@@ -178,7 +92,7 @@ public final class ConfigTreeNodeUtilities {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aParseTree;
 			final Token token = tn.getSymbol();
 			if ( aDisallowedNodes == null || !aDisallowedNodes.contains( token.getType() ) ) {
-				print( token, aTokenStream, aSb, aDisallowedNodes );
+				print( token, aTokenStream, aSb );
 			}
 		}
 		else if ( aParseTree instanceof AddedParseTree ) {
@@ -200,12 +114,10 @@ public final class ConfigTreeNodeUtilities {
 	 * @param aToken token to print
 	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
 	 * @param aSb (in/out) StringBuilder, where the rule text is written
-	 * @param aDisallowedNodes token types, which are not printed (also their children), it can be null
 	 */
 	public static void print( final Token aToken,
 							  final TokenStream aTokenStream,
-							  final StringBuilder aSb,
-							  final List<Integer> aDisallowedNodes ) {
+							  final StringBuilder aSb ) {
 		final int startIndex = aToken.getTokenIndex();
 		if ( startIndex == -1 ) {
 			// Token has no index.
@@ -219,11 +131,34 @@ public final class ConfigTreeNodeUtilities {
 		while ( isHiddenToken( startHiddenIndex - 1, aTokenStream ) ) {
 			startHiddenIndex--;
 		}
-		if ( aTokenStream == null ) {
-			//TODO: program error
+		for ( int i = startHiddenIndex; i <= startIndex; i++ ) {
+			final Token t = aTokenStream.get( i );
+			final String tokenText = t.getText();
+			aSb.append( tokenText != null ? tokenText : "" );
+		}
+	}
+
+	/**
+	 * Builds hidden tokens after a token
+	 * @param aToken last token (this will NOT be printed, only the hidden tokens after it)
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @param aSb (in/out) StringBuilder, where the rule text is written
+	 */
+	public static void printHiddenAfter( final Token aToken,
+										 final TokenStream aTokenStream,
+										 final StringBuilder aSb ) {
+		final int stopIndex = aToken.getTokenIndex();
+		if ( stopIndex == -1 ) {
+			// Token has no index.
+			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
+			// because token has no index in the token stream.
 			return;
 		}
-		for ( int i = startHiddenIndex; i <= startIndex; i++ ) {
+		int stopHiddenIndex = stopIndex;
+		while ( isHiddenToken( stopHiddenIndex + 1, aTokenStream ) ) {
+			stopHiddenIndex++;
+		}
+		for ( int i = stopIndex + 1; i <= stopHiddenIndex; i++ ) {
 			final Token t = aTokenStream.get( i );
 			final String tokenText = t.getText();
 			aSb.append( tokenText != null ? tokenText : "" );
@@ -274,9 +209,46 @@ public final class ConfigTreeNodeUtilities {
 			} else {
 				rule.children.add(aChild);
 			}
+			setParent( aChild, rule);
 		} else {
 			//TODO: program error: only ParserRuleContext can have children
 		}
+	}
+	
+	public static void setParent( final ParseTree aChild, final ParserRuleContext aParent ) {
+		if ( aChild == null ) {
+			//TODO: program error
+			return;
+		}
+		if ( aChild instanceof ParserRuleContext ) {
+			final ParserRuleContext rule = (ParserRuleContext)aChild;
+			rule.parent = aParent;
+			
+		} else if ( aChild instanceof TerminalNodeImpl ) {
+			final TerminalNodeImpl tn = (TerminalNodeImpl)aChild;
+			tn.parent = aParent;
+		} else if ( aChild instanceof AddedParseTree ) {
+			final AddedParseTree t = (AddedParseTree)aChild;
+			t.setParent( aParent );
+		} else {
+			//TODO: program error: unhandled ParseTree class type
+		}
+	}
+	
+	/**
+	 * Removes child from parent's list.
+	 * Parent is get from child data.
+	 * NOTE: Use the 2 parameter version if possible.
+	 *       getParent() should always be filled, but it's safer to name the parent implicitly.
+	 * @param aChild child element to remove
+	 */
+	public static void removeChild( final ParseTree aChild ) {
+		if ( aChild == null ) {
+			//TODO: program error
+			return;
+		}
+		final ParseTree parent = aChild.getParent();
+		removeChild( parent, aChild );
 	}
 	
 	/**
@@ -303,6 +275,24 @@ public final class ConfigTreeNodeUtilities {
 					}
 				}
 			}
+		} else {
+			//TODO: program error: only ParserRuleContext can have children
+		}
+	}
+	
+	/**
+	 * Removes children from parent's list
+	 * @param aParent parent node to remove the child from
+	 * @param aChild child element to remove
+	 */
+	public static void removeChildren( final ParseTree aParent ) {
+		if ( aParent == null ) {
+			//TODO: program error
+			return;
+		}
+		if ( aParent instanceof ParserRuleContext ) {
+			final ParserRuleContext rule = (ParserRuleContext)aParent;
+			rule.children = null;
 		} else {
 			//TODO: program error: only ParserRuleContext can have children
 		}

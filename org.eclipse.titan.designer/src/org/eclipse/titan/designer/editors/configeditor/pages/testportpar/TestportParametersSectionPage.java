@@ -10,6 +10,8 @@ package org.eclipse.titan.designer.editors.configeditor.pages.testportpar;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -34,8 +36,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHandler.TestportParameter;
@@ -53,7 +54,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class TestportParametersSectionPage extends FormPage {
 
 	private Label totalTestportParametersLabel;
@@ -165,13 +167,7 @@ public final class TestportParametersSectionPage extends FormPage {
 					return;
 				}
 
-				if (testportParametersHandler.getTestportParameters().isEmpty()) {
-					testportParametersHandler.getLastSectionRoot().setNextSibling(newTestportParameter.getRoot());
-				} else {
-					TestportParameter testportParameter = testportParametersHandler.getTestportParameters().get(
-							testportParametersHandler.getTestportParameters().size() - 1);
-					testportParameter.getRoot().setNextSibling(newTestportParameter.getRoot());
-				}
+				ConfigTreeNodeUtilities.addChild(testportParametersHandler.getLastSectionRoot(), newTestportParameter.getRoot());
 
 				testportParametersHandler.getTestportParameters().add(newTestportParameter);
 
@@ -244,8 +240,8 @@ public final class TestportParametersSectionPage extends FormPage {
 					if (testportParameter.getValue() != null) {
 						if (testportParameter.getValue().getText().length() == 0) {
 							String temp = ConfigTreeNodeUtilities.toString(testportParameter.getValue());
-							testportParameter.getValue().removeChildren();
-							testportParameter.getValue().setText(temp);
+							ConfigTreeNodeUtilities.removeChildren( testportParameter.getValue() );
+							ConfigTreeNodeUtilities.setText( testportParameter.getValue(), temp );
 						}
 
 						parameterValueText.setText(testportParameter.getValue().getText());
@@ -287,15 +283,15 @@ public final class TestportParametersSectionPage extends FormPage {
 					switch (columnIndex) {
 					case 0:
 						// COMPONENT_NAME
-						testportParameter.getComponentName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( testportParameter.getComponentName(), ((String) value).trim() );
 						break;
 					case 1:
 						// TESTPORT_NAME
-						testportParameter.getTestportName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( testportParameter.getTestportName(), ((String) value).trim() );
 						break;
 					case 2:
 						// PARAMETER_NAME
-						testportParameter.getParameterName().setText(((String) value).trim());
+						ConfigTreeNodeUtilities.setText( testportParameter.getParameterName(), ((String) value).trim() );
 						break;
 					default:
 						break;
@@ -336,7 +332,7 @@ public final class TestportParametersSectionPage extends FormPage {
 				}
 
 				TestportParameter testportParameter = (TestportParameter) iterator.next();
-				testportParameter.getValue().setText(parameterValueText.getText());
+				ConfigTreeNodeUtilities.setText( testportParameter.getValue(), parameterValueText.getText() );
 
 				if (valueChanged) {
 					valueChanged = false;
@@ -400,12 +396,12 @@ public final class TestportParametersSectionPage extends FormPage {
 			return;
 		}
 
-		testportParametersHandler.setLastSectionRoot(new LocationAST("[TESTPORT_PARAMETERS]"));
-		testportParametersHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(testportParametersHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		testportParametersHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[TESTPORT_PARAMETERS]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -417,26 +413,22 @@ public final class TestportParametersSectionPage extends FormPage {
 		}
 
 		TestportParameter newTestportParameter = new TestportParameterSectionHandler.TestportParameter();
-		newTestportParameter.setRoot(new LocationAST(""));
+		final ParseTree root = new ParserRuleContext();
+		newTestportParameter.setRoot( root );
 
-		LocationAST node;
-		newTestportParameter.setComponentName(new LocationAST("component_name"));
-		newTestportParameter.getComponentName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		newTestportParameter.getRoot().setFirstChild(newTestportParameter.getComponentName());
-		node = new LocationAST(".");
-		newTestportParameter.getComponentName().setNextSibling(node);
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree("\n") );
+		newTestportParameter.setComponentName(new AddedParseTree("component_name"));
+		ConfigTreeNodeUtilities.addChild( root, newTestportParameter.getComponentName() );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(".") );
 
-		newTestportParameter.setTestportName(new LocationAST("testport_name"));
-		node.setNextSibling(newTestportParameter.getTestportName());
-		node = new LocationAST(".");
-		newTestportParameter.getTestportName().setNextSibling(node);
+		newTestportParameter.setTestportName(new AddedParseTree("testport_name"));
+		ConfigTreeNodeUtilities.addChild( root, newTestportParameter.getTestportName() );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(".") );
 
-		newTestportParameter.setParameterName(new LocationAST("parameter_name"));
-		node.setNextSibling(newTestportParameter.getParameterName());
-		node = new LocationAST(" := ");
-		newTestportParameter.getParameterName().setNextSibling(node);
-		newTestportParameter.setValue(new LocationAST("\"value\""));
-		node.setNextSibling(newTestportParameter.getValue());
+		newTestportParameter.setParameterName(new AddedParseTree("parameter_name"));
+		ConfigTreeNodeUtilities.addChild( root, newTestportParameter.getParameterName() );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(" := ") );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree("\"value\"") );
 
 		return newTestportParameter;
 	}
@@ -446,8 +438,7 @@ public final class TestportParametersSectionPage extends FormPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), testportParametersHandler.getLastSectionRoot()
-				.getParent());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), testportParametersHandler.getLastSectionRoot());
 		testportParametersHandler.setLastSectionRoot(null);
 	}
 
@@ -462,7 +453,7 @@ public final class TestportParametersSectionPage extends FormPage {
 		for (; iterator.hasNext();) {
 			TestportParameter testportParameter = (TestportParameter) iterator.next();
 			if (testportParameter != null) {
-				ConfigTreeNodeUtilities.removeFromChain(testportParametersHandler.getLastSectionRoot(), testportParameter.getRoot());
+				ConfigTreeNodeUtilities.removeChild(testportParametersHandler.getLastSectionRoot(), testportParameter.getRoot());
 				testportParametersHandler.getTestportParameters().remove(testportParameter);
 			}
 		}

@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.ILocationAST;
 import org.eclipse.titan.designer.GeneralConstants;
 
 /**
@@ -47,10 +46,6 @@ public class Location {
 		setLocation(location);
 	}
 
-	public Location(final Location location, final ILocationAST endTok) {
-		setLocation(location, endTok);
-	}
-
 	public Location(final IResource file) {
 		this.file = file;
 		line = -1;
@@ -69,10 +64,6 @@ public class Location {
 		setLocation(file, line, offset, endOffset);
 	}
 	
-	public Location(final IResource file, final ILocationAST startTok, final ILocationAST endTok) {
-		setLocation(file, startTok, endTok);
-	}
-
 	/**
 	 * Constructor for ANTLR v4 tokens
 	 * @param aFile the parsed file
@@ -126,38 +117,11 @@ public class Location {
 		return new Location(startLoc.getFile(), startLoc.getLine(), startLoc.getOffset(), endLoc.getEndOffset());
 	}
 	
-	protected final void setLocation(final IResource file, final ILocationAST startTok, final ILocationAST endTok) {
-		this.file = file;
-		if (startTok == null) {
-			line = -1;
-			offset = -1;
-		} else {
-			line =  startTok.getLine();
-			offset = startTok.getOffset();
-		}
-		if (endTok == null) {
-			endOffset = -1;
-		} else {
-			endOffset = endTok.getEndOffset();
-		}
-	}
-
 	protected final void setLocation(final Location location) {
 		file = location.getFile();
 		line = location.getLine();
 		offset = location.getOffset();
 		endOffset = location.getEndOffset();
-	}
-
-	protected final void setLocation(final Location location, final ILocationAST endToken) {
-		file = location.getFile();
-		line = location.getLine();
-		offset = location.getOffset();
-		if (endToken == null) {
-			endOffset = location.getEndOffset();
-		} else {
-			endOffset = endToken.getEndOffset();
-		}
 	}
 
 	protected final void setLocation(final IResource file, final int line, final int offset, final int endOffset) {

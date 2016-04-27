@@ -9,7 +9,10 @@ package org.eclipse.titan.designer.editors.configeditor.pages.compgroupmc;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -28,8 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.GroupSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.GroupSectionHandler.Group;
@@ -45,7 +47,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class GroupsSubPage {
 
 	private Label totalGroupsLabel;
@@ -140,12 +143,7 @@ public final class GroupsSubPage {
 					return;
 				}
 
-				if (groupSectionHandler.getGroups().isEmpty()) {
-					groupSectionHandler.getLastSectionRoot().setNextSibling(newGroup.getRoot());
-				} else {
-					Group group = groupSectionHandler.getGroups().get(groupSectionHandler.getGroups().size() - 1);
-					group.getRoot().setNextSibling(newGroup.getRoot());
-				}
+				ConfigTreeNodeUtilities.addChild( groupSectionHandler.getLastSectionRoot(), newGroup.getRoot() );
 
 				groupSectionHandler.getGroups().add(newGroup);
 
@@ -238,7 +236,7 @@ public final class GroupsSubPage {
 			public void modify(final Object element, final String property, final Object value) {
 				if (element != null && element instanceof TableItem && value instanceof String) {
 					Group group = (Group) ((TableItem) element).getData();
-					group.getGroupName().setText((String) value);
+					ConfigTreeNodeUtilities.setText( group.getGroupName(), (String) value );
 					groupsTableViewer.refresh(group);
 					editor.setDirty();
 				}
@@ -287,17 +285,11 @@ public final class GroupsSubPage {
 				}
 				GroupItem newItem;
 
-				CommonHiddenStreamToken hidden = new CommonHiddenStreamToken(", ");
+				ParseTree hidden = new AddedParseTree(", ");
+				ConfigTreeNodeUtilities.addChild(selectedGroup.getRoot(), hidden );
 
-				LocationAST child = selectedGroup.getRoot().getFirstChild();
-				while (child.getNextSibling() != null) {
-					child = child.getNextSibling();
-				}
-				child.setHiddenAfter(hidden);
-
-				LocationAST node = new LocationAST("item");
-				node.setHiddenBefore(hidden);
-				selectedGroup.getRoot().addChild(node);
+				ParseTree node = new AddedParseTree("item");
+				ConfigTreeNodeUtilities.addChild(selectedGroup.getRoot(), node );
 
 				newItem = new GroupSectionHandler.GroupItem(node);
 				selectedGroup.getGroupItems().add(newItem);
@@ -377,7 +369,7 @@ public final class GroupsSubPage {
 			public void modify(final Object element, final String property, final Object value) {
 				if (element != null && element instanceof TableItem && value instanceof String) {
 					GroupItem item = (GroupItem) ((TableItem) element).getData();
-					item.getItem().setText((String) value);
+					ConfigTreeNodeUtilities.setText( item.getItem(), (String) value );
 					itemsTableViewer.refresh(item);
 					editor.setDirty();
 				}
@@ -446,12 +438,12 @@ public final class GroupsSubPage {
 			return;
 		}
 
-		groupSectionHandler.setLastSectionRoot(new LocationAST("[GROUPS]"));
-		groupSectionHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(groupSectionHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		groupSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[GROUPS]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -462,19 +454,20 @@ public final class GroupsSubPage {
 			return null;
 		}
 
-		Group newGroup = new GroupSectionHandler.Group();
-		newGroup.setRoot(new LocationAST(""));
+		final Group newGroup = new GroupSectionHandler.Group();
+		final ParseTree root = new ParserRuleContext();
+		newGroup.setRoot( root );
 
-		LocationAST node;
-		newGroup.setGroupName(new LocationAST("group_name"));
-		newGroup.getGroupName().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		newGroup.getRoot().setFirstChild(newGroup.getGroupName());
-		node = new LocationAST(" := ");
-		newGroup.getGroupName().setNextSibling(node);
-		newGroup.setGroupItems(new ArrayList<GroupItem>());
-		LocationAST item = new LocationAST("item");
-		node.setNextSibling(item);
+		final ParseTree groupName = new AddedParseTree("group_name");
+		final ParseTree item = new AddedParseTree("item");
+		newGroup.setGroupName( groupName );
+		newGroup.setGroupItems( new ArrayList<GroupItem>() );
 		newGroup.getGroupItems().add(new GroupSectionHandler.GroupItem(item));
+		
+		ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( "\n" ) );
+		ConfigTreeNodeUtilities.addChild( root, groupName );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(" := ") );
+		ConfigTreeNodeUtilities.addChild( root, item );
 
 		return newGroup;
 	}
@@ -484,8 +477,7 @@ public final class GroupsSubPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), groupSectionHandler.getLastSectionRoot()
-				.getParent());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), groupSectionHandler.getLastSectionRoot());
 		groupSectionHandler.setLastSectionRoot(null);
 	}
 
@@ -499,7 +491,7 @@ public final class GroupsSubPage {
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			Group group = (Group) iterator.next();
 			if (group != null) {
-				ConfigTreeNodeUtilities.removeFromChain(groupSectionHandler.getLastSectionRoot(), group.getRoot());
+				ConfigTreeNodeUtilities.removeChild(groupSectionHandler.getLastSectionRoot(), group.getRoot());
 				groupSectionHandler.getGroups().remove(group);
 			}
 		}
@@ -515,36 +507,40 @@ public final class GroupsSubPage {
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			GroupItem item = (GroupItem) iterator.next();
 			if (item != null) {
-				int index = selectedGroup.getGroupItems().indexOf(item);
+				final List<GroupItem> groupItems = selectedGroup.getGroupItems();
+				final int size = groupItems.size();
+				final int index = groupItems.indexOf(item);
 
 				if (index == 0) {
-					if (selectedGroup.getGroupItems().size() == 1) {
+					if ( size == 1 ) {
 						// if it is the only one
 						// DO NOTHING
 						// Each group must have at least one item.
 						return;
 					}
 
-					LocationAST next = item.getItem().getNextSibling().getNextSibling();
-					if (next != null) {
-						LocationAST assignment = selectedGroup.getRoot().getFirstChild().getNextSibling();
-						assignment.setNextSibling(next);
-						CommonHiddenStreamToken hidden = new CommonHiddenStreamToken(" ");
-						assignment.setHiddenAfter(hidden);
+					final ParseTree selected = item.getItem();
+					final String selectedText = selected.getText();
+					final ParseTree parent = selectedGroup.getRoot();
+					if ( parent instanceof ParserRuleContext ) {
+						ParserRuleContext parentRule = (ParserRuleContext)parent;
+						if ( parentRule.children != null ) {
+							final List<ParseTree> childrenList = parentRule.children;
+							for ( int i = 0; i < childrenList.size(); i++ ) {
+								// delete by text
+								final String text = childrenList.get(i).getText();
+								if ( selectedText.equals( text ) ) {
+									childrenList.remove(i);
+									//also remove the previos " " or ", "
+									if (i > 0) {
+										childrenList.remove( i - 1 );
+									}
+									break;
+								}
+							}
+						}
 					}
-				} else {
-					LocationAST previous = selectedGroup.getGroupItems().get(index - 1).getItem();
-					if (index + 1 < selectedGroup.getGroupItems().size()) {
-						// if this is not the last
-						LocationAST next = selectedGroup.getGroupItems().get(index + 1).getItem();
-						previous.setNextSibling(next);
-						CommonHiddenStreamToken hidden = new CommonHiddenStreamToken(", ");
-						previous.setHiddenAfter(hidden);
-						next.setHiddenBefore(hidden);
-
-					} else {
-						previous.setNextSibling(null);
-					}
+					groupItems.remove(index);
 
 				}
 

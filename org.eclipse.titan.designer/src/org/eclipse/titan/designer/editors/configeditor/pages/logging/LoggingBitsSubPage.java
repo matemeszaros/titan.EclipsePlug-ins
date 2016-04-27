@@ -12,6 +12,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -26,7 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingBit;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingBitHelper;
@@ -42,7 +44,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class LoggingBitsSubPage {
 
 	private LoggingSectionHandler loggingSectionHandler;
@@ -116,10 +119,6 @@ public final class LoggingBitsSubPage {
 
 				if (!event.getChecked()) {
 					if (selectedLogEntry.getConsoleMaskBits().keySet().isEmpty()) {
-						selectedLogEntry.getConsoleMaskRoot().setNextSibling(null);
-						selectedLogEntry.getConsoleMaskRoot().setFirstChild(null);
-						selectedLogEntry.getConsoleMaskRoot().setHiddenBefore(null);
-						selectedLogEntry.getConsoleMaskRoot().setText("");
 						selectedLogEntry.setConsoleMaskRoot(null);
 					}
 				}
@@ -154,7 +153,7 @@ public final class LoggingBitsSubPage {
 
 		if (selectedLogEntry == null) {
 			consoleMaskViewer.getControl().setEnabled(false);
-			consoleMaskViewer.setInput(new EnumMap<LoggingBit, LocationAST>(LoggingBit.class));
+			consoleMaskViewer.setInput(new EnumMap<LoggingBit, ParseTree>(LoggingBit.class));
 		} else {
 			consoleMaskViewer.getControl().setEnabled(true);
 			consoleMaskViewer.setInput(selectedLogEntry.getConsoleMaskBits());
@@ -200,10 +199,6 @@ public final class LoggingBitsSubPage {
 
 				if (!event.getChecked()) {
 					if (selectedLogEntry.getFileMaskBits().keySet().isEmpty()) {
-						selectedLogEntry.getFileMaskRoot().setNextSibling(null);
-						selectedLogEntry.getFileMaskRoot().setFirstChild(null);
-						selectedLogEntry.getFileMaskRoot().setHiddenBefore(null);
-						selectedLogEntry.getFileMaskRoot().setText("");
 						selectedLogEntry.setFileMaskRoot(null);
 					}
 				}
@@ -238,7 +233,7 @@ public final class LoggingBitsSubPage {
 
 		if (selectedLogEntry == null) {
 			fileMaskViewer.getControl().setEnabled(false);
-			fileMaskViewer.setInput(new EnumMap<LoggingBit, LocationAST>(LoggingBit.class));
+			fileMaskViewer.setInput(new EnumMap<LoggingBit, ParseTree>(LoggingBit.class));
 		} else {
 			fileMaskViewer.getControl().setEnabled(true);
 			fileMaskViewer.setInput(selectedLogEntry.getFileMaskBits());
@@ -248,38 +243,42 @@ public final class LoggingBitsSubPage {
 	}
 
 	private void createConsoleMaskRootNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry) {
-		logentry.setConsoleMaskRoot(new LocationAST("\n"));
+		ParseTree consoleMaskRoot = new ParserRuleContext();
+		logentry.setConsoleMaskRoot( consoleMaskRoot );
+		ConfigTreeNodeUtilities.addChild( consoleMaskRoot, new AddedParseTree("\n") );
 
 		StringBuilder name = new StringBuilder();
 		lte.writeNamePrefix(name);
 		name.append("ConsoleMask := ");
 
-		LocationAST node = new LocationAST(name.toString());
-
-		logentry.getConsoleMaskRoot().setFirstChild(node);
-		logentry.setConsoleMask(new LocationAST(""));
-		node.setNextSibling(logentry.getConsoleMask());
-		logentry.getConsoleMask().setNextSibling(loggingSectionHandler.getLastSectionRoot().getFirstChild());
-		loggingSectionHandler.getLastSectionRoot().setFirstChild(logentry.getConsoleMaskRoot());
+		ParseTree node = new AddedParseTree(name.toString());
+		ConfigTreeNodeUtilities.addChild( consoleMaskRoot, node );
+		
+		ParseTree consoleMask = new AddedParseTree("");
+		logentry.setConsoleMask( consoleMask );
+		ConfigTreeNodeUtilities.addChild( consoleMaskRoot, consoleMask );
+		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), consoleMaskRoot, 0 );
 	}
 
 	private void createFileMaskRootNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry) {
-		logentry.setFileMaskRoot(new LocationAST("\n"));
+		ParseTree fileMaskRoot = new ParserRuleContext();
+		logentry.setConsoleMaskRoot( fileMaskRoot );
+		ConfigTreeNodeUtilities.addChild( fileMaskRoot, new AddedParseTree("\n") );
 
 		StringBuilder name = new StringBuilder();
 		lte.writeNamePrefix(name);
 		name.append("FileMask := ");
 
-		LocationAST node = new LocationAST(name.toString());
-
-		logentry.getFileMaskRoot().setFirstChild(node);
-		logentry.setFileMask(new LocationAST(""));
-		node.setNextSibling(logentry.getFileMask());
-		logentry.getFileMask().setNextSibling(loggingSectionHandler.getLastSectionRoot().getFirstChild());
-		loggingSectionHandler.getLastSectionRoot().setFirstChild(logentry.getFileMaskRoot());
+		ParseTree node = new AddedParseTree(name.toString());
+		ConfigTreeNodeUtilities.addChild( fileMaskRoot, node );
+		
+		ParseTree fileMask = new AddedParseTree("");
+		logentry.setFileMask( fileMask );
+		ConfigTreeNodeUtilities.addChild( fileMaskRoot, fileMask );
+		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), fileMaskRoot, 0 );
 	}
 
-	private void checkStateChangeHandler(final Map<LoggingBit, LocationAST> bitMask, final LocationAST bitmaskRoot,
+	private void checkStateChangeHandler(final Map<LoggingBit, ParseTree> bitMask, final ParseTree bitmaskRoot,
 			final CheckStateChangedEvent event) {
 		editor.setDirty();
 
@@ -345,7 +344,7 @@ public final class LoggingBitsSubPage {
 		}
 	}
 
-	private void bitCompression(final Map<LoggingBit, LocationAST> bitMask, final LocationAST bitmaskRoot) {
+	private void bitCompression(final Map<LoggingBit, ParseTree> bitMask, final ParseTree bitmaskRoot) {
 		for (LoggingBit parent : LoggingBitHelper.getFirstLevelNodes()) {
 			LoggingBit[] children = LoggingBitHelper.getChildren(parent);
 
@@ -381,58 +380,37 @@ public final class LoggingBitsSubPage {
 		}
 	}
 
-	private void addLoggingBit(final Map<LoggingBit, LocationAST> bitMask, final LocationAST bitmaskRoot, final LoggingBit bit) {
-		LocationAST newBit = new LocationAST(bit.getName());
+	private void addLoggingBit(final Map<LoggingBit, ParseTree> bitMask, final ParseTree bitmaskRoot, final LoggingBit bit) {
+		ParseTree newBit = new AddedParseTree(bit.getName());
 		bitMask.put(bit, newBit);
 
 		if (bitMask.keySet().size() > 1) {
-			LocationAST separator = new LocationAST("|");
-			separator.setNextSibling(bitmaskRoot.getFirstChild());
-			newBit.setNextSibling(separator);
+			ParseTree separator = new AddedParseTree("|");
+			ConfigTreeNodeUtilities.addChild(bitmaskRoot, separator, 0);
 		}
 
-		bitmaskRoot.setFirstChild(newBit);
+		ConfigTreeNodeUtilities.addChild(bitmaskRoot, newBit, 0);
 	}
 
-	private void removeLoggingBit(final Map<LoggingBit, LocationAST> bitMask, final LoggingBit bit) {
-		LocationAST removedBit = bitMask.remove(bit);
-		removedBit.setHiddenBefore(null);
-		removedBit.setText("");
-		LocationAST next = removedBit.getNextSibling();
-		if (next != null) {
-			next.setHiddenBefore(null);
-			next.setText("");
-		}
+	private void removeLoggingBit(final Map<LoggingBit, ParseTree> bitMask, final LoggingBit bit) {
+		final ParseTree removedBit = bitMask.remove(bit);
+		ConfigTreeNodeUtilities.removeChild(removedBit);
 	}
 
-	private void removeLastSeparator(final LocationAST bitmaskRoot) {
-		LocationAST node = bitmaskRoot.getFirstChild();
-		if (node == null) {
-			return;
-		}
-
-		List<LocationAST> children = new ArrayList<LocationAST>();
-
-		children.add(node);
-		while (node.getNextSibling() != null) {
-			node = node.getNextSibling();
-			children.add(node);
-		}
-
-		int i = children.size() - 1;
-		while (i >= 0) {
-			node = children.get(i);
-
-			if (!"".equals(node.getText()) && !"|".equals(node.getText())) {
+	private void removeLastSeparator(final ParseTree bitmaskRoot) {
+		final int count = bitmaskRoot.getChildCount();
+		for ( int i = count - 1; i >= 0; i-- ) {
+			final ParseTree child = bitmaskRoot.getChild( i );
+			final String childText = child.getText();
+			if ( "".equals( childText ) || "|".equals( childText ) ) {
+				ConfigTreeNodeUtilities.removeChild(bitmaskRoot, child);
+			} else {
 				break;
 			}
-			i--;
 		}
-
-		node.setNextSibling(null);
 	}
 
-	private void evaluateSelection(final CheckboxTreeViewer viewer, final Map<LoggingBit, LocationAST> bitMask) {
+	private void evaluateSelection(final CheckboxTreeViewer viewer, final Map<LoggingBit, ParseTree> bitMask) {
 		LoggingBit[] firstLevelnodes = LoggingBitHelper.getFirstLevelNodes();
 		LoggingBit[] children;
 		List<LoggingBit> toBeGrayed = new ArrayList<LoggingBit>();
@@ -464,7 +442,7 @@ public final class LoggingBitsSubPage {
 		viewer.setCheckedElements(toBeSelected.toArray());
 	}
 
-	private void logAllHandler(final Map<LoggingBit, LocationAST> bitMask, final LocationAST bitmaskRoot) {
+	private void logAllHandler(final Map<LoggingBit, ParseTree> bitMask, final ParseTree bitmaskRoot) {
 		if (bitMask.containsKey(LoggingBit.LOG_ALL)) {
 			LoggingBit[] logAllBits = LoggingBitHelper.getLogAllBits();
 			for (LoggingBit bit : logAllBits) {
@@ -480,21 +458,19 @@ public final class LoggingBitsSubPage {
 
 	public void pluginRenamed() {
 		if (selectedLogEntry.getConsoleMaskRoot() != null) {
-			LocationAST child = selectedLogEntry.getConsoleMask().getFirstChild();
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getConsoleMaskRoot()
-					.getParent());
+			ParseTree child = selectedLogEntry.getConsoleMask().getChild( 0 );
+			ConfigTreeNodeUtilities.removeChild( loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getConsoleMaskRoot() );
 			createConsoleMaskRootNode(loggingPage.getSelectedTreeElement(), selectedLogEntry);
 			if (child != null) {
-				selectedLogEntry.getConsoleMask().setFirstChild(child);
+				ConfigTreeNodeUtilities.addChild( selectedLogEntry.getConsoleMask(), child, 0 );
 			}
 		}
 		if (selectedLogEntry.getFileMaskRoot() != null) {
-			LocationAST child = selectedLogEntry.getFileMask().getFirstChild();
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getFileMaskRoot()
-					.getParent());
+			ParseTree child = selectedLogEntry.getFileMask().getChild( 0 );
+			ConfigTreeNodeUtilities.removeChild( loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getFileMaskRoot() );
 			createFileMaskRootNode(loggingPage.getSelectedTreeElement(), selectedLogEntry);
 			if (child != null) {
-				selectedLogEntry.getFileMask().setFirstChild(child);
+				ConfigTreeNodeUtilities.addChild( selectedLogEntry.getFileMask(), child, 0 );
 			}
 		}
 	}

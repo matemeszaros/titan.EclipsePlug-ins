@@ -11,16 +11,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.titan.common.parsers.LocationAST;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class IncludeSectionDragSourceListener implements DragSourceListener {
 
 	private TableViewer viewer;
@@ -49,15 +50,15 @@ public final class IncludeSectionDragSourceListener implements DragSourceListene
 	public void dragSetData(final DragSourceEvent event) {
 		if (IncludeItemTransfer.getInstance().isSupportedType(event.dataType)) {
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-			List<LocationAST> items = new ArrayList<LocationAST>();
+			List<ParseTree> items = new ArrayList<ParseTree>();
 			if (!selection.isEmpty()) {
 				for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 					Object element = it.next();
-					if (element instanceof LocationAST) {
-						items.add((LocationAST) element);
+					if (element instanceof ParseTree) {
+						items.add((ParseTree) element);
 					}
 				}
-				event.data = items.toArray(new LocationAST[items.size()]);
+				event.data = items.toArray(new ParseTree[items.size()]);
 			}
 		}
 	}
@@ -65,7 +66,7 @@ public final class IncludeSectionDragSourceListener implements DragSourceListene
 	@Override
 	public void dragStart(final DragSourceEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-		event.doit = !selection.isEmpty() && (selection.getFirstElement() instanceof LocationAST);
+		event.doit = !selection.isEmpty() && (selection.getFirstElement() instanceof ParseTree);
 	}
 
 }

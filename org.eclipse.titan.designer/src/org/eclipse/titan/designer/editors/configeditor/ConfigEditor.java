@@ -16,7 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.cfg.CfgAnalyzer;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.designer.editors.configeditor.pages.compgroupmc.ComponentsGroupsMCPage;
@@ -214,8 +214,8 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 		firePropertyChange(PROP_DIRTY);
 	}
 
-	public LocationAST getParseTreeRoot() {
-		return new LocationAST(mParseTreeRoot, mTokenStream);
+	public ParserRuleContext getParseTreeRoot() {
+		return mParseTreeRoot;
 	}
 
 	public void setParseTreeRoot(final ParserRuleContext aParseTreeRoot) {
@@ -227,10 +227,9 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	}
 
 	private void updateTextualPage() {
-		LocationAST parseTreeRoot = getParseTreeRoot();
-		if (parseTreeRoot != null && parseTreeRoot.getRule() != null) {
+		if (mParseTreeRoot != null && mTokenStream != null) {
 			String original = editor.getDocument().get();
-			String content = ConfigTreeNodeUtilities.toStringWithhiddenAfter(parseTreeRoot);
+			String content = ConfigTreeNodeUtilities.toStringWithhiddenAfter( mParseTreeRoot, mTokenStream );
 
 			if (!content.equals(original)) {
 				editor.getDocument().set(content);

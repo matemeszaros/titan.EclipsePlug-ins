@@ -10,69 +10,70 @@ package org.eclipse.titan.common.parsers.cfg.indices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class TestportParameterSectionHandler {
 
 	public static class TestportParameter {
-		private LocationAST root = null;
-		private LocationAST componentName = null;
-		private LocationAST testportName = null;
-		private LocationAST parameterName = null;
-		private LocationAST value = null;
+		private ParseTree root = null;
+		private ParseTree componentName = null;
+		private ParseTree testportName = null;
+		private ParseTree parameterName = null;
+		private ParseTree value = null;
 
-		public LocationAST getRoot() {
+		public ParseTree getRoot() {
 			return root;
 		}
 
-		public void setRoot(final LocationAST root) {
+		public void setRoot(final ParseTree root) {
 			this.root = root;
 		}
 
-		public LocationAST getComponentName() {
+		public ParseTree getComponentName() {
 			return componentName;
 		}
 
-		public void setComponentName(final LocationAST componentName) {
+		public void setComponentName(final ParseTree componentName) {
 			this.componentName = componentName;
 		}
 
-		public LocationAST getTestportName() {
+		public ParseTree getTestportName() {
 			return testportName;
 		}
 
-		public void setTestportName(final LocationAST testportName) {
+		public void setTestportName(final ParseTree testportName) {
 			this.testportName = testportName;
 		}
 
-		public LocationAST getParameterName() {
+		public ParseTree getParameterName() {
 			return parameterName;
 		}
 
-		public void setParameterName(final LocationAST parameterName) {
+		public void setParameterName(final ParseTree parameterName) {
 			this.parameterName = parameterName;
 		}
 
-		public LocationAST getValue() {
+		public ParseTree getValue() {
 			return value;
 		}
 
-		public void setValue(final LocationAST value) {
+		public void setValue(final ParseTree value) {
 			this.value = value;
 		}
 	}
 
-	private LocationAST lastSectionRoot = null;
+	private ParseTree lastSectionRoot = null;
 	private List<TestportParameter> testportParameters = new ArrayList<TestportParameter>();
 
-	public LocationAST getLastSectionRoot() {
+	public ParseTree getLastSectionRoot() {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final ParseTree lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 

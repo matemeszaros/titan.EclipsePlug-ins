@@ -13,18 +13,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler.Component;
+import org.eclipse.titan.designer.editors.configeditor.ConfigItemTransferBase;
 
 /**
  * @author Kristof Szabados
- * */
-public final class ComponentItemTransfer extends ByteArrayTransfer {
+ * @author Arpad Lovassy
+ */
+public final class ComponentItemTransfer extends ConfigItemTransferBase {
 	private static ComponentItemTransfer instance = new ComponentItemTransfer();
 	private static final String TYPE_NAME = "TITAN-ComponentItem-transfer-format";
 	private static final int TYPEID = registerType(TYPE_NAME);
@@ -55,14 +57,7 @@ public final class ComponentItemTransfer extends ByteArrayTransfer {
 			out.writeInt(items.length);
 
 			for (int i = 0; i < items.length; i++) {
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getComponentName()));
-				out.writeUTF(items[i].getComponentName().getText());
-
-				// hidden before the ":=" sign
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getComponentName().getNextSibling()));
-
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getHostName()));
-				out.writeUTF(items[i].getHostName().getText());
+				out.writeUTF( convertToString( items[i].getRoot() ) );
 			}
 			out.close();
 			bytes = byteOut.toByteArray();
@@ -87,28 +82,29 @@ public final class ComponentItemTransfer extends ByteArrayTransfer {
 			String componentName;
 			String hostName;
 			String hiddenBefore;
-			LocationAST node;
 			for (int i = 0; i < n; i++) {
 				items[i] = new Component();
 
+				final ParseTree root = new ParserRuleContext();
+				items[i].setRoot( root );
+				
 				hiddenBefore = in.readUTF();
+				ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( hiddenBefore ) );
 				componentName = in.readUTF();
-				items[i].setComponentName(new LocationAST(componentName));
-				items[i].getComponentName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore));
+				final ParseTree componentNameNode = new AddedParseTree( componentName );
+				items[i].setComponentName( componentNameNode );
+				ConfigTreeNodeUtilities.addChild( root, componentNameNode );
 
 				hiddenBefore = in.readUTF();
-				node = new LocationAST(":=");
-				node.setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore));
-				items[i].getComponentName().setNextSibling(node);
+				ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( hiddenBefore ) );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(":=") );
 
 				hiddenBefore = in.readUTF();
+				ConfigTreeNodeUtilities.addChild( root, ConfigTreeNodeUtilities.createHiddenTokenNode( hiddenBefore ) );
 				hostName = in.readUTF();
-				items[i].setHostName(new LocationAST(hostName));
-				items[i].getHostName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore));
-				node.setNextSibling(items[i].getHostName());
-
-				items[i].setRoot(new LocationAST(""));
-				items[i].getRoot().setFirstChild(items[i].getComponentName());
+				final ParseTree hostNameNode = new AddedParseTree( hostName );
+				items[i].setHostName( hostNameNode );
+				ConfigTreeNodeUtilities.addChild( root, hostNameNode );
 			}
 			return items;
 		} catch (IOException e) {

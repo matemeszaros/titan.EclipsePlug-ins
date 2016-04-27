@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor.pages.compgroupmc;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -16,8 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.MCSectionHandler;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
@@ -92,7 +93,7 @@ public final class MCSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (mcSectionHandler.getLocalAddressRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(mcSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(mcSectionHandler.getLastSectionRoot(),
 								mcSectionHandler.getLocalAddressRoot());
 					}
 					mcSectionHandler.setLocalAddress(null);
@@ -103,20 +104,17 @@ public final class MCSubPage {
 					// create the node
 					createMCSection();
 
-					LocationAST oldsibling = mcSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("localAddress := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					mcSectionHandler.setLocalAddress(new LocationAST(temp.trim()));
-					node.setNextSibling(mcSectionHandler.getLocalAddress());
-					mcSectionHandler.setLocalAddressRoot(new LocationAST(""));
-					mcSectionHandler.getLocalAddressRoot().setFirstChild(node);
-					mcSectionHandler.getLastSectionRoot().setNextSibling(mcSectionHandler.getLocalAddressRoot());
-					mcSectionHandler.getLocalAddressRoot().setNextSibling(oldsibling);
+					ParseTree localAddressRoot = new ParserRuleContext();
+					mcSectionHandler.setLocalAddressRoot( localAddressRoot );
+					ConfigTreeNodeUtilities.addChild( mcSectionHandler.getLastSectionRoot(), localAddressRoot ); 
+					ConfigTreeNodeUtilities.addChild( localAddressRoot, new AddedParseTree("\nlocalAddress := ") );
+					ParseTree localAddress = new AddedParseTree( temp.trim() );
+					mcSectionHandler.setLocalAddress( localAddress );
+					ConfigTreeNodeUtilities.addChild( localAddressRoot, localAddress );
 				} else {
 					// simple modification
-					mcSectionHandler.getLocalAddress().setText(temp.trim());
-					mcSectionHandler.getLocalAddress().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( mcSectionHandler.getLocalAddress(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getLocalAddress() );
 				}
 			}
 		});
@@ -141,7 +139,7 @@ public final class MCSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (mcSectionHandler.getTcpPortRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(mcSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(mcSectionHandler.getLastSectionRoot(),
 								mcSectionHandler.getTcpPortRoot());
 					}
 					mcSectionHandler.setTcpPort(null);
@@ -152,20 +150,17 @@ public final class MCSubPage {
 					// create the node
 					createMCSection();
 
-					LocationAST oldsibling = mcSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("TCPPort := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					mcSectionHandler.setTcpPort(new LocationAST(temp.trim()));
-					node.setNextSibling(mcSectionHandler.getTcpPort());
-					mcSectionHandler.setTcpPortRoot(new LocationAST(""));
-					mcSectionHandler.getTcpPortRoot().setFirstChild(node);
-					mcSectionHandler.getLastSectionRoot().setNextSibling(mcSectionHandler.getTcpPortRoot());
-					mcSectionHandler.getTcpPortRoot().setNextSibling(oldsibling);
+					ParseTree tcpPortRoot = new ParserRuleContext();
+					mcSectionHandler.setTcpPortRoot( tcpPortRoot );
+					ConfigTreeNodeUtilities.addChild( mcSectionHandler.getLastSectionRoot(), tcpPortRoot ); 
+					ConfigTreeNodeUtilities.addChild( tcpPortRoot, new AddedParseTree("\nTCPPort := ") );
+					ParseTree tcpPort = new AddedParseTree( temp.trim() );
+					mcSectionHandler.setTcpPort( tcpPort );
+					ConfigTreeNodeUtilities.addChild( tcpPortRoot, tcpPort );
 				} else {
 					// simple modification
-					mcSectionHandler.getTcpPort().setText(temp.trim());
-					mcSectionHandler.getTcpPort().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( mcSectionHandler.getTcpPort(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getTcpPort() );
 				}
 			}
 		});
@@ -190,7 +185,7 @@ public final class MCSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (mcSectionHandler.getKillTimerRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(mcSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(mcSectionHandler.getLastSectionRoot(),
 								mcSectionHandler.getKillTimerRoot());
 					}
 					mcSectionHandler.setKillTimer(null);
@@ -201,20 +196,17 @@ public final class MCSubPage {
 					// create the node
 					createMCSection();
 
-					LocationAST oldsibling = mcSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("killTimer := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					mcSectionHandler.setKillTimer(new LocationAST(temp.trim()));
-					node.setNextSibling(mcSectionHandler.getKillTimer());
-					mcSectionHandler.setKillTimerRoot(new LocationAST(""));
-					mcSectionHandler.getKillTimerRoot().setFirstChild(node);
-					mcSectionHandler.getLastSectionRoot().setNextSibling(mcSectionHandler.getKillTimerRoot());
-					mcSectionHandler.getKillTimerRoot().setNextSibling(oldsibling);
+					ParseTree killTimerRoot = new ParserRuleContext();
+					mcSectionHandler.setKillTimerRoot( killTimerRoot );
+					ConfigTreeNodeUtilities.addChild( mcSectionHandler.getLastSectionRoot(), killTimerRoot ); 
+					ConfigTreeNodeUtilities.addChild( killTimerRoot, new AddedParseTree("\nkillTimer := ") );
+					ParseTree killTimer = new AddedParseTree( temp.trim() );
+					mcSectionHandler.setTcpPort( killTimer );
+					ConfigTreeNodeUtilities.addChild( killTimerRoot, killTimer );
 				} else {
 					// simple modification
-					mcSectionHandler.getKillTimer().setText(temp.trim());
-					mcSectionHandler.getKillTimer().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( mcSectionHandler.getKillTimer(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getKillTimer() );
 				}
 			}
 		});
@@ -239,7 +231,7 @@ public final class MCSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (mcSectionHandler.getNumHCsTextRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(mcSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(mcSectionHandler.getLastSectionRoot(),
 								mcSectionHandler.getNumHCsTextRoot());
 					}
 					mcSectionHandler.setNumHCsText(null);
@@ -250,20 +242,17 @@ public final class MCSubPage {
 					// create the node
 					createMCSection();
 
-					LocationAST oldsibling = mcSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("numHCs := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					mcSectionHandler.setNumHCsText(new LocationAST(temp.trim()));
-					node.setNextSibling(mcSectionHandler.getNumHCsText());
-					mcSectionHandler.setNumHCsTextRoot(new LocationAST(""));
-					mcSectionHandler.getNumHCsTextRoot().setFirstChild(node);
-					mcSectionHandler.getLastSectionRoot().setNextSibling(mcSectionHandler.getNumHCsTextRoot());
-					mcSectionHandler.getNumHCsTextRoot().setNextSibling(oldsibling);
+					ParseTree numHCsTextRoot = new ParserRuleContext();
+					mcSectionHandler.setKillTimerRoot( numHCsTextRoot );
+					ConfigTreeNodeUtilities.addChild( mcSectionHandler.getLastSectionRoot(), numHCsTextRoot ); 
+					ConfigTreeNodeUtilities.addChild( numHCsTextRoot, new AddedParseTree("\nnumHCs := ") );
+					ParseTree numHCsText = new AddedParseTree( temp.trim() );
+					mcSectionHandler.setNumHCsText( numHCsText );
+					ConfigTreeNodeUtilities.addChild( numHCsTextRoot, numHCsText );
 				} else {
 					// simple modification
-					mcSectionHandler.getNumHCsText().setText(temp.trim());
-					mcSectionHandler.getNumHCsText().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( mcSectionHandler.getNumHCsText(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getNumHCsText() );
 				}
 			}
 		});
@@ -290,7 +279,7 @@ public final class MCSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (mcSectionHandler.getUnixDomainSocketRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(mcSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(mcSectionHandler.getLastSectionRoot(),
 								mcSectionHandler.getUnixDomainSocketRoot());
 					}
 					mcSectionHandler.setUnixDomainSocket(null);
@@ -301,20 +290,17 @@ public final class MCSubPage {
 					// create the node
 					createMCSection();
 
-					LocationAST oldsibling = mcSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("UnixSocketsEnabled := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					mcSectionHandler.setUnixDomainSocket(new LocationAST(temp.trim()));
-					node.setNextSibling(mcSectionHandler.getUnixDomainSocket());
-					mcSectionHandler.setUnixDomainSocketRoot(new LocationAST(""));
-					mcSectionHandler.getUnixDomainSocketRoot().setFirstChild(node);
-					mcSectionHandler.getLastSectionRoot().setNextSibling(mcSectionHandler.getUnixDomainSocketRoot());
-					mcSectionHandler.getUnixDomainSocketRoot().setNextSibling(oldsibling);
+					ParseTree unixDomainSocketRoot = new ParserRuleContext();
+					mcSectionHandler.setUnixDomainSocketRoot( unixDomainSocketRoot );
+					ConfigTreeNodeUtilities.addChild( mcSectionHandler.getLastSectionRoot(), unixDomainSocketRoot ); 
+					ConfigTreeNodeUtilities.addChild( unixDomainSocketRoot, new AddedParseTree("\nUnixSocketsEnabled := ") );
+					ParseTree unixDomainSocket = new AddedParseTree( temp.trim() );
+					mcSectionHandler.setUnixDomainSocket( unixDomainSocket );
+					ConfigTreeNodeUtilities.addChild( unixDomainSocketRoot, unixDomainSocket );
 				} else {
 					// simple modification
-					mcSectionHandler.getUnixDomainSocket().setText(temp.trim());
-					mcSectionHandler.getUnixDomainSocket().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( mcSectionHandler.getNumHCsText(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getNumHCsText() );
 				}
 			}
 		});
@@ -385,12 +371,12 @@ public final class MCSubPage {
 			return;
 		}
 
-		mcSectionHandler.setLastSectionRoot(new LocationAST("[MAIN_CONTROLLER]"));
-		mcSectionHandler.getLastSectionRoot().setHiddenAfter(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(mcSectionHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		mcSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[MAIN_CONTROLLER]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -404,8 +390,7 @@ public final class MCSubPage {
 
 		if (mcSectionHandler.getLocalAddress() == null && mcSectionHandler.getTcpPort() == null && mcSectionHandler.getKillTimer() == null
 				&& mcSectionHandler.getNumHCsText() == null && mcSectionHandler.getUnixDomainSocket() == null) {
-			ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), mcSectionHandler.getLastSectionRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), mcSectionHandler.getLastSectionRoot());
 			mcSectionHandler.setLastSectionRoot(null);
 		}
 	}
