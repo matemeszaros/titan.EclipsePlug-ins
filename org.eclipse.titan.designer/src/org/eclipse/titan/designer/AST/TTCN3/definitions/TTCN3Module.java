@@ -25,6 +25,7 @@ import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IType.Type_type;
@@ -753,7 +754,12 @@ public final class TTCN3Module extends Module {
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		// if a moduleId is present, that import (or the actual module)
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			// if a moduleId is present, that import (or the actual module)
 		// must be searched
 		final Identifier moduleId = reference.getModuleIdentifier();
 		final Location referenceLocation = reference.getLocation();

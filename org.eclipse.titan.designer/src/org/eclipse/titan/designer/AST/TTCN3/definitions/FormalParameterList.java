@@ -26,6 +26,7 @@ import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
@@ -778,8 +779,13 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 	}
 
 	@Override
-	public final Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		if (reference.getModuleIdentifier() != null || parameterMap == null) {
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			if (reference.getModuleIdentifier() != null || parameterMap == null) {
 			return getParentScope().getAssBySRef(timestamp, reference);
 		}
 

@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
@@ -188,6 +189,11 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
+		check(timestamp, null);
+		}
+		
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}

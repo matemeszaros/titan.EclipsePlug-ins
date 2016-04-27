@@ -105,7 +105,12 @@ public abstract class Undefined_Assignment extends ASN1Assignment {
 	}
 
 	@Override
-	public final void check(final CompilationTimeStamp timestamp) {
+	public void check(final CompilationTimeStamp timestamp) {
+		check(timestamp, null);
+		}
+		
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
 		if (null != lastTimeChecked && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}

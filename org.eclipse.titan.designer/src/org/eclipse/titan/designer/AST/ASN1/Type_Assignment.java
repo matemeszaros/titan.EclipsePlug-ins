@@ -92,6 +92,11 @@ public final class Type_Assignment extends ASN1Assignment {
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
+		check(timestamp, null);
+		}
+		
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
 		if (null != lastTimeChecked && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}

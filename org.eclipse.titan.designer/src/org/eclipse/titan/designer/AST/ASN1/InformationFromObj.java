@@ -13,6 +13,7 @@ import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Error_Setting;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISetting;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
@@ -428,8 +429,8 @@ public final class InformationFromObj extends Reference {
 	}
 
 	@Override
-	public Assignment getRefdAssignment(final CompilationTimeStamp timestamp, final boolean checkParameterList) {
-		return reference.getRefdAssignment(timestamp, true);
+	public Assignment getRefdAssignment(final CompilationTimeStamp timestamp, final boolean checkParameterList, final IReferenceChain refChain) {
+		return reference.getRefdAssignment(timestamp, true, refChain);
 	}
 
 	@Override

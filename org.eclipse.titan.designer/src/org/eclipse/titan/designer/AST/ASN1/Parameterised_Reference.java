@@ -164,7 +164,7 @@ public final class Parameterised_Reference extends Defined_Reference {
 
 		lastChekTimeStamp = compilationTimeStamp;
 
-		final Assignment parass = assignmentReference.getRefdAssignment(compilationTimeStamp, true);
+		final Assignment parass = assignmentReference.getRefdAssignment(compilationTimeStamp, true, null);
 		if (null == parass) {
 			isErroneous = true;
 			return null;

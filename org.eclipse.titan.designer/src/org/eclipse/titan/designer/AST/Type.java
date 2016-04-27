@@ -233,7 +233,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 	 * 
 	 * @return the actual or the last referred type
 	 * */
-	protected IType getTypeRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
+	public IType getTypeRefdLast(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		return this;
 	}
 
@@ -333,7 +333,12 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 	// FIXME could be made abstract
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
-		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
+		check(timestamp, null);
+	}
+		
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
+	if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
 
@@ -504,7 +509,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 	private void checkThisReferencedValue(final CompilationTimeStamp timestamp, final IValue value, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain, final boolean subCheck, final boolean strElem) {
 		final Reference reference = ((Referenced_Value) value).getReference();
-		final Assignment assignment = reference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = reference.getRefdAssignment(timestamp, true, referenceChain);
 
 		if (assignment == null) {
 			value.setIsErroneous(true);
@@ -811,7 +816,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 
 		switch (value.getValuetype()) {
 		case REFERENCED_VALUE:
-			Assignment assignment = ((Referenced_Value) value).getReference().getRefdAssignment(timestamp, false);
+			Assignment assignment = ((Referenced_Value) value).getReference().getRefdAssignment(timestamp, false, null);
 			if (assignment == null) {
 				template.setIsErroneous(true);
 			} else {

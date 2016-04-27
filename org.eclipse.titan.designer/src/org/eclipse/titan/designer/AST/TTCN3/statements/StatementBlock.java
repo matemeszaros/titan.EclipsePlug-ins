@@ -30,6 +30,7 @@ import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.INamedNode;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
@@ -971,7 +972,12 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		if (reference.getModuleIdentifier() != null || definitionMap == null) {
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			if (reference.getModuleIdentifier() != null || definitionMap == null) {
 			if (minimiseMemoryUsage) {
 				final FakeReference fakeReference = new FakeReference(reference);
 				if (!referencesGoingOut.contains(fakeReference)) {

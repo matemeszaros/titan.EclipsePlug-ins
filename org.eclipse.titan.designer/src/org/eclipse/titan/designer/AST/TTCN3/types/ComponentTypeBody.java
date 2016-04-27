@@ -328,7 +328,12 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
-		if (reference.getModuleIdentifier() != null) {
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+			if (reference.getModuleIdentifier() != null) {
 			return getParentScope().getAssBySRef(timestamp, reference);
 		}
 

@@ -17,5 +17,10 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 public abstract class Governor extends Setting implements IGovernor {
 
 	@Override
-	public abstract void check(final CompilationTimeStamp timestamp);
+	public void check(final CompilationTimeStamp timestamp) {
+	}		
+	
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
+	}
 }

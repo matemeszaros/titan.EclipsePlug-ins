@@ -73,7 +73,7 @@ public final class ObjectClass_refd extends ObjectClass implements IReferenceCha
 
 	protected ObjectClass getRefd(final CompilationTimeStamp timestamp, final IReferenceChain referenceChain) {
 		if (null != reference && referenceChain.add(this)) {
-			final Assignment assignment = reference.getRefdAssignment(timestamp, true);
+			final Assignment assignment = reference.getRefdAssignment(timestamp, true, referenceChain);
 			if (null == assignment) {
 				return newObjectClassDefinitionInstance();
 			}

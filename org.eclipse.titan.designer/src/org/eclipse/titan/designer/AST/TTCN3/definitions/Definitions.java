@@ -23,6 +23,7 @@ import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IOutlineElement;
+import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Module;
@@ -409,6 +410,11 @@ public final class Definitions extends Assignments implements ILocateableNode {
 
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference) {
+		return getAssBySRef(timestamp, reference, null);
+	}
+	
+	@Override
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
 		if (reference.getModuleIdentifier() != null) {
 			return getModuleScope().getAssBySRef(timestamp, reference);
 		}

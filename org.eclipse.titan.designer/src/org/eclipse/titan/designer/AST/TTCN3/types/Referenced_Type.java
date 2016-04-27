@@ -238,6 +238,11 @@ public final class Referenced_Type extends ASN1Type implements IReferencingType 
 
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
+		check(timestamp, null);
+	}
+	
+	@Override
+	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
@@ -351,7 +356,7 @@ public final class Referenced_Type extends ASN1Type implements IReferencingType 
 				return refd;
 			}
 
-			Assignment ass = reference.getRefdAssignment(timestamp, true);
+			Assignment ass = reference.getRefdAssignment(timestamp, true, refChain);
 
 			if (ass != null && Assignment_type.A_UNDEF.equals(ass.getAssignmentType())) {
 				ass = ((Undefined_Assignment) ass).getRealAssignment(timestamp);
