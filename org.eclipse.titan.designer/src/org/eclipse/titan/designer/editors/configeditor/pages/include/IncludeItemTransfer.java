@@ -55,6 +55,7 @@ public final class IncludeItemTransfer extends ConfigItemTransferBase {
 			out.writeInt(items.length);
 
 			for (int i = 0; i < items.length; i++) {
+				out.writeUTF( convertToString( items[ 2 * i ] ) );
 				out.writeUTF( convertToString( items[ 2 * i + 1 ] ) );
 			}
 			out.close();

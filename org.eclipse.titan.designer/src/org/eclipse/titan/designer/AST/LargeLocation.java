@@ -10,7 +10,6 @@ package org.eclipse.titan.designer.AST;
 import org.antlr.v4.runtime.Token;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.titan.common.parsers.ILocationAST;
 
 /**
  * @author Kristof Szabados
@@ -20,16 +19,6 @@ public final class LargeLocation extends Location {
 	
 	protected int endLine;
 
-	public LargeLocation(final IResource file, final ILocationAST startToken, final ILocationAST endToken) {
-		setLocation(file, startToken, endToken);
-
-		if (endToken == null) {
-			endLine = -1;
-		} else {
-			endLine = endToken.getLine();
-		}
-	}
-	
 	public LargeLocation(final IResource file, final int line, final int endline, final int offset, final int endOffset) {
 		super(file, line, offset, endOffset);
 		this.endLine = endline;

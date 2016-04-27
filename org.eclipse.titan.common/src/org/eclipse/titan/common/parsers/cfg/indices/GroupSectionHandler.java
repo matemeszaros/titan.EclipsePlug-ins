@@ -10,31 +10,32 @@ package org.eclipse.titan.common.parsers.cfg.indices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * @author Kristof Szabados
+ * @author Arpad Lovassy
  * */
-public final class GroupSectionHandler {
+public final class GroupSectionHandler extends ConfigSectionHandlerBase {
 
 	public static class Group {
-		private LocationAST root = null;
-		private LocationAST groupName = null;
+		private ParseTree root = null;
+		private ParseTree groupName = null;
 		private List<GroupItem> groupItems = new ArrayList<GroupItem>();
 
-		public LocationAST getRoot() {
+		public ParseTree getRoot() {
 			return root;
 		}
 
-		public void setRoot(final LocationAST root) {
+		public void setRoot(final ParseTree root) {
 			this.root = root;
 		}
 
-		public LocationAST getGroupName() {
+		public ParseTree getGroupName() {
 			return groupName;
 		}
 
-		public void setGroupName(final LocationAST groupName) {
+		public void setGroupName(final ParseTree groupName) {
 			this.groupName = groupName;
 		}
 
@@ -48,31 +49,22 @@ public final class GroupSectionHandler {
 	}
 
 	public static class GroupItem {
-		private LocationAST item = null;
+		private ParseTree item = null;
 
-		public GroupItem(final LocationAST item) {
+		public GroupItem(final ParseTree item) {
 			this.item = item;
 		}
 
-		public LocationAST getItem() {
+		public ParseTree getItem() {
 			return item;
 		}
 
-		public void setItem(final LocationAST item) {
+		public void setItem(final ParseTree item) {
 			this.item = item;
 		}
 	}
 
-	private LocationAST lastSectionRoot = null;
 	private List<Group> groups = new ArrayList<Group>();
-
-	public LocationAST getLastSectionRoot() {
-		return lastSectionRoot;
-	}
-
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
-		this.lastSectionRoot = lastSectionRoot;
-	}
 
 	public List<Group> getGroups() {
 		return groups;

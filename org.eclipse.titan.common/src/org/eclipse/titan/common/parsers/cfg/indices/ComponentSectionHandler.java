@@ -10,22 +10,14 @@ package org.eclipse.titan.common.parsers.cfg.indices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * @author Kristof Szabados
- * */
-public final class ComponentSectionHandler {
-	private LocationAST lastSectionRoot = null;
+ * @author Arpad Lovassy
+ */
+public final class ComponentSectionHandler extends ConfigSectionHandlerBase {
 	private List<Component> components = new ArrayList<Component>();
-
-	public LocationAST getLastSectionRoot() {
-		return lastSectionRoot;
-	}
-
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
-		this.lastSectionRoot = lastSectionRoot;
-	}
 
 	public List<Component> getComponents() {
 		return components;
@@ -36,31 +28,31 @@ public final class ComponentSectionHandler {
 	}
 
 	public static class Component {
-		private LocationAST root = null;
-		private LocationAST componentName = null;
-		private LocationAST hostName = null;
+		private ParseTree root = null;
+		private ParseTree componentName = null;
+		private ParseTree hostName = null;
 
-		public LocationAST getRoot() {
+		public ParseTree getRoot() {
 			return root;
 		}
 
-		public void setRoot(final LocationAST root) {
+		public void setRoot(final ParseTree root) {
 			this.root = root;
 		}
 
-		public LocationAST getComponentName() {
+		public ParseTree getComponentName() {
 			return componentName;
 		}
 
-		public void setComponentName(final LocationAST componentName) {
+		public void setComponentName(final ParseTree componentName) {
 			this.componentName = componentName;
 		}
 
-		public LocationAST getHostName() {
+		public ParseTree getHostName() {
 			return hostName;
 		}
 
-		public void setHostName(final LocationAST hostName) {
+		public void setHostName(final ParseTree hostName) {
 			this.hostName = hostName;
 		}
 	}

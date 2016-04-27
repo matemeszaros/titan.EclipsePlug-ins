@@ -277,7 +277,7 @@ public final class DefineSubPage {
 		ParseTree header = new AddedParseTree("\n[DEFINE]");
 		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		ParserRuleContext root = editor.getParseTreeRoot().getRule();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -310,7 +310,7 @@ public final class DefineSubPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot().getRule(), defineSectionHandler.getLastSectionRoot());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), defineSectionHandler.getLastSectionRoot());
 		defineSectionHandler.setLastSectionRoot((ParserRuleContext)null);
 	}
 

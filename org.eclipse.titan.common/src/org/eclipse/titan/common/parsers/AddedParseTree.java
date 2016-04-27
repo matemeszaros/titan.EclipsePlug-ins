@@ -14,7 +14,11 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public class AddedParseTree implements ParseTree {
 
+	/** text of the parse tree node. It doesn't have to be 1 token, it can be any string. */
 	private String mText;
+	
+	/** parent rule */
+	private ParseTree mParent;
 	
 	public AddedParseTree( final String aText ) {
 		mText = aText;
@@ -52,7 +56,7 @@ public class AddedParseTree implements ParseTree {
 
 	@Override
 	public ParseTree getParent() {
-		return null;
+		return mParent;
 	}
 
 	@Override
@@ -68,5 +72,10 @@ public class AddedParseTree implements ParseTree {
 	public void setText(String aText) {
 		mText = aText;
 	}
+	
+	public void setParent( final ParseTree aParent ) {
+		mParent = aParent;
+	}
+
 
 }

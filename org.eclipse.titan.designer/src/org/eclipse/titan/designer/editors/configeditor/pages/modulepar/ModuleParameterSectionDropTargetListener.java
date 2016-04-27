@@ -7,18 +7,20 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor.pages.modulepar;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler.ModuleParameter;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class ModuleParameterSectionDropTargetListener implements DropTargetListener {
 
 	private TableViewer viewer;
@@ -83,14 +85,14 @@ public final class ModuleParameterSectionDropTargetListener implements DropTarge
 
 				int baseindex = moduleParameterSectionHandler.getModuleParameters().indexOf(element);
 
-				LocationAST oldSibling = element.getRoot().getNextSibling();
+				final ParseTree parent = moduleParameterSectionHandler.getLastSectionRoot();
+				ConfigTreeNodeUtilities.removeChild(parent, element.getRoot());
+				ConfigTreeNodeUtilities.addChild(parent, element.getRoot(), baseindex);
 				if (items.length > 0) {
-					element.getRoot().setNextSibling(items[0].getRoot());
 					for (int i = 0; i < items.length - 1; i++) {
-						items[i].getRoot().setNextSibling(items[i + 1].getRoot());
 						moduleParameterSectionHandler.getModuleParameters().add(++baseindex, items[i]);
 					}
-					items[items.length - 1].getRoot().setNextSibling(oldSibling);
+					
 					moduleParameterSectionHandler.getModuleParameters().add(++baseindex, items[items.length - 1]);
 				}
 

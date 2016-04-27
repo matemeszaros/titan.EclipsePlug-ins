@@ -10,6 +10,8 @@ package org.eclipse.titan.designer.editors.configeditor.pages.logging;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -30,8 +32,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler.LogParamEntry;
@@ -43,7 +44,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class GeneralOptionsSubPage {
 
 	private Text logFileText;
@@ -118,8 +120,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getLogFileRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getLogFileRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getLogFileRoot());
 					}
 					selectedLogEntry.setLogFile(null);
 					selectedLogEntry.setLogFileRoot(null);
@@ -128,16 +130,16 @@ public final class GeneralOptionsSubPage {
 					createLogFileNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getLogFile().setText(temp.trim());
-					selectedLogEntry.getLogFile().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogFile(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogFile() );
 				}
 			}
 		});
 		if (selectedLogEntry != null && selectedLogEntry.getLogFile() != null) {
 			if (selectedLogEntry.getLogFile().getText().length() == 0) {
 				String temp = ConfigTreeNodeUtilities.toString(selectedLogEntry.getLogFile());
-				selectedLogEntry.getLogFile().removeChildren();
-				selectedLogEntry.getLogFile().setText(temp);
+				ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogFile(), temp );
+				ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogFile() );
 			}
 			logFileText.setText(ConfigTreeNodeUtilities.toString(selectedLogEntry.getLogFile()));
 		}
@@ -162,8 +164,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getTimestampFormatRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getTimestampFormatRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getTimestampFormatRoot());
 					}
 					selectedLogEntry.setTimestampFormat(null);
 					selectedLogEntry.setTimestampFormatRoot(null);
@@ -174,8 +176,8 @@ public final class GeneralOptionsSubPage {
 					createTimeStampFormatNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getTimestampFormat().setText(temp.trim());
-					selectedLogEntry.getTimestampFormat().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getTimestampFormat(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getTimestampFormat() );
 				}
 			}
 		});
@@ -204,8 +206,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getSourceInfoFormatRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getSourceInfoFormatRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getSourceInfoFormatRoot());
 					}
 					selectedLogEntry.setSourceInfoFormat(null);
 					selectedLogEntry.setSourceInfoFormatRoot(null);
@@ -216,8 +218,8 @@ public final class GeneralOptionsSubPage {
 					createSourceInfoFormatNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getSourceInfoFormat().setText(temp.trim());
-					selectedLogEntry.getSourceInfoFormat().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getSourceInfoFormat(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getSourceInfoFormat() );
 				}
 			}
 		});
@@ -244,8 +246,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getAppendFileRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getAppendFileRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getAppendFileRoot());
 					}
 					selectedLogEntry.setAppendFile(null);
 					selectedLogEntry.setAppendFileRoot(null);
@@ -256,8 +258,8 @@ public final class GeneralOptionsSubPage {
 					createAppendFileNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getAppendFile().setText(temp.trim());
-					selectedLogEntry.getAppendFile().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getAppendFile(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getAppendFile() );
 				}
 			}
 		});
@@ -286,8 +288,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getLogeventTypesRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getLogeventTypesRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getLogeventTypesRoot());
 					}
 					selectedLogEntry.setLogeventTypes(null);
 					selectedLogEntry.setLogeventTypesRoot(null);
@@ -298,8 +300,8 @@ public final class GeneralOptionsSubPage {
 					createLogEventTypesNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getLogeventTypes().setText(temp.trim());
-					selectedLogEntry.getLogeventTypes().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogeventTypes(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogeventTypes() );
 				}
 			}
 		});
@@ -326,8 +328,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getLogEntityNameRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getLogEntityNameRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getLogEntityNameRoot());
 					}
 					selectedLogEntry.setLogEntityName(null);
 					selectedLogEntry.setLogEntityNameRoot(null);
@@ -338,8 +340,8 @@ public final class GeneralOptionsSubPage {
 					createLogEntityNameNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getLogEntityName().setText(temp.trim());
-					selectedLogEntry.getLogEntityName().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogEntityName(),temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogEntityName() );
 				}
 			}
 		});
@@ -366,8 +368,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getMatchingHintsRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getMatchingHintsRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getMatchingHintsRoot());
 					}
 					selectedLogEntry.setMatchingHints(null);
 					selectedLogEntry.setMatchingHintsRoot(null);
@@ -378,8 +380,8 @@ public final class GeneralOptionsSubPage {
 					createMatchingHintsNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getMatchingHints().setText(temp.trim());
-					selectedLogEntry.getMatchingHints().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getMatchingHints(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getMatchingHints() );
 				}
 			}
 		});
@@ -404,8 +406,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getLogfileSize() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getLogfileSizeRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getLogfileSizeRoot());
 					}
 					selectedLogEntry.setLogfileSize(null);
 					selectedLogEntry.setLogfileSizeRoot(null);
@@ -415,8 +417,8 @@ public final class GeneralOptionsSubPage {
 					createLogFileSizeNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getLogfileSize().setText(temp.trim());
-					selectedLogEntry.getLogfileSize().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogfileSize(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogfileSize() );
 				}
 			}
 		});
@@ -441,8 +443,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getLogfileNumber() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getLogfileNumberRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getLogfileNumberRoot());
 					}
 					selectedLogEntry.setLogfileNumber(null);
 					selectedLogEntry.setLogfileNumberRoot(null);
@@ -452,8 +454,8 @@ public final class GeneralOptionsSubPage {
 					createLogFileNumberNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getLogfileNumber().setText(temp.trim());
-					selectedLogEntry.getLogfileNumber().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogfileNumber(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogfileNumber() );
 				}
 			}
 		});
@@ -482,8 +484,8 @@ public final class GeneralOptionsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (selectedLogEntry.getDiskFullAction() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-								.getDiskFullActionRoot().getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+								.getDiskFullActionRoot());
 					}
 					selectedLogEntry.setDiskFullAction(null);
 					selectedLogEntry.setDiskFullActionRoot(null);
@@ -493,8 +495,8 @@ public final class GeneralOptionsSubPage {
 					createDiskFullActionNode(loggingPage.getSelectedTreeElement(), selectedLogEntry, temp.trim());
 				} else {
 					// simple modification
-					selectedLogEntry.getDiskFullAction().setText(temp.trim());
-					selectedLogEntry.getDiskFullAction().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( selectedLogEntry.getDiskFullAction(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getDiskFullAction() );
 				}
 			}
 		});
@@ -599,8 +601,7 @@ public final class GeneralOptionsSubPage {
 				ParamDialog d = new ParamDialog(null, selectedLogEntry, psp);
 				if (d.open() == Window.OK) {
 					if (psp.getParam() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), psp.getParam()
-								.getParent());
+						ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), psp.getParam());
 					}
 					selectedLogEntry.getPluginSpecificParam().remove(psp);
 					psp = createPluginSpecificParamNode(d.getName(), d.getValue());
@@ -634,8 +635,7 @@ public final class GeneralOptionsSubPage {
 				PluginSpecificParam psp = (PluginSpecificParam) selection.getFirstElement();
 
 				if (psp.getParam() != null) {
-					ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), psp.getParam()
-							.getParent());
+					ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), psp.getParam());
 				}
 
 				selectedLogEntry.getPluginSpecificParam().remove(psp);
@@ -646,204 +646,98 @@ public final class GeneralOptionsSubPage {
 
 		valueChanged = false;
 	}
+	
+	private void createNode( final LoggingSectionHandler.LoggerTreeElement aLte,
+							 final LogParamEntry aLogEntry,
+							 final String aValue,
+							 final String aNodeText,
+							 final ParseTree aRoot,
+							 final ParseTree aData ) {
+		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), aRoot );
+
+		final StringBuilder name = new StringBuilder();
+		aLte.writeNamePrefix(name);
+		name.append( aNodeText + " := ");
+		
+		ConfigTreeNodeUtilities.addChild( aRoot, new AddedParseTree( "\n" ) );
+		ConfigTreeNodeUtilities.addChild( aRoot, new AddedParseTree( name.toString() ) );
+		ConfigTreeNodeUtilities.addChild( aRoot, aData );
+	}
 
 	private void createLogFileNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("LogFile := ");
-
-		logentry.setLogFileRoot(new LocationAST(name.toString()));
-		logentry.getLogFileRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setLogFile(new LocationAST(value));
-		logentry.getLogFileRoot().setNextSibling(logentry.getLogFile());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getLogFileRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile(new AddedParseTree(value));
+		createNode( lte, logentry, value, "LogFile", logentry.getLogFileRoot(), logentry.getLogFile() );
 	}
 
 	private void createTimeStampFormatNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("TimeStampFormat := ");
-
-		logentry.setTimestampFormatRoot(new LocationAST(name.toString()));
-		logentry.getTimestampFormatRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setTimestampFormat(new LocationAST(value));
-		logentry.getTimestampFormatRoot().setNextSibling(logentry.getTimestampFormat());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getTimestampFormatRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile(new AddedParseTree(value));
+		createNode( lte, logentry, value, "TimeStampFormat", logentry.getTimestampFormatRoot(), logentry.getTimestampFormat() );
 	}
 
 	private void createSourceInfoFormatNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("SourceInfoFormat := ");
-
-		logentry.setSourceInfoFormatRoot(new LocationAST(name.toString()));
-		logentry.getSourceInfoFormatRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setSourceInfoFormat(new LocationAST(value));
-		logentry.getSourceInfoFormatRoot().setNextSibling(logentry.getSourceInfoFormat());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getSourceInfoFormatRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile(new AddedParseTree(value));
+		createNode( lte, logentry, value, "SourceInfoFormat", logentry.getSourceInfoFormatRoot(), logentry.getSourceInfoFormat() );
 	}
 
 	private void createAppendFileNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("AppendFile := ");
-
-		logentry.setAppendFileRoot(new LocationAST(name.toString()));
-		logentry.getAppendFileRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setAppendFile(new LocationAST(value));
-		logentry.getAppendFileRoot().setNextSibling(logentry.getAppendFile());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getAppendFileRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile(new AddedParseTree(value));
+		createNode( lte, logentry, value, "AppendFile", logentry.getAppendFileRoot(), logentry.getAppendFile() );
 	}
 
 	private void createLogEventTypesNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("LogEventTypes := ");
-
-		logentry.setLogeventTypesRoot(new LocationAST(name.toString()));
-		logentry.getLogeventTypesRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setLogeventTypes(new LocationAST(value));
-		logentry.getLogeventTypesRoot().setNextSibling(logentry.getLogeventTypes());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getLogeventTypesRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile(new AddedParseTree(value));
+		createNode( lte, logentry, value, "LogEventTypes", logentry.getLogeventTypesRoot(), logentry.getLogeventTypes() );
 	}
 
 	private void createLogEntityNameNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("LogEntityName := ");
-
-		logentry.setLogEntityNameRoot(new LocationAST(name.toString()));
-		logentry.getLogEntityNameRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setLogEntityName(new LocationAST(value));
-		logentry.getLogEntityNameRoot().setNextSibling(logentry.getLogEntityName());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getLogEntityNameRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile(new AddedParseTree(value));
+		createNode( lte, logentry, value, "LogEntityName", logentry.getLogEntityNameRoot(), logentry.getLogEntityName() );
 	}
 
 	private void createMatchingHintsNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("MatchingHints := ");
-
-		logentry.setMatchingHintsRoot(new LocationAST(name.toString()));
-		logentry.getMatchingHintsRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setMatchingHints(new LocationAST(value));
-		logentry.getMatchingHintsRoot().setNextSibling(logentry.getMatchingHints());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getMatchingHintsRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile( new AddedParseTree( value ) );
+		createNode( lte, logentry, value, "MatchingHints", logentry.getMatchingHintsRoot(), logentry.getMatchingHints() );
 	}
 
 	private void createLogFileSizeNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("LogFileSize := ");
-
-		logentry.setLogfileSizeRoot(new LocationAST(name.toString()));
-		logentry.getLogfileSizeRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setLogfileSize(new LocationAST(value));
-		logentry.getLogfileSizeRoot().setNextSibling(logentry.getLogfileSize());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getLogfileSizeRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile( new AddedParseTree( value ) );
+		createNode( lte, logentry, value, "LogFileSize", logentry.getLogfileSizeRoot(), logentry.getLogfileSize() );
 	}
 
 	private void createLogFileNumberNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("LogFileNumber := ");
-
-		logentry.setLogfileNumberRoot(new LocationAST(name.toString()));
-		logentry.getLogfileNumberRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setLogfileNumber(new LocationAST(value));
-		logentry.getLogfileNumberRoot().setNextSibling(logentry.getLogfileNumber());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getLogfileNumberRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile( new AddedParseTree( value ) );
+		createNode( lte, logentry, value, "LogFileNumber", logentry.getLogfileNumberRoot(), logentry.getLogfileNumber() );
 	}
 
 	private void createDiskFullActionNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
-		StringBuilder name = new StringBuilder();
-		lte.writeNamePrefix(name);
-		name.append("DiskFullAction := ");
-
-		logentry.setDiskFullActionRoot(new LocationAST(name.toString()));
-		logentry.getDiskFullActionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		logentry.setDiskFullAction(new LocationAST(value));
-		logentry.getDiskFullActionRoot().setNextSibling(logentry.getDiskFullAction());
-
-		LocationAST node = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(node);
-		node.setFirstChild(logentry.getDiskFullActionRoot());
-		node.setNextSibling(nextSibling);
+		logentry.setLogFileRoot( new ParserRuleContext() );
+		logentry.setLogFile( new AddedParseTree( value ) );
+		createNode( lte, logentry, value, "DiskFullAction", logentry.getDiskFullActionRoot(), logentry.getDiskFullAction() );
 	}
 
 	private PluginSpecificParam createPluginSpecificParamNode(final String param, final String value) {
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
-
 		StringBuilder name = new StringBuilder();
 		loggingPage.getSelectedTreeElement().writeNamePrefix(name);
 		name.append(param);
 		name.append(" := ");
 
-		LocationAST keyAST = new LocationAST(name.toString());
-		keyAST.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST valueAST = new LocationAST(value);
-		keyAST.setNextSibling(valueAST);
+		final ParseTree keyAST = new AddedParseTree(name.toString());
+		final ParseTree valueAST = new AddedParseTree(value);
 
-		LocationAST root = new LocationAST("");
-		loggingSectionHandler.getLastSectionRoot().setNextSibling(root);
-		root.setFirstChild(keyAST);
-		root.setNextSibling(nextSibling);
+		final ParseTree root = new ParserRuleContext();
+		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), root );
+		ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( "\n" ) );
+		ConfigTreeNodeUtilities.addChild( root, keyAST );
+		ConfigTreeNodeUtilities.addChild( root, valueAST );
 
 		PluginSpecificParam psp = new PluginSpecificParam(root, keyAST, valueAST, param);
 		selectedLogEntry.getPluginSpecificParam().add(psp);
@@ -997,53 +891,45 @@ public final class GeneralOptionsSubPage {
 	public void pluginRenamed() {
 		LoggingSectionHandler.LoggerTreeElement lte = loggingPage.getSelectedTreeElement();
 		if (selectedLogEntry.getLogFileRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogFileRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogFileRoot());
 			createLogFileNode(lte, selectedLogEntry, logFileText.getText().trim());
 		}
 		if (selectedLogEntry.getTimestampFormatRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getTimestampFormatRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getTimestampFormatRoot());
 			createTimeStampFormatNode(lte, selectedLogEntry, timeStampFormat.getText().trim());
 		}
 		if (selectedLogEntry.getSourceInfoFormatRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
-					.getSourceInfoFormatRoot().getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry
+					.getSourceInfoFormatRoot());
 			createSourceInfoFormatNode(lte, selectedLogEntry, sourceInfoFormat.getText().trim());
 		}
 		if (selectedLogEntry.getAppendFileRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getAppendFileRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getAppendFileRoot());
 			createAppendFileNode(lte, selectedLogEntry, appendFile.getText().trim());
 		}
 		if (selectedLogEntry.getLogeventTypesRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogeventTypesRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogeventTypesRoot());
 			createLogEventTypesNode(lte, selectedLogEntry, logEventTypes.getText().trim());
 		}
 		if (selectedLogEntry.getLogEntityNameRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogEntityNameRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogEntityNameRoot());
 			createLogEntityNameNode(lte, selectedLogEntry, logEntityName.getText().trim());
 		}
 		if (selectedLogEntry.getLogfileSizeRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogfileSizeRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogfileSizeRoot());
 			createLogFileSizeNode(lte, selectedLogEntry, actualLogFileSizeText.getText().trim());
 		}
 		if (selectedLogEntry.getLogfileNumberRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogfileNumberRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getLogfileNumberRoot());
 			createLogFileNumberNode(lte, selectedLogEntry, actualLogFileNumberText.getText().trim());
 		}
 		if (selectedLogEntry.getDiskFullActionRoot() != null) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getDiskFullActionRoot()
-					.getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getDiskFullActionRoot());
 			createDiskFullActionNode(lte, selectedLogEntry, actualDiskFullAction.getText().trim());
 		}
 		List<PluginSpecificParam> list = new ArrayList<PluginSpecificParam>(selectedLogEntry.getPluginSpecificParam());
 		for (PluginSpecificParam param : list) {
-			ConfigTreeNodeUtilities.removeFromChain(loggingSectionHandler.getLastSectionRoot(), param.getParam().getParent());
+			ConfigTreeNodeUtilities.removeChild(loggingSectionHandler.getLastSectionRoot(), param.getParam());
 		}
 		selectedLogEntry.getPluginSpecificParam().clear();
 		for (PluginSpecificParam param : list) {

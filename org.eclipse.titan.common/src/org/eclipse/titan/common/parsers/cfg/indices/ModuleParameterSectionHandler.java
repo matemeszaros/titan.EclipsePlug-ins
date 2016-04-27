@@ -10,60 +10,77 @@ package org.eclipse.titan.common.parsers.cfg.indices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class ModuleParameterSectionHandler {
 
 	public static class ModuleParameter {
-		private LocationAST root = null;
-		private LocationAST moduleName = null;
-		private LocationAST parameterName = null;
-		private LocationAST value = null;
+		private ParseTree root = null;
+		private ParseTree moduleName = null;
+		
+		/**
+		 * Separator between module and parameter names,
+		 * it is "." if module name is NOT empty,
+		 * "" if module name is empty
+		 */
+		private ParseTree mSeparator = null;
+		
+		private ParseTree parameterName = null;
+		private ParseTree value = null;
 
-		public LocationAST getRoot() {
+		public ParseTree getRoot() {
 			return root;
 		}
 
-		public void setRoot(final LocationAST root) {
+		public void setRoot(final ParseTree root) {
 			this.root = root;
 		}
 
-		public LocationAST getModuleName() {
+		public ParseTree getModuleName() {
 			return moduleName;
 		}
 
-		public void setModuleName(final LocationAST moduleName) {
+		public void setModuleName(final ParseTree moduleName) {
 			this.moduleName = moduleName;
 		}
 
-		public LocationAST getParameterName() {
+		public ParseTree getSeparator() {
+			return mSeparator;
+		}
+
+		public void setSeparator( final ParseTree aSeparator ) {
+			this.mSeparator = aSeparator;
+		}
+
+		public ParseTree getParameterName() {
 			return parameterName;
 		}
 
-		public void setParameterName(final LocationAST parameterName) {
+		public void setParameterName(final ParseTree parameterName) {
 			this.parameterName = parameterName;
 		}
 
-		public LocationAST getValue() {
+		public ParseTree getValue() {
 			return value;
 		}
 
-		public void setValue(final LocationAST value) {
+		public void setValue(final ParseTree value) {
 			this.value = value;
 		}
 	}
 
-	private LocationAST lastSectionRoot = null;
+	private ParseTree lastSectionRoot = null;
 	private List<ModuleParameter> moduleParameters = new ArrayList<ModuleParameter>();
 
-	public LocationAST getLastSectionRoot() {
+	public ParseTree getLastSectionRoot() {
 		return lastSectionRoot;
 	}
 
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
+	public void setLastSectionRoot(final ParseTree lastSectionRoot) {
 		this.lastSectionRoot = lastSectionRoot;
 	}
 

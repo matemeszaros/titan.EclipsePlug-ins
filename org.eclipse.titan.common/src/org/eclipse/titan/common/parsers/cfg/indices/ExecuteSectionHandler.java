@@ -10,53 +10,45 @@ package org.eclipse.titan.common.parsers.cfg.indices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * @author Kristof Szabados
- * */
-public final class ExecuteSectionHandler {
+ * @author Arpad Lovassy
+ */
+public final class ExecuteSectionHandler extends ConfigSectionHandlerBase {
 
 	public static class ExecuteItem {
-		private LocationAST root = null;
-		private LocationAST moduleName = null;
-		private LocationAST testcaseName = null;
+		private ParseTree root = null;
+		private ParseTree moduleName = null;
+		private ParseTree testcaseName = null;
 
-		public LocationAST getRoot() {
+		public ParseTree getRoot() {
 			return root;
 		}
 
-		public void setRoot(final LocationAST root) {
+		public void setRoot(final ParseTree root) {
 			this.root = root;
 		}
 
-		public LocationAST getModuleName() {
+		public ParseTree getModuleName() {
 			return moduleName;
 		}
 
-		public void setModuleName(final LocationAST moduleName) {
+		public void setModuleName(final ParseTree moduleName) {
 			this.moduleName = moduleName;
 		}
 
-		public LocationAST getTestcaseName() {
+		public ParseTree getTestcaseName() {
 			return testcaseName;
 		}
 
-		public void setTestcaseName(final LocationAST testcaseName) {
+		public void setTestcaseName(final ParseTree testcaseName) {
 			this.testcaseName = testcaseName;
 		}
 	}
 
-	private LocationAST lastSectionRoot = null;
 	private List<ExecuteItem> executeitems = new ArrayList<ExecuteItem>();
-
-	public LocationAST getLastSectionRoot() {
-		return lastSectionRoot;
-	}
-
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
-		this.lastSectionRoot = lastSectionRoot;
-	}
 
 	public List<ExecuteItem> getExecuteitems() {
 		return executeitems;

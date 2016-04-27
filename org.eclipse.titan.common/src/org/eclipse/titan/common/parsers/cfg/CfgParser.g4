@@ -39,23 +39,24 @@ import java.util.regex.Pattern;
 
 	// pattern for matching typed macro string, for example: ${a, float}
 	private final static Pattern PATTERN_TYPED_MACRO = Pattern.compile("\\$\\s*\\{\\s*([A-Za-z][A-Za-z0-9_]*)\\s*,\\s*[A-Za-z][A-Za-z0-9_]*\\s*\\}");
-
+	
 	private List<TITANMarker> mWarnings = new ArrayList<TITANMarker>();
-
+	
 	private List<ISection> mSections = new ArrayList<ISection>();
 
 	private Map<String, CfgDefinitionInformation> mDefinitions = new HashMap<String, CfgDefinitionInformation>();
+  
 	private List<String> mIncludeFiles = new ArrayList<String>();
 
 	private IFile mActualFile = null;
 
 	private Map<String, String> mEnvVariables;
-
+	
 	private CfgParseResult mCfgParseResult = new CfgParseResult();
-
+	
 	private int mLine = 1;
 	private int mOffset = 0;
-
+	
 	private ModuleParameterSectionHandler moduleParametersHandler = new ModuleParameterSectionHandler();
 	private TestportParameterSectionHandler testportParametersHandler = new TestportParameterSectionHandler();
 	private ComponentSectionHandler componentSectionHandler = new ComponentSectionHandler();
@@ -67,7 +68,7 @@ import java.util.regex.Pattern;
 	private IncludeSectionHandler orderedIncludeSectionHandler = new IncludeSectionHandler();
 	private DefineSectionHandler defineSectionHandler = new DefineSectionHandler();
 	private LoggingSectionHandler loggingSectionHandler = new LoggingSectionHandler();
-
+	
 	public void reportWarning(TITANMarker marker){
 		mWarnings.add(marker);
 	}
@@ -75,7 +76,7 @@ import java.util.regex.Pattern;
 	public List<TITANMarker> getWarnings(){
 		return mWarnings;
 	}
-
+	
 	public List<ISection> getSections() {
 		return mSections;
 	}
@@ -83,7 +84,7 @@ import java.util.regex.Pattern;
 	public void setDefinitions( Map<String,CfgDefinitionInformation> aDefs ) {
 		mDefinitions = aDefs;
 	}
-
+	
 	public Map< String, CfgDefinitionInformation > getDefinitions() {
 		return mDefinitions;
 	}
@@ -99,11 +100,11 @@ import java.util.regex.Pattern;
 	public CfgParseResult getCfgParseResult() {
 		return mCfgParseResult;
 	}
-
+	
 	public void setEnvironmentalVariables(Map<String, String> aEnvVariables){
 		mEnvVariables = aEnvVariables;
 	}
-
+	
 	public ModuleParameterSectionHandler getModuleParametersHandler() {
 		return moduleParametersHandler;
 	}
@@ -143,7 +144,7 @@ import java.util.regex.Pattern;
 	public LoggingSectionHandler getLoggingSectionHandler() {
 		return loggingSectionHandler;
 	}
-
+	
 	/**
 	 * Creates a marker.
 	 * Locations of input tokens are not moved by offset and line yet, this function does this conversion.
@@ -196,7 +197,7 @@ import java.util.regex.Pattern;
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Extracts macro name from macro string
 	 * @param aMacroString macro string, for example: \$a, \${a}
@@ -210,7 +211,7 @@ import java.util.regex.Pattern;
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Extracts macro name from typed macro string
 	 * @param aMacroString macro string, for example: \${a, float}
@@ -224,7 +225,7 @@ import java.util.regex.Pattern;
 			return null;
 		}
 	}
-
+		
 	/**
 	 * Gets the macro value string of a macro (without type)
 	 * @param aMacroToken the macro token
@@ -243,7 +244,7 @@ import java.util.regex.Pattern;
 		}
 		return value;
 	}
-
+	
 	/**
 	 * Gets the macro value string of a macro (without type)
 	 * @param aMacroRule the macro rule
@@ -262,7 +263,7 @@ import java.util.regex.Pattern;
 		}
 		return value;
 	}
-
+	
 	/**
 	 * Gets the macro value string of a macro (with type)
 	 * @param aMacroToken the macro token
@@ -281,7 +282,7 @@ import java.util.regex.Pattern;
 		}
 		return value;
 	}
-
+		
 	/**
 	 * Gets the macro value string of a macro (with type)
 	 * @param aMacroRule the macro rule
@@ -299,7 +300,7 @@ import java.util.regex.Pattern;
 			return "";
 		}
 		return value;
-	}
+	}	
 }
 
 options{
@@ -315,22 +316,23 @@ pr_ConfigFile:
 	)+
 	EOF
 ;
-
+ 
 pr_Section returns [ ISection section ]:
 {	$section = null;
 }
-(	pr_MainControllerSection
-|	i = pr_IncludeSection { $section = $i.includeSection; includeSectionHandler.setLastSectionRoot( $i.ctx ); }
-|	pr_OrderedIncludeSection
-|	pr_ExecuteSection
-|	d = pr_DefineSection { defineSectionHandler.setLastSectionRoot( $d.ctx ); }
-|	pr_ExternalCommandsSection
-|	pr_TestportParametersSection
-|	pr_GroupsSection
-|	pr_ModuleParametersSection
-|	pr_ComponentsSection
-|	pr_LoggingSection
-|	pr_ProfilerSection
+(	mc = pr_MainControllerSection		{ mcSectionHandler.setLastSectionRoot( $mc.ctx ); }
+|	i = pr_IncludeSection				{ $section = $i.includeSection;
+										  includeSectionHandler.setLastSectionRoot( $i.ctx ); }
+|	oi = pr_OrderedIncludeSection		{ orderedIncludeSectionHandler.setLastSectionRoot( $oi.ctx ); }
+|	e = pr_ExecuteSection				{ executeSectionHandler.setLastSectionRoot( $e.ctx ); }
+|	d = pr_DefineSection				{ defineSectionHandler.setLastSectionRoot( $d.ctx ); }
+|	ec = pr_ExternalCommandsSection		{ externalCommandsSectionHandler.setLastSectionRoot( $ec.ctx ); }
+|	tp = pr_TestportParametersSection	{ testportParametersHandler.setLastSectionRoot( $tp.ctx ); }
+|	g = pr_GroupsSection				{ groupSectionHandler.setLastSectionRoot( $g.ctx ); }
+|	mp = pr_ModuleParametersSection		{ moduleParametersHandler.setLastSectionRoot( $mp.ctx ); }
+|	c = pr_ComponentsSection			{ componentSectionHandler.setLastSectionRoot( $c.ctx ); }
+|	l = pr_LoggingSection				{ loggingSectionHandler.setLastSectionRoot( $l.ctx ); }
+|	p = pr_ProfilerSection				//TODO:{ profilerSectionHandler.setLastSectionRoot( $p.ctx ); }
 )
 ;
 
@@ -426,7 +428,7 @@ pr_ExternalCommandsSection:
 	(	(	BEGINCONTROLPART6
 		|	ENDCONTROLPART6
 		|	BEGINTESTCASE6
-		|	ENDTESTCASE6
+		|	ENDTESTCASE6 
 		)
 		ASSIGNMENTCHAR6
 		STRING6
@@ -442,7 +444,7 @@ pr_TestportParametersSection:
 
 pr_GroupsSection:
 	GROUPS_SECTION
-	(	pr_GroupItem SEMICOLON8?
+	(	pr_GroupItem SEMICOLON8?	
 	)*
 ;
 
@@ -688,12 +690,12 @@ pr_PlainLoggingParam:
 
 pr_DiskFullActionValue:
 (	DISKFULLACTIONVALUE
-|	DISKFULLACTIONVALUERETRY ( LPAREN11 NUMBER11 RPAREN11 )?
+|	DISKFULLACTIONVALUERETRY ( LPAREN11 NUMBER11 RPAREN11 )?	
 )
 ;
 
 pr_LoggerPluginEntry:
-	pr_Identifier
+	pr_Identifier 
 	(	ASSIGNMENTCHAR11 pr_StringValue
 	)?
 ;
@@ -748,7 +750,7 @@ pr_LogEventType:
 |	STATISTICS_VERDICT | TESTCASE_FINISH | TESTCASE_START | TESTCASE_UNQUALIFIED | TIMEROP_GUARD | TIMEROP_READ | TIMEROP_START | TIMEROP_STOP
 |	TIMEROP_TIMEOUT | TIMEROP_UNQUALIFIED | USER_UNQUALIFIED | VERDICTOP_FINAL | VERDICTOP_GETVERDICT | VERDICTOP_SETVERDICT | VERDICTOP_UNQUALIFIED
 |   WARNING_UNQUALIFIED
-)
+)	
 ;
 
 pr_LogEventTypeSet:
@@ -758,15 +760,15 @@ pr_LogEventTypeSet:
 ;
 
 pr_deprecatedEventTypeSet:
-a =
-(	TTCN_EXECUTOR1
+a = 
+(	TTCN_EXECUTOR1 
 |	TTCN_ERROR1
 |	TTCN_WARNING1
 |	TTCN_PORTEVENT1
 |	TTCN_TIMEROP1
 |	TTCN_VERDICTOP1
 |	TTCN_DEFAULTOP1
-|	TTCN_ACTION1
+|	TTCN_ACTION1	
 |	TTCN_TESTCASE1
 |	TTCN_FUNCTION1
 |	TTCN_USER1
@@ -789,7 +791,7 @@ pr_Detailed:
 
 pr_ComponentItem:
 	n = pr_ComponentName
-	ASSIGNMENTCHAR10
+	ASSIGNMENTCHAR10 
 	(	h = pr_HostName { mCfgParseResult.getComponents().put( $n.text, $h.text ); }
 	|	i = IPV6_10 { mCfgParseResult.getComponents().put( $n.text, $i.getText() ); }
 	)
@@ -864,7 +866,7 @@ pr_StructuredValue:
 ;
 
 pr_StructuredValue2:
-(  	pr_MacroAssignment
+(  	pr_MacroAssignment 
 |	pr_SimpleValue
 )?
 ;
@@ -946,7 +948,7 @@ pr_IntegerPrimaryExpression returns [CFGNumber number]:
 
 pr_Number returns [CFGNumber number]:
 (	a = (NUMBER1 | NUMBER7 | NUMBER9 | NUMBER11)	{$number = new CFGNumber($a.text);}
-|	macro = (MACRO_INT1 | MACRO_INT7 | MACRO_INT9 | MACRO_INT11)
+|	macro = (MACRO_INT1 | MACRO_INT7 | MACRO_INT9 | MACRO_INT11)	
 		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_INT );
 			$number = new CFGNumber( value.length() > 0 ? value : "0" );
 		}
@@ -962,7 +964,7 @@ pr_StringValue returns [String string]:
 
 pr_CString returns [String string]:
 (	a = (STRING1 | STRING7 | STRING9 | STRING11)
-		{
+		{	
 			$string = $a.text;
 		}
 |	macro2 = pr_MacroCString			{	$string = "\"" + $macro2.string + "\"";	}
@@ -1142,7 +1144,7 @@ pr_ObjIdValue:
 
 pr_ObjIdComponent:
 (	pr_Number
-|	pr_Identifier LPAREN9 pr_Number RPAREN9
+|	pr_Identifier LPAREN9 pr_Number RPAREN9	
 )
 ;
 
@@ -1210,7 +1212,7 @@ pr_UniversalOrNotStringValue:
 ;
 
 pr_Quadruple:
-	CHARKeyword9
+	CHARKeyword9 
 	LPAREN9
 	pr_IntegerValueExpression COMMA9 pr_IntegerValueExpression COMMA9 pr_IntegerValueExpression COMMA9 pr_IntegerValueExpression
 	RPAREN9
@@ -1229,7 +1231,7 @@ pr_CompoundValue:
     (	/* empty */
 	|	pr_FieldValue	(	COMMA9 pr_FieldValue	)*
 	|	pr_ArrayItem	(	COMMA9 pr_ArrayItem		)*
-    |	pr_IndexValue	(	COMMA9 pr_IndexValue	)*
+    |	pr_IndexValue	(	COMMA9 pr_IndexValue	)*	
 	)
 	ENDCHAR9
 |	LPAREN9
@@ -1261,7 +1263,7 @@ pr_ArrayItem:
 ;
 
 pr_TemplateItemList:
-	pr_ParameterValue
+	pr_ParameterValue 
 	(	COMMA9 pr_ParameterValue
 	)*
 ;
@@ -1331,7 +1333,7 @@ pr_PatternChunkList:
 
 pr_PatternChunk:
 	pr_CString
-|	pr_Quadruple
+|	pr_Quadruple   
 ;
 
 pr_BStringMatch:

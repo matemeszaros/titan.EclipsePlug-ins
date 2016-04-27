@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -25,8 +27,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
+import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler.LogParamEntry;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler.PluginSpecificParam;
@@ -37,7 +39,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Adam Delic
- * */
+ * @author Arpad Lovassy
+ */
 public final class LoggingTreeSubPage {
 
 	private TreeViewer componentpluginViewer;
@@ -266,48 +269,54 @@ public final class LoggingTreeSubPage {
 			return;
 		}
 
-		StringBuilder pluginBuilder = new StringBuilder();
+		final StringBuilder pluginBuilder = new StringBuilder();
 		pluginBuilder.append(pluginName);
 		if (path != null && path.length() != 0) {
 			pluginBuilder.append(" := \"").append(path).append("\"");
 		}
 
-		LocationAST nextSibling = loggingSectionHandler.getLastSectionRoot().getNextSibling();
+		/*
+		 *   loggingSectionHandler.getLastSectionRoot()
+		 *     entry.getLoggerPluginsRoot()
+		 *       entry.getLoggerPluginsListRoot()
+		 *         {
+		 *           pluginEntry.getLoggerPluginRoot()
+		 *         }
+		 */
 		LoggingSectionHandler.LoggerPluginsEntry entry = loggingSectionHandler.getLoggerPluginsTree().get(componentName);
 		if (entry == null) {
 			entry = new LoggingSectionHandler.LoggerPluginsEntry();
 			loggingSectionHandler.getLoggerPluginsTree().put(componentName, entry);
-			StringBuilder builder = new StringBuilder();
+			final ParseTree loggerPluginsRoot = new ParserRuleContext();
+			ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), loggerPluginsRoot ); 
+			entry.setLoggerPluginsRoot( loggerPluginsRoot );
+			
+			final StringBuilder builder = new StringBuilder();
 			builder.append("\n").append(componentName).append(".LoggerPlugins := ");
-			entry.setLoggerPluginsRoot(new LocationAST(builder.toString()));
-			loggingSectionHandler.getLastSectionRoot().setNextSibling(entry.getLoggerPluginsRoot());
-			entry.setLoggerPluginsListRoot(new LocationAST("{"));
-			entry.getLoggerPluginsRoot().setNextSibling(entry.getLoggerPluginsListRoot());
+			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, new AddedParseTree( builder.toString() ) ); 
+			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, entry.getLoggerPluginsRoot() );
+			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, new AddedParseTree("{") );
+			
+			final ParseTree loggerPluginsListRoot = new ParserRuleContext();
+			entry.setLoggerPluginsListRoot( loggerPluginsListRoot );
+			ConfigTreeNodeUtilities.addChild( loggerPluginsListRoot, entry.getLoggerPluginsListRoot() );
 
-			LoggingSectionHandler.LoggerPluginEntry pluginEntry = new LoggingSectionHandler.LoggerPluginEntry();
-			pluginEntry.setLoggerPluginRoot(new LocationAST(pluginBuilder.toString()));
+			final LoggingSectionHandler.LoggerPluginEntry pluginEntry = new LoggingSectionHandler.LoggerPluginEntry();
+			final ParseTree pluginRoot = new ParserRuleContext();
+			pluginEntry.setLoggerPluginRoot( pluginRoot );
 			pluginEntry.setName(pluginName);
 			pluginEntry.setPath(path);
+			ConfigTreeNodeUtilities.addChild( pluginRoot, new AddedParseTree( pluginBuilder.toString() ) );
 			entry.setPluginRoots(new HashMap<String, LoggingSectionHandler.LoggerPluginEntry>(1));
 			entry.getPluginRoots().put(pluginName, pluginEntry);
-			entry.getLoggerPluginsListRoot().setNextSibling(pluginEntry.getLoggerPluginRoot());
-			LocationAST temp = new LocationAST("}");
-			pluginEntry.getLoggerPluginRoot().setNextSibling(temp);
-
-			temp.setNextSibling(nextSibling);
-
+			ConfigTreeNodeUtilities.addChild( loggerPluginsListRoot, pluginEntry.getLoggerPluginRoot());
+			
+			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, new AddedParseTree("}") );
 			return;
 		}
 
-		LocationAST firstPlugin = entry.getLoggerPluginsListRoot().getNextSibling();
-		if (firstPlugin == null) {
-			entry.getLoggerPluginsListRoot().setNextSibling(new LocationAST(pluginBuilder.toString()));
-			return;
-		}
-
-		LocationAST newPlugin = new LocationAST(pluginBuilder.toString() + ", ");
-		entry.getLoggerPluginsListRoot().setNextSibling(newPlugin);
-		newPlugin.setNextSibling(firstPlugin);
+		final int childCount = entry.getLoggerPluginsListRoot().getChildCount();
+		ConfigTreeNodeUtilities.addChild( entry.getLoggerPluginsListRoot(), new AddedParseTree( ( childCount > 0 ? ", " : "" ) + pluginBuilder.toString() ) );
 	}
 
 	/**
@@ -325,7 +334,7 @@ public final class LoggingTreeSubPage {
 			return;
 		}
 
-		LoggingSectionHandler.LoggerPluginsEntry entry = loggingSectionHandler.getLoggerPluginsTree().get(componentName);
+		final LoggingSectionHandler.LoggerPluginsEntry entry = loggingSectionHandler.getLoggerPluginsTree().get(componentName);
 		if (entry == null) {
 			return;
 		}
@@ -334,38 +343,13 @@ public final class LoggingTreeSubPage {
 			return;
 		}
 
-		if (entry.getPluginRoots().size() == 1) {
-			// if this is the last plugin entry, the whole entry has
-			// to be removed
-			entry.getLoggerPluginsRoot().setNextSibling(null);
-			entry.getLoggerPluginsRoot().setText("");
-			CommonHiddenStreamToken temp = entry.getLoggerPluginsRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				entry.getLoggerPluginsRoot().setHiddenBefore(null);
-			}
+		if (entry.getPluginRoots().size() == 0) {
+			// if this was the last plugin entry, the whole entry has to be removed
+			ConfigTreeNodeUtilities.removeChild( loggingSectionHandler.getLastSectionRoot(), entry.getLoggerPluginsRoot() );
 		}
 
 		LoggingSectionHandler.LoggerPluginEntry pluginEntry = entry.getPluginRoots().remove(pluginName);
-		pluginEntry.getLoggerPluginRoot().setText("");
-		LocationAST nextSibling = pluginEntry.getLoggerPluginRoot().getNextSibling();
-		// if the ',' is after the item remove it from there
-		if (nextSibling != null && ",".equals(nextSibling.getText())) {
-			nextSibling.setText("");
-			return;
-		}
-
-		// if the item is the last one in the list we have to remove the
-		// ',' from before it.
-		LocationAST actual = entry.getLoggerPluginsRoot();
-		while (actual != null && !actual.equals(pluginEntry.getLoggerPluginRoot())) {
-			nextSibling = actual.getNextSibling();
-			if (",".equals(actual.getText()) && pluginEntry.getLoggerPluginRoot().equals(nextSibling)) {
-				actual.setText("");
-				return;
-			}
-
-			actual = nextSibling;
-		}
+		ConfigTreeNodeUtilities.removeChild( entry.getLoggerPluginsListRoot(), pluginEntry.getLoggerPluginRoot() );
 	}
 
 	/**
@@ -377,122 +361,59 @@ public final class LoggingTreeSubPage {
 	 *                the entry to be removed.
 	 * */
 	private void removeLoggingComponents(final LogParamEntry logentry) {
+		final ParseTree lastSectionRoot = loggingSectionHandler.getLastSectionRoot();
 		if (logentry.getAppendFile() != null && logentry.getAppendFileRoot() != null) {
 			logentry.setAppendFile(null);
-			logentry.getAppendFileRoot().setNextSibling(null);
-			logentry.getAppendFileRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getAppendFileRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getAppendFileRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getAppendFileRoot() );
 		}
 		if (logentry.getConsoleMask() != null && logentry.getConsoleMaskRoot() != null) {
 			logentry.setConsoleMask(null);
-			logentry.getConsoleMaskRoot().setNextSibling(null);
-			logentry.getConsoleMaskRoot().setText("");
-			logentry.getConsoleMaskRoot().removeChildren();
-			CommonHiddenStreamToken temp = logentry.getConsoleMaskRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getConsoleMaskRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getConsoleMaskRoot() );
 		}
 		if (logentry.getDiskFullAction() != null && logentry.getDiskFullActionRoot() != null) {
 			logentry.setDiskFullAction(null);
-			logentry.getDiskFullActionRoot().setNextSibling(null);
-			logentry.getDiskFullActionRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getDiskFullActionRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getDiskFullActionRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getDiskFullActionRoot() );
 		}
 		if (logentry.getFileMask() != null && logentry.getFileMaskRoot() != null) {
 			logentry.setFileMask(null);
-			logentry.getFileMaskRoot().setNextSibling(null);
-			logentry.getFileMaskRoot().setText("");
-			logentry.getFileMaskRoot().removeChildren();
-			CommonHiddenStreamToken temp = logentry.getFileMaskRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getFileMaskRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getFileMaskRoot() );
 		}
 		if (logentry.getLogEntityName() != null && logentry.getLogEntityNameRoot() != null) {
 			logentry.setLogEntityName(null);
-			logentry.getLogEntityNameRoot().setNextSibling(null);
-			logentry.getLogEntityNameRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getLogEntityNameRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getLogEntityNameRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getLogEntityNameRoot() );
 		}
 		if (logentry.getLogeventTypes() != null && logentry.getLogeventTypesRoot() != null) {
 			logentry.setLogeventTypes(null);
-			logentry.getLogeventTypesRoot().setNextSibling(null);
-			logentry.getLogeventTypesRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getLogeventTypesRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getLogeventTypesRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getLogeventTypesRoot() );
 		}
 		if (logentry.getLogFile() != null && logentry.getLogFileRoot() != null) {
 			logentry.setLogFile(null);
-			logentry.getLogFileRoot().setNextSibling(null);
-			logentry.getLogFileRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getLogFileRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getLogFileRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getLogFileRoot() );
 		}
 		if (logentry.getLogfileNumber() != null && logentry.getLogfileNumberRoot() != null) {
 			logentry.setLogfileNumber(null);
-			logentry.getLogfileNumberRoot().setNextSibling(null);
-			logentry.getLogfileNumberRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getLogfileNumberRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getLogfileNumberRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getLogfileNumberRoot() );
 		}
 		if (logentry.getLogfileSize() != null && logentry.getLogfileSizeRoot() != null) {
 			logentry.setLogfileSize(null);
-			logentry.getLogfileSizeRoot().setNextSibling(null);
-			logentry.getLogfileSizeRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getLogfileSizeRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getLogfileSizeRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getLogfileSizeRoot() );
 		}
 		if (logentry.getMatchingHints() != null && logentry.getMatchingHintsRoot() != null) {
 			logentry.setMatchingHints(null);
-			logentry.getMatchingHintsRoot().setNextSibling(null);
-			logentry.getMatchingHintsRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getMatchingHintsRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getMatchingHintsRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getMatchingHintsRoot() );
 		}
 		if (logentry.getSourceInfoFormat() != null && logentry.getSourceInfoFormatRoot() != null) {
 			logentry.setSourceInfoFormat(null);
-			logentry.getSourceInfoFormatRoot().setNextSibling(null);
-			logentry.getSourceInfoFormatRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getSourceInfoFormatRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getSourceInfoFormatRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getSourceInfoFormatRoot() );
 		}
 		if (logentry.getTimestampFormat() != null && logentry.getTimestampFormatRoot() != null) {
 			logentry.setTimestampFormat(null);
-			logentry.getTimestampFormatRoot().setNextSibling(null);
-			logentry.getTimestampFormatRoot().setText("");
-			CommonHiddenStreamToken temp = logentry.getTimestampFormatRoot().getHiddenBefore();
-			if (temp != null && "\n".equals(temp.getText())) {
-				logentry.getTimestampFormatRoot().setHiddenBefore(null);
-			}
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, logentry.getTimestampFormatRoot() );
 		}
 		Iterator<PluginSpecificParam> pspit = logentry.getPluginSpecificParam().iterator();
 		while (pspit.hasNext()) {
 			PluginSpecificParam psp = pspit.next();
-			psp.getRoot().setNextSibling(null);
-			psp.getRoot().setText("");
-			psp.getRoot().removeChildren();
+			ConfigTreeNodeUtilities.removeChild( lastSectionRoot, psp.getRoot() );
 			psp.setParamName(null);
 		}
 

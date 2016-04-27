@@ -12,7 +12,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.titan.common.parsers.LocationAST;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler.Definition;
@@ -20,7 +19,8 @@ import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class DefineSectionDropTargetListener implements DropTargetListener {
 
 	private TableViewer viewer;
@@ -85,7 +85,6 @@ public final class DefineSectionDropTargetListener implements DropTargetListener
 
 				int baseindex = defineSectionHandler.getDefinitions().indexOf(element);
 
-				
 				final ParseTree parent = defineSectionHandler.getLastSectionRoot();
 				ConfigTreeNodeUtilities.removeChild(parent, element.getRoot());
 				ConfigTreeNodeUtilities.addChild(parent, element.getRoot(), baseindex);

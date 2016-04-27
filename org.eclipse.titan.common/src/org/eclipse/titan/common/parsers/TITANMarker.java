@@ -27,19 +27,6 @@ public class TITANMarker {
 		this.priority = priority;
 	}
 
-	public TITANMarker(final String message, final ILocationAST start, final ILocationAST end, final int severity, final int priority) {
-		this.message = message;
-		if (start != null) {
-			this.line = start.getLine();
-			this.offset = start.getOffset();
-		}
-		if (end != null) {
-			this.endOffset = end.getEndOffset();
-		}
-		this.severity = severity;
-		this.priority = priority;
-	}
-	
 	public String getMessage() {
 		return message;
 	}

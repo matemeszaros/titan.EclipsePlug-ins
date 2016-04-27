@@ -9,7 +9,6 @@ package org.eclipse.titan.common.parsers.cfg;
 
 import org.antlr.v4.runtime.Token;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.titan.common.parsers.ILocationAST;
 
 /**
  * The Location class represents a location in configuration files.  It was
@@ -29,16 +28,8 @@ public final class CfgLocation {
 		setLocation(location);
 	}
 	
-	public CfgLocation(final IFile file) {
-		this(file, (ILocationAST)null, (ILocationAST)null);
-	}
-	
 	public CfgLocation(final IFile file, final int line, final int offset, final int endOffset) {
 		setLocation(file, line, offset, endOffset);
-	}
-	
-	public CfgLocation(final IFile file, final ILocationAST startTok, final ILocationAST endTok) {
-		setLocation(file, startTok, endTok);
 	}
 	
 	/**
@@ -53,22 +44,6 @@ public final class CfgLocation {
 	public CfgLocation( final IFile aFile, final Token aStartToken, final Token aEndToken ) {
 		setLocation( aFile, aStartToken.getLine(), aStartToken.getStartIndex(),
 				     aEndToken.getStopIndex()+1);
-	}
-	
-	private final void setLocation(final IFile file, final ILocationAST startTok, final ILocationAST endTok) {
-		this.file = file;
-		if (startTok == null) {
-			line = -1;
-			offset = -1;
-		} else {
-			line =  startTok.getLine();
-			offset = startTok.getOffset();
-		}
-		if (endTok == null) {
-			endOffset = -1;
-		} else {
-			endOffset = endTok.getEndOffset();
-		}
 	}
 	
 	private final void setLocation(final CfgLocation location) {

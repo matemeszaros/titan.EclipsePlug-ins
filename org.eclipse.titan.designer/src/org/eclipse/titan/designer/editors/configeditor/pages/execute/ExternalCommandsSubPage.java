@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor.pages.execute;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -17,8 +19,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ExternalCommandSectionHandler;
 import org.eclipse.titan.designer.editors.configeditor.ConfigEditor;
@@ -32,7 +33,8 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class ExternalCommandsSubPage {
 
 	private Text beginControlPartText;
@@ -92,7 +94,7 @@ public final class ExternalCommandsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (executeCommandSectionHandler.getBeginControlPartRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(executeCommandSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(executeCommandSectionHandler.getLastSectionRoot(),
 								executeCommandSectionHandler.getBeginControlPartRoot());
 					}
 					executeCommandSectionHandler.setBeginControlPart(null);
@@ -103,21 +105,17 @@ public final class ExternalCommandsSubPage {
 					// create the node
 					createExternalCommandsSection();
 
-					LocationAST oldsibling = executeCommandSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("beginControlPart := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					executeCommandSectionHandler.setBeginControlPart(new LocationAST(temp.trim()));
-					node.setNextSibling(executeCommandSectionHandler.getBeginControlPart());
-					executeCommandSectionHandler.setBeginControlPartRoot(new LocationAST(""));
-					executeCommandSectionHandler.getBeginControlPartRoot().setFirstChild(node);
-					executeCommandSectionHandler.getLastSectionRoot().setNextSibling(
-							executeCommandSectionHandler.getBeginControlPartRoot());
-					executeCommandSectionHandler.getBeginControlPartRoot().setNextSibling(oldsibling);
+					ParseTree beginControlPartRoot = new ParserRuleContext();
+					executeCommandSectionHandler.setBeginControlPartRoot( beginControlPartRoot );
+					ConfigTreeNodeUtilities.addChild( executeCommandSectionHandler.getLastSectionRoot(), beginControlPartRoot ); 
+					ConfigTreeNodeUtilities.addChild( beginControlPartRoot, new AddedParseTree("\nbeginControlPart := ") );
+					ParseTree beginControlPart = new AddedParseTree( temp.trim() );
+					executeCommandSectionHandler.setBeginControlPart( beginControlPart );
+					ConfigTreeNodeUtilities.addChild( beginControlPartRoot, beginControlPart );
 				} else {
 					// simple modification
-					executeCommandSectionHandler.getBeginControlPart().setText(temp.trim());
-					executeCommandSectionHandler.getBeginControlPart().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getBeginControlPart(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getBeginControlPart() );
 				}
 			}
 		});
@@ -144,7 +142,7 @@ public final class ExternalCommandsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (executeCommandSectionHandler.getBeginTestcaseRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(executeCommandSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(executeCommandSectionHandler.getLastSectionRoot(),
 								executeCommandSectionHandler.getBeginTestcaseRoot());
 					}
 					executeCommandSectionHandler.setBeginTestcase(null);
@@ -155,21 +153,17 @@ public final class ExternalCommandsSubPage {
 					// create the node
 					createExternalCommandsSection();
 
-					LocationAST oldsibling = executeCommandSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("beginTestcase := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					executeCommandSectionHandler.setBeginTestcase(new LocationAST(temp.trim()));
-					node.setNextSibling(executeCommandSectionHandler.getBeginTestcase());
-					executeCommandSectionHandler.setBeginTestcaseRoot(new LocationAST(""));
-					executeCommandSectionHandler.getBeginTestcaseRoot().setFirstChild(node);
-					executeCommandSectionHandler.getLastSectionRoot().setNextSibling(
-							executeCommandSectionHandler.getBeginTestcaseRoot());
-					executeCommandSectionHandler.getBeginTestcaseRoot().setNextSibling(oldsibling);
+					ParseTree beginTestcaseRoot = new ParserRuleContext();
+					executeCommandSectionHandler.setBeginTestcaseRoot( beginTestcaseRoot );
+					ConfigTreeNodeUtilities.addChild( executeCommandSectionHandler.getLastSectionRoot(), beginTestcaseRoot ); 
+					ConfigTreeNodeUtilities.addChild( beginTestcaseRoot, new AddedParseTree("\nbeginTestcase := ") );
+					ParseTree beginTestcase = new AddedParseTree( temp.trim() );
+					executeCommandSectionHandler.setBeginTestcase( beginTestcase );
+					ConfigTreeNodeUtilities.addChild( beginTestcaseRoot, beginTestcase );
 				} else {
 					// simple modification
-					executeCommandSectionHandler.getBeginTestcase().setText(temp.trim());
-					executeCommandSectionHandler.getBeginTestcase().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getBeginTestcase(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getBeginTestcase() );
 				}
 			}
 		});
@@ -196,7 +190,7 @@ public final class ExternalCommandsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (executeCommandSectionHandler.getEndControlPartRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(executeCommandSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(executeCommandSectionHandler.getLastSectionRoot(),
 								executeCommandSectionHandler.getEndControlPartRoot());
 					}
 					executeCommandSectionHandler.setEndControlPart(null);
@@ -207,21 +201,17 @@ public final class ExternalCommandsSubPage {
 					// create the node
 					createExternalCommandsSection();
 
-					LocationAST oldsibling = executeCommandSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("endControlpart := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					executeCommandSectionHandler.setEndControlPart(new LocationAST(temp.trim()));
-					node.setNextSibling(executeCommandSectionHandler.getEndControlPart());
-					executeCommandSectionHandler.setEndControlPartRoot(new LocationAST(""));
-					executeCommandSectionHandler.getEndControlPartRoot().setFirstChild(node);
-					executeCommandSectionHandler.getLastSectionRoot().setNextSibling(
-							executeCommandSectionHandler.getEndControlPartRoot());
-					executeCommandSectionHandler.getEndControlPartRoot().setNextSibling(oldsibling);
+					ParseTree endControlPartRoot = new ParserRuleContext();
+					executeCommandSectionHandler.setEndControlPartRoot( endControlPartRoot );
+					ConfigTreeNodeUtilities.addChild( executeCommandSectionHandler.getLastSectionRoot(), endControlPartRoot ); 
+					ConfigTreeNodeUtilities.addChild( endControlPartRoot, new AddedParseTree("\nendControlPart := ") );
+					ParseTree endControlPart = new AddedParseTree( temp.trim() );
+					executeCommandSectionHandler.setEndControlPart( endControlPart );
+					ConfigTreeNodeUtilities.addChild( endControlPartRoot, endControlPart );
 				} else {
 					// simple modification
-					executeCommandSectionHandler.getEndControlPart().setText(temp.trim());
-					executeCommandSectionHandler.getEndControlPart().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getEndControlPart(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getEndControlPart() );
 				}
 			}
 		});
@@ -248,7 +238,7 @@ public final class ExternalCommandsSubPage {
 				if (temp == null || temp.length() == 0) {
 					// remove the node
 					if (executeCommandSectionHandler.getEndTestcaseRoot() != null) {
-						ConfigTreeNodeUtilities.removeFromChain(executeCommandSectionHandler.getLastSectionRoot(),
+						ConfigTreeNodeUtilities.removeChild(executeCommandSectionHandler.getLastSectionRoot(),
 								executeCommandSectionHandler.getEndTestcaseRoot());
 					}
 					executeCommandSectionHandler.setEndTestcase(null);
@@ -259,21 +249,17 @@ public final class ExternalCommandsSubPage {
 					// create the node
 					createExternalCommandsSection();
 
-					LocationAST oldsibling = executeCommandSectionHandler.getLastSectionRoot().getNextSibling();
-
-					LocationAST node = new LocationAST("endTestcase := ");
-					node.setHiddenBefore(new CommonHiddenStreamToken("\n"));
-					executeCommandSectionHandler.setEndTestcase(new LocationAST(temp.trim()));
-					node.setNextSibling(executeCommandSectionHandler.getEndTestcase());
-					executeCommandSectionHandler.setEndTestcaseRoot(new LocationAST(""));
-					executeCommandSectionHandler.getEndTestcaseRoot().setFirstChild(node);
-					executeCommandSectionHandler.getLastSectionRoot().setNextSibling(
-							executeCommandSectionHandler.getEndTestcaseRoot());
-					executeCommandSectionHandler.getEndTestcaseRoot().setNextSibling(oldsibling);
+					ParseTree endTestcaseRoot = new ParserRuleContext();
+					executeCommandSectionHandler.setEndTestcaseRoot( endTestcaseRoot );
+					ConfigTreeNodeUtilities.addChild( executeCommandSectionHandler.getLastSectionRoot(), endTestcaseRoot ); 
+					ConfigTreeNodeUtilities.addChild( endTestcaseRoot, new AddedParseTree("\nendTestcase := ") );
+					ParseTree endTestcase = new AddedParseTree( temp.trim() );
+					executeCommandSectionHandler.setEndTestcase( endTestcase );
+					ConfigTreeNodeUtilities.addChild( endTestcaseRoot, endTestcase );
 				} else {
 					// simple modification
-					executeCommandSectionHandler.getEndTestcase().setText(temp.trim());
-					executeCommandSectionHandler.getEndTestcase().setFirstChild(null);
+					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getEndTestcase(), temp.trim() );
+					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getEndTestcase() );
 				}
 			}
 		});
@@ -339,12 +325,12 @@ public final class ExternalCommandsSubPage {
 			return;
 		}
 
-		executeCommandSectionHandler.setLastSectionRoot(new LocationAST("[EXTERNAL_COMMANDS]"));
-		executeCommandSectionHandler.getLastSectionRoot().setHiddenBefore(new CommonHiddenStreamToken("\n"));
-		LocationAST sectionRoot = new LocationAST("");
-		sectionRoot.setFirstChild(executeCommandSectionHandler.getLastSectionRoot());
+		ParserRuleContext sectionRoot = new ParserRuleContext();
+		executeCommandSectionHandler.setLastSectionRoot( sectionRoot );
+		ParseTree header = new AddedParseTree("\n[EXTERNAL_COMMANDS]");
+		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		LocationAST root = editor.getParseTreeRoot();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -358,8 +344,7 @@ public final class ExternalCommandsSubPage {
 
 		if (executeCommandSectionHandler.getBeginControlPart() == null && executeCommandSectionHandler.getEndControlPart() == null
 				&& executeCommandSectionHandler.getBeginTestcase() == null && executeCommandSectionHandler.getEndTestcase() == null) {
-			ConfigTreeNodeUtilities.removeFromChain(editor.getParseTreeRoot().getFirstChild(), executeCommandSectionHandler
-					.getLastSectionRoot().getParent());
+			ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), executeCommandSectionHandler.getLastSectionRoot());
 			executeCommandSectionHandler.setLastSectionRoot(null);
 		}
 	}

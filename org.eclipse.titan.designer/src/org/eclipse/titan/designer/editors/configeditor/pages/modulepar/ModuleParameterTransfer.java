@@ -13,19 +13,21 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler.ModuleParameter;
+import org.eclipse.titan.designer.editors.configeditor.ConfigItemTransferBase;
 
 /**
  * @author Kristof Szabados
- * */
-public final class ModuleParameterTransfer extends ByteArrayTransfer {
+ * @author Arpad Lovassy
+ */
+public final class ModuleParameterTransfer extends ConfigItemTransferBase {
 	private static ModuleParameterTransfer instance = new ModuleParameterTransfer();
 	private static final String TYPE_NAME = "TITAN-ModuleParameter-transfer-format";
 	private static final int TYPEID = registerType(TYPE_NAME);
@@ -56,27 +58,7 @@ public final class ModuleParameterTransfer extends ByteArrayTransfer {
 			out.writeInt(items.length);
 
 			for (int i = 0; i < items.length; i++) {
-				if (items[i].getModuleName() == null) {
-					// hidden before the module name
-					out.writeUTF("");
-					// the module name
-					out.writeUTF("");
-					// hidden before the separating '.'
-					out.writeUTF("");
-				} else {
-					out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getModuleName()));
-					out.writeUTF(items[i].getModuleName().getText());
-					out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getModuleName().getNextSibling()));
-				}
-
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getParameterName()));
-				out.writeUTF(items[i].getParameterName().getText());
-
-				// hidden before the ":=" sign
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getParameterName().getNextSibling()));
-
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getValue()));
-				out.writeUTF(ConfigTreeNodeUtilities.toString(items[i].getValue()));
+				out.writeUTF( convertToString( items[i].getRoot() ) );
 			}
 			out.close();
 			bytes = byteOut.toByteArray();
@@ -97,63 +79,50 @@ public final class ModuleParameterTransfer extends ByteArrayTransfer {
 		try {
 			int n = in.readInt();
 			ModuleParameter[] items = new ModuleParameter[n];
-			ModuleParameter item;
 
-			String moduleName;
-			String parameterName;
-			String hiddenBefore1;
-			String hiddenBefore2;
-			String value;
 			for (int i = 0; i < n; i++) {
-				item = new ModuleParameterSectionHandler.ModuleParameter();
+				ModuleParameter newModuleParameter = new ModuleParameterSectionHandler.ModuleParameter();
+
+				final ParseTree root = new ParserRuleContext();
+				newModuleParameter.setRoot( root );
 
 				// module name part
-				hiddenBefore1 = in.readUTF();
-				moduleName = in.readUTF();
-				hiddenBefore2 = in.readUTF();
-				LocationAST node;
-				if ("".equals(moduleName)) {
-					item.setModuleName(null);
-					node = null;
-				} else {
-					item.setModuleName(new LocationAST(moduleName));
-					item.getModuleName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-					node = new LocationAST(".");
-					node.setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore2));
-					item.getModuleName().setNextSibling(node);
-				}
+				final String hiddenBeforeModuleName = in.readUTF();
+				final String moduleName = in.readUTF();
+				final String hiddenBeforeSeparator = in.readUTF();
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree("\n") );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBeforeModuleName ) );
+				newModuleParameter.setModuleName( new AddedParseTree( moduleName ) );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBeforeSeparator ) );
+				ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getModuleName() );
+				
+				final boolean isModuleNameEmpty = moduleName == null || moduleName.isEmpty();
+				
+				newModuleParameter.setSeparator( new AddedParseTree( isModuleNameEmpty ? "" : ".") );
+				ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getSeparator() );
 
 				// parameter name part
-				hiddenBefore1 = in.readUTF();
-				parameterName = in.readUTF();
-				item.setParameterName(new LocationAST(parameterName));
-				item.getParameterName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-				if (node != null) {
-					node.setNextSibling(item.getParameterName());
-				}
-
+				final String hiddenBeforeParameterName = in.readUTF();
+				final String parameterName = in.readUTF();
+				
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBeforeParameterName ) );
+				newModuleParameter.setParameterName( new AddedParseTree( parameterName ) );
+				ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getParameterName() );
+				
 				// the := sign and the hidden stuff before it
-				hiddenBefore1 = in.readUTF();
-				node = new LocationAST(":=");
-				node.setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-				item.getParameterName().setNextSibling(node);
-
+				final String hiddenBeforeOperator = in.readUTF();
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBeforeOperator ) );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(" := ") );
+				
 				// the value part
-				hiddenBefore1 = in.readUTF();
-				value = in.readUTF();
-				item.setValue(new LocationAST(value));
-				item.getValue().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-				node.setNextSibling(item.getValue());
-
+				final String hiddenBeforeValue = in.readUTF();
+				final String value = in.readUTF();
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBeforeValue ) );
+				newModuleParameter.setValue( new AddedParseTree( value ) );
+				ConfigTreeNodeUtilities.addChild( root, newModuleParameter.getValue() );
+				
 				// put it under the root node
-				item.setRoot(new LocationAST(""));
-				if (item.getModuleName() == null) {
-					item.getRoot().setFirstChild(item.getParameterName());
-				} else {
-					item.getRoot().setFirstChild(item.getModuleName());
-				}
-
-				items[i] = item;
+				items[i] = newModuleParameter;
 			}
 			return items;
 		} catch (IOException e) {

@@ -15,20 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
+ * Stores temporary config editor data of the logging section
  * @author Kristof Szabados
- * */
-public final class LoggingSectionHandler {
+ * @author Arpad Lovassy
+ */
+public final class LoggingSectionHandler extends ConfigSectionHandlerBase {
 
 	public static class PluginSpecificParam {
-		private LocationAST root = null;
-		private LocationAST param = null;
-		private LocationAST value = null;
+		private ParseTree root = null;
+		private ParseTree param = null;
+		private ParseTree value = null;
 		private String paramName = null;
 
-		public PluginSpecificParam(final LocationAST root, final LocationAST param, final LocationAST value, final String paramName) {
+		public PluginSpecificParam(final ParseTree root, final ParseTree param, final ParseTree value, final String paramName) {
 			this.setRoot(root);
 			this.setParam(param);
 			this.setValue(value);
@@ -58,27 +60,27 @@ public final class LoggingSectionHandler {
 			return getParam().hashCode() + 31 * getValue().hashCode();
 		}
 
-		public LocationAST getRoot() {
+		public ParseTree getRoot() {
 			return root;
 		}
 
-		public void setRoot(final LocationAST root) {
+		public void setRoot(final ParseTree root) {
 			this.root = root;
 		}
 
-		public LocationAST getParam() {
+		public ParseTree getParam() {
 			return param;
 		}
 
-		public void setParam(final LocationAST param) {
+		public void setParam(final ParseTree param) {
 			this.param = param;
 		}
 
-		public LocationAST getValue() {
+		public ParseTree getValue() {
 			return value;
 		}
 
-		public void setValue(final LocationAST value) {
+		public void setValue(final ParseTree value) {
 			this.value = value;
 		}
 
@@ -92,249 +94,249 @@ public final class LoggingSectionHandler {
 	}
 
 	public static class LogParamEntry {
-		private LocationAST logFile = null;
-		private LocationAST logFileRoot = null;
-		private LocationAST appendFile = null;
-		private LocationAST appendFileRoot = null;
-		private LocationAST timestampFormat = null;
-		private LocationAST timestampFormatRoot = null;
-		private LocationAST logeventTypes = null;
-		private LocationAST logeventTypesRoot = null;
-		private LocationAST sourceInfoFormat = null;
-		private LocationAST sourceInfoFormatRoot = null;
-		private LocationAST logEntityName = null;
-		private LocationAST logEntityNameRoot = null;
-		private LocationAST matchingHints = null;
-		private LocationAST matchingHintsRoot = null;
+		private ParseTree logFile = null;
+		private ParseTree logFileRoot = null;
+		private ParseTree appendFile = null;
+		private ParseTree appendFileRoot = null;
+		private ParseTree timestampFormat = null;
+		private ParseTree timestampFormatRoot = null;
+		private ParseTree logeventTypes = null;
+		private ParseTree logeventTypesRoot = null;
+		private ParseTree sourceInfoFormat = null;
+		private ParseTree sourceInfoFormatRoot = null;
+		private ParseTree logEntityName = null;
+		private ParseTree logEntityNameRoot = null;
+		private ParseTree matchingHints = null;
+		private ParseTree matchingHintsRoot = null;
 
-		private LocationAST logfileNumber = null;
-		private LocationAST logfileNumberRoot = null;
-		private LocationAST logfileSize = null;
-		private LocationAST logfileSizeRoot = null;
-		private LocationAST diskFullAction = null;
-		private LocationAST diskFullActionRoot = null;
+		private ParseTree logfileNumber = null;
+		private ParseTree logfileNumberRoot = null;
+		private ParseTree logfileSize = null;
+		private ParseTree logfileSizeRoot = null;
+		private ParseTree diskFullAction = null;
+		private ParseTree diskFullActionRoot = null;
 
-		private Map<LoggingBit, LocationAST> fileMaskBits = new EnumMap<LoggingBit, LocationAST>(LoggingBit.class);
-		private LocationAST fileMask = null;
-		private LocationAST fileMaskRoot = null;
+		private Map<LoggingBit, ParseTree> fileMaskBits = new EnumMap<LoggingBit, ParseTree>(LoggingBit.class);
+		private ParseTree fileMask = null;
+		private ParseTree fileMaskRoot = null;
 
-		private Map<LoggingBit, LocationAST> consoleMaskBits = new EnumMap<LoggingBit, LocationAST>(LoggingBit.class);
-		private LocationAST consoleMask = null;
-		private LocationAST consoleMaskRoot = null;
+		private Map<LoggingBit, ParseTree> consoleMaskBits = new EnumMap<LoggingBit, ParseTree>(LoggingBit.class);
+		private ParseTree consoleMask = null;
+		private ParseTree consoleMaskRoot = null;
 
 		private List<PluginSpecificParam> pluginSpecificParam = new ArrayList<PluginSpecificParam>();
 
 		private String pluginPath = null;
 
-		private LocationAST emergencyLogging = null;
-		private LocationAST emergencyLoggingBehaviour = null;
-		private LocationAST emergencyLoggingMask =null;
+		private ParseTree emergencyLogging = null;
+		private ParseTree emergencyLoggingBehaviour = null;
+		private ParseTree emergencyLoggingMask =null;
 
-		public LocationAST getLogFile() {
+		public ParseTree getLogFile() {
 			return logFile;
 		}
 
-		public void setLogFile(final LocationAST logFile) {
+		public void setLogFile(final ParseTree logFile) {
 			this.logFile = logFile;
 		}
 
-		public LocationAST getLogFileRoot() {
+		public ParseTree getLogFileRoot() {
 			return logFileRoot;
 		}
 
-		public void setLogFileRoot(final LocationAST logFileRoot) {
+		public void setLogFileRoot(final ParseTree logFileRoot) {
 			this.logFileRoot = logFileRoot;
 		}
 
-		public LocationAST getAppendFile() {
+		public ParseTree getAppendFile() {
 			return appendFile;
 		}
 
-		public void setAppendFile(final LocationAST appendFile) {
+		public void setAppendFile(final ParseTree appendFile) {
 			this.appendFile = appendFile;
 		}
 
-		public LocationAST getAppendFileRoot() {
+		public ParseTree getAppendFileRoot() {
 			return appendFileRoot;
 		}
 
-		public void setAppendFileRoot(final LocationAST appendFileRoot) {
+		public void setAppendFileRoot(final ParseTree appendFileRoot) {
 			this.appendFileRoot = appendFileRoot;
 		}
 
-		public LocationAST getTimestampFormat() {
+		public ParseTree getTimestampFormat() {
 			return timestampFormat;
 		}
 
-		public void setTimestampFormat(final LocationAST timestampFormat) {
+		public void setTimestampFormat(final ParseTree timestampFormat) {
 			this.timestampFormat = timestampFormat;
 		}
 
-		public LocationAST getTimestampFormatRoot() {
+		public ParseTree getTimestampFormatRoot() {
 			return timestampFormatRoot;
 		}
 
-		public void setTimestampFormatRoot(final LocationAST timestampFormatRoot) {
+		public void setTimestampFormatRoot(final ParseTree timestampFormatRoot) {
 			this.timestampFormatRoot = timestampFormatRoot;
 		}
 
-		public LocationAST getLogeventTypes() {
+		public ParseTree getLogeventTypes() {
 			return logeventTypes;
 		}
 
-		public void setLogeventTypes(final LocationAST logeventTypes) {
+		public void setLogeventTypes(final ParseTree logeventTypes) {
 			this.logeventTypes = logeventTypes;
 		}
 
-		public LocationAST getLogeventTypesRoot() {
+		public ParseTree getLogeventTypesRoot() {
 			return logeventTypesRoot;
 		}
 
-		public void setLogeventTypesRoot(final LocationAST logeventTypesRoot) {
+		public void setLogeventTypesRoot(final ParseTree logeventTypesRoot) {
 			this.logeventTypesRoot = logeventTypesRoot;
 		}
 
-		public LocationAST getSourceInfoFormat() {
+		public ParseTree getSourceInfoFormat() {
 			return sourceInfoFormat;
 		}
 
-		public void setSourceInfoFormat(final LocationAST sourceInfoFormat) {
+		public void setSourceInfoFormat(final ParseTree sourceInfoFormat) {
 			this.sourceInfoFormat = sourceInfoFormat;
 		}
 
-		public LocationAST getSourceInfoFormatRoot() {
+		public ParseTree getSourceInfoFormatRoot() {
 			return sourceInfoFormatRoot;
 		}
 
-		public void setSourceInfoFormatRoot(final LocationAST sourceInfoFormatRoot) {
+		public void setSourceInfoFormatRoot(final ParseTree sourceInfoFormatRoot) {
 			this.sourceInfoFormatRoot = sourceInfoFormatRoot;
 		}
 
-		public LocationAST getLogEntityName() {
+		public ParseTree getLogEntityName() {
 			return logEntityName;
 		}
 
-		public void setLogEntityName(final LocationAST logEntityName) {
+		public void setLogEntityName(final ParseTree logEntityName) {
 			this.logEntityName = logEntityName;
 		}
 
-		public LocationAST getLogEntityNameRoot() {
+		public ParseTree getLogEntityNameRoot() {
 			return logEntityNameRoot;
 		}
 
-		public void setLogEntityNameRoot(final LocationAST logEntityNameRoot) {
+		public void setLogEntityNameRoot(final ParseTree logEntityNameRoot) {
 			this.logEntityNameRoot = logEntityNameRoot;
 		}
 
-		public LocationAST getMatchingHints() {
+		public ParseTree getMatchingHints() {
 			return matchingHints;
 		}
 
-		public void setMatchingHints(final LocationAST matchingHints) {
+		public void setMatchingHints(final ParseTree matchingHints) {
 			this.matchingHints = matchingHints;
 		}
 
-		public LocationAST getMatchingHintsRoot() {
+		public ParseTree getMatchingHintsRoot() {
 			return matchingHintsRoot;
 		}
 
-		public void setMatchingHintsRoot(final LocationAST matchingHintsRoot) {
+		public void setMatchingHintsRoot(final ParseTree matchingHintsRoot) {
 			this.matchingHintsRoot = matchingHintsRoot;
 		}
 
-		public LocationAST getLogfileNumber() {
+		public ParseTree getLogfileNumber() {
 			return logfileNumber;
 		}
 
-		public void setLogfileNumber(final LocationAST logfileNumber) {
+		public void setLogfileNumber(final ParseTree logfileNumber) {
 			this.logfileNumber = logfileNumber;
 		}
 
-		public LocationAST getLogfileNumberRoot() {
+		public ParseTree getLogfileNumberRoot() {
 			return logfileNumberRoot;
 		}
 
-		public void setLogfileNumberRoot(final LocationAST logfileNumberRoot) {
+		public void setLogfileNumberRoot(final ParseTree logfileNumberRoot) {
 			this.logfileNumberRoot = logfileNumberRoot;
 		}
 
-		public LocationAST getLogfileSize() {
+		public ParseTree getLogfileSize() {
 			return logfileSize;
 		}
 
-		public void setLogfileSize(final LocationAST logfileSize) {
+		public void setLogfileSize(final ParseTree logfileSize) {
 			this.logfileSize = logfileSize;
 		}
 
-		public LocationAST getLogfileSizeRoot() {
+		public ParseTree getLogfileSizeRoot() {
 			return logfileSizeRoot;
 		}
 
-		public void setLogfileSizeRoot(final LocationAST logfileSizeRoot) {
+		public void setLogfileSizeRoot(final ParseTree logfileSizeRoot) {
 			this.logfileSizeRoot = logfileSizeRoot;
 		}
 
-		public LocationAST getDiskFullAction() {
+		public ParseTree getDiskFullAction() {
 			return diskFullAction;
 		}
 
-		public void setDiskFullAction(final LocationAST diskFullAction) {
+		public void setDiskFullAction(final ParseTree diskFullAction) {
 			this.diskFullAction = diskFullAction;
 		}
 
-		public LocationAST getDiskFullActionRoot() {
+		public ParseTree getDiskFullActionRoot() {
 			return diskFullActionRoot;
 		}
 
-		public void setDiskFullActionRoot(final LocationAST diskFullActionRoot) {
+		public void setDiskFullActionRoot(final ParseTree diskFullActionRoot) {
 			this.diskFullActionRoot = diskFullActionRoot;
 		}
 
-		public Map<LoggingBit, LocationAST> getFileMaskBits() {
+		public Map<LoggingBit, ParseTree> getFileMaskBits() {
 			return fileMaskBits;
 		}
 
-		public void setFileMaskBits(final Map<LoggingBit, LocationAST> fileMaskBits) {
+		public void setFileMaskBits(final Map<LoggingBit, ParseTree> fileMaskBits) {
 			this.fileMaskBits = fileMaskBits;
 		}
 
-		public LocationAST getFileMask() {
+		public ParseTree getFileMask() {
 			return fileMask;
 		}
 
-		public void setFileMask(final LocationAST fileMask) {
+		public void setFileMask(final ParseTree fileMask) {
 			this.fileMask = fileMask;
 		}
 
-		public LocationAST getFileMaskRoot() {
+		public ParseTree getFileMaskRoot() {
 			return fileMaskRoot;
 		}
 
-		public void setFileMaskRoot(final LocationAST fileMaskRoot) {
+		public void setFileMaskRoot(final ParseTree fileMaskRoot) {
 			this.fileMaskRoot = fileMaskRoot;
 		}
 
-		public Map<LoggingBit, LocationAST> getConsoleMaskBits() {
+		public Map<LoggingBit, ParseTree> getConsoleMaskBits() {
 			return consoleMaskBits;
 		}
 
-		public void setConsoleMaskBits(final Map<LoggingBit, LocationAST> consoleMaskBits) {
+		public void setConsoleMaskBits(final Map<LoggingBit, ParseTree> consoleMaskBits) {
 			this.consoleMaskBits = consoleMaskBits;
 		}
 
-		public LocationAST getConsoleMask() {
+		public ParseTree getConsoleMask() {
 			return consoleMask;
 		}
 
-		public void setConsoleMask(final LocationAST consoleMask) {
+		public void setConsoleMask(final ParseTree consoleMask) {
 			this.consoleMask = consoleMask;
 		}
 
-		public LocationAST getConsoleMaskRoot() {
+		public ParseTree getConsoleMaskRoot() {
 			return consoleMaskRoot;
 		}
 
-		public void setConsoleMaskRoot(final LocationAST consoleMaskRoot) {
+		public void setConsoleMaskRoot(final ParseTree consoleMaskRoot) {
 			this.consoleMaskRoot = consoleMaskRoot;
 		}
 
@@ -354,41 +356,41 @@ public final class LoggingSectionHandler {
 			this.pluginPath = pluginPath;
 		}
 
-		public LocationAST getEmergencyLogging() {
+		public ParseTree getEmergencyLogging() {
 			return emergencyLogging;
 		}
 
-		public void setEmergencyLogging(final LocationAST emergencyLogging) {
+		public void setEmergencyLogging(final ParseTree emergencyLogging) {
 			this.emergencyLogging = emergencyLogging;
 		}
 
-		public LocationAST getEmergencyLoggingBehaviour() {
+		public ParseTree getEmergencyLoggingBehaviour() {
 			return emergencyLoggingBehaviour;
 		}
 
-		public void setEmergencyLoggingBehaviour(final LocationAST emergencyLoggingBehaviour) {
+		public void setEmergencyLoggingBehaviour(final ParseTree emergencyLoggingBehaviour) {
 			this.emergencyLoggingBehaviour = emergencyLoggingBehaviour;
 		}
 
-		public LocationAST getEmergencyLoggingMask() {
+		public ParseTree getEmergencyLoggingMask() {
 			return emergencyLoggingMask;
 		}
 
-		public void setEmergencyLoggingMask(final LocationAST emergencyLoggingMask) {
+		public void setEmergencyLoggingMask(final ParseTree emergencyLoggingMask) {
 			this.emergencyLoggingMask = emergencyLoggingMask;
 		}
 	}
 
 	public static class LoggerPluginEntry {
-		private LocationAST loggerPluginRoot = null;
+		private ParseTree loggerPluginRoot = null;
 		private String name = null;
 		private String path = null;
 
-		public LocationAST getLoggerPluginRoot() {
+		public ParseTree getLoggerPluginRoot() {
 			return loggerPluginRoot;
 		}
 
-		public void setLoggerPluginRoot(final LocationAST loggerPluginRoot) {
+		public void setLoggerPluginRoot(final ParseTree loggerPluginRoot) {
 			this.loggerPluginRoot = loggerPluginRoot;
 		}
 
@@ -410,23 +412,23 @@ public final class LoggingSectionHandler {
 	}
 
 	public static class LoggerPluginsEntry {
-		private LocationAST loggerPluginsRoot = null;
-		private LocationAST loggerPluginsListRoot = null;
+		private ParseTree loggerPluginsRoot = null;
+		private ParseTree loggerPluginsListRoot = null;
 		private Map<String, LoggerPluginEntry> pluginRoots = null;
 
-		public LocationAST getLoggerPluginsRoot() {
+		public ParseTree getLoggerPluginsRoot() {
 			return loggerPluginsRoot;
 		}
 
-		public void setLoggerPluginsRoot(final LocationAST loggerPluginsRoot) {
+		public void setLoggerPluginsRoot(final ParseTree loggerPluginsRoot) {
 			this.loggerPluginsRoot = loggerPluginsRoot;
 		}
 
-		public LocationAST getLoggerPluginsListRoot() {
+		public ParseTree getLoggerPluginsListRoot() {
 			return loggerPluginsListRoot;
 		}
 
-		public void setLoggerPluginsListRoot(final LocationAST loggerPluginsListRoot) {
+		public void setLoggerPluginsListRoot(final ParseTree loggerPluginsListRoot) {
 			this.loggerPluginsListRoot = loggerPluginsListRoot;
 		}
 
@@ -440,8 +442,6 @@ public final class LoggingSectionHandler {
 	}
 
 	private Map<String, LoggerPluginsEntry> loggerPluginsTree = new HashMap<String, LoggingSectionHandler.LoggerPluginsEntry>();
-
-	private LocationAST lastSectionRoot = null;
 
 	// component/plugin hashmap
 	private Map<String,HashMap<String,LogParamEntry>> loggerTree = new HashMap<String,HashMap<String,LogParamEntry>>();
@@ -567,13 +567,5 @@ public final class LoggingSectionHandler {
 
 	public void setLoggerPluginsTree(final Map<String, LoggerPluginsEntry> loggerPluginsTree) {
 		this.loggerPluginsTree = loggerPluginsTree;
-	}
-
-	public LocationAST getLastSectionRoot() {
-		return lastSectionRoot;
-	}
-
-	public void setLastSectionRoot(final LocationAST lastSectionRoot) {
-		this.lastSectionRoot = lastSectionRoot;
 	}
 }

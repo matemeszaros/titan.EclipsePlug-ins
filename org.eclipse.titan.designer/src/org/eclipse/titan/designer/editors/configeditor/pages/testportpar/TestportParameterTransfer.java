@@ -13,19 +13,21 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.eclipse.swt.dnd.ByteArrayTransfer;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.titan.common.logging.ErrorReporter;
-import org.eclipse.titan.common.parsers.CommonHiddenStreamToken;
-import org.eclipse.titan.common.parsers.LocationAST;
+import org.eclipse.titan.common.parsers.AddedParseTree;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHandler.TestportParameter;
+import org.eclipse.titan.designer.editors.configeditor.ConfigItemTransferBase;
 
 /**
  * @author Kristof Szabados
- * */
-public final class TestportParameterTransfer extends ByteArrayTransfer {
+ * @author Arpad Lovassy
+ */
+public final class TestportParameterTransfer extends ConfigItemTransferBase {
 	private static TestportParameterTransfer instance = new TestportParameterTransfer();
 	private static final String TYPE_NAME = "TITAN-TestportParameter-transfer-format";
 	private static final int TYPEID = registerType(TYPE_NAME);
@@ -56,41 +58,7 @@ public final class TestportParameterTransfer extends ByteArrayTransfer {
 			out.writeInt(items.length);
 
 			for (int i = 0; i < items.length; i++) {
-				if (items[i].getComponentName() == null) {
-					// hidden before the component name
-					out.writeUTF("");
-					// the component name
-					out.writeUTF("");
-					// hidden before the separating '.'
-					out.writeUTF("");
-				} else {
-					out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getComponentName()));
-					out.writeUTF(items[i].getComponentName().getText());
-					out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getComponentName().getNextSibling()));
-				}
-
-				if (items[i].getTestportName() == null) {
-					// hidden before the testport name
-					out.writeUTF("");
-					// the testport name
-					out.writeUTF("");
-					// hidden before the separating '.'
-					out.writeUTF("");
-				} else {
-					out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getTestportName()));
-					out.writeUTF(items[i].getTestportName().getText());
-					out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getTestportName().getNextSibling()));
-				}
-
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getParameterName()));
-				out.writeUTF(items[i].getParameterName().getText());
-
-				// hidden before the ":=" sign
-				out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].getParameterName().getNextSibling()));
-
-				// out.writeUTF(ConfigTreeNodeUtilities.getHiddenBefore(items[i].value));
-				out.writeUTF(ConfigTreeNodeUtilities.toString(items[i].getValue()));
-
+				out.writeUTF( convertToString( items[i].getRoot() ) );
 			}
 			out.close();
 			bytes = byteOut.toByteArray();
@@ -111,7 +79,6 @@ public final class TestportParameterTransfer extends ByteArrayTransfer {
 		try {
 			int n = in.readInt();
 			TestportParameter[] items = new TestportParameter[n];
-			TestportParameter item;
 
 			String componentName;
 			String testportName;
@@ -120,73 +87,44 @@ public final class TestportParameterTransfer extends ByteArrayTransfer {
 			String hiddenBefore2;
 			String value;
 			for (int i = 0; i < n; i++) {
-				item = new TestportParameterSectionHandler.TestportParameter();
+				TestportParameter item = new TestportParameterSectionHandler.TestportParameter();
 
+				final ParseTree root = new ParserRuleContext(); 
+				item.setRoot( root );
+				
 				// component name part
 				hiddenBefore1 = in.readUTF();
 				componentName = in.readUTF();
 				hiddenBefore2 = in.readUTF();
-				LocationAST node;
-				if ("".equals(componentName)) {
-					item.setComponentName(null);
-					node = null;
-				} else {
-					item.setComponentName(new LocationAST(componentName));
-					item.getComponentName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-					node = new LocationAST(".");
-					node.setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore2));
-					item.getComponentName().setNextSibling(node);
-				}
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBefore1 ) );
+				item.setComponentName(new AddedParseTree(componentName));
+				ConfigTreeNodeUtilities.addChild( root, item.getComponentName() );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBefore2 ) );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( "".equals(componentName) ? "" : "." ) );
 
 				// testport name part
 				hiddenBefore1 = in.readUTF();
 				testportName = in.readUTF();
 				hiddenBefore2 = in.readUTF();
-				if ("".equals(testportName)) {
-					item.setTestportName(null);
-					node = null;
-				} else {
-					item.setTestportName(new LocationAST(testportName));
-					item.getTestportName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-					if (node != null) {
-						node.setNextSibling(item.getTestportName());
-					}
-					node = new LocationAST(".");
-					node.setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore2));
-					item.getTestportName().setNextSibling(node);
-				}
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree(hiddenBefore2) );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( "".equals(testportName) ? "" : "." ) );
 
 				// parameter name part
 				hiddenBefore1 = in.readUTF();
 				parameterName = in.readUTF();
-				item.setParameterName(new LocationAST(parameterName));
-				item.getParameterName().setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-				if (node != null) {
-					node.setNextSibling(item.getParameterName());
-				}
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBefore1 ) );
+				item.setParameterName(new AddedParseTree(parameterName));
+				ConfigTreeNodeUtilities.addChild( root, item.getParameterName() );
 
 				// the := sign and the hidden stuff before it
 				hiddenBefore1 = in.readUTF();
-				node = new LocationAST(":=");
-				node.setHiddenBefore(new CommonHiddenStreamToken(hiddenBefore1));
-				item.getParameterName().setNextSibling(node);
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( hiddenBefore1 ) );
+				ConfigTreeNodeUtilities.addChild( root, new AddedParseTree( ":=" ) );
 
 				// the value part
 				value = in.readUTF();
-				item.setValue(new LocationAST(value));
-				node.setNextSibling(item.getValue());
-
-				// put it under the root node
-				item.setRoot(new LocationAST(""));
-				if (item.getComponentName() == null) {
-					if (item.getTestportName() == null) {
-						item.getRoot().setFirstChild(item.getParameterName());
-					} else {
-						item.getRoot().setFirstChild(item.getTestportName());
-					}
-				} else {
-					item.getRoot().setFirstChild(item.getComponentName());
-				}
+				item.setValue(new AddedParseTree(value));
+				ConfigTreeNodeUtilities.addChild( root, item.getValue() );
 
 				items[i] = item;
 			}

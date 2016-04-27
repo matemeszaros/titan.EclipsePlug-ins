@@ -248,7 +248,7 @@ public final class IncludeSubPage {
 		ParseTree header = new AddedParseTree("\n[INCLUDE]");
 		ConfigTreeNodeUtilities.addChild(sectionRoot, header);
 
-		ParserRuleContext root = editor.getParseTreeRoot().getRule();
+		ParserRuleContext root = editor.getParseTreeRoot();
 		if (root != null) {
 			root.addChild(sectionRoot);
 		}
@@ -268,7 +268,7 @@ public final class IncludeSubPage {
 			return;
 		}
 
-		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot().getRule(), includeSectionHandler.getLastSectionRoot());
+		ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), includeSectionHandler.getLastSectionRoot());
 		includeSectionHandler.setLastSectionRoot((ParserRuleContext)null);
 	}
 
