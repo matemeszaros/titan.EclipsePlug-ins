@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.variables,
  org.eclipse.debug.ui,
  org.eclipse.core.expressions,
- org.eclipse.titan.common;bundle-version="5.5.0"
+ org.eclipse.titan.common;bundle-version="5.5.0",
+ org.eclipse.titan.designer;bundle-version="5.5.0"
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Bundle-Vendor: Eclipse Titan Project
