@@ -150,6 +150,58 @@ public final class ProjectFileHandler {
 		}
 	}
 
+
+	/**
+	 * Gets all the files of the project
+	 *
+	 * @param project
+	 * @return Map of the projects
+	 */
+	public static Map<String, IFile> getFiles(final IProject project) {
+		final IContainer[] workingDirectories = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryResources(false);
+		final ResourceVisitor saveVisitor = new ResourceVisitor(workingDirectories);
+		// collect the resources
+		try {
+			project.accept(saveVisitor);
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace("While collecting resources of `" + project.getName() + "'", e);
+		}
+		final Map<String, IFile> files = saveVisitor.getFiles();
+		return files;
+	}
+
+	public static List<IFile> getCfgFiles(final IProject project) {
+		Map<String, IFile> files = getFiles(project);
+		List<IFile> cfgFiles = new ArrayList<IFile>();
+		for( IFile file : files.values()) {
+			if("cfg".equals(file.getFileExtension())) {
+				cfgFiles.add(file);
+			}
+		}
+		return cfgFiles;
+
+	}
+
+	/**
+	 * Gets all the folders of the project
+	 *
+	 * @param project
+	 * @return
+	 */
+	public static Map<String, IFolder> getFoldersOfProject(final IProject project) {
+		final IContainer[] workingDirectories = ProjectBasedBuilder.getProjectBasedBuilder(project).getWorkingDirectoryResources(false);
+		final ResourceVisitor saveVisitor = new ResourceVisitor(workingDirectories);
+		// collect the resources
+		try {
+			project.accept(saveVisitor);
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace("While collecting resources of `" + project.getName() + "'", e);
+		}
+		final Map<String, IFolder> folders = saveVisitor.getFolders();
+		return folders;
+	}
+
+
 	/**
 	 * Constructs the object, saves the project to work on, and initializes
 	 * the needed structures.
