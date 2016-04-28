@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
  * see {@link java.nio.charset.StandardCharsets}
  * This class should be deleted, when the project will use Java 1.7.
  */
-public class StandardCharsets {
+public final class StandardCharsets {
 	public static final String UTF8_KEY = "UTF-8";
 
 	public static final Charset UTF8 = Charset.forName(UTF8_KEY);

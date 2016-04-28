@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.titan.common.logging.ErrorReporter;
 
-public class ResourceUtils {
+public final class ResourceUtils {
 
 	private ResourceUtils() {
 		// Hide constructor

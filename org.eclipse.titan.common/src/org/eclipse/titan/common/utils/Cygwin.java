@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.titan.common.logging.ErrorReporter;
 
-public class Cygwin {
+public final class Cygwin {
 	// singleton for speed
-	static Boolean installed = null;
+	private static Boolean installed = null;
 
 	private Cygwin() {
 		// Disable constructor
@@ -44,9 +44,9 @@ public class Cygwin {
 			}
 
 			// check if error occured:
-			final Pattern regQueryOutputPattern = Pattern.compile("ERROR.*");
-			final Matcher regQueryoutputMatcher = regQueryOutputPattern.matcher(regQueryOutput);
-			if (regQueryoutputMatcher.matches()) {
+			final Pattern errorPattern = Pattern.compile("ERROR.*");
+			final Matcher errorMatcher = errorPattern.matcher(regQueryOutput);
+			if (errorMatcher.matches()) {
 				return installed.booleanValue(); 
 			}
 			installed = Boolean.TRUE;	
@@ -60,16 +60,13 @@ public class Cygwin {
 	 * @return true if the OS is Win32 and there is no installed cygwin, otherwise returns false
 	 */
 	public static boolean isMissingInOSWin32() {
-		if (Platform.OS_WIN32.equals(Platform.getOS()) && !Cygwin.isInstalled() ) {
-			return true;
-		} 
-		return false;
+		return Platform.OS_WIN32.equals(Platform.getOS()) && !Cygwin.isInstalled();
 	}
 	
 	/**
 	 * @return Returns the standard output if no exceptions and return code was 0, otherwise returns null
 	 */
-	static String executeProgram(final String command) {
+	private static String executeProgram(final String command) {
 		Process proc;
 		
 		try {
@@ -81,15 +78,15 @@ public class Cygwin {
 
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream(), Charset.defaultCharset()));
 		try {
-			final StringBuilder sb = new StringBuilder();
+			final StringBuilder stringBuilder = new StringBuilder();
 			String line = null;
 			while ((line = reader.readLine()) != null) {
-				sb.append(line);  
+				stringBuilder.append(line);  
 			}
 			if (proc.waitFor() != 0) {
 				return null;
 			}
-			return sb.toString();
+			return stringBuilder.toString();
 		} catch (Exception e) {
 			ErrorReporter.logExceptionStackTrace("Error while executing " + command, e);
 		} finally {

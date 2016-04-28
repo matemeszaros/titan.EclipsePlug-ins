@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import org.eclipse.titan.common.logging.ErrorReporter;
 
-public class FileUtils {
+public final class FileUtils {
 
 	private FileUtils() {
 		// Hide constructor

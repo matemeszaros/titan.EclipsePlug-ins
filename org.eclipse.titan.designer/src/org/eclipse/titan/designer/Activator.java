@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -207,14 +206,14 @@ public final class Activator extends AbstractUIPlugin {
 
 			for (final IResourceDelta delta  : eventDelta.getAffectedChildren()) {
 				final IResource changedResource = delta.getResource();
-				final ContentChangedFileFinder changeFinder = new ContentChangedFileFinder();
-				
+
 				if (changedResource.getType() == IResource.PROJECT && TITANNature.hasTITANNature((IProject) changedResource)) {
 					try {
 						if (!Boolean.TRUE.equals(changedResource.getSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE))) {
 							return;
 						}
 						
+						final ContentChangedFileFinder changeFinder = new ContentChangedFileFinder();
 						delta.accept(changeFinder);
 						if (changeFinder.getChangeFound()) {
 							changedResource.setSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE, false);
