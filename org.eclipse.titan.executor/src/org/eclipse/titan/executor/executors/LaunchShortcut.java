@@ -90,7 +90,6 @@ public abstract class LaunchShortcut implements ILaunchShortcut {
 
 				labelProvider.dispose();
 			}
-			//old: final String configurationName = "new configuration (" + project.getName() + ")";
 			final String configurationName = "new configuration (" + file.getFullPath().toString().replace("/", "__") + ")";
 			ILaunchConfigurationWorkingCopy wc = configurationType.newInstance(null, configurationName);
 			wc.setMappedResources(new IResource[] {project});
