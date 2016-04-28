@@ -60,7 +60,7 @@ public final class PathConverter {
 	 * */
 	public static String convert(final String path, final boolean reportDebugInformation, final MessageConsole outputConsole) {
 		
-		if("".equals(path)){
+		if("".equals(path.trim())){
 			return path;
 		}
 		
