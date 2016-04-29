@@ -175,7 +175,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 
    <plugin
          id="org.eclipse.titan.designer"
-         download-size="0"
+         download-size="3841"
          install-size="0"
          version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
          unpack="false"/>
