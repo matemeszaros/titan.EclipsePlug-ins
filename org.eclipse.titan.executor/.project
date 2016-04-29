@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>org.eclipse.titan.common</project>
+		<project>org.eclipse.titan.designer</project>
 		<project>org.eclipse.titan.help</project>
 	</projects>
 	<buildSpec>
