@@ -49,7 +49,7 @@
 		<build.plugin name="${designer.name}"/>
 	</target>
 
-	<target name="executor.plugin" depends="init, common.plugin">
+	<target name="executor.plugin" depends="init, common.plugin, designer.plugin">
 		<build.plugin name="${executor.name}"/>
 	</target>
 
