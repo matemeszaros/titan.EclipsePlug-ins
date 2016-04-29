@@ -636,25 +636,25 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			Definition temp = iterator.next();
 			if (temp.getParentGroup() == null) {
 				Location tempLocation = temp.getLocation();
-				Location comulativeLocation = temp.getComulativeDefinitionLocation();
-				if (tempLocation.equals(comulativeLocation) && reparser.envelopsDamage(tempLocation)) {
+				Location cumulativeLocation = temp.getCumulativeDefinitionLocation();
+				if (tempLocation.equals(cumulativeLocation) && reparser.envelopsDamage(cumulativeLocation)) {
 					enveloped = true;
-					leftBoundary = tempLocation.getOffset();
-					rightBoundary = tempLocation.getEndOffset();
-				} else if (reparser.isDamaged(comulativeLocation)) {
+					leftBoundary = cumulativeLocation.getOffset();
+					rightBoundary = cumulativeLocation.getEndOffset();
+				} else if (reparser.isDamaged(cumulativeLocation)) {
 					nofDamaged++;
-					if (reparser.getDamageStart() == comulativeLocation.getEndOffset()) {
+					if (reparser.getDamageStart() == cumulativeLocation.getEndOffset()) {
 						lastAppendableBeforeChange = temp;
-					} else if (reparser.getDamageEnd() == comulativeLocation.getOffset()) {
+					} else if (reparser.getDamageEnd() == cumulativeLocation.getOffset()) {
 						lastPrependableBeforeChange = temp;
 					}
 				} else {
-					if (comulativeLocation.getEndOffset() < damageOffset && comulativeLocation.getEndOffset() > leftBoundary) {
-						leftBoundary = comulativeLocation.getEndOffset() + 1;
+					if (cumulativeLocation.getEndOffset() < damageOffset && cumulativeLocation.getEndOffset() > leftBoundary) {
+						leftBoundary = cumulativeLocation.getEndOffset() + 1;
 						lastAppendableBeforeChange = temp;
 					}
-					if (comulativeLocation.getOffset() >= damageOffset && comulativeLocation.getOffset() < rightBoundary) {
-						rightBoundary = comulativeLocation.getOffset();
+					if (cumulativeLocation.getOffset() >= damageOffset && cumulativeLocation.getOffset() < rightBoundary) {
+						rightBoundary = cumulativeLocation.getOffset();
 						lastPrependableBeforeChange = temp;
 					}
 				}
@@ -793,7 +793,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			Definition temp = iterator.next();
 			if (temp.getParentGroup() == null) {
 				Location tempLocation = temp.getLocation();
-				if (reparser.isAffected(tempLocation)) {
+				Location cumulativeLocation = temp.getCumulativeDefinitionLocation();
+				if (reparser.isAffected(cumulativeLocation)) {
 					try {
 						boolean isDamaged = enveloped && reparser.envelopsDamage(tempLocation);
 						temp.updateSyntax(reparser, isDamaged);
@@ -811,7 +812,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 						if (e.getDepth() == 1) {
 							enveloped = false;
 							definitions.remove(temp);
-							reparser.extendDamagedRegion(tempLocation);
+							reparser.extendDamagedRegion(cumulativeLocation);
 							result = 1;
 						} else {
 							if (doubleDefinitions != null) {
@@ -866,7 +867,11 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			Definition temp = iterator.next();
 			if (temp.getParentGroup() == null) {
 				Location tempLocation = temp.getLocation();
+				Location cumulativeLocation = temp.getCumulativeDefinitionLocation();
 				if (reparser.isAffected(tempLocation)) {
+					if(!tempLocation.equals(cumulativeLocation)) {
+						reparser.updateLocation(cumulativeLocation);
+					}
 					reparser.updateLocation(tempLocation);
 				}
 			}
@@ -979,8 +984,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 
 		for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
 			Definition temp = iterator.next();
-			if (reparser.isDamaged(temp.getLocation())) {
-				reparser.extendDamagedRegion(temp.getLocation());
+			if (reparser.isDamaged(temp.getCumulativeDefinitionLocation())) {
+				reparser.extendDamagedRegion(temp.getCumulativeDefinitionLocation());
 				definitions.remove(temp);
 			}
 		}

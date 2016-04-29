@@ -877,6 +877,9 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		for (Definition definition : definitions) {
 			definition.updateSyntax(reparser, false);
 			reparser.updateLocation(definition.getLocation());
+			if(!definition.getLocation().equals(definition.getCumulativeDefinitionLocation())) {
+				reparser.updateLocation(definition.getCumulativeDefinitionLocation());
+			}
 		}
 
 		if (extendsReferences != null) {

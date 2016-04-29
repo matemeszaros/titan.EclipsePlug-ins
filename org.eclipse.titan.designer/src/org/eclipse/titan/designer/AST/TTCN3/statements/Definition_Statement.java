@@ -146,6 +146,9 @@ public final class Definition_Statement extends Statement {
 		if (definition != null) {
 			definition.updateSyntax(reparser, false);
 			reparser.updateLocation(definition.getLocation());
+			if(!definition.getLocation().equals(definition.getCumulativeDefinitionLocation())) {
+				reparser.updateLocation(definition.getCumulativeDefinitionLocation());
+			}
 		}
 	}
 

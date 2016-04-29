@@ -83,6 +83,8 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	private VisibilityModifier visibilityModifier;
 
 	private Location commentLocation = null;
+	
+	private Location cumulativeDefinitionLocation = null;
 
 	//TODO this should be removed as the same functionality is present in Titanium as codesmell.
 	public List<String> referingHere = new ArrayList<String>();
@@ -203,8 +205,19 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 	 * 
 	 * @return the location of the same typed definition list the definition is located in. 
 	 * */
-	public Location getComulativeDefinitionLocation() {
+	public Location getCumulativeDefinitionLocation() {
+		if (cumulativeDefinitionLocation != null) {
+			return cumulativeDefinitionLocation;
+		}
+		
 		return getLocation();
+	}
+
+	/**
+	 * Set the cumulative location of this definition
+	 * */
+	public void setCumulativeDefinitionLocation(final Location location) {
+		this.cumulativeDefinitionLocation = location;
 	}
 
 	/**

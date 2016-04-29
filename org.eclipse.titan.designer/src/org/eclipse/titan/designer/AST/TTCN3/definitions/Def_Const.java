@@ -54,8 +54,6 @@ public final class Def_Const extends Definition {
 	public static final String SIGNATURENOTALLOWED = "Constant can not be defined for signature type `{0}''";
 
 	private static final String KIND = "constant ";
-	
-	private Location comulativeDefinitionLocation = null;
 
 	public static String getKind() {
 		return KIND;
@@ -102,19 +100,6 @@ public final class Def_Const extends Definition {
 		if (value != null) {
 			value.setMyScope(scope);
 		}
-	}
-	
-	@Override
-	public Location getComulativeDefinitionLocation() {
-		if (comulativeDefinitionLocation != null) {
-			return comulativeDefinitionLocation;
-		}
-		
-		return super.getComulativeDefinitionLocation();
-	}
-
-	public void setComulativeDefinitionLocation(final Location location) {
-		this.comulativeDefinitionLocation = location;
 	}
 
 	@Override

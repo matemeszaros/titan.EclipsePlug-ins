@@ -1080,25 +1080,31 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		for (int i = 0, size = statements.size(); i < size && !enveloped; i++) {
 			final Statement statement = statements.get(i);
 			final Location temporalLocation = statement.getLocation();
+			Location cumulativeLocation;
+			if(statement instanceof Definition_Statement) {
+				cumulativeLocation = ((Definition_Statement) statement).getDefinition().getCumulativeDefinitionLocation();
+			} else {
+				cumulativeLocation = temporalLocation;
+			}
 
-			if (reparser.envelopsDamage(temporalLocation)) {
+			if (temporalLocation.equals(cumulativeLocation) && reparser.envelopsDamage(cumulativeLocation)) {
 				enveloped = true;
-				leftBoundary = temporalLocation.getOffset();
-				rightBoundary = temporalLocation.getEndOffset();
-			} else if (reparser.isDamaged(temporalLocation)) {
+				leftBoundary = cumulativeLocation.getOffset();
+				rightBoundary = cumulativeLocation.getEndOffset();
+			} else if (reparser.isDamaged(cumulativeLocation)) {
 				nofDamaged++;
-				if (reparser.getDamageStart() == temporalLocation.getEndOffset()) {
+				if (reparser.getDamageStart() == cumulativeLocation.getEndOffset()) {
 					lastAppendableBeforeChange = statement;
-				} else if (reparser.getDamageEnd() == temporalLocation.getOffset()) {
+				} else if (reparser.getDamageEnd() == cumulativeLocation.getOffset()) {
 					lastPrependableBeforeChange = statement;
 				}
 			} else {
-				if (temporalLocation.getEndOffset() < damageOffset && temporalLocation.getEndOffset() > leftBoundary) {
-					leftBoundary = temporalLocation.getEndOffset() + 1;
+				if (cumulativeLocation.getEndOffset() < damageOffset && cumulativeLocation.getEndOffset() > leftBoundary) {
+					leftBoundary = cumulativeLocation.getEndOffset() + 1;
 					lastAppendableBeforeChange = statement;
 				}
-				if (temporalLocation.getOffset() >= damageOffset && temporalLocation.getOffset() < rightBoundary) {
-					rightBoundary = temporalLocation.getOffset();
+				if (cumulativeLocation.getOffset() >= damageOffset && cumulativeLocation.getOffset() < rightBoundary) {
+					rightBoundary = cumulativeLocation.getOffset();
 					lastPrependableBeforeChange = statement;
 				}
 			}
@@ -1141,16 +1147,22 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		for (final Iterator<Statement> iterator = statements.iterator(); iterator.hasNext();) {
 			final Statement statement = iterator.next();
 			final Location temporalLocation = statement.getLocation();
+			Location cumulativeLocation;
+			if(statement instanceof Definition_Statement) {
+				cumulativeLocation = ((Definition_Statement) statement).getDefinition().getCumulativeDefinitionLocation();
+			} else {
+				cumulativeLocation = temporalLocation;
+			}
 
-			if (reparser.isAffectedAppended(temporalLocation)) {
+			if (reparser.isAffectedAppended(cumulativeLocation)) {
 				try {
-					statement.updateSyntax(reparser, enveloped && reparser.envelopsDamage(temporalLocation));
+					statement.updateSyntax(reparser, enveloped && reparser.envelopsDamage(cumulativeLocation));
 					reparser.updateLocation(statement.getLocation());
 				} catch (ReParseException e) {
 					if (e.getDepth() == 1) {
 						enveloped = false;
 						iterator.remove();
-						reparser.extendDamagedRegion(temporalLocation);
+						reparser.extendDamagedRegion(cumulativeLocation);
 					} else {
 						e.decreaseDepth();
 						throw e;
@@ -1183,11 +1195,16 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	}
 
 	private void removeStuffInRange(final TTCN3ReparseUpdater reparser) {
-		Location temp;
 		for (int i = statements.size() - 1; i >= 0; i--) {
-			temp = statements.get(i).getLocation();
-			if (reparser.isDamaged(temp)) {
-				reparser.extendDamagedRegion(temp);
+			final Statement statement = statements.get(i);
+			Location cumulativeLocation;
+			if(statement instanceof Definition_Statement) {
+				cumulativeLocation = ((Definition_Statement) statement).getDefinition().getCumulativeDefinitionLocation();
+			} else {
+				cumulativeLocation = statement.getLocation();
+			}
+			if (reparser.isDamaged(cumulativeLocation)) {
+				reparser.extendDamagedRegion(cumulativeLocation);
 				statements.remove(i);
 			}
 		}

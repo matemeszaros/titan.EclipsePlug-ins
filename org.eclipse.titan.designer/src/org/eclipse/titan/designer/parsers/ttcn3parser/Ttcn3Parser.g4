@@ -636,6 +636,7 @@ pr_ModuleDef returns [List<Definition> definitions]
 			Location loc = definition.getLocation();
 			loc.setEndOffset(offset + getStopToken().getStopIndex() + 1);
 		}
+		definition.setCumulativeDefinitionLocation(getLocation( $start, getStopToken()));
 	}
 	if (commentLocation == null) {
 		commentLocation = lexer.getLastCommentLocation();
@@ -1554,12 +1555,14 @@ pr_ComponentElementDef returns[List<Definition> definitions = null]
 	)
 )
 {
-	if ( modifier != null) {
-		for(int i = 0; i < $definitions.size(); i++) {
-			Definition definition = $definitions.get(i);
+	for(int i = 0; i < $definitions.size(); i++) {
+		Definition definition = $definitions.get(i);
+		if ( modifier != null) {
 			definition.setVisibility( modifier );
-    	}
+		}
+		definition.setCumulativeDefinitionLocation(getLocation( $start, getStopToken()));
 	}
+	
 };
 
 pr_ComponentElementVisibility returns[VisibilityModifier modifier = VisibilityModifier.Public]:
@@ -1619,7 +1622,6 @@ pr_ConstDef returns[List<Definition> array = null]:
 				Location loc = temp.getLocation();
 				loc.setOffset( offset + $col.start.getStartIndex() );
 			}
-			((Def_Const)temp).setComulativeDefinitionLocation(getLocation( $col.start, $a.stop));
 		}
 	}
 };
@@ -2487,6 +2489,7 @@ pr_FunctionStatementOrDef returns[List<Statement> statements]
 {
 	if(definitions != null) {
 		for(Definition definition : definitions) {
+			definition.setCumulativeDefinitionLocation(getLocation( $start, getStopToken()));
 			Statement temp_statement = new Definition_Statement(definition);
 			temp_statement.setLocation(getLocation( $start, getStopToken()));
 			$statements.add(temp_statement);
@@ -3033,7 +3036,13 @@ pr_AltstepLocalDef returns[ List<Definition> definitions = null]:
 				$definitions.add($def.def_template);
 			}
 		}
-);
+)
+{
+	for ( int i = 0; i < $definitions.size(); i++ ) {
+		Definition definition = $definitions.get(i);
+		definition.setCumulativeDefinitionLocation(getLocation( $start, getStopToken()));
+	}
+};
 
 pr_AltstepInstance returns[Reference temporalReference = null]:
 (	t = pr_FunctionInstance { $temporalReference = $t.temporalReference; }
@@ -3806,6 +3815,7 @@ pr_ControlStatementOrDef returns [List<Statement> statements]
 	if(definitions != null) {
 		for(Definition definition : definitions) {
 			if(definition != null) {
+				definition.setCumulativeDefinitionLocation(getLocation( $start, getStopToken()));
 				Statement temp_statement = new Definition_Statement(definition);
 				temp_statement.setLocation(getLocation( $start, getStopToken()));
 				$statements.add(temp_statement);
@@ -6762,6 +6772,10 @@ pr_InitialDefinitions returns[For_Loop_Definitions definitions]
 {
 	if ( $d.definitions != null ) {
 		$definitions.addDefinitions( $d.definitions );
+		for ( int i = 0; i < $definitions.getNofAssignments(); i++ ) {
+			Definition definition = $definitions.getAssignmentByIndex(i);
+			definition.setCumulativeDefinitionLocation(getLocation( $start, getStopToken()));
+		}
 	}
 	$definitions.setLocation( getLocation( $d.start, $d.stop ) );
 };
