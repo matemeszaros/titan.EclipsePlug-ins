@@ -653,7 +653,6 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 			}
 		}
 		configurationFileIsValid = false;
-		exceptions.clear();
 		exceptions.add(new Exception("The path `" + path + "' does not seem to be correct."));
 		automaticExecuteSectionExecution.setEnabled(false);
 	}
@@ -727,14 +726,13 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		}
 		
 		if(EMPTY.equals(configurationFileText.getStringValue())) {
-			setErrorMessage("The configuration file must be set."); //<<<<== This should be set to "setErrorMessage(null);"
-																	//if the cfg file is not mandatory !
-			return false; // <<<<== This can be set to true if the cfg file is not mandatory !
+			setErrorMessage("The configuration file must be set.");
+			return false;
 		} else if (!configurationFileIsValid) {
 			if (null != exceptions && !exceptions.isEmpty()) {
-				setErrorMessage("Problem in config file: " + exceptions.get(0).getMessage());
+				setErrorMessage("Problem in config file: " + exceptions.get(0).toString());
 			} else {
-				setErrorMessage("The configuration file is not valid.");
+				setErrorMessage("The configurationfile is not valid.");
 			}
 			return false;
 		}
