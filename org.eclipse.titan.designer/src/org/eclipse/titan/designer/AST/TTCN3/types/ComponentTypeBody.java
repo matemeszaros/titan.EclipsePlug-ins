@@ -650,7 +650,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 				if (definitions.hasDefinition(name)) {
 					Definition localDefinition = definitions.getDefinition(name);
 					localDefinition.getIdentifier().getLocation().reportSemanticError(MessageFormat.format(
-							LOCALINHERTANCECOLLISSION, name, definition.getMyScope().getFullName()));
+							LOCALINHERTANCECOLLISSION, definition.getIdentifier().getDisplayName(), definition.getMyScope().getFullName()));
 				} else if (extendsGainedDefinitions.containsKey(name)) {
 					Definition previousDefinition = extendsGainedDefinitions.get(name);
 					if (!previousDefinition.equals(definition)) {
