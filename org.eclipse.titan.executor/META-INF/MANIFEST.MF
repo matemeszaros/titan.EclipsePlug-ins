@@ -20,4 +20,5 @@ Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Bundle-Vendor: Eclipse Titan Project
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.titan.designer.properties.data
 
