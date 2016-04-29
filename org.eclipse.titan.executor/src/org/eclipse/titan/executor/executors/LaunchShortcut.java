@@ -8,12 +8,10 @@
 package org.eclipse.titan.executor.executors;
 
 import static org.eclipse.titan.executor.GeneralConstants.EXECUTECONFIGFILEONLAUNCH;
-import org.eclipse.titan.designer.properties.data.ProjectFileHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -50,19 +48,32 @@ public abstract class LaunchShortcut implements ILaunchShortcut {
 	public abstract boolean initLaunchConfiguration(final ILaunchConfigurationWorkingCopy configuration,
 	                                                final IProject project, final String configFilePath);
 
-	protected ILaunchConfigurationWorkingCopy getWorkingCopy(final IProject project, IFile file, final String mode) {
+	protected ILaunchConfigurationWorkingCopy getWorkingCopy(final ISelection selection, final String mode) {
+		if (!(selection instanceof IStructuredSelection)) {
+			return null;
+		}
 
+		final Object[] selections = ((IStructuredSelection) selection).toArray();
+		if (1 != selections.length) {
+			return null;
+		}
+
+		if (!(selections[0] instanceof IProject)) {
+			return null;
+		}
+		
+		final IProject project = (IProject) selections[0];
 		try {
 			final ILaunchConfigurationType configurationType = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurationType(getConfigurationId());
 			final ILaunchConfiguration[] configurations = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(configurationType);
-
+			final String configurationName = "new configuration (" + project.getName() + ")";
 			final List<ILaunchConfiguration> candidateConfigurations = new ArrayList<ILaunchConfiguration>();
 			for (ILaunchConfiguration configuration : configurations) {
 				IResource[] resources = configuration.getMappedResources();
 				if (null != resources) {
 					boolean found = false;
 					for (IResource resource : resources) {
-						if (file.equals(resource)) {
+						if (project.equals(resource)) {
 							found = true;
 						}
 					}
@@ -79,18 +90,18 @@ public abstract class LaunchShortcut implements ILaunchShortcut {
 				ILabelProvider labelProvider = DebugUITools.newDebugModelPresentation();
 				ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, labelProvider);
 				dialog.setTitle(getDialogTitle());
-				dialog.setMessage("Select existing configuration:");
+				dialog.setMessage("Select existing configuration.");
 				dialog.setElements(candidateConfigurations.toArray(new ILaunchConfiguration[candidateConfigurations.size()]));
 				if (dialog.open() == Window.OK) {
 					ILaunchConfiguration result = (ILaunchConfiguration) dialog.getFirstResult();
 					result.launch(mode, null);
 					labelProvider.dispose();
+
 					return null ;
 				}
 
 				labelProvider.dispose();
 			}
-			final String configurationName = "new configuration (" + file.getFullPath().toString().replace("/", "__") + ")";
 			ILaunchConfigurationWorkingCopy wc = configurationType.newInstance(null, configurationName);
 			wc.setMappedResources(new IResource[] {project});
 			wc.setAttribute(EXECUTECONFIGFILEONLAUNCH, true);
@@ -117,50 +128,22 @@ public abstract class LaunchShortcut implements ILaunchShortcut {
 			return;
 		}
 
-		IFile cfgFile = null;
-		IProject project = null;
-
-		if ((selections[0] instanceof IProject)) {
-			// try to find the cfg file:
-			project = (IProject) selections[0];
-			List<IFile> cfgFiles = ProjectFileHandler.getCfgFiles(project);
-			if (cfgFiles.size() == 1) {
-				cfgFile = cfgFiles.get(0);
-			} else if (cfgFiles.size() > 1) {
-				final ILabelProvider labelProvider = DebugUITools.newDebugModelPresentation();
-				final ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, labelProvider);
-				dialog.setTitle("Config File Selection");
-				dialog.setMessage("Select existing cfg file:");
-				dialog.setElements(cfgFiles.toArray(new IFile[cfgFiles.size()]));
-				if (dialog.open() == Window.OK) {
-					cfgFile = (IFile) dialog.getFirstResult();
-				}
-			} else {
-				ErrorReporter.logError("Config file not found");
-				ErrorReporter.parallelErrorDisplayInMessageDialog(
-						"An error was found while creating the default launch configuration for project "
-								+ project.getName(),
-						"Config file not found in project " + project.getName());
+		if (!(selections[0] instanceof IProject)) {
+			return;
+		}
+		
+		final IProject project = (IProject) selections[0];
+		try {
+			final ILaunchConfigurationWorkingCopy wc = getWorkingCopy(selection, mode);
+			if (wc == null) {
 				return;
 			}
-		} else {
-			return;
-		}
 
-		if (project == null || cfgFile == null) {
-			return;
-		}
-
-		final ILaunchConfigurationWorkingCopy wc = getWorkingCopy(project, cfgFile, mode);
-		if (wc == null) {
-			return; // successful launch happened
-		}
-
-		boolean result = initLaunchConfiguration(wc, project, cfgFile.getLocation().toOSString());
-		if (result) {
-			result = HostControllersTab.initLaunchConfiguration(wc);
-		}
-		try {
+			boolean result = initLaunchConfiguration(wc, project, "");
+			if (result) {
+				result = HostControllersTab.initLaunchConfiguration(wc);
+			}
+			
 			if (result) {
 				ILaunchConfiguration conf = wc.doSave();
 				conf.launch(mode, null);
