@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.BridgingNamedNode;
@@ -255,7 +256,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return true;
 		}
 
-		if (getAttributesInheritedDefinition(identifier) != null) {
+		if (attributeGainedDefinitions.containsKey(identifier.getName())) {
 			return true;
 		}
 
@@ -288,7 +289,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			}
 		}
 
-		definition =  getAttributesInheritedDefinition(identifier);
+		definition = attributeGainedDefinitions.get(identifier.getName());
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -316,7 +317,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			}
 		}
 
-		definition = getAttributesInheritedDefinition(identifier);
+		definition = attributeGainedDefinitions.get(identifier.getName());
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return true;
@@ -333,7 +334,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	
 	@Override
 	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
-			if (reference.getModuleIdentifier() != null) {
+		if (reference.getModuleIdentifier() != null) {
 			return getParentScope().getAssBySRef(timestamp, reference);
 		}
 
@@ -346,7 +347,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return definition;
 		}
 
-		definition = extendsGainedDefinitions.get(identifier.getName());
+		definition = extendsGainedDefinitions.get(reference.getId().getName());
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -357,7 +358,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return null;
 		}
 
-		definition = getAttributesInheritedDefinition(reference.getId());
+		definition = attributeGainedDefinitions.get(reference.getId().getName());
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -394,6 +395,29 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		return result;
 	}
 
+	/**
+	 * Collect all component type bodies that can be reached, recursively, via extends attributes.
+	 * 
+	 * @return the collected component type bodies.
+	 * */
+	private List<ComponentTypeBody> getAttributeExtendsInheritedComponentBodies() {
+		List<ComponentTypeBody> result = new ArrayList<ComponentTypeBody>();
+		LinkedList<ComponentTypeBody> toBeChecked = new LinkedList<ComponentTypeBody>(attrExtendsReferences.getComponentBodies());
+		while(!toBeChecked.isEmpty()) {
+			ComponentTypeBody body = toBeChecked.removeFirst();
+			if(!result.contains(body)) {
+				result.add(body);
+				for(ComponentTypeBody subBody : body.attrExtendsReferences.getComponentBodies()) {
+					if(!result.contains(subBody) && !toBeChecked.contains(subBody)) {
+						toBeChecked.add(subBody);
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Traverse the attribute extension hierarchy and check all components in it,
 	 *  to see if there is a definition with the provided name.
@@ -686,7 +710,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	 * In reality no collection is done, but it is checked that the actual component has all definitions from the extended component.
 	 * */
 	private void collectDefinitionsFromAttributeExtends() {
-		List<ComponentTypeBody> parents = attrExtendsReferences.getComponentBodies();
+		List<ComponentTypeBody> parents = getAttributeExtendsInheritedComponentBodies();
 		for (ComponentTypeBody parent : parents) {
 			for (Definition definition : parent.getDefinitions()) {
 				Identifier id = definition.getIdentifier();
@@ -837,7 +861,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			definition.addDeclaration(declarationCollector, i);
 		}
 
-		definition = getAttributesInheritedDefinition(identifier);
+		definition = attributeGainedDefinitions.get(identifier.getName());
 		if (definition != null) {
 			definition.addDeclaration(declarationCollector, i);
 		}
