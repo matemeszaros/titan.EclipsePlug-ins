@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.BridgingNamedNode;
@@ -27,24 +27,24 @@ import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.IReferenceChainElement;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
+import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
-import org.eclipse.titan.designer.AST.Scope;
-import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TTCN3Scope;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.AttributeSpecification;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ExtensionAttribute;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.ExtensionAttribute.ExtensionAttribute_type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.ExtensionsAttribute;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.Qualifiers;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute;
-import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
-import org.eclipse.titan.designer.AST.TTCN3.attributes.ExtensionAttribute.ExtensionAttribute_type;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.SingleWithAttribute.Attribute_Type;
+import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.VisibilityModifier;
 import org.eclipse.titan.designer.editors.ProposalCollector;
@@ -250,7 +250,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return true;
 		}
 
-		definition = getExtendsInheritedDefinition(identifier);
+		definition = extendsGainedDefinitions.get(identifier.getName());
 		if (definition != null) {
 			return true;
 		}
@@ -278,7 +278,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return definition;
 		}
 
-		definition = getExtendsInheritedDefinition(identifier);
+		definition = extendsGainedDefinitions.get(identifier.getName());
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -309,16 +309,16 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return true;
 		}
 
-		Definition def = getExtendsInheritedDefinition(identifier);
-		if (def != null) {
-			if (VisibilityModifier.Public.equals(def.getVisibilityModifier())) {
+		definition = extendsGainedDefinitions.get(identifier.getName());
+		if (definition != null) {
+			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return true;
 			}
 		}
 
-		def = getAttributesInheritedDefinition(identifier);
-		if (def != null) {
-			if (VisibilityModifier.Public.equals(def.getVisibilityModifier())) {
+		definition = getAttributesInheritedDefinition(identifier);
+		if (definition != null) {
+			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return true;
 			}
 		}
@@ -346,10 +346,10 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return definition;
 		}
 
-		Definition def = getExtendsInheritedDefinition(reference.getId());
-		if (def != null) {
-			if (VisibilityModifier.Public.equals(def.getVisibilityModifier())) {
-				return def;
+		definition = extendsGainedDefinitions.get(identifier.getName());
+		if (definition != null) {
+			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
+				return definition;
 			}
 
 			reference.getLocation().reportSemanticError(MessageFormat.format(
@@ -357,10 +357,10 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return null;
 		}
 
-		def = getAttributesInheritedDefinition(reference.getId());
-		if (def != null) {
-			if (VisibilityModifier.Public.equals(def.getVisibilityModifier())) {
-				return def;
+		definition = getAttributesInheritedDefinition(reference.getId());
+		if (definition != null) {
+			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
+				return definition;
 			}
 
 			reference.getLocation().reportSemanticError(MessageFormat.format(
@@ -372,45 +372,26 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	}
 
 	/**
-	 * Traverse the normal extension hierarchy and check all components in it,
-	 *  to see if there is a definition with the provided name.
-	 *
-	 * Please note, that semantic checking is not done here.
-	 * That should be performed before, but not required.
-	 *
-	 * @param id the name to search for.
-	 * @return the definition reachable in the extension hierarchy or null if non found.
+	 * Collect all component type bodies that can be reached, recursively, via extends.
+	 * 
+	 * @return the collected component type bodies.
 	 * */
-	private Definition getExtendsInheritedDefinition(final Identifier id) {
-		if (extendsReferences == null) {
-			return null;
-		}
-
-		final String temporalName = id.getName();
-
-		final List<ComponentTypeBody> bodies = extendsReferences.getComponentBodies();
-		if (bodies == null) {
-			return null;
-		}
-
-		for (ComponentTypeBody body : bodies) {
-			if (body == this) {
-				ErrorReporter.logError("Incorrect component structure: `" + getFullName() + "' is extending itself");
-				continue;
-			}
-
-			Map<String, Definition> subDefinitionMap = body.getDefinitionMap();
-			if (subDefinitionMap.containsKey(temporalName)) {
-				return subDefinitionMap.get(temporalName);
-			}
-
-			Definition temp = body.getExtendsInheritedDefinition(id);
-			if (temp != null) {
-				return temp;
+	private List<ComponentTypeBody> getExtendsInheritedComponentBodies() {
+		List<ComponentTypeBody> result = new ArrayList<ComponentTypeBody>();
+		LinkedList<ComponentTypeBody> toBeChecked = new LinkedList<ComponentTypeBody>(extendsReferences.getComponentBodies());
+		while(!toBeChecked.isEmpty()) {
+			ComponentTypeBody body = toBeChecked.removeFirst();
+			if(!result.contains(body)) {
+				result.add(body);
+				for(ComponentTypeBody subBody : body.extendsReferences.getComponentBodies()) {
+					if(!result.contains(subBody) && !toBeChecked.contains(subBody)) {
+						toBeChecked.add(subBody);
+					}
+				}
 			}
 		}
-
-		return null;
+		
+		return result;
 	}
 
 	/**
@@ -642,7 +623,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		initCompatibility(extendsReferences);
 
 		// collect definitions
-		List<ComponentTypeBody> bodies = extendsReferences.getComponentBodies();
+		List<ComponentTypeBody> bodies = getExtendsInheritedComponentBodies();
 		for (ComponentTypeBody body : bodies) {
 			Map<String, Definition> subDefinitionMap = body.getDefinitionMap();
 			for (Definition definition : subDefinitionMap.values()) {
@@ -732,8 +713,6 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 				}
 
 				attributeGainedDefinitions.put(name, definition);
-
-
 			}
 		}
 	}
@@ -848,19 +827,19 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 
 	public void addDeclaration(final DeclarationCollector declarationCollector, final int i) {
 		final Identifier identifier = declarationCollector.getReference().getId();
-		Definition def = definitions.getDefinition(identifier.getName());
-		if (def != null) {
-			def.addDeclaration(declarationCollector, i);
+		Definition definition = definitions.getDefinition(identifier.getName());
+		if (definition != null) {
+			definition.addDeclaration(declarationCollector, i);
 		}
 
-		def = getExtendsInheritedDefinition(identifier);
-		if (def != null) {
-			def.addDeclaration(declarationCollector, i);
+		definition = extendsGainedDefinitions.get(identifier.getName());
+		if (definition != null) {
+			definition.addDeclaration(declarationCollector, i);
 		}
 
-		def = getAttributesInheritedDefinition(identifier);
-		if (def != null) {
-			def.addDeclaration(declarationCollector, i);
+		definition = getAttributesInheritedDefinition(identifier);
+		if (definition != null) {
+			definition.addDeclaration(declarationCollector, i);
 		}
 
 		if (i == 0) {
