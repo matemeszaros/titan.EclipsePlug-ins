@@ -125,7 +125,7 @@ public final class ComponentTypeReferenceList extends ASTNode implements ILocate
 		for (Reference reference : componentReferences) {
 			Component_Type componentType = reference.chkComponentypeReference(timestamp);
 			if (componentType != null) {
-				ComponentTypeBody compTypeBody = (componentType).getComponentBody();
+				ComponentTypeBody compTypeBody = componentType.getComponentBody();
 				if (compTypeBody != null) {
 					if (componentTypeBodies.containsKey(compTypeBody)) {
 						componentTypeBodies.get(compTypeBody).getId().getLocation().reportSingularSemanticError(

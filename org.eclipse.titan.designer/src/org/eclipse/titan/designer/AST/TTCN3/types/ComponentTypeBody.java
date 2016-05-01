@@ -246,21 +246,18 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
 		}
 
-		Definition definition = definitions.getDefinition(identifier.getName());
+		final String name = identifier.getName();
+		Definition definition = definitions.getDefinition(name);
 		if (definition != null) {
 			return true;
 		}
 
-		definition = extendsGainedDefinitions.get(identifier.getName());
+		definition = extendsGainedDefinitions.get(name);
 		if (definition != null) {
 			return true;
 		}
 
-		if (attributeGainedDefinitions.containsKey(identifier.getName())) {
-			return true;
-		}
-
-		return false;
+		return attributeGainedDefinitions.containsKey(name);
 	}
 
 	/**
@@ -274,12 +271,13 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
 		}
 
-		Definition definition = definitions.getDefinition(identifier.getName());
+		final String name = identifier.getName();
+		Definition definition = definitions.getDefinition(name);
 		if (definition != null) {
 			return definition;
 		}
 
-		definition = extendsGainedDefinitions.get(identifier.getName());
+		definition = extendsGainedDefinitions.get(name);
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -289,7 +287,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			}
 		}
 
-		definition = attributeGainedDefinitions.get(identifier.getName());
+		definition = attributeGainedDefinitions.get(name);
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -304,20 +302,20 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 
 	@Override
 	public boolean hasAssignmentWithId(final CompilationTimeStamp timestamp, final Identifier identifier) {
-		// only the visible ones
-		Definition definition = definitions.getDefinition(identifier.getName());
+		final String name = identifier.getName();
+		Definition definition = definitions.getDefinition(name);
 		if (definition != null) {
 			return true;
 		}
 
-		definition = extendsGainedDefinitions.get(identifier.getName());
+		definition = extendsGainedDefinitions.get(name);
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return true;
 			}
 		}
 
-		definition = attributeGainedDefinitions.get(identifier.getName());
+		definition = attributeGainedDefinitions.get(name);
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return true;
@@ -333,7 +331,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	}
 	
 	@Override
-	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, final IReferenceChain refChain) {
 		if (reference.getModuleIdentifier() != null) {
 			return getParentScope().getAssBySRef(timestamp, reference);
 		}
@@ -342,12 +340,13 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			checkUniqueness(timestamp);
 		}
 
-		Definition definition = definitions.getDefinition(reference.getId().getName());
+		final String name = reference.getId().getName();
+		Definition definition = definitions.getDefinition(name);
 		if (definition != null) {
 			return definition;
 		}
 
-		definition = extendsGainedDefinitions.get(reference.getId().getName());
+		definition = extendsGainedDefinitions.get(name);
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -358,7 +357,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			return null;
 		}
 
-		definition = attributeGainedDefinitions.get(reference.getId().getName());
+		definition = attributeGainedDefinitions.get(name);
 		if (definition != null) {
 			if (VisibilityModifier.Public.equals(definition.getVisibilityModifier())) {
 				return definition;
@@ -401,7 +400,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	 * @return the collected component type bodies.
 	 * */
 	private List<ComponentTypeBody> getAttributeExtendsInheritedComponentBodies() {
-		List<ComponentTypeBody> result = new ArrayList<ComponentTypeBody>();
+		final List<ComponentTypeBody> result = new ArrayList<ComponentTypeBody>();
 		LinkedList<ComponentTypeBody> toBeChecked = new LinkedList<ComponentTypeBody>(attrExtendsReferences.getComponentBodies());
 		while(!toBeChecked.isEmpty()) {
 			ComponentTypeBody body = toBeChecked.removeFirst();
@@ -416,43 +415,6 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 		}
 		
 		return result;
-	}
-	
-	/**
-	 * Traverse the attribute extension hierarchy and check all components in it,
-	 *  to see if there is a definition with the provided name.
-	 *
-	 * Please note, that semantic checking is not done here.
-	 * That should be performed before, but not required.
-	 *
-	 * @param id the name to search for.
-	 * @return the definition reachable in the extension hierarchy or null if non found.
-	 * */
-	private Definition getAttributesInheritedDefinition(final Identifier id) {
-		if (attrExtendsReferences == null) {
-			return null;
-		}
-
-		final String temporalName = id.getName();
-
-		final List<ComponentTypeBody> bodies = attrExtendsReferences.getComponentBodies();
-		if(bodies == null) {
-			return null;
-		}
-
-		for (ComponentTypeBody body : bodies) {
-			Map<String, Definition> subDefinitionMap = body.getDefinitionMap();
-			if (subDefinitionMap.containsKey(temporalName)) {
-				return subDefinitionMap.get(temporalName);
-			}
-
-			Definition temp = body.getAttributesInheritedDefinition(id);
-			if (temp != null) {
-				return temp;
-			}
-		}
-
-		return null;
 	}
 
 	/**
@@ -935,15 +897,11 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 				}
 			}
 		}
-		if (extendsReferences != null) {
-			if (!extendsReferences.accept(v)) {
-				return false;
-			}
+		if (extendsReferences != null && !extendsReferences.accept(v)) {
+			return false;
 		}
-		if (attrExtendsReferences != null) {
-			if (!attrExtendsReferences.accept(v)) {
-				return false;
-			}
+		if (attrExtendsReferences != null && !attrExtendsReferences.accept(v)) {
+			return false;
 		}
 		if (v.leave(this)==ASTVisitor.V_ABORT) {
 			return false;
