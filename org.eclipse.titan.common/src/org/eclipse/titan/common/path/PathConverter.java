@@ -59,6 +59,12 @@ public final class PathConverter {
 	 * @return the path in cygwin style or the value of the path parameter.
 	 * */
 	public static String convert(final String path, final boolean reportDebugInformation, final MessageConsole outputConsole) {
+
+		if("".equals(path.trim())){
+			ErrorReporter.logWarning("The empty path could not be converted");
+			return path;
+		}
+		
 		if (!Platform.OS_WIN32.equals(Platform.getOS())) {
 			return path;
 		}

@@ -379,7 +379,11 @@ public final class CliExecutor extends BaseExecutor {
 
 			//TODO: implement
 			if ( !CREATE_TEMP_CFG || logFileNameDefined ) {
-				command.add(" sleep 1; " + mctrCliPath + " '" + PathConverter.convert(configFilePath, true, TITANDebugConsole.getConsole()) + "'");
+				if (!StringUtils.isNullOrEmpty(configFilePath)) {
+					command.add(" sleep 1; " + mctrCliPath + " '" + PathConverter.convert(configFilePath, true, TITANDebugConsole.getConsole()) + "'");
+				} else {
+					command.add(" sleep 1; " + mctrCliPath);
+				}
 			} else {
 				generateTemporalCfgFile(generateCfgString());
 				command.add(" sleep 1; " + mctrCliPath + " '" + PathConverter.convert(temporalConfigFile.getName(), true, TITANDebugConsole.getConsole()) + "'");
