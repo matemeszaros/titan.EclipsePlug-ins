@@ -138,7 +138,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
    </url>
 
    <requires>
-      <import feature="TITAN_Designer" version="5.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.debug.core"/>
@@ -146,10 +145,11 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.ui.console"/>
       <import plugin="org.eclipse.core.variables"/>
       <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.antlr.runtime" version="4.3.0"/>
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.core.filesystem"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.antlr.runtime" version="4.3.0" match="perfect"/>
+      <import plugin="org.eclipse.titan.designer" version="5.5.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -169,13 +169,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
    <plugin
          id="org.eclipse.titan.common"
          download-size="532"
-         install-size="0"
-         version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.titan.designer"
-         download-size="3841"
          install-size="0"
          version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
          unpack="false"/>
