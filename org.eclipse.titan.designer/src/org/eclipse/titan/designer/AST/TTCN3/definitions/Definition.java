@@ -84,6 +84,18 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 
 	private Location commentLocation = null;
 	
+	/**
+	 * The cumulative location of a definition is the location of the definition if it is stand alone,
+	 *  or the whole short hand notation it is enclosed into.
+	 * 
+	 * TTCN-3 allows to write some definitions with a shorthand notation.
+	 * for example: const integer a1:=1,a2:=2;
+	 * In these cases the locations of the definitions overlap, creating various problems.
+	 * 
+	 * To make the situation clear cumulative location stores the location of the whole shorthand notation
+	 *  the definition is listed in.
+	 * This way it becomes easy to identify which definitions can be affected by a change in the file.
+	 * */
 	private Location cumulativeDefinitionLocation = null;
 
 	//TODO this should be removed as the same functionality is present in Titanium as codesmell.
