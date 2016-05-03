@@ -42,7 +42,7 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 
 		if (this instanceof Def_ModulePar) {
 			String st1 = this.getFullName().toString();
-			String st = st1.substring(st1.lastIndexOf(".") + 1);
+			String st = st1.substring(st1.lastIndexOf('.') + 1);
 
 			return new T3Doc(this.getCommentLocation(), st);
 		}
@@ -82,7 +82,7 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 						st = rf.fieldId.getDisplayName();
 					} else {
 						String st1 = this.getFullName().toString();
-						st = st1.substring(st1.lastIndexOf(".") + 1);
+						st = st1.substring(st1.lastIndexOf('.') + 1);
 					}
 
 					//Get member information if available
@@ -94,7 +94,7 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 					}
 				} else if (assignment.getAssignmentType() == Assignment_type.A_TEMPLATE) {
 					String st1 = this.getFullName().toString();
-					String st = st1.substring(st1.lastIndexOf(".") + 1);
+					String st = st1.substring(st1.lastIndexOf('.') + 1);
 
 					String desc = null;
 					if (parentT3doc.getMembers() != null) {
@@ -116,7 +116,7 @@ public abstract class ASTNode implements IASTNode, IIdentifierContainer, IVisita
 					assignment.getAssignmentType() == Assignment_type.A_FUNCTION_RVAL) {
 					
 					String st1 = this.getFullName().toString();
-					String st = st1.substring(st1.lastIndexOf(".") + 1);
+					String st = st1.substring(st1.lastIndexOf('.') + 1);
 
 					if (parentT3doc.getParams() != null) {
 						final String desc = parentT3doc.getParams().get(st);

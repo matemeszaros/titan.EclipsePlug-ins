@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IFile;
  *  
  *  @author Kristof Szabados
  * */
-public class FileSaveTracker {
+public final class FileSaveTracker {
 	/**
 	 * The set of files that were reported to be saved by the supported
 	 * editors, but not yet had their modification event processed

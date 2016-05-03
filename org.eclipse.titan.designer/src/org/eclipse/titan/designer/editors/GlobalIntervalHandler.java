@@ -21,7 +21,7 @@ import org.eclipse.titan.common.parsers.Interval;
  * 
  * @author Kristof Szabados
  * */
-public class GlobalIntervalHandler {
+public final class GlobalIntervalHandler {
 	/**
 	 * The set of documents we know about right now, and the root of the
 	 * interval tree present in each

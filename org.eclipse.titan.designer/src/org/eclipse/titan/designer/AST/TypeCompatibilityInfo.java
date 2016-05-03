@@ -189,20 +189,20 @@ public final class TypeCompatibilityInfo {
 		if (op2Type != null) {
 			op2TypeName = op2Type.getTypename();
 		}
-		returnValue.append("`").append(op1DisplayString).append("'");
+		returnValue.append('`').append(op1DisplayString).append('\'');
 		if (op1TypeName != null && !op1DisplayString.equals(op1TypeName)) {
 			returnValue.append(" of type ");
-			returnValue.append("`");
+			returnValue.append('`');
 			returnValue.append(op1TypeName);
-			returnValue.append("'");
+			returnValue.append('\'');
 		}
 		returnValue.append(" and ");
-		returnValue.append("`").append(op2DisplayString).append("'");
+		returnValue.append('`').append(op2DisplayString).append('\'');
 		if (op2TypeName != null && !op2DisplayString.equals(op2TypeName)) {
 			returnValue.append(" of type ");
-			returnValue.append("`");
+			returnValue.append('`');
 			returnValue.append(op2TypeName);
-			returnValue.append("'");
+			returnValue.append('\'');
 		}
 		returnValue.append(" are not compatible");
 		if (errorStr != null) {

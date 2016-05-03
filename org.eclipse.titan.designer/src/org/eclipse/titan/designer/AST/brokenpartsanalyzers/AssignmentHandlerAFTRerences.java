@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.IVisitableNode;
+import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Assignment;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
@@ -89,7 +90,8 @@ public final class AssignmentHandlerAFTRerences extends ReferencesProcessor {
 		}
 
 		if (node instanceof Reference) {
-			addContagiousReference(((Reference) node).getId().getDisplayName());
+			Identifier identifier = ((Reference) node).getId();
+			addContagiousReference(identifier.getDisplayName());
 		}
 		return V_CONTINUE;
 	}

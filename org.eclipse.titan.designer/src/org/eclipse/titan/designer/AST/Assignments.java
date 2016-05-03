@@ -103,12 +103,10 @@ public abstract class Assignments extends Scope implements IOutlineElement, Iter
 		return super.hasAssignmentWithId(timestamp, identifier);
 	}
 
-	@Override
 	public String getOutlineText() {
 		return "";
 	}
 
-	@Override
 	public int category() {
 		return 0;
 	}

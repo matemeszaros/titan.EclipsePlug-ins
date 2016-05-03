@@ -111,7 +111,7 @@ public final class T3Doc {
 	private static final String[] TTCN3_MEMBER_CAPABLE = { Type_type.TYPE_TTCN3_CHOICE.toString(), Type_type.TYPE_TTCN3_ENUMERATED.toString(),
 			Type_type.TYPE_TTCN3_SET.toString(), Type_type.TYPE_TTCN3_SEQUENCE.toString(), Type_type.TYPE_REFERENCED.toString() };
 
-	private static boolean T3DocEnable;
+	private static boolean documentationEnabled;
 
 	private static Location location;
 
@@ -144,7 +144,7 @@ public final class T3Doc {
 
 	static {
 		final IPreferencesService prefService = Platform.getPreferencesService();
-		T3DocEnable = prefService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.T3DOC_ENABLE, false, null);
+		documentationEnabled = prefService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.T3DOC_ENABLE, false, null);
 
 		final Activator activator = Activator.getDefault();
 		if (activator != null) {
@@ -154,7 +154,7 @@ public final class T3Doc {
 					final String property = event.getProperty();
 
 					if (PreferenceConstants.T3DOC_ENABLE.equals(property)) {
-						T3DocEnable = prefService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
+						documentationEnabled = prefService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 								PreferenceConstants.T3DOC_ENABLE, false, null);
 						return;
 					}
@@ -268,7 +268,7 @@ public final class T3Doc {
 	}
 
 	public static boolean isT3DocEnable() {
-		return T3DocEnable;
+		return documentationEnabled;
 	}
 
 	public String getSignature() {
@@ -305,14 +305,14 @@ public final class T3Doc {
 	}
 
 	public static void check(final Location commentLocation, final String type) {
-		if (!T3DocEnable) {
+		if (!documentationEnabled) {
 			return;  // just to spare time
 		}
 		check(commentLocation, type, null);
 	}
 
 	public static void check(final Location commentLocation, final String type, final Type_type typeType) {
-		if (!T3DocEnable) {
+		if (!documentationEnabled) {
 			return;
 		}
 

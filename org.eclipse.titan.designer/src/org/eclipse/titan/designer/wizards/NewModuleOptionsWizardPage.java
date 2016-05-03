@@ -45,7 +45,7 @@ public abstract class NewModuleOptionsWizardPage extends WizardPage {
 		EMPTY, NAME_AND_EMPTY_BODY, SKELETON
 	}
 	
-	private static GeneratedModuleType[] GeneratedModuleTypeValues = GeneratedModuleType.values();
+	private static GeneratedModuleType[] generatedModuleTypeValues = GeneratedModuleType.values();
 	
 	private Composite pageComposite;
 
@@ -89,7 +89,7 @@ public abstract class NewModuleOptionsWizardPage extends WizardPage {
 			}
 		});
 		
-		generateModuleLabel = new org.eclipse.swt.widgets.Label(pageComposite, SWT.READ_ONLY|SWT.LEFT);
+		generateModuleLabel = new Label(pageComposite, SWT.READ_ONLY|SWT.LEFT);
 		generateModuleLabel.setText(GEN_WITH);
 		
 		generateModuleCombo = new Combo(pageComposite,SWT.READ_ONLY|SWT.RIGHT);	
@@ -116,7 +116,7 @@ public abstract class NewModuleOptionsWizardPage extends WizardPage {
 	}
 	
 	private void setGeneratedModuleType(final int index) {
-		generatedModuleType = GeneratedModuleTypeValues[index];
+		generatedModuleType = generatedModuleTypeValues[index];
 	}
 
 	@Override

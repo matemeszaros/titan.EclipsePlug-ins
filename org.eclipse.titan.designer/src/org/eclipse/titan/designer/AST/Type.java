@@ -337,7 +337,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 	}
 		
 	@Override
-	public void check(final CompilationTimeStamp timestamp, IReferenceChain refChain) {
+	public void check(final CompilationTimeStamp timestamp, final IReferenceChain refChain) {
 	if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
@@ -981,7 +981,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain);
 	
 	@Override
-	public boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, TypeCompatibilityInfo info,
+	public boolean isStronglyCompatible(final CompilationTimeStamp timestamp, final IType otherType, final TypeCompatibilityInfo info,
 			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain) {
 
 		check(timestamp);

@@ -29,7 +29,7 @@ import org.eclipse.titan.designer.AST.Location;
  * 
  * @author Kristof Szabados
  */
-public class ParserMarkerSupport {
+public final class ParserMarkerSupport {
 	
 	// disabled constructor
 	private ParserMarkerSupport() {

@@ -574,8 +574,8 @@ public abstract class Scope implements INamedNode, IIdentifierContainer, IVisita
 			if (i != 0) {
 				sb.append(", ");
 			}
-			sb.append(subScopes.get(i).getClass().getName()).append(": LOC=[").append(subScopeLocations.get(i).getOffset()).append("-")
-					.append(subScopeLocations.get(i).getEndOffset()).append("]");
+			sb.append(subScopes.get(i).getClass().getName()).append(": LOC=[").append(subScopeLocations.get(i).getOffset()).append('-')
+					.append(subScopeLocations.get(i).getEndOffset()).append(']');
 		}
 		return sb.toString();
 	}
@@ -590,7 +590,7 @@ public abstract class Scope implements INamedNode, IIdentifierContainer, IVisita
 			} else {
 				sb.append("\n    -> ");
 			}
-			sb.append("[").append(s.scopeName).append("]*[").append(s.getFullName()).append("]*[").append(s.getClass().getName())
+			sb.append('[').append(s.scopeName).append("]*[").append(s.getFullName()).append("]*[").append(s.getClass().getName())
 					.append("] SUBSCOPES: ").append(s.getSubScopeAndLocInfo());
 			s = s.parentScope;
 			first = false;
@@ -606,7 +606,7 @@ public abstract class Scope implements INamedNode, IIdentifierContainer, IVisita
 			if (!first) {
 				sb.append(" -> ");
 			}
-			sb.append("[").append(s.getClass().getSimpleName()).append("] ").append(s.getFullName());
+			sb.append('[').append(s.getClass().getSimpleName()).append("] ").append(s.getFullName());
 			s = s.parentScope;
 			first = false;
 		}
