@@ -214,19 +214,22 @@ public final class ObjectSet_definition extends ObjectSet implements IReferenceC
 	}
 
 	private void parseBlockObjectSetSpecifications() {
-		ObjectSet_definition temporalDefinition = null;
-		if (mBlock != null) {
-			final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
-			if (parser != null) {
-				temporalDefinition = parser.pr_special_ObjectSetSpec().definition;
-				//internalIndex += parser.nof_consumed_tokens();
-				final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
-				if (null != errors && !errors.isEmpty()) {
-					for (int i = 0; i < errors.size(); i++) {
-						ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
-								IMarker.SEVERITY_ERROR);
-					}
-				}
+		if (mBlock == null) {
+			return;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (parser == null) {
+			return;
+		}
+
+		final ObjectSet_definition temporalDefinition = parser.pr_special_ObjectSetSpec().definition;
+		//internalIndex += parser.nof_consumed_tokens();
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
 			}
 		}
 
