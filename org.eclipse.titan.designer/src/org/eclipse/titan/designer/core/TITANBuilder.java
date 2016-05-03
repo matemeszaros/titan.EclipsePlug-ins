@@ -199,6 +199,10 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 	 * @return true if the operation was successful, false otherwise.
 	 */
 	private static boolean removeExecutable(final IProject project, final List<IProject> processedProjects, final boolean sync) {
+		if (!project.isAccessible()) {
+			return false;
+		}
+
 		try {
 			String targetExecutable = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakefileCreationData.TARGET_EXECUTABLE_PROPERTY));
