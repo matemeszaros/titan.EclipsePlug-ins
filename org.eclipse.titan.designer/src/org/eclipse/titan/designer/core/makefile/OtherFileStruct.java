@@ -10,16 +10,16 @@ package org.eclipse.titan.designer.core.makefile;
 /**
  * @author Szabolcs Beres
  * */
-class OtherFileStruct implements Comparable<OtherFileStruct> {
+final class OtherFileStruct implements Comparable<OtherFileStruct> {
 	/** if null the file is in the current working directory */
 	private String directory;
 	private String originalLocation;
 	private String fileName;
 
 	public OtherFileStruct(final String directory, final String originalLocation, final String fileName) {
-		this.setDirectory(directory);
-		this.setOriginalLocation(originalLocation);
-		this.setFileName(fileName);
+		setDirectory(directory);
+		setOriginalLocation(originalLocation);
+		setFileName(fileName);
 	}
 
 	public StringBuilder name(final String workingDirectory, final boolean useAbsolutePathNames) {

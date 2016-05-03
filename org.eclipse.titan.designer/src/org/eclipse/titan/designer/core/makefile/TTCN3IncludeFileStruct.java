@@ -10,7 +10,7 @@ package org.eclipse.titan.designer.core.makefile;
 /**
  * @author Laszlo Baji
  * */
-public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct> {
+public final class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct> {
 	private String directory;
 	private String workspaceDirectory;
 	private String originalLocation;
@@ -19,11 +19,11 @@ public class TTCN3IncludeFileStruct implements Comparable<TTCN3IncludeFileStruct
 
 	public TTCN3IncludeFileStruct(final String directory, final String workspaceDirectory, final String originalLocation,
 			final String workspaceLocation, final String fileName) {
-		this.setDirectory(directory);
-		this.setWorkspaceDirectory(workspaceDirectory);
-		this.setOriginalLocation(originalLocation);
-		this.setWorkspaceLocation(workspaceLocation);
-		this.setFileName(fileName);
+		setDirectory(directory);
+		setWorkspaceDirectory(workspaceDirectory);
+		setOriginalLocation(originalLocation);
+		setWorkspaceLocation(workspaceLocation);
+		setFileName(fileName);
 	}
 
 	public StringBuilder name(final String workingDirectory, final boolean useAbsolutePathNames) {

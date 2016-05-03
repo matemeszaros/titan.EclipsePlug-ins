@@ -10,7 +10,7 @@ package org.eclipse.titan.designer.core.makefile;
 /**
  * @author Szabolcs Beres
  * */
-class ModuleStruct implements Comparable<ModuleStruct> {
+final class ModuleStruct implements Comparable<ModuleStruct> {
 	/** if null the file is in the current working directory */
 	private String directory;
 	private String originalLocation;
@@ -20,10 +20,10 @@ class ModuleStruct implements Comparable<ModuleStruct> {
 	private boolean isRegular = true;
 
 	public ModuleStruct(final String directory, final String originalLocation, final String fileName, final String moduleName) {
-		this.setDirectory(directory);
-		this.setOriginalLocation(originalLocation);
-		this.setFileName(fileName);
-		this.setModuleName(moduleName);
+		setDirectory(directory);
+		setOriginalLocation(originalLocation);
+		setFileName(fileName);
+		setModuleName(moduleName);
 	}
 
 	public StringBuilder fileName() {
