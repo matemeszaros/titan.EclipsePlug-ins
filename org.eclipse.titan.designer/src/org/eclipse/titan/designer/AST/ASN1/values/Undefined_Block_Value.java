@@ -247,150 +247,181 @@ public final class Undefined_Block_Value extends Value {
 	}
 
 	private Named_Bits parseBlockNamedBits() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return null;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return null;
 		}
-		Named_Bits namedBits = null;
-		namedBits = parser.pr_special_NamedBitListValue().named_bits;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+
+		final Named_Bits namedBits = parser.pr_special_NamedBitListValue().named_bits;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
-			namedBits = null;
+
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
 						IMarker.SEVERITY_ERROR);
 			}
+
+			return null;
 		}
+
 		return namedBits;
 	}
 
 
 	private SequenceOf_Value parseBlockSeqofValue() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return null;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return null;
 		}
-		SequenceOf_Value value = null;
-		value = parser.pr_special_SeqOfValue().value;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+
+		final SequenceOf_Value value = parser.pr_special_SeqOfValue().value;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
-			value = null;
 
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
 						IMarker.SEVERITY_ERROR);
 			}
+
+			return null;
 		}
+
 		return value;
 	}
 
 	private SetOf_Value parseBlockSetofValue() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return null;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return null;
 		}
-		SetOf_Value value = null;
-		value = parser.pr_special_SetOfValue().value;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+
+		final SetOf_Value value = parser.pr_special_SetOfValue().value;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
-			value = null;
 		
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
 						IMarker.SEVERITY_ERROR);
 			}
-		}	
+
+			return null;
+		}
+
 		return value;
 	}
 
 	private Sequence_Value parseBlockSequenceValue() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return null;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return null;
 		}
-		Sequence_Value value = null;
-		value = parser.pr_special_SequenceValue().value;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+
+		final Sequence_Value value = parser.pr_special_SequenceValue().value;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
-			value = null;
-		
+
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
 						IMarker.SEVERITY_ERROR);
 			}
-		}	
+
+			return null;
+		}
+
 		return value;
 	}
 
 	private Set_Value parseBlockSetValue() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return null;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return null;
 		}
-		Set_Value value = null;
 
-		value = parser.pr_special_SetValue().value;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		final Set_Value value = parser.pr_special_SetValue().value;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
-			value = null;
 		
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
 						IMarker.SEVERITY_ERROR);
 			}
-		}	
+
+			return null;
+		}
+
 		return value;
 	}
 
 	private ObjectIdentifier_Value parseBlockObjectIdentifierValue() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return null;
 		}
-		ObjectIdentifier_Value value = null;
-		value = parser.pr_special_ObjectIdentifierValue().value;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+
+		final ObjectIdentifier_Value value = parser.pr_special_ObjectIdentifierValue().value;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
-			value = null;
-		
+
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
 						IMarker.SEVERITY_ERROR);
 			}
-		}	
+
+			return null;
+		}
+
 		return value;
 	}
 
 	private RelativeObjectIdentifier_Value parseBlockRelativeObjectIdentifierValue() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return null;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return null;
 		}
-		RelativeObjectIdentifier_Value value = null;
-		value = parser.pr_special_RelativeObjectIdentifierValue().value;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+
+		final RelativeObjectIdentifier_Value value = parser.pr_special_RelativeObjectIdentifierValue().value;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
-			value = null;
-		
+
 			for (int i = 0; i < errors.size(); i++) {
 				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
 						IMarker.SEVERITY_ERROR);
 			}
+
+			return null;
 		}
+
 		return value;
 	}
 	

@@ -119,12 +119,15 @@ public final class ObjectClass_Definition extends ObjectClass {
 	}
 	
 	private void parseBlockFieldSpecs() {
-		Asn1Parser parser = null;
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(fieldSpecsBlock);
+		if (null == fieldSpecsBlock) {
+			return;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(fieldSpecsBlock);
 		if (null == parser) {
 			return;
 		}
-		
+
 		fieldSpecifications = parser.pr_special_FieldSpecList().fieldSpecifications;
 		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
@@ -135,6 +138,7 @@ public final class ObjectClass_Definition extends ObjectClass {
 						IMarker.SEVERITY_ERROR);
 			}
 		}
+
 		if (null == fieldSpecifications) {
 			isErroneous = true;
 			return;

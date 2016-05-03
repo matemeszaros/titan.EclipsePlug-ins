@@ -460,13 +460,17 @@ public final class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithCom
 	}
 
 	private void parseBlockEnumeration() {
-		Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if(null == mBlock) {
+			return;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return;
 		}
 
 		enumerations = parser.pr_special_Enumerations().enumeration;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
 			enumerations = null;
@@ -475,7 +479,7 @@ public final class ASN1_Enumerated_Type extends ASN1Type implements ITypeWithCom
 						IMarker.SEVERITY_ERROR);
 			}
 		}
-		
+
 		if (enumerations != null) {
 			if(enumerations.enumItems1 != null) {
 				enumerations.enumItems1.setFullNameParent(this);

@@ -364,23 +364,26 @@ public final class ASN1_BitString_Type extends ASN1Type {
 	}
 
 	private void parseBlockBitstring() {
-		Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return;
 		}
-		namedValues = null;
-		if (null != mBlock) {
-			namedValues = parser.pr_special_NamedBitList().namedValues;
-			List<SyntacticErrorStorage> errors = parser.getErrorStorage();
-			if (null != errors && !errors.isEmpty()) {
-				isErroneous = true;
-				namedValues = null;
-				for (int i = 0; i < errors.size(); i++) {
-					ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
-							IMarker.SEVERITY_ERROR);
-				}
+
+		namedValues = parser.pr_special_NamedBitList().namedValues;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			namedValues = null;
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
 			}
 		}
+
 		if (namedValues != null) {
 			namedValues.setFullNameParent(this);
 			namedValues.setMyScope(getMyScope());

@@ -710,22 +710,23 @@ public final class ASN1_Set_Type extends ASN1_Set_Seq_Choice_BaseType {
 
 	/** Parses the block as if it were the block of a set. */
 	private void parseBlockSet() {
-		Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return;
+		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return;
 		}
-		components = null;
 
-		if (null != mBlock) {
-			components = parser.pr_special_ComponentTypeLists().list;
-			List<SyntacticErrorStorage> errors = parser.getErrorStorage();
-			if (null != errors && !errors.isEmpty()) {
-				isErroneous = true;
-				components = null;
-				for (int i = 0; i < errors.size(); i++) {
-					ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
-							IMarker.SEVERITY_ERROR);
-				}
+		components = parser.pr_special_ComponentTypeLists().list;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			isErroneous = true;
+			components = null;
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
 			}
 		}
 

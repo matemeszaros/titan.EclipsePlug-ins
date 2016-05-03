@@ -800,27 +800,26 @@ public final class ASN1_Sequence_Type extends ASN1_Set_Seq_Choice_BaseType {
 
 	/** Parses the block as if it were the block of a sequence. */
 	private void parseBlockSequence() {
-		Asn1Parser parser = null;
-		if (null != mBlock) {
-			parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
+		if (null == mBlock) {
+			return;
 		}
+
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return;
 		}
-		components = null;
 
-		if (null != mBlock) {
-			components = parser.pr_special_ComponentTypeLists().list;
-			List<SyntacticErrorStorage> errors = parser.getErrorStorage();
-			if (null != errors && !errors.isEmpty()) {
-				//isErroneous = true;
-				components = null;
-				for (int i = 0; i < errors.size(); i++) {
-					ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
-							IMarker.SEVERITY_ERROR);
-				}
+		components = parser.pr_special_ComponentTypeLists().list;
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		if (null != errors && !errors.isEmpty()) {
+			//isErroneous = true;
+			components = null;
+			for (int i = 0; i < errors.size(); i++) {
+				ParserMarkerSupport.createOnTheFlyMixedMarker((IFile) mBlock.getLocation().getFile(), errors.get(i),
+						IMarker.SEVERITY_ERROR);
 			}
 		}
+
 		if (components == null) {
 			isErroneous = true;
 			return;

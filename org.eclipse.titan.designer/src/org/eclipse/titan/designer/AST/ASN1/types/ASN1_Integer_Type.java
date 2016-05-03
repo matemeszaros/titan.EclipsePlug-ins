@@ -479,19 +479,17 @@ public final class ASN1_Integer_Type extends ASN1Type {
 	}
 
 	private void parseBlockInt() {
-		Asn1Parser parser = null;
 		if (null == mBlock) {
 			return;
 		}
 
-		parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
-
+		final Asn1Parser parser = BlockLevelTokenStreamTracker.getASN1ParserForBlock(mBlock);
 		if (null == parser) {
 			return;
 		}
 
 		namedNumbers = parser.pr_special_NamedNumberList().namedValues;
-		List<SyntacticErrorStorage> errors = parser.getErrorStorage();
+		final List<SyntacticErrorStorage> errors = parser.getErrorStorage();
 		if (null != errors && !errors.isEmpty()) {
 			isErroneous = true;
 			namedNumbers = null;
