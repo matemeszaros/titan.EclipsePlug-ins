@@ -82,6 +82,10 @@ public final class ConfigTreeNodeUtilities {
 							  final TokenStream aTokenStream,
 							  final StringBuilder aSb,
 							  final List<Integer> aDisallowedNodes ) {
+		if ( aParseTree == null ) {
+			//TODO: warning
+			return;
+		}
 		if ( aParseTree instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParseTree;
 			if ( aDisallowedNodes != null && aDisallowedNodes.contains( rule.start.getType() ) ) {

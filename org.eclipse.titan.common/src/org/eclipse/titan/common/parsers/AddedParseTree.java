@@ -1,3 +1,10 @@
+/******************************************************************************
+ * Copyright (c) 2000-2015 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 package org.eclipse.titan.common.parsers;
 
 import org.antlr.v4.runtime.Parser;
@@ -8,8 +15,8 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 /**
  * Parse tree type for adding new strings to an existing ParseTree structure,
  * which was build during a parsing.
- * It has no info about its start and end tokens, it just contains a string
- * It can have children
+ * It has NO info about its start and end tokens, it just contains a string
+ * It has NO children
  * @author Arpad Lovassy
  */
 public class AddedParseTree implements ParseTree {
