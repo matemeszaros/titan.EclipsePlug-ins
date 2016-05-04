@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+         <actionSet
+           id="org.eclipse.titan.designer.actionSet1"
+           label="GenerateJAVAfiles"
+           visible="true">
+        <action
+              class="org.eclipse.titan.codegenerator.AstWalkerJava"
+              icon="icons/generate_java.gif"
+              id="org.eclipse.titan.designer.action1"
+              label="GenerateJAVAfiles"
+              state="true"
+              style="push"
+              toolbarPath="Normal/additions"
+              tooltip="Generate JAVA code from the TTCN sources">
+        </action>
+     </actionSet>
+   </extension>
+</plugin>
