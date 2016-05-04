@@ -13,6 +13,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
+import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
@@ -20,6 +21,7 @@ import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.TemplateInstance;
 import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -118,7 +120,20 @@ public final class MatchExpression extends Expression_Value {
 			return;
 		}
 
-		templateInstance.getTemplateBody().checkThisTemplateGeneric(timestamp, templateInstance.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE), false,	false, false, true,	false);
+		Expected_Value_type internalExpectation = Expected_Value_type.EXPECTED_DYNAMIC_VALUE.equals(expectedValue) ? Expected_Value_type.EXPECTED_TEMPLATE
+				: expectedValue;
+		
+		IType localGovernor = templateInstance.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
+		if (localGovernor == null) {
+			ITTCN3Template template = templateInstance.getTemplateBody().setLoweridToReference(timestamp);
+			localGovernor = template.getExpressionGovernor(timestamp, internalExpectation);
+		}
+		if(localGovernor == null) {
+			setIsErroneous(true);
+			return;
+		}
+
+		templateInstance.getTemplateBody().checkThisTemplateGeneric(timestamp, localGovernor, false, false, false, true, false);
 
 		try {
 			ExpressionUtilities.checkExpressionOperatorCompatibility(timestamp, this, referenceChain, Expected_Value_type.EXPECTED_TEMPLATE, value, templateInstance);
