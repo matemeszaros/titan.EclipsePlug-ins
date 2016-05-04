@@ -450,7 +450,8 @@ pr_GroupsSection:
 
 pr_ModuleParametersSection:
 	MODULE_PARAMETERS_SECTION
-	(	pr_ModuleParam SEMICOLON9?
+	(	param = pr_ModuleParam	{if($param.parameter != null) {moduleParametersHandler.getModuleParameters().add($param.parameter);}}
+		SEMICOLON9?
 	)*
 ;
 
@@ -1008,20 +1009,32 @@ pr_DNSName:
 )
 ;
 
-pr_ModuleParam:
-	pr_ParameterName
-	(	ASSIGNMENTCHAR9 pr_ParameterValue
-	|	CONCATCHAR9 pr_ParameterValue
+pr_ModuleParam returns[ModuleParameterSectionHandler.ModuleParameter parameter = null]:
+	name = pr_ParameterName	{$parameter = $name.parameter;}
+	(	ASSIGNMENTCHAR9
+		val1 = pr_ParameterValue	{$parameter.setValue($val1.ctx);}
+	|	CONCATCHAR9
+		val2 = pr_ParameterValue	{$parameter.setValue($val2.ctx);}
 	)
 ;
 
-pr_ParameterName:
-(	(STAR9 DOT9)?
-	pr_Identifier (SQUAREOPEN9 NUMBER9 SQUARECLOSE9)?
-	(	DOT9 pr_Identifier (SQUAREOPEN9 NUMBER9 SQUARECLOSE9)?
-	)*
+pr_ParameterName returns[ModuleParameterSectionHandler.ModuleParameter parameter = null]:
+(
+	id1 = pr_Identifier	{$parameter = new ModuleParameterSectionHandler.ModuleParameter();}
+	(	DOT9
+		id2 = pr_Identifier { $parameter.setModuleName($id1.ctx);$parameter.setParameterName($id2.ctx);}
+	|	{$parameter.setParameterName($id1.ctx);}
+	)
+|	star = pr_StarModuleName
+	DOT9
+	id3 = pr_Identifier
+	{$parameter = new ModuleParameterSectionHandler.ModuleParameter(); $parameter.setModuleName($star.ctx);$parameter.setParameterName($id3.ctx);}
 )
 ;
+
+pr_StarModuleName:
+(	STAR9
+);
 
 pr_ParameterValue:
 	pr_SimpleParameterValue pr_LengthMatch? IFPRESENTKeyword9?
