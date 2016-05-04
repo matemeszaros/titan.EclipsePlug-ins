@@ -39,6 +39,9 @@ import org.eclipse.ui.part.FileEditorInput;
  * @author Arpad Lovassy
  */
 public final class ConfigEditor extends FormEditor implements IResourceChangeListener {
+	
+	private static final boolean CONFIG_EDITOR_TABS_VISIBLE = true;
+	
 	private ConfigTextEditor editor;
 
 	private int editorPageIndex;
@@ -123,8 +126,9 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	}
 	
 	public void refresh(final CfgAnalyzer cfgAnalyzer) {
-		//TODO: implement
-		/*
+		if ( !CONFIG_EDITOR_TABS_VISIBLE ) {
+			return;
+		}
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -139,14 +143,14 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 				mLoggingEditor.refreshData( cfgAnalyzer.getLoggingSectionHandler() );
 			}
 		});
-		//*/
 	}
 
 	public void setErrorMessage(final String errorMessage) {
 		this.errorMessage = errorMessage;
 
-		//TODO: implement
-		/*
+		if ( !CONFIG_EDITOR_TABS_VISIBLE ) {
+			return;
+		}
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -158,33 +162,31 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 				mLoggingEditor.setErrorMessage();
 			}
 		});
-		//*/
 	}
 	
 	@Override
 	protected void addPages() {
-		//TODO: implement
-		//*
-		createTextEditorPage();
-		/*/
-		try {
+		if ( CONFIG_EDITOR_TABS_VISIBLE ) {
+			try {
+				createTextEditorPage();
+				mModuleParameterSectionEditor = new ModuleParameterSectionPage(this);
+				addPage(mModuleParameterSectionEditor);
+				mTestportParameterSectionEditor = new TestportParametersSectionPage(this);
+				addPage(mTestportParameterSectionEditor);
+				mComponentGroupMCSectionEditor = new ComponentsGroupsMCPage(this);
+				addPage(mComponentGroupMCSectionEditor);
+				mExecuteExternalCommandsEditor = new ExecuteExternalcommandsPage(this);
+				addPage(mExecuteExternalCommandsEditor);
+				mIncludeDefineEditor = new IncludeDefinePage(this);
+				addPage(mIncludeDefineEditor);
+				mLoggingEditor = new LoggingPage(this);
+				addPage(mLoggingEditor);
+			} catch (PartInitException e) {
+				ErrorReporter.logExceptionStackTrace(e);
+			}
+		} else {
 			createTextEditorPage();
-			mModuleParameterSectionEditor = new ModuleParameterSectionPage(this);
-			addPage(mModuleParameterSectionEditor);
-			mTestportParameterSectionEditor = new TestportParametersSectionPage(this);
-			addPage(mTestportParameterSectionEditor);
-			mComponentGroupMCSectionEditor = new ComponentsGroupsMCPage(this);
-			addPage(mComponentGroupMCSectionEditor);
-			mExecuteExternalCommandsEditor = new ExecuteExternalcommandsPage(this);
-			addPage(mExecuteExternalCommandsEditor);
-			mIncludeDefineEditor = new IncludeDefinePage(this);
-			addPage(mIncludeDefineEditor);
-			mLoggingEditor = new LoggingPage(this);
-			addPage(mLoggingEditor);
-		} catch (PartInitException e) {
-			ErrorReporter.logExceptionStackTrace(e);
 		}
-		//*/
 
 		setPartName(getEditorInput().getName());
 	}

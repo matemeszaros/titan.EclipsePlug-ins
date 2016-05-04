@@ -254,10 +254,10 @@ public final class LoggingBitsSubPage {
 		ParseTree node = new AddedParseTree(name.toString());
 		ConfigTreeNodeUtilities.addChild( consoleMaskRoot, node );
 		
-		ParseTree consoleMask = new AddedParseTree("");
+		ParseTree consoleMask = new ParserRuleContext();
 		logentry.setConsoleMask( consoleMask );
 		ConfigTreeNodeUtilities.addChild( consoleMaskRoot, consoleMask );
-		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), consoleMaskRoot, 0 );
+		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), consoleMaskRoot );
 	}
 
 	private void createFileMaskRootNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry) {
@@ -272,10 +272,10 @@ public final class LoggingBitsSubPage {
 		ParseTree node = new AddedParseTree(name.toString());
 		ConfigTreeNodeUtilities.addChild( fileMaskRoot, node );
 		
-		ParseTree fileMask = new AddedParseTree("");
+		ParseTree fileMask = new ParserRuleContext();
 		logentry.setFileMask( fileMask );
 		ConfigTreeNodeUtilities.addChild( fileMaskRoot, fileMask );
-		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), fileMaskRoot, 0 );
+		ConfigTreeNodeUtilities.addChild( loggingSectionHandler.getLastSectionRoot(), fileMaskRoot );
 	}
 
 	private void checkStateChangeHandler(final Map<LoggingBit, ParseTree> bitMask, final ParseTree bitmaskRoot,
@@ -386,10 +386,10 @@ public final class LoggingBitsSubPage {
 
 		if (bitMask.keySet().size() > 1) {
 			ParseTree separator = new AddedParseTree("|");
-			ConfigTreeNodeUtilities.addChild(bitmaskRoot, separator, 0);
+			ConfigTreeNodeUtilities.addChild( bitmaskRoot, separator );
 		}
 
-		ConfigTreeNodeUtilities.addChild(bitmaskRoot, newBit, 0);
+		ConfigTreeNodeUtilities.addChild( bitmaskRoot, newBit );
 	}
 
 	private void removeLoggingBit(final Map<LoggingBit, ParseTree> bitMask, final LoggingBit bit) {

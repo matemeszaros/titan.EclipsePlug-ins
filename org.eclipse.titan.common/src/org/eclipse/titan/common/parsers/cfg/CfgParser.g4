@@ -8,6 +8,7 @@ import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ExecuteSectionHandler;
+import org.eclipse.titan.common.parsers.cfg.indices.ExecuteSectionHandler.ExecuteItem;
 import org.eclipse.titan.common.parsers.cfg.indices.ExternalCommandSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.GroupSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.IncludeSectionHandler;
@@ -407,10 +408,39 @@ pr_ExecuteSection:
 	pr_ExecuteSectionItem*
 ;
 
-pr_ExecuteSectionItem:
-	t = TEST3 { mCfgParseResult.getExecuteElements().add( $t.getText() ); }
+pr_ExecuteSectionItem
+@init {
+	String executeElement = "";
+	ExecuteItem item = new ExecuteItem();
+}:
+	module = pr_ExecuteSectionItemModuleName
+		{
+			executeElement += $module.name;
+			item.setModuleName( $module.ctx );
+		}
+	(	DOT3
+		testcase = pr_ExecuteSectionItemTestcaseName
+			{
+				executeElement += $testcase.name;
+				item.setTestcaseName( $testcase.ctx );
+			}
+	)?
+	{	mCfgParseResult.getExecuteElements().add( executeElement );
+		item.setRoot( $ctx );
+		executeSectionHandler.getExecuteitems().add( item );
+	}
 	SEMICOLON3?
 ;
+
+pr_ExecuteSectionItemModuleName returns [ String name ]:
+	t = TEST_MODULE3
+{	$name = $t.text != null ? $t.text : "";
+};
+
+pr_ExecuteSectionItemTestcaseName returns [ String name ]:
+	t = TEST_TESTCASE3?
+{	$name = $t.text != null ? $t.text : "";
+};
 
 pr_DefineSection: 
 	DEFINE_SECTION
@@ -450,7 +480,11 @@ pr_GroupsSection:
 
 pr_ModuleParametersSection:
 	MODULE_PARAMETERS_SECTION
-	(	param = pr_ModuleParam	{if($param.parameter != null) {moduleParametersHandler.getModuleParameters().add($param.parameter);}}
+	(	param = pr_ModuleParam
+			{	if ( $param.parameter != null ) {
+					moduleParametersHandler.getModuleParameters().add( $param.parameter );
+				}
+			}
 		SEMICOLON9?
 	)*
 ;

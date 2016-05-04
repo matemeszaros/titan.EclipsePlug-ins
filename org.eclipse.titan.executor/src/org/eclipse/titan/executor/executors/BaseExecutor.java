@@ -98,7 +98,8 @@ import static org.eclipse.titan.executor.properties.FieldEditorPropertyPage.getO
  * It tries to hide all of the launchConfiguration handling and HC starting issues from the specific Executors
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public abstract class BaseExecutor {
 	
 	//TODO: implement
