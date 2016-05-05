@@ -60,8 +60,8 @@ public final class Int2OctExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("int2oct");
-		builder.append('(').append(value1.createStringRepresentation());
+		final StringBuilder builder = new StringBuilder("int2oct(");
+		builder.append(value1.createStringRepresentation());
 		builder.append(", ");
 		builder.append(value2.createStringRepresentation()).append(')');
 		return builder.toString();
@@ -159,10 +159,7 @@ public final class Int2OctExpression extends Expression_Value {
 		case TYPE_INTEGER:
 			last2 = value2.getValueRefdLast(timestamp, expectedValue, referenceChain);
 			if (!last2.isUnfoldable(timestamp) && Value.Value_type.INTEGER_VALUE.equals(last2.getValuetype())) {
-				if (!((Integer_Value) last2).isNative()) {
-					value2.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR6, last2));
-					setIsErroneous(true);
-				} else {
+				if (((Integer_Value) last2).isNative()) {
 					long i2 = ((Integer_Value) last2).getValue();
 					if (i2 < 0) {
 						value2.getLocation().reportSemanticError(OPERANDERROR4);
@@ -174,6 +171,9 @@ public final class Int2OctExpression extends Expression_Value {
 							setIsErroneous(true);
 						}
 					}
+				} else {
+					value2.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR6, last2));
+					setIsErroneous(true);
 				}
 			}
 			break;

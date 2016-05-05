@@ -274,15 +274,15 @@ public final class ReplaceExpression extends Expression_Value {
 			case TYPE_INTEGER:
 				IValue last2 = value2.getValueRefdLast(timestamp, expectedValue, referenceChain);
 				if (!last2.isUnfoldable(timestamp) && Value.Value_type.INTEGER_VALUE.equals(last2.getValuetype())) {
-					if (!((Integer_Value) last2).isNative()) {
-						value2.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR11, value2));
-						setIsErroneous(true);
-					} else {
+					if (((Integer_Value) last2).isNative()) {
 						long i = ((Integer_Value) last2).getValue();
 						if (i < 0) {
 							value2.getLocation().reportSemanticError(OPERANDERROR3);
 							setIsErroneous(true);
 						}
+					} else {
+						value2.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR11, value2));
+						setIsErroneous(true);
 					}
 				}
 				break;
@@ -304,15 +304,15 @@ public final class ReplaceExpression extends Expression_Value {
 			case TYPE_INTEGER:
 				IValue last3 = value3.getValueRefdLast(timestamp, expectedValue, referenceChain);
 				if (!last3.isUnfoldable(timestamp) && Value.Value_type.INTEGER_VALUE.equals(last3.getValuetype())) {
-					if (!((Integer_Value) last3).isNative()) {
-						value3.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR12, last3));
-						setIsErroneous(true);
-					} else {
+					if (((Integer_Value) last3).isNative()) {
 						long i = ((Integer_Value) last3).getValue();
 						if (i < 0) {
 							value3.getLocation().reportSemanticError(OPERANDERROR4);
 							setIsErroneous(true);
 						}
+					} else {
+						value3.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR12, last3));
+						setIsErroneous(true);
 					}
 				}
 				break;

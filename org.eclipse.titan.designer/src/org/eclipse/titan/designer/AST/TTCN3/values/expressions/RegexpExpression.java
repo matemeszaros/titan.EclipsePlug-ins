@@ -254,15 +254,15 @@ public final class RegexpExpression extends Expression_Value {
 			case TYPE_INTEGER:
 				IValue last3 = temp.getValueRefdLast(timestamp, expectedValue, referenceChain);
 				if (!last3.isUnfoldable(timestamp) && Value.Value_type.INTEGER_VALUE.equals(last3.getValuetype())) {
-					if (!((Integer_Value) last3).isNative()) {
-						value3.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR5, last3));
-						setIsErroneous(true);
-					} else {
+					if (((Integer_Value) last3).isNative()) {
 						long i = ((Integer_Value) last3).getValue();
 						if (i < 0) {
 							value3.getLocation().reportSemanticError(OPERANDERROR4);
 							setIsErroneous(true);
 						}
+					} else {
+						value3.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR5, last3));
+						setIsErroneous(true);
 					}
 				}
 				break;

@@ -37,7 +37,7 @@ public final class TimerReadExpression extends Expression_Value {
 	private static final String OPERANDERROR2 = "The operand of operation `timer read'' should be a timer instead of `{0}''";
 	private static final String OPERATIONNAME = "timer read";
 
-	private Reference reference;
+	private final Reference reference;
 
 	public TimerReadExpression(final Reference reference) {
 		this.reference = reference;

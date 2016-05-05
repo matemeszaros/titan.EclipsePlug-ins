@@ -158,10 +158,7 @@ public final class Int2BitExpression extends Expression_Value {
 		case TYPE_INTEGER:
 			last2 = value2.getValueRefdLast(timestamp, expectedValue, referenceChain);
 			if (!last2.isUnfoldable(timestamp) && Value.Value_type.INTEGER_VALUE.equals(last2.getValuetype())) {
-				if (!((Integer_Value) last2).isNative()) {
-					value2.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR6, last2));
-					setIsErroneous(true);
-				} else {
+				if (((Integer_Value) last2).isNative()) {
 					int i2 = ((Integer_Value) last2).intValue();
 					if (i2 < 0) {
 						value2.getLocation().reportSemanticError(OPERANDERROR4);
@@ -174,6 +171,9 @@ public final class Int2BitExpression extends Expression_Value {
 							setIsErroneous(true);
 						}
 					}
+				} else {
+					value2.getLocation().reportSemanticError(MessageFormat.format(OPERANDERROR6, last2));
+					setIsErroneous(true);
 				}
 			}
 			break;

@@ -36,7 +36,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
 public final class ValueofExpression extends Expression_Value {
 	private static final String OPERANDERROR = "Cannot determine the argument type of `valueof' operation";
 
-	private TemplateInstance templateInstance;
+	private final TemplateInstance templateInstance;
 
 	public ValueofExpression(final TemplateInstance templateInstance) {
 		this.templateInstance = templateInstance;

@@ -57,7 +57,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * */
 public final class SizeOfExpression extends Expression_Value {
-	private TemplateInstance templateInstance;
+	private final TemplateInstance templateInstance;
 
 	// private Reference reference;
 

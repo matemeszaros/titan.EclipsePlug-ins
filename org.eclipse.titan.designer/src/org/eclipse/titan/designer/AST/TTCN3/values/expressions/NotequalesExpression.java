@@ -29,8 +29,8 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * */
 public final class NotequalesExpression extends Expression_Value {
-	private Value value1;
-	private Value value2;
+	private final Value value1;
+	private final Value value2;
 
 	public NotequalesExpression(final Value value1, final Value value2) {
 		this.value1 = value1;

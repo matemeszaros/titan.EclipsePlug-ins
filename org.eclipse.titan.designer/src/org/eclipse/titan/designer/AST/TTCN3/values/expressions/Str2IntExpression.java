@@ -115,7 +115,7 @@ public final class Str2IntExpression extends Expression_Value {
 			if (!last.isUnfoldable(timestamp)) {
 				String string = ((Charstring_Value) last).getValue();
 				string = string.trim();
-				if (string.startsWith("+")) {
+				if (!string.isEmpty() && string.charAt(0) == '+') {
 					string = string.substring(1);
 				}
 				try {

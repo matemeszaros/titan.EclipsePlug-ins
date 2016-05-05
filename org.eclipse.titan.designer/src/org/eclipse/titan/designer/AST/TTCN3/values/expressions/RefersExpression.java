@@ -42,7 +42,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 public final class RefersExpression extends Expression_Value {
 	private static final String OPERANDERROR = "Reference to a function, external function, altstep or testcase was expected.";
 
-	private Reference referred;
+	private final Reference referred;
 	private Assignment referredAssignment;
 
 	public RefersExpression(final Reference referred) {
