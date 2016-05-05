@@ -84,6 +84,8 @@ public class RenameRefactoring extends Refactoring {
 	public static final String DEFINITIONALREADYEXISTS2 = "Name conflict:"
 			+ " definition with name `{0}'' already exists in module `{1}'' at line {2}";
 
+	private static final String ONTHEFLYANALAYSISDISABLED = "On-the-fly analysis is disabled,"
+			+ " there is no reliable semantic information present for the refactoring to work on";
 	private static final String MINIMISEWARNING = "Minimise memory usage is enabled, which can cause unexpected behaviour in the refactoring process!\n"
 			+ "Refactoring is not supported with the memory minimise option turned on, "
 			+ "we do not take any responsibility for it.";
@@ -130,6 +132,12 @@ public class RenameRefactoring extends Refactoring {
 		RefactoringStatus result = new RefactoringStatus();
 		try {
 			pm.beginTask("Checking preconditions...", 3);
+			
+			final IPreferencesService prefs = Platform.getPreferencesService();//PreferenceConstants.USEONTHEFLYPARSING
+			if (! prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.USEONTHEFLYPARSING, false, null)) {
+				result.addFatalError(ONTHEFLYANALAYSISDISABLED);
+			}
+
 			// check that there are no ttcnpp files in the
 			// project
 			if (hasTtcnppFiles(file.getProject())) {//FIXME actually all referencing and referenced projects need to be checked too !
@@ -147,7 +155,7 @@ public class RenameRefactoring extends Refactoring {
 			}
 			pm.worked(1);
 
-			final IPreferencesService prefs = Platform.getPreferencesService();
+			
 			if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MINIMISEMEMORYUSAGE, false, null)) {
 				result.addError(MINIMISEWARNING);
 			}
