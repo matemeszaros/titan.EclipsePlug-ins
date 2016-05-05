@@ -31,6 +31,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.utils.IOUtils;
 
 
 /**
@@ -316,7 +317,11 @@ public class ExportedProblemMerger {
 	 * @throws IOException
 	 */
 	private void close() throws FileNotFoundException, IOException {
-		outbook.write(new FileOutputStream(outfile));
+		FileOutputStream fileOutputStream = new FileOutputStream(outfile);
+
+		outbook.write(fileOutputStream);
+
+		IOUtils.closeQuietly(fileOutputStream);
 	}
 
 	/**

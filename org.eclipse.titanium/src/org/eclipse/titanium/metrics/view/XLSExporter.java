@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.utils.IOUtils;
 import org.eclipse.titanium.metrics.IMetricEnum;
 import org.eclipse.titanium.metrics.MetricData;
 import org.eclipse.titanium.metrics.MetricGroup;
@@ -67,8 +68,10 @@ class XLSExporter {
 				}
 			}
 
-			workbook.write(new FileOutputStream(file));
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			workbook.write(fileOutputStream);
 
+			IOUtils.closeQuietly(fileOutputStream);
 		} catch (IOException e) {
 			ErrorReporter.logExceptionStackTrace("Error while exporting to excel",e);
 		}
