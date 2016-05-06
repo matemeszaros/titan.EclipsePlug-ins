@@ -666,61 +666,61 @@ public final class GeneralOptionsSubPage {
 
 	private void createLogFileNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
 		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile(new AddedParseTree(value));
+		logentry.setLogFile( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "LogFile", logentry.getLogFileRoot(), logentry.getLogFile() );
 	}
 
 	private void createTimeStampFormatNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile(new AddedParseTree(value));
+		logentry.setTimestampFormatRoot( new ParserRuleContext() );
+		logentry.setTimestampFormat( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "TimeStampFormat", logentry.getTimestampFormatRoot(), logentry.getTimestampFormat() );
 	}
 
 	private void createSourceInfoFormatNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile(new AddedParseTree(value));
+		logentry.setSourceInfoFormatRoot( new ParserRuleContext() );
+		logentry.setSourceInfoFormat( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "SourceInfoFormat", logentry.getSourceInfoFormatRoot(), logentry.getSourceInfoFormat() );
 	}
 
 	private void createAppendFileNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile(new AddedParseTree(value));
+		logentry.setAppendFileRoot( new ParserRuleContext() );
+		logentry.setAppendFile( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "AppendFile", logentry.getAppendFileRoot(), logentry.getAppendFile() );
 	}
 
 	private void createLogEventTypesNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile(new AddedParseTree(value));
+		logentry.setLogeventTypesRoot( new ParserRuleContext() );
+		logentry.setLogeventTypes( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "LogEventTypes", logentry.getLogeventTypesRoot(), logentry.getLogeventTypes() );
 	}
 
 	private void createLogEntityNameNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile(new AddedParseTree(value));
+		logentry.setLogEntityNameRoot( new ParserRuleContext() );
+		logentry.setLogEntityName( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "LogEntityName", logentry.getLogEntityNameRoot(), logentry.getLogEntityName() );
 	}
 
 	private void createMatchingHintsNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile( new AddedParseTree( value ) );
+		logentry.setMatchingHintsRoot( new ParserRuleContext() );
+		logentry.setMatchingHints( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "MatchingHints", logentry.getMatchingHintsRoot(), logentry.getMatchingHints() );
 	}
 
 	private void createLogFileSizeNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile( new AddedParseTree( value ) );
+		logentry.setLogfileSizeRoot( new ParserRuleContext() );
+		logentry.setLogfileSize( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "LogFileSize", logentry.getLogfileSizeRoot(), logentry.getLogfileSize() );
 	}
 
 	private void createLogFileNumberNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile( new AddedParseTree( value ) );
+		logentry.setLogfileNumberRoot( new ParserRuleContext() );
+		logentry.setLogfileNumber( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "LogFileNumber", logentry.getLogfileNumberRoot(), logentry.getLogfileNumber() );
 	}
 
 	private void createDiskFullActionNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry, final String value) {
-		logentry.setLogFileRoot( new ParserRuleContext() );
-		logentry.setLogFile( new AddedParseTree( value ) );
+		logentry.setDiskFullActionRoot( new ParserRuleContext() );
+		logentry.setDiskFullAction( new AddedParseTree( value ) );
 		createNode( lte, logentry, value, "DiskFullAction", logentry.getDiskFullActionRoot(), logentry.getDiskFullAction() );
 	}
 
