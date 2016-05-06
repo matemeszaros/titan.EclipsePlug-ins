@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.WritableToken;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
+import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.AddedParseTree;
 
 /**
@@ -47,7 +48,7 @@ public final class ConfigTreeNodeUtilities {
 		final StringBuilder builder = new StringBuilder();
 
 		print(builder, aParseTreeRoot, aTokenStream );
-		appendHiddenAfter(builder, aParseTreeRoot, aTokenStream );
+		// there are no hidden tokens after the last token
 
 		return builder.toString();
 	}
@@ -83,7 +84,7 @@ public final class ConfigTreeNodeUtilities {
 							  final StringBuilder aSb,
 							  final List<Integer> aDisallowedNodes ) {
 		if ( aParseTree == null ) {
-			//TODO: warning
+			ErrorReporter.logWarning("ConfigTreeNodeUtilities.print(): aParseTree == null");
 			return;
 		}
 		if ( aParseTree instanceof ParserRuleContext ) {
@@ -104,7 +105,7 @@ public final class ConfigTreeNodeUtilities {
 			aSb.append( t.getText() );
 		}
 		else {
-			//TODO: program error: unexpected ParseTree type
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): unexpected ParseTree type");
 		}
 		
 		for ( int i = 0; i < aParseTree.getChildCount(); i++ ) {
@@ -176,7 +177,7 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	private static boolean isHiddenToken( final int aIndex, final TokenStream aTokenStream ) {
 		if ( aTokenStream == null ) {
-			//TODO: program error
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.isHiddenToken(): aTokenStream == null");
 			return false;
 		}
 		
@@ -200,7 +201,7 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	public static void addChild( final ParseTree aParent, final ParseTree aChild, final int aIndex ) {
 		if ( aParent == null ) {
-			//TODO: program error
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.addChild(): aParent == null");
 			return;
 		}
 		if ( aParent instanceof ParserRuleContext ) {
@@ -215,13 +216,13 @@ public final class ConfigTreeNodeUtilities {
 			}
 			setParent( aChild, rule);
 		} else {
-			//TODO: program error: only ParserRuleContext can have children
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.addChild(): only ParserRuleContext can have children");
 		}
 	}
 	
 	public static void setParent( final ParseTree aChild, final ParserRuleContext aParent ) {
 		if ( aChild == null ) {
-			//TODO: program error
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setParent(): aChild == null");
 			return;
 		}
 		if ( aChild instanceof ParserRuleContext ) {
@@ -235,7 +236,7 @@ public final class ConfigTreeNodeUtilities {
 			final AddedParseTree t = (AddedParseTree)aChild;
 			t.setParent( aParent );
 		} else {
-			//TODO: program error: unhandled ParseTree class type
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setParent(): unhandled ParseTree class type");
 		}
 	}
 	
@@ -248,7 +249,7 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	public static void removeChild( final ParseTree aChild ) {
 		if ( aChild == null ) {
-			//TODO: program error
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree ): aChild == null");
 			return;
 		}
 		final ParseTree parent = aChild.getParent();
@@ -262,17 +263,19 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	public static void removeChild( final ParseTree aParent, final ParseTree aChild ) {
 		if ( aParent == null ) {
-			//TODO: program error
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): aParent == null");
 			return;
 		}
 		if ( aParent instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParent;
-			if ( rule.children != null && aChild != null ) {
+			if ( rule.children != null && aChild != null && aChild.getText() != null ) {
 				//delete child by text
 				final List<ParseTree> list = rule.children;
 				final int size = list.size();
 				final String childText = aChild.getText();
-				for ( int i = size - 1; i >= 0; i-- ) {
+				//TODO: remove: do NOT start from back, because it deletes by text
+				//for ( int i = size - 1; i >= 0; i-- ) {
+				for ( int i = 0; i < size; i++ ) {
 					if ( childText.equals( list.get( i ).getText() ) ) {
 						list.remove( i );
 						break;
@@ -280,7 +283,7 @@ public final class ConfigTreeNodeUtilities {
 				}
 			}
 		} else {
-			//TODO: program error: only ParserRuleContext can have children
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): only ParserRuleContext can have children");
 		}
 	}
 	
@@ -291,14 +294,14 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	public static void removeChildren( final ParseTree aParent ) {
 		if ( aParent == null ) {
-			//TODO: program error
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChildren(): aParent == null");
 			return;
 		}
 		if ( aParent instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParent;
 			rule.children = null;
 		} else {
-			//TODO: program error: only ParserRuleContext can have children
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChildren(): only ParserRuleContext can have children");
 		}
 	}
 	
@@ -309,7 +312,7 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	public static void setText( final ParseTree aParseTree, final String aText ) {
 		if ( aParseTree == null ) {
-			//TODO: program error: aParseTree == null
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setText(): aParseTree == null");
 			return;
 		}
 		if ( aParseTree instanceof ParserRuleContext ) {
@@ -333,10 +336,10 @@ public final class ConfigTreeNodeUtilities {
 				final WritableToken ct = (WritableToken)t;
 				ct.setText(aText);
 			} else {
-				//TODO: program error: unhandled token class type
+				ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setText(): unhandled token class type");
 			}
 		} else {
-			//TODO: program error: unhandled ParseTree class type
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setText(): unhandled ParseTree class type");
 		}
 	}
 

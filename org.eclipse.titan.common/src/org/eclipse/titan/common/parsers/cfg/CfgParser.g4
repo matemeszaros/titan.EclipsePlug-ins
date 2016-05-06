@@ -12,7 +12,9 @@ import org.eclipse.titan.common.parsers.cfg.indices.ExecuteSectionHandler.Execut
 import org.eclipse.titan.common.parsers.cfg.indices.ExternalCommandSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.GroupSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.IncludeSectionHandler;
+import org.eclipse.titan.common.parsers.cfg.indices.LoggingBit;
 import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler;
+import org.eclipse.titan.common.parsers.cfg.indices.LoggingSectionHandler.LogParamEntry;
 import org.eclipse.titan.common.parsers.cfg.indices.MCSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHandler;
@@ -433,12 +435,12 @@ pr_ExecuteSectionItem
 ;
 
 pr_ExecuteSectionItemModuleName returns [ String name ]:
-	t = TEST_MODULE3
+	t = TTCN3IDENTIFIER3
 {	$name = $t.text != null ? $t.text : "";
 };
 
 pr_ExecuteSectionItemTestcaseName returns [ String name ]:
-	t = TEST_TESTCASE3?
+	t = ( TTCN3IDENTIFIER3 | STAR3 )
 {	$name = $t.text != null ? $t.text : "";
 };
 
@@ -678,26 +680,71 @@ pr_ComponentSpecificLoggingParam:
 |	pr_PlainLoggingParam
 ;
 
-pr_LoggerPluginsPart:
-	(	pt_TestComponentID DOT11
+pr_LoggerPluginsPart
+@init {
+	String componentName = "*";
+	LoggingSectionHandler.LoggerPluginEntry pluginEntry2 = null;
+	List<LoggingSectionHandler.LoggerPluginEntry> entries2 = new ArrayList<LoggingSectionHandler.LoggerPluginEntry>();
+}:
+	(	cn = pt_TestComponentID DOT11 { componentName = $cn.text; }
 	)?
-	LOGGERPLUGINS ASSIGNMENTCHAR11 BEGINCHAR11 pr_LoggerPluginEntry
-	(	COMMA11 pr_LoggerPluginEntry
+	LOGGERPLUGINS ASSIGNMENTCHAR11 b = BEGINCHAR11 lpe = pr_LoggerPluginEntry {  entries2.add( $lpe.entry ); }
+	(	COMMA11 lpe = pr_LoggerPluginEntry  {  entries2.add( $lpe.entry ); }
 	)*
 	ENDCHAR11
+{
+	for (LoggingSectionHandler.LoggerPluginEntry item : entries2) {
+		LoggingSectionHandler.LogParamEntry lpe = loggingSectionHandler.componentPlugin(componentName, item.getName());
+		lpe.setPluginPath(item.getPath());
+	}
+	LoggingSectionHandler.LoggerPluginsEntry entry = new LoggingSectionHandler.LoggerPluginsEntry();
+	entry.setLoggerPluginsRoot( $ctx );
+	TerminalNodeImpl begin = new TerminalNodeImpl( $b );
+	begin.parent = $ctx;
+	entry.setLoggerPluginsListRoot( begin );
+	entry.setPluginRoots(new HashMap<String, LoggingSectionHandler.LoggerPluginEntry>(entries2.size()));
+	for (LoggingSectionHandler.LoggerPluginEntry item : entries2) {
+		entry.getPluginRoots().put(item.getName(), item);
+	}
+	loggingSectionHandler.getLoggerPluginsTree().put(componentName, entry);
+}
 ;
 
-pr_PlainLoggingParam:
-(	pt_TestComponentID DOT11
+pr_PlainLoggingParam
+@init {
+	Map<LoggingBit, ParseTree> loggingBitMask = null;
+	String componentName = "*";
+	String pluginName = "*";
+}:
+(	cn = pt_TestComponentID DOT11 { componentName = $cn.text; }
 )?
 (	STAR11 DOT11
-|	pr_Identifier DOT11
+|	pn = pr_Identifier DOT11 { pluginName = $pn.text; }
 )?
-(   FILEMASK ASSIGNMENTCHAR11 pr_LoggingBitMask
-|	CONSOLEMASK ASSIGNMENTCHAR11 pr_LoggingBitMask
-|	DISKFULLACTION ASSIGNMENTCHAR11 pr_DiskFullActionValue
-|	LOGFILENUMBER ASSIGNMENTCHAR11 pr_Number
-|	LOGFILESIZE ASSIGNMENTCHAR11 pr_Number
+{	LogParamEntry logParamEntry = loggingSectionHandler.componentPlugin(componentName, pluginName);
+}
+(   FILEMASK ASSIGNMENTCHAR11 fileMask = pr_LoggingBitMask
+		{	logParamEntry.setFileMaskRoot( $ctx );
+			logParamEntry.setFileMask( $fileMask.ctx );
+			logParamEntry.setFileMaskBits( loggingBitMask );
+		}
+|	CONSOLEMASK ASSIGNMENTCHAR11 consoleMask = pr_LoggingBitMask
+		{	logParamEntry.setConsoleMaskRoot( $ctx );
+			logParamEntry.setConsoleMask( $consoleMask.ctx );
+			logParamEntry.setFileMaskBits( loggingBitMask );
+		}
+|	DISKFULLACTION ASSIGNMENTCHAR11 dfa = pr_DiskFullActionValue
+		{	logParamEntry.setDiskFullActionRoot( $ctx );
+			logParamEntry.setDiskFullAction( $dfa.ctx );
+		}
+|	LOGFILENUMBER ASSIGNMENTCHAR11 lfn = pr_Number
+		{	logParamEntry.setLogfileNumberRoot( $ctx );
+			logParamEntry.setLogfileNumber( $lfn.ctx );
+		}
+|	LOGFILESIZE ASSIGNMENTCHAR11 lfs = pr_Number
+		{	logParamEntry.setLogfileSizeRoot( $ctx );
+			logParamEntry.setLogfileSize( $lfs.ctx );
+		}
 |	LOGFILENAME ASSIGNMENTCHAR11 f = pr_LogfileName
 	{	mCfgParseResult.setLogFileDefined( true );
 		String logFileName = $f.text;
@@ -706,21 +753,72 @@ pr_PlainLoggingParam:
 			logFileName = logFileName.replaceAll("^\"|\"$", "");
 			mCfgParseResult.setLogFileName( logFileName );
 		}
+		logParamEntry.setLogFileRoot( $ctx );
+		logParamEntry.setLogFile( $f.ctx );
 	}
-|	(TIMESTAMPFORMAT | CONSOLETIMESTAMPFORMAT) ASSIGNMENTCHAR11 TIMESTAMPVALUE
+|	(TIMESTAMPFORMAT | CONSOLETIMESTAMPFORMAT) ASSIGNMENTCHAR11 ttv = pr_TimeStampValue
+	{	logParamEntry.setTimestampFormatRoot( $ctx );
+		logParamEntry.setTimestampFormat( $ttv.ctx );
+	}
 |	SOURCEINFOFORMAT ASSIGNMENTCHAR11
-	(	SOURCEINFOVALUE
-	|	pr_YesNoOrBoolean
+	(	siv1 = pr_SourceInfoValue
+		{	logParamEntry.setSourceInfoFormatRoot( $ctx );
+			logParamEntry.setSourceInfoFormat( $siv1.ctx );
+		}
+	|	siv2 = pr_YesNoOrBoolean
+		{	logParamEntry.setSourceInfoFormatRoot( $ctx );
+			logParamEntry.setSourceInfoFormat( $siv2.ctx );
+		}
 	)
-|	APPENDFILE ASSIGNMENTCHAR11 pr_YesNoOrBoolean
-|	LOGEVENTTYPES ASSIGNMENTCHAR11 pr_LogEventTypesValue
-|	LOGENTITYNAME ASSIGNMENTCHAR11 pr_YesNoOrBoolean
-|	MATCHINGHINTS ASSIGNMENTCHAR11 pr_MatchingHintsValue
-|	TTCN3IDENTIFIER11 ASSIGNMENTCHAR11 pr_StringValue
-|   EMERGENCYLOGGING ASSIGNMENTCHAR11 pr_Number
-|   EMERGENCYLOGGINGBEHAVIOUR ASSIGNMENTCHAR11 BUFFERALLORBUFFERMASKED
-|   EMERGENCYLOGGINGMASK ASSIGNMENTCHAR11 pr_LoggingBitMask
+|	APPENDFILE ASSIGNMENTCHAR11 af = pr_YesNoOrBoolean
+	{	logParamEntry.setAppendFileRoot( $ctx );
+		logParamEntry.setAppendFile( $af.ctx );
+	}
+|	LOGEVENTTYPES ASSIGNMENTCHAR11 let = pr_LogEventTypesValue
+	{	logParamEntry.setLogeventTypesRoot( $ctx );
+		logParamEntry.setLogeventTypes( $let.ctx );
+	}
+|	LOGENTITYNAME ASSIGNMENTCHAR11 len = pr_YesNoOrBoolean
+	{	logParamEntry.setLogEntityNameRoot( $ctx );
+		logParamEntry.setLogEntityName( $len.ctx );
+	}
+|	MATCHINGHINTS ASSIGNMENTCHAR11 mh = pr_MatchingHintsValue
+	{	logParamEntry.setMatchingHintsRoot( $ctx );
+		logParamEntry.setMatchingHints( $mh.ctx );
+	}
+|	o1 = pr_PluginSpecificParamName ASSIGNMENTCHAR11 o2 = pr_StringValue
+	{	logParamEntry.getPluginSpecificParam().add(
+			new LoggingSectionHandler.PluginSpecificParam( $ctx, $o1.ctx, $o2.ctx, $o1.text ) );
+	}
+|   EMERGENCYLOGGING ASSIGNMENTCHAR11 el = pr_Number
+	{	logParamEntry.setLogEntityNameRoot( $ctx );
+		logParamEntry.setEmergencyLogging( $el.ctx );
+	}
+|   EMERGENCYLOGGINGBEHAVIOUR ASSIGNMENTCHAR11 elb = pr_BufferAllOrMasked
+	{	logParamEntry.setLogEntityNameRoot( $ctx );
+		logParamEntry.setEmergencyLoggingBehaviour( $elb.ctx );
+	}
+|   EMERGENCYLOGGINGMASK ASSIGNMENTCHAR11 elm = pr_LoggingBitMask
+	{	logParamEntry.setLogEntityNameRoot( $ctx );
+		logParamEntry.setEmergencyLoggingMask( $elm.ctx );
+	}
 )
+;
+
+pr_TimeStampValue:
+	TIMESTAMPVALUE
+;
+
+pr_SourceInfoValue:
+	SOURCEINFOVALUE
+;
+
+pr_PluginSpecificParamName:
+	TTCN3IDENTIFIER11
+;
+
+pr_BufferAllOrMasked:
+	BUFFERALLORBUFFERMASKED
 ;
 
 pr_DiskFullActionValue:
@@ -729,7 +827,10 @@ pr_DiskFullActionValue:
 )
 ;
 
-pr_LoggerPluginEntry:
+pr_LoggerPluginEntry returns [ LoggingSectionHandler.LoggerPluginEntry entry ]
+@init {
+	$entry = new LoggingSectionHandler.LoggerPluginEntry();
+}:
 	pr_Identifier 
 	(	ASSIGNMENTCHAR11 pr_StringValue
 	)?

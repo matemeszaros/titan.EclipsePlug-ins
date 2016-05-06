@@ -299,11 +299,11 @@ public final class LoggingBitsSubPage {
 				}
 			}
 
-			removeLastSeparator(bitmaskRoot);
+			removeFirstSeparator(bitmaskRoot);
 		} else {
 			if (bitMask.containsKey(bit)) {
 				removeLoggingBit(bitMask, bit);
-				removeLastSeparator(bitmaskRoot);
+				removeFirstSeparator(bitmaskRoot);
 			} else {
 				LoggingBit parent = LoggingBitHelper.getParent(bit);
 				if (parent == null) {
@@ -320,7 +320,7 @@ public final class LoggingBitsSubPage {
 
 				if (bitMask.containsKey(parent)) {
 					removeLoggingBit(bitMask, parent);
-					removeLastSeparator(bitmaskRoot);
+					removeFirstSeparator(bitmaskRoot);
 
 					for (int i = 0; i < children.length; i++) {
 						if (!bitMask.containsKey(children[i]) && !bit.equals(children[i])) {
@@ -336,7 +336,7 @@ public final class LoggingBitsSubPage {
 						}
 					}
 
-					removeLastSeparator(bitmaskRoot);
+					removeFirstSeparator(bitmaskRoot);
 				} else {
 					addLoggingBit(bitMask, bitmaskRoot, bit);
 				}
@@ -355,7 +355,7 @@ public final class LoggingBitsSubPage {
 					}
 				}
 
-				removeLastSeparator(bitmaskRoot);
+				removeFirstSeparator(bitmaskRoot);
 			} else {
 				int childCount = 0;
 
@@ -374,7 +374,7 @@ public final class LoggingBitsSubPage {
 						}
 					}
 
-					removeLastSeparator(bitmaskRoot);
+					removeFirstSeparator(bitmaskRoot);
 				}
 			}
 		}
@@ -397,15 +397,17 @@ public final class LoggingBitsSubPage {
 		ConfigTreeNodeUtilities.removeChild(removedBit);
 	}
 
-	private void removeLastSeparator(final ParseTree bitmaskRoot) {
+	/**
+	 * Removes separator if found at position 0 after deletion
+	 * @param bitmaskRoot root parse tree
+	 */
+	private void removeFirstSeparator(final ParseTree bitmaskRoot) {
 		final int count = bitmaskRoot.getChildCount();
-		for ( int i = count - 1; i >= 0; i-- ) {
-			final ParseTree child = bitmaskRoot.getChild( i );
+		if ( count > 0 ) {
+			final ParseTree child = bitmaskRoot.getChild( 0 );
 			final String childText = child.getText();
 			if ( "".equals( childText ) || "|".equals( childText ) ) {
-				ConfigTreeNodeUtilities.removeChild(bitmaskRoot, child);
-			} else {
-				break;
+				ConfigTreeNodeUtilities.removeChild( bitmaskRoot, child );
 			}
 		}
 	}
@@ -452,7 +454,7 @@ public final class LoggingBitsSubPage {
 			}
 
 			removeLoggingBit(bitMask, LoggingBit.LOG_ALL);
-			removeLastSeparator(bitmaskRoot);
+			removeFirstSeparator(bitmaskRoot);
 		}
 	}
 
