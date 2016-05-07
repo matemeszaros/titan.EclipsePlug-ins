@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 
 /**
  * This class can be used to acquire metric datas for a certain project.
@@ -21,6 +25,25 @@ import org.eclipse.core.resources.IProject;
  */
 public final class WrapperStore {
 	private static Map<IProject, ModuleMetricsWrapper> wrappers = new HashMap<IProject, ModuleMetricsWrapper>();
+
+	private static final IResourceChangeListener projectCloselistener = new IResourceChangeListener() {
+		@Override
+		public void resourceChanged(final IResourceChangeEvent event) {
+			switch (event.getType()) {
+			case IResourceChangeEvent.PRE_CLOSE:
+			case IResourceChangeEvent.PRE_DELETE:
+				deleteWrapper(event.getResource().getProject());
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	static {
+		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		workspace.addResourceChangeListener(projectCloselistener);
+	}
 
 	private WrapperStore() {
 		// Hide constructor
