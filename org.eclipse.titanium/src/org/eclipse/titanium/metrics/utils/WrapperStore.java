@@ -17,16 +17,21 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 /**
- * This class can be used to acquire metric datas for a certain project.
- * It implements a strange singleton, as the objects are global and unique only for one project.
- * But more objects for several projects may exist (only one per project)
+ * This class can be used to acquire metric datas for a certain project. It
+ * implements a strange singleton, as the objects are global and unique only for
+ * one project. But more objects for several projects may exist (only one per
+ * project)
  * 
  * @author Gabor Jenei
  */
 public final class WrapperStore {
 	private static Map<IProject, ModuleMetricsWrapper> wrappers = new HashMap<IProject, ModuleMetricsWrapper>();
 
-	private static final IResourceChangeListener projectCloselistener = new IResourceChangeListener() {
+	/**
+	 * Will listen for a project close event, to remove all information
+	 * about that project
+	 **/
+	private static final IResourceChangeListener PROJECT_CLOSE_LISTENER = new IResourceChangeListener() {
 		@Override
 		public void resourceChanged(final IResourceChangeEvent event) {
 			switch (event.getType()) {
@@ -42,7 +47,7 @@ public final class WrapperStore {
 
 	static {
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		workspace.addResourceChangeListener(projectCloselistener);
+		workspace.addResourceChangeListener(PROJECT_CLOSE_LISTENER);
 	}
 
 	private WrapperStore() {
@@ -50,10 +55,13 @@ public final class WrapperStore {
 	}
 
 	/**
-	 * This method can be used to get the {@link ModuleMetricsWrapper} object for a certain project.
+	 * Gets the {@link ModuleMetricsWrapper} object of project.
 	 * 
-	 * @param project : The project where we should calculate (or simply return) metrics values
-	 * @return A new wrapper object if it doesn't exist for this project, the already constructed object otherwise
+	 * @param project
+	 *                The project where we should calculate (or simply
+	 *                return) metrics values
+	 * @return A new wrapper object if it doesn't exist for this project,
+	 *         the already constructed object otherwise
 	 */
 	public static ModuleMetricsWrapper getWrapper(final IProject project) {
 		ModuleMetricsWrapper ret = wrappers.get(project);
@@ -67,7 +75,8 @@ public final class WrapperStore {
 	}
 	
 	/**
-	 * This method clears the store, so all the metrics will be recalculated upon the first request
+	 * This method clears the store, so all the metrics will be recalculated
+	 * upon the first request
 	 */
 	public static void clearStore() {
 		wrappers = new HashMap<IProject, ModuleMetricsWrapper>();
@@ -75,7 +84,9 @@ public final class WrapperStore {
 	
 	/**
 	 * This method destroys the wrapper object for a given project
-	 * @param project : The project to be deleted from the store
+	 * 
+	 * @param project
+	 *                The project to be deleted from the store
 	 */
 	public static void deleteWrapper(final IProject project) {
 		wrappers.remove(project);
