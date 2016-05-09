@@ -16,7 +16,7 @@ import java.math.BigInteger;
 public final class CFGNumber {
 	private static final String DIV_BY_ZERO = "Division by zero";
 	private boolean isFloatNumber;
-	private float floatNumber;
+	private double floatNumber;
 	private BigInteger intNumber;
 	
 	/**
@@ -146,10 +146,10 @@ public final class CFGNumber {
 	public String toString() {
 		if (isFloatNumber) {
 			// "Infinity" is not a valid value in a configuration file.
-			if (Float.isInfinite(floatNumber)) {
+			if (Double.isInfinite(floatNumber)) {
 				return "0.0";
 			}
-			return Float.toString(floatNumber);
+			return Double.toString(floatNumber);
 		}
 		
 		return intNumber.toString();
