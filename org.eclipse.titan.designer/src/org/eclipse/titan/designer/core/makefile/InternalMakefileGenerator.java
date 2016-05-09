@@ -569,11 +569,12 @@ public final class InternalMakefileGenerator {
 		}
 
 		List<IProject> reachableProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
+		boolean foundClosedProject = false;
 		for (IProject reachableProject : reachableProjects) {
 			if (!reachableProject.isAccessible()) {
 				final StringBuilder builder = new StringBuilder("The project `" + reachableProject.getName()
 						+ "' (reachable from project `" + project.getName()
-						+ "') is not accesible. The Makefile will be generated without using it.");
+						+ "') is not accesible.");
 				final IProject[] referencingProjects = reachableProject.getReferencingProjects();
 				if (referencingProjects != null && referencingProjects.length > 0) {
 					builder.append(" The project `").append(reachableProject.getName()).append("' is referenced directly by");
@@ -582,6 +583,7 @@ public final class InternalMakefileGenerator {
 					}
 				}
 				ErrorReporter.logError(builder.toString());
+				foundClosedProject = true;
 			} else if (!reachableProject.equals(project)) {
 				centralStorage = true;
 				try {
@@ -591,6 +593,14 @@ public final class InternalMakefileGenerator {
 					return;
 				}
 			}
+		}
+		
+		if (foundClosedProject) {
+			ErrorReporter.parallelErrorDisplayInMessageDialog("Error during Makefile generation",
+					"A makefile can not be generated for project " + project.getName() + "\n"
+							+ "Some of the projects referenced by it are not accessible.\n"
+							+ "Please check the error log for more details.");
+			return;
 		}
 
 		try {
