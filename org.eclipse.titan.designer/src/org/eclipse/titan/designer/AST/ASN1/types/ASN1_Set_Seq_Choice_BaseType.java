@@ -172,11 +172,12 @@ public abstract class ASN1_Set_Seq_Choice_BaseType extends ASN1Type implements I
 			return null;
 		}
 
-		final CompField compField = getComponentByName(subreferences.get(actualIndex).getId());
+		final Identifier fieldID = subreferences.get(actualIndex).getId();
 		if (subreferences.get(actualIndex) == lastSubreference) {
-			return Declaration.createInstance(getDefiningAssignment(), compField.getIdentifier());
+			return Declaration.createInstance(getDefiningAssignment(), fieldID);
 		}
 
+		final CompField compField = getComponentByName(fieldID);
 		final IType compFieldType = compField.getType().getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp());
 		if (compFieldType instanceof IReferenceableElement) {
 			Declaration decl = ((IReferenceableElement) compFieldType).resolveReference(reference, actualIndex + 1, lastSubreference);
