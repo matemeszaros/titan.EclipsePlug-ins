@@ -126,7 +126,7 @@ public final class SingleExecutor extends BaseExecutor {
 		}
 
 		boolean invalidSelection = false;
-		StringBuilder builder = new StringBuilder();
+		StringBuilder configBuilder = new StringBuilder();
 		do {
 			if (automaticExecution && null != configFilePath && 0 != configFilePath.length() && !invalidSelection) {
 				lastTimeSelection = "configuration file";
@@ -195,15 +195,15 @@ public final class SingleExecutor extends BaseExecutor {
 			disallowedNodes.add(CfgLexer.GROUPS_SECTION);
 			disallowedNodes.add(CfgLexer.EXECUTE_SECTION);
 
-			builder = configHandler.toStringResolved(disallowedNodes);
-			builder.append("\n[EXECUTE]\n");
+			configBuilder = configHandler.toStringResolved(disallowedNodes);
+			configBuilder.append("\n[EXECUTE]\n");
 
 			switch (lastTimeSelectionType) {
 			case TESTCASE:
 			case CONTROLPART:
 				invalidSelection = false;
 				for (int i = 0; i < lastTimeSelectionTime; i++) {
-					builder.append(lastTimeSelection).append('\n');
+					configBuilder.append(lastTimeSelection).append('\n');
 				}
 				break;
 			case TESTSET:
@@ -211,10 +211,10 @@ public final class SingleExecutor extends BaseExecutor {
 				for (int i = 0; i < availableTestSetNames.size(); i++) {
 					if (availableTestSetNames.get(i).equals(lastTimeSelection)) {
 						for (int k = 0; k < lastTimeSelectionTime; k++) {
-							builder.append("// testset: ").append(lastTimeSelection).append('\n');
+							configBuilder.append("// testset: ").append(lastTimeSelection).append('\n');
 							for (int j = 0; j < availableTestSetContents.get(i).size(); j++) {
-								builder.append(availableTestSetContents.get(i).get(j));
-								builder.append('\n');
+								configBuilder.append(availableTestSetContents.get(i).get(j));
+								configBuilder.append('\n');
 							}
 						}
 					}
@@ -229,7 +229,7 @@ public final class SingleExecutor extends BaseExecutor {
 					invalidSelection = false;
 					for (int i = 0; i < lastTimeSelectionTime; i++) {
 						for (String s : configurationFileElements) {
-							builder.append(s).append('\n');
+							configBuilder.append(s).append('\n');
 						}
 					}
 				}
@@ -244,8 +244,8 @@ public final class SingleExecutor extends BaseExecutor {
 
 		File cfgFile;
 		if ( CREATE_TEMP_CFG ) {
-			builder.append(generateCfgString());
-			generateTemporalCfgFile(builder.toString());
+			configBuilder.append(generateCfgString());
+			generateTemporalCfgFile(configBuilder.toString());
 			cfgFile = temporalConfigFile;
 		} else {
 			cfgFile = new File ( configFilePath );
