@@ -121,7 +121,7 @@ public final class Type_Assignment extends ASN1Assignment {
 	@Override
 	public Object[] getOutlineChildren() {
 		if (type instanceof IOutlineElement) {
-			((IOutlineElement) type).getOutlineChildren();
+			return ((IOutlineElement) type).getOutlineChildren();
 		}
 
 		return super.getOutlineChildren();
