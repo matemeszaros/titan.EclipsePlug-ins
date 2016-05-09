@@ -1,8 +1,6 @@
 parser grammar CfgParser;
 
 @header {
-import java.util.HashMap;
-
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler;
@@ -21,6 +19,8 @@ import org.eclipse.titan.common.parsers.cfg.indices.TestportParameterSectionHand
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IFile;
 
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -303,7 +303,19 @@ import java.util.regex.Pattern;
 			return "";
 		}
 		return value;
-	}	
+	}
+	
+	/**
+	 * Creates a wrapper TerminalNode arount the Token to use it as ParseTree
+	 * @param aToken token to wrap
+	 * @param aParent parent parse tree of the new node
+	 * @return the created TerminalNodeImpl object
+	 */
+	private TerminalNodeImpl newTerminalNode( final Token aToken, final ParseTree aParent ) {
+		TerminalNodeImpl node = new TerminalNodeImpl( aToken );
+		node.parent = aParent;
+		return node;
+	}
 }
 
 options{
@@ -355,31 +367,49 @@ pr_MainControllerItem:
 ;
 
 pr_MainControllerItemUnixDomainSocket:
-	UNIXSOCKETS1	ASSIGNMENTCHAR1	u = (YES1 | NO1)					SEMICOLON1?
-	{	mCfgParseResult.setUnixDomainSocket( Boolean.parseBoolean( $u.getText() ) );
+	UNIXSOCKETS1
+	ASSIGNMENTCHAR1
+	u = pr_MainControllerItemUnixDomainSocketValue
+	SEMICOLON1?
+	{	mCfgParseResult.setUnixDomainSocket( Boolean.parseBoolean( $u.text ) );
+		mcSectionHandler.setUnixDomainSocketRoot( $ctx );
+		mcSectionHandler.setUnixDomainSocket( $u.ctx );
 	}
+;
+
+pr_MainControllerItemUnixDomainSocketValue:
+	(YES1 | NO1)
 ;
 
 pr_MainControllerItemKillTimer:
 	KILLTIMER1		ASSIGNMENTCHAR1	k = pr_ArithmeticValueExpression	SEMICOLON1?
 	{	mCfgParseResult.setKillTimer( $k.number.getValue() );
+		mcSectionHandler.setKillTimerRoot( $ctx );
+		mcSectionHandler.setKillTimer( $k.ctx );
 	}
 ;
 
 pr_MainControllerItemLocalAddress:
 	LOCALADDRESS1	ASSIGNMENTCHAR1	l = pr_HostName						SEMICOLON1?
-	{	mCfgParseResult.setLocalAddress( $l.text );	}
+	{	mCfgParseResult.setLocalAddress( $l.text );
+		mcSectionHandler.setLocalAddressRoot( $ctx );
+		mcSectionHandler.setLocalAddress( $l.ctx );
+	}
 ;
 
 pr_MainControllerItemNumHcs:
 	NUMHCS1			ASSIGNMENTCHAR1	n = pr_IntegerValueExpression		SEMICOLON1?
 	{	mCfgParseResult.setNumHcs( $n.number.getIntegerValue() );
+		mcSectionHandler.setNumHCsTextRoot( $ctx );
+		mcSectionHandler.setNumHCsText( $n.ctx );
 	}
 ;
 
 pr_MainControllerItemTcpPort:
 	TCPPORT1		ASSIGNMENTCHAR1	t = pr_IntegerValueExpression		SEMICOLON1?
 	{	mCfgParseResult.setTcpPort( $t.number.getIntegerValue() );
+		mcSectionHandler.setTcpPortRoot( $ctx );
+		mcSectionHandler.setTcpPort( $t.ctx );
 	}
 ;
 
@@ -457,21 +487,66 @@ pr_DefineSection:
 
 pr_ExternalCommandsSection:
 	EXTERNAL_COMMANDS_SECTION
-	(	(	BEGINCONTROLPART6
-		|	ENDCONTROLPART6
-		|	BEGINTESTCASE6
-		|	ENDTESTCASE6 
-		)
-		ASSIGNMENTCHAR6
-		STRING6
+	(	pr_ExternalCommand
 		SEMICOLON6?
 	)*
 ;
 
+pr_ExternalCommand:
+	(	BEGINCONTROLPART6
+		ASSIGNMENTCHAR6
+		v = pr_ExternalCommandValue
+			{	externalCommandsSectionHandler.setBeginControlPart( $v.ctx );
+				externalCommandsSectionHandler.setBeginControlPartRoot( $ctx );
+			}
+	|	ENDCONTROLPART6
+		ASSIGNMENTCHAR6
+		v = pr_ExternalCommandValue
+			{	externalCommandsSectionHandler.setEndControlPart( $v.ctx );
+				externalCommandsSectionHandler.setEndControlPartRoot( $ctx );
+			}
+	|	BEGINTESTCASE6
+		ASSIGNMENTCHAR6
+		v = pr_ExternalCommandValue
+			{	externalCommandsSectionHandler.setBeginTestcase( $v.ctx );
+				externalCommandsSectionHandler.setBeginTestcaseRoot( $ctx );
+			}
+	|	ENDTESTCASE6 
+		ASSIGNMENTCHAR6
+		v = pr_ExternalCommandValue
+			{	externalCommandsSectionHandler.setEndTestcase( $v.ctx );
+				externalCommandsSectionHandler.setEndTestcaseRoot( $ctx );
+			}
+	)
+;
+
+pr_ExternalCommandValue:
+	STRING6
+;
+
 pr_TestportParametersSection:
 	TESTPORT_PARAMETERS_SECTION
-	(	pr_ComponentID DOT7 pr_TestportName DOT7 pr_Identifier ASSIGNMENTCHAR7 pr_StringValue SEMICOLON7?
+	(	pr_TestportParameter
+		SEMICOLON7?
 	)*
+;
+
+pr_TestportParameter:
+	a = pr_ComponentID
+	DOT7
+	b = pr_TestportName
+	DOT7
+	c = pr_Identifier
+	ASSIGNMENTCHAR7
+	d = pr_StringValue
+{	TestportParameterSectionHandler.TestportParameter parameter = new TestportParameterSectionHandler.TestportParameter();
+	parameter.setComponentName( $a.ctx );
+	parameter.setTestportName( $b.ctx );
+	parameter.setParameterName( $c.ctx );
+	parameter.setValue( $d.ctx );
+	parameter.setRoot( $ctx );
+	testportParametersHandler.getTestportParameters().add( parameter );
+}
 ;
 
 pr_GroupsSection:
@@ -683,7 +758,6 @@ pr_ComponentSpecificLoggingParam:
 pr_LoggerPluginsPart
 @init {
 	String componentName = "*";
-	LoggingSectionHandler.LoggerPluginEntry pluginEntry2 = null;
 	List<LoggingSectionHandler.LoggerPluginEntry> entries2 = new ArrayList<LoggingSectionHandler.LoggerPluginEntry>();
 }:
 	(	cn = pt_TestComponentID DOT11 { componentName = $cn.text; }
@@ -712,7 +786,6 @@ pr_LoggerPluginsPart
 
 pr_PlainLoggingParam
 @init {
-	Map<LoggingBit, ParseTree> loggingBitMask = null;
 	String componentName = "*";
 	String pluginName = "*";
 }:
@@ -726,11 +799,13 @@ pr_PlainLoggingParam
 (   FILEMASK ASSIGNMENTCHAR11 fileMask = pr_LoggingBitMask
 		{	logParamEntry.setFileMaskRoot( $ctx );
 			logParamEntry.setFileMask( $fileMask.ctx );
+			Map<LoggingBit, ParseTree> loggingBitMask = $fileMask.loggingBitMask;
 			logParamEntry.setFileMaskBits( loggingBitMask );
 		}
 |	CONSOLEMASK ASSIGNMENTCHAR11 consoleMask = pr_LoggingBitMask
 		{	logParamEntry.setConsoleMaskRoot( $ctx );
 			logParamEntry.setConsoleMask( $consoleMask.ctx );
+			Map<LoggingBit, ParseTree> loggingBitMask = $consoleMask.loggingBitMask;
 			logParamEntry.setFileMaskBits( loggingBitMask );
 		}
 |	DISKFULLACTION ASSIGNMENTCHAR11 dfa = pr_DiskFullActionValue
@@ -801,6 +876,7 @@ pr_PlainLoggingParam
 |   EMERGENCYLOGGINGMASK ASSIGNMENTCHAR11 elm = pr_LoggingBitMask
 	{	logParamEntry.setLogEntityNameRoot( $ctx );
 		logParamEntry.setEmergencyLoggingMask( $elm.ctx );
+		Map<LoggingBit, ParseTree> loggingBitMask = $elm.loggingBitMask;
 	}
 )
 ;
@@ -844,16 +920,19 @@ pt_TestComponentID:
 )
 ;
 
-pr_LoggingBitMask:
-	pr_LoggingMaskElement
-	(	LOGICALOR11	pr_LoggingMaskElement
+pr_LoggingBitMask returns [ Map<LoggingBit, ParseTree> loggingBitMask ]
+@init {
+	$loggingBitMask = new EnumMap<LoggingBit, ParseTree>( LoggingBit.class );
+}:
+	pr_LoggingMaskElement [ $loggingBitMask ]
+	(	LOGICALOR11	pr_LoggingMaskElement [ $loggingBitMask ]
 	)*
 ;
 
-pr_LoggingMaskElement:
-	pr_LogEventType
-|	pr_LogEventTypeSet
-|	pr_deprecatedEventTypeSet
+pr_LoggingMaskElement [ Map<LoggingBit, ParseTree> loggingBitMask ]:
+	pr_LogEventType [ $loggingBitMask ]
+|	pr_LogEventTypeSet [ $loggingBitMask ]
+|	pr_deprecatedEventTypeSet [ $loggingBitMask ]
 ;
 
 pr_LogfileName:
@@ -875,48 +954,114 @@ pr_MatchingHintsValue:
 |	DETAILED
 ;
 
-pr_LogEventType:
-(	ACTION_UNQUALIFIED | DEBUG_ENCDEC | DEBUG_TESTPORT | DEBUG_UNQUALIFIED | DEFAULTOP_ACTIVATE | DEFAULTOP_DEACTIVATE | DEFAULTOP_EXIT
-|	DEFAULTOP_UNQUALIFIED | ERROR_UNQUALIFIED | EXECUTOR_COMPONENT | EXECUTOR_CONFIGDATA | EXECUTOR_EXTCOMMAND | EXECUTOR_LOGOPTIONS
-|	EXECUTOR_RUNTIME | EXECUTOR_UNQUALIFIED | FUNCTION_RND | FUNCTION_UNQUALIFIED | MATCHING_DONE | MATCHING_MCSUCCESS | MATCHING_MCUNSUCC
-|	MATCHING_MMSUCCESS | MATCHING_MMUNSUCC | MATCHING_PCSUCCESS | MATCHING_PCUNSUCC | MATCHING_PMSUCCESS | MATCHING_PMUNSUCC | MATCHING_PROBLEM
-|	MATCHING_TIMEOUT | MATCHING_UNQUALIFIED | PARALLEL_PORTCONN | PARALLEL_PORTMAP | PARALLEL_PTC | PARALLEL_UNQUALIFIED | PORTEVENT_DUALRECV
-|	PORTEVENT_DUALSEND | PORTEVENT_MCRECV | PORTEVENT_MCSEND | PORTEVENT_MMRECV | PORTEVENT_MMSEND | PORTEVENT_MQUEUE | PORTEVENT_PCIN
-|	PORTEVENT_PCOUT | PORTEVENT_PMIN | PORTEVENT_PMOUT | PORTEVENT_PQUEUE | PORTEVENT_STATE | PORTEVENT_UNQUALIFIED	| STATISTICS_UNQUALIFIED
-|	STATISTICS_VERDICT | TESTCASE_FINISH | TESTCASE_START | TESTCASE_UNQUALIFIED | TIMEROP_GUARD | TIMEROP_READ | TIMEROP_START | TIMEROP_STOP
-|	TIMEROP_TIMEOUT | TIMEROP_UNQUALIFIED | USER_UNQUALIFIED | VERDICTOP_FINAL | VERDICTOP_GETVERDICT | VERDICTOP_SETVERDICT | VERDICTOP_UNQUALIFIED
-|   WARNING_UNQUALIFIED
+pr_LogEventType [ Map<LoggingBit, ParseTree> loggingBitMask ]:
+(  a1 = ACTION_UNQUALIFIED		{ loggingBitMask.put(LoggingBit.ACTION_UNQUALIFIED, newTerminalNode( $a1, $ctx ) );}
+|  a2 = DEBUG_ENCDEC			{ loggingBitMask.put(LoggingBit.DEBUG_ENCDEC, newTerminalNode( $a2, $ctx ) );}
+|  a3 = DEBUG_TESTPORT			{ loggingBitMask.put(LoggingBit.DEBUG_TESTPORT, newTerminalNode( $a3, $ctx ) );}
+|  a4 = DEBUG_UNQUALIFIED		{ loggingBitMask.put(LoggingBit.DEBUG_UNQUALIFIED, newTerminalNode( $a4, $ctx ) );}
+|  a5 = DEFAULTOP_ACTIVATE		{ loggingBitMask.put(LoggingBit.DEFAULTOP_ACTIVATE, newTerminalNode( $a5, $ctx ) );}
+|  a6 = DEFAULTOP_DEACTIVATE	{ loggingBitMask.put(LoggingBit.DEFAULTOP_DEACTIVATE, newTerminalNode( $a6, $ctx ) );}
+|  a7 = DEFAULTOP_EXIT			{ loggingBitMask.put(LoggingBit.DEFAULTOP_EXIT, newTerminalNode( $a7, $ctx ) );}
+|  a8 = DEFAULTOP_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.DEFAULTOP_UNQUALIFIED, newTerminalNode( $a8, $ctx ) );}
+|  a9 = ERROR_UNQUALIFIED		{ loggingBitMask.put(LoggingBit.ERROR_UNQUALIFIED, newTerminalNode( $a9, $ctx ) );}
+|  a10 = EXECUTOR_COMPONENT		{ loggingBitMask.put(LoggingBit.EXECUTOR_COMPONENT, newTerminalNode( $a10, $ctx ) );}
+|  a11 = EXECUTOR_CONFIGDATA	{ loggingBitMask.put(LoggingBit.EXECUTOR_CONFIGDATA, newTerminalNode( $a11, $ctx ) );}
+|  a12 = EXECUTOR_EXTCOMMAND	{ loggingBitMask.put(LoggingBit.EXECUTOR_EXTCOMMAND, newTerminalNode( $a12, $ctx ) );}
+|  a13 = EXECUTOR_LOGOPTIONS	{ loggingBitMask.put(LoggingBit.EXECUTOR_LOGOPTIONS, newTerminalNode( $a13, $ctx ) );}
+|  a14 = EXECUTOR_RUNTIME		{ loggingBitMask.put(LoggingBit.EXECUTOR_RUNTIME, newTerminalNode( $a14, $ctx ) );}
+|  a15 = EXECUTOR_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.EXECUTOR_UNQUALIFIED, newTerminalNode( $a15, $ctx ) );}
+|  a16 = FUNCTION_RND			{ loggingBitMask.put(LoggingBit.FUNCTION_RND, newTerminalNode( $a16, $ctx ) );}
+|  a17 = FUNCTION_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.FUNCTION_UNQUALIFIED, newTerminalNode( $a17, $ctx ) );}
+|  a18 = MATCHING_DONE			{ loggingBitMask.put(LoggingBit.MATCHING_DONE, newTerminalNode( $a18, $ctx ) );}
+|  a19 = MATCHING_MCSUCCESS		{ loggingBitMask.put(LoggingBit.MATCHING_MCSUCCESS, newTerminalNode( $a19, $ctx ) );}
+|  a20 = MATCHING_MCUNSUCC		{ loggingBitMask.put(LoggingBit.MATCHING_MCUNSUCC, newTerminalNode( $a20, $ctx ) );}
+|  a21 = MATCHING_MMSUCCESS		{ loggingBitMask.put(LoggingBit.MATCHING_MMSUCCESS, newTerminalNode( $a21, $ctx ) );}
+|  a22 = MATCHING_MMUNSUCC		{ loggingBitMask.put(LoggingBit.MATCHING_MMUNSUCC, newTerminalNode( $a22, $ctx ) );}
+|  a23 = MATCHING_PCSUCCESS		{ loggingBitMask.put(LoggingBit.MATCHING_PCSUCCESS, newTerminalNode( $a23, $ctx ) );}
+|  a24 = MATCHING_PCUNSUCC		{ loggingBitMask.put(LoggingBit.MATCHING_PCUNSUCC, newTerminalNode( $a24, $ctx ) );}
+|  a25 = MATCHING_PMSUCCESS		{ loggingBitMask.put(LoggingBit.MATCHING_PMSUCCESS, newTerminalNode( $a25, $ctx ) );}
+|  a26 = MATCHING_PMUNSUCC		{ loggingBitMask.put(LoggingBit.MATCHING_PMUNSUCC, newTerminalNode( $a26, $ctx ) );}
+|  a27 = MATCHING_PROBLEM		{ loggingBitMask.put(LoggingBit.MATCHING_PROBLEM, newTerminalNode( $a27, $ctx ) );}
+|  a28 = MATCHING_TIMEOUT		{ loggingBitMask.put(LoggingBit.MATCHING_TIMEOUT, newTerminalNode( $a28, $ctx ) );}
+|  a29 = MATCHING_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.MATCHING_UNQUALIFIED, newTerminalNode( $a29, $ctx ) );}
+|  a30 = PARALLEL_PORTCONN		{ loggingBitMask.put(LoggingBit.PARALLEL_PORTCONN, newTerminalNode( $a30, $ctx ) );}
+|  a31 = PARALLEL_PORTMAP		{ loggingBitMask.put(LoggingBit.PARALLEL_PORTMAP, newTerminalNode( $a31, $ctx ) );}
+|  a32 = PARALLEL_PTC			{ loggingBitMask.put(LoggingBit.PARALLEL_PTC, newTerminalNode( $a32, $ctx ) );}
+|  a33 = PARALLEL_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.PARALLEL_UNQUALIFIED, newTerminalNode( $a33, $ctx ) );}
+|  a34 = PORTEVENT_DUALRECV		{ loggingBitMask.put(LoggingBit.PORTEVENT_DUALRECV, newTerminalNode( $a34, $ctx ) );}
+|  a35 = PORTEVENT_DUALSEND		{ loggingBitMask.put(LoggingBit.PORTEVENT_DUALSEND, newTerminalNode( $a35, $ctx ) );}
+|  a36 = PORTEVENT_MCRECV		{ loggingBitMask.put(LoggingBit.PORTEVENT_MCRECV, newTerminalNode( $a36, $ctx ) );}
+|  a37 = PORTEVENT_MCSEND		{ loggingBitMask.put(LoggingBit.PORTEVENT_MCSEND, newTerminalNode( $a37, $ctx ) );}
+|  a38 = PORTEVENT_MMRECV		{ loggingBitMask.put(LoggingBit.PORTEVENT_MMRECV, newTerminalNode( $a38, $ctx ) );}
+|  a39 = PORTEVENT_MMSEND		{ loggingBitMask.put(LoggingBit.PORTEVENT_MMSEND, newTerminalNode( $a39, $ctx ) );}
+|  a40 = PORTEVENT_MQUEUE		{ loggingBitMask.put(LoggingBit.PORTEVENT_MQUEUE, newTerminalNode( $a40, $ctx ) );}
+|  a41 = PORTEVENT_PCIN			{ loggingBitMask.put(LoggingBit.PORTEVENT_PCIN, newTerminalNode( $a41, $ctx ) );}
+|  a42 = PORTEVENT_PCOUT		{ loggingBitMask.put(LoggingBit.PORTEVENT_PCOUT, newTerminalNode( $a42, $ctx ) );}
+|  a43 = PORTEVENT_PMIN			{ loggingBitMask.put(LoggingBit.PORTEVENT_PMIN, newTerminalNode( $a43, $ctx ) );}
+|  a44 = PORTEVENT_PMOUT		{ loggingBitMask.put(LoggingBit.PORTEVENT_PMOUT, newTerminalNode( $a44, $ctx ) );}
+|  a45 = PORTEVENT_PQUEUE		{ loggingBitMask.put(LoggingBit.PORTEVENT_PQUEUE, newTerminalNode( $a45, $ctx ) );}
+|  a46 = PORTEVENT_STATE		{ loggingBitMask.put(LoggingBit.PORTEVENT_STATE, newTerminalNode( $a46, $ctx ) );}
+|  a47 = PORTEVENT_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.PORTEVENT_UNQUALIFIED, newTerminalNode( $a47, $ctx ) );}
+|  a48 = STATISTICS_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.STATISTICS_UNQUALIFIED, newTerminalNode( $a48, $ctx ) );}
+|  a49 = STATISTICS_VERDICT		{ loggingBitMask.put(LoggingBit.STATISTICS_VERDICT, newTerminalNode( $a49, $ctx ) );}
+|  a50 = TESTCASE_FINISH		{ loggingBitMask.put(LoggingBit.TESTCASE_FINISH, newTerminalNode( $a50, $ctx ) );}
+|  a51 = TESTCASE_START			{ loggingBitMask.put(LoggingBit.TESTCASE_START, newTerminalNode( $a51, $ctx ) );}
+|  a52 = TESTCASE_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.TESTCASE_UNQUALIFIED, newTerminalNode( $a52, $ctx ) );}
+|  a53 = TIMEROP_GUARD			{ loggingBitMask.put(LoggingBit.TIMEROP_GUARD, newTerminalNode( $a53, $ctx ) );}
+|  a54 = TIMEROP_READ			{ loggingBitMask.put(LoggingBit.TIMEROP_READ, newTerminalNode( $a54, $ctx ) );}
+|  a55 = TIMEROP_START			{ loggingBitMask.put(LoggingBit.TIMEROP_START, newTerminalNode( $a55, $ctx ) );}
+|  a56 = TIMEROP_STOP			{ loggingBitMask.put(LoggingBit.TIMEROP_STOP, newTerminalNode( $a56, $ctx ) );}
+|  a57 = TIMEROP_TIMEOUT		{ loggingBitMask.put(LoggingBit.TIMEROP_TIMEOUT, newTerminalNode( $a57, $ctx ) );}
+|  a58 = TIMEROP_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.TIMEROP_UNQUALIFIED, newTerminalNode( $a58, $ctx ) );}
+|  a59 = USER_UNQUALIFIED		{ loggingBitMask.put(LoggingBit.USER_UNQUALIFIED, newTerminalNode( $a59, $ctx ) );}
+|  a60 = VERDICTOP_FINAL		{ loggingBitMask.put(LoggingBit.VERDICTOP_FINAL, newTerminalNode( $a60, $ctx ) );}
+|  a61 = VERDICTOP_GETVERDICT	{ loggingBitMask.put(LoggingBit.VERDICTOP_GETVERDICT, newTerminalNode( $a61, $ctx ) );}
+|  a62 = VERDICTOP_SETVERDICT	{ loggingBitMask.put(LoggingBit.VERDICTOP_SETVERDICT, newTerminalNode( $a62, $ctx ) );}
+|  a63 = VERDICTOP_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.VERDICTOP_UNQUALIFIED, newTerminalNode( $a63, $ctx ) );}
+|  a64 = WARNING_UNQUALIFIED	{ loggingBitMask.put(LoggingBit.WARNING_UNQUALIFIED, newTerminalNode( $a64, $ctx ) );}
 )	
 ;
 
-pr_LogEventTypeSet:
-(	TTCN_EXECUTOR2 | TTCN_ERROR2 | TTCN_WARNING2 | TTCN_PORTEVENT2 | TTCN_TIMEROP2 | TTCN_VERDICTOP2 | TTCN_DEFAULTOP2 | TTCN_ACTION2	
-|	TTCN_TESTCASE2 | TTCN_FUNCTION2 | TTCN_USER2 | TTCN_STATISTICS2 | TTCN_PARALLEL2 | TTCN_MATCHING2 | TTCN_DEBUG2 | LOG_ALL | LOG_NOTHING		
+pr_LogEventTypeSet [ Map<LoggingBit, ParseTree> loggingBitMask ]:
+(  a1 = TTCN_EXECUTOR2		{ loggingBitMask.put(LoggingBit.EXECUTOR, newTerminalNode( $a1, $ctx ) );}
+|  a2 = TTCN_ERROR2			{ loggingBitMask.put(LoggingBit.ERROR, newTerminalNode( $a2, $ctx ) );}
+|  a3 = TTCN_WARNING2		{ loggingBitMask.put(LoggingBit.WARNING, newTerminalNode( $a3, $ctx ) );}
+|  a4 = TTCN_PORTEVENT2		{ loggingBitMask.put(LoggingBit.PORTEVENT, newTerminalNode( $a4, $ctx ) );}
+|  a5 = TTCN_TIMEROP2		{ loggingBitMask.put(LoggingBit.TIMEROP, newTerminalNode( $a5, $ctx ) );}
+|  a6 = TTCN_VERDICTOP2		{ loggingBitMask.put(LoggingBit.VERDICTOP, newTerminalNode( $a6, $ctx ) );}
+|  a7 = TTCN_DEFAULTOP2		{ loggingBitMask.put(LoggingBit.DEFAULTOP, newTerminalNode( $a7, $ctx ) );}
+|  a8 = TTCN_ACTION2		{ loggingBitMask.put(LoggingBit.ACTION, newTerminalNode( $a8, $ctx ) );}
+|  a9 = TTCN_TESTCASE2		{ loggingBitMask.put(LoggingBit.TESTCASE, newTerminalNode( $a9, $ctx ) );}
+|  a10 = TTCN_FUNCTION2		{ loggingBitMask.put(LoggingBit.FUNCTION, newTerminalNode( $a10, $ctx ) );}
+|  a11 = TTCN_USER2			{ loggingBitMask.put(LoggingBit.USER, newTerminalNode( $a11, $ctx ) );}
+|  a12 = TTCN_STATISTICS2	{ loggingBitMask.put(LoggingBit.STATISTICS, newTerminalNode( $a12, $ctx ) );}
+|  a13 = TTCN_PARALLEL2		{ loggingBitMask.put(LoggingBit.PARALLEL, newTerminalNode( $a13, $ctx ) );}
+|  a14 = TTCN_MATCHING2		{ loggingBitMask.put(LoggingBit.MATCHING, newTerminalNode( $a14, $ctx ) );}
+|  a15 = TTCN_DEBUG2		{ loggingBitMask.put(LoggingBit.DEBUG, newTerminalNode( $a15, $ctx ) );}
+|  a16 = LOG_ALL			{ loggingBitMask.put(LoggingBit.LOG_ALL, newTerminalNode( $a16, $ctx ) );}
+|  a17 = LOG_NOTHING		{ loggingBitMask.put(LoggingBit.LOG_NOTHING, newTerminalNode( $a17, $ctx ) );}
 )
 ;
 
-pr_deprecatedEventTypeSet:
-a = 
-(	TTCN_EXECUTOR1 
-|	TTCN_ERROR1
-|	TTCN_WARNING1
-|	TTCN_PORTEVENT1
-|	TTCN_TIMEROP1
-|	TTCN_VERDICTOP1
-|	TTCN_DEFAULTOP1
-|	TTCN_ACTION1	
-|	TTCN_TESTCASE1
-|	TTCN_FUNCTION1
-|	TTCN_USER1
-|	TTCN_STATISTICS1
-|	TTCN_PARALLEL1
-|	TTCN_MATCHING1
-|	TTCN_DEBUG1
+pr_deprecatedEventTypeSet [ Map<LoggingBit, ParseTree> loggingBitMask ]:
+(  a1 = TTCN_EXECUTOR1		{ loggingBitMask.put(LoggingBit.EXECUTOR, newTerminalNode( $a1, $ctx ) );}
+|  a2 = TTCN_ERROR1			{ loggingBitMask.put(LoggingBit.ERROR, newTerminalNode( $a2, $ctx ) );}
+|  a3 = TTCN_WARNING1		{ loggingBitMask.put(LoggingBit.WARNING, newTerminalNode( $a3, $ctx ) );}
+|  a4 = TTCN_PORTEVENT1		{ loggingBitMask.put(LoggingBit.PORTEVENT, newTerminalNode( $a4, $ctx ) );}
+|  a5 = TTCN_TIMEROP1		{ loggingBitMask.put(LoggingBit.TIMEROP, newTerminalNode( $a5, $ctx ) );}
+|  a6 = TTCN_VERDICTOP1		{ loggingBitMask.put(LoggingBit.VERDICTOP, newTerminalNode( $a6, $ctx ) );}
+|  a7 = TTCN_DEFAULTOP1		{ loggingBitMask.put(LoggingBit.DEFAULTOP, newTerminalNode( $a7, $ctx ) );}
+|  a8 = TTCN_ACTION1		{ loggingBitMask.put(LoggingBit.ACTION, newTerminalNode( $a8, $ctx ) );}
+|  a9 = TTCN_TESTCASE1		{ loggingBitMask.put(LoggingBit.TESTCASE, newTerminalNode( $a9, $ctx ) );}
+|  a10 = TTCN_FUNCTION1		{ loggingBitMask.put(LoggingBit.FUNCTION, newTerminalNode( $a10, $ctx ) );}
+|  a11 = TTCN_USER1			{ loggingBitMask.put(LoggingBit.USER, newTerminalNode( $a11, $ctx ) );}
+|  a12 = TTCN_STATISTICS1	{ loggingBitMask.put(LoggingBit.STATISTICS, newTerminalNode( $a12, $ctx ) );}
+|  a13 = TTCN_PARALLEL1		{ loggingBitMask.put(LoggingBit.PARALLEL, newTerminalNode( $a13, $ctx ) );}
+|  a14 = TTCN_MATCHING1		{ loggingBitMask.put(LoggingBit.MATCHING, newTerminalNode( $a14, $ctx ) );}
+|  a15 = TTCN_DEBUG1		{ loggingBitMask.put(LoggingBit.DEBUG, newTerminalNode( $a15, $ctx ) );}
 )
-{	if ( $a != null ) {
-		reportWarning(new TITANMarker("Deprecated logging option " + $a.getText(), $a.getLine(),
-			$a.getStartIndex(), $a.getStopIndex(), IMarker.SEVERITY_WARNING, IMarker.PRIORITY_NORMAL));
-	}
+{	reportWarning(new TITANMarker("Deprecated logging option " + $start.getText(), $start.getLine(),
+		$start.getStartIndex(), $start.getStopIndex(), IMarker.SEVERITY_WARNING, IMarker.PRIORITY_NORMAL));
 }
 ;
 
@@ -926,11 +1071,21 @@ pr_Detailed:
 ;
 
 pr_ComponentItem:
+{	ComponentSectionHandler.Component component = new ComponentSectionHandler.Component();
+}
 	n = pr_ComponentName
+		{	component.setComponentName( $n.ctx );	}
 	ASSIGNMENTCHAR10 
-	(	h = pr_HostName { mCfgParseResult.getComponents().put( $n.text, $h.text ); }
-	|	i = IPV6_10 { mCfgParseResult.getComponents().put( $n.text, $i.getText() ); }
+	(	h = pr_HostName {	mCfgParseResult.getComponents().put( $n.text, $h.text );
+							component.setHostName( $h.ctx );
+						}
+	|	i = pr_HostNameIpV6	{	mCfgParseResult.getComponents().put( $n.text, $i.text );
+								component.setHostName( $i.ctx );
+							}
 	)
+{	component.setRoot( $ctx );
+	componentSectionHandler.getComponents().add( component );
+}
 ;
 
 pr_ComponentName:
@@ -947,6 +1102,10 @@ pr_HostName:
 			//TODO: implement: use value if needed
 		}
 )
+;
+
+pr_HostNameIpV6:
+	IPV6_10
 ;
 
 pr_MacroAssignment returns [ DefineSectionHandler.Definition definition ]
@@ -1119,21 +1278,34 @@ pr_MacroExpliciteCString returns [String string]:
 ;
 
 pr_GroupItem:
-{  ArrayList<String> memberlist = new ArrayList<String>();  }
+{	List<String> memberlist = new ArrayList<String>();
+	GroupSectionHandler.Group group = new GroupSectionHandler.Group();
+}
 (	a = pr_Identifier
 	ASSIGNMENTCHAR8
 	(	STAR8 {  memberlist.add("*");  }
-	|	(	c = pr_DNSName { memberlist.add( $c.text ); }
-		|	d = pr_Identifier { memberlist.add( $d.text ); }
+	|	(	c = pr_DNSName	{	memberlist.add( $c.text );	
+								group.getGroupItems().add( new GroupSectionHandler.GroupItem( $c.ctx ) );
+							}
+		|	d = pr_Identifier	{	memberlist.add( $d.text );
+									group.getGroupItems().add( new GroupSectionHandler.GroupItem( $d.ctx ) );
+								}
 		)
 		(	COMMA8
-			(	e = pr_DNSName { memberlist.add( $e.text ); }
-			|	f = pr_Identifier { memberlist.add( $f.text ); }
+			(	e = pr_DNSName	{	memberlist.add( $e.text );
+									group.getGroupItems().add( new GroupSectionHandler.GroupItem( $e.ctx ) );
+								}
+			|	f = pr_Identifier	{	memberlist.add( $f.text );
+										group.getGroupItems().add( new GroupSectionHandler.GroupItem( $f.ctx ) );
+									}
 			)
 		)*
 	)
 )
 {	mCfgParseResult.getGroups().put( $a.text, memberlist.toArray( new String[ memberlist.size() ] ) );
+	group.setGroupName( $a.ctx );
+	group.setRoot( $ctx );
+	groupSectionHandler.getGroups().add( group );
 }
 ;
 
