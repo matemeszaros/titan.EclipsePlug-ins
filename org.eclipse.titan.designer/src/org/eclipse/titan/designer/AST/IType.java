@@ -336,7 +336,7 @@ public interface IType extends IGovernor, IIdentifierContainer, IVisitableNode, 
 	/**
 	 * Calculates the list of field types traversed, in type_array and their
 	 * local indices in subrefsArray parameters. Must be used only after
-	 * getFieldType() was already successfully invoked.. It can be used only
+	 * getFieldType() was already successfully invoked. It can be used only
 	 * when all array indexes are foldable, otherwise it returns false.
 	 * 
 	 * @param timestamp
