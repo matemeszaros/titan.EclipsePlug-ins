@@ -325,7 +325,7 @@ public final class ExpressionUtilities {
 			}
 
 			if (!Type.isCompatible(timestamp, tempType1, tempType2, false, false)
-					&& !Type.isCompatible(timestamp, tempType1, tempType2, false, false)) {
+					&& !Type.isCompatible(timestamp, tempType2, tempType1, false, false)) {
 				expression.getLocation().reportSemanticError(INCOMPATIBLEOPERANDERROR);
 				expression.setIsErroneous(true);
 			}
@@ -511,7 +511,7 @@ public final class ExpressionUtilities {
 			}
 
 			if (!Type.isCompatible(timestamp, tempType1, tempType2, false, false)
-					&& !Type.isCompatible(timestamp, tempType1, tempType2, false, false)) {
+					&& !Type.isCompatible(timestamp, tempType2, tempType1, false, false)) {
 				expression.getLocation().reportSemanticError(INCOMPATIBLEOPERANDERROR);
 				expression.setIsErroneous(true);
 			}
