@@ -161,25 +161,25 @@ public abstract class ASN1_Set_Seq_Choice_BaseType extends ASN1Type implements I
 	}
 
 	@Override
-	public Declaration resolveReference(final Reference reference, int subRefIdx, final ISubReference lastSubreference) {
+	public Declaration resolveReference(final Reference reference, final int subRefIdx, final ISubReference lastSubreference) {
 		final List<ISubReference> subreferences = reference.getSubreferences();
-		while (subRefIdx < subreferences.size() && subreferences.get(subRefIdx) instanceof ArraySubReference) {
-			++subRefIdx;
+		int actualIndex = subRefIdx;
+		while (actualIndex < subreferences.size() && subreferences.get(actualIndex) instanceof ArraySubReference) {
+			++actualIndex;
 		}
 
-		if (subRefIdx == subreferences.size()) {
+		if (actualIndex == subreferences.size()) {
 			return null;
 		}
 
-		final CompField compField = getComponentByName(subreferences.get(subRefIdx).getId());
-		final IType compFieldType = compField.getType().getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp());
-
-		if (subreferences.get(subRefIdx) == lastSubreference) {
+		final CompField compField = getComponentByName(subreferences.get(actualIndex).getId());
+		if (subreferences.get(actualIndex) == lastSubreference) {
 			return Declaration.createInstance(getDefiningAssignment(), compField.getIdentifier());
 		}
 
+		final IType compFieldType = compField.getType().getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp());
 		if (compFieldType instanceof IReferenceableElement) {
-			Declaration decl = ((IReferenceableElement) compFieldType).resolveReference(reference, subRefIdx + 1, lastSubreference);
+			Declaration decl = ((IReferenceableElement) compFieldType).resolveReference(reference, actualIndex + 1, lastSubreference);
 			return decl != null ? decl : Declaration.createInstance(getDefiningAssignment(), compField.getIdentifier());
 		}
 
