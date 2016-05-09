@@ -269,19 +269,11 @@ public final class Named_Template_List extends TTCN3Template {
 			return false;
 		}
 
-		if (baseTemplate != null) {
-			// TODO: optimization possibility;
-			// if(baseTemplate.isValue()) then rework this function
-			// and getValue()
-			return false;
-		}
-
 		for (int i = 0, size = getNofTemplates(); i < size; i++) {
 			if (!namedTemplates.getTemplateByIndex(i).getTemplate().isValue(timestamp)) {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
