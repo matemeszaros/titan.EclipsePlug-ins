@@ -966,10 +966,10 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		boolean makefileExists = makefile.toFile().exists();
 		// It is true if the makefile is going to exist before the build
 		// is started
-		boolean makefileWillExist = TRUE.equals(automaticMakefileGeneration) && (mandatoryMakefileRebuild || !makefileExists);
+		boolean makefileWillExist = automaticMakefileGeneration && (mandatoryMakefileRebuild || !makefileExists);
 
 		if (makefileWillExist) {
-			if (!"true".equals(useInternalMakefileGeneration)) {
+			if (!useInternalMakefileGeneration) {
 				IProject[] projects = project.getReferencedProjects();
 				for (IProject referencedProject : projects) {
 					if ( ! ProjectBuildPropertyData.useSymbolicLinks(referencedProject) ) {
