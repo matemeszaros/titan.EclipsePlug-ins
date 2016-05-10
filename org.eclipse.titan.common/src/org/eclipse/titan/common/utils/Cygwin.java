@@ -28,10 +28,11 @@ public final class Cygwin {
 	 * Checks if cygwin is installed, makes sense only on windows
 	 * @return true if cygwin is installed
 	 */
-	public static boolean isInstalled() {
+	public static synchronized boolean isInstalled() {
 		if (installed!=null) {
 			return installed.booleanValue();
 		}
+
 		installed = Boolean.FALSE;
 		try {
 			// apparently reading the value with command line reg.exe command does not need admin rights
@@ -53,6 +54,7 @@ public final class Cygwin {
 		} catch (Exception e) {
 			ErrorReporter.logExceptionStackTrace("While checking if cygwin is installed",e);
 		}
+
 		return installed.booleanValue();
 	}
 	/**
