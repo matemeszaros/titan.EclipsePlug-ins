@@ -28,6 +28,7 @@ import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.types.Function_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Bitstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
@@ -375,11 +376,25 @@ public final class SpecificValue_Template extends TTCN3Template {
 			case A_EXT_FUNCTION_RVAL:
 			case A_MODULEPAR:
 				return true;
+			case A_TEMPLATE:
+			case A_PAR_TEMP_IN:
+			case A_PAR_TEMP_INOUT:
+			case A_FUNCTION_RTEMP:
+			case A_VAR_TEMPLATE:
+				TTCN3Template ttemplate = getTemplateReferencedLast(timestamp);
+				if (ttemplate.isValue(timestamp)) {
+					return true;
+				} else {
+					try {
+						return ((Definition)assignment).getTemplateRestriction().equals(TemplateRestriction.Restriction_type.TR_VALUE);
+					} catch (ClassCastException cce) {
+						return false;
+					}
+				}
 			default:
 				return false;
 			}
 		}
-
 		return true;
 	}
 
