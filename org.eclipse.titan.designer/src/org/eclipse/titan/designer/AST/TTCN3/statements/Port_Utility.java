@@ -374,7 +374,7 @@ public final class Port_Utility {
 		}
 
 		final Assignment assignment = componentBody.getLocalAssignmentById(portIdentifier);
-		if (!Assignment_type.A_PORT.equals(assignment.getAssignmentType())) {
+		if (assignment != null && !Assignment_type.A_PORT.equals(assignment.getAssignmentType())) {
 			portReference.getLocation().reportSemanticError(
 					MessageFormat.format(DEFINITIONNOTPORT, portIdentifier.getDisplayName(), componentType.getTypename(),
 							assignment.getAssignmentName()));
