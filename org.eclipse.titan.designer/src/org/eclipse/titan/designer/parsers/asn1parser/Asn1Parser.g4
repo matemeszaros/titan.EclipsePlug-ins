@@ -2523,7 +2523,7 @@ locals [Token referenceEnd, Identifier identifier, ASN1Type type, boolean is_uni
 		a1 = pr_UNIQ_opt		{ $is_unique = $a1.is_unique ; }
 		(
 			a11 = OPTIONAL		{ $is_optional = true; }
-		|	a12 = pr_Dflt_Value	{ $defaultValue = $defaultValue; $has_default = true; }
+		|	a12 = pr_Dflt_Value	{ $defaultValue = $a12.value; $has_default = true; }
 		)?
 	|	(
 			referenceStart = pr_SimplDefdUpper	{ $simpleReference = $referenceStart.reference; }//it may be defdUpper too
