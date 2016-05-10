@@ -11,7 +11,8 @@ lexer grammar PreprocessorDirectiveLexer;
 
 /**
  * @author Laszlo Baji
- * */
+ * @author Arpad Lovassy
+ */
 
 DIRECTIVE_IFDEF : 'ifdef'; DIRECTIVE_IFNDEF : 'ifndef'; DIRECTIVE_IF : 'if';
 DIRECTIVE_ELSE : 'else'; DIRECTIVE_ELIF : 'elif'; DIRECTIVE_ENDIF : 'endif';
@@ -65,6 +66,8 @@ HEXINT:
 DIRECTIVE_PRAGMA : 'pragma' .*? EOF; 
 DIRECTIVE_ERROR : 'error' .*? EOF; 
 DIRECTIVE_WARNING :	'warning' .*? EOF;
+
+NOT :	'not'|'NOT';
 
 IDENTIFIER:
 [A-Za-z_][A-Za-z0-9_]*

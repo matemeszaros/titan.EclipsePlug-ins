@@ -14,7 +14,8 @@ import org.eclipse.core.resources.IFile;
 
 /*
  * @author Laszlo Baji
- * */
+ * @author Arpad Lovassy
+ */
 
 /*
 ******************************************************************************
@@ -203,7 +204,14 @@ pr_UnaryExpression returns [long value]
 (
 	v1 = pr_PrimaryExpression { $value = $v1.value; }
 |	(
-		OP_NOT v2 = pr_UnaryExpression
+		(	OP_NOT
+		|	NOT
+			{	TITANMarker marker = new TITANMarker("Some compiler versions cannot accept keyword `not', use `!' instead", 
+					line, -1, -1, IMarker.SEVERITY_WARNING, IMarker.PRIORITY_NORMAL);
+				reportUnsupportedConstruct(marker);
+			}
+		)
+		v2 = pr_UnaryExpression
 	)
 	{
 		$value = $v2.value; 
