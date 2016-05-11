@@ -216,7 +216,7 @@ public abstract class OccurencesMarker {
 				int hitOffset = hit.identifier.getLocation().getOffset();
 				int hitEndOffset = hit.identifier.getLocation().getEndOffset();
 				if( hitOffset>=0 && hitEndOffset>=0 && hitEndOffset>=hitOffset ) {
-					final Annotation annotationToAdd = new Annotation(ANNOTATION_TYPE, false, "Occurence of " + hit.identifier.getDisplayName());
+					final Annotation annotationToAdd = new Annotation(ANNOTATION_TYPE, false, hit.identifier.getDisplayName());
 					final Position position = new Position(hitOffset, hitEndOffset - hitOffset);
 					annotationMap.put(annotationToAdd, position);
 				}
