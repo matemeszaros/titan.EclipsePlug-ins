@@ -91,7 +91,9 @@ public final class AssignmentHandlerAFTRerences extends ReferencesProcessor {
 
 		if (node instanceof Reference) {
 			Identifier identifier = ((Reference) node).getId();
-			addContagiousReference(identifier.getDisplayName());
+			if(identifier != null) {
+				addContagiousReference(identifier.getDisplayName());
+			}
 		}
 		return V_CONTINUE;
 	}
