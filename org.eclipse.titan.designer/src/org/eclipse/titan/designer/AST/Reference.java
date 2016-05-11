@@ -261,9 +261,11 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	 * */
 	public Identifier getId() {
 		detectModid();
+
 		if (!subReferences.isEmpty()) {
 			return subReferences.get(0).getId();
 		}
+
 		return null;
 	}
 

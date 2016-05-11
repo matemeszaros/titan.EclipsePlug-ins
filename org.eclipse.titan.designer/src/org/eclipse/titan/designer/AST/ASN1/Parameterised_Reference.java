@@ -104,9 +104,11 @@ public final class Parameterised_Reference extends Defined_Reference {
 	@Override
 	public Identifier getId() {
 		final Defined_Reference ref = getRefDefdSimple();
+
 		if (null != ref) {
 			return ref.getId();
 		}
+
 		return null;
 	}
 
