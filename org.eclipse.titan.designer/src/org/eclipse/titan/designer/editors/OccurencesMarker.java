@@ -31,6 +31,7 @@ import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.AST.ASTLocationChainVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
+import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
@@ -82,6 +83,7 @@ public abstract class OccurencesMarker {
 		@Override
 		public synchronized IStatus runInWorkspace(final IProgressMonitor pMonitor) throws CoreException {
 			doMark(document, offset);
+
 			return Status.OK_STATUS;
 		}
 	}
@@ -141,11 +143,12 @@ public abstract class OccurencesMarker {
 
 	public void markOccurences(final IDocument document, final int offset) {
 		markerJob.cancel();
+
 		markerJob.setParam(document, offset);
 		markerJob.schedule(delay.getValue());
 	}
 
-	public void doMark(final IDocument document, final int offset) {
+	private void doMark(final IDocument document, final int offset) {
 		IAnnotationModel annotationModel = getAnnotationModel();
 		if (annotationModel == null) {
 			removeOccurences(false);
@@ -166,12 +169,14 @@ public abstract class OccurencesMarker {
 			error(document, offset, "Can not find the projectsourceparser for the project: " + file.getProject());
 			return;
 		}
+
 		final String moduleName = projectSourceParser.containedModule(file);
 		if (moduleName == null) {
 			removeOccurences(false);
 			error(document, offset, "The module name can not be found in the project.");
 			return;
 		}
+
 		final Module module = projectSourceParser.getModuleByName(moduleName);
 		if (module == null) {
 			removeOccurences(false);
@@ -193,7 +198,8 @@ public abstract class OccurencesMarker {
 			return;
 		}
 
-		if (reference.getLocation().getOffset() == reference.getLocation().getEndOffset()) {
+		final Location referenceLocaton = reference.getLocation();
+		if (referenceLocaton.getOffset() == referenceLocaton.getEndOffset()) {
 			removeOccurences(false);
 			return;
 		}
@@ -381,15 +387,19 @@ public abstract class OccurencesMarker {
 		if (!force && keepMarks.getValue()) {
 			return;
 		}
+
 		markerJob.cancel();
+
 		final IAnnotationModel annotationModel = getAnnotationModel();
 		if (annotationModel == null) {
 			return;
 		}
+
 		synchronized (getLockObject(annotationModel)) {
 			if (occurrenceAnnotations == null) {
 				return;
 			}
+
 			for (Annotation annotaion : occurrenceAnnotations) {
 				annotationModel.removeAnnotation(annotaion);
 			}
@@ -411,6 +421,7 @@ public abstract class OccurencesMarker {
 			}
 			return null;
 		}
+
 		final IDocumentProvider documentProvider = editor.getDocumentProvider();
 		if (documentProvider == null) {
 			// This can be null if the editor was closed
@@ -420,17 +431,19 @@ public abstract class OccurencesMarker {
 			}
 			return null;
 		}
+
 		return documentProvider.getAnnotationModel(editorInput);
 	}
 
 	/** Returns the lock object for the given annotation model. */
 	private Object getLockObject(final IAnnotationModel annotationModel) {
 		if (annotationModel instanceof ISynchronizable) {
-			Object lock = ((ISynchronizable) annotationModel).getLockObject();
+			final Object lock = ((ISynchronizable) annotationModel).getLockObject();
 			if (lock != null) {
 				return lock;
 			}
 		}
+
 		return annotationModel;
 	}
 
