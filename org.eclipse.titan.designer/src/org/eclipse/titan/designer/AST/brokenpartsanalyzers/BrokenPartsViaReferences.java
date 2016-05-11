@@ -34,7 +34,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 public final class BrokenPartsViaReferences extends SelectionMethodBase implements IBaseAnalyzer {
 	// when the definition based search for parts to be analyzed exceeds this limit we switch back to the import based method.
 	// 1 second in nanoseconds
-	private final static long TIMELIMIT = (long)1e+9;
+	private final static long TIMELIMIT = 10 * (long)1e+9;
 
 	private final CompilationTimeStamp timestamp;
 	private final Map<Module, List<Assignment>> moduleAndBrokenAssignments;
