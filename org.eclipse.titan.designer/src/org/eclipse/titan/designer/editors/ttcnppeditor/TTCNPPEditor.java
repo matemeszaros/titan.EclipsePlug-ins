@@ -126,10 +126,10 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		}
 	};
 
-	private static class TTCN3OccurrenceMarker extends OccurencesMarker {
+	private static class TTCN3PPOccurrenceMarker extends OccurencesMarker {
 		private final IReferenceParser referenceParser = new TTCN3ReferenceParser(false);
 
-		public TTCN3OccurrenceMarker(final ITextEditor editor) {
+		public TTCN3PPOccurrenceMarker(final ITextEditor editor) {
 			super(editor);
 		}
 
@@ -173,7 +173,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 			}
 
 			if (markOccurrences) {
-				occurrencesMarker = new TTCN3OccurrenceMarker(TTCNPPEditor.this);
+				occurrencesMarker = new TTCN3PPOccurrenceMarker(TTCNPPEditor.this);
 			} else if (occurrencesMarker != null) {
 				occurrencesMarker.removeOccurences(true);
 				occurrencesMarker = null;
@@ -187,7 +187,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		boolean markOccurrences = prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.MARK_OCCURRENCES_ENABLED, false, null);
 		if (markOccurrences) {
-			occurrencesMarker = new TTCN3OccurrenceMarker(TTCNPPEditor.this);
+			occurrencesMarker = new TTCN3PPOccurrenceMarker(TTCNPPEditor.this);
 		}
 	}
 
