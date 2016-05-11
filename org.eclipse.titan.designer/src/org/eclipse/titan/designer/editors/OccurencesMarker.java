@@ -156,7 +156,7 @@ public abstract class OccurencesMarker {
 		IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 		if (file == null) {
 			removeOccurences(false);
-			error(document, offset, "editor.getEditorInput().getAdapter(IFile.class) is null.");
+			error(document, offset, "can not determine the file in the editor.");
 			return;
 		}
 
