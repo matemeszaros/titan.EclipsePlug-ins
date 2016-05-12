@@ -3022,7 +3022,7 @@ pr_AltstepLocalDefList returns[ List<Definition> definitions = null]:
 	(	pr_SemiColon?
 		d2 = pr_AltstepLocalDef { if( $definitions != null && $d2.definitions != null) { $definitions.addAll($d2.definitions); }}
 	)*
-	pr_SemiColon
+	pr_SemiColon?
 );
 
 pr_AltstepLocalDef returns[ List<Definition> definitions = null]:
