@@ -68,15 +68,11 @@ public class PrivateViaPublic {
 			ret.add(Module.class);
 			return ret;
 		}
-
-		protected abstract void check(Problems problems);
 	}
 
 	public static class Field extends Base {
 
 		private static final String ERROR_MESSAGE = "The {0} field is private but it is accessible because of wrapping into public type.";
-
-		private FieldCollector fieldCollector;
 
 		public Field() {
 			super(CodeSmellType.PRIVATE_FIELD_VIA_PUBLIC);
@@ -85,9 +81,9 @@ public class PrivateViaPublic {
 		@Override
 		protected void process(final IVisitableNode node, final Problems problems) {
 			actualModule = (Module) node;
-			fieldCollector = new FieldCollector();
+			FieldCollector fieldCollector = new FieldCollector();
 			actualModule.accept(fieldCollector);
-			check(problems);
+			check(fieldCollector, problems);
 		}
 
 		private class FieldCollector extends ASTVisitor {
@@ -115,13 +111,12 @@ public class PrivateViaPublic {
 			}
 		}
 
-		@Override
-		protected void check(final Problems problems) {
-			checkReferences(problems);
-			checkNamedValues(problems);
+		protected void check(final FieldCollector fieldCollector, final Problems problems) {
+			checkReferences(fieldCollector, problems);
+			checkNamedValues(fieldCollector, problems);
 		}
 
-		private void checkReferences(final Problems problems) {
+		private void checkReferences(final FieldCollector fieldCollector, final Problems problems) {
 
 			Iterator<Reference> referenceIterator = fieldCollector.references.iterator();
 
@@ -130,7 +125,7 @@ public class PrivateViaPublic {
 
 				List<ISubReference> subReferences = new ArrayList<ISubReference>(actualReference.getSubreferences());
 
-				// subReferences.get(0) always unrelevant for us
+				// subReferences.get(0) always irrelevant for us
 				if (subReferences.size() > 1) {
 					subReferences.remove(0);
 				}
@@ -165,7 +160,7 @@ public class PrivateViaPublic {
 			}
 		}
 
-		private void checkNamedValues(final Problems problems) {
+		private void checkNamedValues(final FieldCollector fieldCollector, final Problems problems) {
 			Iterator<NamedValue> namedValueIterator = fieldCollector.namedValues.iterator();
 
 			while (namedValueIterator.hasNext()) {
@@ -247,8 +242,6 @@ public class PrivateViaPublic {
 	public static class Value extends Base {
 
 		private static final String ERROR_MESSAGE = "The parametrization of {0} field is private but it is accessible because of wrapping into public type.";
-
-		private ValueCollector valueCollector;
 		
 		public Value() {
 			super(CodeSmellType.PRIVATE_VALUE_VIA_PUBLIC);
@@ -257,9 +250,9 @@ public class PrivateViaPublic {
 		@Override
 		protected void process(final IVisitableNode node, final Problems problems) {
 			actualModule = (Module) node;
-			valueCollector = new ValueCollector();
+			ValueCollector valueCollector = new ValueCollector();
 			actualModule.accept(valueCollector);
-			check(problems);
+			check(valueCollector, problems);
 		}
 
 		private class ValueCollector extends ASTVisitor {
@@ -279,12 +272,11 @@ public class PrivateViaPublic {
 			}
 		}
 
-		@Override
-		public void check(final Problems problems) {
-			checkSequenceOfValues(problems);
+		public void check(final ValueCollector valueCollector, final Problems problems) {
+			checkSequenceOfValues(valueCollector, problems);
 		}
 
-		private void checkSequenceOfValues(final Problems problems) {
+		private void checkSequenceOfValues(final ValueCollector valueCollector, final Problems problems) {
 			Iterator<SequenceOf_Value> valueIterator = valueCollector.sequenceOfValues.iterator();
 
 			while (valueIterator.hasNext()) {
