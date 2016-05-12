@@ -116,8 +116,7 @@ public final class Configuration extends TextSourceViewerConfiguration {
 			strategy.setEditor(editor);
 
 			IPreferencesService prefs = Platform.getPreferencesService();
-			reconciler = new MonoReconciler(strategy, prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-					PreferenceConstants.USEINCREMENTALPARSING, false, null));
+			reconciler = new MonoReconciler(strategy, false);
 			reconciler.setProgressMonitor(new NullProgressMonitor());
 			editor.setReconciler(reconciler);
 
