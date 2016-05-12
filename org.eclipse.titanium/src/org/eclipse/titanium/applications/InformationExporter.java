@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.titan.common.logging.ErrorReporter;
@@ -72,19 +71,15 @@ public abstract class InformationExporter implements IApplication {
 
 		final List<IProject> existingProjects = getProjectsToHandle();
 
-		final List<Job> jobs = new ArrayList<Job>();
 		for (IProject project : existingProjects) {
-			jobs.add(new ProjectAnalyzerJob("Exporting information for project " + project.getName()) {
+			ProjectAnalyzerJob job = new ProjectAnalyzerJob("Exporting information for project " + project.getName()) {
 				@Override
 				public IStatus doPostWork(final IProgressMonitor monitor) {
 					System.out.println("Exporting information for " + getProject().getName());
 					exportInformationForProject(args, getProject(), monitor);
 					return Status.OK_STATUS;
 				}
-			}.quickSchedule(project));
-		}
-
-		for (Job job : jobs) {
+			}.quickSchedule(project);
 			job.join();
 		}
 
