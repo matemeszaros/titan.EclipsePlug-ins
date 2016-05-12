@@ -39,7 +39,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
  * @author Ilyes Eniko 
  */
 public class SelectWithNumbersSorted extends  BaseModuleCodeSmellSpotter {
-private static final String ERR_MSG = "Select cases are not listed in incremental order.";
+	private static final String ERR_MSG = "Select cases are not listed in incremental order.";
 	
 	private final CompilationTimeStamp timestamp;
 	
@@ -55,7 +55,7 @@ private static final String ERR_MSG = "Select cases are not listed in incrementa
 		if (!(node instanceof SelectCase_Statement)) {
 			return;
 		}
-		
+
 		SelectCase_Statement s = (SelectCase_Statement)node;
 		Value v = s.getExpression();
 		if (v == null || v.getIsErroneous(timestamp)) {
@@ -74,7 +74,6 @@ private static final String ERR_MSG = "Select cases are not listed in incrementa
 			}
 		}
 		
-		
 		IType itype = v.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 		// TODO Kristof: az ellenorzes folosleges.
 		if (itype instanceof Referenced_Type) {
@@ -84,7 +83,6 @@ private static final String ERR_MSG = "Select cases are not listed in incrementa
 		if (itype == null || !(itype instanceof Integer_Type)) {
 			return;
 		}
-		
 		
 		//count number of cases in select, get used integer type case-items
 		CaseVisitorInteger caseVisitorInteger = new CaseVisitorInteger();

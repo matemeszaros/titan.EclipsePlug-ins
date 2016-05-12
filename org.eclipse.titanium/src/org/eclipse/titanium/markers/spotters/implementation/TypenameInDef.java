@@ -30,6 +30,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
 
 public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 	private static final String REPORT = "The name `{1}'' of the {0} contains it''s type''s name `{2}''";
+
 	protected final CompilationTimeStamp timestamp;
 	
 	public TypenameInDef() {
@@ -71,6 +72,7 @@ public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 		if (type == null) {
 			return;
 		}
+
 		final String displayName = identifier.getDisplayName();
 		Identifier typeId = null;
 		if (type instanceof Referenced_Type) {
@@ -84,6 +86,7 @@ public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 		} else {
 			typeName = typeId.getDisplayName();
 		}
+
 		if (displayName.contains(typeName)) {
 			String msg = MessageFormat.format(REPORT, description, displayName, typeName);
 			problems.report(identifier.getLocation(), msg);
