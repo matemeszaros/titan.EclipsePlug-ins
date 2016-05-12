@@ -59,7 +59,7 @@ public class ConvertToEnum extends BaseModuleCodeSmellSpotter {
 		IType.Type_type type = v.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 		if (!type.equals(Type_type.TYPE_TTCN3_ENUMERATED)) {
 			IType governor = v.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
-			if (governor != null) {
+			if (governor != null && !governor.getIsErroneous(timestamp)) {
 				problems.report(v.getLocation(), MessageFormat.format(ERROR_MSG_SELECT, governor.getTypename()));
 			}
 		}
