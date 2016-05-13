@@ -294,4 +294,5 @@ abstract class BaseNamingConventionPropertyPage extends FieldEditorPropertyPage 
 		addField(createFieldEditor(comp, PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_VARIABLE, "component variable"));
 		addField(createFieldEditor(comp, PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_TIMER, "component timer"));
 	}
+	
 }

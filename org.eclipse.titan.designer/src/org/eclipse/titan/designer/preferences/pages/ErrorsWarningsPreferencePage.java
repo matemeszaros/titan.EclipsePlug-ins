@@ -41,7 +41,7 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 
 	private static final String REPORTUNSUPPORTEDCONSTRUCTS = "Language constructs not supported yet:";
 	private static final String REPORTUNSUPPORTEDCONSTRUCTS_TOOLTIP = "For example pattern subtyping in TTCN-3.";
-	private static final String REPORTMISSINGIMPORTATION = "Missing imported module:";
+	private static final String REPORTMISSINGIMPORTATION = "Report missing imported modules:";
 	private static final String REPORTMISSINGIMPORTATION_TOOLTIP = "When a module referred to in an import statement could not be found.";
 	private static final String REPORTUNUSEDMODULEIMPORTATION = "Report unused module importation:";
 	private static final String REPORTUNUSEDMODULEIMPORTATION_TOOLTIP = "When nothing is used in the module from the imported module.";
@@ -88,12 +88,6 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 	private static final String REPORT_SETVERDICT_WITHOUT_REASON = "Report setverdict without reason";
 	private static final String REPORT_SETVERDICT_WITHOUT_REASON_TOOLTIP = "Setting any other verdict reason then pass,"
 			+ " should be accompanied with a reason, with details for the verdict";
-	private static final String REPORT_MODULENAME_IN_DEFINITION = "Report if the name of the module is mentioned in the name of the definition";
-	private static final String REPORT_MODULENAME_IN_DEFINITION_TOOLTIP = "Definitions can be referenced in the modulename.identifier format,"
-			+ " so it is of no value if the name of the module is duplicated in the name of the definition\n" + "But makes it longer";
-	private static final String REPORT_VISIBILITY_IN_DEFINITION = "Report visibility settings mentioned in the name of definitions";
-	private static final String REPORT_VISIBILITY_IN_DEFINITION_TOOLTIP = "Visibility attributes should not be mentioned"
-			+ " in the names of the definitions\n" + "They should be explicitly set as visibility attributes of the definition";
 
 	private static final String REPORTUNNECESSARYCONTROLS = "Report unnecessary controls:";
 	private static final String REPORTUNNECESSARYCONTROLS_TOOLTIP = "Report controls that can be identified to be unnecessary"
@@ -109,7 +103,7 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 	private static final String REPORTERRORSINEXTENSIONSYNTAX = "Report incorrect syntax in extension attributes:";
 	private static final String REPORTERRORSINEXTENSIONSYNTAX_TOOLTIP = "According to the standard"
 			+ " syntax errors in the extension attribute should not be reported,"
-			+ " but should be assumed as correct for some other tool .";
+			+ " but should be assumed as correct for some other tool.";
 	private static final String REPORT_STRICT_CONSTANTS = "Use stricter checks for constants";
 	private static final String REPORT_STRICT_CONSTANTS_TOOLTIP = "Although it is valid to leave fields of constants and literals unbound,"
 			+ " in some cases this was not the intention.";
@@ -422,30 +416,6 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 				IGNORE_WARNING_ERROR, comp);
 		text = comboedit.getLabelControl(comp);
 		text.setToolTipText(REPORT_SETVERDICT_WITHOUT_REASON_TOOLTIP);
-		comboedit.setPropertyChangeListener(new IPropertyChangeListener() {
-			@Override
-			public void propertyChange(final PropertyChangeEvent event) {
-				changed = true;
-			}
-		});
-		addField(comboedit);
-
-		comboedit = new ComboFieldEditor(PreferenceConstants.REPORT_MODULENAME_IN_DEFINITION, REPORT_MODULENAME_IN_DEFINITION,
-				IGNORE_WARNING_ERROR, comp);
-		text = comboedit.getLabelControl(comp);
-		text.setToolTipText(REPORT_MODULENAME_IN_DEFINITION_TOOLTIP);
-		comboedit.setPropertyChangeListener(new IPropertyChangeListener() {
-			@Override
-			public void propertyChange(final PropertyChangeEvent event) {
-				changed = true;
-			}
-		});
-		addField(comboedit);
-
-		comboedit = new ComboFieldEditor(PreferenceConstants.REPORT_VISIBILITY_IN_DEFINITION, REPORT_VISIBILITY_IN_DEFINITION,
-				IGNORE_WARNING_ERROR, comp);
-		text = comboedit.getLabelControl(comp);
-		text.setToolTipText(REPORT_VISIBILITY_IN_DEFINITION_TOOLTIP);
 		comboedit.setPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
 			public void propertyChange(final PropertyChangeEvent event) {
