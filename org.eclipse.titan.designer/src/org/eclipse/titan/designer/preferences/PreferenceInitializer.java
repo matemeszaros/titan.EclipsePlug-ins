@@ -112,7 +112,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	private void onTheFlyChecker(final IPreferenceStore preferenceStore) {
 		//on-the-fly checker
-		preferenceStore.setDefault(PreferenceConstants.REPORTUNSUPPORTEDCONSTRUCTS, GeneralConstants.ERROR);
+		preferenceStore.setDefault(PreferenceConstants.REPORTUNSUPPORTEDCONSTRUCTS, GeneralConstants.WARNING);
 		preferenceStore.setDefault(PreferenceConstants.REPORTUNUSEDMODULEIMPORTATION, GeneralConstants.WARNING);
 		preferenceStore.setDefault(PreferenceConstants.REPORTUNUSEDGLOBALDEFINITION, GeneralConstants.IGNORE);
 		preferenceStore.setDefault(PreferenceConstants.REPORTUNUSEDLOCALDEFINITION, GeneralConstants.WARNING);
@@ -125,7 +125,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.REPORT_IGNORED_PREPROCESSOR_DIRECTIVES, GeneralConstants.WARNING);
 		preferenceStore.setDefault(PreferenceConstants.REPORTINFINITELOOPS, GeneralConstants.IGNORE);
 		preferenceStore.setDefault(PreferenceConstants.REPORTREADONLY, GeneralConstants.IGNORE);
-		preferenceStore.setDefault(PreferenceConstants.REPORTTYPECOMPATIBILITY, GeneralConstants.ERROR);
+		preferenceStore.setDefault(PreferenceConstants.REPORTTYPECOMPATIBILITY, GeneralConstants.WARNING);
 		preferenceStore.setDefault(PreferenceConstants.REPORTERRORSINEXTENSIONSYNTAX, GeneralConstants.WARNING);
 		preferenceStore.setDefault(PreferenceConstants.REPORT_STRICT_CONSTANTS, false);
 		preferenceStore.setDefault(PreferenceConstants.REPORT_GOTO, GeneralConstants.IGNORE);
@@ -156,9 +156,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	private void namingConventionPreferences(final IPreferenceStore preferenceStore) {
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTIONPROBLEMS, GeneralConstants.IGNORE);
+		//module names
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_TTCN3MODULE, ".*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_ASN1MODULE, ".*");
-
+		//global TTCN-3 definitions
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_ALTSTEP, "as_.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_GLOBAL_CONSTANT, "cg_.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_EXTERNALCONSTANT, "ec_.*");
@@ -171,20 +172,21 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_GLOBAL_TIMER, "T.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_TYPE, ".*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_GROUP, "[A-Z].*");
-
+		//local TTCN-3 definitions:
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_LOCAL_CONSTANT, "cl.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_LOCAL_VARIABLE, "vl.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_LOCAL_TEMPLATE, "t.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_LOCAL_VARTEMPLATE, "vt.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_LOCAL_TIMER, "TL_.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_FORMAL_PARAMETER, "pl_.*");
-
+		//component internal TTCN-3 definitions
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_CONSTANT, "c_.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_VARIABLE, "v_.*");
 		preferenceStore.setDefault(PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_TIMER, "T_.*");
-
+		//other:
 		preferenceStore.setDefault(PreferenceConstants.REPORT_MODULENAME_IN_DEFINITION, GeneralConstants.IGNORE);
 		preferenceStore.setDefault(PreferenceConstants.REPORT_VISIBILITY_IN_DEFINITION, GeneralConstants.IGNORE);
+		
 	}
 
 	private void color(final IPreferenceStore preferenceStore) {

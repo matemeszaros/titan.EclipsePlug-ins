@@ -49,6 +49,16 @@ public class NamingConventionPreferencePage extends FieldEditorPreferencePage im
 	private static final String REPORTNAMINGCONVENTIONPROBLEMS = "Report naming convention problems:";
 	private static final String REPORTNAMINGCONVENTIONPROBLEMS_TOOLTIP = "When the name of a definition does not match the naming convention.";
 
+	private static final String REPORT_MODULENAME_IN_DEFINITION = "Report if the name of the module is mentioned in the name of the definition";
+	private static final String REPORT_MODULENAME_IN_DEFINITION_TOOLTIP = "Definitions can be referenced in the modulename.identifier format,"
+			+ " in order to avoid a name collision.\n" 
+			+ "Adding the module name to the definition is unnecessary, this only makes it longer";
+	private static final String REPORT_VISIBILITY_IN_DEFINITION = "Report visibility settings mentioned in the name of definitions";
+	private static final String REPORT_VISIBILITY_IN_DEFINITION_TOOLTIP = "Visibility attributes should not be mentioned"
+			+ " in the names of the definitions.\n" + 
+			"They should be explicitly set as visibility attributes of the definition";
+
+	
 	private boolean changed = false;
 
 	private static final String[][] IGNORE_WARNING_ERROR = new String[][] { { "Ignore", GeneralConstants.IGNORE },
@@ -221,6 +231,7 @@ public class NamingConventionPreferencePage extends FieldEditorPreferencePage im
 		createTTCN3GlobalSection(tempParent);
 		createTTCN3LocalSection(tempParent);
 		createTTCN3ComponentSection(tempParent);
+		createOthersSection(tempParent);
 	}
 
 	/**
@@ -311,6 +322,49 @@ public class NamingConventionPreferencePage extends FieldEditorPreferencePage im
 		addField(createFieldEditor(comp, PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_VARIABLE, "component variable"));
 		addField(createFieldEditor(comp, PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_TIMER, "component timer"));
 	}
+	
+	/**
+	 * Creates the section of naming conventions governing definitions
+	 * 
+	 * @param parent
+	 *                the parent composite to put the section under.
+	 * */
+	private void createOthersSection(final Composite parent) {
+		ExpandableComposite expandable = createExtendableComposite(parent, "other naming rules");
+		Composite comp = new Composite(expandable, SWT.NONE);
+		comp.setLayout(new GridLayout(2, false));
+		comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		expandable.setClient(comp);
+		expandable.setExpanded(false);
+
+		ComboFieldEditor comboedit = new ComboFieldEditor(PreferenceConstants.REPORT_MODULENAME_IN_DEFINITION, REPORT_MODULENAME_IN_DEFINITION,
+				IGNORE_WARNING_ERROR, comp);
+		Label text = comboedit.getLabelControl(comp);
+		text.setToolTipText(REPORT_MODULENAME_IN_DEFINITION_TOOLTIP);
+		comboedit.setPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(final PropertyChangeEvent event) {
+				changed = true;
+			}
+		});
+		addField(comboedit);
+
+		comboedit = new ComboFieldEditor(PreferenceConstants.REPORT_VISIBILITY_IN_DEFINITION, REPORT_VISIBILITY_IN_DEFINITION,
+				IGNORE_WARNING_ERROR, comp);
+		text = comboedit.getLabelControl(comp);
+		text.setToolTipText(REPORT_VISIBILITY_IN_DEFINITION_TOOLTIP);
+		comboedit.setPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(final PropertyChangeEvent event) {
+				changed = true;
+			}
+		});
+		addField(comboedit);
+	
+	}
+	
+	
+	
 
 	@Override
 	protected IPreferenceStore doGetPreferenceStore() {

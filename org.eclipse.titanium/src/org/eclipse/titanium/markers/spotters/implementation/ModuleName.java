@@ -25,7 +25,7 @@ public class ModuleName {
 	}
 
 	public abstract static class Base extends BaseModuleCodeSmellSpotter {
-		private static final String REPORT = "The name {1} of the {0} contains the module name it is located in {2}";
+		private static final String REPORT = "The name {1} of the {0} contains the module name {2} it is located in";
 
 		public Base() {
 			super(CodeSmellType.MODULENAME_IN_DEFINITION);

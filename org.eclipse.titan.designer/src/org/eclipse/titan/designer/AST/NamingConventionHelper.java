@@ -76,7 +76,8 @@ public final class NamingConventionHelper {
 				public void propertyChange(final PropertyChangeEvent event) {
 					final String property = event.getProperty();
 					if (PreferenceConstants.REPORTNAMINGCONVENTIONPROBLEMS.equals(property)) {
-						namingSeverity = Platform.getPreferencesService().getString(ProductConstants.PRODUCT_ID_DESIGNER,
+						namingSeverity = Platform.getPreferencesService().getString(
+								ProductConstants.PRODUCT_ID_DESIGNER,
 								PreferenceConstants.REPORTNAMINGCONVENTIONPROBLEMS, GeneralConstants.WARNING, null);
 						silentMode = GeneralConstants.IGNORE.equals(namingSeverity);
 					} else if (PreferenceConstants.REPORT_MODULENAME_IN_DEFINITION.equals(property)) {
@@ -329,7 +330,7 @@ public final class NamingConventionHelper {
 		if (displayName.contains(moduleID.getDisplayName())) {
 			final Location identifierLocation = identifier.getLocation();
 			identifierLocation.reportConfigurableSemanticProblem(containsModuleNameSeverity, MessageFormat.format(
-					"The name {1} of the {0} contains the module name it is located in {2}", description, displayName,
+					"The name {1} of the {0} contains the module name {2} it is located in", description, displayName,
 					moduleID.getDisplayName()));
 		}
 		if (VISIBILITY_PATTERN.matcher(displayName).matches()) {

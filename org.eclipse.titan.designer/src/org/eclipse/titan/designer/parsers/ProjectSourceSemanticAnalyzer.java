@@ -404,7 +404,7 @@ public class ProjectSourceSemanticAnalyzer {
 		monitor.subTask("Checking the importations of the modules");
 		
 		try{
-			final String option = preferenceService.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.REPORTUNSUPPORTEDCONSTRUCTS, GeneralConstants.ERROR, null);
+			final String option = preferenceService.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.REPORTUNSUPPORTEDCONSTRUCTS, GeneralConstants.WARNING, null);
 			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
 				// report the unsupported constructs in the project
 				ProjectSourceSyntacticAnalyzer syntacticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSyntacticAnalyzer();
