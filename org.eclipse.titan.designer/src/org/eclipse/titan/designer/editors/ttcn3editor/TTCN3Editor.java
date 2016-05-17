@@ -44,16 +44,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.designer.Activator;
 import org.eclipse.titan.designer.HeadlessStorage;
-import org.eclipse.titan.designer.AST.Module;
-import org.eclipse.titan.designer.AST.Reference;
-import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.editors.ColorManager;
 import org.eclipse.titan.designer.editors.EditorTracker;
 import org.eclipse.titan.designer.editors.FoldingSupport;
 import org.eclipse.titan.designer.editors.IEditorWithCarretOffset;
-import org.eclipse.titan.designer.editors.IReferenceParser;
 import org.eclipse.titan.designer.editors.ISemanticTITANEditor;
-import org.eclipse.titan.designer.editors.OccurencesMarker;
 import org.eclipse.titan.designer.editors.ttcn3editor.actions.ToggleComment;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.FileSaveTracker;
@@ -72,7 +67,6 @@ import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -98,7 +92,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	private Reconciler reconciler;
 
 	/** It can be null if the feature is turned off. */
-	private OccurencesMarker occurrencesMarker;
+	private TTCN3OccurrenceMarker occurrencesMarker;
 	private IDocumentListener markOccurrencesDocumentListener = new IDocumentListener() {
 		@Override
 		public void documentChanged(final DocumentEvent event) {
@@ -112,24 +106,6 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 			}
 		}
 	};
-
-	private static class TTCN3OccurrenceMarker extends OccurencesMarker {
-		private final IReferenceParser referenceParser = new TTCN3ReferenceParser(false);
-
-		public TTCN3OccurrenceMarker(final ITextEditor editor) {
-			super(editor);
-		}
-
-		@Override
-		protected IReferenceParser getReferenceParser() {
-			return referenceParser;
-		}
-
-		@Override
-		protected List<Hit> findOccurrences(final IDocument document, final Reference reference, final Module module, final int offset) {
-			return findOccurrencesLocationBased(module, offset);
-		}
-	}
 
 	private IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
 		@Override
