@@ -382,7 +382,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 			case A_FUNCTION_RTEMP:
 			case A_VAR_TEMPLATE:
 				TTCN3Template ttemplate = getTemplateReferencedLast(timestamp);
-				if (ttemplate.isValue(timestamp)) {
+				if ((!ttemplate.equals(this)) && (ttemplate.isValue(timestamp))) {
 					return true;
 				} else {
 					try {
