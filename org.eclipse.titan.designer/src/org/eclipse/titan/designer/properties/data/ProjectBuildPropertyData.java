@@ -373,7 +373,7 @@ public final class ProjectBuildPropertyData {
 	 * Gets if symbolic link switch is switched on in the given project.
 	 * <p>
 	 * Do not use this function to decide if symbolic linking shall be performed
-	 * because this condition is necessary but not sufficient. 
+	 * because this condition is necessary but not sufficient.
 	 * Use the function useSymbolicLinks() instead of this function
 	 * </p>
 	 * @param project
@@ -408,9 +408,15 @@ public final class ProjectBuildPropertyData {
 	 */
 	public static boolean useSymbolicLinks(final IProject project) {
 		
-		return !( useAutomaticMakefilegeneration(project) 
-				&& useInternalMakefilegeneration(project)
-				&& isSymlinklessBuildSwitchedOn(project) );
+		if(useAutomaticMakefilegeneration(project)) {
+			if(useInternalMakefilegeneration(project) && isSymlinklessBuildSwitchedOn(project)) {
+				return false;
+			} else {
+				return true; 
+			}
+		} else {
+			return !isSymlinklessBuildSwitchedOn(project);
+		}
 
 	}
 }
