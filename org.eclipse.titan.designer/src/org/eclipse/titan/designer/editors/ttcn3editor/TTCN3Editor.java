@@ -89,9 +89,9 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	private Reconciler reconciler;
 
 	/** It can be null if the feature is turned off. */
-	private TTCN3OccurrenceMarker occurrencesMarker;
+	private final TTCN3OccurrenceMarker occurrencesMarker;
 
-	private IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
+	private final IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
 		@Override
 		public void propertyChange(final PropertyChangeEvent event) {
 			final String property = event.getProperty();
@@ -110,6 +110,8 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	};
 
 	public TTCN3Editor() {
+		super();
+
 		occurrencesMarker = new TTCN3OccurrenceMarker(TTCN3Editor.this);
 	}
 

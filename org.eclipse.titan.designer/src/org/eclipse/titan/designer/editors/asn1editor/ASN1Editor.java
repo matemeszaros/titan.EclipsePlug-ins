@@ -82,9 +82,9 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 	private ReconcilingStrategy strategy;
 
 	/** It can be null if the feature is turned off. */
-	private ASN1OccurrenceMarker occurrencesMarker;
+	private final ASN1OccurrenceMarker occurrencesMarker;
 
-	private IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
+	private final IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
 		@Override
 		public void propertyChange(final PropertyChangeEvent event) {
 			final String property = event.getProperty();
@@ -103,6 +103,8 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 	};
 
 	public ASN1Editor() {
+		super();
+
 		occurrencesMarker = new ASN1OccurrenceMarker(this);
 	}
 
@@ -136,26 +138,24 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 
 		super.doSave(progressMonitor);
 
-		if (file != null) {
-			if (isSemanticCheckingDelayed()) {
-				WorkspaceJob op = new WorkspaceJob("Reconciliation on save") {
-					@Override
-					public IStatus runInWorkspace(final IProgressMonitor monitor) {
-						ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-						projectSourceParser.reportOutdating(file);
+		if (file != null && isSemanticCheckingDelayed()) {
+			final WorkspaceJob op = new WorkspaceJob("Reconciliation on save") {
+				@Override
+				public IStatus runInWorkspace(final IProgressMonitor monitor) {
+					ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
+					projectSourceParser.reportOutdating(file);
 
-						strategy.analyze(true);
+					strategy.analyze(true);
 
-						return Status.OK_STATUS;
-					}
-				};
-				op.setPriority(Job.LONG);
-				op.setSystem(true);
-				op.setUser(false);
-				op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
-				op.schedule();
+					return Status.OK_STATUS;
+				}
+			};
+			op.setPriority(Job.LONG);
+			op.setSystem(true);
+			op.setUser(false);
+			op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
+			op.schedule();
 
-			}
 		}
 	}
 

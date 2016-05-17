@@ -101,9 +101,9 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 	private static final String INACTIVE_CODE_ANNOTATION_TYPE = "org.eclipse.titan.inactive_code";
 
 	/** It can be null if the feature is turned off. */
-	private TTCN3PPOccurrenceMarker occurrencesMarker;
+	private final TTCN3PPOccurrenceMarker occurrencesMarker;
 
-	private IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
+	private final IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
 		@Override
 		public void propertyChange(final PropertyChangeEvent event) {
 			final String property = event.getProperty();
@@ -122,6 +122,8 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 	};
 
 	public TTCNPPEditor() {
+		super();
+
 		occurrencesMarker = new TTCN3PPOccurrenceMarker(TTCNPPEditor.this);
 	}
 
@@ -155,28 +157,26 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 
 		super.doSave(progressMonitor);
 
-		if (file != null) {
-			if (isSemanticCheckingDelayed()) {
-				final IReconcilingStrategy strategy = reconciler.getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE);
-				if (strategy instanceof ReconcilingStrategy) {
-					WorkspaceJob op = new WorkspaceJob("Reconciliation on save") {
-						@Override
-						public IStatus runInWorkspace(final IProgressMonitor monitor) {
-							ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file
-									.getProject());
-							projectSourceParser.reportOutdating(file);
-							TITANDebugConsole.println("  ** Full reconciliation and full semantic check on save for delayed semantic checking.(ttcnpp)");
-							((ReconcilingStrategy) strategy).analyze(true);
+		if (file != null && isSemanticCheckingDelayed()) {
+			final IReconcilingStrategy strategy = reconciler.getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE);
+			if (strategy instanceof ReconcilingStrategy) {
+				WorkspaceJob op = new WorkspaceJob("Reconciliation on save") {
+					@Override
+					public IStatus runInWorkspace(final IProgressMonitor monitor) {
+						ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file
+								.getProject());
+						projectSourceParser.reportOutdating(file);
+						TITANDebugConsole.println("  ** Full reconciliation and full semantic check on save for delayed semantic checking.(ttcnpp)");
+						((ReconcilingStrategy) strategy).analyze(true);
 
-							return Status.OK_STATUS;
-						}
-					};
-					op.setPriority(Job.LONG);
-					op.setSystem(true);
-					op.setUser(false);
-					op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
-					op.schedule();
-				}
+						return Status.OK_STATUS;
+					}
+				};
+				op.setPriority(Job.LONG);
+				op.setSystem(true);
+				op.setUser(false);
+				op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
+				op.schedule();
 			}
 		}
 	}
