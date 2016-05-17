@@ -94,9 +94,7 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 
 		@Override
 		public void documentAboutToBeChanged(final DocumentEvent event) {
-			if (ASN1Editor.this.occurrencesMarker != null) {
-				ASN1Editor.this.occurrencesMarker.removeOccurences(true);
-			}
+			// Do nothing
 		}
 	};
 
@@ -121,27 +119,12 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 	private IPropertyChangeListener occurrencesMarkerListener = new IPropertyChangeListener() {
 		@Override
 		public void propertyChange(final PropertyChangeEvent event) {
-			final String property = event.getProperty();
-			if (PreferenceConstants.MARK_OCCURRENCES_ENABLED.equals(property)) {
-				final boolean markOccurrences = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-						PreferenceConstants.MARK_OCCURRENCES_ENABLED, false, null);
-				if (markOccurrences) {
-					occurrencesMarker = new ASN1OccurrenceMarker(ASN1Editor.this);
-				} else if (occurrencesMarker != null) {
-					occurrencesMarker.removeOccurences(true);
-					occurrencesMarker = null;
-				}
-			}
+			// Do nothing
 		}
 	};
 
 	public ASN1Editor() {
-		IPreferencesService prefs = Platform.getPreferencesService();
-		final boolean markOccurrences = prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-				PreferenceConstants.MARK_OCCURRENCES_ENABLED, false, null);
-		if (markOccurrences) {
-			occurrencesMarker = new ASN1OccurrenceMarker(this);
-		}
+		occurrencesMarker = new ASN1OccurrenceMarker(this);
 	}
 
 	@Override
@@ -315,7 +298,7 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
-				if (occurrencesMarker == null || selection.isEmpty() || !(selection instanceof TextSelection)
+				if (selection.isEmpty() || !(selection instanceof TextSelection)
 						|| "".equals(((TextSelection) selection).getText())) {
 					return;
 				}
@@ -335,9 +318,8 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 	@Override
 	protected void handleCursorPositionChanged() {
 		super.handleCursorPositionChanged();
-		if (occurrencesMarker != null) {
-			occurrencesMarker.markOccurences(getDocument(), getCarretOffset());
-		}
+
+		occurrencesMarker.markOccurences(getDocument(), getCarretOffset());
 	}
 
 	@Override

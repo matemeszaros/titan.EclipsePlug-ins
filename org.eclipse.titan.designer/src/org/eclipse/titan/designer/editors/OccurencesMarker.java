@@ -59,6 +59,7 @@ public abstract class OccurencesMarker {
 	private static SubscribedBoolean reportDebugInformation;
 	private static SubscribedBoolean printASTElem;
 
+	private static SubscribedBoolean enabled;
 	private static SubscribedInt delay;
 	private static SubscribedBoolean keepMarks;
 
@@ -89,6 +90,7 @@ public abstract class OccurencesMarker {
 	}
 
 	static {
+		enabled = new SubscribedBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MARK_OCCURRENCES_ENABLED, false);
 		delay = new SubscribedInt(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MARK_OCCURRENCES_DELAY, 100);
 		keepMarks = new SubscribedBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MARK_OCCURRENCES_KEEP_MARKS, false);
 		reportDebugInformation = new SubscribedBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.DISPLAYDEBUGINFORMATION,
@@ -143,6 +145,10 @@ public abstract class OccurencesMarker {
 
 	public void markOccurences(final IDocument document, final int offset) {
 		markerJob.cancel();
+
+		if(!enabled.getValue()) {
+			return;
+		}
 
 		markerJob.setParam(document, offset);
 		markerJob.schedule(delay.getValue());
