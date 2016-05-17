@@ -13,6 +13,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -102,6 +106,22 @@ public class MetricsView extends ViewPart {
 	public void setFocus() {
 		parent.setFocus();
 	}
+	
+	private void refreshData() {
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				if(browser == null) {
+					return;
+				}
+
+				browser.setInput(data);
+				browser.setContentProvider(new ContentProvider());
+				browser.setLabelProvider(new LabelProvider(data));
+				browser.setComparator(new Sorter(data));
+			}
+		});
+	}
 
 	private void createHead(final Composite head) {
 		// upper composite, the head itself
@@ -142,6 +162,9 @@ public class MetricsView extends ViewPart {
 				if ("".equals(selectedProjectName)) {
 					// Nothing is selected (probably there are no projects in
 					// the project browser);
+					data = null;
+					refreshData();
+
 					return;
 				}
 
@@ -152,6 +175,9 @@ public class MetricsView extends ViewPart {
 
 				final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(selectedProjectName);
 				if (project == null) {
+					data = null;
+					refreshData();
+
 					return;
 				}
 
@@ -164,9 +190,7 @@ public class MetricsView extends ViewPart {
 							Display.getDefault().syncExec(new Runnable() {
 								@Override
 								public void run() {
-									browser.setInput(data);
-									browser.setLabelProvider(new LabelProvider(data));
-									browser.setComparator(new Sorter(data));
+									refreshData();
 									export.setEnabled(true);
 								}
 							});
@@ -194,6 +218,42 @@ public class MetricsView extends ViewPart {
 		});
 
 		createExportToXlsButton(head);
+		
+		final IResourceChangeListener PROJECT_CLOSE_LISTENER = new IResourceChangeListener() {
+			@Override
+			public void resourceChanged(final IResourceChangeEvent event) {
+				switch (event.getType()) {
+				case IResourceChangeEvent.PRE_CLOSE:
+				case IResourceChangeEvent.PRE_DELETE:
+					final IResource resource = event.getResource();
+					//projectSelector.getText();
+					Display.getDefault().syncExec(new Runnable() {
+						@Override
+						public void run() {
+							if(projectSelector == null || projectSelector.isDisposed()) {
+								return;
+							}
+
+							projectSelector.deselectAll();
+							projectSelector.removeAll();
+							for (final IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+								if (!project.equals(resource.getProject()) && TITANNature.hasTITANNature(project)) {
+									projectSelector.add(project.getName());
+								}
+							}
+
+							data = null;
+							refreshData();
+						}
+					});
+					break;
+				default:
+					break;
+				}
+			}
+		};
+		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		workspace.addResourceChangeListener(PROJECT_CLOSE_LISTENER);
 	}
 
 	private void createExportToXlsButton(final Composite head) {
