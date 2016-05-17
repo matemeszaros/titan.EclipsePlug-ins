@@ -325,7 +325,7 @@ public final class ProjectBuildPropertyPage extends PropertyPage {
 			internalMakefileCreationTab.setMakefileGenerationEnabled(false);
 			makeAttributesTab.setMakefileGenerationEnabled(false);
 			generateInternalMakefileButton.setEnabled(false);
-			updateSymlinkLessbuild(generateInternalMakefileButton.getSelection());
+			updateSymlinkLessbuild(true);
 		}
 
 	}
