@@ -406,9 +406,11 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 			ComponentTypeBody body = toBeChecked.removeFirst();
 			if(!result.contains(body)) {
 				result.add(body);
-				for(ComponentTypeBody subBody : body.attrExtendsReferences.getComponentBodies()) {
-					if(!result.contains(subBody) && !toBeChecked.contains(subBody)) {
-						toBeChecked.add(subBody);
+				if(body.attrExtendsReferences != null) {
+					for(ComponentTypeBody subBody : body.attrExtendsReferences.getComponentBodies()) {
+						if(!result.contains(subBody) && !toBeChecked.contains(subBody)) {
+							toBeChecked.add(subBody);
+						}
 					}
 				}
 			}
