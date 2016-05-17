@@ -23,11 +23,8 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ISynchronizable;
-import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
@@ -105,17 +102,6 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 
 	/** It can be null if the feature is turned off. */
 	private TTCN3PPOccurrenceMarker occurrencesMarker;
-	private IDocumentListener markOccurrencesDocumentListener = new IDocumentListener() {
-		@Override
-		public void documentChanged(final DocumentEvent event) {
-			// Do nothing
-		}
-
-		@Override
-		public void documentAboutToBeChanged(final DocumentEvent event) {
-			// Do nothing
-		}
-	};
 
 	private IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
 		@Override
@@ -135,15 +121,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		}
 	};
 
-	private IPropertyChangeListener occurrencesMarkerListener = new IPropertyChangeListener() {
-		@Override
-		public void propertyChange(final PropertyChangeEvent event) {
-			// Do nothing
-		}
-	};
-
 	public TTCNPPEditor() {
-
 		occurrencesMarker = new TTCN3PPOccurrenceMarker(TTCNPPEditor.this);
 	}
 
@@ -270,7 +248,6 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		configuration = null;
 		projectionViewer = null;
 		Activator.getDefault().getPreferenceStore().removePropertyChangeListener(foldingListener);
-		Activator.getDefault().getPreferenceStore().removePropertyChangeListener(occurrencesMarkerListener);
 
 		IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
 		if (file != null) {
@@ -360,7 +337,6 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		ISourceViewer viewer = new ProjectionViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles);
 		getSourceViewerDecorationSupport(viewer);
 		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(foldingListener);
-		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(occurrencesMarkerListener);
 
 		// Context setting is placed here because getEditorSite() must
 		// be called after the editor is
@@ -370,23 +346,6 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		// be active only within the editor.
 		contextService.activateContext(EDITOR_SCOPE);
 
-		viewer.addTextInputListener(new ITextInputListener() {
-			@Override
-			public void inputDocumentAboutToBeChanged(final IDocument oldInput, final IDocument newInput) {
-				if (oldInput != null) {
-					oldInput.removeDocumentListener(markOccurrencesDocumentListener);
-				}
-
-				if (newInput != null) {
-					newInput.addDocumentListener(markOccurrencesDocumentListener);
-				}
-			}
-
-			@Override
-			public void inputDocumentChanged(final IDocument oldInput, final IDocument newInput) {
-				//Do nothing
-			}
-		});
 		return viewer;
 	}
 
