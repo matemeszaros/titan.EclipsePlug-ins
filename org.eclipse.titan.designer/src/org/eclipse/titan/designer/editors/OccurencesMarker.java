@@ -76,14 +76,32 @@ public abstract class OccurencesMarker {
 			setSystem(true);
 		}
 
-		public synchronized void setParam(final IDocument document, final int offset) {
-			this.document = document;
-			this.offset = offset;
+		public void setParam(final IDocument document, final int offset) {
+			IAnnotationModel annotationModel = getAnnotationModel();
+			if (annotationModel == null) {
+				removeOccurences(false);
+				error(document, offset, "AnnotationModel is null");
+				return;
+			}
+
+			synchronized (getLockObject(annotationModel)) {
+				this.document = document;
+				this.offset = offset;
+			}
 		}
 
 		@Override
-		public synchronized IStatus runInWorkspace(final IProgressMonitor pMonitor) throws CoreException {
-			doMark(document, offset);
+		public IStatus runInWorkspace(final IProgressMonitor pMonitor) throws CoreException {
+			IAnnotationModel annotationModel = getAnnotationModel();
+			if (annotationModel == null) {
+				removeOccurences(false);
+				error(document, offset, "AnnotationModel is null");
+				return Status.CANCEL_STATUS;
+			}
+
+			synchronized (getLockObject(annotationModel)) {
+				doMark(document, offset);
+			}
 
 			return Status.OK_STATUS;
 		}
