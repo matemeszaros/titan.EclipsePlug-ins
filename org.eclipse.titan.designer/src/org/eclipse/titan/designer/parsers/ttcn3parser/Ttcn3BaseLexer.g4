@@ -285,7 +285,7 @@ tokens {
   GET_STRINGENCODING, OCT2UNICHAR, REMOVE_BOM,
   UNICHAR2OCT, ENCODE_BASE64, DECODE_BASE64,
   
-  /* general macro, used for code completion, see TTCN3KeywordLessLexer4 */
+  /* general macro, used for code completion, see TTCN3KeywordLessLexer */
   MACRO
   
 }
