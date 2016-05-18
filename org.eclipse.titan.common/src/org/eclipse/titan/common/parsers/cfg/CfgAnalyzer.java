@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +73,9 @@ public final class CfgAnalyzer {
 	private Double mKillTimer = null;
 	private Integer mNumHcs = null;
 	private Boolean mUnixDomainSocket = null;
+	private Map<String, String> mComponents = new HashMap<String, String>();
+	private Map<String, String[]> mGroups = new HashMap<String, String[]>();
+	
 	
 	public List<TITANMarker> getWarnings() {
 		return warnings;
@@ -266,5 +270,15 @@ public final class CfgAnalyzer {
 		mKillTimer = cfgParseResult.getKillTimer();
 		mNumHcs = cfgParseResult.getNumHcs();
 		mUnixDomainSocket = cfgParseResult.isUnixDomainSocket();
+		mGroups = cfgParseResult.getGroups();
+		mComponents = cfgParseResult.getComponents();
+	}
+
+	public Map<String, String[]> getGroups() {
+		return mGroups;
+	}
+
+	public Map<String, String> getComponents() {
+		return mComponents;
 	}
 }
