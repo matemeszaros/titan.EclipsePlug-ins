@@ -186,10 +186,14 @@ public final class TITANFlagsOptionsPage implements IOptionsPage {
 		boolean result = false;
 		for (int i = 0; i < TITANFlagsOptionsData.PROPERTIES.length; i++) {
 			try {
-				actualValue = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
-						TITANFlagsOptionsData.PROPERTIES[i]));
+				actualValue = project.getPersistentProperty(
+						new QualifiedName(ProjectBuildPropertyData.QUALIFIER, TITANFlagsOptionsData.PROPERTIES[i]));
 				copyValue = tempStorage.getString(TITANFlagsOptionsData.PROPERTIES[i]);
-				result |= ((actualValue != null && !actualValue.equals(copyValue)) || (actualValue == null && copyValue == null));
+				result |= ((actualValue != null && !actualValue.equals(copyValue))
+						|| (actualValue == null && copyValue == null));
+				if (result) {
+					return true;
+				}
 			} catch (CoreException e) {
 				ErrorReporter.logExceptionStackTrace(e);
 				result = true;
