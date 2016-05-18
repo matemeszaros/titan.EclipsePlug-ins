@@ -907,8 +907,10 @@ pr_LoggerPluginEntry returns [ LoggingSectionHandler.LoggerPluginEntry entry ]
 @init {
 	$entry = new LoggingSectionHandler.LoggerPluginEntry();
 }:
-	pr_Identifier 
-	(	ASSIGNMENTCHAR11 pr_StringValue
+	i = pr_Identifier {	$entry.setName( $i.identifier );
+						$entry.setPath("");	} 
+	(	ASSIGNMENTCHAR11
+		s = pr_StringValue { $entry.setPath( $s.string ); }
 	)?
 ;
 
@@ -1326,22 +1328,34 @@ pr_ModuleParam returns[ModuleParameterSectionHandler.ModuleParameter parameter =
 ;
 
 pr_ParameterName returns[ModuleParameterSectionHandler.ModuleParameter parameter = null]:
-(
-	id1 = pr_Identifier	{$parameter = new ModuleParameterSectionHandler.ModuleParameter();}
-	(	DOT9
-		id2 = pr_Identifier { $parameter.setModuleName($id1.ctx);$parameter.setParameterName($id2.ctx);}
-	|	{$parameter.setParameterName($id1.ctx);}
+{	$parameter = new ModuleParameterSectionHandler.ModuleParameter();
+	$parameter.setRoot( $ctx );
+}
+(	id1 = pr_Identifier
+	(	separator = pr_Dot
+		id2 = pr_Identifier {	$parameter.setModuleName( $id1.ctx );
+								$parameter.setSeparator( $separator.ctx );
+								$parameter.setParameterName( $id2.ctx );
+							}
+	|	{	$parameter.setParameterName( $id1.ctx );
+		}
 	)
 |	star = pr_StarModuleName
 	DOT9
 	id3 = pr_Identifier
-	{$parameter = new ModuleParameterSectionHandler.ModuleParameter(); $parameter.setModuleName($star.ctx);$parameter.setParameterName($id3.ctx);}
+	{	$parameter.setModuleName($star.ctx);
+		$parameter.setParameterName($id3.ctx);
+	}
 )
 ;
 
+pr_Dot:
+	DOT9
+;
+
 pr_StarModuleName:
-(	STAR9
-);
+	STAR9
+;
 
 pr_ParameterValue:
 	pr_SimpleParameterValue pr_LengthMatch? IFPRESENTKeyword9?
