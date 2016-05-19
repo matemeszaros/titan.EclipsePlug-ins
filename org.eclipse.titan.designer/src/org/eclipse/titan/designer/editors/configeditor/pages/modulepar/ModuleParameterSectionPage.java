@@ -241,7 +241,6 @@ public final class ModuleParameterSectionPage extends FormPage {
 					if (moduleParameter.getValue() != null) {
 						if (moduleParameter.getValue().getText().length() == 0) {
 							String temp = ConfigTreeNodeUtilities.toString(moduleParameter.getValue());
-							ConfigTreeNodeUtilities.removeChildren( moduleParameter.getValue() );
 							ConfigTreeNodeUtilities.setText( moduleParameter.getValue(), temp );
 						}
 

@@ -59,6 +59,7 @@ public final class ConfigTreeNodeUtilities {
 		print( aParseTreeRoot, aTokenStream, aSb, null );
 	}
 	
+	//TODO: remove if not needed
 	/**
 	 * Builds hidden tokens after a rule
 	 * @param aSb (in/out) StringBuilder, where the rule text is written
@@ -273,8 +274,8 @@ public final class ConfigTreeNodeUtilities {
 				final List<ParseTree> list = rule.children;
 				final int size = list.size();
 				final String childText = aChild.getText();
-				//TODO: remove: do NOT start from back, because it deletes by text
-				//for ( int i = size - 1; i >= 0; i-- ) {
+				//NOTE: do NOT start from back, because it deletes by text
+				//      and the 1st occurrence must be deleted
 				for ( int i = 0; i < size; i++ ) {
 					if ( childText.equals( list.get( i ).getText() ) ) {
 						list.remove( i );
@@ -287,6 +288,7 @@ public final class ConfigTreeNodeUtilities {
 		}
 	}
 	
+	//TODO: remove if not needed
 	/**
 	 * Removes children from parent's list
 	 * @param aParent parent node to remove the child from
