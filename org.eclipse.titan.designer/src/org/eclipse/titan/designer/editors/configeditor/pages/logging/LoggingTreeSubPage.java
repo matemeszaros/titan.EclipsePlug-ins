@@ -294,12 +294,10 @@ public final class LoggingTreeSubPage {
 			final StringBuilder builder = new StringBuilder();
 			builder.append("\n").append(componentName).append(".LoggerPlugins := ");
 			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, new AddedParseTree( builder.toString() ) ); 
-			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, entry.getLoggerPluginsRoot() );
 			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, new AddedParseTree("{") );
 			
 			final ParseTree loggerPluginsListRoot = new ParserRuleContext();
 			entry.setLoggerPluginsListRoot( loggerPluginsListRoot );
-			ConfigTreeNodeUtilities.addChild( loggerPluginsListRoot, entry.getLoggerPluginsListRoot() );
 
 			final LoggingSectionHandler.LoggerPluginEntry pluginEntry = new LoggingSectionHandler.LoggerPluginEntry();
 			final ParseTree pluginRoot = new ParserRuleContext();
@@ -309,8 +307,9 @@ public final class LoggingTreeSubPage {
 			ConfigTreeNodeUtilities.addChild( pluginRoot, new AddedParseTree( pluginBuilder.toString() ) );
 			entry.setPluginRoots(new HashMap<String, LoggingSectionHandler.LoggerPluginEntry>(1));
 			entry.getPluginRoots().put(pluginName, pluginEntry);
-			ConfigTreeNodeUtilities.addChild( loggerPluginsListRoot, pluginEntry.getLoggerPluginRoot());
+			ConfigTreeNodeUtilities.addChild( loggerPluginsListRoot, pluginRoot );
 			
+			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, loggerPluginsListRoot );
 			ConfigTreeNodeUtilities.addChild( loggerPluginsRoot, new AddedParseTree("}") );
 			return;
 		}
