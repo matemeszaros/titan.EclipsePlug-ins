@@ -240,7 +240,6 @@ public final class TestportParametersSectionPage extends FormPage {
 					if (testportParameter.getValue() != null) {
 						if (testportParameter.getValue().getText().length() == 0) {
 							String temp = ConfigTreeNodeUtilities.toString(testportParameter.getValue());
-							ConfigTreeNodeUtilities.removeChildren( testportParameter.getValue() );
 							ConfigTreeNodeUtilities.setText( testportParameter.getValue(), temp );
 						}
 

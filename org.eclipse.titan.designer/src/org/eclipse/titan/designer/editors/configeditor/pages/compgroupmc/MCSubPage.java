@@ -114,7 +114,6 @@ public final class MCSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( mcSectionHandler.getLocalAddress(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getLocalAddress() );
 				}
 			}
 		});
@@ -160,7 +159,6 @@ public final class MCSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( mcSectionHandler.getTcpPort(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getTcpPort() );
 				}
 			}
 		});
@@ -206,7 +204,6 @@ public final class MCSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( mcSectionHandler.getKillTimer(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getKillTimer() );
 				}
 			}
 		});
@@ -252,7 +249,6 @@ public final class MCSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( mcSectionHandler.getNumHCsText(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getNumHCsText() );
 				}
 			}
 		});
@@ -300,7 +296,6 @@ public final class MCSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( mcSectionHandler.getNumHCsText(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( mcSectionHandler.getNumHCsText() );
 				}
 			}
 		});

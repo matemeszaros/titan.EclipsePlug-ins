@@ -131,7 +131,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogFile(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogFile() );
 				}
 			}
 		});
@@ -139,7 +138,6 @@ public final class GeneralOptionsSubPage {
 			if (selectedLogEntry.getLogFile().getText().length() == 0) {
 				String temp = ConfigTreeNodeUtilities.toString(selectedLogEntry.getLogFile());
 				ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogFile(), temp );
-				ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogFile() );
 			}
 			logFileText.setText(ConfigTreeNodeUtilities.toString(selectedLogEntry.getLogFile()));
 		}
@@ -177,7 +175,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getTimestampFormat(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getTimestampFormat() );
 				}
 			}
 		});
@@ -219,7 +216,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getSourceInfoFormat(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getSourceInfoFormat() );
 				}
 			}
 		});
@@ -259,7 +255,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getAppendFile(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getAppendFile() );
 				}
 			}
 		});
@@ -301,7 +296,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogeventTypes(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogeventTypes() );
 				}
 			}
 		});
@@ -341,7 +335,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogEntityName(),temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogEntityName() );
 				}
 			}
 		});
@@ -381,7 +374,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getMatchingHints(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getMatchingHints() );
 				}
 			}
 		});
@@ -418,7 +410,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogfileSize(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogfileSize() );
 				}
 			}
 		});
@@ -455,7 +446,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getLogfileNumber(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getLogfileNumber() );
 				}
 			}
 		});
@@ -496,7 +486,6 @@ public final class GeneralOptionsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( selectedLogEntry.getDiskFullAction(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( selectedLogEntry.getDiskFullAction() );
 				}
 			}
 		});

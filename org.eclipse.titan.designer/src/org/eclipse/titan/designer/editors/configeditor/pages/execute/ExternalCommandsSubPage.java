@@ -115,7 +115,6 @@ public final class ExternalCommandsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getBeginControlPart(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getBeginControlPart() );
 				}
 			}
 		});
@@ -163,7 +162,6 @@ public final class ExternalCommandsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getBeginTestcase(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getBeginTestcase() );
 				}
 			}
 		});
@@ -211,7 +209,6 @@ public final class ExternalCommandsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getEndControlPart(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getEndControlPart() );
 				}
 			}
 		});
@@ -259,7 +256,6 @@ public final class ExternalCommandsSubPage {
 				} else {
 					// simple modification
 					ConfigTreeNodeUtilities.setText( executeCommandSectionHandler.getEndTestcase(), temp.trim() );
-					ConfigTreeNodeUtilities.removeChildren( executeCommandSectionHandler.getEndTestcase() );
 				}
 			}
 		});
