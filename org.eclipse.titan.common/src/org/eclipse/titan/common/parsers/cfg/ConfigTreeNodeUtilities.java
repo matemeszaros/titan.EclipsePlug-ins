@@ -111,7 +111,11 @@ public final class ConfigTreeNodeUtilities {
 		
 		for ( int i = 0; i < aParseTree.getChildCount(); i++ ) {
 			ParseTree child = aParseTree.getChild( i );
-			print( child, aTokenStream, aSb, aDisallowedNodes );
+			if ( child == aParseTree ) {
+				ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): child == aParseTree");
+			} else {
+				print( child, aTokenStream, aSb, aDisallowedNodes );
+			}
 		}
 	}
 	
@@ -205,6 +209,14 @@ public final class ConfigTreeNodeUtilities {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.addChild(): aParent == null");
 			return;
 		}
+		if ( aChild == null ) {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.addChild(): aChild == null");
+			return;
+		}
+		if ( aParent == aChild ) {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.addChild(): aParent == aChild");
+			return;
+		}
 		if ( aParent instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParent;
 			if ( rule.children == null ) {
@@ -224,6 +236,10 @@ public final class ConfigTreeNodeUtilities {
 	public static void setParent( final ParseTree aChild, final ParserRuleContext aParent ) {
 		if ( aChild == null ) {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setParent(): aChild == null");
+			return;
+		}
+		if ( aChild == aParent ) {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setParent(): aChild == aParent");
 			return;
 		}
 		if ( aChild instanceof ParserRuleContext ) {
