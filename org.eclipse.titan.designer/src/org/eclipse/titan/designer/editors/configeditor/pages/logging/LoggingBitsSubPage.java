@@ -191,7 +191,7 @@ public final class LoggingBitsSubPage {
 			@Override
 			public void checkStateChanged(final CheckStateChangedEvent event) {
 				if (event.getChecked() && selectedLogEntry.getFileMaskRoot() == null) {
-					createConsoleMaskRootNode(loggingPage.getSelectedTreeElement(), selectedLogEntry);
+					createFileMaskRootNode(loggingPage.getSelectedTreeElement(), selectedLogEntry);
 				}
 
 				checkStateChangeHandler(selectedLogEntry.getFileMaskBits(), selectedLogEntry.getFileMask(), event);
