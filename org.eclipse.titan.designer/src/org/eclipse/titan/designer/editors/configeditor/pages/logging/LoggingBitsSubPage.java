@@ -264,7 +264,7 @@ public final class LoggingBitsSubPage {
 
 	private void createFileMaskRootNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry) {
 		ParseTree fileMaskRoot = new ParserRuleContext();
-		logentry.setConsoleMaskRoot( fileMaskRoot );
+		logentry.setFileMaskRoot( fileMaskRoot );
 		ConfigTreeNodeUtilities.addChild( fileMaskRoot, new AddedParseTree("\n") );
 
 		StringBuilder name = new StringBuilder();
