@@ -93,6 +93,11 @@ public final class ConfigTreeNodeUtilities {
 			if ( aDisallowedNodes != null && aDisallowedNodes.contains( rule.start.getType() ) ) {
 				return;
 			}
+			if ( rule.getChildCount() > 0 && rule.getChild(0) instanceof AddedParseTree ) {
+				//special case: if AddedParseTree is the 1st in the rule, it has no information
+				// about the hidden tokens, as it has no position in the token stream, but the rule may have
+				printHiddenTokensBefore(rule, aTokenStream, aSb);
+			}
 		}
 		else if ( aParseTree instanceof TerminalNodeImpl ) {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aParseTree;
@@ -257,6 +262,7 @@ public final class ConfigTreeNodeUtilities {
 		}
 	}
 	
+	//TODO: remove if not needed
 	/**
 	 * Removes child from parent's list.
 	 * Parent is get from child data.
@@ -283,6 +289,13 @@ public final class ConfigTreeNodeUtilities {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): aParent == null");
 			return;
 		}
+		if ( aChild == null ) {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): aChild == null");
+			return;
+		}
+		if ( aParent != aChild.getParent() ) {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): aParent != aChild.getParent()");
+		}
 		if ( aParent instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParent;
 			if ( rule.children != null && aChild != null && aChild.getText() != null ) {
@@ -295,6 +308,52 @@ public final class ConfigTreeNodeUtilities {
 				for ( int i = 0; i < size; i++ ) {
 					if ( childText.equals( list.get( i ).getText() ) ) {
 						list.remove( i );
+						break;
+					}
+				}
+			}
+		} else {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): only ParserRuleContext can have children");
+		}
+	}
+	
+	/**
+	 * Removes child and a separator ("|") before or after the child (if any) from parent's list
+	 * @param aParent parent node to remove the child from
+	 * @param aChild child element to remove
+	 */
+	public static void removeChildWithSeparator( final ParseTree aParent, final ParseTree aChild ) {
+		if ( aParent == null ) {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChildWithSeparator( ParseTree, ParseTree ): aParent == null");
+			return;
+		}
+		if ( aParent instanceof ParserRuleContext ) {
+			final ParserRuleContext rule = (ParserRuleContext)aParent;
+			if ( rule.children != null && aChild != null && aChild.getText() != null ) {
+				//delete child by text
+				final List<ParseTree> list = rule.children;
+				final int size = list.size();
+				final String childText = aChild.getText();
+				//NOTE: do NOT start from back, because it deletes by text
+				//      and the 1st occurrence must be deleted
+				for ( int i = 0; i < size; i++ ) {
+					if ( childText.equals( list.get( i ).getText() ) ) {
+						list.remove( i );
+						final String separator = "|";
+						if ( i > 0 ) {
+							final ParseTree previous = list.get( i - 1 );
+							if ( separator.equals( previous.getText() ) ) {
+								list.remove( i - 1 );
+							}
+						} else if( size > 1 ) {
+							// i == 0, but let's check also, if this is not the last item,
+							// because in that case there is no more separator, there is nothing to remove
+							// NOTE: remember, that list size just decreased by 1 now
+							final ParseTree next = list.get( 0 );
+							if ( separator.equals( next.getText() ) ) {
+								list.remove( 0 );
+							}
+						}
 						break;
 					}
 				}
@@ -358,6 +417,28 @@ public final class ConfigTreeNodeUtilities {
 			}
 		} else {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setText(): unhandled ParseTree class type");
+		}
+	}
+
+	private static void printHiddenTokensBefore( final ParserRuleContext aRule,
+												 final TokenStream aTokenStream,
+												 final StringBuilder aSb) {
+		Token startToken = aRule.start;
+		final int startIndex = startToken.getTokenIndex();
+		if ( startIndex == -1 ) {
+			// Token has no index.
+			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
+			// because token has no index in the token stream.
+			return;
+		}
+		int startHiddenIndex = startIndex;
+		while ( isHiddenToken( startHiddenIndex - 1, aTokenStream ) ) {
+			startHiddenIndex--;
+		}
+		for ( int i = startHiddenIndex; i < startIndex; i++ ) {
+			final Token t = aTokenStream.get( i );
+			final String tokenText = t.getText();
+			aSb.append( tokenText != null ? tokenText : "" );
 		}
 	}
 
