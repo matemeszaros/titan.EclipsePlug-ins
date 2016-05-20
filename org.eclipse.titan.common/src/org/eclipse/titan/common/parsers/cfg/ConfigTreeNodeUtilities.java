@@ -424,6 +424,9 @@ public final class ConfigTreeNodeUtilities {
 												 final TokenStream aTokenStream,
 												 final StringBuilder aSb) {
 		Token startToken = aRule.start;
+		if ( startToken == null ) {
+			return;
+		}
 		final int startIndex = startToken.getTokenIndex();
 		if ( startIndex == -1 ) {
 			// Token has no index.
