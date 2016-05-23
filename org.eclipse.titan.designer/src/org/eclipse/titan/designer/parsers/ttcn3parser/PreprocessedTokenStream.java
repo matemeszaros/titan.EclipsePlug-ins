@@ -205,11 +205,11 @@ class ConditionalStateMachine {
 	}
 }
 
-class ConditionalStateStack4 {
+class ConditionalStateStack {
 	Stack<ConditionalStateMachine> stateStack = new Stack<ConditionalStateMachine>();
 	List<TITANMarker> unsupportedConstructs;
 
-	public ConditionalStateStack4(List<TITANMarker> unsupportedConstructs) {
+	public ConditionalStateStack(List<TITANMarker> unsupportedConstructs) {
 		this.unsupportedConstructs = unsupportedConstructs;
 	}
 
@@ -283,12 +283,12 @@ class ConditionalStateStack4 {
 /**
  * Helper class to store data related to lexers in lexer stack
  */
-class TokenStreamData4 extends BufferedTokenStream {
+class TokenStreamData extends BufferedTokenStream {
 	public IFile file;
 	public Ttcn3Lexer lexer;
 	public Reader reader;
 
-	public TokenStreamData4(Ttcn3Lexer source, IFile file, Reader reader) {
+	public TokenStreamData(Ttcn3Lexer source, IFile file, Reader reader) {
 		super (source);
 		this.file = file;
 		this.lexer = source;
@@ -297,14 +297,16 @@ class TokenStreamData4 extends BufferedTokenStream {
 }
 
 public class PreprocessedTokenStream extends BufferedTokenStream {
+	private static final int RECURSION_LIMIT = 20;
+	
 	IFile actualFile;
 	Ttcn3Lexer actualLexer;
 	Ttcn3Parser parser;
-	ConditionalStateStack4 condStateStack;
+	ConditionalStateStack condStateStack;
 	// global, non-recursive macros (symbols)
 	Map<String, String> macros = new Hashtable<String, String>();
 	// #include files
-	Stack<TokenStreamData4> tokenStreamStack = new Stack<TokenStreamData4>();
+	Stack<TokenStreamData> tokenStreamStack = new Stack<TokenStreamData>();
 
 	Set<IFile> includedFiles = new HashSet<IFile>();
 	List<Location> inactiveCodeLocations = new ArrayList<Location>();
@@ -346,7 +348,7 @@ public class PreprocessedTokenStream extends BufferedTokenStream {
 
 	public PreprocessedTokenStream(TokenSource tokenSource) {
 		super(tokenSource);
-		condStateStack = new ConditionalStateStack4(unsupportedConstructs);
+		condStateStack = new ConditionalStateStack(unsupportedConstructs);
 	}
 
 	public void setActualFile(IFile file) {
@@ -458,7 +460,7 @@ public class PreprocessedTokenStream extends BufferedTokenStream {
 		lexer.initRootInterval(rootInt);
 		lexer.setActualFile(includedFile);
 		// add the lexer to the stack of lexers
-		tokenStreamStack.push(new TokenStreamData4(lexer, includedFile, reader));
+		tokenStreamStack.push(new TokenStreamData(lexer, includedFile, reader));
 		if (parser != null) {
 			parser.setActualFile(includedFile);
 			parser.setLexer(lexer);
@@ -548,7 +550,7 @@ public class PreprocessedTokenStream extends BufferedTokenStream {
 							// directive
 							switch (ppDirective.type) {
 							case INCLUDE: {
-								if (tokenStreamStack.size() > 20) {
+								if (tokenStreamStack.size() > RECURSION_LIMIT) {
 									// dumb but safe defense against infinite recursion, default value from gcc
 									TITANMarker marker = new TITANMarker(
 											"Maximum #include recursion depth reached", ppDirective.line,
@@ -607,7 +609,7 @@ public class PreprocessedTokenStream extends BufferedTokenStream {
 				if (!tokenStreamStack.isEmpty()) {
 					// the included file ended, drop lexer
 					// from the stack and ignore EOF token
-					TokenStreamData4 tsd = tokenStreamStack.pop();
+					TokenStreamData tsd = tokenStreamStack.pop();
 					if (parser != null) {
 						if (tokenStreamStack.isEmpty()) {
 							parser.setActualFile(actualFile);

@@ -119,6 +119,7 @@ public final class LoggingBitsSubPage {
 
 				if (!event.getChecked()) {
 					if (selectedLogEntry.getConsoleMaskBits().keySet().isEmpty()) {
+						ConfigTreeNodeUtilities.removeChild( loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getConsoleMaskRoot() );
 						selectedLogEntry.setConsoleMaskRoot(null);
 					}
 				}
@@ -190,7 +191,7 @@ public final class LoggingBitsSubPage {
 			@Override
 			public void checkStateChanged(final CheckStateChangedEvent event) {
 				if (event.getChecked() && selectedLogEntry.getFileMaskRoot() == null) {
-					createConsoleMaskRootNode(loggingPage.getSelectedTreeElement(), selectedLogEntry);
+					createFileMaskRootNode(loggingPage.getSelectedTreeElement(), selectedLogEntry);
 				}
 
 				checkStateChangeHandler(selectedLogEntry.getFileMaskBits(), selectedLogEntry.getFileMask(), event);
@@ -199,6 +200,7 @@ public final class LoggingBitsSubPage {
 
 				if (!event.getChecked()) {
 					if (selectedLogEntry.getFileMaskBits().keySet().isEmpty()) {
+						ConfigTreeNodeUtilities.removeChild( loggingSectionHandler.getLastSectionRoot(), selectedLogEntry.getFileMaskRoot() );
 						selectedLogEntry.setFileMaskRoot(null);
 					}
 				}
@@ -262,7 +264,7 @@ public final class LoggingBitsSubPage {
 
 	private void createFileMaskRootNode(final LoggingSectionHandler.LoggerTreeElement lte, final LogParamEntry logentry) {
 		ParseTree fileMaskRoot = new ParserRuleContext();
-		logentry.setConsoleMaskRoot( fileMaskRoot );
+		logentry.setFileMaskRoot( fileMaskRoot );
 		ConfigTreeNodeUtilities.addChild( fileMaskRoot, new AddedParseTree("\n") );
 
 		StringBuilder name = new StringBuilder();
@@ -288,22 +290,19 @@ public final class LoggingBitsSubPage {
 			LoggingBit[] children = LoggingBitHelper.getChildren(bit);
 
 			if (bitMask.containsKey(bit)) {
-				removeLoggingBit(bitMask, bit);
+				removeLoggingBit(bitMask, bitmaskRoot, bit);
 			} else {
 				addLoggingBit(bitMask, bitmaskRoot, bit);
 			}
 
 			for (int i = 0; i < children.length; i++) {
 				if (bitMask.containsKey(children[i])) {
-					removeLoggingBit(bitMask, children[i]);
+					removeLoggingBit(bitMask, bitmaskRoot, children[i]);
 				}
 			}
-
-			removeFirstSeparator(bitmaskRoot);
 		} else {
 			if (bitMask.containsKey(bit)) {
-				removeLoggingBit(bitMask, bit);
-				removeFirstSeparator(bitmaskRoot);
+				removeLoggingBit(bitMask, bitmaskRoot, bit);
 			} else {
 				LoggingBit parent = LoggingBitHelper.getParent(bit);
 				if (parent == null) {
@@ -319,8 +318,7 @@ public final class LoggingBitsSubPage {
 				}
 
 				if (bitMask.containsKey(parent)) {
-					removeLoggingBit(bitMask, parent);
-					removeFirstSeparator(bitmaskRoot);
+					removeLoggingBit(bitMask, bitmaskRoot, parent);
 
 					for (int i = 0; i < children.length; i++) {
 						if (!bitMask.containsKey(children[i]) && !bit.equals(children[i])) {
@@ -332,11 +330,9 @@ public final class LoggingBitsSubPage {
 
 					for (int i = 0; i < children.length; i++) {
 						if (bitMask.containsKey(children[i])) {
-							removeLoggingBit(bitMask, children[i]);
+							removeLoggingBit(bitMask, bitmaskRoot, children[i]);
 						}
 					}
-
-					removeFirstSeparator(bitmaskRoot);
 				} else {
 					addLoggingBit(bitMask, bitmaskRoot, bit);
 				}
@@ -351,11 +347,9 @@ public final class LoggingBitsSubPage {
 			if (bitMask.containsKey(parent)) {
 				for (int i = 0; i < children.length; i++) {
 					if (bitMask.containsKey(children[i])) {
-						removeLoggingBit(bitMask, children[i]);
+						removeLoggingBit(bitMask, bitmaskRoot, children[i]);
 					}
 				}
-
-				removeFirstSeparator(bitmaskRoot);
 			} else {
 				int childCount = 0;
 
@@ -370,11 +364,9 @@ public final class LoggingBitsSubPage {
 
 					for (int i = 0; i < children.length; i++) {
 						if (bitMask.containsKey(children[i])) {
-							removeLoggingBit(bitMask, children[i]);
+							removeLoggingBit(bitMask, bitmaskRoot, children[i]);
 						}
 					}
-
-					removeFirstSeparator(bitmaskRoot);
 				}
 			}
 		}
@@ -392,24 +384,9 @@ public final class LoggingBitsSubPage {
 		ConfigTreeNodeUtilities.addChild( bitmaskRoot, newBit );
 	}
 
-	private void removeLoggingBit(final Map<LoggingBit, ParseTree> bitMask, final LoggingBit bit) {
-		final ParseTree removedBit = bitMask.remove(bit);
-		ConfigTreeNodeUtilities.removeChild(removedBit);
-	}
-
-	/**
-	 * Removes separator if found at position 0 after deletion
-	 * @param bitmaskRoot root parse tree
-	 */
-	private void removeFirstSeparator(final ParseTree bitmaskRoot) {
-		final int count = bitmaskRoot.getChildCount();
-		if ( count > 0 ) {
-			final ParseTree child = bitmaskRoot.getChild( 0 );
-			final String childText = child.getText();
-			if ( "".equals( childText ) || "|".equals( childText ) ) {
-				ConfigTreeNodeUtilities.removeChild( bitmaskRoot, child );
-			}
-		}
+	private void removeLoggingBit(final Map<LoggingBit, ParseTree> aBitMask, final ParseTree aBitmaskRoot, final LoggingBit aBit) {
+		final ParseTree removedBit = aBitMask.remove( aBit );
+		ConfigTreeNodeUtilities.removeChildWithSeparator( aBitmaskRoot, removedBit );
 	}
 
 	private void evaluateSelection(final CheckboxTreeViewer viewer, final Map<LoggingBit, ParseTree> bitMask) {
@@ -453,8 +430,7 @@ public final class LoggingBitsSubPage {
 				}
 			}
 
-			removeLoggingBit(bitMask, LoggingBit.LOG_ALL);
-			removeFirstSeparator(bitmaskRoot);
+			removeLoggingBit(bitMask, bitmaskRoot, LoggingBit.LOG_ALL);
 		}
 	}
 

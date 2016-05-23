@@ -262,6 +262,8 @@ public final class ConfigFileHandler {
 			}
 
 			definesMap.putAll( analyzer.getDefinitions() );
+			groups.putAll(analyzer.getGroups());
+			components.putAll(analyzer.getComponents());
 			executeElements.addAll( analyzer.getExecuteElements() );
 
 		}
