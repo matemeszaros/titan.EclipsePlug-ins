@@ -806,7 +806,7 @@ pr_PlainLoggingParam
 		{	logParamEntry.setConsoleMaskRoot( $ctx );
 			logParamEntry.setConsoleMask( $consoleMask.ctx );
 			Map<LoggingBit, ParseTree> loggingBitMask = $consoleMask.loggingBitMask;
-			logParamEntry.setFileMaskBits( loggingBitMask );
+			logParamEntry.setConsoleMaskBits( loggingBitMask );
 		}
 |	DISKFULLACTION ASSIGNMENTCHAR11 dfa = pr_DiskFullActionValue
 		{	logParamEntry.setDiskFullActionRoot( $ctx );
@@ -877,6 +877,7 @@ pr_PlainLoggingParam
 	{	logParamEntry.setLogEntityNameRoot( $ctx );
 		logParamEntry.setEmergencyLoggingMask( $elm.ctx );
 		Map<LoggingBit, ParseTree> loggingBitMask = $elm.loggingBitMask;
+		//TODO: use loggingBitMask if needed
 	}
 )
 ;
