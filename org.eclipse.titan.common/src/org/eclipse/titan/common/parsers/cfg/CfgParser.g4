@@ -560,6 +560,7 @@ pr_ModuleParametersSection:
 	(	param = pr_ModuleParam
 			{	if ( $param.parameter != null ) {
 					moduleParametersHandler.getModuleParameters().add( $param.parameter );
+					$param.parameter.setRoot( $param.ctx );
 				}
 			}
 		SEMICOLON9?
@@ -913,6 +914,8 @@ pr_LoggerPluginEntry returns [ LoggingSectionHandler.LoggerPluginEntry entry ]
 	(	ASSIGNMENTCHAR11
 		s = pr_StringValue { $entry.setPath( $s.string ); }
 	)?
+{	$entry.setLoggerPluginRoot( $ctx );
+}
 ;
 
 pt_TestComponentID:
