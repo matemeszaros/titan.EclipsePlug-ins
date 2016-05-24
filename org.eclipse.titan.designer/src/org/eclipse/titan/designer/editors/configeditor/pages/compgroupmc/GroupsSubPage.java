@@ -509,41 +509,18 @@ public final class GroupsSubPage {
 			if (item != null) {
 				final List<GroupItem> groupItems = selectedGroup.getGroupItems();
 				final int size = groupItems.size();
-				final int index = groupItems.indexOf(item);
-
-				if (index == 0) {
-					if ( size == 1 ) {
-						// if it is the only one
-						// DO NOTHING
-						// Each group must have at least one item.
-						return;
-					}
-
-					final ParseTree selected = item.getItem();
-					final String selectedText = selected.getText();
-					final ParseTree parent = selectedGroup.getRoot();
-					if ( parent instanceof ParserRuleContext ) {
-						ParserRuleContext parentRule = (ParserRuleContext)parent;
-						if ( parentRule.children != null ) {
-							final List<ParseTree> childrenList = parentRule.children;
-							for ( int i = 0; i < childrenList.size(); i++ ) {
-								// delete by text
-								final String text = childrenList.get(i).getText();
-								if ( selectedText.equals( text ) ) {
-									childrenList.remove(i);
-									//also remove the previos " " or ", "
-									if (i > 0) {
-										childrenList.remove( i - 1 );
-									}
-									break;
-								}
-							}
-						}
-					}
-					groupItems.remove(index);
-
+				if ( size == 1 ) {
+					// if it is the only one
+					// DO NOTHING
+					// Each group must have at least one item.
+					return;
 				}
-
+				
+				final ParseTree selected = item.getItem();
+				final ParseTree parent = selectedGroup.getRoot();
+				// items are separated by ","
+				// first 2 items of the rule are: group name, ":=", they are not items
+				ConfigTreeNodeUtilities.removeChildWithSeparator( parent, selected, ",", 2 );
 				selectedGroup.getGroupItems().remove(item);
 			}
 		}

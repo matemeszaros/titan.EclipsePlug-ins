@@ -347,13 +347,28 @@ public final class ConfigTreeNodeUtilities {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): only ParserRuleContext can have children");
 		}
 	}
-	
+
 	/**
-	 * Removes child and a separator ("|") before or after the child (if any) from parent's list
+	 * Removes child and a separator before or after the child (if any) from parent's list.
+	 * Default case
 	 * @param aParent parent node to remove the child from
 	 * @param aChild child element to remove
 	 */
 	public static void removeChildWithSeparator( final ParseTree aParent, final ParseTree aChild ) {
+		removeChildWithSeparator( aParent, aChild, "|", 0 );
+	}
+	/**
+	 * Removes child and a separator before or after the child (if any) from parent's list
+	 * @param aParent parent node to remove the child from
+	 * @param aChild child element to remove
+	 * @param aSeparator separator string
+	 * @param aStartIndex the start index where the items start
+	 *                    aStartIndex > 0 if rule contains some other parse tree nodes than normal list items
+	 */
+	public static void removeChildWithSeparator( final ParseTree aParent,
+												 final ParseTree aChild,
+												 final String aSeparator,
+												 final int aStartIndex ) {
 		if ( aParent == null ) {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChildWithSeparator( ParseTree, ParseTree ): aParent == null");
 			return;
@@ -367,22 +382,21 @@ public final class ConfigTreeNodeUtilities {
 				final String childText = aChild.getText();
 				//NOTE: do NOT start from back, because it deletes by text
 				//      and the 1st occurrence must be deleted
-				for ( int i = 0; i < size; i++ ) {
+				for ( int i = aStartIndex; i < size; i++ ) {
 					if ( childText.equals( list.get( i ).getText() ) ) {
 						list.remove( i );
-						final String separator = "|";
-						if ( i > 0 ) {
+						if ( i > aStartIndex ) {
 							final ParseTree previous = list.get( i - 1 );
-							if ( separator.equals( previous.getText() ) ) {
+							if ( aSeparator.equals( previous.getText() ) ) {
 								list.remove( i - 1 );
 							}
-						} else if( size > 1 ) {
-							// i == 0, but let's check also, if this is not the last item,
+						} else if( size > aStartIndex + 1 ) {
+							// i == aStartIndex, but let's check also, if this is not the last item,
 							// because in that case there is no more separator, there is nothing to remove
 							// NOTE: remember, that list size just decreased by 1 now
-							final ParseTree next = list.get( 0 );
-							if ( separator.equals( next.getText() ) ) {
-								list.remove( 0 );
+							final ParseTree next = list.get( aStartIndex );
+							if ( aSeparator.equals( next.getText() ) ) {
+								list.remove( aStartIndex );
 							}
 						}
 						break;
