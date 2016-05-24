@@ -1276,11 +1276,25 @@ pr_Number returns [CFGNumber number]:
 )
 ;
 
-pr_StringValue returns [String string]:
-	a = pr_CString	{ $string = $a.string.replaceAll("^\"|\"$", ""); }
-	(	(STRINGOP1 | STRINGOP7 | STRINGOP9 | STRINGOP11) b = pr_CString { $string = $string + $b.string.replaceAll("^\"|\"$", ""); }
+pr_StringValue returns [String string]
+@init {
+	$string = "";
+}:
+	a = pr_CString
+		{	if ( $a.string != null ) {
+				$string = $a.string.replaceAll("^\"|\"$", "");
+			}
+		}
+	(	(STRINGOP1 | STRINGOP7 | STRINGOP9 | STRINGOP11) b = pr_CString
+			{	if ( $b.string != null ) {
+					$string = $string + $b.string.replaceAll("^\"|\"$", "");
+				}
+			}
 	)*
-	{	$string = "\"" + $string + "\"";	}
+	{	if ( $string != null ) {
+			$string = "\"" + $string + "\"";
+		}
+	}
 ;
 
 pr_CString returns [String string]:
