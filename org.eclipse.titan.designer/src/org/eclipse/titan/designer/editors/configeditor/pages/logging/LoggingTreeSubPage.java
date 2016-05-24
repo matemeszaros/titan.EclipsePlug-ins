@@ -198,11 +198,13 @@ public final class LoggingTreeSubPage {
 				if (tempComponentName == null) {
 					tempComponentName = "*";
 				}
+
 				Set<String> plugins = loggingSectionHandler.getPlugins(tempComponentName);
-				for (String pluginName : plugins) {
-					LogParamEntry lpe = loggingSectionHandler.componentPlugin(tempComponentName, pluginName);
+				String tempPluginName = lte.getPluginName();
+				if(plugins.contains(tempPluginName)) {
+					LogParamEntry lpe = loggingSectionHandler.componentPlugin(tempComponentName, tempPluginName);
 					removeLoggingComponents(lpe);
-					removeFromPluginList(tempComponentName, pluginName);
+					removeFromPluginList(tempComponentName, tempPluginName);
 				}
 
 				loggingSectionHandler.removeTreeElement(lte);
