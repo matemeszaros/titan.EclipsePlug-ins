@@ -371,9 +371,11 @@ pr_MainControllerItemUnixDomainSocket:
 	ASSIGNMENTCHAR1
 	u = pr_MainControllerItemUnixDomainSocketValue
 	SEMICOLON1?
-	{	mCfgParseResult.setUnixDomainSocket( Boolean.parseBoolean( $u.text ) );
-		mcSectionHandler.setUnixDomainSocketRoot( $ctx );
-		mcSectionHandler.setUnixDomainSocket( $u.ctx );
+	{	if ( $u.text != null ) {
+			mCfgParseResult.setUnixDomainSocket( "yes".equalsIgnoreCase( $u.text ) );
+			mcSectionHandler.setUnixDomainSocketRoot( $ctx );
+			mcSectionHandler.setUnixDomainSocket( $u.ctx );
+		}
 	}
 ;
 
@@ -382,15 +384,23 @@ pr_MainControllerItemUnixDomainSocketValue:
 ;
 
 pr_MainControllerItemKillTimer:
-	KILLTIMER1		ASSIGNMENTCHAR1	k = pr_ArithmeticValueExpression	SEMICOLON1?
-	{	mCfgParseResult.setKillTimer( $k.number.getValue() );
-		mcSectionHandler.setKillTimerRoot( $ctx );
-		mcSectionHandler.setKillTimer( $k.ctx );
+	KILLTIMER1
+	ASSIGNMENTCHAR1
+	k = pr_ArithmeticValueExpression
+	SEMICOLON1?
+	{	if ( $k.number != null ) {
+			mCfgParseResult.setKillTimer( $k.number.getValue() );
+			mcSectionHandler.setKillTimerRoot( $ctx );
+			mcSectionHandler.setKillTimer( $k.ctx );
+		}
 	}
 ;
 
 pr_MainControllerItemLocalAddress:
-	LOCALADDRESS1	ASSIGNMENTCHAR1	l = pr_HostName						SEMICOLON1?
+	LOCALADDRESS1
+	ASSIGNMENTCHAR1
+	l = pr_HostName
+	SEMICOLON1?
 	{	mCfgParseResult.setLocalAddress( $l.text );
 		mcSectionHandler.setLocalAddressRoot( $ctx );
 		mcSectionHandler.setLocalAddress( $l.ctx );
@@ -398,18 +408,28 @@ pr_MainControllerItemLocalAddress:
 ;
 
 pr_MainControllerItemNumHcs:
-	NUMHCS1			ASSIGNMENTCHAR1	n = pr_IntegerValueExpression		SEMICOLON1?
-	{	mCfgParseResult.setNumHcs( $n.number.getIntegerValue() );
-		mcSectionHandler.setNumHCsTextRoot( $ctx );
-		mcSectionHandler.setNumHCsText( $n.ctx );
+	NUMHCS1
+	ASSIGNMENTCHAR1
+	n = pr_IntegerValueExpression
+	SEMICOLON1?
+	{	if ( $n.number != null ) {
+			mCfgParseResult.setNumHcs( $n.number.getIntegerValue() );
+			mcSectionHandler.setNumHCsTextRoot( $ctx );
+			mcSectionHandler.setNumHCsText( $n.ctx );
+		}
 	}
 ;
 
 pr_MainControllerItemTcpPort:
-	TCPPORT1		ASSIGNMENTCHAR1	t = pr_IntegerValueExpression		SEMICOLON1?
-	{	mCfgParseResult.setTcpPort( $t.number.getIntegerValue() );
-		mcSectionHandler.setTcpPortRoot( $ctx );
-		mcSectionHandler.setTcpPort( $t.ctx );
+	TCPPORT1
+	ASSIGNMENTCHAR1
+	t = pr_IntegerValueExpression
+	SEMICOLON1?
+	{	if ( $t.number != null ) {
+			mCfgParseResult.setTcpPort( $t.number.getIntegerValue() );
+			mcSectionHandler.setTcpPortRoot( $ctx );
+			mcSectionHandler.setTcpPort( $t.ctx );
+		}
 	}
 ;
 
