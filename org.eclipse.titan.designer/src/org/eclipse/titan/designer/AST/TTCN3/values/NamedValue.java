@@ -49,7 +49,7 @@ public final class NamedValue extends ASTNode implements ILocateableNode, IIncre
 	 * Tells if this named value was parsed or created while doing the semantic
 	 * check.
 	 * */
-	private boolean parsed;
+	private final boolean parsed;
 
 	public NamedValue(final Identifier name, final IValue value) {
 		super();

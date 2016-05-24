@@ -39,7 +39,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 public final class Function_Reference_Value extends Value {
 
-	private Definition referredFunction;
+	private final Definition referredFunction;
 
 	public Function_Reference_Value(final Def_Function referredFunction) {
 		this.referredFunction = referredFunction;

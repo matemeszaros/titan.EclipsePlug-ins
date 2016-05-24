@@ -37,7 +37,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 public final class Altstep_Reference_Value extends Value {
 
-	private Def_Altstep referredAltstep;
+	private final Def_Altstep referredAltstep;
 
 	public Altstep_Reference_Value(final Def_Altstep referredAltstep) {
 		this.referredAltstep = referredAltstep;

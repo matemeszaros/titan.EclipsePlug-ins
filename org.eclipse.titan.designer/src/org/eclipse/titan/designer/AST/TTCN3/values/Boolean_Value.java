@@ -33,7 +33,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * */
 public final class Boolean_Value extends Value {
 
-	private boolean value;
+	private final boolean value;
 
 	public Boolean_Value(final boolean value) {
 		this.value = value;

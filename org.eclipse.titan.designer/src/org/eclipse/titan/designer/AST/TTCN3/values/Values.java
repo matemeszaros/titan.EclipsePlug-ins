@@ -28,7 +28,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * */
 public final class Values extends ASTNode implements IIncrementallyUpdateable {
-	private boolean isIndexed;
+	private final boolean isIndexed;
 	private ArrayList<IValue> values;
 	private ArrayList<IndexedValue> indexedValues;
 

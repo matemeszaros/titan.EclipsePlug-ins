@@ -30,7 +30,7 @@ public final class SingleArrayDimension extends ArrayDimension {
 	private static final String OPERANDERROR = "A positive integer value was expected";
 	private static final String LARGEINTEGERERROR = "Using a large integer value ({0}) as an array dimension is not supported";
 
-	private Value value;
+	private final Value value;
 	private long size;
 
 	public SingleArrayDimension(final Value value) {

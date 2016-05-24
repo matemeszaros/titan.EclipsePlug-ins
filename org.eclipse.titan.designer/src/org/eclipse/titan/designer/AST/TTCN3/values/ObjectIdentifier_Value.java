@@ -34,7 +34,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * */
 public final class ObjectIdentifier_Value extends Value {
-	private List<ObjectIdentifierComponent> objectIdComponents = new ArrayList<ObjectIdentifierComponent>();
+	private final List<ObjectIdentifierComponent> objectIdComponents = new ArrayList<ObjectIdentifierComponent>();
 
 	@Override
 	public Value_type getValuetype() {
