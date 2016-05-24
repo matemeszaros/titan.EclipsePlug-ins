@@ -514,7 +514,7 @@ public final class PortTypeBody extends ASTNode implements ILocateableNode, IInc
 			// checking target types
 			for (int i = 0, size = inMappings.getNofMappings(); i < size; i++) {
 				TypeMapping mapping = inMappings.getMappingByIndex(i);
-				for (int j = 0, nofTargets = mapping.getNofTargets(); i < nofTargets; i++) {
+				for (int j = 0, nofTargets = mapping.getNofTargets(); j < nofTargets; j++) {
 					Type targetType = mapping.getTargetByIndex(j).getTargetType();
 					if (targetType != null && (inMessages == null || !inMessages.hasType(timestamp, targetType))) {
 						targetType.getLocation().reportSemanticError(MessageFormat.format(
@@ -560,7 +560,7 @@ public final class PortTypeBody extends ASTNode implements ILocateableNode, IInc
 			if (providerBody != null) {
 				for (int i = 0, size = outMappings.getNofMappings(); i < size; i++) {
 					TypeMapping mapping = outMappings.getMappingByIndex(i);
-					for (int j = 0, nofTargets = mapping.getNofTargets(); i < nofTargets; i++) {
+					for (int j = 0, nofTargets = mapping.getNofTargets(); j < nofTargets; j++) {
 						Type targetType = mapping.getTargetByIndex(j).getTargetType();
 						if (targetType != null && (providerBody.outMessages == null || !providerBody.outMessages.hasType(timestamp, targetType))) {
 							targetType.getLocation().reportSemanticError(MessageFormat.format(
