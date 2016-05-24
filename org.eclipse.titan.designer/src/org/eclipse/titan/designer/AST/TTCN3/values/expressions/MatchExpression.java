@@ -54,7 +54,7 @@ public final class MatchExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("match(");
+		final StringBuilder builder = new StringBuilder("match(");
 		builder.append(value.createStringRepresentation());
 		builder.append(", ");
 		builder.append(templateInstance.createStringRepresentation());

@@ -70,7 +70,7 @@ public final class SignatureFormalParameterList extends ASTNode implements IIncr
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (parameters == null) {
 			return builder;

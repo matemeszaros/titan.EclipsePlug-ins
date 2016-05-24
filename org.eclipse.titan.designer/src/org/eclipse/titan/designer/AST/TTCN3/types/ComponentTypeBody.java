@@ -128,7 +128,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (definitions != null) {
 			Identifier tempIdentifier;

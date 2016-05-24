@@ -58,7 +58,7 @@ public final class SignatureExceptions extends ASTNode implements IIncrementally
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0; i < exceptionTypes.size(); i++) {
 			if (exceptionTypes.get(i) == child) {

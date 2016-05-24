@@ -61,7 +61,7 @@ public final class ExecuteExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("execute(");
+		final StringBuilder builder = new StringBuilder("execute(");
 		if (reference != null) {
 			builder.append(reference.getDisplayName());
 		}

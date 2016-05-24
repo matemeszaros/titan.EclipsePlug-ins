@@ -67,7 +67,7 @@ public final class SignatureFormalParameter extends ASTNode implements ILocateab
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (type == child) {
 			return builder.append(FULLNAMEPART);

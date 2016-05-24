@@ -67,7 +67,7 @@ public final class RegexpExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("regexp(");
+		final StringBuilder builder = new StringBuilder("regexp(");
 		builder.append(templateInstance1.createStringRepresentation());
 		builder.append(", ");
 		builder.append(templateInstance2.createStringRepresentation());

@@ -61,7 +61,7 @@ public final class Int2BitExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("int2bit");
+		final StringBuilder builder = new StringBuilder("int2bit");
 		builder.append('(').append(value1.createStringRepresentation());
 		builder.append(", ");
 		builder.append(value2.createStringRepresentation()).append(')');
@@ -229,7 +229,7 @@ public final class Int2BitExpression extends Expression_Value {
 	}
 
 	public static String int2bit(final Integer_Value value, final int length) {
-		StringBuilder builder = new StringBuilder(length);
+		final StringBuilder builder = new StringBuilder(length);
 		BigInteger temp = value.getValueValue();
 		for (int i = 1; i <= length; i++) {
 			if (temp.remainder(BigInteger.valueOf(2)).equals(BigInteger.ZERO)) {

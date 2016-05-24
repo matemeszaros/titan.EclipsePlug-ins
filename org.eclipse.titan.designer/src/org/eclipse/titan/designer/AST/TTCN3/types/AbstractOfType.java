@@ -88,7 +88,7 @@ public abstract class AbstractOfType extends ASN1Type {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (ofType == child) {
 			return builder.append(FULLNAMEPART);

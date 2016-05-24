@@ -51,7 +51,7 @@ public final class Array_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("{");
+		final StringBuilder builder = new StringBuilder("{");
 		if (isIndexed()) {
 			for (int i = 0; i < values.getNofIndexedValues(); i++) {
 				if (i > 0) {

@@ -62,7 +62,7 @@ public final class LengthofExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("lengthof(");
+		final StringBuilder builder = new StringBuilder("lengthof(");
 		builder.append(templateInstance.createStringRepresentation());
 		builder.append(')');
 		return builder.toString();

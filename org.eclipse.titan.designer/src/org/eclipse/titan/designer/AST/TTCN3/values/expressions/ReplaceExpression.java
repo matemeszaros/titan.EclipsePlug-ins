@@ -92,7 +92,7 @@ public final class ReplaceExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("replace(");
+		final StringBuilder builder = new StringBuilder("replace(");
 		builder.append(templateInstance1.createStringRepresentation());
 		builder.append(", ");
 		builder.append(value2.createStringRepresentation());

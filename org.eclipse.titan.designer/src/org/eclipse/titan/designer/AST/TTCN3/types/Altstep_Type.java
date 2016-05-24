@@ -82,7 +82,7 @@ public final class Altstep_Type extends Type {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (formalParList == child) {
 			return builder.append(FULLNAMEPART1);

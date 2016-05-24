@@ -50,7 +50,7 @@ public final class Altstep_Reference_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("refers(");
+		final StringBuilder builder = new StringBuilder("refers(");
 		builder.append(referredAltstep.getAssignmentName()).append(')');
 		return builder.toString();
 	}

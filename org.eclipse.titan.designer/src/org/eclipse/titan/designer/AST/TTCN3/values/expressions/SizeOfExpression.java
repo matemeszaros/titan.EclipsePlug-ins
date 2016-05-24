@@ -76,7 +76,7 @@ public final class SizeOfExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("sizeof(");
+		final StringBuilder builder = new StringBuilder("sizeof(");
 		builder.append(templateInstance.createStringRepresentation());
 		builder.append(')');
 		return builder.toString();

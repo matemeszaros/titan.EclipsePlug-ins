@@ -155,7 +155,7 @@ public final class Sequence_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("{");
+		final StringBuilder builder = new StringBuilder("{");
 		boolean isAsn1 = isAsn();
 		for (int i = 0; i < values.getSize(); i++) {
 			if (i > 0) {

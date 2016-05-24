@@ -50,7 +50,7 @@ public final class Testcase_Reference_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("refers(");
+		final StringBuilder builder = new StringBuilder("refers(");
 		builder.append(referredTestcase.getAssignmentName()).append(')');
 		return builder.toString();
 	}

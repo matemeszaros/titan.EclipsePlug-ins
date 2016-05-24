@@ -41,7 +41,7 @@ public final class EnumerationItems extends ASTNode implements IIncrementallyUpd
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (EnumItem item : items) {
 			if (item == child) {

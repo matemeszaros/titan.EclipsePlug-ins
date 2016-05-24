@@ -56,7 +56,7 @@ public final class Function_Reference_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("refers(");
+		final StringBuilder builder = new StringBuilder("refers(");
 		builder.append(referredFunction.getAssignmentName()).append(')');
 		return builder.toString();
 	}
