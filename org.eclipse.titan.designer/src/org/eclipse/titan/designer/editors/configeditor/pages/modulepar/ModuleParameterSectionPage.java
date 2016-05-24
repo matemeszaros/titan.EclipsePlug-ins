@@ -239,12 +239,9 @@ public final class ModuleParameterSectionPage extends FormPage {
 				ModuleParameter moduleParameter = (ModuleParameter) selection.getFirstElement();
 				if (moduleParameter != null) {
 					if (moduleParameter.getValue() != null) {
-						if (moduleParameter.getValue().getText().length() == 0) {
-							String temp = ConfigTreeNodeUtilities.toString(moduleParameter.getValue());
-							ConfigTreeNodeUtilities.setText( moduleParameter.getValue(), temp );
-						}
-
-						parameterValueText.setText(moduleParameter.getValue().getText());
+						final String moduleParamValueText = ConfigTreeNodeUtilities.toStringWithHidden(
+								moduleParameter.getValue(), editor.getTokenStream() );
+						parameterValueText.setText( moduleParamValueText );
 					}
 
 					valueChanged = true;
