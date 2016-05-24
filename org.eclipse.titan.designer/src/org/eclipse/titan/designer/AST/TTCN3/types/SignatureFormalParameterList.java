@@ -77,8 +77,10 @@ public final class SignatureFormalParameterList extends ASTNode implements IIncr
 		}
 
 		for (SignatureFormalParameter parameter : parameters) {
-			Identifier identifier = parameter.getIdentifier();
-			return builder.append(INamedNode.DOT).append(identifier != null ? identifier.getDisplayName() : FULLNAMEPART);
+			if (parameter == child) {
+				Identifier identifier = parameter.getIdentifier();
+				return builder.append(INamedNode.DOT).append(identifier != null ? identifier.getDisplayName() : FULLNAMEPART);
+			}
 		}
 
 		return builder;

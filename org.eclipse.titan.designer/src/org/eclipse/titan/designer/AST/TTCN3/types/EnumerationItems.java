@@ -44,12 +44,14 @@ public final class EnumerationItems extends ASTNode implements IIncrementallyUpd
 		StringBuilder builder = super.getFullName(child);
 
 		for (EnumItem item : items) {
-			Identifier identifier = item.getId();
-			if (identifier != null && identifier.getDisplayName() != null) {
-				return builder.append(INamedNode.DOT).append(identifier.getDisplayName());
-			}
+			if (item == child) {
+				final Identifier identifier = item.getId();
+				if (identifier != null) {
+					return builder.append(INamedNode.DOT).append(identifier.getDisplayName());
+				}
 
-			return builder.append(FULLNAMEPART);
+				return builder.append(FULLNAMEPART);
+			}
 		}
 
 		return builder;
