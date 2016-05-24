@@ -10,6 +10,8 @@ package org.eclipse.titan.designer.AST.TTCN3.attributes;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.titan.designer.AST.ASTNode;
 import org.eclipse.titan.designer.AST.ASTVisitor;
@@ -31,8 +33,8 @@ public final class ErrorBehaviorList extends ASTNode implements ILocateableNode 
 	private static final String[] VALID_HANDLINGS = { "DEFAULT", "ERROR", "WARNING", "IGNORE" };
 
 	// TODO could be optimized using real-life data
-	private final ArrayList<ErrorBehaviorSetting> settings = new ArrayList<ErrorBehaviorSetting>(1);
-	private final HashMap<String, ErrorBehaviorSetting> settingMap = new HashMap<String, ErrorBehaviorSetting>();
+	private final List<ErrorBehaviorSetting> settings = new ArrayList<ErrorBehaviorSetting>(1);
+	private final Map<String, ErrorBehaviorSetting> settingMap = new HashMap<String, ErrorBehaviorSetting>();
 	private ErrorBehaviorSetting settingAll;
 
 	/** the time when this error behavior list was checked the last time. */
