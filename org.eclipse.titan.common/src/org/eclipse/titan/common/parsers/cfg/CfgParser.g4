@@ -779,30 +779,37 @@ pr_ComponentSpecificLoggingParam:
 pr_LoggerPluginsPart
 @init {
 	String componentName = "*";
-	List<LoggingSectionHandler.LoggerPluginEntry> entries2 = new ArrayList<LoggingSectionHandler.LoggerPluginEntry>();
 }:
 	(	cn = pt_TestComponentID DOT11 { componentName = $cn.text; }
 	)?
-	LOGGERPLUGINS ASSIGNMENTCHAR11 b = BEGINCHAR11 lpe = pr_LoggerPluginEntry {  entries2.add( $lpe.entry ); }
-	(	COMMA11 lpe = pr_LoggerPluginEntry  {  entries2.add( $lpe.entry ); }
-	)*
+	LOGGERPLUGINS
+	ASSIGNMENTCHAR11
+	BEGINCHAR11
+	lpl = pr_LoggerPluginsList
 	ENDCHAR11
 {
-	for (LoggingSectionHandler.LoggerPluginEntry item : entries2) {
+	for (LoggingSectionHandler.LoggerPluginEntry item : $lpl.entries) {
 		LoggingSectionHandler.LogParamEntry lpe = loggingSectionHandler.componentPlugin(componentName, item.getName());
 		lpe.setPluginPath(item.getPath());
 	}
 	LoggingSectionHandler.LoggerPluginsEntry entry = new LoggingSectionHandler.LoggerPluginsEntry();
 	entry.setLoggerPluginsRoot( $ctx );
-	TerminalNodeImpl begin = new TerminalNodeImpl( $b );
-	begin.parent = $ctx;
-	entry.setLoggerPluginsListRoot( begin );
-	entry.setPluginRoots(new HashMap<String, LoggingSectionHandler.LoggerPluginEntry>(entries2.size()));
-	for (LoggingSectionHandler.LoggerPluginEntry item : entries2) {
+	entry.setLoggerPluginsListRoot( $lpl.ctx );
+	entry.setPluginRoots( new HashMap<String, LoggingSectionHandler.LoggerPluginEntry>( $lpl.entries.size() ) );
+	for ( LoggingSectionHandler.LoggerPluginEntry item : $lpl.entries ) {
 		entry.getPluginRoots().put(item.getName(), item);
 	}
 	loggingSectionHandler.getLoggerPluginsTree().put(componentName, entry);
 }
+;
+
+pr_LoggerPluginsList returns [ List<LoggingSectionHandler.LoggerPluginEntry> entries ]
+@init {
+	$entries = new ArrayList<LoggingSectionHandler.LoggerPluginEntry>();
+}:
+	lpe = pr_LoggerPluginEntry { $entries.add( $lpe.entry ); }
+	(	COMMA11 lpe = pr_LoggerPluginEntry  { $entries.add( $lpe.entry ); }
+	)*
 ;
 
 pr_PlainLoggingParam

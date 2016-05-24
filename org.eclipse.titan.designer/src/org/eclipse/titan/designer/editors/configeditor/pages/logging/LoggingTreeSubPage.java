@@ -342,13 +342,13 @@ public final class LoggingTreeSubPage {
 			return;
 		}
 
+		LoggingSectionHandler.LoggerPluginEntry pluginEntry = entry.getPluginRoots().remove(pluginName);
+		ConfigTreeNodeUtilities.removeChild( entry.getLoggerPluginsListRoot(), pluginEntry.getLoggerPluginRoot() );
+
 		if (entry.getPluginRoots().size() == 0) {
 			// if this was the last plugin entry, the whole entry has to be removed
 			ConfigTreeNodeUtilities.removeChild( loggingSectionHandler.getLastSectionRoot(), entry.getLoggerPluginsRoot() );
 		}
-
-		LoggingSectionHandler.LoggerPluginEntry pluginEntry = entry.getPluginRoots().remove(pluginName);
-		ConfigTreeNodeUtilities.removeChild( entry.getLoggerPluginsListRoot(), pluginEntry.getLoggerPluginRoot() );
 	}
 
 	/**
