@@ -21,7 +21,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.AddedParseTree;
 
 /**
- * Basic utility class for configuration file AST and pare tree operations.
+ * Basic utility class for configuration file AST and parse tree operations.
  *
  * @author Kristof Szabados
  * @author Arpad Lovassy
@@ -48,8 +48,8 @@ public final class ConfigTreeNodeUtilities {
 	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
 	 * @return output parse tree text
 	 */
-	public static String toStringWithhiddenAfter( final ParserRuleContext aParseTreeRoot,
-												  final TokenStream aTokenStream ) {
+	public static String toStringWithHiddenBefore( final ParseTree aParseTreeRoot,
+												   final TokenStream aTokenStream ) {
 		final StringBuilder builder = new StringBuilder();
 
 		print( aParseTreeRoot, aTokenStream, builder, null );
@@ -59,7 +59,19 @@ public final class ConfigTreeNodeUtilities {
 	}
 	
 	/**
-	 * RECURSIVE
+	 * Builds parse tree text including hidden tokens (but not before the rule)
+	 * @param aParseTreeRoot root of the parse tree to print
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @return output parse tree text
+	 */
+	public static String toStringWithHidden( final ParseTree aParseTreeRoot,
+											 final TokenStream aTokenStream ) {
+		final StringBuilder builder = new StringBuilder();
+		print( aParseTreeRoot, aTokenStream, builder, null, false );
+		return builder.toString();
+	}
+	
+	/**
 	 * Builds parse tree text including hidden tokens (also before the rule)
 	 * @param aParseTree parse tree
 	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
@@ -70,6 +82,24 @@ public final class ConfigTreeNodeUtilities {
 							  final TokenStream aTokenStream,
 							  final StringBuilder aSb,
 							  final List<Integer> aDisallowedNodes ) {
+		print( aParseTree, aTokenStream, aSb, aDisallowedNodes, true );
+	}
+	
+	/**
+	 * RECURSIVE
+	 * Builds parse tree text including hidden tokens
+	 * @param aParseTree parse tree
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @param aSb (in/out) StringBuilder, where the rule text is written
+	 * @param aDisallowedNodes token types, which are not printed (also their children), it can be null
+	 * @param aPrintHiddenBefore true to print hidden tokens before the parse tree
+	 *                           (NOTE: hidden tokens in the parse tree will be printed)
+	 */
+	private static void print( final ParseTree aParseTree,
+							   final TokenStream aTokenStream,
+							   final StringBuilder aSb,
+							   final List<Integer> aDisallowedNodes,
+							   final boolean aPrintHiddenBefore ) {
 		if ( aParseTree == null ) {
 			ErrorReporter.logWarning("ConfigTreeNodeUtilities.print(): aParseTree == null");
 			return;
@@ -79,7 +109,7 @@ public final class ConfigTreeNodeUtilities {
 			if ( aDisallowedNodes != null && aDisallowedNodes.contains( rule.start.getType() ) ) {
 				return;
 			}
-			if ( rule.getChildCount() > 0 && rule.getChild(0) instanceof AddedParseTree ) {
+			if ( aPrintHiddenBefore && rule.getChildCount() > 0 && rule.getChild(0) instanceof AddedParseTree ) {
 				//special case: if AddedParseTree is the 1st in the rule, it has no information
 				// about the hidden tokens, as it has no position in the token stream, but the rule may have
 				printHiddenTokensBefore(rule, aTokenStream, aSb);
@@ -89,7 +119,7 @@ public final class ConfigTreeNodeUtilities {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aParseTree;
 			final Token token = tn.getSymbol();
 			if ( aDisallowedNodes == null || !aDisallowedNodes.contains( token.getType() ) ) {
-				print( token, aTokenStream, aSb );
+				print( token, aTokenStream, aSb, aPrintHiddenBefore );
 			}
 		}
 		else if ( aParseTree instanceof AddedParseTree ) {
@@ -105,7 +135,7 @@ public final class ConfigTreeNodeUtilities {
 			if ( child == aParseTree ) {
 				ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): child == aParseTree");
 			} else {
-				print( child, aTokenStream, aSb, aDisallowedNodes );
+				print( child, aTokenStream, aSb, aDisallowedNodes, aPrintHiddenBefore || i > 0 );
 			}
 		}
 	}
@@ -115,12 +145,14 @@ public final class ConfigTreeNodeUtilities {
 	 * @param aToken token to print
 	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
 	 * @param aSb (in/out) StringBuilder, where the rule text is written
+	 * @param aPrintHiddenBefore true to print hidden tokens before the token
 	 */
 	public static void print( final Token aToken,
 							  final TokenStream aTokenStream,
-							  final StringBuilder aSb ) {
+							  final StringBuilder aSb,
+							  final boolean aPrintHiddenBefore ) {
 		final int startIndex = aToken.getTokenIndex();
-		if ( startIndex == -1 ) {
+		if ( startIndex == -1 || !aPrintHiddenBefore ) {
 			// Token has no index.
 			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
 			// because token has no index in the token stream.
