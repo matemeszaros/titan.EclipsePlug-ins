@@ -62,7 +62,7 @@ public final class IsBoundExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("isbound(");
+		final StringBuilder builder = new StringBuilder("isbound(");
 		builder.append(templateInstance.createStringRepresentation());
 		builder.append(')');
 		return builder.toString();

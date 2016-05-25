@@ -35,7 +35,7 @@ public final class NamedValues extends ASTNode implements IIncrementallyUpdateab
 	public static final String DUPLICATEIDENTIFIERFIRST = "Duplicate field name `{0}'' was first used here";
 	public static final String DUPLICATEIDENTIFIERREPEATED = "Duplicate identifier `{0}''";
 
-	private ArrayList<NamedValue> values;
+	private final ArrayList<NamedValue> values;
 
 	private Map<String, NamedValue> namedValuesMap;
 	private List<NamedValue> duplicatedNames;

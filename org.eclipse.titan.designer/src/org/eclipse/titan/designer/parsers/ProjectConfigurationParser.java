@@ -389,6 +389,8 @@ public final class ProjectConfigurationParser {
 				parentEditor.setTokenStream(cfgAnalyzer.getTokenStream());
 				parentEditor.refresh(cfgAnalyzer);
 				parentEditor.setErrorMessage(null);
+			} else {
+				parentEditor.setErrorMessage("There were " + errorsStored.size() + " problems found while parsing");
 			}
 		}
 

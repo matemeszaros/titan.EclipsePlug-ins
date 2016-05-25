@@ -9,6 +9,7 @@ package org.eclipse.titan.designer.AST.TTCN3.types;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.titan.designer.AST.ASTNode;
 import org.eclipse.titan.designer.AST.ASTVisitor;
@@ -23,7 +24,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 public final class TypeSet extends ASTNode {
 
 	private final ArrayList<IType> types;
-	private final HashMap<String, IType> typeMap;
+	private final Map<String, IType> typeMap;
 
 	public TypeSet() {
 		super();

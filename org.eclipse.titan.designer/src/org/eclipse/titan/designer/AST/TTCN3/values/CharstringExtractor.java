@@ -20,7 +20,7 @@ public class CharstringExtractor {
 	private boolean mErrorneous = false;
 	
 	/** the value string of the TTCN-3 string */
-	private String mExtractedString;
+	private final String mExtractedString;
 	
 	/** the error message (if any) */
 	private String mErrorMessage;

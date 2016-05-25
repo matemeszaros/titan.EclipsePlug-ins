@@ -39,7 +39,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 public final class Function_Reference_Value extends Value {
 
-	private Definition referredFunction;
+	private final Definition referredFunction;
 
 	public Function_Reference_Value(final Def_Function referredFunction) {
 		this.referredFunction = referredFunction;
@@ -56,7 +56,7 @@ public final class Function_Reference_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("refers(");
+		final StringBuilder builder = new StringBuilder("refers(");
 		builder.append(referredFunction.getAssignmentName()).append(')');
 		return builder.toString();
 	}

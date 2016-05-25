@@ -68,11 +68,6 @@ public final class Port_Type extends Type {
 	}
 
 	@Override
-	public void setAttributeParentPath(final WithAttributesPath parent) {
-		super.setAttributeParentPath(parent);
-	}
-
-	@Override
 	public boolean isCompatible(final CompilationTimeStamp timestamp, final IType otherType, final TypeCompatibilityInfo info,
 			final TypeCompatibilityInfo.Chain leftChain, final TypeCompatibilityInfo.Chain rightChain) {
 		check(timestamp);

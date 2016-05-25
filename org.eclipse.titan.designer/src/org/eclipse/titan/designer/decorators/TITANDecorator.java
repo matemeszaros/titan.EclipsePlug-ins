@@ -309,16 +309,17 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 	 *         command line.
 	 */
 	public static String propertiesAsParameters(final IProject project, final boolean full) {
+		if (!project.isAccessible()) {
+			return "";
+		}
+
 		final StringBuffer result = new StringBuffer();
-		boolean pendingSpace = false;
 
 		// FIXME this costs too much we should store the already
 		// calculated data
 		final DecoratorVisitor visitor = new DecoratorVisitor();
 		try {
-			if (project.isAccessible()) {
-				project.accept(visitor);
-			}
+			project.accept(visitor);
 
 			if (TRUE_STRING.equals(project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakefileCreationData.USE_ABSOLUTEPATH_PROPERTY)))) {
@@ -377,8 +378,9 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 			}
 			if (result.length() > 0) {
 				result.insert(0, '-');
-				pendingSpace = true;
 			}
+			
+			boolean pendingSpace = result.length() > 0;
 
 			String targetExecutable = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakefileCreationData.TARGET_EXECUTABLE_PROPERTY));
@@ -387,7 +389,6 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 				targetExecutable = URIUtil.toPath(uri).toOSString();
 				if (pendingSpace) {
 					result.append(SPACE);
-					pendingSpace = false;
 				}
 				result.append(TARGET_EXECUTABLE_OPTION);
 				if (full) {
@@ -402,7 +403,6 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 			} else if (full) {
 				if (pendingSpace) {
 					result.append(SPACE);
-					pendingSpace = false;
 				}
 				result.append(TARGET_EXECUTABLE_OPTION);
 
@@ -422,7 +422,6 @@ public final class TITANDecorator extends LabelProvider implements ILabelDecorat
 			if (codesplittingOption != null && codesplittingOption.length() != 0 && !GeneralConstants.NONE.equals(codesplittingOption)) {
 				if (pendingSpace) {
 					result.append(SPACE);
-					pendingSpace = false;
 				}
 				result.append("-U");
 				if (full) {

@@ -170,7 +170,7 @@ public final class Char2OctExpression extends Expression_Value {
 	}
 
 	public static String char2oct(final String charString) {
-		StringBuilder builder = new StringBuilder(charString.length() * 2);
+		final StringBuilder builder = new StringBuilder(charString.length() * 2);
 		byte[] bytes = charString.getBytes();
 		byte temp;
 		for (int i = 0; i < bytes.length; i++) {

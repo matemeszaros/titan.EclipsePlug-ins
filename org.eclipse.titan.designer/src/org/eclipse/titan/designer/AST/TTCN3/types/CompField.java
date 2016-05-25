@@ -86,7 +86,7 @@ public final class CompField extends ASTNode
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		builder.append(INamedNode.DOT).append(name.getDisplayName());
 

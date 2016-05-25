@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.titan.designer.AST.ASTNode;
 import org.eclipse.titan.designer.AST.ASTVisitor;
@@ -31,7 +32,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * */
 public final class TypeMappings extends ASTNode implements ILocateableNode {
 	private final List<TypeMapping> mappings;
-	private final HashMap<String, TypeMapping> mappingsMap;
+	private final Map<String, TypeMapping> mappingsMap;
 
 	/** the time when this type mapping was check the last time. */
 	private CompilationTimeStamp lastTimeChecked;

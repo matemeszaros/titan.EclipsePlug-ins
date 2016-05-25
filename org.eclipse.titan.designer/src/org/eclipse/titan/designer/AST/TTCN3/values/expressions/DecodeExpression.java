@@ -61,7 +61,7 @@ public final class DecodeExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("decvalue");
+		final StringBuilder builder = new StringBuilder("decvalue");
 		builder.append('(').append(reference1.getDisplayName());
 		builder.append(", ");
 		builder.append(reference2.getDisplayName());

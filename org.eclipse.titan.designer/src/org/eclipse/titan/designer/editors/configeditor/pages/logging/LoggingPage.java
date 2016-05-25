@@ -129,7 +129,7 @@ public final class LoggingPage extends FormPage {
 		}
 		if (loggingSectionHandler.getComponents().isEmpty()) {
 			ConfigTreeNodeUtilities.removeChild(editor.getParseTreeRoot(), loggingSectionHandler.getLastSectionRoot());
-			loggingSectionHandler.setLastSectionRoot((ParserRuleContext)null);
+			loggingSectionHandler.setLastSectionRoot( null );
 		}
 	}
 

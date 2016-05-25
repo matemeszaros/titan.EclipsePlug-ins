@@ -102,7 +102,7 @@ public final class Function_Type extends Type {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (formalParList == child) {
 			return builder.append(FULLNAMEPART1);
@@ -361,10 +361,10 @@ public final class Function_Type extends Type {
 			return;
 		}
 
-		IType tempRunsOnType = null;
+		
 		// external functions do not have runs on clauses
 		if (assignment instanceof Def_Function) {
-			tempRunsOnType = ((Def_Function) assignment).getRunsOnType(timestamp);
+			final IType tempRunsOnType = ((Def_Function) assignment).getRunsOnType(timestamp);
 
 			if (tempRunsOnType != null) {
 				if (runsOnSelf) {

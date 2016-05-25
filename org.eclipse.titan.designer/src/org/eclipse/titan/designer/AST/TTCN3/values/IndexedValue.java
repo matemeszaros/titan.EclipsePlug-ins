@@ -33,8 +33,8 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  */
 public final class IndexedValue extends ASTNode implements ILocateableNode, IIncrementallyUpdateable {
-	private ArraySubReference index;
-	private IValue value;
+	private final ArraySubReference index;
+	private final IValue value;
 
 	/**
 	 * The location of the whole item.

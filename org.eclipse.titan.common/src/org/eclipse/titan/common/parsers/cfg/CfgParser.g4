@@ -371,9 +371,11 @@ pr_MainControllerItemUnixDomainSocket:
 	ASSIGNMENTCHAR1
 	u = pr_MainControllerItemUnixDomainSocketValue
 	SEMICOLON1?
-	{	mCfgParseResult.setUnixDomainSocket( Boolean.parseBoolean( $u.text ) );
-		mcSectionHandler.setUnixDomainSocketRoot( $ctx );
-		mcSectionHandler.setUnixDomainSocket( $u.ctx );
+	{	if ( $u.text != null ) {
+			mCfgParseResult.setUnixDomainSocket( "yes".equalsIgnoreCase( $u.text ) );
+			mcSectionHandler.setUnixDomainSocketRoot( $ctx );
+			mcSectionHandler.setUnixDomainSocket( $u.ctx );
+		}
 	}
 ;
 
@@ -382,15 +384,23 @@ pr_MainControllerItemUnixDomainSocketValue:
 ;
 
 pr_MainControllerItemKillTimer:
-	KILLTIMER1		ASSIGNMENTCHAR1	k = pr_ArithmeticValueExpression	SEMICOLON1?
-	{	mCfgParseResult.setKillTimer( $k.number.getValue() );
-		mcSectionHandler.setKillTimerRoot( $ctx );
-		mcSectionHandler.setKillTimer( $k.ctx );
+	KILLTIMER1
+	ASSIGNMENTCHAR1
+	k = pr_ArithmeticValueExpression
+	SEMICOLON1?
+	{	if ( $k.number != null ) {
+			mCfgParseResult.setKillTimer( $k.number.getValue() );
+			mcSectionHandler.setKillTimerRoot( $ctx );
+			mcSectionHandler.setKillTimer( $k.ctx );
+		}
 	}
 ;
 
 pr_MainControllerItemLocalAddress:
-	LOCALADDRESS1	ASSIGNMENTCHAR1	l = pr_HostName						SEMICOLON1?
+	LOCALADDRESS1
+	ASSIGNMENTCHAR1
+	l = pr_HostName
+	SEMICOLON1?
 	{	mCfgParseResult.setLocalAddress( $l.text );
 		mcSectionHandler.setLocalAddressRoot( $ctx );
 		mcSectionHandler.setLocalAddress( $l.ctx );
@@ -398,18 +408,28 @@ pr_MainControllerItemLocalAddress:
 ;
 
 pr_MainControllerItemNumHcs:
-	NUMHCS1			ASSIGNMENTCHAR1	n = pr_IntegerValueExpression		SEMICOLON1?
-	{	mCfgParseResult.setNumHcs( $n.number.getIntegerValue() );
-		mcSectionHandler.setNumHCsTextRoot( $ctx );
-		mcSectionHandler.setNumHCsText( $n.ctx );
+	NUMHCS1
+	ASSIGNMENTCHAR1
+	n = pr_IntegerValueExpression
+	SEMICOLON1?
+	{	if ( $n.number != null ) {
+			mCfgParseResult.setNumHcs( $n.number.getIntegerValue() );
+			mcSectionHandler.setNumHCsTextRoot( $ctx );
+			mcSectionHandler.setNumHCsText( $n.ctx );
+		}
 	}
 ;
 
 pr_MainControllerItemTcpPort:
-	TCPPORT1		ASSIGNMENTCHAR1	t = pr_IntegerValueExpression		SEMICOLON1?
-	{	mCfgParseResult.setTcpPort( $t.number.getIntegerValue() );
-		mcSectionHandler.setTcpPortRoot( $ctx );
-		mcSectionHandler.setTcpPort( $t.ctx );
+	TCPPORT1
+	ASSIGNMENTCHAR1
+	t = pr_IntegerValueExpression
+	SEMICOLON1?
+	{	if ( $t.number != null ) {
+			mCfgParseResult.setTcpPort( $t.number.getIntegerValue() );
+			mcSectionHandler.setTcpPortRoot( $ctx );
+			mcSectionHandler.setTcpPort( $t.ctx );
+		}
 	}
 ;
 
@@ -560,6 +580,7 @@ pr_ModuleParametersSection:
 	(	param = pr_ModuleParam
 			{	if ( $param.parameter != null ) {
 					moduleParametersHandler.getModuleParameters().add( $param.parameter );
+					$param.parameter.setRoot( $param.ctx );
 				}
 			}
 		SEMICOLON9?
@@ -758,30 +779,37 @@ pr_ComponentSpecificLoggingParam:
 pr_LoggerPluginsPart
 @init {
 	String componentName = "*";
-	List<LoggingSectionHandler.LoggerPluginEntry> entries2 = new ArrayList<LoggingSectionHandler.LoggerPluginEntry>();
 }:
 	(	cn = pt_TestComponentID DOT11 { componentName = $cn.text; }
 	)?
-	LOGGERPLUGINS ASSIGNMENTCHAR11 b = BEGINCHAR11 lpe = pr_LoggerPluginEntry {  entries2.add( $lpe.entry ); }
-	(	COMMA11 lpe = pr_LoggerPluginEntry  {  entries2.add( $lpe.entry ); }
-	)*
+	LOGGERPLUGINS
+	ASSIGNMENTCHAR11
+	BEGINCHAR11
+	lpl = pr_LoggerPluginsList
 	ENDCHAR11
 {
-	for (LoggingSectionHandler.LoggerPluginEntry item : entries2) {
+	for (LoggingSectionHandler.LoggerPluginEntry item : $lpl.entries) {
 		LoggingSectionHandler.LogParamEntry lpe = loggingSectionHandler.componentPlugin(componentName, item.getName());
 		lpe.setPluginPath(item.getPath());
 	}
 	LoggingSectionHandler.LoggerPluginsEntry entry = new LoggingSectionHandler.LoggerPluginsEntry();
 	entry.setLoggerPluginsRoot( $ctx );
-	TerminalNodeImpl begin = new TerminalNodeImpl( $b );
-	begin.parent = $ctx;
-	entry.setLoggerPluginsListRoot( begin );
-	entry.setPluginRoots(new HashMap<String, LoggingSectionHandler.LoggerPluginEntry>(entries2.size()));
-	for (LoggingSectionHandler.LoggerPluginEntry item : entries2) {
+	entry.setLoggerPluginsListRoot( $lpl.ctx );
+	entry.setPluginRoots( new HashMap<String, LoggingSectionHandler.LoggerPluginEntry>( $lpl.entries.size() ) );
+	for ( LoggingSectionHandler.LoggerPluginEntry item : $lpl.entries ) {
 		entry.getPluginRoots().put(item.getName(), item);
 	}
 	loggingSectionHandler.getLoggerPluginsTree().put(componentName, entry);
 }
+;
+
+pr_LoggerPluginsList returns [ List<LoggingSectionHandler.LoggerPluginEntry> entries ]
+@init {
+	$entries = new ArrayList<LoggingSectionHandler.LoggerPluginEntry>();
+}:
+	lpe = pr_LoggerPluginEntry { $entries.add( $lpe.entry ); }
+	(	COMMA11 lpe = pr_LoggerPluginEntry  { $entries.add( $lpe.entry ); }
+	)*
 ;
 
 pr_PlainLoggingParam
@@ -806,7 +834,7 @@ pr_PlainLoggingParam
 		{	logParamEntry.setConsoleMaskRoot( $ctx );
 			logParamEntry.setConsoleMask( $consoleMask.ctx );
 			Map<LoggingBit, ParseTree> loggingBitMask = $consoleMask.loggingBitMask;
-			logParamEntry.setFileMaskBits( loggingBitMask );
+			logParamEntry.setConsoleMaskBits( loggingBitMask );
 		}
 |	DISKFULLACTION ASSIGNMENTCHAR11 dfa = pr_DiskFullActionValue
 		{	logParamEntry.setDiskFullActionRoot( $ctx );
@@ -877,6 +905,7 @@ pr_PlainLoggingParam
 	{	logParamEntry.setLogEntityNameRoot( $ctx );
 		logParamEntry.setEmergencyLoggingMask( $elm.ctx );
 		Map<LoggingBit, ParseTree> loggingBitMask = $elm.loggingBitMask;
+		//TODO: use loggingBitMask if needed
 	}
 )
 ;
@@ -912,6 +941,8 @@ pr_LoggerPluginEntry returns [ LoggingSectionHandler.LoggerPluginEntry entry ]
 	(	ASSIGNMENTCHAR11
 		s = pr_StringValue { $entry.setPath( $s.string ); }
 	)?
+{	$entry.setLoggerPluginRoot( $ctx );
+}
 ;
 
 pt_TestComponentID:
@@ -1252,11 +1283,25 @@ pr_Number returns [CFGNumber number]:
 )
 ;
 
-pr_StringValue returns [String string]:
-	a = pr_CString	{ $string = $a.string.replaceAll("^\"|\"$", ""); }
-	(	(STRINGOP1 | STRINGOP7 | STRINGOP9 | STRINGOP11) b = pr_CString { $string = $string + $b.string.replaceAll("^\"|\"$", ""); }
+pr_StringValue returns [String string]
+@init {
+	$string = "";
+}:
+	a = pr_CString
+		{	if ( $a.string != null ) {
+				$string = $a.string.replaceAll("^\"|\"$", "");
+			}
+		}
+	(	(STRINGOP1 | STRINGOP7 | STRINGOP9 | STRINGOP11) b = pr_CString
+			{	if ( $b.string != null ) {
+					$string = $string + $b.string.replaceAll("^\"|\"$", "");
+				}
+			}
 	)*
-	{	$string = "\"" + $string + "\"";	}
+	{	if ( $string != null ) {
+			$string = "\"" + $string + "\"";
+		}
+	}
 ;
 
 pr_CString returns [String string]:

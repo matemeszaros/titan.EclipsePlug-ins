@@ -85,7 +85,7 @@ public final class IsChoosenExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("ischoosen(");
+		final StringBuilder builder = new StringBuilder("ischoosen(");
 		builder.append(reference.getDisplayName());
 		builder.append('.');
 		builder.append(identifier.getDisplayName());

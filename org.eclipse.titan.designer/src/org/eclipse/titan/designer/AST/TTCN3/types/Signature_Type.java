@@ -97,7 +97,7 @@ public final class Signature_Type extends Type {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (returnType == child) {
 			return builder.append(FULLNAMEPART1);

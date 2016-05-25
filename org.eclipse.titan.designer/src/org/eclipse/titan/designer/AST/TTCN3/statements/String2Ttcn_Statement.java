@@ -83,7 +83,7 @@ public class String2Ttcn_Statement extends Statement {
 	}
 
 	@Override
-	public void check(CompilationTimeStamp timestamp) {
+	public void check(final CompilationTimeStamp timestamp) {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}

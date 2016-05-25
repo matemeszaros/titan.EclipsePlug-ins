@@ -129,11 +129,11 @@ public final class PathUtil {
 		final List<String> baseList = Arrays.asList(basePath.segments());
 		final List<String> relativeList = Arrays.asList(relativePath.segments());
 
-		final Path temp = new Path(calculateAbsolutePath(baseList, relativeList));
-		IPath temp2 = temp.setDevice(baseDevice);
-		temp2 = temp2.makeAbsolute();
+		final Path calculatedPath = new Path(calculateAbsolutePath(baseList, relativeList));
+		final IPath temp = calculatedPath.setDevice(baseDevice);
+		final IPath absolutePath = temp.makeAbsolute();
 
-		return temp2.toOSString();
+		return absolutePath.toOSString();
 	}
 
 	/**

@@ -60,7 +60,7 @@ public final class Int2HexExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("int2hex");
+		final StringBuilder builder = new StringBuilder("int2hex");
 		builder.append('(').append(value1.createStringRepresentation());
 		builder.append(", ");
 		builder.append(value2.createStringRepresentation()).append(')');
@@ -229,7 +229,7 @@ public final class Int2HexExpression extends Expression_Value {
 	}
 
 	public static String int2hex(final Integer_Value value, final int length) {
-		StringBuilder builder = new StringBuilder(length);
+		final StringBuilder builder = new StringBuilder(length);
 
 		final Integer_Value zero = new Integer_Value(Long.valueOf(0x0f));
 		Integer_Value temp = value;

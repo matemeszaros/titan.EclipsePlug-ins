@@ -70,7 +70,7 @@ public final class ExecuteDereferedExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("execute(derefers(");
+		final StringBuilder builder = new StringBuilder("execute(derefers(");
 		if (value != null) {
 			builder.append(value.createStringRepresentation());
 		}

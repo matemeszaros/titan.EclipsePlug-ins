@@ -142,8 +142,8 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 	 * Eclipse independent version
 	 * @param aFile TTCN-3 file to parse, It cannot be null
 	 */
-	public void parse( final File aFile ) {
-		BufferedReader bufferedReader = null;
+	public void parse(final File aFile ) {
+		BufferedReader bufferedReader;
 
 		try {
 			bufferedReader = new BufferedReader( new FileReader( aFile ) );

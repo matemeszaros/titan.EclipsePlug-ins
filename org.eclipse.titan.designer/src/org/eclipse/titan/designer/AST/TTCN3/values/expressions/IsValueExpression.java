@@ -58,7 +58,7 @@ public final class IsValueExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("isvalue(");
+		final StringBuilder builder = new StringBuilder("isvalue(");
 		builder.append(templateInstance.createStringRepresentation());
 		builder.append(')');
 		return builder.toString();

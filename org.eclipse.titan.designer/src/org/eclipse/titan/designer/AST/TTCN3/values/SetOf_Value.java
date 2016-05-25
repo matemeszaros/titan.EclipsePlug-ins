@@ -41,7 +41,7 @@ public final class SetOf_Value extends Value {
 			"Index overflow in a value of `set of'' type `{0}'': the index is {1}, but the value has only {2} elements";
 	private static final String NOINDEX = "There is no value assigned to index {0} in the value `{1}''";
 
-	private Values values;
+	private final Values values;
 
 	public SetOf_Value(final Values values) {
 		this.values = values;
@@ -67,7 +67,7 @@ public final class SetOf_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("{");
+		final StringBuilder builder = new StringBuilder("{");
 		if (isIndexed()) {
 			for (int i = 0; i < values.getNofIndexedValues(); i++) {
 				if (i > 0) {

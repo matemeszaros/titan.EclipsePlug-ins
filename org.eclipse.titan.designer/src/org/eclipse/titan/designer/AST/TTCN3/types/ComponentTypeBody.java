@@ -90,20 +90,20 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 	/** component references from the extend attributes null if none */
 	private ComponentTypeReferenceList attrExtendsReferences = new ComponentTypeReferenceList();
 
-	private Set<ComponentTypeBody> compatibleBodies = new HashSet<ComponentTypeBody>();
+	private final Set<ComponentTypeBody> compatibleBodies = new HashSet<ComponentTypeBody>();
 
 	/** The component's own definitions */
-	private DefinitionContainer definitions = new DefinitionContainer();
+	private final DefinitionContainer definitions = new DefinitionContainer();
 	/**
 	 * The list of definitions gained through extends references.
 	 * Used only to speed up some operations.
 	 * */
-	private Map<String, Definition> extendsGainedDefinitions = new HashMap<String, Definition>();
+	private final Map<String, Definition> extendsGainedDefinitions = new HashMap<String, Definition>();
 	/**
 	 * The list of definitions gained through extends attribute.
 	 * Used only to speed up some operations.
 	 * */
-	private Map<String, Definition> attributeGainedDefinitions = new HashMap<String, Definition>();
+	private final Map<String, Definition> attributeGainedDefinitions = new HashMap<String, Definition>();
 
 	/** the with attributes of the definition does not belong to the componentTypeBody naturally !*/
 	private WithAttributesPath withAttributesPath;
@@ -128,7 +128,7 @@ public final class ComponentTypeBody extends TTCN3Scope implements IReferenceCha
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (definitions != null) {
 			Identifier tempIdentifier;

@@ -37,7 +37,7 @@ public final class ArrayDimensions extends ASTNode implements IIncrementallyUpda
 	private static final String TOOMANYINDICES =
 			"Too many indices in a reference to a {0} array: the reference has {1} array indices, but the array has only {2} dimension{3}";
 
-	private List<ArrayDimension> dimensions;
+	private final List<ArrayDimension> dimensions;
 
 	public ArrayDimensions() {
 		dimensions = new ArrayList<ArrayDimension>();

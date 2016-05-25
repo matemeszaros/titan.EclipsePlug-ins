@@ -48,7 +48,7 @@ public class Ttcn2StringExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("ttcn2string(");
+		final StringBuilder builder = new StringBuilder("ttcn2string(");
 		builder.append(templateInstance.createStringRepresentation());
 		builder.append(')');
 		return builder.toString();

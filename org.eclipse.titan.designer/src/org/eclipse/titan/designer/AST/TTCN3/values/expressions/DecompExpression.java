@@ -91,7 +91,7 @@ public final class DecompExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("decomp(");
+		final StringBuilder builder = new StringBuilder("decomp(");
 		builder.append(value1.createStringRepresentation());
 		builder.append(", ");
 		builder.append(value2.createStringRepresentation());

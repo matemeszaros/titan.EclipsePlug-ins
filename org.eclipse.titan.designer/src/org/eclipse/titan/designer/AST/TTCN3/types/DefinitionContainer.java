@@ -24,7 +24,7 @@ public class DefinitionContainer implements Iterable<Definition> {
 
 	private final List<Definition> definitions = new CopyOnWriteArrayList<Definition>();
 
-	private Map<String, Definition> definitionMap = new HashMap<String, Definition>();
+	private final Map<String, Definition> definitionMap = new HashMap<String, Definition>();
 
 	public Map<String, Definition> getDefinitionMap() {
 		return definitionMap;

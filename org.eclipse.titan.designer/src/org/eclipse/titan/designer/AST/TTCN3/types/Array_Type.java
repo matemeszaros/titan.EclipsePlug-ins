@@ -107,7 +107,7 @@ public final class Array_Type extends Type implements IReferenceableElement {
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (elementType == child) {
 			return builder.append(FULLNAMEPART1);
@@ -666,7 +666,7 @@ public final class Array_Type extends Type implements IReferenceableElement {
 			return "Erroneous type";
 		}
 
-		StringBuilder builder = new StringBuilder(elementType.getTypename());
+		final StringBuilder builder = new StringBuilder(elementType.getTypename());
 		builder.append(dimension.createStringRepresentation());
 		IType temp = elementType;
 		while (temp != null && Type_type.TYPE_ARRAY.equals(temp.getTypetype())) {

@@ -53,7 +53,7 @@ public final class ValueofExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("valueof(");
+		final StringBuilder builder = new StringBuilder("valueof(");
 		builder.append(templateInstance.createStringRepresentation());
 		builder.append(')');
 		return builder.toString();

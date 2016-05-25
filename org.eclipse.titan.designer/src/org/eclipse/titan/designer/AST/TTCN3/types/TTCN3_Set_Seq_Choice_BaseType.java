@@ -569,28 +569,29 @@ public abstract class TTCN3_Set_Seq_Choice_BaseType extends Type implements ITyp
 	}
 
 	@Override
-	public Declaration resolveReference(final Reference reference, int subRefIdx, final ISubReference lastSubreference) {
+	public Declaration resolveReference(final Reference reference, final int subRefIdx, final ISubReference lastSubreference) {
 		final List<ISubReference> subreferences = reference.getSubreferences();
-		while (subRefIdx < subreferences.size() && subreferences.get(subRefIdx) instanceof ArraySubReference) {
-			++subRefIdx;
+		int localIndex = subRefIdx;
+		while (localIndex < subreferences.size() && subreferences.get(localIndex) instanceof ArraySubReference) {
+			++localIndex;
 		}
 
-		if (subRefIdx == subreferences.size()) {
+		if (localIndex == subreferences.size()) {
 			return null;
 		}
 
-		final CompField compField = getComponentByName(subreferences.get(subRefIdx).getId().getName());
+		final CompField compField = getComponentByName(subreferences.get(localIndex).getId().getName());
 		if (compField == null) {
 			return null;
 		}
 		final IType compFieldType = compField.getType().getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp());
 
-		if (subreferences.get(subRefIdx) == lastSubreference) {
+		if (subreferences.get(localIndex) == lastSubreference) {
 			return Declaration.createInstance(getDefiningAssignment(), compField.getIdentifier());
 		}
 
 		if (compFieldType instanceof IReferenceableElement) {
-			final Declaration decl = ((IReferenceableElement) compFieldType).resolveReference(reference, subRefIdx + 1, lastSubreference);
+			final Declaration decl = ((IReferenceableElement) compFieldType).resolveReference(reference, localIndex + 1, lastSubreference);
 			return decl != null ? decl : Declaration.createInstance(getDefiningAssignment(), compField.getIdentifier());
 		}
 

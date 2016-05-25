@@ -37,7 +37,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 public final class Array_Value extends Value {
 	private static final String NOINDEX = "There is no value assigned to index {0} in the value `{1}''";
 
-	private Values values;
+	private final Values values;
 
 	protected Array_Value(final SequenceOf_Value original) {
 		copyGeneralProperties(original);
@@ -51,7 +51,7 @@ public final class Array_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("{");
+		final StringBuilder builder = new StringBuilder("{");
 		if (isIndexed()) {
 			for (int i = 0; i < values.getNofIndexedValues(); i++) {
 				if (i > 0) {

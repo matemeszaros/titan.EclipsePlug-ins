@@ -62,7 +62,7 @@ public final class IsPresentExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("ispresent(");
+		final StringBuilder builder = new StringBuilder("ispresent(");
 		builder.append(templateInstance.createStringRepresentation());
 		builder.append(')');
 		return builder.toString();

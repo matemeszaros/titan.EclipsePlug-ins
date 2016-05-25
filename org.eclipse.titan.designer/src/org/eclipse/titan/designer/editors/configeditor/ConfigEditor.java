@@ -224,6 +224,10 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 		mParseTreeRoot = aParseTreeRoot;
 	}
 
+	public TokenStream getTokenStream() {
+		return mTokenStream;
+	}
+
 	public void setTokenStream(final TokenStream aTokenStream) {
 		mTokenStream = aTokenStream;
 	}
@@ -231,7 +235,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	private void updateTextualPage() {
 		if (mParseTreeRoot != null && mTokenStream != null) {
 			String original = editor.getDocument().get();
-			String content = ConfigTreeNodeUtilities.toStringWithhiddenAfter( mParseTreeRoot, mTokenStream );
+			String content = ConfigTreeNodeUtilities.toStringWithHiddenBefore( mParseTreeRoot, mTokenStream );
 
 			if (!content.equals(original)) {
 				editor.getDocument().set(content);

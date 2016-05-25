@@ -21,7 +21,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.AddedParseTree;
 
 /**
- * Basic utility class for configuration file AST operations.
+ * Basic utility class for configuration file AST and parse tree operations.
  *
  * @author Kristof Szabados
  * @author Arpad Lovassy
@@ -42,38 +42,36 @@ public final class ConfigTreeNodeUtilities {
 		return aRoot.getText();
 	}
 	
-
-	public static String toStringWithhiddenAfter( final ParserRuleContext aParseTreeRoot,
-												  final TokenStream aTokenStream ) {
+	/**
+	 * Builds parse tree text including hidden tokens (also before the rule)
+	 * @param aParseTreeRoot root of the parse tree to print
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @return output parse tree text
+	 */
+	public static String toStringWithHiddenBefore( final ParseTree aParseTreeRoot,
+												   final TokenStream aTokenStream ) {
 		final StringBuilder builder = new StringBuilder();
 
-		print(builder, aParseTreeRoot, aTokenStream );
+		print( aParseTreeRoot, aTokenStream, builder, null );
 		// there are no hidden tokens after the last token
 
 		return builder.toString();
 	}
 	
-	private static final void print( final StringBuilder aSb,
-									 final ParserRuleContext aParseTreeRoot,
-									 final TokenStream aTokenStream ){
-		print( aParseTreeRoot, aTokenStream, aSb, null );
-	}
-	
-	//TODO: remove if not needed
 	/**
-	 * Builds hidden tokens after a rule
-	 * @param aSb (in/out) StringBuilder, where the rule text is written
-	 * @param aParseTreeRoot the rule (this will NOT be printed, only the hidden tokens after it)
+	 * Builds parse tree text including hidden tokens (but not before the rule)
+	 * @param aParseTreeRoot root of the parse tree to print
 	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @return output parse tree text
 	 */
-	private static final void appendHiddenAfter( final StringBuilder aSb,
-												 final ParserRuleContext aParseTreeRoot,
-												 final TokenStream aTokenStream ) {
-		printHiddenAfter( aParseTreeRoot.stop, aTokenStream, aSb ); 
+	public static String toStringWithHidden( final ParseTree aParseTreeRoot,
+											 final TokenStream aTokenStream ) {
+		final StringBuilder builder = new StringBuilder();
+		print( aParseTreeRoot, aTokenStream, builder, null, false );
+		return builder.toString();
 	}
 	
 	/**
-	 * RECURSIVE
 	 * Builds parse tree text including hidden tokens (also before the rule)
 	 * @param aParseTree parse tree
 	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
@@ -84,6 +82,24 @@ public final class ConfigTreeNodeUtilities {
 							  final TokenStream aTokenStream,
 							  final StringBuilder aSb,
 							  final List<Integer> aDisallowedNodes ) {
+		print( aParseTree, aTokenStream, aSb, aDisallowedNodes, true );
+	}
+	
+	/**
+	 * RECURSIVE
+	 * Builds parse tree text including hidden tokens
+	 * @param aParseTree parse tree
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @param aSb (in/out) StringBuilder, where the rule text is written
+	 * @param aDisallowedNodes token types, which are not printed (also their children), it can be null
+	 * @param aPrintHiddenBefore true to print hidden tokens before the parse tree
+	 *                           (NOTE: hidden tokens in the parse tree will be printed)
+	 */
+	private static void print( final ParseTree aParseTree,
+							   final TokenStream aTokenStream,
+							   final StringBuilder aSb,
+							   final List<Integer> aDisallowedNodes,
+							   final boolean aPrintHiddenBefore ) {
 		if ( aParseTree == null ) {
 			ErrorReporter.logWarning("ConfigTreeNodeUtilities.print(): aParseTree == null");
 			return;
@@ -93,7 +109,7 @@ public final class ConfigTreeNodeUtilities {
 			if ( aDisallowedNodes != null && aDisallowedNodes.contains( rule.start.getType() ) ) {
 				return;
 			}
-			if ( rule.getChildCount() > 0 && rule.getChild(0) instanceof AddedParseTree ) {
+			if ( aPrintHiddenBefore && rule.getChildCount() > 0 && rule.getChild(0) instanceof AddedParseTree ) {
 				//special case: if AddedParseTree is the 1st in the rule, it has no information
 				// about the hidden tokens, as it has no position in the token stream, but the rule may have
 				printHiddenTokensBefore(rule, aTokenStream, aSb);
@@ -103,7 +119,7 @@ public final class ConfigTreeNodeUtilities {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aParseTree;
 			final Token token = tn.getSymbol();
 			if ( aDisallowedNodes == null || !aDisallowedNodes.contains( token.getType() ) ) {
-				print( token, aTokenStream, aSb );
+				print( token, aTokenStream, aSb, aPrintHiddenBefore );
 			}
 		}
 		else if ( aParseTree instanceof AddedParseTree ) {
@@ -119,7 +135,7 @@ public final class ConfigTreeNodeUtilities {
 			if ( child == aParseTree ) {
 				ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): child == aParseTree");
 			} else {
-				print( child, aTokenStream, aSb, aDisallowedNodes );
+				print( child, aTokenStream, aSb, aDisallowedNodes, aPrintHiddenBefore || i > 0 );
 			}
 		}
 	}
@@ -129,12 +145,14 @@ public final class ConfigTreeNodeUtilities {
 	 * @param aToken token to print
 	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
 	 * @param aSb (in/out) StringBuilder, where the rule text is written
+	 * @param aPrintHiddenBefore true to print hidden tokens before the token
 	 */
 	public static void print( final Token aToken,
 							  final TokenStream aTokenStream,
-							  final StringBuilder aSb ) {
+							  final StringBuilder aSb,
+							  final boolean aPrintHiddenBefore ) {
 		final int startIndex = aToken.getTokenIndex();
-		if ( startIndex == -1 ) {
+		if ( startIndex == -1 || !aPrintHiddenBefore ) {
 			// Token has no index.
 			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
 			// because token has no index in the token stream.
@@ -262,12 +280,9 @@ public final class ConfigTreeNodeUtilities {
 		}
 	}
 	
-	//TODO: remove if not needed
 	/**
 	 * Removes child from parent's list.
 	 * Parent is get from child data.
-	 * NOTE: Use the 2 parameter version if possible.
-	 *       getParent() should always be filled, but it's safer to name the parent implicitly.
 	 * @param aChild child element to remove
 	 */
 	public static void removeChild( final ParseTree aChild ) {
@@ -276,15 +291,25 @@ public final class ConfigTreeNodeUtilities {
 			return;
 		}
 		final ParseTree parent = aChild.getParent();
-		removeChild( parent, aChild );
+		removeChild( parent, aChild, false );
 	}
-	
+
 	/**
 	 * Removes child from parent's list
 	 * @param aParent parent node to remove the child from
 	 * @param aChild child element to remove
 	 */
 	public static void removeChild( final ParseTree aParent, final ParseTree aChild ) {
+		removeChild( aParent, aChild, true );
+	}
+	
+	/**
+	 * Removes child from parent's list
+	 * @param aParent parent node to remove the child from
+	 * @param aChild child element to remove
+	 * @param aRetry true to retry with parent known by the child
+	 */
+	private static void removeChild( final ParseTree aParent, final ParseTree aChild, final boolean aRetry ) {
 		if ( aParent == null ) {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): aParent == null");
 			return;
@@ -293,9 +318,6 @@ public final class ConfigTreeNodeUtilities {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): aChild == null");
 			return;
 		}
-		if ( aParent != aChild.getParent() ) {
-			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): aParent != aChild.getParent()");
-		}
 		if ( aParent instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParent;
 			if ( rule.children != null && aChild != null && aChild.getText() != null ) {
@@ -303,26 +325,50 @@ public final class ConfigTreeNodeUtilities {
 				final List<ParseTree> list = rule.children;
 				final int size = list.size();
 				final String childText = aChild.getText();
+				// true, if item to delete is found
+				boolean found = false;
 				//NOTE: do NOT start from back, because it deletes by text
 				//      and the 1st occurrence must be deleted
 				for ( int i = 0; i < size; i++ ) {
 					if ( childText.equals( list.get( i ).getText() ) ) {
 						list.remove( i );
+						found = true;
 						break;
 					}
+				}
+				// if item to delete is not found, it means, that aParent is not the parent of aChild,
+				// but a root of a rule, and the rule has more levels.
+				// In this case it must be deleted in the other way. The child knows its parent
+				if ( aRetry && !found ) {
+					removeChild( aChild );
 				}
 			}
 		} else {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): only ParserRuleContext can have children");
 		}
 	}
-	
+
 	/**
-	 * Removes child and a separator ("|") before or after the child (if any) from parent's list
+	 * Removes child and a separator before or after the child (if any) from parent's list.
+	 * Default case
 	 * @param aParent parent node to remove the child from
 	 * @param aChild child element to remove
 	 */
 	public static void removeChildWithSeparator( final ParseTree aParent, final ParseTree aChild ) {
+		removeChildWithSeparator( aParent, aChild, "|", 0 );
+	}
+	/**
+	 * Removes child and a separator before or after the child (if any) from parent's list
+	 * @param aParent parent node to remove the child from
+	 * @param aChild child element to remove
+	 * @param aSeparator separator string
+	 * @param aStartIndex the start index where the items start
+	 *                    aStartIndex > 0 if rule contains some other parse tree nodes than normal list items
+	 */
+	public static void removeChildWithSeparator( final ParseTree aParent,
+												 final ParseTree aChild,
+												 final String aSeparator,
+												 final int aStartIndex ) {
 		if ( aParent == null ) {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChildWithSeparator( ParseTree, ParseTree ): aParent == null");
 			return;
@@ -336,22 +382,21 @@ public final class ConfigTreeNodeUtilities {
 				final String childText = aChild.getText();
 				//NOTE: do NOT start from back, because it deletes by text
 				//      and the 1st occurrence must be deleted
-				for ( int i = 0; i < size; i++ ) {
+				for ( int i = aStartIndex; i < size; i++ ) {
 					if ( childText.equals( list.get( i ).getText() ) ) {
 						list.remove( i );
-						final String separator = "|";
-						if ( i > 0 ) {
+						if ( i > aStartIndex ) {
 							final ParseTree previous = list.get( i - 1 );
-							if ( separator.equals( previous.getText() ) ) {
+							if ( aSeparator.equals( previous.getText() ) ) {
 								list.remove( i - 1 );
 							}
-						} else if( size > 1 ) {
-							// i == 0, but let's check also, if this is not the last item,
+						} else if( size > aStartIndex + 1 ) {
+							// i == aStartIndex, but let's check also, if this is not the last item,
 							// because in that case there is no more separator, there is nothing to remove
 							// NOTE: remember, that list size just decreased by 1 now
-							final ParseTree next = list.get( 0 );
-							if ( separator.equals( next.getText() ) ) {
-								list.remove( 0 );
+							final ParseTree next = list.get( aStartIndex );
+							if ( aSeparator.equals( next.getText() ) ) {
+								list.remove( aStartIndex );
 							}
 						}
 						break;
@@ -360,25 +405,6 @@ public final class ConfigTreeNodeUtilities {
 			}
 		} else {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChild( ParseTree, ParseTree ): only ParserRuleContext can have children");
-		}
-	}
-	
-	//TODO: remove if not needed
-	/**
-	 * Removes children from parent's list
-	 * @param aParent parent node to remove the child from
-	 * @param aChild child element to remove
-	 */
-	public static void removeChildren( final ParseTree aParent ) {
-		if ( aParent == null ) {
-			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChildren(): aParent == null");
-			return;
-		}
-		if ( aParent instanceof ParserRuleContext ) {
-			final ParserRuleContext rule = (ParserRuleContext)aParent;
-			rule.children = null;
-		} else {
-			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.removeChildren(): only ParserRuleContext can have children");
 		}
 	}
 	

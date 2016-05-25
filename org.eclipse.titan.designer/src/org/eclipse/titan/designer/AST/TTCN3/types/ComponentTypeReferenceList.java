@@ -52,7 +52,7 @@ public final class ComponentTypeReferenceList extends ASTNode implements ILocate
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		for (int i = 0; i < componentReferences.size(); i++) {
 			if (componentReferences.get(i) == child) {

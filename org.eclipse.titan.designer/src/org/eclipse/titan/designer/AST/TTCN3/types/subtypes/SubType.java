@@ -88,6 +88,18 @@ public final class SubType implements IIncrementallyUpdateable {
 		ST_TESTCASE
 	}
 
+	// constants used by is_compatible_with_elem():
+	private static final SubtypeConstraint BIT_SC = new StringSizeAndValueListConstraint(StringSizeAndValueListConstraint.Type.BITSTRING,
+			new SizeLimit(1));
+	private static final SubtypeConstraint HEX_SC = new StringSizeAndValueListConstraint(StringSizeAndValueListConstraint.Type.HEXSTRING,
+			new SizeLimit(1));
+	private static final SubtypeConstraint OCTET_SC = new StringSizeAndValueListConstraint(StringSizeAndValueListConstraint.Type.OCTETSTRING,
+			new SizeLimit(1));
+	private static final SubtypeConstraint CHAR_SC = new StringSetConstraint(StringSubtypeTreeElement.StringType.CHARSTRING,
+			StringSetConstraint.ConstraintType.SIZE_CONSTRAINT, new RangeListConstraint(new SizeLimit(1)));
+	private static final SubtypeConstraint UCHAR_SC = new StringSetConstraint(StringSubtypeTreeElement.StringType.UNIVERSAL_CHARSTRING,
+			StringSetConstraint.ConstraintType.SIZE_CONSTRAINT, new RangeListConstraint(new SizeLimit(1)));
+
 	private final SubType_type subtypeType;
 
 	/** The type to which this sub-type belongs to. */
@@ -165,18 +177,6 @@ public final class SubType implements IIncrementallyUpdateable {
 		SubtypeConstraint intersectionSet = subtypeConstraint.intersection(other.subtypeConstraint);
 		return intersectionSet.isEmpty() != TernaryBool.TTRUE;
 	}
-
-	// constants used by is_compatible_with_elem():
-	private static final SubtypeConstraint BIT_SC = new StringSizeAndValueListConstraint(StringSizeAndValueListConstraint.Type.BITSTRING,
-			new SizeLimit(1));
-	private static final SubtypeConstraint HEX_SC = new StringSizeAndValueListConstraint(StringSizeAndValueListConstraint.Type.HEXSTRING,
-			new SizeLimit(1));
-	private static final SubtypeConstraint OCTET_SC = new StringSizeAndValueListConstraint(StringSizeAndValueListConstraint.Type.OCTETSTRING,
-			new SizeLimit(1));
-	private static final SubtypeConstraint CHAR_SC = new StringSetConstraint(StringSubtypeTreeElement.StringType.CHARSTRING,
-			StringSetConstraint.ConstraintType.SIZE_CONSTRAINT, new RangeListConstraint(new SizeLimit(1)));
-	private static final SubtypeConstraint UCHAR_SC = new StringSetConstraint(StringSubtypeTreeElement.StringType.UNIVERSAL_CHARSTRING,
-			StringSetConstraint.ConstraintType.SIZE_CONSTRAINT, new RangeListConstraint(new SizeLimit(1)));
 
 	public boolean isCompatibleWithElem(final CompilationTimeStamp timestamp) {
 		if (getIsErroneous(timestamp)) {

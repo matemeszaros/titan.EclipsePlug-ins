@@ -47,7 +47,7 @@ public final class ActivateExpression extends Expression_Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("activate(");
+		final StringBuilder builder = new StringBuilder("activate(");
 		if (reference != null) {
 			builder.append(reference.getDisplayName());
 		}

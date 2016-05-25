@@ -70,15 +70,17 @@ public final class SignatureFormalParameterList extends ASTNode implements IIncr
 
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
-		StringBuilder builder = super.getFullName(child);
+		final StringBuilder builder = super.getFullName(child);
 
 		if (parameters == null) {
 			return builder;
 		}
 
 		for (SignatureFormalParameter parameter : parameters) {
-			Identifier identifier = parameter.getIdentifier();
-			return builder.append(INamedNode.DOT).append(identifier != null ? identifier.getDisplayName() : FULLNAMEPART);
+			if (parameter == child) {
+				Identifier identifier = parameter.getIdentifier();
+				return builder.append(INamedNode.DOT).append(identifier != null ? identifier.getDisplayName() : FULLNAMEPART);
+			}
 		}
 
 		return builder;
@@ -249,17 +251,17 @@ public final class SignatureFormalParameterList extends ASTNode implements IIncr
 
 		checkUniqueness(timestamp);
 
-		boolean isNonoblock = signature.isNonblocking();
+		boolean isNonblock = signature.isNonblocking();
 		for (SignatureFormalParameter parameter : parameters) {
 			if (parameter.getDirection() == SignatureFormalParameter.PARAM_IN) {
 				inParameters.add(parameter);
 			} else if (parameter.getDirection() == SignatureFormalParameter.PARAM_OUT) {
-				if (isNonoblock) {
+				if (isNonblock) {
 					parameter.getLocation().reportSemanticError("A non-blocking signature cannot have `out' parameter");
 				}
 				outParameters.add(parameter);
 			} else if (parameter.getDirection() == SignatureFormalParameter.PARAM_INOUT) {
-				if (isNonoblock) {
+				if (isNonblock) {
 					parameter.getLocation().reportSemanticError("A non-blocking signature cannot have `out' parameter");
 				}
 				inParameters.add(parameter);

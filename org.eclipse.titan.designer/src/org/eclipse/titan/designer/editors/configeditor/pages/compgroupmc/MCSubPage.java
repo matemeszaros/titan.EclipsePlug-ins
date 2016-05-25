@@ -295,7 +295,7 @@ public final class MCSubPage {
 					ConfigTreeNodeUtilities.addChild( unixDomainSocketRoot, unixDomainSocket );
 				} else {
 					// simple modification
-					ConfigTreeNodeUtilities.setText( mcSectionHandler.getNumHCsText(), temp.trim() );
+					ConfigTreeNodeUtilities.setText( mcSectionHandler.getUnixDomainSocket(), temp.trim() );
 				}
 			}
 		});

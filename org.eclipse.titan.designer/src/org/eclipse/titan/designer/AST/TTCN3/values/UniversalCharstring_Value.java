@@ -39,7 +39,7 @@ public final class UniversalCharstring_Value extends Value {
 
 	public static final String ISOCONVERTION = "ISO-10646 string value cannot be converted to ISO-2022 string";
 
-	private UniversalCharstring value;
+	private final UniversalCharstring value;
 
 	public UniversalCharstring_Value(final UniversalCharstring value) {
 		this.value = value;

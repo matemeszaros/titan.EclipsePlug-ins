@@ -37,7 +37,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 public final class Testcase_Reference_Value extends Value {
 
-	private Def_Testcase referredTestcase;
+	private final Def_Testcase referredTestcase;
 
 	public Testcase_Reference_Value(final Def_Testcase referredTestcase) {
 		this.referredTestcase = referredTestcase;
@@ -50,7 +50,7 @@ public final class Testcase_Reference_Value extends Value {
 
 	@Override
 	public String createStringRepresentation() {
-		StringBuilder builder = new StringBuilder("refers(");
+		final StringBuilder builder = new StringBuilder("refers(");
 		builder.append(referredTestcase.getAssignmentName()).append(')');
 		return builder.toString();
 	}
