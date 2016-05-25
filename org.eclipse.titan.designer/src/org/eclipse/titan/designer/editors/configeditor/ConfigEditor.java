@@ -129,7 +129,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 		if ( !CONFIG_EDITOR_TABS_VISIBLE ) {
 			return;
 		}
-		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+		getSite().getShell().getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				mModuleParameterSectionEditor.refreshData( cfgAnalyzer.getModuleParametersHandler() );
