@@ -45,11 +45,11 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 	public static final String DUPLICATEFIELDNAMEFIRST = "Duplicate field name `{0}'' was first declared here";
 	public static final String DUPLICATEFIELDNAMEREPEATED = "Duplicate field name `{0}'' was declared here again";
 
-	protected final ArrayList<CompField> fields;
+	final ArrayList<CompField> fields;
 	private WeakReference<Type> myType;
 
 	/** Should be IDentifier based. */
-	protected Map<String, CompField> componentFieldMap;
+	Map<String, CompField> componentFieldMap;
 
 	/**
 	 * Stores the components that were identified to be duplicates, to save time
@@ -59,7 +59,7 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 
 	/** Holds the last time when the components were checked, or null if never. */
 	private CompilationTimeStamp lastCompilationTimeStamp;
-	protected CompilationTimeStamp lastUniquenessCheck;
+	CompilationTimeStamp lastUniquenessCheck;
 
 	/**
 	 * The location of the whole component field map. This location encloses the

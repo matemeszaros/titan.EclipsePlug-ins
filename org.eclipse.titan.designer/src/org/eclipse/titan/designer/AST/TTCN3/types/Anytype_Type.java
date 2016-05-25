@@ -335,9 +335,7 @@ public final class Anytype_Type extends Type {
 				Identifier name = namedTemplate.getName();
 
 				CompField field = compFieldMap.getCompWithName(name);
-				if (field == null) {
-					//	named_template.getLocation().reportSemanticError(MessageFormat.format(REFERENCETONONEXISTENTFIELD, name.get_displayName(), getFullName()));
-				} else {
+				if (field != null) {
 					Type fieldType = field.getType();
 					ITTCN3Template namedTemplateTemplate = namedTemplate.getTemplate();
 

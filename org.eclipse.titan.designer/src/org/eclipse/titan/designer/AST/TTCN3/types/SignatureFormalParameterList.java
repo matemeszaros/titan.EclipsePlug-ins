@@ -251,17 +251,17 @@ public final class SignatureFormalParameterList extends ASTNode implements IIncr
 
 		checkUniqueness(timestamp);
 
-		boolean isNonoblock = signature.isNonblocking();
+		boolean isNonblock = signature.isNonblocking();
 		for (SignatureFormalParameter parameter : parameters) {
 			if (parameter.getDirection() == SignatureFormalParameter.PARAM_IN) {
 				inParameters.add(parameter);
 			} else if (parameter.getDirection() == SignatureFormalParameter.PARAM_OUT) {
-				if (isNonoblock) {
+				if (isNonblock) {
 					parameter.getLocation().reportSemanticError("A non-blocking signature cannot have `out' parameter");
 				}
 				outParameters.add(parameter);
 			} else if (parameter.getDirection() == SignatureFormalParameter.PARAM_INOUT) {
-				if (isNonoblock) {
+				if (isNonblock) {
 					parameter.getLocation().reportSemanticError("A non-blocking signature cannot have `out' parameter");
 				}
 				inParameters.add(parameter);

@@ -14,6 +14,13 @@ package org.eclipse.titan.designer.AST.TTCN3.types.subtypes;
  */
 public enum TernaryBool {
 	TFALSE(false), TUNKNOWN(), TTRUE(true);
+
+	private static final TernaryBool[][] AND_TRUTH_TABLE = { { TFALSE, TFALSE, TFALSE }, { TFALSE, TUNKNOWN, TUNKNOWN },
+		{ TFALSE, TUNKNOWN, TTRUE } };
+	private static final TernaryBool[][] OR_TRUTH_TABLE = { { TFALSE, TUNKNOWN, TTRUE }, { TUNKNOWN, TUNKNOWN, TTRUE }, { TTRUE, TTRUE, TTRUE } };
+	private static final TernaryBool[] NOT_TRUTH_TABLE = { TTRUE, TUNKNOWN, TFALSE };
+
+
 	private final int value;
 
 	TernaryBool() {
@@ -28,20 +35,13 @@ public enum TernaryBool {
 		return b ? TTRUE : TFALSE;
 	}
 
-	private static final TernaryBool[][] AND_TRUTH_TABLE = { { TFALSE, TFALSE, TFALSE }, { TFALSE, TUNKNOWN, TUNKNOWN },
-			{ TFALSE, TUNKNOWN, TTRUE } };
-
 	public TernaryBool and(final TernaryBool other) {
 		return AND_TRUTH_TABLE[value][other.value];
 	}
 
-	private static final TernaryBool[][] OR_TRUTH_TABLE = { { TFALSE, TUNKNOWN, TTRUE }, { TUNKNOWN, TUNKNOWN, TTRUE }, { TTRUE, TTRUE, TTRUE } };
-
 	public TernaryBool or(final TernaryBool other) {
 		return OR_TRUTH_TABLE[value][other.value];
 	}
-
-	private static final TernaryBool[] NOT_TRUTH_TABLE = { TTRUE, TUNKNOWN, TFALSE };
 
 	public TernaryBool not() {
 		return NOT_TRUTH_TABLE[value];
