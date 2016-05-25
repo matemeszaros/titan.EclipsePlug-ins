@@ -9,6 +9,7 @@ package org.eclipse.titan.designer.editors.configeditor.pages.logging;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -355,11 +356,30 @@ public final class LoggingTreeSubPage {
 		}
 
 		LoggingSectionHandler.LoggerPluginEntry pluginEntry = entry.getPluginRoots().remove(pluginName);
-		ConfigTreeNodeUtilities.removeChild( entry.getLoggerPluginsListRoot(), pluginEntry.getLoggerPluginRoot() );
-
 		if (entry.getPluginRoots().size() == 0) {
+			((ParserRuleContext)entry.getLoggerPluginsListRoot()).children.clear();
 			// if this was the last plugin entry, the whole entry has to be removed
 			ConfigTreeNodeUtilities.removeChild( loggingSectionHandler.getLastSectionRoot(), entry.getLoggerPluginsRoot() );
+			return;
+		}
+
+		// remove the name of the plugin from the list
+		final List<ParseTree> list = ((ParserRuleContext)entry.getLoggerPluginsListRoot()).children;
+		final int size = list.size();
+		final String childText = pluginEntry.getLoggerPluginRoot().getText();
+
+		//NOTE: do NOT start from back, because it deletes by text
+		//      and the 1st occurrence must be deleted
+		for ( int i = 0; i < size; i++ ) {
+			if ( childText.equals( list.get( i ).getText() ) ) {
+				list.remove( i );
+				if (i > 0) {
+					list.remove(i-1);
+				} else if(size > 1){
+					list.remove(i);
+				}
+				return;
+			}
 		}
 	}
 
