@@ -237,7 +237,7 @@ public class myASTVisitor extends ASTVisitor {
 			+ "\r\n"
 			+ "import java.util.Vector;"
 			+ "\r\n" + "import java.net.ServerSocket;" + "\r\n" + "\r\n";
-
+/*
 	static {
 		currentFileName = "Constants";
 		visualizeNodeToJava(importListStrings); // erre
@@ -253,7 +253,7 @@ public class myASTVisitor extends ASTVisitor {
 		visualizeNodeToJava(importListStrings); // erre
 		visualizeNodeToJava("class TTCN_functions{\r\n}\r\n");
 
-	}
+	}*/
 
 	public static void visualizeNodeToJava(String string) {
 

@@ -110,12 +110,22 @@ public class Def_Testcase_Writer {
 		String createType = "";
 		testCaseString.append("public void " + nodeName
 				+ "(){" + "\r\n");
-		testCaseString.append("if(!created) return;" + "\r\n");
 
-	
+		testCaseString.append("String sourcefilename = \""
+				+ testCaseNode.getLocation().getFile().getFullPath()
+						.lastSegment() + "\";" + "\r\n");
+		testCaseString.append("int rownum=" +tcStatementBlock.getLocation().getLine()+ ";\r\n");
+		testCaseString.append("if(!created) return;" + "\r\n");
+		
+		testCaseString.append("TTCN3Logger.writeLog(\"mtc\", \"PARALLEL\", sourcefilename, rownum, \"testcase\", \""+nodeName+"\", \"Testcase started on mtc\", false);"+ "\r\n");
 		int currentCounterValue=0;
+		int logCreateCounter=0;
+
 		int currentConnectValue=0;
+		int logConnectCounter=0;
+		
 		int currentStartValue=0;
+		int logStartCounter=0;
 			int testcaseSize = tcStatementBlock.getSize();
 			for (int j = 0; j < testcaseSize; j++) {
 
@@ -135,20 +145,38 @@ public class Def_Testcase_Writer {
 									.getSpecificValue();
 
 							createCounter++;
-							
-							
-							
-							testCaseString.append("hc.create("+"\"" +tcCreateValues.get(currentCounterValue)+"\"");
-							currentCounterValue++;
-
-							while(tcCreateCounter.get(currentCounterValue).equals(String.valueOf(createCounter))){
-								testCaseString.append(",\"" +tcCreateValues.get(currentCounterValue)+"\"");
-								currentCounterValue++;
-								if(tcCreateCounter.size()==(currentCounterValue)){break;}
+							logCreateCounter++;
+							int logSizeValue=1;
+							while(tcCreateCounter.get(logCreateCounter).equals(String.valueOf(createCounter))){
+								logCreateCounter++;
+								logSizeValue++;
+								if(tcCreateCounter.size()==(logCreateCounter)){
+									break;}
 								
 							}
-							
+							String[] logValues=new String[logSizeValue];
+							int logWriteCounter=0;
+							testCaseString.append("rownum="+componenetCreateExp.getLocation().getLine()+";\r\n");
+							testCaseString.append("hc.create("+"\"" +tcCreateValues.get(currentCounterValue)+"\"");
+							logValues[logWriteCounter]=tcCreateValues.get(currentCounterValue);
+							currentCounterValue++;
+
+							logWriteCounter++;
+							while(tcCreateCounter.get(currentCounterValue).equals(String.valueOf(createCounter))){
+								testCaseString.append(",\"" +tcCreateValues.get(currentCounterValue)+"\"");
+								
+								logValues[logWriteCounter]=tcCreateValues.get(currentCounterValue);
+								logWriteCounter++;
+								currentCounterValue++;
+
+								if(tcCreateCounter.size()==(currentCounterValue)){
+									break;}
+								
+							}
 							testCaseString.append(	"); "+	"\r\n");
+							
+							testCaseString.append("TTCN3Logger.writeLog(\"mtc\", \"PARALLEL\", sourcefilename, rownum, \"testcase\", \""+nodeName+"\", \"Starting PTC "+logValues[0]+" type "+logValues[1]+" on "+logValues[2]+"\", false);"+"\r\n");
+							
 							
 						}
 
@@ -162,12 +190,31 @@ public class Def_Testcase_Writer {
 					Connect_Statement tc_connectStatement = (Connect_Statement) tcStatementBlock
 							.getStatementByIndex(j);
 					connectCounter++;
+					logConnectCounter++;
+					int logSizeValue=1;
+					while(tcConnectCounter.get(logConnectCounter).equals(String.valueOf(connectCounter))){
+						logConnectCounter++;
+						logSizeValue++;
+						if(tcConnectCounter.size()==(logConnectCounter)){
+							break;}
+						
+					}
 					
+					String[] logValues=new String[logSizeValue];
+					int logWriteCounter=0;
+					testCaseString.append("rownum="+tc_connectStatement.getLocation().getLine()+";\r\n");
 					testCaseString.append("hc.connect("+"\"" +tcConnectValues.get(currentConnectValue)+"\"");
+					
+					logValues[logWriteCounter]=tcConnectValues.get(currentCounterValue);
 					currentConnectValue++;
+
+					logWriteCounter++;
 
 					while(tcConnectCounter.get(currentConnectValue).equals(String.valueOf(connectCounter))){
 						testCaseString.append(",\"" +tcConnectValues.get(currentConnectValue)+"\"");
+						
+						logValues[logWriteCounter]=tcConnectValues.get(currentConnectValue);
+						logWriteCounter++;
 						currentConnectValue++;
 						if(tcConnectCounter.size()==(currentConnectValue)){break;}
 						
@@ -176,7 +223,7 @@ public class Def_Testcase_Writer {
 					testCaseString.append(	"); "+	"\r\n");
 					
 					
-					
+					testCaseString.append("TTCN3Logger.writeLog(\"mtc\", \"PARALLEL\", sourcefilename, rownum, \"testcase\", \""+nodeName+"\", \"Connecting port "+logValues[1]+" of "+logValues[0]+" to port "+logValues[3]+" of "+logValues[2]+"\", false);"+"\r\n");
 					
 					
 					
@@ -185,21 +232,40 @@ public class Def_Testcase_Writer {
 				}
 
 				if (tcStatementBlock.getStatementByIndex(j) instanceof Unknown_Start_Statement) {
-					
+					Unknown_Start_Statement tc_startStatement = (Unknown_Start_Statement) tcStatementBlock.getStatementByIndex(j);
 					startCounter++;
+					logStartCounter++;
+					int logSizeValue=1;
+					while(tcStartCounter.get(logStartCounter).equals(String.valueOf(startCounter))){
+						logStartCounter++;
+						logSizeValue++;
+						if(tcStartCounter.size()==(logStartCounter)){
+							break;}
+						
+					}
 					
+					String[] logValues=new String[logSizeValue];
+					int logWriteCounter=0;
+					testCaseString.append("rownum="+tc_startStatement.getLocation().getLine()+";\r\n");
 					testCaseString.append("hc.start("+"\"" +tcStartValues.get(currentStartValue)+"\"");
+					
+					logValues[logWriteCounter]=tcStartValues.get(currentStartValue);
 					currentStartValue++;
+
+					logWriteCounter++;
 					
 					while(tcStartCounter.get(currentStartValue).equals(String.valueOf(startCounter))){
 						testCaseString.append(",\"" +tcStartValues.get(currentStartValue)+"\"");
+						
+						logValues[logWriteCounter]=tcStartValues.get(currentStartValue);
+						logWriteCounter++;
 						currentStartValue++;
 						if(tcStartCounter.size()==(currentStartValue)){break;}
 						
 					}
 					
 					testCaseString.append(	"); "+	"\r\n");
-		
+					testCaseString.append("TTCN3Logger.writeLog(\"mtc\", \"PARALLEL\", sourcefilename, rownum, \"testcase\", \""+nodeName+"\", \"Starting function "+logValues[1]+" on component "+logValues[0]+"\", false);"+"\r\n");
 
 				}
 

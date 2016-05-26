@@ -190,7 +190,7 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 					fileNames.add(listOfFiles[i].getPath());
 				}
 			}
-/*
+
 			myASTVisitor.currentFileName = "Constants";
 			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); // erre
 			myASTVisitor.visualizeNodeToJava("class Constants{\r\n}\r\n");
@@ -203,7 +203,7 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 			myASTVisitor.currentFileName = "TTCN_functions";
 
 			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); // erre
-			myASTVisitor.visualizeNodeToJava("class TTCN_functions{\r\n}\r\n");*/
+			myASTVisitor.visualizeNodeToJava("class TTCN_functions{\r\n}\r\n");
 			
 			
 			if (fileNames.size() > 0) {

@@ -27,10 +27,11 @@ public class Additional_Class_Writer {
 		hcString.append("	private static String MCIP=\"127.0.0.1\";" + "\r\n");
 
 		hcString.append("	private static HCType hc;" + "\r\n");
+		hcString.append("	private static boolean DEBUGMODE=false;" + "\r\n");
 		hcString.append("	public static void main(String args[]){" + "\r\n");
 		hcString.append("		hc=new HCType();" + "\r\n");
 		hcString.append("		hc.starthc(MCIP,SERVERPORTNUM);" + "\r\n");
-		hcString.append("		System.out.println(\"HC stopped\");" + "\r\n");
+		hcString.append("		TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Host Controller stopped.\", false);" + "\r\n");
 		hcString.append("		System.exit(0);" + "\r\n"); 
 		hcString.append("	}" + "\r\n");
 
@@ -58,18 +59,21 @@ public class Additional_Class_Writer {
 																	// for
 																	// opening
 																	// sockets
+		hcTypeString.append("	public boolean debugmode; " + "\r\n");
 		hcTypeString.append("	" + "\r\n");
 		hcTypeString.append("	public HCType(){" + "\r\n");
 		hcTypeString.append("		componentpool = new Vector<ComponentDef>();"
 				+ "\r\n");
 		hcTypeString.append("		portlistenerpool = new Vector<Thread>();"
 				+ "\r\n");
+		hcTypeString.append("		this.debugmode=debugmode;"+ "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
 		hcTypeString
 				.append("	public void connect(String comp1, String port1, String comp2, String port2){"
 						+ "\r\n");
 		hcTypeString.append("		this.waitingforconnect=true;" + "\r\n");
+		hcTypeString.append("		if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Connecting \" + comp1 + \":\" + port1 + \" to \" + comp2 + \":\" + port2, false);" + "\r\n");
 		hcTypeString
 				.append("		sendtomc(\"connect \"+comp1+\" \"+ port1+\" \"+comp2+\" \"+port2);"
 						+ "\r\n");
@@ -83,6 +87,7 @@ public class Additional_Class_Writer {
 		hcTypeString
 				.append("	public void start(String component, String function){"
 						+ "\r\n");
+		hcTypeString.append("		if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Starting function \" + function + \" on component \" + component, false);"+ "\r\n");
 		hcTypeString
 				.append("		sendtomc(\"start \" + component + \" \" + function);"
 						+ "\r\n");
@@ -113,20 +118,21 @@ public class Additional_Class_Writer {
 		hcTypeString.append("		try{" + "\r\n");
 		hcTypeString.append("			writer.write(message + \"\\r\\n\");" + "\r\n");
 		hcTypeString.append("			writer.flush();" + "\r\n");
-		hcTypeString.append("			System.out.println(\"HC->MC: \" + message);"
+		hcTypeString.append("			TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"HC->MC: \" + message, false);"
 				+ "\r\n");
 		hcTypeString.append("		}catch(Exception e){}" + "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
 		hcTypeString
-				.append("	public void registercomponent(String name, String type){"
+				.append("	public void registercomponent(String name, String type, String ID){"
 						+ "\r\n");
-
+		hcTypeString
+		.append("	TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Creating PTC \" + name + \" with ID \" + ID, false);"+ "\r\n");
 
 		for (int i = 0; i < myASTVisitor.componentList.size(); i++) {
 			hcTypeString.append("		if(type.equals(\"" + myASTVisitor.componentList.get(i)
 					+ "\")) componentpool.add(new " + myASTVisitor.componentList.get(i)
-					+ "(this,name));" + "\r\n");
+					+ "(this,name,ID));" + "\r\n");
 		}
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
@@ -153,9 +159,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("		try{" + "\r\n");
 		hcTypeString.append("			getcomponent(\"mtc\").donequeue.take();"
 				+ "\r\n");
-		hcTypeString
-				.append("			System.out.println(\"DQ2 \" + getcomponent(\"mtc\").donequeue.size());"
-						+ "\r\n");
+
 		hcTypeString.append("		}catch(Exception e){}" + "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
@@ -170,11 +174,12 @@ public class Additional_Class_Writer {
 		hcTypeString
 				.append("	public void starthc(String mcIp,int serverportnum){"
 						+ "\r\n");
-		hcTypeString.append("		System.out.println(\"HC started.\");" + "\r\n");
+		hcTypeString.append("		TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Host Controller started\", false);" + "\r\n");
 		hcTypeString.append("		try{" + "\r\n");
+		hcTypeString.append("			if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Connecting to Main Controller on IP \" + mcIp + \" port \" + serverportnum, false);" + "\r\n");
 		hcTypeString.append("			sock = new Socket(mcIp,serverportnum);"
 				+ "\r\n"); // for outgoing signal messages
-		hcTypeString.append("			System.out.println(\"Connected to MC.\");"
+		hcTypeString.append("			if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Connected to Main Controller\", false);"
 				+ "\r\n");
 		hcTypeString
 				.append("			writer = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));"
@@ -183,12 +188,12 @@ public class Additional_Class_Writer {
 				.append("			reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));"
 						+ "\r\n");
 		hcTypeString
-				.append("			System.out.println(\"HC waiting for message...\");"
+				.append("			if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Waiting for control message from Main Controller\", false);"
 						+ "\r\n");
 		hcTypeString.append("			for(;;){" + "\r\n");
 		hcTypeString.append("				String msg = reader.readLine();" + "\r\n");
 		hcTypeString
-				.append("				System.out.println(\"HC received message: \" + msg);"
+				.append("				if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Received control message \" + msg, false);"
 						+ "\r\n");
 		hcTypeString.append("				if(msg.equals(\"quit\")) break;" + "\r\n");
 		hcTypeString.append("				if(msg.equals(\"connected\")){" + "\r\n");
@@ -196,6 +201,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("				}" + "\r\n");
 		hcTypeString.append("				String command = msg.split(\" \")[0];"
 				+ "\r\n");
+		hcTypeString.append("				//logged on receiver side instead of default sender side (because a test case might be the entry point of execution)"+ "\r\n");
 		hcTypeString.append("				if(command.equals(\"execute\")){" + "\r\n");
 		hcTypeString.append("					String tcasename = msg.split(\" \")[1];"
 				+ "\r\n");
@@ -207,12 +213,14 @@ public class Additional_Class_Writer {
 					+ myASTVisitor.testCaseList.get(i) + "\")){" + "\r\n"); // minden egyes
 																// testcase-re
 																// kell ez az if
+			hcTypeString.append("						if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Creating MTC\", false);" + "\r\n");
 			hcTypeString.append("						registercomponent(\"mtc\", \""
-					+ myASTVisitor.testCaseRunsOnList.get(i) + "\");" + "\r\n"); // masodik
+					+ myASTVisitor.testCaseRunsOnList.get(i) + "\", \"2\");" + "\r\n"); // masodik//TODO ezmi
 																	// parameter
 																	// az adott
 																	// tc
 																	// runsonja
+			hcTypeString.append("						if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Starting new Thread for MTC\", false);" + "\r\n");
 			hcTypeString.append("						Thread testcasethread = new Thread(new "
 					+ myASTVisitor.testCaseList.get(i) + "((" + myASTVisitor.testCaseRunsOnList.get(i)
 					+ ")getcomponent(\"mtc\")));" + "\r\n");
@@ -224,12 +232,14 @@ public class Additional_Class_Writer {
 		}
 
 		hcTypeString.append("				}" + "\r\n");
+		hcTypeString.append("				//logged on receiver side instead of default sender side (because of centrally generated IDs)" + "\r\n");
 		hcTypeString.append("				if(command.equals(\"create\")){" + "\r\n");
 		hcTypeString.append("					String compname = msg.split(\" \")[1];"
 				+ "\r\n");
 		hcTypeString.append("					String comptype = msg.split(\" \")[2];"
 				+ "\r\n");
-		hcTypeString.append("					registercomponent(compname, comptype);"
+		hcTypeString.append("					String compid = msg.split(\" \")[3];"+ "\r\n");
+		hcTypeString.append("					registercomponent(compname, comptype, compid);"
 				+ "\r\n");
 		hcTypeString.append("				}" + "\r\n");
 		hcTypeString.append("				if(command.equals(\"prepareforconnection\")){"
@@ -242,6 +252,7 @@ public class Additional_Class_Writer {
 				+ "\r\n");
 		hcTypeString.append("					String remoteport = msg.split(\" \")[4];"
 				+ "\r\n");
+		hcTypeString.append("					if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Preparing for connection of component \" + thiscomp + \" port \" + thisport + \" and component \" + remotecomp + \" port \" + remoteport, false);"+ "\r\n");
 		hcTypeString
 				.append("					getcomponent(thiscomp).prepareforconnection(thisport,NEXTPORTNUM);"
 						+ "\r\n");
@@ -257,6 +268,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("					String ip = msg.split(\" \")[3];" + "\r\n");
 		hcTypeString.append("					String portnum = msg.split(\" \")[4];"
 				+ "\r\n");
+		hcTypeString.append("					if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Connecting to component \" + component + \" port \" + port + \" on \" + ip + \":\" + portnum, false);"+ "\r\n");
 		hcTypeString
 				.append("					getcomponent(component).connect(port,ip,portnum);"
 						+ "\r\n"); // cast az adott nevu komponens tipusara megy
@@ -286,21 +298,25 @@ public class Additional_Class_Writer {
 			hcTypeString.append("						component.thread=functionthread;"
 					+ "\r\n");
 			hcTypeString.append("						functionthread.start();" + "\r\n");
+			hcTypeString.append("						if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Function f_SENDER started on PTC \" + component, false);" + "\r\n");
 			hcTypeString.append("					}" + "\r\n");
 		}
 
 		hcTypeString.append("				}" + "\r\n");
+		hcTypeString.append("				//logged on receiver side instead of default sender side (because of various done arguments processed here)" + "\r\n"); 
 		hcTypeString.append("				if(command.equals(\"done\")){" + "\r\n");
 		hcTypeString.append("					if(msg.equals(\"done all component\")){"
 				+ "\r\n");
 		hcTypeString.append("						for(ComponentDef c:componentpool)" + "\r\n");
 		hcTypeString.append("							if(!c.name.equals(\"mtc\")){" + "\r\n");
+		
 		hcTypeString
-				.append("								System.out.println(\"Waiting for component \" + c.name + \" to be done\");"
+				.append("								TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Waiting for component \" + c.name + \" to be done\", false);"
 						+ "\r\n");
 		hcTypeString.append("								c.thread.join();" + "\r\n");
+		hcTypeString.append("								//logged by mc too" + "\r\n");
 		hcTypeString
-				.append("								System.out.println(\"Component \" + c.name + \" done\");"
+				.append("								if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Component \" + c.name + \" is done\", false);"
 						+ "\r\n");
 		hcTypeString
 				.append("								sendtomc(\"finished \" + c.name + \" \" + Integer.toString(c.getVerdictInt()));"
