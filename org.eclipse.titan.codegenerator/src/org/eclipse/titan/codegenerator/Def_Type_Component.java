@@ -65,17 +65,20 @@ public class Def_Type_Component {
 
 	public void writeConstructor() {
 		compString.append("public " + nodeName
-				+ "(HCType hcomp, String name){" + "\r\n");
+				+ "(HCType hcomp, String name, String ID){" + "\r\n");
 		compString.append("super(name);" + "\r\n");
 		compString.append("hc=hcomp;" + "\r\n");
 
+		compString.append("if(hc.debugmode)TTCN3Logger.writeLog(name, \"PARALLEL\", \"Test component \" + name + \" created.\", false);" + "\r\n");
+		
 		for (int i = 0; i < compFieldNames.size(); i++) {
 
 			compString.append(compFieldNames.get(i) + " =new "
-					+ compFieldTypes.get(i) + "(this);" + "\r\n");
+					+ compFieldTypes.get(i) + "(this,\"+compFieldNames.get(i)+\");" + "\r\n");
 		}
 
 		compString.append("created = true;" + "\r\n");
+		compString.append("compid = ID;" + "\r\n");
 		compString.append("}" + "\r\n");
 	}
 

@@ -88,10 +88,7 @@ public class Def_Type_Set {
 				+ ")message).anyField) return false;" + "\r\n");
 
 
-		if (AstWalkerJava.areCommentsAllowed) {
-			setString.append("System.out.println(\""
-					+ nodeName + " rek\");" + "\r\n");
-		}
+
 		setString.append("	return "); //
 
 		for (int i = 0; i < compFieldTypes.size(); i++) {
@@ -132,7 +129,36 @@ public class Def_Type_Set {
 		setString.append("	return true;" + "\r\n");
 		setString.append("}" + "\r\n");
 	}
-	
+	public void writeToString() {
+		setString.append("public String toString(){" + "\r\n");
+		setString.append("return toString(\"\");" + "\r\n");
+		setString.append("}\r\n");
+
+	}
+
+	public void writeToStringWithParam() {
+		setString.append("public String toString(String tabs){" + "\r\n");
+		setString.append("if(anyField) return \"?\";" + "\r\n");
+		setString.append("if(omitField) return \"omit\";" + "\r\n");
+		setString.append("if(anyOrOmitField) return \"*\";" + "\r\n");
+		setString.append("return \"{\\n\" + " + "\r\n");
+
+		for (int i = 0; i < compFieldTypes.size(); i++) {
+			if((i+1)<compFieldTypes.size()){
+				setString.append("tabs + \"\\t\" + \"" + compFieldNames.get(i)
+					+ " := \" + " + compFieldNames.get(i)
+					+ ".toString(tabs + \"\\t\") + \",\\n\" +" + "\r\n");
+			}else{
+				setString.append("tabs + \"\\t\" + \"" + compFieldNames.get(i)
+						+ " := \" + " + compFieldNames.get(i)
+						+ ".toString(tabs + \"\\t\") + \"\\n\" +" + "\r\n");
+			}
+		}
+
+		setString.append("tabs + \"}\";" + "\r\n");
+		setString.append("}\r\n");
+
+	}
 	public String getJavaSource(){
 		
 		setString.append("class " + nodeName
@@ -142,6 +168,8 @@ public class Def_Type_Set {
 		this.writeCompFields();
 		this.writeMatcher();
 		this.writeEquals();
+		this.writeToString();
+		this.writeToStringWithParam();
 
 		setString.append("\r\n}");
 		String returnString=setString.toString();
