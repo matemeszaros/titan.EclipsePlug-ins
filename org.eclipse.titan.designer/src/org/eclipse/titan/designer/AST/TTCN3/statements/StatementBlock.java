@@ -101,17 +101,6 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		RS_YES
 	}
 
-	public enum ExceptionHandling_type {
-		/** normal block */
-		EH_NONE,
-		/** try{} block */
-		EH_TRY,
-		/** catch{} block */
-		EH_CATCH
-	}
-
-	private ExceptionHandling_type exceptionHandling = ExceptionHandling_type.EH_NONE;
-
 	private Location location = NULL_Location.INSTANCE;
 
 	private final List<Statement> statements;
@@ -275,14 +264,6 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 
 			return super.hashCode();
 		}
-	}
-
-	public void setExceptionHandling(final ExceptionHandling_type eh) {
-		exceptionHandling = eh;
-	}
-
-	public ExceptionHandling_type getExceptionHandling() {
-		return exceptionHandling;
 	}
 
 	public StatementBlock() {
@@ -477,7 +458,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	}
 
 	/**
-	 * Sets the statementblock in which this statement was be found.
+	 * Sets the statementblock in which this statement was found.
 	 * 
 	 * @param statementBlock
 	 *                the statementblock containing this statement.
@@ -550,61 +531,16 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 					return returnStatus;
 				}
 			}
-			if (Statement_type.S_BLOCK.equals(statement.getType())
-					&& ((StatementBlock_Statement) statement).getStatementBlock().getExceptionHandling() != ExceptionHandling_type.EH_NONE) {
-				switch (((StatementBlock_Statement) statement).getStatementBlock().getExceptionHandling()) {
-				case EH_TRY:
-					// the i-th statement is a try{} statement block,
-					// the (i+1)-th must be a catch{} block
-					if ((i + 1) < statements.size()
-							&& Statement_type.S_BLOCK.equals(statements.get(i + 1).getType())
-							&& ((StatementBlock_Statement) statements.get(i + 1)).getStatementBlock()
-									.getExceptionHandling() == ExceptionHandling_type.EH_CATCH) {
-						final ReturnStatus_type tryBlockReturnStatus = statement.hasReturn(timestamp);
-						final ReturnStatus_type catchBlockReturnStatus = statements.get(i + 1).hasReturn(timestamp);
-						// 3 x 3 combinations
-						if (tryBlockReturnStatus == catchBlockReturnStatus) {
-							switch (tryBlockReturnStatus) {
-							case RS_YES:
-								return ReturnStatus_type.RS_YES;
-							case RS_MAYBE:
-								returnStatus = ReturnStatus_type.RS_MAYBE;
-								break;
-							default:
-								break;
-							}
-						} else {
-							returnStatus = ReturnStatus_type.RS_MAYBE;
-						}
-					} else {
-						// if next statement is not a
-						// catch{} block
-						// then that error has already
-						// been reported.
-						// Assume the catch block was an
-						// RS_MAYBE
-						returnStatus = ReturnStatus_type.RS_MAYBE;
-					}
-					break;
-				case EH_CATCH:
-					// logically this is part of the
-					// preceding try{} block, handle it as
-					// part of it, see above case EH_TRY
-					break;
-				default:
-					ErrorReporter.INTERNAL_ERROR();
-				}
-			} else {
-				switch (statement.hasReturn(timestamp)) {
-				case RS_YES:
-					returnStatus = ReturnStatus_type.RS_YES;
-					break;
-				case RS_MAYBE:
-					returnStatus = ReturnStatus_type.RS_MAYBE;
-					break;
-				default:
-					break;
-				}
+
+			switch (statement.hasReturn(timestamp)) {
+			case RS_YES:
+				returnStatus = ReturnStatus_type.RS_YES;
+				break;
+			case RS_MAYBE:
+				returnStatus = ReturnStatus_type.RS_MAYBE;
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -665,27 +601,6 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 					definition.getLocation().reportSemanticWarning(
 							MessageFormat.format(HIDINGMODULEIDENTIFIER, identifier.getDisplayName()));
 				}
-			}
-		}
-	}
-
-	/**
-	 * Check that a try{} block is followed by a catch{} block and a catch{}
-	 * block is preceded by a try{} block
-	 */
-	void checkTrycatchBlocks(final Statement s1, final Statement s2) {
-		if (s1 != null && Statement_type.S_BLOCK.equals(s1.getType())
-				&& ((StatementBlock_Statement) s1).getStatementBlock().getExceptionHandling() == ExceptionHandling_type.EH_TRY) {
-			if (!(s2 != null && Statement_type.S_BLOCK.equals(s2.getType()) && ((StatementBlock_Statement) s2).getStatementBlock()
-					.getExceptionHandling() == ExceptionHandling_type.EH_CATCH)) {
-				s1.getLocation().reportSemanticError("`@try' statement block must be followed by a `@catch' block");
-			}
-		}
-		if (s2 != null && Statement_type.S_BLOCK.equals(s2.getType())
-				&& ((StatementBlock_Statement) s2).getStatementBlock().getExceptionHandling() == ExceptionHandling_type.EH_CATCH) {
-			if (!(s1 != null && Statement_type.S_BLOCK.equals(s1.getType()) && ((StatementBlock_Statement) s1).getStatementBlock()
-					.getExceptionHandling() == ExceptionHandling_type.EH_TRY)) {
-				s2.getLocation().reportSemanticError("`@catch' statement block must be preceded by a `@try' block");
 			}
 		}
 	}
@@ -777,10 +692,8 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 				unreachableFound = true;
 			}
 			// check try-catch statement block usage
-			checkTrycatchBlocks(previousStatement, statement);
 			previousStatement = statement;
 		}
-		checkTrycatchBlocks(previousStatement, null);
 
 		if (statements.isEmpty()) {
 			getLocation().reportConfigurableSemanticProblem(reportEmptyStatementBlock, EMPTY_STATEMENT_BLOCK);
@@ -976,7 +889,7 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 	}
 	
 	@Override
-	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, IReferenceChain refChain) {
+	public Assignment getAssBySRef(final CompilationTimeStamp timestamp, final Reference reference, final IReferenceChain refChain) {
 			if (reference.getModuleIdentifier() != null || definitionMap == null) {
 			if (minimiseMemoryUsage) {
 				final FakeReference fakeReference = new FakeReference(reference);
