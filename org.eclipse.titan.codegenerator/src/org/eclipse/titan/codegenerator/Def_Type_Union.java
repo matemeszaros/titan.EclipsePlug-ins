@@ -68,10 +68,10 @@ public class Def_Type_Union {
 		unionString.append("if(!(message instanceof " + nodeName
 				+ "))return false;" + "\r\n");
 
-		if (AstWalkerJava.areCommentsAllowed) {
+		/*if (AstWalkerJava.areCommentsAllowed) {
 			unionString.append("System.out.println(\"" + nodeName
 					+ " tipusegyezes2\");" + "\r\n");
-		}
+		}*/
 
 		unionString.append("if(pattern.omitField&&((" + nodeName
 				+ ")message).omitField) return true;" + "\r\n");
@@ -138,10 +138,10 @@ public class Def_Type_Union {
 					+ (i + 1) + "_" + nodeName + " pattern, " + "Object"
 					+ " message){" + "\r\n");
 
-			if (AstWalkerJava.areCommentsAllowed) {
+			/*if (AstWalkerJava.areCommentsAllowed) {
 				unionChildString.append("System.out.println(\"SC_" + (i + 1)
 						+ "\");" + "\r\n");
-			}
+			}*/
 
 			unionChildString.append("if(!(message instanceof " + "SC_"
 					+ (i + 1) + "_" + nodeName + ")) return false;" + "\r\n");
@@ -174,6 +174,20 @@ public class Def_Type_Union {
 					+ ".equals(v." + compFieldNames.get(i) + ");" + "\r\n");
 
 			unionChildString.append("}" + "\r\n");
+			
+			unionChildString.append("public String toString(){" + "\r\n");
+			unionChildString.append("	return toString(\"\");" + "\r\n");
+			unionChildString.append("}" + "\r\n");
+			unionChildString.append("public String toString(String tabs){" + "\r\n");
+			unionChildString.append("	if(anyField) return \"?\";" + "\r\n");
+			unionChildString.append("	if(omitField) return \"omit\";" + "\r\n");
+			unionChildString.append("	if(anyOrOmitField) return \"*\";" + "\r\n");
+			unionChildString.append("	return "+compFieldNames.get(i)+".toString(tabs);" + "\r\n");
+			unionChildString.append("}" + "\r\n");
+			
+			
+			
+			
 			unionChildString.append("}" + "\r\n");
 			myASTVisitor.visualizeNodeToJava(unionChildString.toString());
 			unionChildString.delete(0, unionChildString.length());
@@ -182,13 +196,39 @@ public class Def_Type_Union {
 		myASTVisitor.currentFileName = fileNameBackup;
 
 	}
+	public void writeToString(){
+		unionString.append("public String toString(){" + "\r\n");
+		unionString.append("return toString(\"\");" + "\r\n");
+		unionString.append("}\r\n");
+	}
+	public void writeToStringWithParam(){
+		unionString.append("public String toString(String tabs){" + "\r\n");
+		unionString.append("if(anyField) return \"?\";" + "\r\n");
+		unionString.append("if(omitField) return \"omit\";" + "\r\n");
+		unionString.append("if(anyOrOmitField) return \"*\";" + "\r\n");
+		
+		for (int l = 0; l < compFieldTypes.size(); l++) {
 
+			unionString.append("if(this instanceof " + "SC_" + (l + 1) + "_"
+					+ nodeName + ") return ((" + "SC_" + (l + 1) + "_"
+					+ nodeName + ")this).toString(tabs);" + "\r\n");
+
+		}
+		
+		unionString.append("	return \"\";"+ "\r\n");
+		unionString.append("}\r\n");
+	}
+	
+	
 	public String getJavaSource() {
 		unionString.append("class " + nodeName + " extends UnionDef{" + "\r\n");
 		this.writeCompFields();
 		this.writeMatcher();
 		this.writeEquals();
+		this.writeToString();
+		this.writeToStringWithParam();
 		this.writeUnionClasses();
+
 		unionString.append("\r\n}");
 		String returnString = unionString.toString();
 		unionString.setLength(0);

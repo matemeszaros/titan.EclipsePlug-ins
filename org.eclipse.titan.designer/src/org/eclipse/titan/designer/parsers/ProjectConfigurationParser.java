@@ -390,7 +390,11 @@ public final class ProjectConfigurationParser {
 				parentEditor.refresh(cfgAnalyzer);
 				parentEditor.setErrorMessage(null);
 			} else {
-				parentEditor.setErrorMessage("There were " + errorsStored.size() + " problems found while parsing");
+				if(errorsStored.size()>1) {
+					parentEditor.setErrorMessage("There were " + errorsStored.size() + " problems found while parsing");
+				} else {
+					parentEditor.setErrorMessage("There was 1 problem found while parsing");
+				}
 			}
 		}
 

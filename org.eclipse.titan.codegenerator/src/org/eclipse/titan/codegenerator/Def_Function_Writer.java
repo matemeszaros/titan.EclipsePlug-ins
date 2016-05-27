@@ -102,12 +102,24 @@ public class Def_Function_Writer {
 
 		functionString.append("public void " + nodeName + "(){\r\n");
 
-		if (AstWalkerJava.areCommentsAllowed) {
-			functionString.append("System.out.println(\"" + nodeName
-					+ " started\");" + "\r\n");
-		}
+		/*
+		 * if (AstWalkerJava.areCommentsAllowed) {
+		 * functionString.append("System.out.println(\"" + nodeName +
+		 * " started\");" + "\r\n"); }
+		 */
 
+		functionString.append("String sourcefilename = \""
+				+ statementBlock.getLocation().getFile().getFullPath()
+						.lastSegment() + "\";" + "\r\n");
+		functionString.append("int rownum=" + functionNode.getLocation().getLine()
+				+ ";\r\n");
 		functionString.append("if(!created) return;" + "\r\n");
+
+		functionString
+				.append("TTCN3Logger.writeLog(compid, \"PARALLEL\", sourcefilename, rownum, \"function\", \""
+						+ nodeName
+						+ "\", \"Function started on \" + compid + \".\", false);"
+						+ "\r\n");
 
 		for (int i = 0; i < statementBlock.getSize(); i++) {
 
@@ -132,8 +144,8 @@ public class Def_Function_Writer {
 
 	}
 
-	public String writeAltCommands(Operation_Altguard altGuard) {
-
+	public String[] writeAltCommands(Operation_Altguard altGuard) {
+		int rownum = 0;
 		StringBuilder altString = new StringBuilder();
 
 		int guardBlockSize = altGuard.getStatementBlock().getSize();
@@ -158,8 +170,20 @@ public class Def_Function_Writer {
 							verdict = "fail";
 
 						}
+						altString.append("rownum="
+								+ verdictValue.getLocation().getLine()
+								+ ";\r\n");
+						altString
+								.append("TTCN3Logger.writeLog(compid, \"VERDICTOP\", sourcefilename, rownum, \"function\", \""
+										+ nodeName
+										+ "\", \"setverdict("
+										+ verdict
+										+ "): \" + getVerdict() + \" -> "
+										+ verdict + "\", true);" + "\r\n");
+
 						altString.append("setVerdict(\"" + verdict
 								+ "\");break;" + "\r\n");
+						rownum = verdictValue.getLocation().getLine();
 					}
 				}
 
@@ -173,10 +197,9 @@ public class Def_Function_Writer {
 						.getSubreferences().get(0).getId().toString();
 
 				if (assignmentGuard.getTemplate().getValue() instanceof AddExpression) {
-
+					altString.append("rownum="+assignmentGuard.getLocation().getLine()+";\r\n");
 					altString.append(assignmentName + "=" + addValues.get(0)
-							+ "+" + addValues.get(1) + "; ");
-
+							+ ".plus(new INTEGER(" + addValues.get(1) + ")); \r\n");
 				}
 
 			}
@@ -184,7 +207,7 @@ public class Def_Function_Writer {
 			if (altGuard.getStatementBlock().getStatementByIndex(j) instanceof Repeat_Statement) {
 				// TODO
 			}
-			
+
 			if (altGuard.getStatementBlock().getStatementByIndex(j) instanceof Send_Statement) {
 				sendCounter++;
 				Send_Statement sendAltGuard = (Send_Statement) altGuard
@@ -198,44 +221,29 @@ public class Def_Function_Writer {
 
 				if (valueType.equals("Undefined_LowerIdentifier_Value")) {
 
-					parameterName =valueName;
+					parameterName = valueName;
 				}
 
 				if (valueType.equals("Charstring_Value")) {
-					parameterName ="new CHARSTRING(\""
-							+ valueName + "\")" ;
+					parameterName = "new CHARSTRING(\"" + valueName + "\")";
 				}
 
 				if (valueType.equals("Int2StrExpression")) {
-					parameterName = "new CHARSTRING(Integer.toString("
-							+ valueName+ "))";
+					parameterName = valueName+".int2str()";
 				}
-				/*if (currentTemplateBody.getSpecificValue() instanceof Int2StrExpression) {
-					Int2StrExpression expressionValue = (Int2StrExpression) currentTemplateBody
-							.getSpecificValue();
-					if (expressionValue.getValue() instanceof Undefined_LowerIdentifier_Value) {
-						Undefined_LowerIdentifier_Value valueID = (Undefined_LowerIdentifier_Value) expressionValue
-								.getValue();
-						parameterName = "new CHARSTRING(Integer.toString("
-								+ valueID.getIdentifier() + "))";
-					}
-				}*/
-				
-				altString.append(portReferenceName + ".send("
-						+ parameterName + ");" + "\r\n");
 
-				if (AstWalkerJava.areCommentsAllowed) {
+				altString.append("rownum="+sendAltGuard.getLocation().getLine()+";\r\n");
+				altString.append(portReferenceName + ".send(" + parameterName
+						+ ");" + "\r\n");
 
-					String condition = parameterName.replaceAll("\"", "\\\\\"");
-
-					altString.append("System.out.println(\""
-							+ nodeName + " send " + condition + "\");"
-							+ "\r\n");
-				}
+				altString.append("TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""+nodeName+"\", \"SEND event on port "+portReferenceName+":\" + "+parameterName+".toString(), true);"+"\r\n");
 
 			}
 		}
-		return altString.toString();
+		String[] returnvalue = new String[2];
+		returnvalue[0] = altString.toString();
+		returnvalue[1] = Integer.toString(rownum);
+		return returnvalue;
 	}
 
 	public void writeDefinitionStatement(
@@ -247,8 +255,19 @@ public class Def_Function_Writer {
 			Def_Timer currentTimer = (Def_Timer) definitionStatement
 					.getDefinition();
 
-			functionString.append("Timer " + statementName + " = new Timer ("
-					+ timerValue + ");\r\n");
+			functionString.append("rownum="
+					+ definitionStatement.getDefinition().getLocation()
+							.getLine() + ";\r\n");
+			functionString.append("Timer " + statementName
+					+ " = new Timer (new FLOAT(" + timerValue + "));\r\n");
+
+			functionString
+					.append("TTCN3Logger.writeLog(compid, \"TIMEROP\", sourcefilename, rownum, \"function\", \""
+							+ nodeName
+							+ "\", \"Timer "
+							+ statementName
+							+ " set to " + timerValue + ".\", false);" + "\r\n");
+
 		}
 
 		if (definitionStatement.getDefinition() instanceof Def_Var) {
@@ -265,20 +284,23 @@ public class Def_Function_Writer {
 						.getType(compilationCounter);
 				variableType = ref.getReference().getSubreferences().get(0)
 						.getId().toString();
+				
+				
 			}
 
 			if (currentVar.getType(compilationCounter) instanceof Integer_Type) {
 				Integer_Type ref = (Integer_Type) currentVar
 						.getType(compilationCounter);
-				variableType = "int";
+				variableType = "INTEGER";
 				if (currentVar.getInitialValue() instanceof Integer_Value) {
 					Integer_Value varValue = (Integer_Value) currentVar
 							.getInitialValue();
-					variableValue = " = " + varValue.getValueValue().toString();
+					variableValue = " = new INTEGER(" + varValue.getValueValue().toString()+")";
 				}
 
 			}
-
+			functionString.append("rownum="
+					+ currentVar.getLocation().getLine() + ";\r\n");
 			functionString.append(variableType + " " + variableName
 					+ variableValue + ";\r\n");
 
@@ -306,34 +328,65 @@ public class Def_Function_Writer {
 			}
 
 			parameterName = parameterType + "." + valueName + "()";
+			
+			functionString.append("rownum=" + sendStatement.getLocation().getLine()
+					+ ";\r\n");
+			functionString.append(portReferenceName + ".send(" + parameterName
+					+ ");" + "\r\n");
+			functionString
+					.append("TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+							+ nodeName
+							+ "\", \"SEND event on port "
+							+ portReferenceName
+							+ ": "
+							+ valueName
+							+ ":=\" + "
+							+ parameterName + ".toString(), true);" + "\r\n");
+			
 		}
 
 		if (valueType.equals("Charstring_Value")) {
 			parameterName = "new CHARSTRING(\"" + valueName + "\")";
+			functionString.append("rownum=" + sendStatement.getLocation().getLine()
+					+ ";\r\n");
+			functionString.append(portReferenceName + ".send(" + parameterName
+					+ ");" + "\r\n");
+			functionString
+					.append("TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+							+ nodeName
+							+ "\", \"SEND event on port "
+							+ portReferenceName
+							+ ":\"+"
+							+ parameterName + ".toString(), false);" + "\r\n");
+		
+		
+		
+		
+		
 		}
-
-		functionString.append(portReferenceName + ".send(" + parameterName
-				+ ");" + "\r\n");
-
-		if (AstWalkerJava.areCommentsAllowed) {
-			String condition = parameterName.replaceAll("\"", "\\\\\"");
-			functionString.append("System.out.println(\"" + nodeName + " send "
-					+ condition + "\");" + "\r\n");
-		}
+		
 
 	}
 
 	public void writeUnknownStartStatement(
 			Unknown_Start_Statement unknownStartStatement) {
-
+		functionString.append("rownum="
+				+ unknownStartStatement.getLocation().getLine() + ";\r\n");
 		functionString.append(unknownStartReference + ".start();" + "\r\n");
 		isThereAStartedTimer = true;
 		currentTimerName = unknownStartReference;
+		functionString
+				.append("TTCN3Logger.writeLog(compid, \"TIMEROP\", sourcefilename, rownum, \"function\", \""
+						+ nodeName
+						+ "\", \"Timer "
+						+ unknownStartReference
+						+ " started.\", false);" + "\r\n");
 
 	}
 
 	public void writeAltStatement(Alt_Statement altStatement) {
-
+		functionString.append("rownum=" + altStatement.getLocation().getLine()
+				+ ";\r\n");
 		functionString.append("for(;;){" + "\r\n");
 
 		int altSize = altStatement.getAltGuards().getNofAltguards();
@@ -343,6 +396,13 @@ public class Def_Function_Writer {
 		String[] negativeConditions = new String[altSize];
 		String[] positiveConditions = new String[altSize];
 		String[] altCommands = new String[altSize];
+		String[] altRowNum = new String[altSize];
+		String[] logReceiveType = new String[altSize];
+		String[] logReceiveValue = new String[altSize];
+		boolean[] isTheRecieveTyped = new boolean[altSize];
+		int[] receiveRowNum = new int[altSize];
+		String[] logTimeout = new String[altSize];
+		
 		// portsetter
 		for (int i = 0; i < altSize; i++) {
 
@@ -385,18 +445,19 @@ public class Def_Function_Writer {
 
 							allPortRecieveType[i] = parameterType + "."
 									+ valueName + "()";
+							logReceiveValue[i] = valueName;
 						}
 						if (valueType.equals("Charstring_Value")) {
 
 							allPortRecieveType[i] = "new CHARSTRING(" + "\""
 									+ valueName + "\")";
 						}
-
+						receiveRowNum[i]=recievePortAltGuard.getLocation().getLine();
 						allPortname[i] = recievePortAltGuard.getPort()
 								.getSubreferences().get(0).getId().toString();
 
 					} else {
-
+						receiveRowNum[i]=recievePortAltGuard.getLocation().getLine();
 						allPortname[i] = "any port";
 
 					}
@@ -445,6 +506,8 @@ public class Def_Function_Writer {
 									+ portRecieveType + ",false)!=null";
 							positiveConditions[i] = portname + ".receive("
 									+ portRecieveType + ",true)!=null";
+
+							isTheRecieveTyped[i] = false;
 						} else {
 							negativeConditions[i] = portname + ".receive" + "_"
 									+ portType + "(false)!=null";
@@ -455,7 +518,8 @@ public class Def_Function_Writer {
 							positiveConditions[i] = "(" + redirectString + "="
 									+ portname + ".receive" + "_" + portType
 									+ "(true))!=null";
-
+							isTheRecieveTyped[i] = true;
+							logReceiveType[i] = portType;
 						}
 
 					} else {
@@ -474,9 +538,15 @@ public class Def_Function_Writer {
 					isThereAStartedTimer = true;
 					negativeConditions[i] = ("!" + currentTimerName + ".timeout()");
 					positiveConditions[i] = ("" + currentTimerName + ".timeout()");
+					
+					logTimeout[i]="rownum="+timeOutAltGuard.getLocation().getLine()+";\r\n"+"TTCN3Logger.writeLog(compid, \"TIMEROP\", sourcefilename, rownum, \"function\", \""+nodeName+"\", \"Timeout on timer "+currentTimerName+".\", false);"+"\r\n";
+					
+					
 				}
+				String[] commandBlock=writeAltCommands(altGuard);
+				altCommands[i] = commandBlock[0];
+				altRowNum[i] = commandBlock[1];
 
-				altCommands[i] = writeAltCommands(altGuard);
 			}
 
 		}
@@ -495,10 +565,13 @@ public class Def_Function_Writer {
 			functionString.append("long timeout = -1;" + "\r\n");
 			functionString.append("long newtimeout;" + "\r\n");
 
-			functionString.append("if(" + currentTimerName
-					+ ".running)if((newtimeout=(long)" + currentTimerName
-					+ ".read())<timeout || timeout == -1) timeout=newtimeout;"
-					+ "\r\n");
+			functionString
+					.append("if("
+							+ currentTimerName
+							+ ".running)if((newtimeout=(long)("
+							+ currentTimerName
+							+ ".read().value*1000.0))<timeout || timeout == -1) timeout=newtimeout;"
+							+ "\r\n");
 			functionString
 					.append("if(timeout>0) try{queue.poll(timeout,TimeUnit.MILLISECONDS);}catch(InterruptedException e){} "
 							+ "\r\n");
@@ -523,16 +596,59 @@ public class Def_Function_Writer {
 			functionString.append(positiveConditions[condCounter]);
 			functionString.append("){" + "\r\n");
 
-			// kiértékelés
-			if (AstWalkerJava.areCommentsAllowed) {
-
-				String condition = positiveConditions[condCounter].replaceAll(
-						"\"", "\\\\\"");
-
-				functionString.append("System.out.println(\"" + nodeName + " "
-						+ condition + "  \");" + "\r\n");
+			if (allPortname[condCounter] != null) {
+				if (!isTheRecieveTyped[condCounter]) {
+					if (logReceiveValue[condCounter] != null) {
+						functionString.append("rownum="+receiveRowNum[condCounter]+";\r\n");
+						functionString
+								.append("TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+										+ nodeName
+										+ "\", \"RECEIVE event on port "
+										+ allPortname[condCounter]
+										+ ":\\n "
+										+ logReceiveValue[condCounter]
+										+ ":=\" + "
+										+ allPortRecieveType[condCounter]
+										+ ".toString(), true);" + "\r\n");
+					} else {
+						if (allPortRecieveType[condCounter] != null) {
+							functionString.append("rownum="+receiveRowNum[condCounter]+";\r\n");
+							functionString
+									.append("	TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+											+ nodeName
+											+ "\", \"RECEIVE event on port "
+											+ allPortname[condCounter]
+											+ ":\" + "
+											+ allPortRecieveType[condCounter]
+											+ ".toString(), true);" + "\r\n");
+						} else {
+							functionString.append("rownum="+receiveRowNum[condCounter]+";\r\n");
+							functionString
+									.append("TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+											+ nodeName
+											+ "\", \"RECEIVE event on port "
+											+ allPortname[condCounter]
+											+ "\", true);" + "\r\n");
+						}
+					}
+				} else {
+					functionString.append("rownum="+receiveRowNum[condCounter]+";\r\n");
+					functionString
+							.append("TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+									+ nodeName
+									+ "\", \"RECEIVE event on port "
+									+ allPortname[condCounter]
+									+ ": type "
+									+ logReceiveType[condCounter]
+									+ "\", true);" + "\r\n");
+				}
+			}
+			
+			if(logTimeout[condCounter]!=null){
+				functionString.append(logTimeout[condCounter]);
 			}
 
+			// TODO: ide jön az if log
 			functionString.append(altCommands[condCounter]);
 
 			functionString.append("}" + "\r\n");
@@ -559,6 +675,16 @@ public class Def_Function_Writer {
 				verdict = "fail";
 			}
 		}
+		functionString.append("rownum="
+				+ setVerdictStatement.getLocation().getLine() + ";\r\n");
+		functionString
+				.append("TTCN3Logger.writeLog(compid, \"VERDICTOP\", sourcefilename, rownum, \"function\", \""
+						+ nodeName
+						+ "\", \"setverdict("
+						+ verdict
+						+ "): \" + getVerdict() + \" -> "
+						+ verdict
+						+ "\", true);" + "\r\n");
 		functionString.append("setVerdict(\"" + verdict + "\");" + "\r\n");
 	}
 
@@ -583,13 +709,13 @@ public class Def_Function_Writer {
 	}
 
 	public String getJavaSource() {
-		recieveCounter=-1;
-		sendCounter=-1;
+		recieveCounter = -1;
+		sendCounter = -1;
 		this.writeFunction();
 		functionString.append("\r\n}");
 		String returnString = functionString.toString();
 		functionString.setLength(0);
-		
+
 		return returnString;
 	}
 
@@ -608,7 +734,7 @@ public class Def_Function_Writer {
 	}
 
 	public String getJavaSourceWithoutRunOn() {
-		
+
 		this.writeFunctionWithoutRunsOn();
 		functionString.append("\r\n}");
 		String returnString = functionString.toString();

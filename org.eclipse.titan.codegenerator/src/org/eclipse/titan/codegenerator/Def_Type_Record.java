@@ -32,10 +32,9 @@ public class Def_Type_Record {
 			.getNewCompilationCounter();
 	private List<String> compFieldTypes = new ArrayList<String>();
 	private List<String> compFieldNames = new ArrayList<String>();
-	private String nodeName=null;
-		
-	private static Map<String, Object> recordHashes = new LinkedHashMap<String, Object>();
+	private String nodeName = null;
 
+	private static Map<String, Object> recordHashes = new LinkedHashMap<String, Object>();
 
 	private Def_Type_Record(Def_Type typeNode) {
 		super();
@@ -45,117 +44,138 @@ public class Def_Type_Record {
 
 	public static Def_Type_Record getInstance(Def_Type typeNode) {
 		if (!recordHashes.containsKey(typeNode.getIdentifier().toString())) {
-			recordHashes.put(typeNode.getIdentifier().toString(),  new Def_Type_Record(typeNode));
+			recordHashes.put(typeNode.getIdentifier().toString(),
+					new Def_Type_Record(typeNode));
 		}
-		return (Def_Type_Record) recordHashes.get(typeNode.getIdentifier().toString());
+		return (Def_Type_Record) recordHashes.get(typeNode.getIdentifier()
+				.toString());
 	}
 
-	public void addCompFields(String type, String name){
+	public void addCompFields(String type, String name) {
 		compFieldTypes.add(type);
 		compFieldNames.add(name);
 	}
-	
-	public void writeCompFields(){
-		
-		for(int i=0;i<compFieldTypes.size();i++){
-			recordString.append(compFieldTypes.get(i)+" "+compFieldNames.get(i)+";\r\n");
+
+	public void writeCompFields() {
+
+		for (int i = 0; i < compFieldTypes.size(); i++) {
+			recordString.append(compFieldTypes.get(i) + " "
+					+ compFieldNames.get(i) + ";\r\n");
 		}
 	}
-	
-	public void writeMatcher(){
 
-		recordString.append("public static boolean match("
-				+ nodeName + " pattern, " + "Object"
-				+ " message){" + "\r\n");
+	public void writeMatcher() {
 
-		recordString.append("if(!(message instanceof "
-				+ nodeName + ")) return false;" + "\r\n");
+		recordString.append("public static boolean match(" + nodeName
+				+ " pattern, " + "Object" + " message){" + "\r\n");
 
-		recordString.append("if(pattern.omitField&&(("
-				+ nodeName
+		recordString.append("if(!(message instanceof " + nodeName
+				+ ")) return false;" + "\r\n");
+
+		recordString.append("if(pattern.omitField&&((" + nodeName
 				+ ")message).omitField) return true;" + "\r\n");
 		recordString.append("if(pattern.anyOrOmitField) return true;" + "\r\n");
-		recordString.append("if(pattern.anyField&&!(("
-				+ nodeName
-				+ ")message).omitField) return true;;" + "\r\n"); 
-		recordString.append("if(pattern.omitField&&!(("
-				+ nodeName
+		recordString.append("if(pattern.anyField&&!((" + nodeName
+				+ ")message).omitField) return true;;" + "\r\n");
+		recordString.append("if(pattern.omitField&&!((" + nodeName
 				+ ")message).omitField) return false;" + "\r\n");
-		recordString.append("if(pattern.anyField&&(("
-				+ nodeName
+		recordString.append("if(pattern.anyField&&((" + nodeName
 				+ ")message).anyField) return false;" + "\r\n");
 
 
-		if (AstWalkerJava.areCommentsAllowed) {
-			recordString.append("System.out.println(\""
-					+ nodeName + " rek\");" + "\r\n");
-		}
 		recordString.append("	return "); //
 
 		for (int i = 0; i < compFieldTypes.size(); i++) {
 
-				recordString.append(compFieldTypes.get(i)
-						+ ".match(pattern."
-						+ compFieldNames.get(i)
-						+ ", (("
-						+ nodeName
-						+ ")message)."
-						+compFieldNames.get(i) + ")");
+			recordString.append(compFieldTypes.get(i) + ".match(pattern."
+					+ compFieldNames.get(i) + ", ((" + nodeName + ")message)."
+					+ compFieldNames.get(i) + ")");
 
-				if ((i + 1 < compFieldTypes.size())){
-					recordString.append("&&");
-				}
-				if ((i + 1) == compFieldTypes.size()) {
-					recordString.append(";\r\n");
-				}
-			
+			if ((i + 1 < compFieldTypes.size())) {
+				recordString.append("&&");
+			}
+			if ((i + 1) == compFieldTypes.size()) {
+				recordString.append(";\r\n");
+			}
+
 		}
 		recordString.append("}" + "\r\n");
 
-		
 	}
-	
-	public void writeEquals(){
-		recordString.append("public boolean equals("
-				+ nodeName + " v){ " + "\r\n");// 0901
+
+	public void writeEquals() {
+		recordString.append("public boolean equals(" + nodeName + " v){ "
+				+ "\r\n");// 0901
 
 		for (int i = 0; i < compFieldTypes.size(); i++) {
-	
-				recordString.append("	if(!" + compFieldNames.get(i)
-						+ ".equals(v." + compFieldNames.get(i)
-						+ "))return false;" + "\r\n");
-			
+
+			recordString.append("	if(!" + compFieldNames.get(i) + ".equals(v."
+					+ compFieldNames.get(i) + "))return false;" + "\r\n");
+
 		}
 
 		recordString.append("	return true;" + "\r\n");
 		recordString.append("}" + "\r\n");
 	}
-	
-	public void writeConstructor(){
 
-			recordString.append(nodeName + "(){\r\n");
+	public void writeConstructor() {
 
-			recordString.append("super();\r\n");
+		recordString.append(nodeName + "(){\r\n");
 
-			for (int i = 0; i < compFieldTypes.size(); i++) {
+		recordString.append("super();\r\n");
 
-					recordString.append("fieldsInOrder.add(\""
-							+ compFieldNames.get(i) + "\");\r\n");
-				
-			}
+		for (int i = 0; i < compFieldTypes.size(); i++) {
 
-			recordString.append("}\r\n");
+			recordString.append("fieldsInOrder.add(\"" + compFieldNames.get(i)
+					+ "\");\r\n");
+
+		}
+
+		recordString.append("}\r\n");
 	}
-	public String getJavaSource(){
-		recordString.append("class " + nodeName
-				+ " extends RecordDef{"
+
+	public void writeToString() {
+		recordString.append("public String toString(){" + "\r\n");
+		recordString.append("return toString(\"\");" + "\r\n");
+		recordString.append("}\r\n");
+
+	}
+
+	public void writeToStringWithParam() {
+		recordString.append("public String toString(String tabs){" + "\r\n");
+		recordString.append("if(anyField) return \"?\";" + "\r\n");
+		recordString.append("if(omitField) return \"omit\";" + "\r\n");
+		recordString.append("if(anyOrOmitField) return \"*\";" + "\r\n");
+		recordString.append("return \"{\\n\" + " + "\r\n");
+
+		for (int i = 0; i < compFieldTypes.size(); i++) {
+			if((i+1)<compFieldTypes.size()){
+			recordString.append("tabs + \"\\t\" + \"" + compFieldNames.get(i)
+					+ " := \" + " + compFieldNames.get(i)
+					+ ".toString(tabs + \"\\t\") + \",\\n\" +" + "\r\n");
+			}else{
+				recordString.append("tabs + \"\\t\" + \"" + compFieldNames.get(i)
+						+ " := \" + " + compFieldNames.get(i)
+						+ ".toString(tabs + \"\\t\") + \"\\n\" +" + "\r\n");
+			}
+		}
+
+		recordString.append("tabs + \"}\";" + "\r\n");
+		recordString.append("}\r\n");
+
+	}
+
+	public String getJavaSource() {
+		recordString.append("class " + nodeName + " extends RecordDef{"
 				+ "\r\n");
 		this.writeCompFields();
 		this.writeMatcher();
 		this.writeEquals();
 		this.writeConstructor();
+		this.writeToString();
+		this.writeToStringWithParam();
 		recordString.append("\r\n}");
-		String returnString=recordString.toString();
+		String returnString = recordString.toString();
 		recordString.setLength(0);
 		compFieldTypes.clear();
 		compFieldNames.clear();

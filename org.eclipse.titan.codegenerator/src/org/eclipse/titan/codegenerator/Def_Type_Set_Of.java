@@ -84,12 +84,6 @@ public class Def_Type_Set_Of {
 				+ nodeName
 				+ ")message).anyField) return false;" + "\r\n");
 
-		if (AstWalkerJava.areCommentsAllowed) {
-			setOfString
-					.append("System.out.println(\""
-							+ nodeName + " rek\");"
-							+ "\r\n");
-		}
 
 		setOfString.append("return pattern.equals(("
 				+ nodeName + ")message);" + "\r\n");
