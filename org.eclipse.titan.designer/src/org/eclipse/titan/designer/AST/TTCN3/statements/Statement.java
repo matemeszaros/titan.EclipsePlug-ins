@@ -58,6 +58,8 @@ public abstract class Statement extends ASTNode implements ILocateableNode, IApp
 		S_BLOCK,
 		/** select statement. */
 		S_SELECT,
+		/** try - catch.*/
+		S_TRY_CATCH,
 		/** log(...). */
 		S_LOG,
 		/** label identifier. */

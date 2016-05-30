@@ -190,7 +190,16 @@ public final class TemplateInstance extends ASTNode implements ILocateableNode, 
 	 * @return the type of the template instance
 	 * */
 	public Type_type getExpressionReturntype(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue) {
-		IType tempType = getExpressionGovernor(timestamp, expectedValue);
+		IType tempType = type;
+		
+		if(tempType == null) {
+			if (derivedReference != null) {
+				IType result = checkDerivedReference(timestamp, null);
+				if (result != null) {
+					tempType = result;
+				}
+			}
+		}
 
 		if (tempType == null) {
 			return templateBody.getExpressionReturntype(timestamp, expectedValue);

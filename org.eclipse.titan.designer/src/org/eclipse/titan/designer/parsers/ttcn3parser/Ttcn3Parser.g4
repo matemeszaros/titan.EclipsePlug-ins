@@ -5977,12 +5977,7 @@ pr_DeactivateStatement returns[Deactivate_Statement statement = null]
 	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_BasicStatements returns[Statement statement = null]
-@init {
-	StatementBlock statementblock = null;
-	StatementBlock.ExceptionHandling_type exc_handling = StatementBlock.ExceptionHandling_type.EH_NONE;
-	Identifier exc_id = null;
-}:
+pr_BasicStatements returns[Statement statement = null]:
 (       s1 = pr_Assignment				{ $statement = $s1.statement; }
 |       s2 = pr_LogStatement			{ $statement = $s2.statement; }
 |       s3 = pr_String2TtcnStatement	{ $statement = $s3.statement; }
@@ -5990,42 +5985,13 @@ pr_BasicStatements returns[Statement statement = null]
 |       s5 = pr_LoopConstruct			{ $statement = $s5.statement; }
 |       s6 = pr_ConditionalConstruct	{ $statement = $s6.ifStatement; }
 |       s7 = pr_SelectCaseConstruct		{ $statement = $s7.statement; }
-|       (	(	TITANSPECIFICTRY { exc_handling = StatementBlock.ExceptionHandling_type.EH_TRY; }
-			|	TITANSPECIFICCATCH
-				pr_LParen
-				id = pr_Identifier
-				pr_RParen
-					{	exc_id = $id.identifier;
-						exc_handling = StatementBlock.ExceptionHandling_type.EH_CATCH;
-						if (exc_id!=null) { exc_id.setLocation(getLocation( $id.start, $id.stop)); }
-					}
-			)?
-			sb = pr_StatementBlock
-				{	statementblock = $sb.statementblock;
-					if (statementblock != null) {
-						$statement = new StatementBlock_Statement(statementblock);
+|       s8 = pr_TryCatchConstruct		{ $statement = $s8.statement; }
+|       s9 = pr_StatementBlock
+				{	if ($s9.statementblock != null) {
+						$statement = new StatementBlock_Statement($s9.statementblock);
 						$statement.setLocation(getLocation( $start, getStopToken()));
 					}
 				}
-		)
-		{	if ( statementblock != null && exc_handling != null ) {
-				statementblock.setExceptionHandling( exc_handling );
-				if ( exc_handling == StatementBlock.ExceptionHandling_type.EH_CATCH ) {
-					if ( exc_id != null ) {
-						// add a newly constructed first statement which will contain the error message, same as: 'var charstring IDentifier;'
-						Type str_type = new CharString_Type();
-						str_type.setLocation(exc_id.getLocation());
-						Def_Var str_def = new Def_Var(exc_id,str_type,null);
-						str_def.setLocation(exc_id.getLocation());
-						Statement str_stmt = new Definition_Statement(str_def);
-						str_stmt.setLocation(exc_id.getLocation());
-						statementblock.addStatement(str_stmt, false);
-					} else { // don't try without an identifier :)
-						statementblock.setExceptionHandling(StatementBlock.ExceptionHandling_type.EH_NONE);
-					}
-				}
-			}
-		}
 );
 
 pr_Expression returns[Value value = null]:
@@ -6889,6 +6855,20 @@ pr_SelectCase returns[SelectCase selectCase = null]
 {
 	$selectCase = new SelectCase(templateInstances, $s.statementblock);
 	$selectCase.setLocation( getLocation( $start, getStopToken()) );
+};
+
+pr_TryCatchConstruct returns[Statement statement = null]:
+(	TITANSPECIFICTRY
+	sb1 = pr_StatementBlock
+	TITANSPECIFICCATCH
+	pr_LParen
+	id = pr_Identifier
+	pr_RParen
+	sb2 = pr_StatementBlock
+)
+{
+	$statement = new TryCatch_Statement($sb1.statementblock, $id.identifier, $sb2.statementblock);
+	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
 pr_Identifier returns [Identifier identifier = null]:

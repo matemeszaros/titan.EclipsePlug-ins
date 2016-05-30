@@ -300,10 +300,6 @@ public final class ReferenceFinder {
 
 	public List<Hit> findReferencesInModule(final Module module) {
 		List<Hit> foundIds = new ArrayList<Hit>();
-		if (scope.getModuleScope() == module) {
-			scope.findReferences(this, foundIds);
-			return foundIds;
-		}
 
 		module.findReferences(this, foundIds);
 
