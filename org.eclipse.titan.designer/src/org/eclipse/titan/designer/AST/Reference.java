@@ -460,51 +460,52 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 		detectModid();
 
 		referredAssignment = myScope.getAssBySRef(timestamp, this, referenceChain);
+		if (referredAssignment == null) {
+			lastTimeChecked = timestamp;
+			return referredAssignment;
+		}
 
-		if (referredAssignment != null) {
-			referredAssignment.check(timestamp, tempReferenceChain);
-			referredAssignment.setUsed();
+		referredAssignment.check(timestamp, tempReferenceChain);
+		referredAssignment.setUsed();
 
-			if (referredAssignment instanceof Definition) {
-				String referingModuleName = getMyScope().getModuleScope().getName();
-				if (!((Definition) referredAssignment).referingHere.contains(referingModuleName)) {
-					((Definition) referredAssignment).referingHere.add(referingModuleName);
-				}
+		if (referredAssignment instanceof Definition) {
+			String referingModuleName = getMyScope().getModuleScope().getName();
+			if (!((Definition) referredAssignment).referingHere.contains(referingModuleName)) {
+				((Definition) referredAssignment).referingHere.add(referingModuleName);
 			}
 		}
 
-		if (referredAssignment != null && checkParameterList) {
+		if (checkParameterList) {
 			FormalParameterList formalParameterList = null;
 
 			if (referredAssignment instanceof IParameterisedAssignment) {
 				formalParameterList = ((IParameterisedAssignment) referredAssignment).getFormalParameterList();
 			}
+
 			if (formalParameterList == null) {
 				if (!subReferences.isEmpty() && subReferences.get(0) instanceof ParameterisedSubReference) {
 					final String message = MessageFormat.format("The referenced {0} cannot have actual parameters",
 							referredAssignment.getDescription());
 					getLocation().reportSemanticError(message);
 				}
-			} else {
-				if (!subReferences.isEmpty()) {
-					ISubReference firstSubReference = subReferences.get(0);
-					if (firstSubReference instanceof ParameterisedSubReference) {
-						formalParameterList.check(timestamp, referredAssignment.getAssignmentType());
-						isErroneous = ((ParameterisedSubReference) firstSubReference).checkParameters(timestamp,
-								formalParameterList);
-					} else {
-						// if it is not a parameterless
-						// template reference pointing
-						// to a template having formal
-						// parameters, where each has
-						// default values
-						if (!Assignment.Assignment_type.A_TEMPLATE.equals(referredAssignment.getAssignmentType())
-								|| !formalParameterList.hasOnlyDefaultValues()) {
-							final String message = MessageFormat.format(
-									"Reference to parameterized definition `{0}'' without actual parameter list",
-									referredAssignment.getIdentifier().getDisplayName());
-							getLocation().reportSemanticError(message);
-						}
+			} else if (!subReferences.isEmpty()) {
+				ISubReference firstSubReference = subReferences.get(0);
+				if (firstSubReference instanceof ParameterisedSubReference) {
+					formalParameterList.check(timestamp, referredAssignment.getAssignmentType());
+					isErroneous = ((ParameterisedSubReference) firstSubReference).checkParameters(timestamp,
+							formalParameterList);
+				} else {
+					// if it is not a parameterless
+					// template reference pointing
+					// to a template having formal
+					// parameters, where each has
+					// default values
+					if (!Assignment.Assignment_type.A_TEMPLATE.equals(referredAssignment.getAssignmentType())
+							|| !formalParameterList.hasOnlyDefaultValues()) {
+						final String message = MessageFormat.format(
+								"Reference to parameterized definition `{0}'' without actual parameter list",
+								referredAssignment.getIdentifier().getDisplayName());
+						getLocation().reportSemanticError(message);
 					}
 				}
 			}
