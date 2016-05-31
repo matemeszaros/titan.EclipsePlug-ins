@@ -388,6 +388,7 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 						switch (last.getTypetypeTtcn3()) {
 						case TYPE_OCTETSTRING:
 						case TYPE_CHARSTRING:
+						case TYPE_BITSTRING:
 							inputType = firstParameterType;
 							break;
 						default: {
