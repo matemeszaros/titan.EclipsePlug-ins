@@ -257,27 +257,11 @@
         <command commandId="org.eclipse.titan.designer.actions.ConvertXSD2TTCN"
           icon="icons/xsd2ttcn.gif" disabledIcon="icons/xsd2ttcn_d.gif"
           label="Convert XSD files to TTCN-3" tooltip="Convert XSD files to TTCN-3">
-          <visibleWhen>
-            <not>
-              <or>
-                <systemTest property="os.name" value="Windows 7" />
-                <systemTest property="os.name" value="Windows Vista" />
-              </or>
-            </not>
-          </visibleWhen>
         </command>
         <command
           commandId="org.eclipse.titan.designer.actions.GenerateTestPortSkeleton"
           icon="icons/generate_testport.gif" disabledIcon="icons/generate_testport_d.gif"
           label="Generate Test Port skeleton" tooltip="Generate Test Port skeleton">
-          <visibleWhen>
-            <not>
-              <or>
-                <systemTest property="os.name" value="Windows 7" />
-                <systemTest property="os.name" value="Windows Vista" />
-              </or>
-            </not>
-          </visibleWhen>
         </command>
         <command commandId="org.eclipse.titan.designer.actions.CheckVersion"
           icon="icons/check_version.gif" disabledIcon="icons/check_version_d.gif"
