@@ -306,7 +306,7 @@ import java.util.regex.Pattern;
 	}
 	
 	/**
-	 * Creates a wrapper TerminalNode arount the Token to use it as ParseTree
+	 * Creates a wrapper TerminalNode around the Token to use it as ParseTree
 	 * @param aToken token to wrap
 	 * @param aParent parent parse tree of the new node
 	 * @return the created TerminalNodeImpl object
@@ -541,7 +541,7 @@ pr_ExternalCommand:
 ;
 
 pr_ExternalCommandValue:
-	STRING6
+	pr_StringValue
 ;
 
 pr_TestportParametersSection:
@@ -1130,8 +1130,12 @@ pr_ComponentName:
 pr_HostName:
 (	pr_DNSName
 |	TTCN3IDENTIFIER1 | TTCN3IDENTIFIER10
-|	macro = (MACRO_HOSTNAME1 | MACRO_HOSTNAME10)
-		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );
+|	macro1 = (MACRO_HOSTNAME1 | MACRO_HOSTNAME10)
+		{	String value = getTypedMacroValue( $macro1, DEFINITION_NOT_FOUND_STRING );
+			//TODO: implement: use value if needed
+		}
+|	macro2 = (MACRO1 | MACRO10)
+		{	String value = getMacroValue( $macro2, DEFINITION_NOT_FOUND_STRING );
 			//TODO: implement: use value if needed
 		}
 )
@@ -1184,6 +1188,12 @@ pr_SimpleValue:
 |	MACRO5
 |	IPV6_5
 |	STRING5
+|	BITSTRING5
+|	HEXSTRING5
+|	OCTETSTRING5
+|	BITSTRINGMATCH5
+|	HEXSTRINGMATCH5
+|	OCTETSTRINGMATCH5
 )
 ;
 
@@ -1276,8 +1286,17 @@ pr_IntegerPrimaryExpression returns [CFGNumber number]:
 
 pr_Number returns [CFGNumber number]:
 (	a = (NUMBER1 | NUMBER7 | NUMBER9 | NUMBER11)	{$number = new CFGNumber($a.text);}
-|	macro = (MACRO_INT1 | MACRO_INT7 | MACRO_INT9 | MACRO_INT11)	
-		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_INT );
+|	macro = pr_MacroNumber { $number = $macro.number; }
+)
+;
+
+pr_MacroNumber returns [CFGNumber number]:
+(	macro1 = (MACRO_INT1 | MACRO_INT7 | MACRO_INT9 | MACRO_INT11)	
+		{	String value = getTypedMacroValue( $macro1, DEFINITION_NOT_FOUND_INT );
+			$number = new CFGNumber( value.length() > 0 ? value : "0" );
+		}
+|	macro2 = (MACRO1 | MACRO7 | MACRO9 | MACRO11)	
+		{	String value = getMacroValue( $macro2, DEFINITION_NOT_FOUND_INT );
 			$number = new CFGNumber( value.length() > 0 ? value : "0" );
 		}
 )
@@ -1292,7 +1311,7 @@ pr_StringValue returns [String string]
 				$string = $a.string.replaceAll("^\"|\"$", "");
 			}
 		}
-	(	(STRINGOP1 | STRINGOP7 | STRINGOP9 | STRINGOP11) b = pr_CString
+	(	(STRINGOP1 | STRINGOP6 | STRINGOP7 | STRINGOP9 | STRINGOP11) b = pr_CString
 			{	if ( $b.string != null ) {
 					$string = $string + $b.string.replaceAll("^\"|\"$", "");
 				}
@@ -1305,7 +1324,7 @@ pr_StringValue returns [String string]
 ;
 
 pr_CString returns [String string]:
-(	a = (STRING1 | STRING7 | STRING9 | STRING11)
+(	a = (STRING1 | STRING6 | STRING7 | STRING9 | STRING11)
 		{	
 			$string = $a.text;
 		}
@@ -1315,12 +1334,12 @@ pr_CString returns [String string]:
 ;
 
 pr_MacroCString returns [String string]:
-	macro = (MACRO1 | MACRO7 | MACRO9 | MACRO11)
+	macro = (MACRO1 | MACRO6 | MACRO7 | MACRO9 | MACRO11)
 		{	$string = getMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );	}
 ;
 
 pr_MacroExpliciteCString returns [String string]:
-	macro = (MACRO_EXP_CSTR1 | MACRO_EXP_CSTR7 | MACRO_EXP_CSTR9 | MACRO_EXP_CSTR11)
+	macro = (MACRO_EXP_CSTR1 | MACRO_EXP_CSTR6 | MACRO_EXP_CSTR7 | MACRO_EXP_CSTR9 | MACRO_EXP_CSTR11)
 		{	$string = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_STRING );	}
 ;
 

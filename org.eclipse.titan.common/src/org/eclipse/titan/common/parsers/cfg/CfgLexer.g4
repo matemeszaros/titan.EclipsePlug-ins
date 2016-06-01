@@ -271,6 +271,18 @@ MACRO5:
 	'$' FR_TTCN3IDENTIFIER5
 |	'$' '{' (WS5)? FR_TTCN3IDENTIFIER5 (WS5)? '}'
 );
+BIN5:				[01];
+BITSTRING5:			'\'' (BIN5)* '\'' 'B';
+HEX5:				[0-9A-Fa-f];
+HEXSTRING5:			'\'' (HEX5)* '\'' 'H';
+OCT5:				HEX5 HEX5;
+OCTETSTRING5:		'\'' (OCT5)* '\'' 'O';
+BINMATCH5:			BIN5 | '?' | '*';
+BITSTRINGMATCH5:	'\'' (BINMATCH9)* '\'' 'B';
+HEXMATCH5:			HEX5 | '?' | '*';
+HEXSTRINGMATCH5:	'\'' (HEXMATCH5)* '\'' 'H';
+OCTMATCH5:			OCT5 | '?' | '*';
+OCTETSTRINGMATCH5:	'\'' (OCTMATCH5)* '\'' 'O';
 
 
 //external command section
@@ -298,6 +310,7 @@ BLOCK_COMMENT6:		'/*' .*? '*/' -> channel(HIDDEN);
 SEMICOLON6: 		';';
 ASSIGNMENTCHAR6:	':=';
 STRING6:			'"' .*? '"';
+STRINGOP6:			'&';
 BEGINCONTROLPART6:	'begincontrolpart' | 'Begincontrolpart' | 'beginControlpart' | 'BeginControlpart'
 | 'begincontrolPart' | 'BeginControlPart' | 'beginControlPart' | 'BegincontrolPart'; 
 ENDCONTROLPART6:	'endcontrolpart' | 'Endcontrolpart' | 'endControlpart' | 'EndControlpart' 
@@ -306,6 +319,19 @@ BEGINTESTCASE6:		'begintestcase' | 'Begintestcase' | 'beginTestcase' | 'BeginTes
 | 'BeginTestCase' | 'beginTestCase' | 'BegintestCase';
 ENDTESTCASE6:		'endtestcase' | 'Endtestcase' | 'endTestcase' | 'EndTestcase' | 'endtestCase'
 | 'EndTestCase' | 'endTestCase' | 'EndtestCase';
+
+fragment FR_LETTER6:	[A-Za-z];
+fragment FR_NUMBER6:	[0-9];
+fragment FR_DOT6:		'.';
+fragment FR_TTCN3IDENTIFIER6:	FR_LETTER6 (FR_LETTER6 | FR_NUMBER6 | '_')*;
+CSTR6:				'charstring';
+MACRO_EXP_CSTR6:	'$' '{' (WS6)? FR_TTCN3IDENTIFIER6 (WS6)? ',' (WS6)? CSTR6 (WS6)? '}';
+MACRO6:
+(
+	'$' FR_TTCN3IDENTIFIER6
+|	'$' '{' (WS6)? FR_TTCN3IDENTIFIER6 (WS6)? '}'
+)
+;
 
 //testport parameters
 mode TESTPORT_PARAMETERS_SECTION_MODE;
@@ -631,6 +657,11 @@ ID10:					'identifier';
 MACRO_ID10:				'$' '{' (WS10)? FR_TTCN3IDENTIFIER10 (WS10)? ',' (WS10)?  ID10 (WS10)? '}';
 HN10:					'hostname';
 MACRO_HOSTNAME10: 		'$' '{' (WS10)? FR_TTCN3IDENTIFIER10 (WS10)? ',' (WS10)?  HN10 (WS10)? '}';
+MACRO10:
+(
+	'$' FR_TTCN3IDENTIFIER10
+|	'$' '{' (WS10)? FR_TTCN3IDENTIFIER10 (WS10)? '}'
+);
 
 //logging section
 mode LOGGING_SECTION_MODE;
