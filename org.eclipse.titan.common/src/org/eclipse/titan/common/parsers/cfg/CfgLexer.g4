@@ -266,6 +266,8 @@ OS5:				'octetstring';
 MACRO_OSTR5:		'$' '{' (WS5)? FR_TTCN3IDENTIFIER5 (WS5)? ',' (WS5)? OS5 (WS5)? '}';
 BINO5:				'binaryoctet';
 MACRO_BINARY5:		'$' '{' (WS5)? FR_TTCN3IDENTIFIER5 (WS5)? ',' (WS5)? BINO5 (WS5)? '}';
+HN5:				'hostname';
+MACRO_HOSTNAME5: 	'$' '{' (WS5)? FR_TTCN3IDENTIFIER5 (WS5)? ',' (WS5)?  HN5 (WS5)? '}';
 MACRO5:
 (
 	'$' FR_TTCN3IDENTIFIER5
@@ -278,7 +280,7 @@ HEXSTRING5:			'\'' (HEX5)* '\'' 'H';
 OCT5:				HEX5 HEX5;
 OCTETSTRING5:		'\'' (OCT5)* '\'' 'O';
 BINMATCH5:			BIN5 | '?' | '*';
-BITSTRINGMATCH5:	'\'' (BINMATCH9)* '\'' 'B';
+BITSTRINGMATCH5:	'\'' (BINMATCH5)* '\'' 'B';
 HEXMATCH5:			HEX5 | '?' | '*';
 HEXSTRINGMATCH5:	'\'' (HEXMATCH5)* '\'' 'H';
 OCTMATCH5:			OCT5 | '?' | '*';
