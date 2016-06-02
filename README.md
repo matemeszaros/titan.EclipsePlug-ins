@@ -13,10 +13,10 @@ ASN.1 (Abstract Syntax Notation One).
 
 * https://projects.eclipse.org/projects/tools.titan
 
-##Introductory video of a presentation about Titan held at EclipseCon 2014: 
+## Introductory video of a presentation about Titan held at EclipseCon 2014: 
 * https://www.youtube.com/watch?v=2knzZuwzn-Y.
 
-##Titan Datasheet on polarsys.org:
+## Titan Datasheet on polarsys.org:
 http://polarsys.org/sites/default/files/custom_uploads/TITAN%20Datasheet%20A4%202.1.pdf
 
 
