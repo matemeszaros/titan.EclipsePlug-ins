@@ -179,49 +179,34 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			return;
 		}
 
-		WorkspaceJob tempLastIncrementalSyntaxCheck = lastIncrementalSyntaxCheck;
-		if (tempLastIncrementalSyntaxCheck != null) {
+		if (lastIncrementalSyntaxCheck != null) {
 			try {
-				tempLastIncrementalSyntaxCheck.join();
+				lastIncrementalSyntaxCheck.join();
 			} catch (InterruptedException e) {
 				ErrorReporter.logExceptionStackTrace(e);
 			}
-			lastIncrementalSyntaxCheck = null;
 		}
 		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(project);
 		lastIncrementalSyntaxCheck = sourceParser.updateSyntax(editedFile, reparser);
-		WorkspaceJob op = new WorkspaceJob("reparse information update") {
-			@Override
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				WorkspaceJob tempLastIncrementalSyntaxCheck = lastIncrementalSyntaxCheck;
-				if (tempLastIncrementalSyntaxCheck != null) {
-					try {
-						tempLastIncrementalSyntaxCheck.join();
-					} catch (InterruptedException e) {
-						ErrorReporter.logExceptionStackTrace(e);
-					}
-				}
-
-				return Status.OK_STATUS;
-			}
-		};
-		op.setPriority(Job.LONG);
-		op.setSystem(true);
-		op.setUser(false);
-		op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
-		op.schedule();
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		if (store.getBoolean(PreferenceConstants.DISPLAYDEBUGINFORMATION)) {
 			TITANDebugConsole.println("Refreshing the syntax took " + (System.nanoTime() - parserStart) * (1e-9) + " secs");
 		}
 
-		op = new WorkspaceJob(FOLDING_UPDATE) {
+		WorkspaceJob op = new WorkspaceJob(FOLDING_UPDATE) {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
+						if (lastIncrementalSyntaxCheck != null) {
+							try {
+								lastIncrementalSyntaxCheck.join();
+							} catch (InterruptedException e) {
+								ErrorReporter.logExceptionStackTrace(e);
+							}
+						}
 						// TODO optimize for incremental
 						// usage
 						List<Position> positions = (new TTCN3FoldingSupport()).calculatePositions(getDocument());
@@ -255,7 +240,6 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 			} catch (InterruptedException e) {
 				ErrorReporter.logExceptionStackTrace(e);
 			}
-			lastIncrementalSyntaxCheck = null;
 		}
 
 		IProject project = editedFile.getProject();
