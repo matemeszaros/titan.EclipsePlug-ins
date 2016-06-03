@@ -159,6 +159,22 @@ public class Location {
 		this.endOffset = endOffset;
 	}
 
+	@Override
+	public boolean equals(final Object object) {
+		if (this == object) {
+			return true;
+		}
+		
+		if(object instanceof Location) {
+			final Location other = (Location) object;
+			
+			// this order of checking is more likely to fail fast
+			return line == other.line && offset == other.offset && endOffset == other.endOffset && file.equals(other.file);
+		}
+
+		return false;
+	}
+
 	/**
 	 * Checks if the actual location starts before the one provided.
 	 *
