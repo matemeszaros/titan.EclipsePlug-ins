@@ -66,13 +66,13 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		}
 		start = System.nanoTime();
 
-		List<Module> startModules = new ArrayList<Module>();
-		Map<Module, List<Module>> invertedImports = buildInvertedImportStructure(allModules, startModules);
+		final List<Module> startModules = new ArrayList<Module>();
+		final Map<Module, List<Module>> invertedImports = buildInvertedImportStructure(allModules, startModules);
 
 		computeAnalyzeOnlyDefinitionsFlag(allModules, startModules);
 
 		if (analyzeOnlyAssignments) {
-			Map<Module, List<AssignmentHandler>> result = collectBrokenParts(startModules, invertedImports);
+			final Map<Module, List<AssignmentHandler>> result = collectBrokenParts(startModules, invertedImports);
 			if (writeDebugInfo && (System.nanoTime()-start < TIMELIMIT)) {
 				writeDebugInfo(result);
 			}
@@ -87,7 +87,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 			analyzeOnlyAssignments = false;
 			modulesToCheck.clear();
 			moduleAndBrokenAssignments.clear();
-			List<Module> modules = collectBrokenModulesViaInvertedImports(startModules, invertedImports);
+			final List<Module> modules = collectBrokenModulesViaInvertedImports(startModules, invertedImports);
 			modulesToCheck.addAll(modules);
 		}
 
@@ -127,7 +127,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 	 */
 	protected Map<Module, List<Module>> buildInvertedImportStructure(final List<Module> allModules, final List<Module> startModules) {
 
-		Map<Module, List<Module>> invertedImports = new HashMap<Module, List<Module>>();
+		final Map<Module, List<Module>> invertedImports = new HashMap<Module, List<Module>>();
 
 		for (Module actualModule : allModules) {
 			// Collect injured modules directly into startModules, we will start the checking from these modules.
@@ -144,13 +144,13 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 
 			for (Module actualImportedModule : actualModule.getImportedModules()) {
 				if (invertedImports.containsKey(actualImportedModule)) {
-					List<Module> dependentModules = invertedImports.get(actualImportedModule);
+					final List<Module> dependentModules = invertedImports.get(actualImportedModule);
 
 					if (!dependentModules.contains(actualModule)) {
 						dependentModules.add(actualModule);
 					}
 				} else {
-					List<Module> temp = new ArrayList<Module>();
+					final List<Module> temp = new ArrayList<Module>();
 					temp.add(actualModule);
 					invertedImports.put(actualImportedModule, temp);
 				}
@@ -162,10 +162,10 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 
 	protected List<Module> collectBrokenModulesViaInvertedImports(final List<Module> startModules, final Map<Module, List<Module>> invertedImports) {
 		
-		List<Module> startModulesCopy = new ArrayList<Module>(startModules);
+		final List<Module> startModulesCopy = new ArrayList<Module>(startModules);
 
-		List<Module> result = new ArrayList<Module>();
-		MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
+		final List<Module> result = new ArrayList<Module>();
+		final MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
 		if (writeDebugInfo) {
 			for (Module startModule: startModules) {
 				TITANDebugConsole.println("  ** Module " + startModule.getName() + " can not be skipped as it was not yet analyzed.", stream);
@@ -173,13 +173,14 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		}
 
 		for (int s = 0; s < startModulesCopy.size(); ++s) {
-			Module startModule = startModulesCopy.get(s);
+			final Module startModule = startModulesCopy.get(s);
 			if (!result.contains(startModule)) {
 				result.add(startModule);
 			}
-			List<Module> whereStartModuleUsed = invertedImports.get(startModule);
+
+			final List<Module> whereStartModuleUsed = invertedImports.get(startModule);
 			for (int d = 0; d < whereStartModuleUsed.size(); ++d) {
-				Module dependentModule = whereStartModuleUsed.get(d);
+				final Module dependentModule = whereStartModuleUsed.get(d);
 				if (!startModulesCopy.contains(dependentModule)) {
 					startModulesCopy.add(dependentModule);
 					if (writeDebugInfo) {
@@ -189,9 +190,9 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 			}
 
 			startModule.notCheckRoot();
-			Assignments assignments = startModule.getAssignments();
+			final Assignments assignments = startModule.getAssignments();
 			for (int d = 0; d < assignments.getNofAssignments(); ++d) {
-				Assignment assignment = assignments.getAssignmentByIndex(d);
+				final Assignment assignment = assignments.getAssignmentByIndex(d);
 				assignment.notCheckRoot();
 			}
 		}
@@ -200,14 +201,14 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 
 	protected Map<Module, List<AssignmentHandler>> collectBrokenParts(final List<Module> startModules, final Map<Module, List<Module>> invertedImports) {
 
-		List<Module> startModulesCopy = new ArrayList<Module>(startModules);
+		final List<Module> startModulesCopy = new ArrayList<Module>(startModules);
 
-		Map<Module, List<AssignmentHandler>> moduleAndBrokenAssignments = new HashMap<Module, List<AssignmentHandler>>();
+		final Map<Module, List<AssignmentHandler>> moduleAndBrokenAssignments = new HashMap<Module, List<AssignmentHandler>>();
 
 		processStartModules(startModulesCopy, moduleAndBrokenAssignments);
 
 		for (int i = 0; i < startModulesCopy.size() && (System.nanoTime()-start < TIMELIMIT); ++i) {
-			Module startModule = startModulesCopy.get(i);
+			final Module startModule = startModulesCopy.get(i);
 			List<AssignmentHandler> startAssignments;
 			if (moduleAndBrokenAssignments.containsKey(startModule)) {
 				startAssignments = moduleAndBrokenAssignments.get(startModule);
@@ -217,9 +218,9 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 			}
 
 			if (!startAssignments.isEmpty()) {
-				List<Module> whereStartModuleUsed = invertedImports.get(startModule);
+				final List<Module> whereStartModuleUsed = invertedImports.get(startModule);
 				for (int j = 0; j < whereStartModuleUsed.size(); ++j) {
-					Module dependentModule = whereStartModuleUsed.get(j);
+					final Module dependentModule = whereStartModuleUsed.get(j);
 					List<AssignmentHandler> dependentAssignments;
 					if (moduleAndBrokenAssignments.containsKey(dependentModule)) {
 						dependentAssignments = moduleAndBrokenAssignments.get(dependentModule);
@@ -229,14 +230,14 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 					}
 
 					// We have to separate broken and not broken definition, because of postcheck.
-					List<AssignmentHandler> brokens = new ArrayList<AssignmentHandler>();
-					List<AssignmentHandler> notBrokens = new ArrayList<AssignmentHandler>();
+					final List<AssignmentHandler> brokens = new ArrayList<AssignmentHandler>();
+					final List<AssignmentHandler> notBrokens = new ArrayList<AssignmentHandler>();
 
 					for (int s = 0; s < startAssignments.size(); ++s) {
-						AssignmentHandler startAssignment = startAssignments.get(s);
+						final AssignmentHandler startAssignment = startAssignments.get(s);
 						if (startAssignment.getIsContagious()) {
 							for (int d = 0; d < dependentAssignments.size(); ++d) {
-								AssignmentHandler dependentAssignment = dependentAssignments.get(d);
+								final AssignmentHandler dependentAssignment = dependentAssignments.get(d);
 								dependentAssignment.check(startAssignment);
 								if (dependentAssignment.getIsInfected()) {
 									if (!startModulesCopy.contains(dependentModule)) {
@@ -250,7 +251,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 					}
 					
 					for (int d = 0; d < dependentAssignments.size(); ++d) {
-						AssignmentHandler dependentAssignment = dependentAssignments.get(d);
+						final AssignmentHandler dependentAssignment = dependentAssignments.get(d);
 						if (!dependentAssignment.getIsInfected()) {
 							notBrokens.add(dependentAssignment);
 						}
@@ -285,7 +286,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				assignmentHandler.assignment.notCheckRoot();
 			}
 			if (!assignments.isEmpty()) {
-				Module module = entry.getKey();
+				final Module module = entry.getKey();
 				moduleAndBrokenAssignments.put(module, assignments);
 				modulesToCheck.add(module);
 			}
@@ -298,16 +299,18 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				return;
 			}
 			if (startModule instanceof TTCN3Module && startModule.getLastCompilationTimeStamp() != null && !startModule.isCheckRoot()) {
-				Assignments startAssignments = startModule.getAssignments();
-				List<AssignmentHandler> brokens = new ArrayList<AssignmentHandler>();
-				List<AssignmentHandler> notBrokens = new ArrayList<AssignmentHandler>();
+				final Assignments startAssignments = startModule.getAssignments();
+				final List<AssignmentHandler> brokens = new ArrayList<AssignmentHandler>();
+				final List<AssignmentHandler> notBrokens = new ArrayList<AssignmentHandler>();
 				for (int d = 0; d < startAssignments.getNofAssignments(); ++d) {
-					Assignment startAssignment = startAssignments.getAssignmentByIndex(d);
-					AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(startAssignment);
+					final Assignment startAssignment = startAssignments.getAssignmentByIndex(d);
+					final AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(startAssignment);
 					if (startAssignment.getLastTimeChecked() == null) {
 						startAssignment.check(timestamp);
 					}
+
 					startAssignment.accept(assignmentHandler);
+
 					if (startAssignment.isCheckRoot()) {
 						assignmentHandler.initStartParts();
 						startAssignment.notCheckRoot();
@@ -333,12 +336,14 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				if (startModule.getLastCompilationTimeStamp() == null) {
 					startModule.check(timestamp);
 				}
-				List<AssignmentHandler> startAssignments = getAssignmentsFrom(startModule);
+
+				final List<AssignmentHandler> startAssignments = getAssignmentsFrom(startModule);
 				for (AssignmentHandler assignmentHandler : startAssignments) {
 					assignmentHandler.initStartParts();
 					assignmentHandler.assignment.notCheckRoot();
 					assignmentHandler.addReason("Parent module's CompilationTimeStamp is null.");
 				}
+
 				if (moduleAndBrokenAssignments.containsKey(startModule)) {
 					moduleAndBrokenAssignments.get(startModule).addAll(startAssignments);
 				} else {
@@ -351,11 +356,11 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 	}
 	
 	public List<AssignmentHandler> getAssignmentsFrom(final Module module) {
-		List<AssignmentHandler> assignmentHandlers = new ArrayList<AssignmentHandler>();
-		Assignments assignments = module.getAssignments();
+		final List<AssignmentHandler> assignmentHandlers = new ArrayList<AssignmentHandler>();
+		final Assignments assignments = module.getAssignments();
 		for (int d = 0; d < assignments.getNofAssignments(); ++d) {
-			Assignment assignment = assignments.getAssignmentByIndex(d);
-			AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(assignment);
+			final Assignment assignment = assignments.getAssignmentByIndex(d);
+			final AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(assignment);
 			assignment.accept(assignmentHandler);
 			assignmentHandlers.add(assignmentHandler);
 		}
@@ -369,7 +374,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 			return;
 		}
 		
-		HashMap<String, AssignmentHandler> brokenMap = new HashMap<String, AssignmentHandler>(brokens.size() + notBrokens.size());
+		final HashMap<String, AssignmentHandler> brokenMap = new HashMap<String, AssignmentHandler>(brokens.size() + notBrokens.size());
 		for(AssignmentHandler handler: brokens) {
 			brokenMap.put(handler.getAssignment().getIdentifier().getDisplayName(), handler);
 		}
@@ -380,7 +385,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 			
 			
 			for (int i = notBrokens.size() -1; i >=0; --i) {
-				AssignmentHandler notBroken = notBrokens.get(i);
+				final AssignmentHandler notBroken = notBrokens.get(i);
 				boolean found = false;
 				for (String name : notBroken.getContagiousReferences()) {
 					if(brokenMap.containsKey(name)) {
@@ -417,7 +422,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				TITANDebugConsole.println("  Detailed info:");
 
 				for (Map.Entry<Module, List<AssignmentHandler>> entry : moduleAndAssignments.entrySet()) {
-					List<AssignmentHandler> values = entry.getValue();
+					final List<AssignmentHandler> values = entry.getValue();
 
 					TITANDebugConsole.println("    module: " + entry.getKey().getIdentifier().getDisplayName());
 
@@ -437,7 +442,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				TITANDebugConsole.println("  digraph {");
 				TITANDebugConsole.println("    rankdir=LR;");
 
-				ArrayList<Module> modules = new ArrayList<Module>(moduleAndAssignments.keySet());
+				final ArrayList<Module> modules = new ArrayList<Module>(moduleAndAssignments.keySet());
 				Collections.sort(modules, new Comparator<Module>() {
 
 					@Override
@@ -448,11 +453,11 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				});
 				
 				for (Module module : modules) {
-					String moduleName = module.getName();
+					final String moduleName = module.getName();
 					TITANDebugConsole.println("    subgraph cluster_" + moduleName + " {");
 					TITANDebugConsole.println("    label=\" " + module.getIdentifier().getDisplayName() + "\";");
 
-					List<AssignmentHandler> values = moduleAndAssignments.get(module);
+					final List<AssignmentHandler> values = moduleAndAssignments.get(module);
 
 					for (AssignmentHandler assignmentHandler : values) {
 						for(String reference: assignmentHandler.getInfectedReferences()) {
