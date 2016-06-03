@@ -134,7 +134,7 @@ public final class CheckSemantic extends ExternalTitanAction {
 
 			String flags = TITANFlagsOptionsData.getTITANFlags(singleSelectedProject, useRuntime2);
 			if (flags != null && flags.length() > 0) {
-				command.add('-' + flags);
+				command.add(flags);
 			}
 		}
 
