@@ -456,11 +456,13 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 			tempReferenceChain = referenceChain;
 		}
 
+		isErroneous = false;
 		detectedModuleId = false;
 		detectModid();
 
 		referredAssignment = myScope.getAssBySRef(timestamp, this, referenceChain);
 		if (referredAssignment == null) {
+			isErroneous = true;
 			lastTimeChecked = timestamp;
 			return referredAssignment;
 		}
