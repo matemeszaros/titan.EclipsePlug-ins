@@ -741,7 +741,11 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				Location tempLocation = temp.getLocation();
 				if (reparser.isAffected(tempLocation)) {
 					try {
+						boolean isDamaged = enveloped && reparser.envelopsDamage(tempLocation);
 						temp.updateSyntax(reparser, enveloped && reparser.envelopsDamage(tempLocation));
+						if(isDamaged) {
+							((TTCN3Module) parentScope).checkRoot();
+						}
 					} catch (ReParseException e) {
 						if (e.getDepth() == 1) {
 							enveloped = false;
@@ -768,7 +772,11 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				Location tempLocation = temp.getLocation();
 				if (reparser.isAffected(tempLocation)) {
 					try {
+						boolean isDamaged = enveloped && reparser.envelopsDamage(tempLocation);
 						temp.updateSyntax(reparser, enveloped && reparser.envelopsDamage(tempLocation));
+						if(isDamaged) {
+							((TTCN3Module) parentScope).checkRoot();
+						}
 					} catch (ReParseException e) {
 						if (e.getDepth() == 1) {
 							enveloped = false;
@@ -806,7 +814,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 							reparser.setNameChanged(false);
 						}
 						if(isDamaged) {
-							temp.resetLastTimeChecked();
+							temp.checkRoot();
 						}
 					} catch (ReParseException e) {
 						if (e.getDepth() == 1) {
@@ -869,7 +877,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				Location tempLocation = temp.getLocation();
 				Location cumulativeLocation = temp.getCumulativeDefinitionLocation();
 				if (reparser.isAffected(tempLocation)) {
-					if(!tempLocation.equals(cumulativeLocation)) {
+					if(tempLocation != cumulativeLocation) {
 						reparser.updateLocation(cumulativeLocation);
 					}
 					reparser.updateLocation(tempLocation);

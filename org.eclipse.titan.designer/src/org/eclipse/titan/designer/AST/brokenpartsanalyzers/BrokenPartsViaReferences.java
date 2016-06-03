@@ -132,7 +132,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		for (Module actualModule : allModules) {
 			// Collect injured modules directly into startModules, we will start the checking from these modules.
 			// Collect modules which have not been checked semantically.
-			if ((actualModule.getLastCompilationTimeStamp() == null || !semanticallyChecked.contains(actualModule.getName())) && !startModules.contains(actualModule) ) {
+			if ((actualModule.getLastCompilationTimeStamp() == null || actualModule.isCheckRoot() || !semanticallyChecked.contains(actualModule.getName())) && !startModules.contains(actualModule) ) {
 				startModules.add(actualModule);
 			}
 
@@ -186,6 +186,13 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 						TITANDebugConsole.println("  ** Module " + dependentModule.getName() + " can not be skipped as it depends on " + startModule.getName() + " which needs to be checked.", stream);
 					}
 				}
+			}
+
+			startModule.notCheckRoot();
+			Assignments assignments = startModule.getAssignments();
+			for (int d = 0; d < assignments.getNofAssignments(); ++d) {
+				Assignment assignment = assignments.getAssignmentByIndex(d);
+				assignment.notCheckRoot();
 			}
 		}
 		return result;
@@ -275,6 +282,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				if (assignmentHandler.getIsInfected()) {
 					assignments.add(assignmentHandler.getAssignment());
 				}
+				assignmentHandler.assignment.notCheckRoot();
 			}
 			if (!assignments.isEmpty()) {
 				Module module = entry.getKey();
@@ -289,22 +297,21 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 			if(System.nanoTime()-start > TIMELIMIT) {
 				return;
 			}
-			if (startModule instanceof TTCN3Module && startModule.getLastCompilationTimeStamp() != null) {
+			if (startModule instanceof TTCN3Module && startModule.getLastCompilationTimeStamp() != null && !startModule.isCheckRoot()) {
 				Assignments startAssignments = startModule.getAssignments();
 				List<AssignmentHandler> brokens = new ArrayList<AssignmentHandler>();
 				List<AssignmentHandler> notBrokens = new ArrayList<AssignmentHandler>();
 				for (int d = 0; d < startAssignments.getNofAssignments(); ++d) {
 					Assignment startAssignment = startAssignments.getAssignmentByIndex(d);
 					AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(startAssignment);
-					boolean wasNull = false;
 					if (startAssignment.getLastTimeChecked() == null) {
-						wasNull = true;
 						startAssignment.check(timestamp);
 					}
 					startAssignment.accept(assignmentHandler);
-					if (wasNull) {
+					if (startAssignment.isCheckRoot()) {
 						assignmentHandler.initStartParts();
-						assignmentHandler.addReason("Definition's CompilationTimeStamp is null, because of incremental parsing.");
+						startAssignment.notCheckRoot();
+						assignmentHandler.addReason("Definition's infected, because of incremental parsing.");
 						brokens.add(assignmentHandler);
 					} else if (assignmentHandler.getIsInfected()) {
 						assignmentHandler.addReason("Definition contains an infected reference.");
@@ -323,10 +330,13 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 					}
 				}
 			} else {
-				startModule.check(timestamp);
+				if (startModule.getLastCompilationTimeStamp() == null) {
+					startModule.check(timestamp);
+				}
 				List<AssignmentHandler> startAssignments = getAssignmentsFrom(startModule);
 				for (AssignmentHandler assignmentHandler : startAssignments) {
 					assignmentHandler.initStartParts();
+					assignmentHandler.assignment.notCheckRoot();
 					assignmentHandler.addReason("Parent module's CompilationTimeStamp is null.");
 				}
 				if (moduleAndBrokenAssignments.containsKey(startModule)) {
@@ -335,12 +345,14 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 					moduleAndBrokenAssignments.put(startModule, startAssignments);
 				}
 			}
+
+			startModule.notCheckRoot();
 		}
 	}
 	
 	public List<AssignmentHandler> getAssignmentsFrom(final Module module) {
 		List<AssignmentHandler> assignmentHandlers = new ArrayList<AssignmentHandler>();
-		Assignments assignments = module.getAssignmentsScope();
+		Assignments assignments = module.getAssignments();
 		for (int d = 0; d < assignments.getNofAssignments(); ++d) {
 			Assignment assignment = assignments.getAssignmentByIndex(d);
 			AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(assignment);

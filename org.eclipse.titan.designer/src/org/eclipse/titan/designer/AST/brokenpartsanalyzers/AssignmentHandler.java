@@ -67,7 +67,7 @@ public abstract class AssignmentHandler extends ASTVisitor implements IAssignmen
 		nonContagiousReferences = new HashSet<String>();
 		contagiousReferences = new HashSet<String>();
 		infectedReferences = new HashSet<String>();
-		isInfected = false;
+		isInfected = assignment.isCheckRoot();
 		isContagious = false;
 	}
 

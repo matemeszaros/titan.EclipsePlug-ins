@@ -86,6 +86,9 @@ public abstract class Assignment extends ASTNode implements IOutlineElement, ILo
 
 	/** Stores whether this assignment was found to be used in this semantic check cycle. */
 	protected boolean isUsed;
+	
+	/** used by the incremental processing to signal if the assignment can eb the root of a change */
+	private boolean canBeCheckRoot = true;
 
 	public Assignment(final Identifier identifier) {
 		this.identifier = identifier;
@@ -97,12 +100,26 @@ public abstract class Assignment extends ASTNode implements IOutlineElement, ILo
 	public final CompilationTimeStamp getLastTimeChecked() {
 		return lastTimeChecked;
 	}
+	
+	/**
+	 * returns true if the assignment is the root of a change.
+	 * */
+	public final boolean isCheckRoot() {
+		return canBeCheckRoot;
+	}
+	
+	/**
+	 * Signals that the assignment can serve as a change root for the incremental analysis.
+	 * */
+	public final void checkRoot() {
+		canBeCheckRoot = true;
+	}
 
 	/**
-	 * Resets the last time when this assignment was checked.
+	 * Signals that the assignment can not serve as a change root for the incremental analysis.
 	 * */
-	public final void resetLastTimeChecked() {
-		lastTimeChecked = null;
+	public final void notCheckRoot() {
+		canBeCheckRoot = false;
 	}
 	
 	public final boolean getIsErroneous() {

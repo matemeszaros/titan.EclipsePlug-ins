@@ -133,7 +133,31 @@ public abstract class Module extends Scope implements IOutlineElement, ILocateab
 	public final CompilationTimeStamp getLastCompilationTimeStamp() {
 		return lastCompilationTimeStamp;
 	}
+	
+	/** used by the incremental processing to signal if the module can be the root of a change */
+	private boolean canBeCheckRoot = true;
 
+	/**
+	 * returns true if the assignment is the root of a change.
+	 * */
+	public final boolean isCheckRoot() {
+		return canBeCheckRoot;
+	}
+	
+	/**
+	 * Signals that the assignment can serve as a change root for the incremental analysis.
+	 * */
+	public final void checkRoot() {
+		canBeCheckRoot = true;
+	}
+	
+	/**
+	 * Signals that the assignment can not serve as a change root for the incremental analysis.
+	 * */
+	public final void notCheckRoot() {
+		canBeCheckRoot = false;
+	}
+	
 	/**
 	 * Sets whether this module can be skipped from semantic checking.
 	 * 

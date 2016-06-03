@@ -779,7 +779,7 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 						reparser.setNameChanged(false);
 					}
 					if(isDamaged) {
-						temp.resetLastTimeChecked();
+						temp.checkRoot();
 					}
 				} catch (ReParseException e) {
 					if (e.getDepth() == 1) {

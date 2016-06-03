@@ -172,13 +172,6 @@ public final class TTCN3Module extends Module {
 	}
 
 	/**
-	 * @return the time this module was checked the last time.
-	 * */
-	public CompilationTimeStamp lastChekingTime() {
-		return lastCompilationTimeStamp;
-	}
-
-	/**
 	 * @return The location of the comment assigned to this definition. Or
 	 *         null if none.
 	 * */

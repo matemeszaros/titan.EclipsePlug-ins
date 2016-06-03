@@ -16,6 +16,7 @@ import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ASN1.ASN1Assignment;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
+import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
  * 
@@ -93,6 +94,19 @@ public final class AssignmentHandlerAFTRerences extends ReferencesProcessor {
 			Identifier identifier = ((Reference) node).getId();
 			if(identifier != null) {
 				addContagiousReference(identifier.getDisplayName());
+			}
+
+			if(((Reference) node).getIsErroneous(CompilationTimeStamp.getBaseTimestamp())) {
+				setIsInfected(true);
+				setIsContagious(true);
+				return V_CONTINUE;
+			}
+			
+			final Assignment assignment = ((Reference) node).getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false, null);
+			if(assignment == null || !assignment.getIdentifier().equals(identifier)) {
+				setIsInfected(true);
+				setIsContagious(true);
+				return V_CONTINUE;
 			}
 		}
 		return V_CONTINUE;

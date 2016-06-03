@@ -32,11 +32,7 @@ public final class AssignmentHandlerFactory {
 			case A_TESTCASE:
 				return new AssignmentHandlerAFTRerences(assignment);
 			case A_TYPE:
-				boolean compilationTimeStampIsNull = assignment.getLastTimeChecked() == null;
 				IType type = assignment.getType(CompilationTimeStamp.getBaseTimestamp());
-				if (compilationTimeStampIsNull) {
-					assignment.resetLastTimeChecked();
-				}
 				if (type instanceof Component_Type) {
 					return new AssignmentHandlerComponent(assignment);
 				} else {
