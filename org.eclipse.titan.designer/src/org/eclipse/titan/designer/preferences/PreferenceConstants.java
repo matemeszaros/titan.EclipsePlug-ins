@@ -22,8 +22,6 @@ public final class PreferenceConstants {
 	public static final String TREATONTHEFLYERRORSFATALFORBUILD = ProductConstants.PRODUCT_ID_DESIGNER + ".treatOnTheFlyErrorsasFatalForBuild";
 	public static final String USEONTHEFLYPARSING = ProductConstants.PRODUCT_ID_DESIGNER + ".useOnTheFlyParsing";
 	public static final String USEINCREMENTALPARSING = ProductConstants.PRODUCT_ID_DESIGNER + ".useIncrementalParsing";
-	public static final String MODULESELECTIONALGORITHM = ProductConstants.PRODUCT_ID_DESIGNER + ".semanticCheckingAlgorithm";
-	public static final String BROKENMODULESRATIO = ProductConstants.PRODUCT_ID_DESIGNER + ".brokenModulesRatio";//TODO no longer used
 	public static final String DELAYSEMANTICCHECKINGTILLSAVE = ProductConstants.PRODUCT_ID_DESIGNER + ".delaySemantiCheckingTillSave";
 	public static final String MINIMISEMEMORYUSAGE = ProductConstants.PRODUCT_ID_DESIGNER + ".minimiseMemoryUsage";
 	public static final String RECONCILERTIMEOUT = ProductConstants.PRODUCT_ID_DESIGNER + ".reconcilerTimeout";

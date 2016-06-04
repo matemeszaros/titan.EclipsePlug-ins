@@ -7,11 +7,7 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.brokenpartsanalyzers;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.preferences.PreferenceConstantValues;
-import org.eclipse.titan.designer.preferences.PreferenceConstants;
-import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
 /**
  * Factory class to create instance of IBaseAnalyzer.
@@ -24,15 +20,7 @@ public final class AnalyzerFactory {
 	}
 
 	public static IBaseAnalyzer getAnalyzer(final CompilationTimeStamp timestamp) {
-		String preferenceSetting = Platform.getPreferencesService().getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MODULESELECTIONALGORITHM, PreferenceConstantValues.MODULESELECTIONORIGINAL, null);
-		SelectionAlgorithm selectionAlgorithm = SelectionAlgorithm.fromString(preferenceSetting);
-
-		if (selectionAlgorithm == null || SelectionAlgorithm.BROKENREFERENCESINVERTED.equals(selectionAlgorithm)) {
-			return new BrokenPartsViaReferences(SelectionAlgorithm.BROKENREFERENCESINVERTED, timestamp);
-		}
-
-		return new OriginalModuleSelection();
-		
+		return new BrokenPartsViaReferences(SelectionAlgorithm.BROKENREFERENCESINVERTED, timestamp);
 	}
 
 

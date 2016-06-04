@@ -41,11 +41,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.TREATONTHEFLYERRORSFATALFORBUILD, false);
 		preferenceStore.setDefault(PreferenceConstants.USEONTHEFLYPARSING, true);
 		preferenceStore.setDefault(PreferenceConstants.USEINCREMENTALPARSING, false);
-		preferenceStore.setDefault(PreferenceConstants.MODULESELECTIONALGORITHM, PreferenceConstantValues.BROKENPARTSVIAREFERENCES);
 		preferenceStore.setDefault(PreferenceConstants.DELAYSEMANTICCHECKINGTILLSAVE, true);
 		preferenceStore.setDefault(PreferenceConstants.MINIMISEMEMORYUSAGE, false);
 		preferenceStore.setDefault(PreferenceConstants.RECONCILERTIMEOUT, 1);
-		preferenceStore.setDefault(PreferenceConstants.BROKENMODULESRATIO, 20);
 		preferenceStore.setDefault(PreferenceConstants.PROCESSINGUNITSTOUSE, PreferenceConstantValues.AVAILABLEPROCESSORS);
 		preferenceStore.setDefault(PreferenceConstants.CONSOLE_ACTION_BEFORE_BUILD, PreferenceConstantValues.BEFORE_BUILD_PRINT_CONSOLE_DELIMITERS);
 
