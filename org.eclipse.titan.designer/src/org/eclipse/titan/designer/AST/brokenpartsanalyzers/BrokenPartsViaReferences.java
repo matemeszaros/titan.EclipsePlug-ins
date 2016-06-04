@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignments;
@@ -23,8 +22,6 @@ import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.preferences.PreferenceConstants;
-import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.ui.console.MessageConsoleStream;
 
 /**
@@ -35,17 +32,23 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 	// when the definition based search for parts to be analyzed exceeds this limit we switch back to the import based method.
 	// 1 second in nanoseconds
 	private final static long TIMELIMIT = 10 * (long)1e+9;
+	
+	/**
+	 *  When the percentage of broken modules is bigger than this limit
+	 *   the module level selection shall be used.
+	 * 
+	 * Otherwise the assignment level detection would take too long.
+	 */
+	private final static float BROKEN_MODULE_LIMIT = 10;
 
 	private final CompilationTimeStamp timestamp;
 	private final Map<Module, List<Assignment>> moduleAndBrokenAssignments;
-	private final int brokenModulesLimit;//FIXME should be a local constant
 	private boolean analyzeOnlyAssignments;
 	
 	public BrokenPartsViaReferences(final SelectionAlgorithm selectionAlgorithm, final CompilationTimeStamp timestamp) {
 		super(selectionAlgorithm);
 		moduleAndBrokenAssignments = new HashMap<Module, List<Assignment>>();
 		analyzeOnlyAssignments = false;
-		brokenModulesLimit = Platform.getPreferencesService().getInt(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.BROKENMODULESRATIO, 100, null);
 		this.timestamp = timestamp;
 		header = "\n**Selection with Broken parts via references is started at:";
 		footer = "**Selection with Broken parts via references is ended at:  ";
@@ -102,7 +105,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 
 	public void computeAnalyzeOnlyDefinitionsFlag(final List<Module> allModules, final List<Module> startModules) {
 		float brokenModulesRatio = (float) ((startModules.size() * 100.0) / allModules.size());
-		if (Float.compare(brokenModulesRatio, (float) brokenModulesLimit) < 0) {
+		if (Float.compare(brokenModulesRatio, (float) BROKEN_MODULE_LIMIT) < 0) {
 			analyzeOnlyAssignments = true;
 		}
 	}
