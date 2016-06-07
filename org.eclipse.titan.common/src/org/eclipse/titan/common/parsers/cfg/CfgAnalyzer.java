@@ -242,6 +242,7 @@ public final class CfgAnalyzer {
 		parser.removeErrorListeners(); // remove ConsoleErrorListener
 		parser.addErrorListener(parserListener);
 		mParseTreeRoot = parser.pr_ConfigFile();
+		parser.checkMacroErrors();
 		mTokenStream = tokens;
 		
 		warnings = parser.getWarnings();
