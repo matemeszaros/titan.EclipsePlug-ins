@@ -72,6 +72,44 @@ import java.util.regex.Pattern;
 	private DefineSectionHandler defineSectionHandler = new DefineSectionHandler();
 	private LoggingSectionHandler loggingSectionHandler = new LoggingSectionHandler();
 	
+	/**
+	 * Parsed macro info, collected during parsing, it will be processed after the parsing.
+	 */
+	private class Macro {
+		/** parsed macro text */
+		private String mMacroName;
+		
+		/** macro token, needed for the text and position */
+		private Token mMacroToken;
+		
+		/** error message if macro is not found */
+		private String mErrorMessage;
+		
+		public Macro( final String aMacroName, final Token aMacroToken, final String aErrorMessage ) {
+			mMacroName = aMacroName;
+			mMacroToken = aMacroToken;
+			mErrorMessage = aErrorMessage;
+		}
+		
+		public String getMacroName() {
+			return mMacroName;
+		}
+
+		public Token getMacroToken() {
+			return mMacroToken;
+		}
+
+		public String getErrorMessage() {
+			return mErrorMessage;
+		}
+	}
+	
+	private List<Macro> mMacros = new ArrayList<Macro>();
+	
+	private void addMacro( final String aMacroName, final Token aMacroToken, final String aErrorMessage ) {
+		mMacros.add( new Macro( aMacroName, aMacroToken, aErrorMessage ) );
+	}
+	
 	public void reportWarning(TITANMarker marker){
 		mWarnings.add(marker);
 	}
@@ -239,29 +277,12 @@ import java.util.regex.Pattern;
 	 */
 	private String getMacroValue( final Token aMacroToken, final String aErrorFormatStr ) {
 		final String definition = getMacroName( aMacroToken.getText() );
+		final String errorMsg = String.format( aErrorFormatStr, definition );
+		addMacro( definition, aMacroToken, errorMsg );
 		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			final String errorMsg = String.format( aErrorFormatStr, definition );
-			reportError( errorMsg, aMacroToken, aMacroToken );
-			return "";
-		}
-		return value;
-	}
-	
-	/**
-	 * Gets the macro value string of a macro (without type)
-	 * @param aMacroRule the macro rule
-	 * @param aErrorFormatStr format strings for error messages if definition (macro or environment variable) cannot be resolved
-	 *                        %s : definition
-	 * @return the macro value string
-	 *         or "" if macro is invalid. In this case an error marker is also created
-	 */
-	private String getMacroValue( final ParserRuleContext aMacroRule, final String aErrorFormatStr ) {
-		final String definition = getMacroName( aMacroRule.getText() );
-		final String value = getDefinitionValue( definition );
-		if ( value == null ) {
-			final String errorMsg = String.format( aErrorFormatStr, definition );
-			reportError( errorMsg, aMacroRule.start, aMacroRule.stop );
+			//TODO: remove, macro errors are processed later
+			//reportError( errorMsg, aMacroToken, aMacroToken );
 			return "";
 		}
 		return value;
@@ -277,32 +298,28 @@ import java.util.regex.Pattern;
 	 */
 	private String getTypedMacroValue( Token aMacroToken, String aErrorFormatStr ) {
 		final String definition = getTypedMacroName( aMacroToken.getText() );
+		final String errorMsg = String.format( aErrorFormatStr, definition );
+		addMacro( definition, aMacroToken, errorMsg );
 		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			final String errorMsg = String.format( aErrorFormatStr, definition );
-			reportError( errorMsg, aMacroToken, aMacroToken );
+			//TODO: remove, macro errors are processed later
+			//reportError( errorMsg, aMacroToken, aMacroToken );
 			return "";
 		}
 		return value;
 	}
-		
+	
 	/**
-	 * Gets the macro value string of a macro (with type)
-	 * @param aMacroRule the macro rule
-	 * @param aErrorFormatStr format strings for error messages if definition (macro or environment variable) cannot be resolved
-	 *                        %s : definition
-	 * @return the macro value string
-	 *         or "" if macro is invalid. In this case an error marker is also created
+	 * Checks if all the collected macros are valid,
+	 * puts error markers if needed
 	 */
-	private String getTypedMacroValue( ParserRuleContext aMacroRule, String aErrorFormatStr ) {
-		final String definition = getTypedMacroName( aMacroRule.getText() );
-		final String value = getDefinitionValue( definition );
-		if ( value == null ) {
-			final String errorMsg = String.format( aErrorFormatStr, definition );
-			reportError( errorMsg, aMacroRule.start, aMacroRule.stop );
-			return "";
+	public void checkMacroErrors() {
+		for ( final Macro macro : mMacros ) {
+			final String value = getDefinitionValue( macro.getMacroName() );
+			if ( value == null ) {
+				reportError( macro.getErrorMessage(), macro.getMacroToken(), macro.getMacroToken() );
+			}
 		}
-		return value;
 	}
 	
 	/**
