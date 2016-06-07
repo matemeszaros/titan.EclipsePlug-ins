@@ -243,6 +243,7 @@ public final class ControlPart extends Scope implements ILocateableNode, IAppend
 	 * */
 	public void updateSyntax(final TTCN3ReparseUpdater reparser) throws ReParseException {
 		if (reparser.isDamaged(getLocation())) {
+			lastTimeChecked = null;
 			boolean enveloped = false;
 
 			if (reparser.envelopsDamage(statementblock.getLocation())) {

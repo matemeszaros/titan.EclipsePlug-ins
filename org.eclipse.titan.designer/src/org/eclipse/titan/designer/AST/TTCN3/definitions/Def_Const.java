@@ -308,6 +308,7 @@ public final class Def_Const extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();

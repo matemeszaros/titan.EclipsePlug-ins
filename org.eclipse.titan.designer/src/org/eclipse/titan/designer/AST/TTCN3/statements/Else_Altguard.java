@@ -122,6 +122,7 @@ public final class Else_Altguard extends AltGuard {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			if (statementblock != null && reparser.envelopsDamage(statementblock.getLocation())) {
 				statementblock.updateSyntax(reparser, true);
 				reparser.updateLocation(statementblock.getLocation());

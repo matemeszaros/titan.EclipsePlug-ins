@@ -105,6 +105,7 @@ public final class Interleave_Statement extends Statement {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			if (altGuards != null) {
 				if (reparser.envelopsDamage(altGuards.getLocation())) {
 					altGuards.updateSyntax(reparser, true);

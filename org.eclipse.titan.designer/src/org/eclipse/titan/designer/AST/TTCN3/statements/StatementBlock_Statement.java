@@ -140,6 +140,7 @@ public final class StatementBlock_Statement extends Statement {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			if (statementblock != null) {
 				if (reparser.envelopsDamage(statementblock.getLocation())) {
 					statementblock.updateSyntax(reparser, true);

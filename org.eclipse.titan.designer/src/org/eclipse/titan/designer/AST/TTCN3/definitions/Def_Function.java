@@ -698,6 +698,8 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
+			
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();

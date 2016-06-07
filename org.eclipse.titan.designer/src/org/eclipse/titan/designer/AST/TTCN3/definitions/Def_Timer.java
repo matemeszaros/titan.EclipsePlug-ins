@@ -355,6 +355,7 @@ public final class Def_Timer extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			int result = 1;
 			Location tempIdentifier = identifier.getLocation();
 			if (reparser.envelopsDamage(tempIdentifier) || reparser.isExtending(tempIdentifier)) {

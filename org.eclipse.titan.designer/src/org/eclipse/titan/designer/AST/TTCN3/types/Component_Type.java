@@ -327,6 +327,7 @@ public final class Component_Type extends Type {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean handled = false;
 
 			if (componentBody != null) {

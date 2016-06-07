@@ -256,6 +256,7 @@ public final class Def_ModulePar extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean enveloped = false;
 
 			Location temporalIdentifier = identifier.getLocation();

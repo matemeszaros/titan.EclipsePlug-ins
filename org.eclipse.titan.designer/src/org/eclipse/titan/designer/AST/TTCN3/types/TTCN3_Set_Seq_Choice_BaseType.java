@@ -498,6 +498,7 @@ public abstract class TTCN3_Set_Seq_Choice_BaseType extends Type implements ITyp
 	@Override
 	public final void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean handled = false;
 
 			if (compFieldMap != null

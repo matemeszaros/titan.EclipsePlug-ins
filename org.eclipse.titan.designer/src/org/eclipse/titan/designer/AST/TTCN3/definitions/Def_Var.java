@@ -332,6 +332,7 @@ public final class Def_Var extends Definition {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean enveloped = false;
 			int result = 1;
 

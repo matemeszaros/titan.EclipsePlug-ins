@@ -424,6 +424,7 @@ public final class For_Loop_Definitions extends Assignments implements ILocateab
 		// calculate damaged region
 		int result = 0;
 
+		lastCompilationTimeStamp = null;
 		boolean enveloped = false;
 		int nofDamaged = 0;
 		int leftBoundary = location.getOffset() + 1;

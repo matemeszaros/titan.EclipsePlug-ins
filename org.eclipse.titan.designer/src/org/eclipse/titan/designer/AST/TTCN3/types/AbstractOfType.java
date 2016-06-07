@@ -604,6 +604,7 @@ public abstract class AbstractOfType extends ASN1Type {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean handled = false;
 
 			if (ofType instanceof IIncrementallyUpdateable && reparser.envelopsDamage(ofType.getLocation())) {

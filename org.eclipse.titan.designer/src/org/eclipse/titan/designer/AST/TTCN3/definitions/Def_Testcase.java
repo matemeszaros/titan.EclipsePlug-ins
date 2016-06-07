@@ -350,6 +350,7 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean enveloped = false;
 			int result = 1;
 

@@ -309,6 +309,7 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastCompilationTimeStamp = null;
 			if (doubleComponents != null) {
 				fields.addAll(doubleComponents);
 				doubleComponents = null;

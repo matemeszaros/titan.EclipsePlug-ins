@@ -706,6 +706,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 					doubleDefinitions.clear();
 				}
 				lastUniquenessCheckTimeStamp = null;
+				lastCompilationTimeStamp = null;
 			}
 		}
 
@@ -812,9 +813,10 @@ public final class Definitions extends Assignments implements ILocateableNode {
 							}
 							lastUniquenessCheckTimeStamp = null;
 							reparser.setNameChanged(false);
+							// This could also spread
 						}
 						if(isDamaged) {
-							temp.checkRoot();
+							temp.checkRoot();//TODO lets move this into the definitions
 						}
 					} catch (ReParseException e) {
 						if (e.getDepth() == 1) {
@@ -841,6 +843,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				doubleDefinitions.clear();
 			}
 			lastUniquenessCheckTimeStamp = null;
+			lastCompilationTimeStamp = null;
 		}
 
 		for (int i = 0, size = groups.size(); i < size; i++) {
@@ -890,6 +893,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			reparser.extendDamagedRegion(leftBoundary, rightBoundary);
 			result = reparse( reparser, tempIsControlPossible );
 			result = Math.max(result - 1, 0);
+			lastCompilationTimeStamp = null;
 		}
 
 		if (result == 0) {

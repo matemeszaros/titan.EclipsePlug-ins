@@ -426,6 +426,7 @@ public final class TTCN3_Enumerated_Type extends Type implements ITypeWithCompon
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean handled = false;
 			if (items != null) {
 				if (reparser.envelopsDamage(items.getLocation())) {

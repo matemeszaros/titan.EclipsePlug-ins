@@ -200,6 +200,7 @@ public final class DoWhile_Statement extends Statement {
 	@Override
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
+			lastTimeChecked = null;
 			boolean enveloped = false;
 
 			if (statementblock != null) {
