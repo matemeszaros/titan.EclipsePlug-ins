@@ -73,11 +73,23 @@ public final class BrokenPartsChecker {
 	//TODO check if this can be merged with the following one
 	private void generalChecker() {
 		semanticMonitor.beginTask("Semantic check", selectionMethod.getModulesToCheck().size());
+		
+		for (Module module : selectionMethod.getModulesToSkip()) {
+			module.setSkippedFromSemanticChecking(true);
+		}
+		for (Module module : selectionMethod.getModulesToCheck()) {
+			module.setSkippedFromSemanticChecking(false);
+		}
+
 		// process the modules one-by-one
 		for (final Module module : selectionMethod.getModulesToCheck()) {
 			semanticMonitor.subTask("Semantically checking module: " + module.getName());
 			module.check(compilationCounter);
 			semanticMonitor.worked(1);
+		}
+
+		for (final Module module : selectionMethod.getModulesToSkip()) {
+			module.setSkippedFromSemanticChecking(false);
 		}
 	}
 
