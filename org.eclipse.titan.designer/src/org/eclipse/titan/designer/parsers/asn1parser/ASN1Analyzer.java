@@ -84,6 +84,7 @@ public class ASN1Analyzer implements ISourceAnalyzer {
 				reader = new BufferedReader(new InputStreamReader(file.getContents(), file.getCharset()));
 			} catch (Exception e) {
 				ErrorReporter.logExceptionStackTrace("Could not get the contents of `" + file.getName() + "'", e);
+				return;
 			}
 		} else {
 			return;
