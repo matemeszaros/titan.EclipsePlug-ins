@@ -4167,7 +4167,7 @@ pr_ConnectStatement returns[Connect_Statement statement = null]:
 	h = pr_SingleConnectionSpec
 )
 {
-	if($h.helper != null && $h.helper.portReference1 != null && $h.helper.portReference2 != null ) {
+	if($h.helper != null) {
 		$statement = new Connect_Statement(	$h.helper.componentReference1, new PortReference($h.helper.portReference1),
 											$h.helper.componentReference2, new PortReference($h.helper.portReference2) );
 		$statement.setLocation(getLocation( $col.start, $h.stop));
@@ -4197,8 +4197,9 @@ pr_PortRef returns[PortReference_Helper helper = null]:
 	p = pr_Port
 )
 {
-	$helper = new PortReference_Helper($c.value, $p.reference);
-
+	if($c.value != null && $p.reference != null) {
+		$helper = new PortReference_Helper($c.value, $p.reference);
+	}
 };
 
 pr_ComponentRef returns[Value value = null]:
