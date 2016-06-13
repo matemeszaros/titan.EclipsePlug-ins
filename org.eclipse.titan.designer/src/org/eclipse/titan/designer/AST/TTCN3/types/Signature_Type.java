@@ -15,6 +15,8 @@ import java.util.Set;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ArraySubReference;
+import org.eclipse.titan.designer.AST.Assignment;
+import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
@@ -35,6 +37,7 @@ import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.NamedTemplate;
 import org.eclipse.titan.designer.AST.TTCN3.templates.Named_Template_List;
+import org.eclipse.titan.designer.AST.TTCN3.templates.SpecificValue_Template;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template.Template_type;
 import org.eclipse.titan.designer.AST.TTCN3.values.NamedValue;
 import org.eclipse.titan.designer.AST.TTCN3.values.Sequence_Value;
@@ -455,13 +458,15 @@ public final class Signature_Type extends Type {
 		template.setMyGovernor(this);
 
 		switch (template.getTemplatetype()) {
-		case TEMPLATE_LIST: {
+		case TEMPLATE_LIST:
 			ITTCN3Template transformed = template.setTemplatetype(timestamp, Template_type.NAMED_TEMPLATE_LIST);
 			checkThisNamedTemplateList(timestamp, (Named_Template_List) transformed, isModified);
 			break;
-		}
 		case NAMED_TEMPLATE_LIST:
 			checkThisNamedTemplateList(timestamp, (Named_Template_List) template, isModified);
+			break;
+		case SPECIFIC_VALUE:
+			((SpecificValue_Template) template).checkSpecificValue(timestamp,false);
 			break;
 		default:
 			template.getLocation().reportSemanticError(MessageFormat.format(TEMPLATENOTALLOWED, template.getTemplateTypeName(), getTypename()));
@@ -476,9 +481,21 @@ public final class Signature_Type extends Type {
 	private void checkThisNamedTemplateList(final CompilationTimeStamp timestamp, final Named_Template_List template, final boolean isModified) {
 		Map<String, NamedTemplate> componentMap = new HashMap<String, NamedTemplate>();
 		boolean inSynch = true;
-		int nofTypeParameters = getNofParameters();
+		int nofTypeParameters =  getNofParameters();  //TODO:  alternatives:formalParList.getNofInParameters(); formalParList.getNofOutParameters()
 		int nofTemplateComponents = template.getNofTemplates();
 		int tI = 0;
+		if(nofTemplateComponents < nofTypeParameters) {
+			template.getLocation().reportSemanticError(
+					MessageFormat.format("Too few elements in value list notation for type `{0}'': {1} was expected instead of {2}",
+					this.getFullName(), nofTypeParameters, nofTemplateComponents));
+		}
+
+// The compiler does not do this check:
+//		if(nofTemplateComponents > nofTypeParameters) {
+//			template.getLocation().reportSemanticError(
+//					MessageFormat.format("Too many elements in value list notation for type `{0}'': {1} was expected instead of {2}",
+//					this.getFullName(), nofTypeParameters, nofTemplateComponents));
+//		}
 		for (int vI = 0; vI < nofTemplateComponents; vI++) {
 			NamedTemplate namedTemplate = template.getTemplateByIndex(vI);
 			Identifier identifier = namedTemplate.getName();
@@ -503,6 +520,7 @@ public final class Signature_Type extends Type {
 						parameter2 = formalParList.getParameterByIndex(tI);
 						if (parameter == parameter2) {
 							found = true;
+							break;
 						}
 					}
 					if (!found) {
