@@ -76,7 +76,7 @@ public abstract class Parameter_Redirect extends ASTNode implements ILocateableN
 		final IType variableType = reference.checkVariableReference(timestamp);
 		if (type != null && variableType != null && !type.isIdentical(timestamp, variableType)) {
 			final String message = MessageFormat.format(
-					"Type missmatch in parameter redirect: A variable of type `{0}'' was expected instead of `{1}''",
+					"Type mismatch in parameter redirect: A variable of type `{0}'' was expected instead of `{1}''",
 					type.getTypename(), variableType.getTypename());
 			reference.getLocation().reportSemanticError(message);
 			return;

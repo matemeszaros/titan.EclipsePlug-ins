@@ -314,7 +314,7 @@ public final class TTCN3_Enumerated_Type extends Type implements ITypeWithCompon
 		registerUsage(template);
 		template.setMyGovernor(this);
 		
-		if (!Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype()) && !Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype())) {
+		if (!Template_type.SPECIFIC_VALUE.equals(template.getTemplatetype()) ) {
 			template.getLocation().reportSemanticError(MessageFormat.format(TEMPLATENOTALLOWED, template.getTemplateTypeName()));
 			template.setIsErroneous(true);
 		}

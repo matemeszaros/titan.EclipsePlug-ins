@@ -242,6 +242,7 @@ public final class Call_Statement extends Statement {
 
 			switch (signatureType.getTypetype()) {
 			case TYPE_SIGNATURE:
+				((Signature_Type) signatureType).checkThisTemplate(timestamp, parameter.getTemplateBody(), false, false);
 				isNonblocking = ((Signature_Type) signatureType).isNonblocking();
 				break;
 			default:
