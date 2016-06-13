@@ -151,7 +151,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 		}
 		super.doSave(progressMonitor);
 		
-		analyzeOpenedFile("Reconciliation on save");
+		analyzeOpenedFile("Reconciliation on save", file);
 	}
 	
 	/**
@@ -163,11 +163,10 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	 *   (This is the case when functionality "minimized memory usage" is switched on)
 	 *   
 	 * @param jobname The name of the workspace job
+	 * @param file the file being saved
 	 * @author Kristof Szabados
 	 */
-	private void analyzeOpenedFile(final String jobname) {
-		// "file" cannot be get as a parameter!
-		final IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
+	private void analyzeOpenedFile(final String jobname, final IFile file) {
 		if (file != null && isSemanticCheckingDelayed()) {
 			final IReconcilingStrategy strategy = reconciler.getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE);
 			if (strategy instanceof ReconcilingStrategy) {
