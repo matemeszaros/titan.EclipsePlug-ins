@@ -176,7 +176,7 @@ public final class Getcall_Statement extends Statement {
 							MessageFormat.format(MESSAGEBASEDPORT, statementName, portType.getTypename()));
 				} else if (inSignatures != null) {
 					if (inSignatures.getNofTypes() == 1) {
-						signature = inSignatures.getTypeByIndex(0); //???
+						signature = inSignatures.getTypeByIndex(0);
 					} else {
 						signature = Port_Utility.getOutgoingType(timestamp, parameter);
 
