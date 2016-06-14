@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.extensions.IProjectProcesser;
 import org.eclipse.titanium.Activator;
 import org.eclipse.titanium.markers.handler.MarkerHandler;
@@ -41,12 +40,7 @@ public class ExecuteAnalyzer implements IProjectProcesser {
 				public void propertyChange(final PropertyChangeEvent event) {
 					final String property = event.getProperty();
 					if (onTheFlyName.equals(property)) {
-						Object object = event.getNewValue();
-						if(object instanceof Boolean) {
-							onTheFlyEnabled = (Boolean) object;
-						} else {
-							ErrorReporter.INTERNAL_ERROR("The on-the-fly analyzer should have boolean values, but is `" + object + "'");
-						}
+						onTheFlyEnabled = Platform.getPreferencesService().getBoolean(titaniumId, onTheFlyName, false, null);
 					}
 				}
 			});
