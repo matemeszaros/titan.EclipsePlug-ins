@@ -408,6 +408,92 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 	}
 
 	/**
+	 * Read the parsed actual parameters, and collate the lazy and non-lazy actual parameters 
+	 * according to their associated formal parameters.
+	 * 
+	 * @param timestamp
+	 *                the timestamp of the actual semantic check cycle.
+	 * @param parsedParameters
+	 *                the parsed actual parameters (may contain named, and unnamed parts too).
+	 * @param actualLazyParameters
+	 *                the list of actual lazy parameters returned for later usage.
+	 * @param actualNonLazyParameters
+	 *                the list of actual non lazy parameters returned for later usage.
+	 */
+	public final void collateLazyAndNonLazyActualParameters(final CompilationTimeStamp timestamp, final ParsedActualParameters parsedParameters,
+			final ActualParameterList actualLazyParameters,final ActualParameterList actualNonLazyParameters) {
+		
+		TemplateInstances unnamed = parsedParameters.getInstances();
+		NamedParameters named = parsedParameters.getNamedParameters();
+		int nofLocated = unnamed.getNofTis();
+		
+		Map<FormalParameter, Integer> formalParameterMap = new HashMap<FormalParameter, Integer>();
+		for (int i = 0, size = parameters.size(); i < size; i++) {
+			formalParameterMap.put(parameters.get(i), Integer.valueOf(i));
+		}
+		
+		TemplateInstances finalUnnamed = new TemplateInstances(unnamed);
+		
+		for (int i = 0, size = named.getNofParams(); i < size; i++) {
+			NamedParameter namedParameter = named.getParamByIndex(i);
+			FormalParameter formalParameter = parameterMap.get(namedParameter.getName().getName());
+			int isAt = formalParameterMap.get(formalParameter);
+			for (; nofLocated < isAt; nofLocated++) {
+				NotUsed_Template temp = new NotUsed_Template();
+				if (!parameters.get(nofLocated).hasDefaultValue()) {
+					temp.setIsErroneous(true);
+				}
+				TemplateInstance instance = new TemplateInstance(null, null, temp);
+				instance.setLocation(parsedParameters.getLocation());
+				finalUnnamed.addTemplateInstance(instance);
+			}
+			finalUnnamed.addTemplateInstance(namedParameter.getInstance());
+			nofLocated++;
+		}
+		
+		finalUnnamed.setLocation(parsedParameters.getLocation());
+		
+		int upperLimit = (finalUnnamed.getNofTis() < parameters.size()) ? finalUnnamed.getNofTis() : parameters.size();
+		
+		for (int i = 0; i < upperLimit; i++) {
+			TemplateInstance instance = finalUnnamed.getInstanceByIndex(i);
+			FormalParameter formalParameter = parameters.get(i);
+			if (instance.getType() == null && instance.getDerivedReference() == null
+					&& Template_type.TEMPLATE_NOTUSED.equals(instance.getTemplateBody().getTemplatetype())) {
+					
+				ActualParameter defaultValue = formalParameter.getDefaultValue();
+				Default_ActualParameter temp = new Default_ActualParameter(defaultValue);
+				temp.setLocation(defaultValue.getLocation());
+				if(formalParameter.getIsLazy()) {
+					actualLazyParameters.addParameter(temp);
+				} else {
+					actualNonLazyParameters.addParameter(temp);
+				}
+			} else {
+				ActualParameter actualParameter = formalParameter.checkActualParameter(timestamp, instance, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+				actualParameter.setLocation(instance.getLocation());
+				if(formalParameter.getIsLazy()) {
+					actualLazyParameters.addParameter(actualParameter);
+				} else {
+					actualNonLazyParameters.addParameter(actualParameter);
+				}
+			}
+		}
+
+		for (int i = upperLimit; i < parameters.size(); i++) {
+			FormalParameter formalParameter = parameters.get(i);
+			ActualParameter defaultValue = formalParameter.getDefaultValue();
+			Default_ActualParameter temp = new Default_ActualParameter(defaultValue);
+			temp.setLocation(defaultValue.getLocation());
+			if(formalParameter.getIsLazy()) {
+				actualLazyParameters.addParameter(temp);
+			} else {
+				actualNonLazyParameters.addParameter(temp);
+			}
+		}
+	}
+	
+	/**
 	 * Check if a list of parsed actual parameters is semantically correct
 	 * according to a list of formal parameters (the called entity).
 	 * 
