@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.OutOfMemoryCheck;
 
 /**
  * The Location class represents a location in the source code.
@@ -30,6 +31,9 @@ import org.eclipse.titan.designer.GeneralConstants;
  * @author Arpad Lovassy
  */
 public class Location {
+	private final String OUTOFMEMORYERROR =
+			"Free memory running low. Markers may be inconsistent.";
+
 	private IResource file;
 	private int line;
 	private int offset;
@@ -334,7 +338,7 @@ public class Location {
 	}
 
 	public void reportExternalProblem(final String reason, final int severity, final int priority, final String markerID) {
-		reportProblem(reason, severity, priority, markerID);
+		checkMemory(reason, severity, priority, markerID);
 	}
 
 	/**
@@ -345,7 +349,25 @@ public class Location {
 	 * @param markerID the identifier of the type of the marker.
 	 * */
 	protected void reportProblem(final String reason, final int severity, final String markerID) {
-		reportProblem(reason, severity, IMarker.PRIORITY_HIGH, markerID);
+		checkMemory(reason, severity, IMarker.PRIORITY_HIGH, markerID);
+	}
+	
+	private void checkMemory(final String reason, final int severity, final int priority, final String markerID) {
+		Runtime Rt = Runtime.getRuntime();
+		
+		long free = Rt.freeMemory();
+		long total = Rt.totalMemory();
+		
+		if (((long)Math.round((total*0.1)))>free) {
+			
+			if (!OutOfMemoryCheck.isOutOfMemory()) {
+				OutOfMemoryCheck.setOutOfMemory(true);
+				ErrorReporter.parallelErrorDisplayInMessageDialog("Low memory", OUTOFMEMORYERROR);
+				ErrorReporter.logError(OUTOFMEMORYERROR);
+			}
+		} else {
+			reportProblem(reason, severity, priority, markerID);
+		}
 	}
 
 	protected void reportProblem(final String reason, final int severity, final int priority, final String markerID) {
