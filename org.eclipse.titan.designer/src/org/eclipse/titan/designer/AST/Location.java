@@ -338,7 +338,7 @@ public class Location {
 	}
 
 	public void reportExternalProblem(final String reason, final int severity, final int priority, final String markerID) {
-		checkMemory(reason, severity, priority, markerID);
+		reportProblem(reason, severity, priority, markerID);
 	}
 
 	/**
@@ -349,60 +349,63 @@ public class Location {
 	 * @param markerID the identifier of the type of the marker.
 	 * */
 	protected void reportProblem(final String reason, final int severity, final String markerID) {
-		checkMemory(reason, severity, IMarker.PRIORITY_HIGH, markerID);
+		reportProblem(reason, severity, IMarker.PRIORITY_HIGH, markerID);
 	}
 	
-	private void checkMemory(final String reason, final int severity, final int priority, final String markerID) {
+	private boolean checkOutOfMemory() {
 		Runtime Rt = Runtime.getRuntime();
 		
 		long free = Rt.freeMemory();
 		long total = Rt.totalMemory();
 		
 		if (((long)Math.round((total*0.1)))>free) {
+			return true;
 			
-			if (!OutOfMemoryCheck.isOutOfMemory()) {
-				OutOfMemoryCheck.setOutOfMemory(true);
-				ErrorReporter.parallelErrorDisplayInMessageDialog("Low memory", OUTOFMEMORYERROR);
-				ErrorReporter.logError(OUTOFMEMORYERROR);
-			}
 		} else {
-			reportProblem(reason, severity, priority, markerID);
+			return false;
 		}
 	}
 
 	protected void reportProblem(final String reason, final int severity, final int priority, final String markerID) {
-		final Map<String, Object> markerProperties = new HashMap<String, Object>();
+		if (checkOutOfMemory()) {
 
-		Integer lineNumber = Integer.valueOf(line);
+			final Map<String, Object> markerProperties = new HashMap<String, Object>();
 
-		if (line != -1) {
-			markerProperties.put(IMarker.LINE_NUMBER, lineNumber);
-		}
-		if (offset != -1) {
-			markerProperties.put(IMarker.CHAR_START, Integer.valueOf(offset));
-		}
-		if (endOffset != -1) {
-			markerProperties.put(IMarker.CHAR_END, Integer.valueOf(endOffset));
-		}
-		markerProperties.put(IMarker.SEVERITY, Integer.valueOf(severity));
-		markerProperties.put(IMarker.PRIORITY, Integer.valueOf(priority));
-		markerProperties.put(IMarker.MESSAGE, reason);
-		markerProperties.put(IMarker.TRANSIENT, Boolean.TRUE);
-		try {
-			if (file != null && file.isAccessible()) {
-				IMarker marker = MarkerHandler.hasMarker(markerID, file, line, offset, endOffset, severity, reason);
-				if (marker != null) {
-					MarkerHandler.markUsed(markerID, file, marker.getId());
-				} else {
-					MarkerCreator markerCreator = new MarkerCreator(markerID, markerProperties);
-					file.getWorkspace().run(markerCreator, null, IWorkspace.AVOID_UPDATE, null);
-					IMarker createdMarker = markerCreator.getMarker();
-					long markerId = createdMarker.getId();
-					MarkerHandler.addMarker(markerID, file, line, offset, endOffset, markerId);
-				}
+			Integer lineNumber = Integer.valueOf(line);
+
+			if (line != -1) {
+				markerProperties.put(IMarker.LINE_NUMBER, lineNumber);
 			}
-		} catch (CoreException e) {
-			ErrorReporter.logExceptionStackTrace("Error while creating marker", e);
+			if (offset != -1) {
+				markerProperties.put(IMarker.CHAR_START, Integer.valueOf(offset));
+			}
+			if (endOffset != -1) {
+				markerProperties.put(IMarker.CHAR_END, Integer.valueOf(endOffset));
+			}
+			markerProperties.put(IMarker.SEVERITY, Integer.valueOf(severity));
+			markerProperties.put(IMarker.PRIORITY, Integer.valueOf(priority));
+			markerProperties.put(IMarker.MESSAGE, reason);
+			markerProperties.put(IMarker.TRANSIENT, Boolean.TRUE);
+			try {
+				if (file != null && file.isAccessible()) {
+					IMarker marker = MarkerHandler.hasMarker(markerID, file, line, offset, endOffset, severity, reason);
+					if (marker != null) {
+						MarkerHandler.markUsed(markerID, file, marker.getId());
+					} else {
+						MarkerCreator markerCreator = new MarkerCreator(markerID, markerProperties);
+						file.getWorkspace().run(markerCreator, null, IWorkspace.AVOID_UPDATE, null);
+						IMarker createdMarker = markerCreator.getMarker();
+						long markerId = createdMarker.getId();
+						MarkerHandler.addMarker(markerID, file, line, offset, endOffset, markerId);
+					}
+				}
+			} catch (CoreException e) {
+				ErrorReporter.logExceptionStackTrace("Error while creating marker", e);
+			}
+		} else if (!OutOfMemoryCheck.isOutOfMemory()) {
+			OutOfMemoryCheck.setOutOfMemory(true);
+			ErrorReporter.parallelErrorDisplayInMessageDialog("Low memory", OUTOFMEMORYERROR);
+			ErrorReporter.logError(OUTOFMEMORYERROR);
 		}
 	}
 
