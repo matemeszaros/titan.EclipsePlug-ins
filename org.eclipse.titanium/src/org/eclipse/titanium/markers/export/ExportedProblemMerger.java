@@ -149,7 +149,7 @@ public class ExportedProblemMerger {
 	private void collectSmellNames(HSSFSheet sheet) {
 		final int rows = sheet.getLastRowNum();
 		int row = 2;
-		while (row < rows) {
+		while (row <= rows) {
 			HSSFRow actualRow = sheet.getRow(row);
 			if (actualRow != null) {
 				Cell cell = actualRow.getCell(0);
@@ -265,7 +265,7 @@ public class ExportedProblemMerger {
 	private void writeSmellData(HSSFSheet sheet, Date date, int col) {
 		int rows = sheet.getLastRowNum();
 		int colinfile = datecol.get(date);
-		for (int row = 2; row < rows; ++row)
+		for (int row = 2; row <= rows; ++row)
 		{
 			HSSFRow actualRow = sheet.getRow(row);
 			if(actualRow == null) {
