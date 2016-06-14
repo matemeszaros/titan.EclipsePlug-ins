@@ -315,7 +315,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 					startAssignment.accept(assignmentHandler);
 
 					if (startAssignment.isCheckRoot()) {
-						assignmentHandler.initStartParts();
+						assignmentHandler.setIsInfected(true);
 						startAssignment.notCheckRoot();
 						assignmentHandler.addReason("Definition's infected, because of incremental parsing.");
 						brokens.add(assignmentHandler);

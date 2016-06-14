@@ -80,13 +80,5 @@ public abstract class SelectionMethodBase {
 		TITANDebugConsole.println("**Broken modules name:   " + modulesToCheck);
 		TITANDebugConsole.println();
 	}
-	
-	public void setSkippedFromSemanticChecking() {
-		for (Module module : modulesToSkip) {
-			module.setSkippedFromSemanticChecking(true);
-		}
-		for (Module module : modulesToCheck) {
-			module.setSkippedFromSemanticChecking(false);
-		}
-	}
+
 }
