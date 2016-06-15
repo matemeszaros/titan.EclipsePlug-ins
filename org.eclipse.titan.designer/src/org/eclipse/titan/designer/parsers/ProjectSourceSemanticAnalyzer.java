@@ -461,8 +461,6 @@ public class ProjectSourceSemanticAnalyzer {
 				selectionMethodBase.setModules(allModules, semanticallyChecked);
 				selectionMethod.execute();
 
-				selectionMethodBase.setSkippedFromSemanticChecking();
-
 				BrokenPartsChecker brokenPartsChecker = new BrokenPartsChecker(monitor, compilationCounter, selectionMethodBase);
 				brokenPartsChecker.doChecking();
 				
