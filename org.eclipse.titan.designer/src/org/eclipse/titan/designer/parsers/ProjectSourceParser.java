@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.OutOfMemoryCheck;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
@@ -726,7 +727,11 @@ public final class ProjectSourceParser {
 		if (!checkConfigurationRequirements(project, GeneralConstants.ONTHEFLY_SEMANTIC_MARKER)) {
 			return Status.OK_STATUS;
 		}
-
+		
+		if (OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
+			return Status.CANCEL_STATUS;
+		}
+				
 		MarkerHandler.markAllMarkersForRemoval(project, GeneralConstants.ONTHEFLY_SEMANTIC_MARKER);
 		MarkerHandler.markAllMarkersForRemoval(project, GeneralConstants.ONTHEFLY_MIXED_MARKER);
 

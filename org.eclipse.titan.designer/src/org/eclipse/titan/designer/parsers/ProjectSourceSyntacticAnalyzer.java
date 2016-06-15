@@ -43,6 +43,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.OutOfMemoryCheck;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
@@ -705,6 +706,11 @@ public final class ProjectSourceSyntacticAnalyzer {
 						TITANDebugConsole.println("The file " + file.getLocationURI() + " does not seem to exist.",stream);
 					}
 					latch.countDown();
+				} else if (OutOfMemoryCheck.isOutOfMemory()) {
+					if (!OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
+						OutOfMemoryCheck.outOfMemoryEvent();
+						return Status.CANCEL_STATUS;
+					}
 				} else if (!uptodateFiles.containsKey(file) && !highlySyntaxErroneousFiles.contains(file)) {
 					// Checked whether the linked file
 					// exists at all, if no continue
@@ -763,6 +769,11 @@ public final class ProjectSourceSyntacticAnalyzer {
 						TITANDebugConsole.println("The file " + file.getLocationURI() + " does not seem to exist.",stream);
 					}
 					latch.countDown();
+				} else if (OutOfMemoryCheck.isOutOfMemory()) {
+					if (!OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
+						OutOfMemoryCheck.outOfMemoryEvent();
+						return Status.CANCEL_STATUS;
+					}
 				} else if (!uptodateFiles.containsKey(file) && !highlySyntaxErroneousFiles.contains(file)) {
 					parseMonitor.subTask("Syntactically analyzing file: " + file.getProjectRelativePath().toOSString());
 					// parse the contents of the file

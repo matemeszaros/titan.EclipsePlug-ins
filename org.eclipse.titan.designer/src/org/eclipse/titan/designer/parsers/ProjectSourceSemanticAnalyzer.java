@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.OutOfMemoryCheck;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
@@ -398,7 +399,11 @@ public class ProjectSourceSemanticAnalyzer {
 				semanticAnalyzer.outdatedModuleMap.clear();
 			}
 		}
-		
+		/*
+		if (OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
+			return Status.CANCEL_STATUS;
+		}
+		*/
 		// Semantic checking starts here
 		monitor.beginTask("On-the-fly semantic checking of everything ", 1);
 		monitor.subTask("Checking the importations of the modules");

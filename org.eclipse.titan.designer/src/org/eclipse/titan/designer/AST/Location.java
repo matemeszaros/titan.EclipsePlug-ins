@@ -31,9 +31,6 @@ import org.eclipse.titan.designer.OutOfMemoryCheck;
  * @author Arpad Lovassy
  */
 public class Location {
-	private final String OUTOFMEMORYERROR =
-			"Free memory running low. Markers may be inconsistent.";
-
 	private IResource file;
 	private int line;
 	private int offset;
@@ -352,60 +349,39 @@ public class Location {
 		reportProblem(reason, severity, IMarker.PRIORITY_HIGH, markerID);
 	}
 	
-	private boolean checkOutOfMemory() {
-		Runtime Rt = Runtime.getRuntime();
-		
-		long free = Rt.freeMemory();
-		long total = Rt.totalMemory();
-		
-		if (((long)Math.round((total*0.1)))>free) {
-			return true;
-			
-		} else {
-			return false;
-		}
-	}
-
 	protected void reportProblem(final String reason, final int severity, final int priority, final String markerID) {
-		if (checkOutOfMemory()) {
+		final Map<String, Object> markerProperties = new HashMap<String, Object>();
 
-			final Map<String, Object> markerProperties = new HashMap<String, Object>();
+		Integer lineNumber = Integer.valueOf(line);
 
-			Integer lineNumber = Integer.valueOf(line);
-
-			if (line != -1) {
-				markerProperties.put(IMarker.LINE_NUMBER, lineNumber);
-			}
-			if (offset != -1) {
-				markerProperties.put(IMarker.CHAR_START, Integer.valueOf(offset));
-			}
-			if (endOffset != -1) {
-				markerProperties.put(IMarker.CHAR_END, Integer.valueOf(endOffset));
-			}
-			markerProperties.put(IMarker.SEVERITY, Integer.valueOf(severity));
-			markerProperties.put(IMarker.PRIORITY, Integer.valueOf(priority));
-			markerProperties.put(IMarker.MESSAGE, reason);
-			markerProperties.put(IMarker.TRANSIENT, Boolean.TRUE);
-			try {
-				if (file != null && file.isAccessible()) {
-					IMarker marker = MarkerHandler.hasMarker(markerID, file, line, offset, endOffset, severity, reason);
-					if (marker != null) {
-						MarkerHandler.markUsed(markerID, file, marker.getId());
-					} else {
-						MarkerCreator markerCreator = new MarkerCreator(markerID, markerProperties);
-						file.getWorkspace().run(markerCreator, null, IWorkspace.AVOID_UPDATE, null);
-						IMarker createdMarker = markerCreator.getMarker();
-						long markerId = createdMarker.getId();
-						MarkerHandler.addMarker(markerID, file, line, offset, endOffset, markerId);
-					}
+		if (line != -1) {
+			markerProperties.put(IMarker.LINE_NUMBER, lineNumber);
+		}
+		if (offset != -1) {
+			markerProperties.put(IMarker.CHAR_START, Integer.valueOf(offset));
+		}
+		if (endOffset != -1) {
+			markerProperties.put(IMarker.CHAR_END, Integer.valueOf(endOffset));
+		}
+		markerProperties.put(IMarker.SEVERITY, Integer.valueOf(severity));
+		markerProperties.put(IMarker.PRIORITY, Integer.valueOf(priority));
+		markerProperties.put(IMarker.MESSAGE, reason);
+		markerProperties.put(IMarker.TRANSIENT, Boolean.TRUE);
+		try {
+			if (file != null && file.isAccessible()) {
+				IMarker marker = MarkerHandler.hasMarker(markerID, file, line, offset, endOffset, severity, reason);
+				if (marker != null) {
+					MarkerHandler.markUsed(markerID, file, marker.getId());
+				} else {
+					MarkerCreator markerCreator = new MarkerCreator(markerID, markerProperties);
+					file.getWorkspace().run(markerCreator, null, IWorkspace.AVOID_UPDATE, null);
+					IMarker createdMarker = markerCreator.getMarker();
+					long markerId = createdMarker.getId();
+					MarkerHandler.addMarker(markerID, file, line, offset, endOffset, markerId);
 				}
-			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace("Error while creating marker", e);
 			}
-		} else if (!OutOfMemoryCheck.isOutOfMemory()) {
-			OutOfMemoryCheck.setOutOfMemory(true);
-			ErrorReporter.parallelErrorDisplayInMessageDialog("Low memory", OUTOFMEMORYERROR);
-			ErrorReporter.logError(OUTOFMEMORYERROR);
+		} catch (CoreException e) {
+			ErrorReporter.logExceptionStackTrace("Error while creating marker", e);
 		}
 	}
 

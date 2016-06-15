@@ -15,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.Activator;
+import org.eclipse.titan.designer.OutOfMemoryCheck;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.ui.IWorkbench;
@@ -96,6 +97,9 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 
 	@Override
 	public void dispose() {
+		if (getPreferenceStore().getBoolean(PreferenceConstants.USEONTHEFLYPARSING)) {
+			OutOfMemoryCheck.resetOutOfMemoryflag();
+		}
 		useOnTheFlyParsing.dispose();
 		useIncrementalParsing.dispose();
 //		minimiseMemoryUsage.dispose();
@@ -129,8 +133,11 @@ public final class OnTheFlyCheckerPreferencePage extends FieldEditorPreferencePa
 
 			GlobalParser.reAnalyzeSemantically();
 		}
-
+		if (getPreferenceStore().getBoolean(PreferenceConstants.USEONTHEFLYPARSING)) {
+			OutOfMemoryCheck.resetOutOfMemoryflag();
+		}
 		super.performApply();
 
-	}	
+	}
+	
 }
