@@ -50,11 +50,11 @@ public class Ttcn3FileReparser implements ITtcn3FileReparser {
 			public void reparse(final Ttcn3Reparser parser) {
 				parser.pr_TTCN3File();
 				if ( parser.isErrorListEmpty() ) {
-					TTCN3Module actualTtc3Module = parser.getModule();
-					if (actualTtc3Module != null && actualTtc3Module.getIdentifier() != null) {
-						if (mSourceParser.getSemanticAnalyzer().addModule(actualTtc3Module)) {
-							mFileMap.put(mFile, actualTtc3Module.getName());
-							mUptodateFiles.put(mFile, actualTtc3Module.getName());
+					TTCN3Module actualTtcn3Module = parser.getModule();
+					if (actualTtcn3Module != null && actualTtcn3Module.getIdentifier() != null) {
+						if (mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module)) {
+							mFileMap.put(mFile, actualTtcn3Module.getName());
+							mUptodateFiles.put(mFile, actualTtcn3Module.getName());
 						} else {
 							mSyntacticallyOutdated = true;
 						}
