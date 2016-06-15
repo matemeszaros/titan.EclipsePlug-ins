@@ -399,11 +399,6 @@ public class ProjectSourceSemanticAnalyzer {
 				semanticAnalyzer.outdatedModuleMap.clear();
 			}
 		}
-		/*
-		if (OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
-			return Status.CANCEL_STATUS;
-		}
-		*/
 		// Semantic checking starts here
 		monitor.beginTask("On-the-fly semantic checking of everything ", 1);
 		monitor.subTask("Checking the importations of the modules");
