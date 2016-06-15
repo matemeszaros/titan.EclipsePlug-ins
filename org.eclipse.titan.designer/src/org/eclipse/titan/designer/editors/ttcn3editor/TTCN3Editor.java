@@ -136,7 +136,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 		HeadlessStorage.setTabWidth(configuration.getTabWidth(getSourceViewer()));
 	}
 
-	public boolean isSemanticCheckingDelayed() {
+	public static boolean isSemanticCheckingDelayed() {
 		IPreferencesService prefs = Platform.getPreferencesService();
 		boolean delayedSemanticChecking = prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.DELAYSEMANTICCHECKINGTILLSAVE,
 				false, null);
@@ -167,7 +167,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	 * @author Kristof Szabados
 	 */
 	private void analyzeOpenedFile(final String jobname, final IFile file) {
-		if (file != null && isSemanticCheckingDelayed()) {
+		if (file != null && TTCN3Editor.isSemanticCheckingDelayed()) {
 			final IReconcilingStrategy strategy = reconciler.getReconcilingStrategy(IDocument.DEFAULT_CONTENT_TYPE);
 			if (strategy instanceof ReconcilingStrategy) {
 				WorkspaceJob op = new WorkspaceJob(jobname) {

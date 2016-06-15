@@ -179,7 +179,7 @@ public class Reconciler implements IReconciler {
 							reconcilingStrategy.reconcileSyntax(oldRegions.get(i));
 						}
 
-						if (!reconcilingStrategy.getEditor().isSemanticCheckingDelayed()) {
+						if (!TTCN3Editor.isSemanticCheckingDelayed()) {
 							reconcilingStrategy.reconcileSemantics();
 						}
 					} else {
@@ -345,7 +345,7 @@ public class Reconciler implements IReconciler {
 			if (document == null) {
 				return;
 			}
-
+			
 			reconcilerDocumentChanged(document);
 
 			document.addDocumentListener(this);

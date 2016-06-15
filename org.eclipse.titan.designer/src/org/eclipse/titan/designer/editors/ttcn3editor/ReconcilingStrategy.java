@@ -325,7 +325,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		});
 
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		if (isInitial || !editor.isSemanticCheckingDelayed()) {
+		if (isInitial || !TTCN3Editor.isSemanticCheckingDelayed()) {
 			final boolean minimizeMemoryUsage = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 					PreferenceConstants.MINIMISEMEMORYUSAGE, false, null);
 			if (!isInitial || minimizeMemoryUsage) {
