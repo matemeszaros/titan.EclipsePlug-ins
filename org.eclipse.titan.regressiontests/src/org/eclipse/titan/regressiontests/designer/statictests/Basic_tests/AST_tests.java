@@ -3263,13 +3263,13 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used without signature template",  lineNum, IMarker.SEVERITY_ERROR));
 		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `statement_tests'", lineNum, IMarker.SEVERITY_ERROR)); }
 		markersToCheck.add(new MarkerToCheck("Too many variable entries compared to the number of in/inout parameters in signature `@statement_tests.S_ProvedureSignatureID': 1 was expected instead of 2",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type missmatch in parameter redirect: A variable of type `integer' was expected instead of `@statement_tests.componentName_CT'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type mismatch in parameter redirect: A variable of type `integer' was expected instead of `@statement_tests.componentName_CT'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used because signature `@statement_tests.S_ProvedureSignatureID5' does not have parameters",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@statement_tests.S_ProvedureSignatureID5': 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Signature `@statement_tests.S_ProvedureSignatureID' does not have parameter named `par2'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate redirect for parameter `par1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Parameter `par1' of signature `@statement_tests.S_ProvedureSignatureID6' has `out' direction",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type missmatch in parameter redirect: A variable of type `integer' was expected instead of `@statement_tests.componentName_CT'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type mismatch in parameter redirect: A variable of type `integer' was expected instead of `@statement_tests.componentName_CT'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used because signature `@statement_tests.S_ProvedureSignatureID5' does not have parameters",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@statement_tests.S_ProvedureSignatureID5': 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the template",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -3326,7 +3326,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Signature `@statement_tests.S_ProvedureSignatureID' does not have parameter named `par2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Signature `@statement_tests.S_ProvedureSignatureID6' does not have parameter named `par2'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate redirect for parameter `par1'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type missmatch in parameter redirect: A variable of type `integer' was expected instead of `@statement_tests.componentName_CT'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type mismatch in parameter redirect: A variable of type `integer' was expected instead of `@statement_tests.componentName_CT'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used because signature `@statement_tests.S_ProvedureSignatureID5' does not have parameters",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@statement_tests.S_ProvedureSignatureID5': 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the template",  ++lineNum, IMarker.SEVERITY_ERROR));
