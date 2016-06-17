@@ -269,6 +269,8 @@ public final class Altstep_Type extends Type {
 			return;
 		}
 
+		formalParList.checkCompatibility(timestamp, altstep.getFormalParameterList(), value.getLocation());
+
 		IType temporalRunsOnType = altstep.getRunsOnType(timestamp);
 		if (temporalRunsOnType != null) {
 			if (runsOnSelf) {

@@ -273,6 +273,8 @@ public final class Testcase_Type extends Type {
 			}
 		}
 
+		formalParList.checkCompatibility(timestamp, testcase.getFormalParameterList(), value.getLocation());
+
 		Component_Type temporalSystemType = testcase.getSystemType(timestamp);
 		if (temporalSystemType == null) {
 			temporalSystemType = temporalRunsOnType;

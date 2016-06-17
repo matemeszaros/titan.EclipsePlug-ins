@@ -37,6 +37,7 @@ import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
+import org.eclipse.titan.designer.AST.Type;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TTCN3Scope;
@@ -853,6 +854,60 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 		}
 	}
 
+	/**
+	 * Checks the compatibility of two formal parameter lists.
+	 * They are compatible if every parameter is compatible,
+	 *   has the same attribute, type, restriction and name.
+	 * 
+	 * Please note that all errors will be reported to the location provided as the last parameter.
+	 * In themselves both formal parameter lists might be OK,
+	 *   so the error needs to be reported to the location where they are compared.
+	 * 
+	 * @param timestamp the compilation timestamp
+	 * @param fpList the formal parameter list to be compared to the actual one.
+	 * @param callSite the location where errors should be reported to.
+	 * */
+	public void checkCompatibility(final CompilationTimeStamp timestamp, final FormalParameterList fpList, final Location callSite) {
+		if (parameters.size() != fpList.parameters.size()) {
+			callSite.reportSemanticError(MessageFormat.format("`{0}'' formal parameters was expected instead of `{1}''", parameters.size(), fpList.parameters.size()));
+		}
+
+		final int upperLimit = Math.min(parameters.size(), fpList.parameters.size());
+		for(int i = 0; i < upperLimit; i++) {
+			final FormalParameter typeParameter = parameters.get(i);
+			final FormalParameter functionParameter = fpList.getParameterByIndex(i);
+			
+			if (typeParameter.getIsErroneous() || functionParameter.getIsErroneous()) {
+				continue;
+			}
+			
+			if(typeParameter.getAssignmentType() != functionParameter.getAssignmentType()) {
+				callSite.reportSemanticError(MessageFormat.format("The kind of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getAssignmentName(), functionParameter.getAssignmentName()));
+			}
+
+			if(typeParameter.getAssignmentType() != Assignment_type.A_TIMER &&
+					functionParameter.getAssignmentType() != Assignment_type.A_TIMER) {
+				final Type typeParameterType = typeParameter.getType(timestamp);
+				final Type functionParameterType = functionParameter.getType(timestamp);
+				if(!typeParameterType.isIdentical(timestamp, functionParameterType)) {
+					callSite.reportSemanticError(MessageFormat.format("The type of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameterType.getTypename(), functionParameterType.getTypename()));
+				}
+			}
+
+			if(typeParameter.getTemplateRestriction() != functionParameter.getTemplateRestriction()) {
+				callSite.reportSemanticError(MessageFormat.format("The template restriction of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getTemplateRestriction().getDisplayName(), functionParameter.getTemplateRestriction().getDisplayName()));
+			}
+
+			if (typeParameter.getIsLazy() != functionParameter.getIsLazy()) {
+				callSite.reportSemanticError(MessageFormat.format("`{0}''th parameter @lazy-ness mismatch", i));
+			}
+
+			if(!typeParameter.getIdentifier().equals(functionParameter.getIdentifier())) {
+				callSite.reportSemanticError(MessageFormat.format("The name of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getIdentifier().getDisplayName(), functionParameter.getIdentifier().getDisplayName()));
+			}
+		}
+	}
+	
 	@Override
 	public final boolean hasAssignmentWithId(final CompilationTimeStamp timestamp, final Identifier identifier) {
 		if (parameterMap != null && parameterMap.containsKey(identifier.getName())) {

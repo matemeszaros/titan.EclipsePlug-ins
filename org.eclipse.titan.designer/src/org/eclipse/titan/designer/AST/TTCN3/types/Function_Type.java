@@ -360,10 +360,11 @@ public final class Function_Type extends Type {
 			value.setIsErroneous(true);
 			return;
 		}
-
 		
 		// external functions do not have runs on clauses
 		if (assignment instanceof Def_Function) {
+			formalParList.checkCompatibility(timestamp, ((Def_Function) assignment).getFormalParameterList(), value.getLocation());
+			
 			final IType tempRunsOnType = ((Def_Function) assignment).getRunsOnType(timestamp);
 
 			if (tempRunsOnType != null) {
