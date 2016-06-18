@@ -66,6 +66,7 @@ public abstract class OccurencesMarker {
 	private final ITextEditor editor;
 	private Annotation[] occurrenceAnnotations = null;
 	private MarkerJob markerJob = new MarkerJob();
+	private IPropertyChangeListener listener = null;
 
 	private class MarkerJob extends WorkspaceJob {
 		private IDocument document;
@@ -118,7 +119,8 @@ public abstract class OccurencesMarker {
 
 	public OccurencesMarker(final ITextEditor editor) {
 		this.editor = editor;
-		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+
+		listener = new IPropertyChangeListener() {
 			@Override
 			public void propertyChange(final PropertyChangeEvent event) {
 				final String property = event.getProperty();
@@ -130,7 +132,17 @@ public abstract class OccurencesMarker {
 					return;
 				}
 			}
-		});
+		};
+		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(listener);
+	}
+
+	/**
+	 * Disposes of this occurrence marker.
+	 * */
+	public void dispose () {
+		if (listener != null) {
+			Activator.getDefault().getPreferenceStore().removePropertyChangeListener(listener);
+		}
 	}
 
 	/**

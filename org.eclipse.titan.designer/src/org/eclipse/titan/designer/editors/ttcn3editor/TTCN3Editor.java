@@ -89,7 +89,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 	private Reconciler reconciler;
 
 	/** It can be null if the feature is turned off. */
-	private final TTCN3OccurrenceMarker occurrencesMarker;
+	private TTCN3OccurrenceMarker occurrencesMarker;
 
 	private final IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
 		@Override
@@ -259,6 +259,10 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 		annotationModel = null;
 		configuration = null;
 		projectionViewer = null;
+		if(occurrencesMarker != null) {
+			occurrencesMarker.dispose();
+			occurrencesMarker = null;
+		}
 		Activator.getDefault().getPreferenceStore().removePropertyChangeListener(foldingListener);
 
 		IFile file = (IFile) getEditorInput().getAdapter(IFile.class);

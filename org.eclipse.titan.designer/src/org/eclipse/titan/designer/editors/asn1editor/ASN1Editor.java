@@ -82,7 +82,7 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 	private ReconcilingStrategy strategy;
 
 	/** It can be null if the feature is turned off. */
-	private final ASN1OccurrenceMarker occurrencesMarker;
+	private ASN1OccurrenceMarker occurrencesMarker;
 
 	private final IPropertyChangeListener foldingListener = new IPropertyChangeListener() {
 		@Override
@@ -218,6 +218,10 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 		annotationModel = null;
 		configuration = null;
 		projectionViewer = null;
+		if(occurrencesMarker != null) {
+			occurrencesMarker.dispose();
+			occurrencesMarker = null;
+		}
 		Activator.getDefault().getPreferenceStore().removePropertyChangeListener(foldingListener);
 
 		IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
