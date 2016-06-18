@@ -903,7 +903,7 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 			}
 
 			if(!typeParameter.getIdentifier().equals(functionParameter.getIdentifier())) {
-				callSite.reportSemanticError(MessageFormat.format("The name of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getIdentifier().getDisplayName(), functionParameter.getIdentifier().getDisplayName()));
+				callSite.reportSemanticWarning(MessageFormat.format("The name of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getIdentifier().getDisplayName(), functionParameter.getIdentifier().getDisplayName()));
 			}
 		}
 	}
