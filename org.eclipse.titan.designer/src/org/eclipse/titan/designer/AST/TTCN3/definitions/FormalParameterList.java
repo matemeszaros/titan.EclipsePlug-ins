@@ -881,7 +881,7 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 				continue;
 			}
 			
-			if(typeParameter.getAssignmentType() != functionParameter.getAssignmentType()) {
+			if(!typeParameter.getAssignmentType().equals(functionParameter.getAssignmentType())) {
 				callSite.reportSemanticError(MessageFormat.format("The kind of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getAssignmentName(), functionParameter.getAssignmentName()));
 			}
 

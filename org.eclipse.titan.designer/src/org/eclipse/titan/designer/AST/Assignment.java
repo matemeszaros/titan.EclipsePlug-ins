@@ -64,7 +64,15 @@ public abstract class Assignment extends ASTNode implements IOutlineElement, ILo
 		/**< value set (ASN.1). */								A_VS,
 		/**< information object class (ASN.1). */		A_OC,
 		/**< information object (ASN.1). */				A_OBJECT,
-		/**< information object set (ASN.1). */			A_OS
+		/**< information object set (ASN.1). */			A_OS;
+
+		public final boolean equals(final Assignment_type other) {
+			if(this == A_PAR_VAL || this == A_PAR_VAL_IN) {
+				return other == A_PAR_VAL || other == A_PAR_VAL_IN;
+			}
+
+			return this == other;
+		}
 	}
 
 	/** The identifier of the assignment. */
