@@ -869,7 +869,7 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 	 * */
 	public void checkCompatibility(final CompilationTimeStamp timestamp, final FormalParameterList fpList, final Location callSite) {
 		if (parameters.size() != fpList.parameters.size()) {
-			callSite.reportSemanticError(MessageFormat.format("`{0}'' formal parameters was expected instead of `{1}''", parameters.size(), fpList.parameters.size()));
+			callSite.reportSemanticError(MessageFormat.format("{0} formal parameters was expected instead of {1}", parameters.size(), fpList.parameters.size()));
 		}
 
 		final int upperLimit = Math.min(parameters.size(), fpList.parameters.size());
@@ -882,7 +882,7 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 			}
 			
 			if(!typeParameter.getAssignmentType().equals(functionParameter.getAssignmentType())) {
-				callSite.reportSemanticError(MessageFormat.format("The kind of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getAssignmentName(), functionParameter.getAssignmentName()));
+				callSite.reportSemanticError(MessageFormat.format("The kind of the {0}th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getAssignmentName(), functionParameter.getAssignmentName()));
 			}
 
 			if(typeParameter.getAssignmentType() != Assignment_type.A_TIMER &&
@@ -890,20 +890,20 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 				final Type typeParameterType = typeParameter.getType(timestamp);
 				final Type functionParameterType = functionParameter.getType(timestamp);
 				if(!typeParameterType.isIdentical(timestamp, functionParameterType)) {
-					callSite.reportSemanticError(MessageFormat.format("The type of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameterType.getTypename(), functionParameterType.getTypename()));
+					callSite.reportSemanticError(MessageFormat.format("The type of the {0}th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameterType.getTypename(), functionParameterType.getTypename()));
 				}
 			}
 
 			if(typeParameter.getTemplateRestriction() != functionParameter.getTemplateRestriction()) {
-				callSite.reportSemanticError(MessageFormat.format("The template restriction of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getTemplateRestriction().getDisplayName(), functionParameter.getTemplateRestriction().getDisplayName()));
+				callSite.reportSemanticError(MessageFormat.format("The template restriction of the {0}th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getTemplateRestriction().getDisplayName(), functionParameter.getTemplateRestriction().getDisplayName()));
 			}
 
 			if (typeParameter.getIsLazy() != functionParameter.getIsLazy()) {
-				callSite.reportSemanticError(MessageFormat.format("`{0}''th parameter @lazy-ness mismatch", i));
+				callSite.reportSemanticError(MessageFormat.format("{0}th parameter @lazy-ness mismatch", i));
 			}
 
 			if(!typeParameter.getIdentifier().equals(functionParameter.getIdentifier())) {
-				callSite.reportSemanticWarning(MessageFormat.format("The name of the `{0}''th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getIdentifier().getDisplayName(), functionParameter.getIdentifier().getDisplayName()));
+				callSite.reportSemanticWarning(MessageFormat.format("The name of the {0}th parameter is not the same: `{1}'' was expected instead of `{2}''", i, typeParameter.getIdentifier().getDisplayName(), functionParameter.getIdentifier().getDisplayName()));
 			}
 		}
 	}
