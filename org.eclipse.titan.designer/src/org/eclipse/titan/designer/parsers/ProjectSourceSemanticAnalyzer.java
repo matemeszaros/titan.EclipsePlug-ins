@@ -224,7 +224,6 @@ public class ProjectSourceSemanticAnalyzer {
 
 		synchronized (outdatedModuleMap) {
 			outdatedModuleMap.put(moduleName, module);
-			module.setSkippedFromSemanticChecking(false);
 		}
 
 		synchronized (semanticallyUptodateModules) {
@@ -316,8 +315,7 @@ public class ProjectSourceSemanticAnalyzer {
 
 		synchronized (outdatedModuleMap) {
 			if (outdatedModuleMap.containsKey(module.getName())) {
-				Module temp2 = outdatedModuleMap.remove(module.getName());
-				temp2.setSkippedFromSemanticChecking(false);
+				outdatedModuleMap.remove(module.getName());
 			}
 		}
 
