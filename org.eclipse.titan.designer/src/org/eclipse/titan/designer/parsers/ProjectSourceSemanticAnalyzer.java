@@ -70,9 +70,6 @@ public class ProjectSourceSemanticAnalyzer {
 	/** The names of the modules, which were checked the last time. */
 	private Set<String> semanticallyUptodateModules;
 
-	/** holds the list of modules which had the same module identifiers */
-	private final Set<IFile> duplicationHolders = new HashSet<IFile>();
-
 	public ProjectSourceSemanticAnalyzer(final IProject project, final ProjectSourceParser sourceParser) {
 		this.project = project;
 		this.sourceParser = sourceParser;
@@ -207,8 +204,6 @@ public class ProjectSourceSemanticAnalyzer {
 			return;
 		}
 
-		outdateDuplicationHolders();
-
 		String moduleName = sourceParser.containedModule(outdatedFile);
 		if (moduleName == null) {
 			// The module was just added
@@ -248,8 +243,6 @@ public class ProjectSourceSemanticAnalyzer {
 	 *            the file which seems to have changed
 	 * */
 	public void reportSemanticOutdating(final IFile outdatedFile) {
-		outdateDuplicationHolders();
-
 		String moduleName = sourceParser.containedModule(outdatedFile);
 		if (moduleName == null) {
 			return;
@@ -267,7 +260,6 @@ public class ProjectSourceSemanticAnalyzer {
 		synchronized (semanticallyUptodateModules) {
 			semanticallyUptodateModules.clear();
 		}
-		duplicationHolders.clear();
 	}
 
 	/**
@@ -279,8 +271,6 @@ public class ProjectSourceSemanticAnalyzer {
 	 *            the name of the module in that file.
 	 **/
 	void removedReferencestoRemovedFiles(final IFile file, final String moduleName) {
-		outdateDuplicationHolders();
-
 		synchronized (semanticallyUptodateModules) {
 			semanticallyUptodateModules.remove(moduleName);
 		}
@@ -305,23 +295,6 @@ public class ProjectSourceSemanticAnalyzer {
 		}
 
 		moduleMap.remove(moduleName);
-	}
-
-	/**
-	 * Outdate all of the modules which define the same module identifier.
-	 * */
-	private void outdateDuplicationHolders() {
-		if (duplicationHolders.isEmpty()) {
-			return;
-		}
-
-		Set<IFile> temp = new HashSet<IFile>();
-		temp.addAll(duplicationHolders);
-		duplicationHolders.clear();
-
-		for (IFile file : temp) {
-			sourceParser.getSyntacticAnalyzer().reportOutdating(file);
-		}
 	}
 
 	/**
