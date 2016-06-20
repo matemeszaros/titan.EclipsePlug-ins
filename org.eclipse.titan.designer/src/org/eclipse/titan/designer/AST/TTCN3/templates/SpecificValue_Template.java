@@ -153,6 +153,7 @@ public final class SpecificValue_Template extends TTCN3Template {
 			return Type_type.TYPE_UNDEFINED;
 		}
 
+		specificValue.setLoweridToReference(timestamp);
 		return specificValue.getExpressionReturntype(timestamp, expectedValue);
 	}
 
