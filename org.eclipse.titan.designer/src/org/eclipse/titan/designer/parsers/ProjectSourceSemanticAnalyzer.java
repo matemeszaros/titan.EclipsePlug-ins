@@ -61,6 +61,7 @@ public class ProjectSourceSemanticAnalyzer {
 	private final ProjectSourceParser sourceParser;
 
 	//file, module
+	// can contain duplicated modules
 	private Map<IFile, Module> fileModuleMap;
 	// module name, module
 	private Map<String, Module> moduleMap;
@@ -309,23 +310,7 @@ public class ProjectSourceSemanticAnalyzer {
 
 		Module temp = sourceParser.getModuleByName(module.getName(), true);
 		if (temp != null) {
-			Identifier identifier = temp.getIdentifier();
-			Location location = null;
-			if (identifier == null) {
-				location = temp.getLocation();
-			} else {
-				location = identifier.getLocation();
-			}
-
-			identifier = module.getIdentifier();
-			Location location2 = null;
-			if (identifier == null) {
-				location2 = module.getLocation();
-			} else {
-				location2 = identifier.getLocation();
-			}
-
-			if (location != null && location2 != null && !location.getFile().equals(location2.getFile())) {
+			if(!temp.getLocation().getFile().equals(module.getLocation().getFile())) {
 				return false;
 			}
 		}
