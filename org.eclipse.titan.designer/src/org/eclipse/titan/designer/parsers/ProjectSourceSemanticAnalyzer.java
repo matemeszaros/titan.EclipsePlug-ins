@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.designer.GeneralConstants;
-import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
@@ -391,23 +390,25 @@ public class ProjectSourceSemanticAnalyzer {
 			final List<Module> allModules = new ArrayList<Module>();
 			final List<String> semanticallyChecked = new ArrayList<String>();
 			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
-				ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
+				final ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
 				for (Module module: semanticAnalyzer.fileModuleMap.values()) {
-					String name = module.getIdentifier().getName();
+					final String name = module.getIdentifier().getName();
 					if(uniqueModules.containsKey(name)) {
-						Location location = uniqueModules.get(name).getIdentifier().getLocation();
-						Location location2 = module.getIdentifier().getLocation();
+						final Location location = uniqueModules.get(name).getIdentifier().getLocation();
+						final Location location2 = module.getIdentifier().getLocation();
 						location.reportSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
 						location2.reportSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
 					} else {
 						uniqueModules.put(name, module);
 					}
 				}
+
 				for (Module moduleToCheck : semanticAnalyzer.moduleMap.values()) {
 					if (moduleToCheck != null) {
 						allModules.add(moduleToCheck);
 					}
 				}
+
 				synchronized (semanticAnalyzer.semanticallyUptodateModules) {
 					for (String modulename : semanticAnalyzer.semanticallyUptodateModules) {
 						if (semanticAnalyzer.moduleMap.containsKey(modulename)) {
