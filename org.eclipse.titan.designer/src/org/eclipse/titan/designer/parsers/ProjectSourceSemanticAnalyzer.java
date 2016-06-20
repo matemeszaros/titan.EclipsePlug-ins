@@ -383,6 +383,7 @@ public class ProjectSourceSemanticAnalyzer {
 			
 			//check for duplicated module names
 			HashMap<String, Module> uniqueModules = new HashMap<String, Module>();
+			Set<String> duplicatedModules = new HashSet<String>();
 
 			// collect all modules and semantically checked modules to work on.
 			final List<Module> allModules = new ArrayList<Module>();
@@ -396,6 +397,8 @@ public class ProjectSourceSemanticAnalyzer {
 						final Location location2 = module.getIdentifier().getLocation();
 						location.reportSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
 						location2.reportSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
+						duplicatedModules.add(name);
+						semanticAnalyzer.semanticallyUptodateModules.remove(name);
 					} else {
 						uniqueModules.put(name, module);
 					}
@@ -463,6 +466,9 @@ public class ProjectSourceSemanticAnalyzer {
 				synchronized (semanticAnalyzer.semanticallyUptodateModules) {
 					semanticAnalyzer.semanticallyUptodateModules.clear();
 					semanticAnalyzer.semanticallyUptodateModules.addAll(semanticAnalyzer.moduleMap.keySet());
+					for (String name: duplicatedModules) {
+						semanticAnalyzer.semanticallyUptodateModules.remove(name);
+					}
 				}
 			}
 		} catch (Exception e) {
