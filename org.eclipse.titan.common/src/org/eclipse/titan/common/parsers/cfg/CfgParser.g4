@@ -1305,6 +1305,9 @@ pr_IntegerPrimaryExpression returns [CFGNumber number]:
 pr_Number returns [CFGNumber number]:
 (	a = (NUMBER1 | NUMBER7 | NUMBER9 | NUMBER11)	{$number = new CFGNumber($a.text);}
 |	macro = pr_MacroNumber { $number = $macro.number; }
+|	TTCN3IDENTIFIER9 // module parameter name
+		{	$number = new CFGNumber( "1" ); // value is unknown yet, but it should not be null
+		}
 )
 ;
 
@@ -1348,6 +1351,9 @@ pr_CString returns [String string]:
 		}
 |	macro2 = pr_MacroCString			{	$string = "\"" + $macro2.string + "\"";	}
 |	macro1 = pr_MacroExpliciteCString	{	$string = "\"" + $macro1.string + "\"";	}
+|	TTCN3IDENTIFIER9 // module parameter name
+		{	$string = "\"\""; // value is unknown yet, but it should not be null
+		}
 )
 ;
 
@@ -1440,7 +1446,29 @@ pr_StarModuleName:
 ;
 
 pr_ParameterValue:
-	pr_SimpleParameterValue pr_LengthMatch? IFPRESENTKeyword9?
+	pr_ParameterExpression pr_LengthMatch? IFPRESENTKeyword9?
+;
+
+//module parameter expression, it can contain previously defined module parameters
+pr_ParameterExpression:
+	pr_SimpleParameterValue
+|	pr_ParameterReference
+|	pr_ParameterExpression
+	(	(	PLUS9
+		|	MINUS9
+		|	STAR9
+		|	SLASH9
+		|	STRINGOP9
+		)
+		pr_ParameterExpression
+	)+
+|	(	PLUS9
+	|	MINUS9
+	)
+	pr_ParameterExpression
+|	LPAREN9
+	pr_ParameterExpression
+	RPAREN9
 ;
 
 pr_LengthMatch:
@@ -1477,6 +1505,26 @@ pr_SimpleParameterValue:
 |	pr_HStringMatch
 |	pr_OStringMatch
 )
+;
+pr_ParameterReference:
+	// enumerated values are also treated as references by the parser,
+	// these will be sorted out later during set_param()
+	pr_ParameterNameSegment
+;
+
+pr_ParameterNameSegment:
+	pr_ParameterNameSegment
+	pr_Dot
+	pr_Identifier
+|	pr_ParameterNameSegment
+	pr_IndexItemIndex
+|	pr_Identifier
+;
+
+pr_IndexItemIndex:
+	SQUAREOPEN9
+	pr_IntegerValueExpression
+	SQUARECLOSE9
 ;
 
 pr_LengthBound:
@@ -1536,6 +1584,9 @@ pr_Float returns [CFGNumber number]:
 |	macro = (MACRO_FLOAT1 | MACRO_FLOAT9)
 		{	String value = getTypedMacroValue( $macro, DEFINITION_NOT_FOUND_FLOAT );
 			$number = new CFGNumber( value.length() > 0 ? value : "0.0" );
+		}
+|	TTCN3IDENTIFIER9 // module parameter name
+		{	$number = new CFGNumber( "1.0" ); // value is unknown yet, but it should not be null
 		}
 )
 ;
