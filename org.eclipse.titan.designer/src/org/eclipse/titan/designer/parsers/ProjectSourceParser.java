@@ -736,12 +736,6 @@ public final class ProjectSourceParser {
 		MarkerHandler.markAllMarkersForRemoval(project, GeneralConstants.ONTHEFLY_MIXED_MARKER);
 
 		List<IProject> tobeAnalyzed = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
-		for (Iterator<IProject> iterator = tobeAnalyzed.iterator(); iterator.hasNext();) {
-			IProject temp = iterator.next();
-			if (GlobalParser.getProjectSourceParser(temp).getLastTimeChecked() != null) {
-				iterator.remove();
-			}
-		}
 
 		// analyze the project referencing the just now analyzed
 		// projects in a bottom up order.

@@ -61,6 +61,8 @@ public class ProjectSourceSemanticAnalyzer {
 	private final IProject project;
 	private final ProjectSourceParser sourceParser;
 
+	//file, module
+	private Map<IFile, Module> fileModuleMap;
 	// module name, module
 	private Map<String, Module> moduleMap;
 	// module name, module
@@ -76,6 +78,7 @@ public class ProjectSourceSemanticAnalyzer {
 		this.project = project;
 		this.sourceParser = sourceParser;
 
+		fileModuleMap = new ConcurrentHashMap<IFile, Module>();
 		moduleMap = new ConcurrentHashMap<String, Module>();
 		outdatedModuleMap = new HashMap<String, Module>();
 		semanticallyUptodateModules = new HashSet<String>();
@@ -223,6 +226,7 @@ public class ProjectSourceSemanticAnalyzer {
 			return;
 		}
 		moduleMap.remove(moduleName);
+		fileModuleMap.remove(moduleFile);
 
 		synchronized (outdatedModuleMap) {
 			outdatedModuleMap.put(moduleName, module);
@@ -283,6 +287,7 @@ public class ProjectSourceSemanticAnalyzer {
 		}
 
 		moduleMap.remove(moduleName);
+		fileModuleMap.remove(file);
 		synchronized (outdatedModuleMap) {
 			outdatedModuleMap.remove(moduleName);
 		}
@@ -295,6 +300,7 @@ public class ProjectSourceSemanticAnalyzer {
 	 *            the name of the module to be removed.
 	 * */
 	void removeModule(final String moduleName) {
+		fileModuleMap.remove(internalGetModuleByName(moduleName, false).getLocation().getFile());
 		synchronized (outdatedModuleMap) {
 			outdatedModuleMap.remove(moduleName);
 		}
@@ -327,6 +333,8 @@ public class ProjectSourceSemanticAnalyzer {
 	 * @return true if it was successfully added, false otherwise.
 	 * */
 	public boolean addModule(final Module module) {
+		fileModuleMap.put((IFile)module.getLocation().getFile(), module);
+
 		Module temp = sourceParser.getModuleByName(module.getName(), true);
 		if (temp != null) {
 			Identifier identifier = temp.getIdentifier();
@@ -346,10 +354,6 @@ public class ProjectSourceSemanticAnalyzer {
 			}
 
 			if (location != null && location2 != null && !location.getFile().equals(location2.getFile())) {
-				duplicationHolders.add((IFile) location.getFile());
-				duplicationHolders.add((IFile) location2.getFile());
-				location.reportSingularSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
-				location2.reportSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
 				return false;
 			}
 		}
@@ -422,12 +426,26 @@ public class ProjectSourceSemanticAnalyzer {
 			// clean the instantiated parameterized assignments,
 			// from their instances
 			Ass_pard.resetAllInstanceCounters();
+			
+			//check for duplicated module names
+			HashMap<String, Module> uniqueModules = new HashMap<String, Module>();
 
 			// collect all modules and semantically checked modules to work on.
 			final List<Module> allModules = new ArrayList<Module>();
 			final List<String> semanticallyChecked = new ArrayList<String>();
 			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
 				ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
+				for (Module module: semanticAnalyzer.fileModuleMap.values()) {
+					String name = module.getIdentifier().getName();
+					if(uniqueModules.containsKey(name)) {
+						Location location = uniqueModules.get(name).getIdentifier().getLocation();
+						Location location2 = module.getIdentifier().getLocation();
+						location.reportSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
+						location2.reportSemanticError(MessageFormat.format(DUPLICATEMODULE, module.getIdentifier().getDisplayName()));
+					} else {
+						uniqueModules.put(name, module);
+					}
+				}
 				for (Module moduleToCheck : semanticAnalyzer.moduleMap.values()) {
 					if (moduleToCheck != null) {
 						allModules.add(moduleToCheck);

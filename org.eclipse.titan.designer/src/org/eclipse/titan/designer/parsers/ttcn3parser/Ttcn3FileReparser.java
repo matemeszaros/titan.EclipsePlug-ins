@@ -55,6 +55,7 @@ public class Ttcn3FileReparser implements ITtcn3FileReparser {
 						if (mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module)) {
 							mFileMap.put(mFile, actualTtcn3Module.getName());
 							mUptodateFiles.put(mFile, actualTtcn3Module.getName());
+							mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module);
 						} else {
 							mSyntacticallyOutdated = true;
 						}
