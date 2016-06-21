@@ -962,6 +962,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 
 			final IFile file = parsedData.getFile();
 			fileMap.put(file, module.getName());
+			uptodateFiles.put(file, module.getName());
 
 			final List<TITANMarker> unsupportedConstructs = parsedData.getUnsupportedConstructs();
 			if (unsupportedConstructs != null && !unsupportedConstructs.isEmpty()) {
@@ -976,7 +977,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 				}
 			}
 
-			uptodateFiles.put(file, module.getName());
+
 		} else {
 			syntacticallyOutdated = true;
 			highlySyntaxErroneousFiles.add(parsedData.getFile());
