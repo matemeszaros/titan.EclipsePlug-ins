@@ -165,19 +165,6 @@ public final class ProjectSourceSyntacticAnalyzer {
 	}
 
 	/**
-	 * Returns the name of the module contained in the provided file, or
-	 * null.
-	 *
-	 * @param file
-	 *                the file whose module we are interested in
-	 *
-	 * @return the name of the module found in the file, or null
-	 * */
-	public String containedModule(final IFile file) {
-		return fileMap.get(file);
-	}
-
-	/**
 	 * Reports that the provided file has changed and so it's stored
 	 * information became out of date.
 	 * <p>

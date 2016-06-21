@@ -415,7 +415,12 @@ public final class ProjectSourceParser {
 	 * @return the name of the module found in the file, or null
 	 * */
 	public String containedModule(final IFile file) {
-		return syntacticAnalyzer.containedModule(file);
+		Module module = semanticAnalyzer.getModulebyFile(file);
+		if (module != null) {
+			return module.getName();
+		}
+
+		return null;
 	}
 
 	/**
