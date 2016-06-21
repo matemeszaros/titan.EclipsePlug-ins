@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.parsers.ttcn3parser;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,20 +50,18 @@ public class Ttcn3FileReparser implements ITtcn3FileReparser {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
 				parser.pr_TTCN3File();
-				if ( parser.isErrorListEmpty() ) {
-					TTCN3Module actualTtcn3Module = parser.getModule();
-					if (actualTtcn3Module != null && actualTtcn3Module.getIdentifier() != null) {
-						if (mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module)) {
-							mFileMap.put(mFile, actualTtcn3Module.getName());
-							mUptodateFiles.put(mFile, actualTtcn3Module.getName());
-							mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module);
-						} else {
-							mSyntacticallyOutdated = true;
-						}
-					}
+				TTCN3Module actualTtcn3Module = parser.getModule();
+				if (actualTtcn3Module != null && actualTtcn3Module.getIdentifier() != null) {
+					mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module);
+					mFileMap.put(mFile, actualTtcn3Module.getName());
+					mUptodateFiles.put(mFile, actualTtcn3Module.getName());
 				} else {
 					mSyntacticallyOutdated = true;
 					mHighlySyntaxErroneousFiles.add(mFile);
+				}
+
+				if (actualTtcn3Module.getLocation().getEndOffset() == -1 && !parser.getErrors().isEmpty()) {
+					actualTtcn3Module.getLocation().setEndOffset((int) new File(mFile.getLocationURI()).length());
 				}
 			}
 		});
