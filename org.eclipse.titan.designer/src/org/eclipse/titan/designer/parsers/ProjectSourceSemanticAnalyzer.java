@@ -57,15 +57,30 @@ public class ProjectSourceSemanticAnalyzer {
 
 	private final ProjectSourceParser sourceParser;
 
-	//file, module
-	// can contain duplicated modules
+	/**
+	 * file to Module map received from the syntax analysis.
+	 * Serves as the main/reliable source of information.
+	 * */
 	private Map<IFile, Module> fileModuleMap;
-	// module name, module
+
+	/**
+	 * module name to module mapping to speed up searching in the list of uptodate modules.
+	 * 
+	 * Calculated during semantic check, maintained in-between semantic checks.
+	 * */
 	private Map<String, Module> moduleMap;
-	// module name, module
+	/**
+	 * module name to module mapping to speed up searching in the list of outdated modules.
+	 * 
+	 * Cleared during semantic check, maintained in-between semantic checks.
+	 * */
 	private Map<String, Module> outdatedModuleMap;
 
-	/** The names of the modules, which were checked the last time. */
+	/**
+	 * The names of the modules, which were checked at the last semantic check.
+	 * 
+	 * Caculated during the semantic check, maintained in-between semantic checks.
+	 * */
 	private Set<String> semanticallyUptodateModules;
 
 	public ProjectSourceSemanticAnalyzer(final ProjectSourceParser sourceParser) {
@@ -260,26 +275,8 @@ public class ProjectSourceSemanticAnalyzer {
 	 *            the module to be added.
 	 * @return true if it was successfully added, false otherwise.
 	 * */
-	public boolean addModule(final Module module) {
+	public void addModule(final Module module) {
 		fileModuleMap.put((IFile)module.getLocation().getFile(), module);
-
-		//TODO this needs some re-thinking
-		Module temp = sourceParser.getModuleByName(module.getName(), true);
-		if (temp != null) {
-			if(!temp.getLocation().getFile().equals(module.getLocation().getFile())) {
-				return false;
-			}
-		}
-
-		synchronized (outdatedModuleMap) {
-			if (outdatedModuleMap.containsKey(module.getName())) {
-				outdatedModuleMap.remove(module.getName());
-			}
-		}
-
-		moduleMap.put(module.getName(), module);
-
-		return true;
 	}
 
 	/**
@@ -314,6 +311,7 @@ public class ProjectSourceSemanticAnalyzer {
 			synchronized (semanticAnalyzer.outdatedModuleMap) {
 				semanticAnalyzer.outdatedModuleMap.clear();
 			}
+			semanticAnalyzer.moduleMap.clear();
 		}
 		// Semantic checking starts here
 		monitor.beginTask("On-the-fly semantic checking of everything ", 1);
@@ -360,6 +358,7 @@ public class ProjectSourceSemanticAnalyzer {
 						semanticAnalyzer.semanticallyUptodateModules.remove(name);
 					} else {
 						uniqueModules.put(name, module);
+						semanticAnalyzer.moduleMap.put(name, module);
 						if(semanticAnalyzer.semanticallyUptodateModules.contains(name)) {
 							semanticallyChecked.add(name);
 						}
