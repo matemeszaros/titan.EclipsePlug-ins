@@ -39,7 +39,6 @@ import org.eclipse.titan.designer.AST.brokenpartsanalyzers.IBaseAnalyzer;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.SelectionAlgorithm;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.SelectionMethodBase;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
-import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.core.TITANNature;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
@@ -56,7 +55,6 @@ public class ProjectSourceSemanticAnalyzer {
 	private static final String DUPLICATEMODULE = "Modules must be unique, but `{0}'' was declared multiple times";
 	public static final String CIRCULARIMPORTCHAIN = "Circular import chain is not recommended: {0}";
 
-	private final IProject project;
 	private final ProjectSourceParser sourceParser;
 
 	//file, module
@@ -70,8 +68,7 @@ public class ProjectSourceSemanticAnalyzer {
 	/** The names of the modules, which were checked the last time. */
 	private Set<String> semanticallyUptodateModules;
 
-	public ProjectSourceSemanticAnalyzer(final IProject project, final ProjectSourceParser sourceParser) {
-		this.project = project;
+	public ProjectSourceSemanticAnalyzer(final ProjectSourceParser sourceParser) {
 		this.sourceParser = sourceParser;
 
 		fileModuleMap = new ConcurrentHashMap<IFile, Module>();
