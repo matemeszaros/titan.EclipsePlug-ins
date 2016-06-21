@@ -63,18 +63,12 @@ public final class OpenDeclarationHelper {
 		}
 
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		final String moduleName = projectSourceParser.containedModule(file);
-		if (moduleName == null) {
-			if (ResourceExclusionHelper.isExcluded(file)) {
-				ErrorReporter.parallelDisplayInStatusLine(targetEditor, MessageFormat.format(EXCLUDEDFROMBUILD, file.getFullPath()));
-			}
-			if (reportErrors) {
-				ErrorReporter.parallelDisplayInStatusLine(targetEditor, MessageFormat.format(NORECOGNISABLEMODULENAME, file.getFullPath()));
-			}
+		if (ResourceExclusionHelper.isExcluded(file)) {
+			ErrorReporter.parallelDisplayInStatusLine(targetEditor, MessageFormat.format(EXCLUDEDFROMBUILD, file.getFullPath()));
 			return null;
 		}
 
-		final Module tempModule = projectSourceParser.getModuleByName(moduleName);
+		final Module tempModule = projectSourceParser.containedModule(file);
 		if (tempModule == null) {
 			if (reportErrors) {
 				ErrorReporter.parallelDisplayInStatusLine(targetEditor, MessageFormat.format(NOTFOUNDMODULE, file.getFullPath()));

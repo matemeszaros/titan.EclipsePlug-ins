@@ -76,14 +76,13 @@ public final class ContentAssistProcessor implements IContentAssistProcessor {
 
 		Scope scope = null;
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		String moduleName = projectSourceParser.containedModule(file);
-		if (moduleName != null) {
-			Module tempModule = projectSourceParser.getModuleByName(moduleName);
-			if (tempModule != null) {
-				scope = tempModule.getSmallestEnclosingScope(refParser.getReplacementOffset());
-				ref.setMyScope(scope);
-				ref.detectModid();
-			}
+		Module tempModule = projectSourceParser.containedModule(file);
+		String moduleName = null;
+		if (tempModule != null) {
+			moduleName = tempModule.getName();
+			scope = tempModule.getSmallestEnclosingScope(refParser.getReplacementOffset());
+			ref.setMyScope(scope);
+			ref.detectModid();
 		}
 
 		IPreferencesService prefs = Platform.getPreferencesService();
@@ -138,8 +137,8 @@ public final class ContentAssistProcessor implements IContentAssistProcessor {
 		Set<String> knownModuleNames = projectSourceParser.getKnownModuleNames();
 		for (String knownModuleName : knownModuleNames) {
 			Identifier tempIdentifier = new Identifier(Identifier_type.ID_NAME, knownModuleName);
-			Module tempModule = projectSourceParser.getModuleByName(knownModuleName);
-			propCollector.addProposal(tempIdentifier, ImageCache.getImage(tempModule.getOutlineIcon()), "module");
+			Module tempModule2 = projectSourceParser.getModuleByName(knownModuleName);
+			propCollector.addProposal(tempIdentifier, ImageCache.getImage(tempModule2.getOutlineIcon()), "module");
 		}
 		propCollector.sortTillMarked();
 		propCollector.markPosition();

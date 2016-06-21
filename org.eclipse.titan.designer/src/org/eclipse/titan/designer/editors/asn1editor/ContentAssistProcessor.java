@@ -64,14 +64,11 @@ public final class ContentAssistProcessor implements IContentAssistProcessor {
 
 		Scope scope = null;
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		String moduleName = projectSourceParser.containedModule(file);
-		if (moduleName != null) {
-			Module tempModule = projectSourceParser.getModuleByName(moduleName);
-			if (tempModule != null) {
-				scope = tempModule.getSmallestEnclosingScope(refParser.getReplacementOffset());
-				ref.setMyScope(scope);
-				ref.detectModid();
-			}
+		Module tempModule = projectSourceParser.containedModule(file);
+		if (tempModule != null) {
+			scope = tempModule.getSmallestEnclosingScope(refParser.getReplacementOffset());
+			ref.setMyScope(scope);
+			ref.detectModid();
 		}
 
 		TemplateContextType contextType = new TemplateContextType(ASN1CodeSkeletons.CONTEXT_IDENTIFIER, ASN1CodeSkeletons.CONTEXT_NAME);

@@ -206,14 +206,7 @@ public abstract class OccurencesMarker {
 			return;
 		}
 
-		final String moduleName = projectSourceParser.containedModule(file);
-		if (moduleName == null) {
-			removeOccurences(false);
-			error(document, offset, "The module name can not be found in the project.");
-			return;
-		}
-
-		final Module module = projectSourceParser.getModuleByName(moduleName);
+		final Module module = projectSourceParser.containedModule(file);
 		if (module == null) {
 			removeOccurences(false);
 			error(document, offset, "The module can not be found in the project.");

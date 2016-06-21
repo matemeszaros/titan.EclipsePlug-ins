@@ -140,11 +140,7 @@ public final class OutlinePage extends ContentOutlinePage {
 		}
 
 		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		String moduleName = sourceParser.containedModule(file);
-		if (moduleName == null) {
-			return null;
-		}
 
-		return sourceParser.getModuleByName(moduleName);
+		return sourceParser.containedModule(file);
 	}
 }

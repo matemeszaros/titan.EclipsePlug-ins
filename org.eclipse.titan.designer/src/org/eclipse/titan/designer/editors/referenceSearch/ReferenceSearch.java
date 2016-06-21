@@ -35,7 +35,7 @@ public final class ReferenceSearch {
 	public static final String FILENOTIDENTIFIABLE = "The file related to the editor could not be identified";
 	public static final String NORECOGNISABLEMODULENAME = "The name of the module in the file `{0}'' could not be identified";
 	public static final String EXCLUDEDFROMBUILD = "The name of the module in the file `{0}'' could not be identified, the file is excluded from build";
-	public static final String NOTFOUNDMODULE = "The module `{0}'' could not be found";
+	public static final String NOTFOUNDMODULE = "The module in file `{0}'' could not be found";
 
 	private ReferenceSearch() {
 		// Hide constructor
@@ -76,21 +76,16 @@ public final class ReferenceSearch {
 
 		// find the module
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		final String moduleName = projectSourceParser.containedModule(file);
-		if (moduleName == null) {
-			if (ResourceExclusionHelper.isExcluded(file)) {
-				targetEditor.getEditorSite().getActionBars().getStatusLineManager()
-						.setErrorMessage(MessageFormat.format(EXCLUDEDFROMBUILD, file.getFullPath()));
-			}
-
+		if (ResourceExclusionHelper.isExcluded(file)) {
 			targetEditor.getEditorSite().getActionBars().getStatusLineManager()
-					.setErrorMessage(MessageFormat.format(NORECOGNISABLEMODULENAME, file.getFullPath()));
+					.setErrorMessage(MessageFormat.format(EXCLUDEDFROMBUILD, file.getFullPath()));
 			return;
 		}
-		final Module module = projectSourceParser.getModuleByName(moduleName);
+
+		final Module module = projectSourceParser.containedModule(file);
 		if (module == null) {
 			targetEditor.getEditorSite().getActionBars().getStatusLineManager()
-					.setErrorMessage(MessageFormat.format(NOTFOUNDMODULE, moduleName));
+					.setErrorMessage(MessageFormat.format(NOTFOUNDMODULE, file.getName()));
 			return;
 		}
 

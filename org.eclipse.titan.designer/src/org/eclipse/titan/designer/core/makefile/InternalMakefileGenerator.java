@@ -2265,7 +2265,7 @@ public final class InternalMakefileGenerator {
 	 */
 	public void addTTCN3Module(final IFile file, final String directory) {
 		ProjectSourceParser parser = GlobalParser.getProjectSourceParser(file.getProject());
-		String moduleName = parser.containedModule(file);
+		String moduleName = parser.containedModuleName(file);
 		if (moduleName == null) {
 			if (file.isSynchronized(IResource.DEPTH_ZERO)) {
 				ErrorReporter.logWarning("file " + file.getFullPath().toOSString() + " is out-of sync with the file system");
@@ -2307,7 +2307,7 @@ public final class InternalMakefileGenerator {
 	 */
 	public void addASN1Module(final IFile file, final String directory) {
 		ProjectSourceParser parser = GlobalParser.getProjectSourceParser(file.getProject());
-		String moduleName = parser.containedModule(file);
+		String moduleName = parser.containedModuleName(file);
 		if (moduleName == null) {
 			if (file.isSynchronized(IResource.DEPTH_ZERO)) {
 				ErrorReporter.logWarning("file " + file.getFullPath().toOSString() + " is out-of sync with the file system");

@@ -933,8 +933,7 @@ public final class T3Doc {
 			if (declaration.node instanceof TTCN3_Sequence_Type || declaration.node instanceof FormalParameter) {
 				final IFile file = (IFile) targetEditor.getEditorInput().getAdapter(IFile.class);
 				ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-				final String moduleName = projectSourceParser.containedModule(file);
-				final Module tempModule = projectSourceParser.getModuleByName(moduleName);
+				final Module tempModule = projectSourceParser.containedModule(file);
 
 				Assignment ass = tempModule.getEnclosingAssignment(hoverRegion.getOffset());
 				if (ass != null) {

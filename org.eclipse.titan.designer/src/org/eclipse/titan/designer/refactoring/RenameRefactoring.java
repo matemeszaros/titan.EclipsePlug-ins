@@ -75,7 +75,7 @@ public class RenameRefactoring extends Refactoring {
 	public static final String FILENOTIDENTIFIABLE = "The file related to the editor could not be identified";
 	public static final String NORECOGNISABLEMODULENAME = "The name of the module in the file `{0}'' could not be identified";
 	public static final String EXCLUDEDFROMBUILD = "The name of the module in the file `{0}'' could not be identified, the file is excluded from build";
-	public static final String NOTFOUNDMODULE = "The module `{0}'' could not be found";
+	public static final String NOTFOUNDMODULE = "The module in file `{0}'' could not be found";
 	public static final String PROJECTCONTAINSERRORS = "The project `{0}'' contains errors, which might corrupt the result of the refactoring";
 	public static final String PROJECTCONTAINSTTCNPPFILES = "The project `{0}'' contains .ttcnpp files, which might corrupt the result of the refactoring";
 	public static final String FIELDALREADYEXISTS = "Field with name `{0}'' already exists in type `{1}''";
@@ -372,18 +372,15 @@ public class RenameRefactoring extends Refactoring {
 		}
 
 		// find the module
-		final String moduleName = projectSourceParser.containedModule(file);
-		if (moduleName == null) {
-			if (ResourceExclusionHelper.isExcluded(file)) {
-				targetEditor.getEditorSite().getActionBars().getStatusLineManager()
-						.setErrorMessage(MessageFormat.format(EXCLUDEDFROMBUILD, file.getFullPath()));
-			}
-			statusLineManager.setErrorMessage(MessageFormat.format(NORECOGNISABLEMODULENAME, file.getFullPath()));
+		if (ResourceExclusionHelper.isExcluded(file)) {
+			targetEditor.getEditorSite().getActionBars().getStatusLineManager()
+			.setErrorMessage(MessageFormat.format(EXCLUDEDFROMBUILD, file.getFullPath()));
 			return;
 		}
-		final Module module = projectSourceParser.getModuleByName(moduleName);
+
+		final Module module = projectSourceParser.containedModule(file);
 		if (module == null) {
-			statusLineManager.setErrorMessage(MessageFormat.format(NOTFOUNDMODULE, moduleName));
+			statusLineManager.setErrorMessage(MessageFormat.format(NOTFOUNDMODULE, file.getName()));
 			return;
 		}
 

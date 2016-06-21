@@ -369,11 +369,7 @@ public final class OutlinePage extends ContentOutlinePage {
 
 		// FIXME add semantic check guard on project level.
 		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		String moduleName = sourceParser.containedModule(file);
-		if (moduleName == null) {
-			return null;
-		}
 
-		return sourceParser.getModuleByName(moduleName);
+		return sourceParser.containedModule(file);
 	}
 }

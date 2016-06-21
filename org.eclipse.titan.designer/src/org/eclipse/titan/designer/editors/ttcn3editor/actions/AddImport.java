@@ -147,8 +147,7 @@ public final class AddImport implements IEditorActionDelegate {
 			}
 
 			IFile newfile = (IFile) resultToInsert.location.getFile();
-			String moduleName = projectSourceParser.containedModule(newfile);
-			Module newModule = projectSourceParser.getModuleByName(moduleName);
+			Module newModule = projectSourceParser.containedModule(newfile);
 			if (newModule == null) {
 				targetEditor.getEditorSite().getActionBars().getStatusLineManager()
 						.setErrorMessage("Could not identify the module in file " + newfile.getName());
@@ -159,8 +158,7 @@ public final class AddImport implements IEditorActionDelegate {
 			TITANDebugConsole.println("the new module to insert: " + ttcnName);
 
 			final IFile actualFile = (IFile) targetEditor.getEditorInput().getAdapter(IFile.class);
-			String actualModuleName = projectSourceParser.containedModule(actualFile);
-			Module actualModule = projectSourceParser.getModuleByName(actualModuleName);
+			Module actualModule = projectSourceParser.containedModule(actualFile);
 
 			int insertionOffset = ((TTCN3Module) actualModule).getAssignmentsScope().getLocation().getOffset() + 1;
 

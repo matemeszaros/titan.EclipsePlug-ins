@@ -148,9 +148,7 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
 
-		final String ttcn3ModuleName = projectSourceParser.containedModule(file);
-
-		final Module module = projectSourceParser.getModuleByName(ttcn3ModuleName);
+		final Module module = projectSourceParser.containedModule(file);
 
 		if (module == null) {
 			if (reportDebugInformation) {
