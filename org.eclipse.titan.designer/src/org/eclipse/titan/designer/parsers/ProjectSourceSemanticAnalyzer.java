@@ -150,35 +150,6 @@ public class ProjectSourceSemanticAnalyzer {
 	}
 
 	/**
-	 * Handles the renaming of a module.
-	 * 
-	 * @param oldname
-	 *            the old name of the module.
-	 * @param newName
-	 *            the new name of the module.
-	 * @param file
-	 *            the file in which the change happened.
-	 * */
-	void renameModule(final String oldname, final String newName, final IFile file) {
-		if (moduleMap.containsKey(oldname)) {
-			Module module = moduleMap.remove(oldname);
-			moduleMap.put(newName, module);
-		}
-		synchronized (outdatedModuleMap) {
-			if (outdatedModuleMap.containsKey(oldname)) {
-				Module module = outdatedModuleMap.remove(oldname);
-				outdatedModuleMap.put(newName, module);
-			}
-		}
-
-		synchronized (semanticallyUptodateModules) {
-			semanticallyUptodateModules.remove(oldname);
-		}
-
-		ProjectBasedBuilder.setForcedMakefileRebuild(project);
-	}
-
-	/**
 	 * Reports that the provided file has changed and so it's stored
 	 * information became out of date.
 	 * <p>

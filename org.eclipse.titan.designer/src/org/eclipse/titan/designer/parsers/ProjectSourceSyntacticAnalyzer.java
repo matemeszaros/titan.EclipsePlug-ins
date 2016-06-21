@@ -178,34 +178,6 @@ public final class ProjectSourceSyntacticAnalyzer {
 	}
 
 	/**
-	 * Handles the renaming of a module.
-	 *
-	 * @param oldname
-	 *                the old name of the module.
-	 * @param newName
-	 *                the new name of the module.
-	 * */
-	public void renameModule(final String oldname, final String newName) {
-		IFile file = null;
-		for (IFile key : fileMap.keySet()) {
-			if (fileMap.get(key).equals(oldname)) {
-				file = key;
-			}
-		}
-
-		if (file == null) {
-			return;
-		}
-
-		fileMap.put(file, newName);
-		if (uptodateFiles.containsKey(file)) {
-			uptodateFiles.put(file, newName);
-		}
-
-		sourceParser.getSemanticAnalyzer().renameModule(oldname, newName, file);
-	}
-
-	/**
 	 * Reports that the provided file has changed and so it's stored
 	 * information became out of date.
 	 * <p>

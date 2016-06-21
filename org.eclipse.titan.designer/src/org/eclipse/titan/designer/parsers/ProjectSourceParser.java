@@ -419,18 +419,6 @@ public final class ProjectSourceParser {
 	}
 
 	/**
-	 * Handles the renaming of a module.
-	 * 
-	 * @param oldname
-	 *                the old name of the module.
-	 * @param newName
-	 *                the new name of the module.
-	 * */
-	public void renameModule(final String oldname, final String newName) {
-		syntacticAnalyzer.renameModule(oldname, newName);
-	}
-
-	/**
 	 * Reports that the provided file has changed and so it's stored
 	 * information became out of date.
 	 * <p>
