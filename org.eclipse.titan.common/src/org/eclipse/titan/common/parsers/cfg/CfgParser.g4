@@ -45,8 +45,6 @@ import java.util.regex.Pattern;
 	
 	private List<TITANMarker> mWarnings = new ArrayList<TITANMarker>();
 	
-	private List<ISection> mSections = new ArrayList<ISection>();
-
 	private Map<String, CfgDefinitionInformation> mDefinitions = new HashMap<String, CfgDefinitionInformation>();
   
 	private List<String> mIncludeFiles = new ArrayList<String>();
@@ -118,10 +116,6 @@ import java.util.regex.Pattern;
 		return mWarnings;
 	}
 	
-	public List<ISection> getSections() {
-		return mSections;
-	}
-
 	public void setDefinitions( Map<String,CfgDefinitionInformation> aDefs ) {
 		mDefinitions = aDefs;
 	}
@@ -341,20 +335,13 @@ options{
 
 pr_ConfigFile:
 	(	s = pr_Section
-		{	if ( $s.section != null ) {
-				mSections.add( $s.section );
-			}
-		}
 	)+
 	EOF
 ;
  
-pr_Section returns [ ISection section ]:
-{	$section = null;
-}
+pr_Section:
 (	mc = pr_MainControllerSection		{ mcSectionHandler.setLastSectionRoot( $mc.ctx ); }
-|	i = pr_IncludeSection				{ $section = $i.includeSection;
-										  includeSectionHandler.setLastSectionRoot( $i.ctx ); }
+|	i = pr_IncludeSection				{ includeSectionHandler.setLastSectionRoot( $i.ctx ); }
 |	oi = pr_OrderedIncludeSection		{ orderedIncludeSectionHandler.setLastSectionRoot( $oi.ctx ); }
 |	e = pr_ExecuteSection				{ executeSectionHandler.setLastSectionRoot( $e.ctx ); }
 |	d = pr_DefineSection				{ defineSectionHandler.setLastSectionRoot( $d.ctx ); }
@@ -450,13 +437,10 @@ pr_MainControllerItemTcpPort:
 	}
 ;
 
-pr_IncludeSection returns [ IncludeSection includeSection ]:
-{	$includeSection = new IncludeSection();
-}
+pr_IncludeSection:
 	INCLUDE_SECTION
 	( f = STRING2
 		{	String fileName = $f.getText().substring( 1, $f.getText().length() - 1 );
-			$includeSection.addIncludeFileName( fileName );
 			mIncludeFiles.add( fileName );
 			final TerminalNodeImpl node = new TerminalNodeImpl( $f );
 			node.parent = $ctx;
@@ -469,7 +453,16 @@ pr_IncludeSection returns [ IncludeSection includeSection ]:
 
 pr_OrderedIncludeSection:
 	ORDERED_INCLUDE_SECTION
-	STRING4*
+	( f = STRING4
+		{	String fileName = $f.getText().substring( 1, $f.getText().length() - 1 );
+			mIncludeFiles.add( fileName );
+			final TerminalNodeImpl node = new TerminalNodeImpl( $f );
+			node.parent = $ctx;
+			//another solution for the same thing
+			//node.parent = orderedIncludeSectionHandler.getLastSectionRoot();
+			orderedIncludeSectionHandler.getFiles().add( node );
+		}
+	)*
 ;
 
 pr_ExecuteSection:

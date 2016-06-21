@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.titan.common.parsers.TITANMarker;
 
 /**
@@ -21,10 +22,22 @@ import org.eclipse.titan.common.parsers.TITANMarker;
  */
 public class CfgParseResult {
 
-	private ParserRuleContext mParseTreeRoot = null;
+	/** the result parse tree, which was built during the parsing */
+	private ParseTree mParseTreeRoot = null;
 	
+	/**
+	 * the result of the tokenizing, done by the lexer.
+	 * It contains all the tokens from all the channels, so it contains also the hidden tokens as well.
+	 * A token is hidden, if token channel > 0
+	 */
+	private CommonTokenStream mTokenStream = null;
+	
+	/**
+	 * list of syntactic warnings collected during parsing
+	 */
 	private List<TITANMarker> mWarnings = new ArrayList<TITANMarker>();
 	
+	/** included file names from [INCLUDE] section */
 	private List<String> mIncludeFiles = new ArrayList<String>();
 
 	/**
@@ -82,12 +95,20 @@ public class CfgParseResult {
 	
 	private List<String> mExecuteElements = new ArrayList<String>();
 	
-	public ParserRuleContext getParseTreeRoot() {
+	public ParseTree getParseTreeRoot() {
 		return mParseTreeRoot;
 	}
 
-	public void setParseTreeRoot(ParserRuleContext aParseTreeRoot) {
+	public void setParseTreeRoot(ParseTree aParseTreeRoot) {
 		this.mParseTreeRoot = aParseTreeRoot;
+	}
+
+	public CommonTokenStream getTokenStream() {
+		return mTokenStream;
+	}
+
+	public void setTokenStream(CommonTokenStream aTokenStream) {
+		this.mTokenStream = aTokenStream;
 	}
 
 	public List<TITANMarker> getWarnings() {

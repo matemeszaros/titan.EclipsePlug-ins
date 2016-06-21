@@ -20,7 +20,6 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenFactory;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -66,7 +65,7 @@ public final class CfgAnalyzer {
 	private DefineSectionHandler defineSectionHandler = null;
 	private LoggingSectionHandler loggingSectionHandler = null;
 	private ParserRuleContext mParseTreeRoot = null;
-	private TokenStream mTokenStream = null;
+	private CommonTokenStream mTokenStream = null;
 	private String mLogFileName = null;
 	private Integer mTcpPort = null;
 	private String mLocalAddress = null;
@@ -173,7 +172,7 @@ public final class CfgAnalyzer {
 		return mParseTreeRoot;
 	}
 
-	public TokenStream getTokenStream() {
+	public CommonTokenStream getTokenStream() {
 		return mTokenStream;
 	}
 
@@ -235,7 +234,7 @@ public final class CfgAnalyzer {
 		// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
 		//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
 		// 2. Changed from BufferedTokenStream to CommonTokenStream, otherwise tokens with "-> channel(HIDDEN)" are not filtered out in lexer.
-		final TokenStream tokens = new CommonTokenStream( lexer );
+		final CommonTokenStream tokens = new CommonTokenStream( lexer );
 		final CfgParser parser = new CfgParser(tokens);
 		//parser tree is built by default
 		parserListener = new TitanListener();
