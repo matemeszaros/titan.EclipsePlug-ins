@@ -9,17 +9,17 @@ package org.eclipse.titan.common.parsers.cfg;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.titan.common.logging.ErrorReporter;
+import org.eclipse.titan.common.parsers.cfg.CfgParseTreePrinter.ResolveMode;
 import org.eclipse.titan.common.path.PathConverter;
 
 /**
@@ -30,10 +30,7 @@ import org.eclipse.titan.common.path.PathConverter;
  * @author Arpad Lovassy
  */
 public final class ConfigFileHandler {
-	private static final String ORIGINALLY_FROM = "//This part was originally found in file: ";
-
-	private Map<Path, ParseTree> originalASTs = new HashMap<Path, ParseTree>();
-	private Map<Path, ParseTree> resolvedASTs = new HashMap<Path, ParseTree>();
+	private LinkedHashMap<Path, CfgParseResult> originalASTs = new LinkedHashMap<Path, CfgParseResult>();
 	private final Map<String, CfgDefinitionInformation> definesMap = new HashMap<String, CfgDefinitionInformation>();
 	private final List<Path> processedFiles = new ArrayList<Path>();
 	private final List<Path> toBeProcessedFiles = new ArrayList<Path>();
@@ -58,9 +55,6 @@ public final class ConfigFileHandler {
 
 	private String mLogFileName = null;
 	
-	/** the token stream of the last parsing, it is needed to print the hidden tokens */
-	private TokenStream mTokenStream = null;
-
 	public ConfigFileHandler(){
 		// Do nothing
 	}
@@ -132,7 +126,6 @@ public final class ConfigFileHandler {
 	 * */
 	public void readFromFile(final String first){
 		originalASTs.clear();
-		resolvedASTs.clear();
 		toBeProcessedFiles.add(new Path(first));
 		while(!toBeProcessedFiles.isEmpty()){
 			final Path actualFile = toBeProcessedFiles.get(0);
@@ -180,7 +173,7 @@ public final class ConfigFileHandler {
 	 * or in configuration files that can be reached from it via inclusion.
 	 */
 	public void processASTs() {
-		//FIXME implement
+		// nothing to do, resolving is done in toStringResolved() on the fly
 	}
 
 	/**
@@ -189,37 +182,13 @@ public final class ConfigFileHandler {
 	 * 
 	 * @see #print(ParseTree, StringBuilder)
 	 * @param disallowedNodes the list of nodes that should be left out of the process.
-	 * */
+	 */
 	public StringBuilder toStringResolved(final List<Integer> disallowedNodes){
-		return toStringInternal(resolvedASTs, disallowedNodes);
-	}
-
-	/**
-	 * Creates the String representation of the parsed tree starting from the provided root node.
-	 * 
-	 * @see #print(ParseTree, StringBuilder)
-	 * @param asts the root node of the parse tree to start from.
-	 * @param disallowedNodes the list of nodes that should be left out of the process.
-	 * */
-	private StringBuilder toStringInternal(final Map<Path, ParseTree> asts, final List<Integer> disallowedNodes){
-		if(asts == null || asts.isEmpty()){
-			return new StringBuilder();
-		}
-		
-		this.disallowedNodes = disallowedNodes;
-		final StringBuilder stringbuilder = new StringBuilder();
-		stringbuilder.setLength(0);
-		
-		for(final Entry<Path, ParseTree> entry:asts.entrySet()){
-			stringbuilder.append(ORIGINALLY_FROM).
-				append(entry.getKey().toOSString()).append('\n');
-			if(entry.getValue() != null){
-				print(entry.getValue(), stringbuilder);
-			}
-		}
-
-		this.disallowedNodes = null;
-		return stringbuilder;
+		StringBuilder sb = new StringBuilder();
+		// Creates the String representation of the parsed tree starting from the provided root node.
+		CfgParseTreePrinter.printResolved( originalASTs, sb, disallowedNodes,
+										ResolveMode.IN_ROW, definesMap, environmentalVariables );
+		return sb;
 	}
 
 	private void parseFile(final Path actualFile, final CfgAnalyzer analyzer, final IFile file) {
@@ -247,11 +216,12 @@ public final class ConfigFileHandler {
 			unixDomainSocket = analyzer.isUnixDomainSocketEnabled();
 		}
 		
-		mTokenStream = analyzer.getTokenStream();
-		
 		final ParseTree rootNode = analyzer.getParseTreeRoot();
 		if ( rootNode != null ) {
-			originalASTs.put( actualFile, rootNode );
+			CfgParseResult cfgResult = new CfgParseResult();
+			cfgResult.setParseTreeRoot(rootNode);
+			cfgResult.setTokenStream( analyzer.getTokenStream() );
+			originalASTs.put( actualFile, cfgResult );
 
 			final List<String> includeFiles = analyzer.getIncludeFilePaths();
 			for ( String filename:includeFiles ) {
@@ -268,17 +238,4 @@ public final class ConfigFileHandler {
 
 		}
 	}
-	
-	/**
-	 * Prints out the hidden values and the visible value of a tree node, and calls itself recursively on it's children
-	 * 
-	 * @see #toStringOriginal(List)
-	 * @see #toStringResolved(List)
-	 * 
-	 * @param root the tree root to start at.
-	 */
-	private void print(final ParseTree aRoot, final StringBuilder aSb) {
-		ConfigTreeNodeUtilities.print( aRoot, mTokenStream, aSb, disallowedNodes );
-	}
-	
 }
