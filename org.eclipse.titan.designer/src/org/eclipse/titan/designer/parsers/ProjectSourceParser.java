@@ -257,27 +257,6 @@ public final class ProjectSourceParser {
 		return null;
 	}
 
-	
-	/**
-	 * Returns the module with the provided name, or null
-	 * <p>
-	 * Does check not only the actual project, but all referenced ones too.
-	 * 
-	 * @param name
-	 *                the name of the module to return
-	 * @param uptodateOnly
-	 *                allow finding only the up-to-date modules.
-	 * 
-	 * @return the module having the provided name
-	 * */
-	public Module getModuleByName(final String name, final boolean uptodateOnly) {
-		if (name == null) {
-			return null;
-		}
-
-		return internalGetModuleByName(name, null, uptodateOnly);
-	}
-
 	public Collection<Module> getModules() {
 		return semanticAnalyzer.internalGetModules();
 	}
