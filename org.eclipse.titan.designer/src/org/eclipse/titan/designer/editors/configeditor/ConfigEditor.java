@@ -7,8 +7,8 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor;
 
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -56,7 +56,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	private LoggingPage mLoggingEditor;
 
 	private ParserRuleContext mParseTreeRoot;
-	private TokenStream mTokenStream;
+	private CommonTokenStream mTokenStream;
 	
 	public ConfigEditor() {
 		editor = new ConfigTextEditor(this);
@@ -224,11 +224,11 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 		mParseTreeRoot = aParseTreeRoot;
 	}
 
-	public TokenStream getTokenStream() {
+	public CommonTokenStream getTokenStream() {
 		return mTokenStream;
 	}
 
-	public void setTokenStream(final TokenStream aTokenStream) {
+	public void setTokenStream(final CommonTokenStream aTokenStream) {
 		mTokenStream = aTokenStream;
 	}
 

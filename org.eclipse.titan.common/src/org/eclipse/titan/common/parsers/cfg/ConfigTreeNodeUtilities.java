@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.WritableToken;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
@@ -40,176 +40,6 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	public static String toString( final ParseTree aRoot ) {
 		return aRoot.getText();
-	}
-	
-	/**
-	 * Builds parse tree text including hidden tokens (also before the rule)
-	 * @param aParseTreeRoot root of the parse tree to print
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
-	 * @return output parse tree text
-	 */
-	public static String toStringWithHiddenBefore( final ParseTree aParseTreeRoot,
-												   final TokenStream aTokenStream ) {
-		final StringBuilder builder = new StringBuilder();
-
-		print( aParseTreeRoot, aTokenStream, builder, null );
-		// there are no hidden tokens after the last token
-
-		return builder.toString();
-	}
-	
-	/**
-	 * Builds parse tree text including hidden tokens (but not before the rule)
-	 * @param aParseTreeRoot root of the parse tree to print
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
-	 * @return output parse tree text
-	 */
-	public static String toStringWithHidden( final ParseTree aParseTreeRoot,
-											 final TokenStream aTokenStream ) {
-		final StringBuilder builder = new StringBuilder();
-		print( aParseTreeRoot, aTokenStream, builder, null, false );
-		return builder.toString();
-	}
-	
-	/**
-	 * Builds parse tree text including hidden tokens (also before the rule)
-	 * @param aParseTree parse tree
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
-	 * @param aSb (in/out) StringBuilder, where the rule text is written
-	 * @param aDisallowedNodes token types, which are not printed (also their children), it can be null
-	 */
-	public static void print( final ParseTree aParseTree,
-							  final TokenStream aTokenStream,
-							  final StringBuilder aSb,
-							  final List<Integer> aDisallowedNodes ) {
-		print( aParseTree, aTokenStream, aSb, aDisallowedNodes, true );
-	}
-	
-	/**
-	 * RECURSIVE
-	 * Builds parse tree text including hidden tokens
-	 * @param aParseTree parse tree
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
-	 * @param aSb (in/out) StringBuilder, where the rule text is written
-	 * @param aDisallowedNodes token types, which are not printed (also their children), it can be null
-	 * @param aPrintHiddenBefore true to print hidden tokens before the parse tree
-	 *                           (NOTE: hidden tokens in the parse tree will be printed)
-	 */
-	private static void print( final ParseTree aParseTree,
-							   final TokenStream aTokenStream,
-							   final StringBuilder aSb,
-							   final List<Integer> aDisallowedNodes,
-							   final boolean aPrintHiddenBefore ) {
-		if ( aParseTree == null ) {
-			ErrorReporter.logWarning("ConfigTreeNodeUtilities.print(): aParseTree == null");
-			return;
-		}
-		if ( aParseTree instanceof ParserRuleContext ) {
-			final ParserRuleContext rule = (ParserRuleContext)aParseTree;
-			if ( aDisallowedNodes != null && aDisallowedNodes.contains( rule.start.getType() ) ) {
-				return;
-			}
-			if ( aPrintHiddenBefore && rule.getChildCount() > 0 && rule.getChild(0) instanceof AddedParseTree ) {
-				//special case: if AddedParseTree is the 1st in the rule, it has no information
-				// about the hidden tokens, as it has no position in the token stream, but the rule may have
-				printHiddenTokensBefore(rule, aTokenStream, aSb);
-			}
-		}
-		else if ( aParseTree instanceof TerminalNodeImpl ) {
-			final TerminalNodeImpl tn = (TerminalNodeImpl)aParseTree;
-			final Token token = tn.getSymbol();
-			if ( aDisallowedNodes == null || !aDisallowedNodes.contains( token.getType() ) ) {
-				print( token, aTokenStream, aSb, aPrintHiddenBefore );
-			}
-		}
-		else if ( aParseTree instanceof AddedParseTree ) {
-			final AddedParseTree t = (AddedParseTree)aParseTree;
-			aSb.append( t.getText() );
-		}
-		else {
-			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): unexpected ParseTree type");
-		}
-		
-		for ( int i = 0; i < aParseTree.getChildCount(); i++ ) {
-			ParseTree child = aParseTree.getChild( i );
-			if ( child == aParseTree ) {
-				ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): child == aParseTree");
-			} else {
-				print( child, aTokenStream, aSb, aDisallowedNodes, aPrintHiddenBefore || i > 0 );
-			}
-		}
-	}
-	
-	/**
-	 * Builds token text including hidden tokens before the token
-	 * @param aToken token to print
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
-	 * @param aSb (in/out) StringBuilder, where the rule text is written
-	 * @param aPrintHiddenBefore true to print hidden tokens before the token
-	 */
-	public static void print( final Token aToken,
-							  final TokenStream aTokenStream,
-							  final StringBuilder aSb,
-							  final boolean aPrintHiddenBefore ) {
-		final int startIndex = aToken.getTokenIndex();
-		if ( startIndex == -1 || !aPrintHiddenBefore ) {
-			// Token has no index.
-			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
-			// because token has no index in the token stream.
-			final String tokenText = aToken.getText();
-			aSb.append( tokenText != null ? tokenText : "" );
-			return;
-		}
-		int startHiddenIndex = startIndex;
-		while ( isHiddenToken( startHiddenIndex - 1, aTokenStream ) ) {
-			startHiddenIndex--;
-		}
-		for ( int i = startHiddenIndex; i <= startIndex; i++ ) {
-			final Token t = aTokenStream.get( i );
-			final String tokenText = t.getText();
-			aSb.append( tokenText != null ? tokenText : "" );
-		}
-	}
-
-	/**
-	 * Builds hidden tokens after a token
-	 * @param aToken last token (this will NOT be printed, only the hidden tokens after it)
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
-	 * @param aSb (in/out) StringBuilder, where the rule text is written
-	 */
-	public static void printHiddenAfter( final Token aToken,
-										 final TokenStream aTokenStream,
-										 final StringBuilder aSb ) {
-		final int stopIndex = aToken.getTokenIndex();
-		if ( stopIndex == -1 ) {
-			// Token has no index.
-			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
-			// because token has no index in the token stream.
-			return;
-		}
-		int stopHiddenIndex = stopIndex;
-		while ( isHiddenToken( stopHiddenIndex + 1, aTokenStream ) ) {
-			stopHiddenIndex++;
-		}
-		for ( int i = stopIndex + 1; i <= stopHiddenIndex; i++ ) {
-			final Token t = aTokenStream.get( i );
-			final String tokenText = t.getText();
-			aSb.append( tokenText != null ? tokenText : "" );
-		}
-	}
-
-	/**
-	 * @param aIndex token index to check
-	 * @param aTokenStream token stream, where tokens can be accessed by index
-	 * @return true, iff token index is valid AND token is hidden
-	 */
-	private static boolean isHiddenToken( final int aIndex, final TokenStream aTokenStream ) {
-		if ( aTokenStream == null ) {
-			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.isHiddenToken(): aTokenStream == null");
-			return false;
-		}
-		
-		return aIndex >= 0 && aIndex < aTokenStream.size() && aTokenStream.get( aIndex ).getChannel() > 0;
 	}
 	
 	/**
@@ -256,7 +86,12 @@ public final class ConfigTreeNodeUtilities {
 		}
 	}
 	
-	public static void setParent( final ParseTree aChild, final ParserRuleContext aParent ) {
+	/**
+	 * Sets the parent of a child node
+	 * @param aChild child node to modify
+	 * @param aParent parent rule, NOT null
+	 */
+	private static void setParent( final ParseTree aChild, final ParserRuleContext aParent ) {
 		if ( aChild == null ) {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.setParent(): aChild == null");
 			return;
@@ -446,36 +281,35 @@ public final class ConfigTreeNodeUtilities {
 		}
 	}
 
-	private static void printHiddenTokensBefore( final ParserRuleContext aRule,
-												 final TokenStream aTokenStream,
-												 final StringBuilder aSb) {
-		Token startToken = aRule.start;
-		if ( startToken == null ) {
-			return;
-		}
-		final int startIndex = startToken.getTokenIndex();
-		if ( startIndex == -1 ) {
-			// Token has no index.
-			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
-			// because token has no index in the token stream.
-			return;
-		}
-		int startHiddenIndex = startIndex;
-		while ( isHiddenToken( startHiddenIndex - 1, aTokenStream ) ) {
-			startHiddenIndex--;
-		}
-		for ( int i = startHiddenIndex; i < startIndex; i++ ) {
-			final Token t = aTokenStream.get( i );
-			final String tokenText = t.getText();
-			aSb.append( tokenText != null ? tokenText : "" );
-		}
-	}
-
 	/**
 	 * Creates a new hidden token node, which can be added to a ParseTree
 	 * @param aText token text
 	 */
 	public static TerminalNodeImpl createHiddenTokenNode( final String aText ) {
 		return new TerminalNodeImpl( new CommonToken( 0, aText ) );
+	}
+	
+	//TODO: remove, call directly
+	/**
+	 * Builds parse tree text including hidden tokens (also before the rule)
+	 * @param aParseTreeRoot root of the parse tree to print
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @return output parse tree text
+	 */
+	public static String toStringWithHiddenBefore( final ParseTree aParseTreeRoot,
+												   final CommonTokenStream aTokenStream ) {
+		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokenStream, true );
+	}
+	
+	//TODO: remove, call directly
+	/**
+	 * Builds parse tree text including hidden tokens (but not before the rule)
+	 * @param aParseTreeRoot root of the parse tree to print
+	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @return output parse tree text
+	 */
+	public static String toStringWithHidden( final ParseTree aParseTreeRoot,
+											 final CommonTokenStream aTokenStream ) {
+		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokenStream, false );
 	}
 }
