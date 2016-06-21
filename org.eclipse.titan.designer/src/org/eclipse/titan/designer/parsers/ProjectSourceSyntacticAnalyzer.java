@@ -305,8 +305,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 	 * */
 	public void updateSyntax(final IFile file, final TTCN3ReparseUpdater reparser) {
 		if (uptodateFiles.containsKey(file)) {
-			final String moduleName = uptodateFiles.get(file);
-			Module module = sourceParser.getSemanticAnalyzer().internalGetModuleByName(moduleName, false);
+			Module module = sourceParser.getSemanticAnalyzer().getModulebyFile(file);
 			sourceParser.getSemanticAnalyzer().reportSemanticOutdating(file);
 
 			if (module != null && module_type.TTCN3_MODULE.equals(module.getModuletype())) {

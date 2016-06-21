@@ -146,6 +146,10 @@ public class ProjectSourceSemanticAnalyzer {
 		return moduleMap.values();
 	}
 
+	Module getModulebyFile(final IFile file) {
+		return fileModuleMap.get(file);
+	}
+
 	/**
 	 * Returns weather a module with the provided name is set to be
 	 * semantically checked right now.
