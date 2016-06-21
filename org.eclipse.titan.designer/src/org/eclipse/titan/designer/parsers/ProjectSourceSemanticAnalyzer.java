@@ -91,14 +91,9 @@ public class ProjectSourceSemanticAnalyzer {
 	 *         analysis.
 	 * */
 	public boolean isOutdated(final IFile file) {
-		String moduleName = sourceParser.containedModule(file);
-		if (moduleName == null) {
-			return true;
-		}
+		final Module module = fileModuleMap.get(file);
 
-		synchronized (semanticallyUptodateModules) {
-			return !semanticallyUptodateModules.contains(moduleName);
-		}
+		return module == null || !semanticallyUptodateModules.contains(module.getName());
 	}
 
 	/**
@@ -204,13 +199,7 @@ public class ProjectSourceSemanticAnalyzer {
 			return;
 		}
 
-		String moduleName = sourceParser.containedModule(outdatedFile);
-		if (moduleName == null) {
-			// The module was just added
-			return;
-		}
-
-		Module module = moduleMap.get(moduleName);
+		Module module = fileModuleMap.get(outdatedFile);
 		if (module == null) {
 			return;
 		}
@@ -219,6 +208,8 @@ public class ProjectSourceSemanticAnalyzer {
 		if (!outdatedFile.equals(moduleFile)) {
 			return;
 		}
+
+		String moduleName = module.getName();
 		moduleMap.remove(moduleName);
 		fileModuleMap.remove(moduleFile);
 
@@ -242,13 +233,11 @@ public class ProjectSourceSemanticAnalyzer {
 	 *            the file which seems to have changed
 	 * */
 	public void reportSemanticOutdating(final IFile outdatedFile) {
-		String moduleName = sourceParser.containedModule(outdatedFile);
-		if (moduleName == null) {
-			return;
-		}
-
-		synchronized (semanticallyUptodateModules) {
-			semanticallyUptodateModules.remove(moduleName);
+		Module module = fileModuleMap.get(outdatedFile);
+		if(module != null) {
+			synchronized (semanticallyUptodateModules) {
+				semanticallyUptodateModules.remove(module.getName());
+			}
 		}
 	}
 
@@ -306,6 +295,7 @@ public class ProjectSourceSemanticAnalyzer {
 	public boolean addModule(final Module module) {
 		fileModuleMap.put((IFile)module.getLocation().getFile(), module);
 
+		//TODO this needs some re-thinking
 		Module temp = sourceParser.getModuleByName(module.getName(), true);
 		if (temp != null) {
 			if(!temp.getLocation().getFile().equals(module.getLocation().getFile())) {
