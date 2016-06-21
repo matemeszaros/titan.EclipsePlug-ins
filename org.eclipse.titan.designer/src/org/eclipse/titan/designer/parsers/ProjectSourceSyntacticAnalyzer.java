@@ -955,10 +955,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 	private void postFileBasedGeneralAnalysis(final TemporalParseData parsedData) {
 		final Module module = parsedData.getModule();
 		if (module != null && module.getIdentifier() != null) {
-			if (!sourceParser.getSemanticAnalyzer().addModule(module)) {
-				syntacticallyOutdated = true;
-				return;
-			}
+			sourceParser.getSemanticAnalyzer().addModule(module);
 
 			final IFile file = parsedData.getFile();
 			fileMap.put(file, module.getName());
