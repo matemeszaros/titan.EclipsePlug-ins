@@ -392,6 +392,7 @@ public class ProjectSourceSemanticAnalyzer {
 				final ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
 				for (Module module: semanticAnalyzer.fileModuleMap.values()) {
 					final String name = module.getIdentifier().getName();
+					allModules.add(module);
 					if(uniqueModules.containsKey(name)) {
 						final Location location = uniqueModules.get(name).getIdentifier().getLocation();
 						final Location location2 = module.getIdentifier().getLocation();
@@ -401,22 +402,8 @@ public class ProjectSourceSemanticAnalyzer {
 						semanticAnalyzer.semanticallyUptodateModules.remove(name);
 					} else {
 						uniqueModules.put(name, module);
-					}
-				}
-
-				for (Module moduleToCheck : semanticAnalyzer.moduleMap.values()) {
-					if (moduleToCheck != null) {
-						allModules.add(moduleToCheck);
-					}
-				}
-
-				synchronized (semanticAnalyzer.semanticallyUptodateModules) {
-					for (String modulename : semanticAnalyzer.semanticallyUptodateModules) {
-						if (semanticAnalyzer.moduleMap.containsKey(modulename)) {
-							Module module = semanticAnalyzer.moduleMap.get(modulename);
-							if (module != null) {
-								semanticallyChecked.add(module.getName());
-							}
+						if(semanticAnalyzer.semanticallyUptodateModules.contains(name)) {
+							semanticallyChecked.add(name);
 						}
 					}
 				}
