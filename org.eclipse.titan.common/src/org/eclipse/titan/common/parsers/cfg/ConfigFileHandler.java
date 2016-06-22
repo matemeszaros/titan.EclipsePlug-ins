@@ -187,43 +187,41 @@ public final class ConfigFileHandler {
 		StringBuilder sb = new StringBuilder();
 		// Creates the String representation of the parsed tree starting from the provided root node.
 		CfgParseTreePrinter.printResolved( originalASTs, sb, disallowedNodes,
-										ResolveMode.IN_ROW, definesMap, environmentalVariables );
+										   ResolveMode.IN_ROW, definesMap, environmentalVariables );
 		return sb;
 	}
 
 	private void parseFile(final Path actualFile, final CfgAnalyzer analyzer, final IFile file) {
 		analyzer.directParse(file, actualFile.toOSString(), null);
 
-		if (analyzer.isLogFileNameDefined()) {
+		final CfgParseResult cfgParseResult = analyzer.getCfgParseResult();
+		if (cfgParseResult.isLogFileDefined()) {
 			logFileNameDefined = true;
-			mLogFileName  = analyzer.getLogFileName();
-			localAddress = analyzer.getLocalAddress();
+			mLogFileName  = cfgParseResult.getLogFileName();
+			localAddress = cfgParseResult.getLocalAddress();
 		}
 		
-		if (analyzer.getTcpPort() != null) {
-			tcpPort = analyzer.getTcpPort();
+		if (cfgParseResult.getTcpPort() != null) {
+			tcpPort = cfgParseResult.getTcpPort();
 		}
-		if (analyzer.getLocalAddress() != null) {
-			localAddress = analyzer.getLocalAddress();
+		if (cfgParseResult.getLocalAddress() != null) {
+			localAddress = cfgParseResult.getLocalAddress();
 		}
-		if (analyzer.getKillTimer() != null) {
-			killTimer = analyzer.getKillTimer();
+		if (cfgParseResult.getKillTimer() != null) {
+			killTimer = cfgParseResult.getKillTimer();
 		}
-		if (analyzer.getNumHcs() != null) {
-			numHCs = analyzer.getNumHcs();
+		if (cfgParseResult.getNumHcs() != null) {
+			numHCs = cfgParseResult.getNumHcs();
 		}
-		if (analyzer.isUnixDomainSocketEnabled() != null) {
-			unixDomainSocket = analyzer.isUnixDomainSocketEnabled();
+		if (cfgParseResult.isUnixDomainSocket() != null) {
+			unixDomainSocket = cfgParseResult.isUnixDomainSocket();
 		}
 		
-		final ParseTree rootNode = analyzer.getParseTreeRoot();
+		final ParseTree rootNode = cfgParseResult.getParseTreeRoot();
 		if ( rootNode != null ) {
-			CfgParseResult cfgResult = new CfgParseResult();
-			cfgResult.setParseTreeRoot(rootNode);
-			cfgResult.setTokenStream( analyzer.getTokenStream() );
-			originalASTs.put( actualFile, cfgResult );
+			originalASTs.put( actualFile, cfgParseResult );
 
-			final List<String> includeFiles = analyzer.getIncludeFilePaths();
+			final List<String> includeFiles = cfgParseResult.getIncludeFiles();
 			for ( String filename:includeFiles ) {
 				filename = PathConverter.getAbsolutePath( actualFile.toOSString(), filename );
 				if ( filename != null ) {
@@ -231,10 +229,10 @@ public final class ConfigFileHandler {
 				}
 			}
 
-			definesMap.putAll( analyzer.getDefinitions() );
-			groups.putAll(analyzer.getGroups());
-			components.putAll(analyzer.getComponents());
-			executeElements.addAll( analyzer.getExecuteElements() );
+			definesMap.putAll( cfgParseResult.getDefinitions() );
+			groups.putAll( cfgParseResult.getGroups() );
+			components.putAll( cfgParseResult.getComponents() );
+			executeElements.addAll( cfgParseResult.getExecuteElements() );
 
 		}
 	}
