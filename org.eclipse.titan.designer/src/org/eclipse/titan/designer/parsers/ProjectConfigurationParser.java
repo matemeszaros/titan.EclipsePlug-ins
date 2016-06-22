@@ -38,6 +38,7 @@ import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.common.parsers.cfg.CfgAnalyzer;
 import org.eclipse.titan.common.parsers.cfg.CfgDefinitionInformation;
 import org.eclipse.titan.common.parsers.cfg.CfgLocation;
+import org.eclipse.titan.common.parsers.cfg.CfgParseResult;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
@@ -379,14 +380,15 @@ public final class ProjectConfigurationParser {
 
 		CfgAnalyzer cfgAnalyzer = new CfgAnalyzer();
 		cfgAnalyzer.parse(file, document == null ? null : document.get());
+		final CfgParseResult cfgParseResult = cfgAnalyzer.getCfgParseResult();
 		errorsStored = cfgAnalyzer.getErrorStorage();
-		warnings = cfgAnalyzer.getWarnings();
+		warnings = cfgParseResult.getWarnings();
 
 		if (editor != null && editor.getDocument() != null) {
 			ConfigEditor parentEditor = editor.getParentEditor();
 			if ( errorsStored == null || errorsStored.isEmpty() ) {
-				parentEditor.setParseTreeRoot(cfgAnalyzer.getParseTreeRoot());
-				parentEditor.setTokenStream(cfgAnalyzer.getTokenStream());
+				parentEditor.setParseTreeRoot(cfgParseResult.getParseTreeRoot());
+				parentEditor.setTokenStream(cfgParseResult.getTokenStream());
 				parentEditor.refresh(cfgAnalyzer);
 				parentEditor.setErrorMessage(null);
 			} else {

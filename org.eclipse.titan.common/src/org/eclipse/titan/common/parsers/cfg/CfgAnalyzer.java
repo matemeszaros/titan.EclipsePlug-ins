@@ -12,9 +12,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenFactory;
@@ -25,7 +23,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.SyntacticErrorStorage;
-import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.common.parsers.TitanListener;
 import org.eclipse.titan.common.parsers.cfg.indices.ComponentSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.DefineSectionHandler;
@@ -44,12 +41,7 @@ import org.eclipse.titan.common.utils.StandardCharsets;
  * @author Arpad Lovassy
  */
 public final class CfgAnalyzer {
-	private List<TITANMarker> warnings;
 	private CfgInterval rootInterval;
-	private Map<String, CfgDefinitionInformation> definitions;
-	private List<String> mExecuteElements;
-	private boolean logFileNameDefined = false;
-	private List<String> includeFiles;
 	private TitanListener lexerListener = null;
 	private TitanListener parserListener = null;
 	
@@ -64,64 +56,12 @@ public final class CfgAnalyzer {
 	private IncludeSectionHandler orderedIncludeSectionHandler = null;
 	private DefineSectionHandler defineSectionHandler = null;
 	private LoggingSectionHandler loggingSectionHandler = null;
-	private ParserRuleContext mParseTreeRoot = null;
-	private CommonTokenStream mTokenStream = null;
-	private String mLogFileName = null;
-	private Integer mTcpPort = null;
-	private String mLocalAddress = null;
-	private Double mKillTimer = null;
-	private Integer mNumHcs = null;
-	private Boolean mUnixDomainSocket = null;
-	private Map<String, String> mComponents = new HashMap<String, String>();
-	private Map<String, String[]> mGroups = new HashMap<String, String[]>();
-	
-	
-	public List<TITANMarker> getWarnings() {
-		return warnings;
-	}
 
-	/** 
-	 * Returns true if the log file name was defined in the configuration file.
-	 * @return true if the log file name was defined in the configuration file.
-	 */
-	public boolean isLogFileNameDefined() {
-		return logFileNameDefined;
-	}
-
-	public String getLogFileName() {
-		return mLogFileName;
-	}
+	/** result of the last parsing */
+	private CfgParseResult mCfgParseResult;
 	
-	public Integer getTcpPort() {
-		return mTcpPort;
-	}
-  
-	public String getLocalAddress() {
-		return mLocalAddress;
-	}
-  
-	public Double getKillTimer() {
-		return mKillTimer;
-	}
-  
-	public Integer getNumHcs() {
-		return mNumHcs;
-	}
-	
-	public Boolean isUnixDomainSocketEnabled() {
-		return mUnixDomainSocket;
-	}
-	
-	public Map<String, CfgDefinitionInformation> getDefinitions(){
-		return definitions;
-	}
-	
-	public List<String> getExecuteElements() {
-		return mExecuteElements;
-	}
-
-	public List<String> getIncludeFilePaths(){
-		return includeFiles;
+	public CfgParseResult getCfgParseResult() {
+		return mCfgParseResult;
 	}
 	
 	public CfgInterval getRootInterval(){
@@ -168,14 +108,6 @@ public final class CfgAnalyzer {
 		return loggingSectionHandler;
 	}
 	
-	public ParserRuleContext getParseTreeRoot() {
-		return mParseTreeRoot;
-	}
-
-	public CommonTokenStream getTokenStream() {
-		return mTokenStream;
-	}
-
 	public List<SyntacticErrorStorage> getErrorStorage() {
 		if (lexerListener != null && parserListener != null) {
 			lexerListener.addAll(parserListener.getErrorsStored());
@@ -240,15 +172,14 @@ public final class CfgAnalyzer {
 		parserListener = new TitanListener();
 		parser.removeErrorListeners(); // remove ConsoleErrorListener
 		parser.addErrorListener(parserListener);
-		mParseTreeRoot = parser.pr_ConfigFile();
+		final ParserRuleContext parseTreeRoot = parser.pr_ConfigFile();
 		parser.checkMacroErrors();
-		mTokenStream = tokens;
 		
-		warnings = parser.getWarnings();
-		definitions = parser.getDefinitions();
-		final CfgParseResult cfgParseResult = parser.getCfgParseResult();
-		mExecuteElements = cfgParseResult.getExecuteElements();
-		includeFiles = parser.getIncludeFiles();
+		mCfgParseResult = parser.getCfgParseResult();
+		// manually add the result parse tree, and its corresponding token stream,
+		// because they logically belong to here
+		mCfgParseResult.setParseTreeRoot( parseTreeRoot );
+		mCfgParseResult.setTokenStream( tokens );
 		
 		// fill handlers
 		moduleParametersHandler = parser.getModuleParametersHandler();
@@ -263,22 +194,5 @@ public final class CfgAnalyzer {
 		defineSectionHandler = parser.getDefineSectionHandler();
 		loggingSectionHandler = parser.getLoggingSectionHandler();
 		
-		logFileNameDefined = cfgParseResult.isLogFileDefined();
-		mLogFileName  = cfgParseResult.getLogFileName();
-		mTcpPort = cfgParseResult.getTcpPort();
-		mLocalAddress = cfgParseResult.getLocalAddress();
-		mKillTimer = cfgParseResult.getKillTimer();
-		mNumHcs = cfgParseResult.getNumHcs();
-		mUnixDomainSocket = cfgParseResult.isUnixDomainSocket();
-		mGroups = cfgParseResult.getGroups();
-		mComponents = cfgParseResult.getComponents();
-	}
-
-	public Map<String, String[]> getGroups() {
-		return mGroups;
-	}
-
-	public Map<String, String> getComponents() {
-		return mComponents;
 	}
 }

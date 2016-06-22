@@ -43,12 +43,6 @@ import java.util.regex.Pattern;
 	// pattern for matching typed macro string, for example: ${a, float}
 	private final static Pattern PATTERN_TYPED_MACRO = Pattern.compile("\\$\\s*\\{\\s*([A-Za-z][A-Za-z0-9_]*)\\s*,\\s*[A-Za-z][A-Za-z0-9_]*\\s*\\}");
 	
-	private List<TITANMarker> mWarnings = new ArrayList<TITANMarker>();
-	
-	private Map<String, CfgDefinitionInformation> mDefinitions = new HashMap<String, CfgDefinitionInformation>();
-  
-	private List<String> mIncludeFiles = new ArrayList<String>();
-
 	private IFile mActualFile = null;
 
 	private Map<String, String> mEnvVariables;
@@ -102,6 +96,13 @@ import java.util.regex.Pattern;
 		}
 	}
 	
+	/**
+	 * Macro references, which are collected at parse time.
+	 * These are NOT macro definitions (those are collected in mCfgParseResult.mDefinitions),
+	 * these are macro references in expressions with locations and these are possible syntax errors.
+	 * At parse time we don't know, if a macro name is valid, or not, it can be defined later.
+	 * This list is evaluated after parsing. See checkMacroErrors() 
+	 */
 	private List<Macro> mMacros = new ArrayList<Macro>();
 	
 	private void addMacro( final String aMacroName, final Token aMacroToken, final String aErrorMessage ) {
@@ -109,23 +110,7 @@ import java.util.regex.Pattern;
 	}
 	
 	public void reportWarning(TITANMarker marker){
-		mWarnings.add(marker);
-	}
-
-	public List<TITANMarker> getWarnings(){
-		return mWarnings;
-	}
-	
-	public void setDefinitions( Map<String,CfgDefinitionInformation> aDefs ) {
-		mDefinitions = aDefs;
-	}
-	
-	public Map< String, CfgDefinitionInformation > getDefinitions() {
-		return mDefinitions;
-	}
-
-	public List<String> getIncludeFiles(){
-		return mIncludeFiles;
+		mCfgParseResult.getWarnings().add(marker);
 	}
 
 	public void setActualFile(IFile file) {
@@ -215,7 +200,7 @@ import java.util.regex.Pattern;
 	 */
 	public void reportError( final String aMessage, final Token aStartToken, final Token aEndToken ) {
 		TITANMarker marker = createMarker( aMessage, aStartToken, aEndToken, IMarker.SEVERITY_ERROR, IMarker.PRIORITY_NORMAL );
-		mWarnings.add(marker);
+		mCfgParseResult.getWarnings().add(marker);
 	}
 
 	/**
@@ -224,8 +209,9 @@ import java.util.regex.Pattern;
 	 * @return macro or environment variable value, or null if there is no such definition
 	 */
 	private String getDefinitionValue(String aDefinition){
-		if ( mDefinitions != null && mDefinitions.containsKey( aDefinition ) ) {
-			return mDefinitions.get( aDefinition ).getValue();
+		final Map< String, CfgDefinitionInformation > definitions = mCfgParseResult.getDefinitions();
+		if ( definitions != null && definitions.containsKey( aDefinition ) ) {
+			return definitions.get( aDefinition ).getValue();
 		} else if ( mEnvVariables != null && mEnvVariables.containsKey( aDefinition ) ) {
 			return mEnvVariables.get( aDefinition );
 		} else {
@@ -441,7 +427,7 @@ pr_IncludeSection:
 	INCLUDE_SECTION
 	( f = STRING2
 		{	String fileName = $f.getText().substring( 1, $f.getText().length() - 1 );
-			mIncludeFiles.add( fileName );
+			mCfgParseResult.getIncludeFiles().add( fileName );
 			final TerminalNodeImpl node = new TerminalNodeImpl( $f );
 			node.parent = $ctx;
 			//another solution for the same thing
@@ -455,7 +441,7 @@ pr_OrderedIncludeSection:
 	ORDERED_INCLUDE_SECTION
 	( f = STRING4
 		{	String fileName = $f.getText().substring( 1, $f.getText().length() - 1 );
-			mIncludeFiles.add( fileName );
+			mCfgParseResult.getIncludeFiles().add( fileName );
 			final TerminalNodeImpl node = new TerminalNodeImpl( $f );
 			node.parent = $ctx;
 			//another solution for the same thing
@@ -1168,7 +1154,7 @@ pr_MacroAssignment returns [ DefineSectionHandler.Definition definition ]
 {	if(name != null && value != null) {
 		ArrayList<CfgLocation> locations = new ArrayList<CfgLocation>();
 		locations.add(new CfgLocation(mActualFile, $col, $col));
-		mDefinitions.put(name, new CfgDefinitionInformation(value, locations));
+		mCfgParseResult.getDefinitions().put(name, new CfgDefinitionInformation(value, locations));
 	}
 
 	$definition = new DefineSectionHandler.Definition();

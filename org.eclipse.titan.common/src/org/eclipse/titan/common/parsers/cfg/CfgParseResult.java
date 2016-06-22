@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.titan.common.parsers.TITANMarker;
 
 /**
@@ -23,7 +23,7 @@ import org.eclipse.titan.common.parsers.TITANMarker;
 public class CfgParseResult {
 
 	/** the result parse tree, which was built during the parsing */
-	private ParseTree mParseTreeRoot = null;
+	private ParserRuleContext mParseTreeRoot = null;
 	
 	/**
 	 * the result of the tokenizing, done by the lexer.
@@ -95,11 +95,13 @@ public class CfgParseResult {
 	
 	private List<String> mExecuteElements = new ArrayList<String>();
 	
-	public ParseTree getParseTreeRoot() {
+	private Map<String, CfgDefinitionInformation> mDefinitions = new HashMap<String, CfgDefinitionInformation>();
+	  
+	public ParserRuleContext getParseTreeRoot() {
 		return mParseTreeRoot;
 	}
 
-	public void setParseTreeRoot(ParseTree aParseTreeRoot) {
+	public void setParseTreeRoot(ParserRuleContext aParseTreeRoot) {
 		this.mParseTreeRoot = aParseTreeRoot;
 	}
 
@@ -205,5 +207,13 @@ public class CfgParseResult {
 	
 	public void setExecuteElements(List<String> aExecuteElements) {
 		this.mExecuteElements = aExecuteElements;
+	}
+	
+	public Map< String, CfgDefinitionInformation > getDefinitions() {
+		return mDefinitions;
+	}
+	
+	public void setDefinitions( Map<String,CfgDefinitionInformation> aDefinitions ) {
+		mDefinitions = aDefinitions;
 	}
 }
