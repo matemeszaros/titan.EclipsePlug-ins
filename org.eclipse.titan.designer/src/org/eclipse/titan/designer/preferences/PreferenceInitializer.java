@@ -39,6 +39,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.ONTHEFLYMARKERSAFTERCOMPILER,  PreferenceConstantValues.ONTHEFLYOPTIONSTAY);
 		preferenceStore.setDefault(PreferenceConstants.REPORTPROGRAMERRORWITHMARKER, false);
 		preferenceStore.setDefault(PreferenceConstants.TREATONTHEFLYERRORSFATALFORBUILD, false);
+		preferenceStore.setDefault(PreferenceConstants.CHECKFORLOWMEMORY, true);
 		preferenceStore.setDefault(PreferenceConstants.USEONTHEFLYPARSING, true);
 		preferenceStore.setDefault(PreferenceConstants.USEINCREMENTALPARSING, false);
 		preferenceStore.setDefault(PreferenceConstants.DELAYSEMANTICCHECKINGTILLSAVE, true);

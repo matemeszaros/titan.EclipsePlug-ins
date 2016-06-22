@@ -20,6 +20,7 @@ public final class PreferenceConstants {
 	public static final String ONTHEFLYMARKERSAFTERCOMPILER = ProductConstants.PRODUCT_ID_DESIGNER + ".ontheflyMarkersAfterCompiler";
 	public static final String REPORTPROGRAMERRORWITHMARKER = ProductConstants.PRODUCT_ID_DESIGNER + ".reportProgramErrorWithMarker";
 	public static final String TREATONTHEFLYERRORSFATALFORBUILD = ProductConstants.PRODUCT_ID_DESIGNER + ".treatOnTheFlyErrorsasFatalForBuild";
+	public static final String CHECKFORLOWMEMORY = ProductConstants.PRODUCT_ID_DESIGNER + ".checkForLowMemory";
 	public static final String USEONTHEFLYPARSING = ProductConstants.PRODUCT_ID_DESIGNER + ".useOnTheFlyParsing";
 	public static final String USEINCREMENTALPARSING = ProductConstants.PRODUCT_ID_DESIGNER + ".useIncrementalParsing";
 	public static final String DELAYSEMANTICCHECKINGTILLSAVE = ProductConstants.PRODUCT_ID_DESIGNER + ".delaySemantiCheckingTillSave";

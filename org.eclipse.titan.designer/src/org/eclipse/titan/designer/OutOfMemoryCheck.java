@@ -72,19 +72,22 @@ public class OutOfMemoryCheck {
 	 * @return true: if the remaining free memory is low
 	 * */
 	public static boolean isOutOfMemory() {
-		Runtime Rt = Runtime.getRuntime();
+		if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.CHECKFORLOWMEMORY)) {
+			Runtime Rt = Runtime.getRuntime();
 
-		long free = Rt.freeMemory();
-		long total = Rt.totalMemory();
+			long free = Rt.freeMemory();
+			long total = Rt.totalMemory();
 
-		long limit = Math.min(200000000, Math.round(total * (double)0.10));
-		ErrorReporter.logError("limit: "+String.valueOf(limit)+", free: " + String.valueOf(free));
-		if (free < limit) {
+			long limit = Math.min(200000000, Math.round(total * (double)0.1));
 			ErrorReporter.logError("limit: "+String.valueOf(limit)+", free: " + String.valueOf(free));
-			return true;
+			if (free < limit) {
+				ErrorReporter.logError("limit: "+String.valueOf(limit)+", free: " + String.valueOf(free));
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
 	}
-
 }
