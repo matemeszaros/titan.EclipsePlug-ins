@@ -342,49 +342,6 @@ public final class ProjectSourceParser {
 	}
 
 	/**
-	 * Returns weather the provided module is set to be semantically checked
-	 * right now.
-	 * <p>
-	 * Does check not only the actual project, but all referenced ones too.
-	 * 
-	 * @param module
-	 *                the module to be checked
-	 * 
-	 * @return true if the module is checked, false otherwise
-	 * */
-	public boolean isSemanticallyChecked(final Module module) {
-		return internalIsSemanticallyChecked(module);
-	}
-
-	/**
-	 * Returns weather the provided module is set to be semantically checked
-	 * right now.
-	 * <p>
-	 * Does check not only the actual project, but all referenced ones too.
-	 * 
-	 * @param module
-	 *                the module to be checked
-	 * 
-	 * @return true if the module is checked, false otherwise
-	 * */
-	private boolean internalIsSemanticallyChecked(final Module module) {
-		if (module == null || module.getLocation() == null) {
-			return false;
-		}
-
-		if (semanticAnalyzer.semanticallyUptodateContains(module.getName())) {
-			return true;
-		}
-
-		ProjectSourceParser parser = GlobalParser.getProjectSourceParser(module.getLocation().getFile().getProject());
-		if (parser.semanticAnalyzer.semanticallyUptodateContains(module.getName())) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Returns the name of the module contained in the provided file, or
 	 * null.
 	 * 

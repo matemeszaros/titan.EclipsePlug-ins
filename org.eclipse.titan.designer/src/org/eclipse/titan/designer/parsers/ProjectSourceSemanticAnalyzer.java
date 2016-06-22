@@ -151,21 +151,6 @@ public class ProjectSourceSemanticAnalyzer {
 	}
 
 	/**
-	 * Returns weather a module with the provided name is set to be
-	 * semantically checked right now.
-	 * <p>
-	 * Checks the only actual project.
-	 * 
-	 * @param moduleName
-	 *            the name of the module to be checked.
-	 * 
-	 * @return true if the module is checked, false otherwise.
-	 * */
-	boolean semanticallyUptodateContains(final String moduleName) {
-		return semanticallyUptodateModules.contains(moduleName);
-	}
-
-	/**
 	 * Reports that the provided file has changed and so it's stored
 	 * information became out of date.
 	 * <p>
