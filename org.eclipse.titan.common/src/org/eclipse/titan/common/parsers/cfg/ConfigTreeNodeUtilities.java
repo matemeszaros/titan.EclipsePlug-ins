@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.WritableToken;
@@ -287,29 +286,5 @@ public final class ConfigTreeNodeUtilities {
 	 */
 	public static TerminalNodeImpl createHiddenTokenNode( final String aText ) {
 		return new TerminalNodeImpl( new CommonToken( 0, aText ) );
-	}
-	
-	//TODO: remove, call directly
-	/**
-	 * Builds parse tree text including hidden tokens (also before the rule)
-	 * @param aParseTreeRoot root of the parse tree to print
-	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
-	 * @return output parse tree text
-	 */
-	public static String toStringWithHiddenBefore( final ParseTree aParseTreeRoot,
-												   final List<Token> aTokens ) {
-		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokens, true );
-	}
-	
-	//TODO: remove, call directly
-	/**
-	 * Builds parse tree text including hidden tokens (but not before the rule)
-	 * @param aParseTreeRoot root of the parse tree to print
-	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
-	 * @return output parse tree text
-	 */
-	public static String toStringWithHidden( final ParseTree aParseTreeRoot,
-											 final List<Token> aTokens ) {
-		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokens, false );
 	}
 }

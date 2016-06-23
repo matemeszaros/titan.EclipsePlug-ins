@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.cfg.CfgAnalyzer;
-import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
+import org.eclipse.titan.common.parsers.cfg.CfgParseTreePrinter;
 import org.eclipse.titan.designer.editors.configeditor.pages.compgroupmc.ComponentsGroupsMCPage;
 import org.eclipse.titan.designer.editors.configeditor.pages.execute.ExecuteExternalcommandsPage;
 import org.eclipse.titan.designer.editors.configeditor.pages.include.IncludeDefinePage;
@@ -237,7 +237,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	private void updateTextualPage() {
 		if (mParseTreeRoot != null && mTokens != null) {
 			String original = editor.getDocument().get();
-			String content = ConfigTreeNodeUtilities.toStringWithHiddenBefore( mParseTreeRoot, mTokens );
+			String content = CfgParseTreePrinter.toStringWithHidden( mParseTreeRoot, mTokens, true );
 
 			if (!content.equals(original)) {
 				editor.getDocument().set(content);
