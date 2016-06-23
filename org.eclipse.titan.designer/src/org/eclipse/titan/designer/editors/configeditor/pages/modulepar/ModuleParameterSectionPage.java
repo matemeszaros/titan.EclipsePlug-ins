@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.titan.common.parsers.AddedParseTree;
+import org.eclipse.titan.common.parsers.cfg.CfgParseTreePrinter;
 import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler;
 import org.eclipse.titan.common.parsers.cfg.indices.ModuleParameterSectionHandler.ModuleParameter;
@@ -239,8 +240,8 @@ public final class ModuleParameterSectionPage extends FormPage {
 				ModuleParameter moduleParameter = (ModuleParameter) selection.getFirstElement();
 				if (moduleParameter != null) {
 					if (moduleParameter.getValue() != null) {
-						final String moduleParamValueText = ConfigTreeNodeUtilities.toStringWithHidden(
-								moduleParameter.getValue(), editor.getTokens() );
+						final String moduleParamValueText = CfgParseTreePrinter.toStringWithHidden(
+								moduleParameter.getValue(), editor.getTokens(), false );
 						parameterValueText.setText( moduleParamValueText );
 					}
 
