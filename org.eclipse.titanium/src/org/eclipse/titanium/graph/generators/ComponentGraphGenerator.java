@@ -69,8 +69,8 @@ public class ComponentGraphGenerator extends GraphGenerator {
 		final List<IProject> visitedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
 
 		for (final IProject currentProject : visitedProjects) {
-			for (String moduleName : projectSourceParser.getKnownModuleNames()) {
-				handleModule(currentProject, projectSourceParser.getModuleByName(moduleName));
+			for (Module module : projectSourceParser.getModules()) {
+				handleModule(currentProject, module);
 			}
 		}
 	}

@@ -230,7 +230,7 @@ public final class ReferenceFinder {
 		
 		int size = 0;
 		for(IProject tempProject: relatedProjects) {
-			size += GlobalParser.getProjectSourceParser(tempProject).getKnownModuleNames().size();
+			size += GlobalParser.getProjectSourceParser(tempProject).getModules().size();
 		}
 
 		monitor.beginTask("Searching references.", size);
@@ -249,15 +249,11 @@ public final class ReferenceFinder {
 			for(IProject project2 : relatedProjects) {
 				ProjectSourceParser projectSourceParser2 = GlobalParser.getProjectSourceParser(project2);
 				
-				for (String moduleName2 : projectSourceParser2.getKnownModuleNames()) {
+				for (Module module2 : projectSourceParser2.getModules()) {
 					if (monitor.isCanceled()) {
 						return foundIdsMap;
 					}
 
-					Module module2 = projectSourceParser2.getModuleByName(moduleName2);
-					if (module2 == null) {
-						continue;
-					}
 					for (Module m : module2.getImportedModules()) {
 						if (m == scope) {
 							if (reportDebugInformation) {
