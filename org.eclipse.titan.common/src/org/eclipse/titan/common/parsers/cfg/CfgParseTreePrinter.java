@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -160,15 +159,15 @@ public class CfgParseTreePrinter {
 	 * @param aParseTreeRoot root of the parse tree to print
 	 * @param aPrintHiddenBefore true to print hidden tokens before the parse tree
 	 *                           (NOTE: hidden tokens in the parse tree will be printed)
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @return output parse tree text
 	 */
 	public static String toStringWithHidden( final ParseTree aParseTreeRoot,
-											 final CommonTokenStream aTokenStream,
+											 final List<Token> aTokens,
 											 final boolean aPrintHiddenBefore ) {
 		final StringBuilder sb = new StringBuilder();
 		CfgParseTreePrinter printer = new CfgParseTreePrinter( sb );
-		printer.print( aParseTreeRoot, aTokenStream, aPrintHiddenBefore, ResolveMode.NO_RESOLVING, null );
+		printer.print( aParseTreeRoot, aTokens, aPrintHiddenBefore, ResolveMode.NO_RESOLVING, null );
 		// there are no hidden tokens after the last token
 
 		return sb.toString();
@@ -206,7 +205,7 @@ public class CfgParseTreePrinter {
 							aCfgParseResults, aDefinitions, aEnvVariables, filesToResolve );
 				for ( Entry<Path, CfgParseResult> entry : aCfgParseResults.entrySet() ) {
 					printer.printResolved( entry.getKey(), entry.getValue().getParseTreeRoot(),
-							entry.getValue().getTokenStream(), aResolveMode );
+							entry.getValue().getTokens(), aResolveMode );
 				}
 				break;
 			}
@@ -219,7 +218,7 @@ public class CfgParseTreePrinter {
 				CfgParseTreePrinter printer = new CfgParseTreePrinter( aSb, aDisallowedNodes,
 						aCfgParseResults, aDefinitions, aEnvVariables, filesToResolve );
 				printer.printResolved( entry.getKey(), entry.getValue().getParseTreeRoot(),
-						entry.getValue().getTokenStream(), aResolveMode );
+						entry.getValue().getTokens(), aResolveMode );
 				break;
 			}
 			case NO_RESOLVING:
@@ -242,11 +241,11 @@ public class CfgParseTreePrinter {
 	 */
 	private void printResolved( final Path aFile,
 								final ParseTree aParseTreeRoot,
-								final CommonTokenStream aTokenStream,
+								final List<Token> aTokens,
 								final ResolveMode aResolveMode ) {
 		if ( mFilesToResolve.contains( aFile ) ) {
 			mSb.append( INCLUDED_BEGIN ).append( aFile.toOSString()).append('\n');
-			print( aParseTreeRoot, aTokenStream, true, aResolveMode, aFile );
+			print( aParseTreeRoot, aTokens, true, aResolveMode, aFile );
 			mSb.append( INCLUDED_END ).append( aFile.toOSString()).append('\n');
 			mFilesToResolve.remove( aFile );
 		}
@@ -263,7 +262,7 @@ public class CfgParseTreePrinter {
 	 *                        needed only if aResolveMode != NO_RESOLVING, in case of [ORDERED_INCLUDE]
 	 */
 	private void print( final ParseTree aParseTree,
-						final CommonTokenStream aTokenStream,
+						final List<Token> aTokens,
 						final boolean aPrintHiddenBefore,
 						final ResolveMode aResolveMode,
 						final Path aFile ) {
@@ -278,15 +277,15 @@ public class CfgParseTreePrinter {
 			}
 			if ( aPrintHiddenBefore && rule.getChildCount() > 0 && rule.getChild( 0 ) instanceof AddedParseTree ) {
 				// special case: if AddedParseTree is the 1st in the rule, it has no information
-				// about the hidden tokens, as it has no position in the token stream, but the rule may have
-				printHiddenTokensBefore( rule, aTokenStream );
+				// about the hidden tokens, as it has no position in the token list, but the rule may have
+				printHiddenTokensBefore( rule, aTokens );
 			}
 		}
 		else if ( aParseTree instanceof TerminalNodeImpl ) {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aParseTree;
 			final Token token = tn.getSymbol();
 			if ( mDisallowedNodes == null || !mDisallowedNodes.contains( token.getType() ) ) {
-				printToken( token, aTokenStream, aPrintHiddenBefore, aResolveMode, aFile );
+				printToken( token, aTokens, aPrintHiddenBefore, aResolveMode, aFile );
 			}
 		}
 		else if ( aParseTree instanceof AddedParseTree ) {
@@ -302,7 +301,7 @@ public class CfgParseTreePrinter {
 			if ( child == aParseTree ) {
 				ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): child == aParseTree");
 			} else {
-				print( child, aTokenStream, aPrintHiddenBefore || i > 0, aResolveMode, aFile );
+				print( child, aTokens, aPrintHiddenBefore || i > 0, aResolveMode, aFile );
 			}
 		}
 	}
@@ -316,7 +315,7 @@ public class CfgParseTreePrinter {
 	 *                        needed only if aResolveMode != NO_RESOLVING, in case of [ORDERED_INCLUDE]
 	 */
 	private void printToken( final Token aToken,
-							 final CommonTokenStream aTokenStream,
+							 final List<Token> aTokens,
 							 final boolean aPrintHiddenBefore,
 							 final ResolveMode aResolveMode,
 							 final Path aFile ) {
@@ -324,8 +323,8 @@ public class CfgParseTreePrinter {
 		if ( tokenIndex > -1 && aPrintHiddenBefore ) {
 			// Token has no index if tokenIndex == -1.
 			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
-			// because token has no index in the token stream.
-			printHiddenTokensBefore( aToken, aTokenStream );
+			// because token has no index in the token list.
+			printHiddenTokensBefore( aToken, aTokens );
 		}
 		
 		// the only non-hidden token
@@ -342,20 +341,20 @@ public class CfgParseTreePrinter {
 	 * @param aToken the token, this will NOT be printed
 	 */
 	private void printHiddenTokensBefore( final Token aToken,
-										  final CommonTokenStream aTokenStream ) {
+										  final List<Token> aTokens ) {
 		final int tokenIndex = aToken.getTokenIndex();
 		if ( tokenIndex == -1 ) {
 			// Token has no index.
 			// If a token is added to the parse tree after parse time, token start index in unknown (-1),
-			// because token has no index in the token stream.
+			// because token has no index in the token list.
 			return;
 		}
 		int startHiddenIndex = tokenIndex;
-		while ( isHiddenToken( startHiddenIndex - 1, aTokenStream ) ) {
+		while ( isHiddenToken( startHiddenIndex - 1, aTokens ) ) {
 			startHiddenIndex--;
 		}
 		for ( int i = startHiddenIndex; i < tokenIndex; i++ ) {
-			final Token t = aTokenStream.get( i );
+			final Token t = aTokens.get( i );
 			final String tokenText = t.getText();
 			mSb.append( tokenText != null ? tokenText : "" );
 		}
@@ -365,25 +364,26 @@ public class CfgParseTreePrinter {
 	 * Builds hidden tokens before the rule
 	 * @param aRule the rule, this will NOT be printed
 	 */
-	private void printHiddenTokensBefore( final ParserRuleContext aRule, final CommonTokenStream aTokenStream ) {
+	private void printHiddenTokensBefore( final ParserRuleContext aRule, final List<Token> aTokens ) {
 		Token startToken = aRule.start;
 		if ( startToken == null ) {
 			return;
 		}
-		printHiddenTokensBefore( startToken, aTokenStream );
+		printHiddenTokensBefore( startToken, aTokens );
 	}
 
 	/**
 	 * @param aIndex token index to check
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @return true, iff token index is valid AND token is hidden
 	 */
-	private boolean isHiddenToken( final int aIndex, final CommonTokenStream aTokenStream ) {
-		if ( aTokenStream == null ) {
-			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.isHiddenToken(): aTokenStream == null");
+	private static boolean isHiddenToken( final int aIndex, final List<Token> aTokens ) {
+		if ( aTokens == null ) {
+			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.isHiddenToken(): aTokens == null");
 			return false;
 		}
 		
-		return aIndex >= 0 && aIndex < aTokenStream.size() && aTokenStream.get( aIndex ).getChannel() > 0;
+		return aIndex >= 0 && aIndex < aTokens.size() && aTokens.get( aIndex ).getChannel() > 0;
 	}
 	
 	/**
@@ -444,7 +444,7 @@ public class CfgParseTreePrinter {
 		final Path absolutePath = getAbsolutePath( aFile, filename );
 		final CfgParseResult cfgParseResult = mCfgParseResults.get( absolutePath );
 		if ( cfgParseResult != null ) {
-			printResolved( absolutePath, cfgParseResult.getParseTreeRoot(), cfgParseResult.getTokenStream(), aResolveMode );
+			printResolved( absolutePath, cfgParseResult.getParseTreeRoot(), cfgParseResult.getTokens(), aResolveMode );
 		} else {
 			// include file is missing from mCfgParseResults, so the included cfg file is not parsed
 			// in ConfigFileHandler.readFromFile()

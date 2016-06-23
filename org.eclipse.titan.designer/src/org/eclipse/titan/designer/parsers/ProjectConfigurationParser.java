@@ -388,7 +388,7 @@ public final class ProjectConfigurationParser {
 			ConfigEditor parentEditor = editor.getParentEditor();
 			if ( errorsStored == null || errorsStored.isEmpty() ) {
 				parentEditor.setParseTreeRoot(cfgParseResult.getParseTreeRoot());
-				parentEditor.setTokenStream(cfgParseResult.getTokenStream());
+				parentEditor.setTokens(cfgParseResult.getTokens());
 				parentEditor.refresh(cfgAnalyzer);
 				parentEditor.setErrorMessage(null);
 			} else {

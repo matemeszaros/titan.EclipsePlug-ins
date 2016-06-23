@@ -166,8 +166,8 @@ public final class CfgAnalyzer {
 		// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
 		//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
 		// 2. Changed from BufferedTokenStream to CommonTokenStream, otherwise tokens with "-> channel(HIDDEN)" are not filtered out in lexer.
-		final CommonTokenStream tokens = new CommonTokenStream( lexer );
-		final CfgParser parser = new CfgParser(tokens);
+		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
+		final CfgParser parser = new CfgParser( tokenStream );
 		//parser tree is built by default
 		parserListener = new TitanListener();
 		parser.removeErrorListeners(); // remove ConsoleErrorListener
@@ -179,7 +179,7 @@ public final class CfgAnalyzer {
 		// manually add the result parse tree, and its corresponding token stream,
 		// because they logically belong to here
 		mCfgParseResult.setParseTreeRoot( parseTreeRoot );
-		mCfgParseResult.setTokenStream( tokens );
+		mCfgParseResult.setTokens( tokenStream.getTokens() );
 		
 		// fill handlers
 		moduleParametersHandler = parser.getModuleParametersHandler();
