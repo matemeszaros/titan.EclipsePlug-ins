@@ -1361,14 +1361,19 @@ pr_BuiltinValue returns[Value value]
 |	block = BLOCK { $value = new Undefined_Block_Value(new Block($block)); }
 );
 
-pr_ReferencedValue_reg returns[Referenced_Value value]
+pr_ReferencedValue_reg returns[Value value]
 locals [Reference reference]
 @init { $reference = null; $value = null; }:
 (	
 	a = pr_RefdLower_reg { $reference = $a.reference; }
 )
 {
-	$value = new Referenced_Value($reference);
+	if ($reference != null && $reference.getModuleIdentifier() == null && $reference.getSubreferences().size() == 1) {
+		Identifier identifier = $reference.getId();
+		$value = new Undefined_LowerIdentifier_Value(identifier);
+	} else {
+		$value = new Referenced_Value($reference);
+	}
 	$value.setLocation(getLocation($a.start, $a.stop));
 };
 
@@ -2426,7 +2431,7 @@ pr_TypeConstraint:
 pr_SingleValue returns[Constraint constraint]
 locals [Token col]
 @init { $constraint = null; }:
-(	
+(
 	a = pr_Value_reg			{ $col = $a.start; }
 |	b = pr_ReferencedValue_reg	{ $col = $b.start; }
 |	c = pr_LowerIdValue			{ $col = $c.start; }
