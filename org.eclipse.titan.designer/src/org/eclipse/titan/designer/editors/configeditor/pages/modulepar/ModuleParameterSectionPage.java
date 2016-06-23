@@ -240,7 +240,7 @@ public final class ModuleParameterSectionPage extends FormPage {
 				if (moduleParameter != null) {
 					if (moduleParameter.getValue() != null) {
 						final String moduleParamValueText = ConfigTreeNodeUtilities.toStringWithHidden(
-								moduleParameter.getValue(), editor.getTokenStream() );
+								moduleParameter.getValue(), editor.getTokens() );
 						parameterValueText.setText( moduleParamValueText );
 					}
 

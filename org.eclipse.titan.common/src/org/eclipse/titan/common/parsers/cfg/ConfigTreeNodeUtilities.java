@@ -293,23 +293,23 @@ public final class ConfigTreeNodeUtilities {
 	/**
 	 * Builds parse tree text including hidden tokens (also before the rule)
 	 * @param aParseTreeRoot root of the parse tree to print
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @return output parse tree text
 	 */
 	public static String toStringWithHiddenBefore( final ParseTree aParseTreeRoot,
-												   final CommonTokenStream aTokenStream ) {
-		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokenStream, true );
+												   final List<Token> aTokens ) {
+		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokens, true );
 	}
 	
 	//TODO: remove, call directly
 	/**
 	 * Builds parse tree text including hidden tokens (but not before the rule)
 	 * @param aParseTreeRoot root of the parse tree to print
-	 * @param aTokenStream token stream to get the tokens from (all, hidden and not hidden also)
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @return output parse tree text
 	 */
 	public static String toStringWithHidden( final ParseTree aParseTreeRoot,
-											 final CommonTokenStream aTokenStream ) {
-		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokenStream, false );
+											 final List<Token> aTokens ) {
+		return CfgParseTreePrinter.toStringWithHidden( aParseTreeRoot, aTokens, false );
 	}
 }

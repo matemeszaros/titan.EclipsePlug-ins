@@ -7,8 +7,10 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors.configeditor;
 
-import org.antlr.v4.runtime.CommonTokenStream;
+import java.util.List;
+
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -56,7 +58,7 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 	private LoggingPage mLoggingEditor;
 
 	private ParserRuleContext mParseTreeRoot;
-	private CommonTokenStream mTokenStream;
+	private List<Token> mTokens;
 	
 	public ConfigEditor() {
 		editor = new ConfigTextEditor(this);
@@ -224,18 +226,18 @@ public final class ConfigEditor extends FormEditor implements IResourceChangeLis
 		mParseTreeRoot = aParseTreeRoot;
 	}
 
-	public CommonTokenStream getTokenStream() {
-		return mTokenStream;
+	public List<Token> getTokens() {
+		return mTokens;
 	}
 
-	public void setTokenStream(final CommonTokenStream aTokenStream) {
-		mTokenStream = aTokenStream;
+	public void setTokens(final List<Token> aTokens) {
+		mTokens = aTokens;
 	}
 
 	private void updateTextualPage() {
-		if (mParseTreeRoot != null && mTokenStream != null) {
+		if (mParseTreeRoot != null && mTokens != null) {
 			String original = editor.getDocument().get();
-			String content = ConfigTreeNodeUtilities.toStringWithHiddenBefore( mParseTreeRoot, mTokenStream );
+			String content = ConfigTreeNodeUtilities.toStringWithHiddenBefore( mParseTreeRoot, mTokens );
 
 			if (!content.equals(original)) {
 				editor.getDocument().set(content);

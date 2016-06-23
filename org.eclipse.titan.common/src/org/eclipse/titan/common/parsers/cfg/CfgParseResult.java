@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.eclipse.titan.common.parsers.TITANMarker;
 
 /**
@@ -30,7 +30,7 @@ public class CfgParseResult {
 	 * It contains all the tokens from all the channels, so it contains also the hidden tokens as well.
 	 * A token is hidden, if token channel > 0
 	 */
-	private CommonTokenStream mTokenStream = null;
+	private List<Token> mTokens = null;
 	
 	/**
 	 * list of syntactic warnings collected during parsing
@@ -105,12 +105,12 @@ public class CfgParseResult {
 		this.mParseTreeRoot = aParseTreeRoot;
 	}
 
-	public CommonTokenStream getTokenStream() {
-		return mTokenStream;
+	public List<Token> getTokens() {
+		return mTokens;
 	}
 
-	public void setTokenStream(CommonTokenStream aTokenStream) {
-		this.mTokenStream = aTokenStream;
+	public void setTokens( List<Token> aTokens ) {
+		this.mTokens = aTokens;
 	}
 
 	public List<TITANMarker> getWarnings() {
