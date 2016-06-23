@@ -42,11 +42,11 @@ public final class Export_Debug_AST implements IEditorActionDelegate {
 		if (targetEditor == null) return;
 		IFile file = (IFile) targetEditor.getEditorInput().getAdapter(IFile.class);
 		ProjectSourceParser parser = GlobalParser.getProjectSourceParser(file.getProject());
-		String name = parser.containedModule(file);
-		if (name == null) {
+		Module module = parser.containedModule(file);
+		if (module == null) {
 			TITANDebugConsole.getConsole().newMessageStream().println("No module was found");
 		}
-		Module module = parser.getModuleByName(name);
+		
 		TITANDebugConsole.getConsole().newMessageStream().println("*************************");
 		TITANDebugConsole.getConsole().newMessageStream().println("Printing DEBUG information for module `" + module.getName() + "':");
 		TITANDebugConsole.getConsole().newMessageStream().println("*************************");
