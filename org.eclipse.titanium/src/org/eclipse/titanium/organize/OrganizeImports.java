@@ -149,8 +149,7 @@ public final class OrganizeImports {
 		TextFileChange change = new TextFileChange(file.getName(), file);
 
 		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		String actualModuleName = projectSourceParser.containedModule(file);
-		Module actualModule = projectSourceParser.getModuleByName(actualModuleName);
+		Module actualModule = projectSourceParser.containedModule(file);
 
 		if (!(actualModule instanceof TTCN3Module)) {
 			ErrorReporter.logError("The module is not a TTCN-3 module");
@@ -205,7 +204,7 @@ public final class OrganizeImports {
 				if (missLoc != null) {
 					final IFile file = (IFile) missLoc.getFile();
 					final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(file.getProject());
-					final Module addMod = parser.getModuleByName(parser.containedModule(file));
+					final Module addMod = parser.containedModule(file);
 					final String importName = addMod.getIdentifier().getTtcnName();
 					if (!importNamesAdded.contains(importName)) {
 						StringBuilder impText = new StringBuilder("import from ").append(importName).append(" all;");

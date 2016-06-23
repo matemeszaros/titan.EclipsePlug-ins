@@ -47,7 +47,7 @@ public class LinkedFileCluster extends ModuleLocationCluster {
 	 *            The file to search
 	 */
 	protected void checkFile(final IFile file) {
-		final String name = parser.containedModule(file);
+		final String name = parser.containedModuleName(file);
 		if (name == null) {
 			return;
 		}

@@ -32,7 +32,7 @@ public class ModuleLocationCluster extends FolderNameCluster {
 
 	@Override
 	protected void checkFile(final IFile file, final Set<NodeDescriptor> cluster) {
-		final String name = parser.containedModule(file);
+		final String name = parser.containedModuleName(file);
 		if (name == null) {
 			return;
 		}

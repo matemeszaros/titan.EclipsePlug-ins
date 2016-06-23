@@ -157,8 +157,7 @@ public class CheckCodeSmells extends AbstractHandler {
 					if (!onTheFlyEnabled) {
 						final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
 						for (final IFile file : files.get(project)) {
-							final String actualModuleName = projectSourceParser.containedModule(file);
-							final Module module = projectSourceParser.getModuleByName(actualModuleName);
+							final Module module = projectSourceParser.containedModule(file);
 							if (module != null) {
 								progress.subTask("Analyzing module " + module.getName());
 								MarkerHandler handler;

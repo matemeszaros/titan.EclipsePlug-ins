@@ -57,7 +57,7 @@ public class FolderNameCluster extends PathCluster {
 	 *            The cluster to add the file to
 	 */
 	protected void checkFile(final IFile file, final Set<NodeDescriptor> cluster) {
-		final String name = parser.containedModule(file);
+		final String name = parser.containedModuleName(file);
 		if (name == null) {
 			return;
 		}
