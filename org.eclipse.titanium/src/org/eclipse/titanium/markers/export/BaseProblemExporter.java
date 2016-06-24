@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.titanium.markers.types.TaskType;
 
@@ -53,20 +54,23 @@ public abstract class BaseProblemExporter {
 	 * @throws CoreException
 	 */
 	protected Map<TaskType, List<IMarker>> collectMarkers() throws CoreException {
-		IMarker[] ms = project.findMarkers(GeneralConstants.ONTHEFLY_TASK_MARKER, false, IResource.DEPTH_INFINITE);
 		Map<TaskType, List<IMarker>> markers = new EnumMap<TaskType, List<IMarker>>(TaskType.class);
 		for (TaskType t : TaskType.values()) {
 			markers.put(t, new ArrayList<IMarker>());
 		}
 
-		for (IMarker m : ms) {
-			for (TaskType t : TaskType.values()) {
-				if (t.equalType(m)) {
-					markers.get(t).add(m);
+		List<IProject> projects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
+		for(IProject tempProject : projects) {
+			IMarker[] ms = tempProject.findMarkers(GeneralConstants.ONTHEFLY_TASK_MARKER, false, IResource.DEPTH_INFINITE);
+			for (IMarker m : ms) {
+				for (TaskType t : TaskType.values()) {
+					if (t.equalType(m)) {
+						markers.get(t).add(m);
+					}
 				}
 			}
 		}
-		ms = null;
+
 		return markers;
 	}
 	
