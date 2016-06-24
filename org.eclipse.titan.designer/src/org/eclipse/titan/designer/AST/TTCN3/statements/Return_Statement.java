@@ -106,14 +106,12 @@ public final class Return_Statement extends Statement {
 			}
 			break;
 		case A_FUNCTION_RVAL:
+			final Type returnType = ((Def_Function) definition).getType(timestamp);
 			if (template == null) {
-				location.reportSemanticError(MessageFormat.format(MISSINGVALUE, ((Def_Function) definition).getType(timestamp)
-						.getTypename()));
+				location.reportSemanticError(MessageFormat.format(MISSINGVALUE,  returnType.getTypename()));
 				break;
 			}
 			
-			final Type returnType = ((Def_Function) definition).getType(timestamp);
-
 			switch (template.getTemplatetype()) {
 			case VALUE_LIST:
 				if (((ValueList_Template) template).getNofTemplates() == 1) {
