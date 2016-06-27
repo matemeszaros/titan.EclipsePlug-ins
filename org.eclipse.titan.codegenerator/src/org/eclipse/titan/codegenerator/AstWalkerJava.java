@@ -153,6 +153,8 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 			// get files in the folder
 			File folder = new File(folderPath.toString());
 			File[] listOfFiles = folder.listFiles();
+			// Sort them in ascending order (temporary fix for linux)
+			Arrays.sort(listOfFiles);
 			String leadingPath = "";
 
 			for (int i = 0; i < path.segmentCount(); i++) {
