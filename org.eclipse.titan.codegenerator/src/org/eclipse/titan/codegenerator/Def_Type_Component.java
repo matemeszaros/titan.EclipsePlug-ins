@@ -65,9 +65,9 @@ public class Def_Type_Component {
 
 	public void writeConstructor() {
 		compString.append("public " + nodeName
-				+ "(HCType hcomp, String name, String ID){" + "\r\n");
+				+ "(HCType hcont, String name, String ID){" + "\r\n");
 		compString.append("super(name);" + "\r\n");
-		compString.append("hc=hcomp;" + "\r\n");
+		compString.append("hc=hcont;" + "\r\n");
 
 		compString.append("if(hc.debugmode)TTCN3Logger.writeLog(name, \"PARALLEL\", \"Test component \" + name + \" created.\", false);" + "\r\n");
 		
@@ -130,6 +130,19 @@ public class Def_Type_Component {
 		compString.append("	" + "\r\n");
 		compString.append("}" + "\r\n");
 	}
+	
+	public void writeDomap() {
+		compString.append("" + "\r\n");
+		compString.append("@Override" + "\r\n");
+		compString
+				.append("public void domap(String thisport, String remotecomp, String remoteport) {"
+						+ "\r\n");
+
+		//TODO
+
+		compString.append("	" + "\r\n");
+		compString.append("}" + "\r\n");
+	}
 
 	public String getJavaSource() {
 		compString.append("class " + nodeName
@@ -139,6 +152,7 @@ public class Def_Type_Component {
 		this.writeAnyPortReceive();
 		this.writePrepareForConnection();
 		this.writeConnect();
+		this.writeDomap();
 		compString.append("\r\n}");
 		
 		String returnString = compString.toString();

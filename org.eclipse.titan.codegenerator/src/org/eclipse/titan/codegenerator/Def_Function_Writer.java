@@ -575,11 +575,13 @@ public class Def_Function_Writer {
 			functionString
 					.append("if(timeout>0) try{queue.poll(timeout,TimeUnit.MILLISECONDS);}catch(InterruptedException e){} "
 							+ "\r\n");
+			functionString.append("this.lock();" + "\r\n");
 		} else {
 
 			functionString
 					.append("try{queue.take();}catch(InterruptedException e){}"
 							+ "\r\n");
+			functionString.append("this.lock();" + "\r\n");
 
 		}
 		// endoftimer
@@ -654,7 +656,7 @@ public class Def_Function_Writer {
 			functionString.append("}" + "\r\n");
 
 		}
-
+		functionString.append("this.unlock();" + "\r\n");
 		functionString.append("}" + "\r\n");
 
 	}

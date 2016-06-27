@@ -74,15 +74,15 @@ public class Def_Type_Set_Of {
 				+ nodeName
 				+ ")message).omitField) return true;" + "\r\n");
 		setOfString.append("if(pattern.anyOrOmitField) return true;" + "\r\n");
-		setOfString.append("if(pattern.anyField&&(("
+		setOfString.append("if(pattern.anyField&&!(("
 				+ nodeName
 				+ ")message).omitField) return true;" + "\r\n");
-		setOfString.append("if(pattern.omitField&&(("
+		setOfString.append("if(pattern.omitField&&!(("
 				+ nodeName
 				+ ")message).omitField) return false;" + "\r\n");
 		setOfString.append("if(pattern.anyField&&(("
 				+ nodeName
-				+ ")message).anyField) return false;" + "\r\n");
+				+ ")message).omitField) return false;" + "\r\n");
 
 
 		setOfString.append("return pattern.equals(("
