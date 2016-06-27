@@ -1398,24 +1398,40 @@ pr_ParameterName returns[ModuleParameterSectionHandler.ModuleParameter parameter
 {	$parameter = new ModuleParameterSectionHandler.ModuleParameter();
 	$parameter.setRoot( $ctx );
 }
-(	id1 = pr_Identifier
+(	id1 = pr_ParameterNamePart
 	(	separator = pr_Dot
-		id2 = pr_Identifier {	$parameter.setModuleName( $id1.ctx );
-								$parameter.setSeparator( $separator.ctx );
-								$parameter.setParameterName( $id2.ctx );
-							}
+		id2 = pr_ParameterNameTail
+			{	$parameter.setModuleName( $id1.ctx );
+				$parameter.setSeparator( $separator.ctx );
+				$parameter.setParameterName( $id2.ctx );
+			}
 	|	{	$parameter.setParameterName( $id1.ctx );
 		}
 	)
 |	star = pr_StarModuleName
 	DOT9
-	id3 = pr_Identifier
+	id3 = pr_ParameterNamePart
 	{	$parameter.setModuleName($star.ctx);
 		$parameter.setParameterName($id3.ctx);
 	}
 )
 ;
 
+// One part of the parameter name which are separated by dots
+pr_ParameterNamePart:
+	pr_Identifier
+	pr_IndexItemIndex*
+;
+
+// rest of the parameter name after the first dot
+// this is handled as parameter (2nd column) in the cfg editor on module parameters tab
+pr_ParameterNameTail:
+	pr_ParameterNamePart
+	(	pr_Dot
+		pr_ParameterNamePart
+	)*
+;
+	
 pr_Dot:
 	DOT9
 ;
