@@ -79,7 +79,7 @@ public class OutOfMemoryCheck {
 			long total = Rt.totalMemory();
 
 			long limit = Math.min(200000000, Math.round(total * (double)0.1));
-			ErrorReporter.logError("limit: "+String.valueOf(limit)+", free: " + String.valueOf(free));
+
 			if (free < limit) {
 				ErrorReporter.logError("limit: "+String.valueOf(limit)+", free: " + String.valueOf(free));
 				return true;
