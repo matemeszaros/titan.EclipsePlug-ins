@@ -19,7 +19,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -173,7 +172,7 @@ public class TITANProjectImportWizard extends BasicNewResourceWizard implements 
 
 				GUIProjectImporter importer = new GUIProjectImporter();
 				ProjectInformation tempProjectInformation = importer
-						.loadProjectFile(tempPath.toOSString(), new NullProgressMonitor(),false); //false: not headless
+						.loadProjectFile(tempPath.toOSString(), null,false); //false: not headless
 				IPath tempPath2 = tempPath.removeFileExtension();
 				String includedProjectName = tempPath2.lastSegment();
 

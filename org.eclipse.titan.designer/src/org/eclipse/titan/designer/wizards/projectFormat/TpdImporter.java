@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.window.Window;
@@ -193,9 +193,10 @@ public class TpdImporter {
 			return false;
 		}
 
-		IProgressMonitor internalMonitor = new SubProgressMonitor(monitor, 1);
-		internalMonitor.beginTask("Loading data", 3);
-		IProgressMonitor projectCreationMonitor = new SubProgressMonitor(internalMonitor, 1);
+		final SubMonitor progress = SubMonitor.convert(monitor, 3);
+		progress.setTaskName("Loading data");
+
+		IProgressMonitor projectCreationMonitor = progress.newChild(1);
 		projectCreationMonitor.beginTask("Creating required projects", projectsToImport.size());
 		//========================
 		// Create projects and 
@@ -224,7 +225,7 @@ public class TpdImporter {
 		}
 		projectCreationMonitor.done();
 
-		IProgressMonitor normalInformationLoadingMonitor = new SubProgressMonitor(internalMonitor, 1);
+		IProgressMonitor normalInformationLoadingMonitor = progress.newChild(1);
 		normalInformationLoadingMonitor.beginTask("Loading directly stored project information", projectsToImport.size());
 
 		//====================================
@@ -277,7 +278,7 @@ public class TpdImporter {
 		URI mainProjectFileFolderURI = URIUtil.toURI(mainProjectFileFolderPath);
 
 		List<Node> packedProjects = loadPackedProjects(projectsToImport.get(resolvedProjectFileURI));
-		IProgressMonitor packedInformationLoadingMonitor = new SubProgressMonitor(internalMonitor, 1);
+		IProgressMonitor packedInformationLoadingMonitor = progress.newChild(1);
 		packedInformationLoadingMonitor.beginTask("Loading packed project information", packedProjects.size());
 		for (Node node : packedProjects) {
 			IProject project = createProject(node, false);
@@ -305,7 +306,7 @@ public class TpdImporter {
 
 		IProject mainProject = projectMap.get(resolvedProjectFileURI);
 		if (mainProject == null) {
-			internalMonitor.done();
+			progress.done();
 			return false;
 		}
 		try {
@@ -360,7 +361,7 @@ public class TpdImporter {
 
 		activatePreviousSettings();
 
-		internalMonitor.done();
+		progress.done();
 		return true;
 	}
 
@@ -1267,21 +1268,22 @@ public class TpdImporter {
 	 */
 	protected void createProject(final IProjectDescription description, final IProject projectHandle, final IProgressMonitor monitor)
 			throws CoreException {
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+		final SubMonitor progress = SubMonitor.convert(monitor, 3);
+
 		try {
-			internalMonitor.beginTask(CREATING_PROJECT, 2000);
+			progress.setTaskName(CREATING_PROJECT);
 
-			projectHandle.create(description, new SubProgressMonitor(internalMonitor, 1000));
+			projectHandle.create(description, progress.newChild(1));
 
-			if (internalMonitor.isCanceled()) {
+			if (progress.isCanceled()) {
 				throw new OperationCanceledException();
 			}
 
-			projectHandle.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(internalMonitor, 1000));
+			projectHandle.open(IResource.BACKGROUND_REFRESH, progress.newChild(1));
 
-			projectHandle.refreshLocal(IResource.DEPTH_ONE, internalMonitor);
+			projectHandle.refreshLocal(IResource.DEPTH_ONE, progress.newChild(1));
 		} finally {
-			internalMonitor.done();
+			progress.done();
 		}
 	}
 }

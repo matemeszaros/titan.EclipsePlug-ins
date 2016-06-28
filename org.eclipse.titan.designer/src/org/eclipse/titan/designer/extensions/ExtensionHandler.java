@@ -15,11 +15,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.titan.common.logging.ErrorReporter;
 
 /**
@@ -47,7 +46,8 @@ public enum ExtensionHandler {
 	}
 
 	public void executeContributors(final IProgressMonitor monitor, final IProject project) {
-		final IProgressMonitor pm = (monitor == null) ? new NullProgressMonitor() : monitor;
+		final SubMonitor progress = SubMonitor.convert(monitor);
+
 		ISafeRunnable runnable = new ISafeRunnable() {
 			@Override
 			public void handleException(final Throwable e) {
@@ -57,15 +57,15 @@ public enum ExtensionHandler {
 			@Override
 			public void run() throws Exception {
 				try {
-					pm.beginTask("Executing extensions", plugins.size());
+					progress.beginTask("Executing extensions", plugins.size());
 					for (IProjectProcesser proc : plugins) {
-						proc.workOnProject(new SubProgressMonitor(pm, 1), project);
-						if (pm.isCanceled()) {
+						proc.workOnProject(progress.newChild(1), project);
+						if (progress.isCanceled()) {
 							throw new OperationCanceledException();
 						}
 					}
 				} finally {
-					pm.done();
+					progress.done();
 				}
 			}
 		};

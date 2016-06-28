@@ -32,7 +32,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
@@ -665,7 +665,7 @@ public final class ProjectSourceParser {
 	 * 
 	 * @return status information on exit.
 	 * */
-	private IStatus internalDoAnalyzeWithReferences(final IProgressMonitor monitor) {
+	private IStatus internalDoAnalyzeWithReferences(final SubMonitor monitor) {
 		if (!checkConfigurationRequirements(project, GeneralConstants.ONTHEFLY_SEMANTIC_MARKER)) {
 			return Status.OK_STATUS;
 		}
@@ -731,8 +731,8 @@ public final class ProjectSourceParser {
 		// Do the analyzes in the determined order.
 		CompilationTimeStamp compilationCounter = CompilationTimeStamp.getNewCompilationCounter();
 
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
-		internalMonitor.beginTask("Analysis of projects", tobeAnalyzed.size() * 2);
+		SubMonitor progress = SubMonitor.convert(monitor, tobeAnalyzed.size() * 2);
+		progress.setTaskName("Analysis of projects");
 
 		IPreferencesService preferenceService = Platform.getPreferencesService();
 		boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
@@ -750,20 +750,20 @@ public final class ProjectSourceParser {
 
 		try {
 			for (int i = 0; i < tobeAnalyzed.size(); i++) {
-				internalMonitor.setTaskName("Analyzing project " + tobeAnalyzed.get(i).getName());
+				progress.subTask("Analyzing project " + tobeAnalyzed.get(i).getName());
 				GlobalParser.getProjectSourceParser(tobeAnalyzed.get(i)).analyzesRunning = true;
 
 				if (tobeAnalyzed.get(i).isAccessible()) {
 					if (TITANNature.hasTITANNature(tobeAnalyzed.get(i))) {
 						GlobalParser.getProjectSourceParser(tobeAnalyzed.get(i)).syntacticAnalyzer
-								.internalDoAnalyzeSyntactically(new SubProgressMonitor(internalMonitor, 1));
+								.internalDoAnalyzeSyntactically(progress.newChild(1));
 						tobeSemanticallyAnalyzed.add(tobeAnalyzed.get(i));
 					} else {
 						Location location = new Location(project, 0, 0, 0);
 						location.reportExternalProblem(MessageFormat.format(REQUIREDPROJECTNOTTITANPROJECT,
 								tobeAnalyzed.get(i).getName(), project.getName()), IMarker.SEVERITY_ERROR,
 								GeneralConstants.ONTHEFLY_SEMANTIC_MARKER);
-						internalMonitor.worked(1);
+						progress.worked(1);
 					}
 				} else {
 					Location location = new Location(project);
@@ -771,18 +771,18 @@ public final class ProjectSourceParser {
 							MessageFormat.format(REQUIREDPROJECTNOTACCESSIBLE, tobeAnalyzed.get(i).getName(),
 									project.getName()), IMarker.SEVERITY_ERROR,
 							GeneralConstants.ONTHEFLY_SEMANTIC_MARKER);
-					internalMonitor.worked(1);
+					progress.worked(1);
 				}
 			}
 
-			ProjectSourceSemanticAnalyzer.analyzeMultipleProjectsSemantically(tobeSemanticallyAnalyzed, internalMonitor, compilationCounter);
+			ProjectSourceSemanticAnalyzer.analyzeMultipleProjectsSemantically(tobeSemanticallyAnalyzed, progress.newChild(tobeAnalyzed.size()), compilationCounter);
 		} finally {
 			for (int i = 0; i < tobeAnalyzed.size(); i++) {
 				GlobalParser.getProjectSourceParser(tobeAnalyzed.get(i)).analyzesRunning = false;
 			}
 		}
 
-		internalMonitor.done();
+		progress.done();
 		lastTimeChecked = compilationCounter;
 
 		return Status.OK_STATUS;
@@ -970,7 +970,7 @@ public final class ProjectSourceParser {
 						}
 					}
 
-					result = internalDoAnalyzeWithReferences(monitor);
+					result = internalDoAnalyzeWithReferences(SubMonitor.convert(monitor));
 
 					boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 							PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
@@ -1019,13 +1019,14 @@ public final class ProjectSourceParser {
 		WorkspaceJob extensions = new WorkspaceJob("Executing Titan extensions") {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				final IProgressMonitor pm = (monitor == null) ? new NullProgressMonitor() : monitor;
+				final SubMonitor progress = SubMonitor.convert(monitor, 100);
 
 				final int priortity = getThread().getPriority();
 				try {
 					getThread().setPriority(Thread.MIN_PRIORITY);
-					pm.beginTask("Executing Titan extensions", 100);
-					pm.subTask("Waiting for semantic analysis");
+					progress.setTaskName("Executing Titan extensions");
+					progress.subTask("Waiting for semantic analysis");
+
 					try {
 						temp.join();
 
@@ -1033,12 +1034,12 @@ public final class ProjectSourceParser {
 						ErrorReporter.logExceptionStackTrace(e);
 					}
 
-					pm.subTask("Executing extensions");
+					progress.subTask("Executing extensions");
 					if (Status.OK_STATUS.equals(temp.getResult())) {
-						ExtensionHandler.INSTANCE.executeContributors(new SubProgressMonitor(pm, 100), project);
+						ExtensionHandler.INSTANCE.executeContributors(progress.newChild(100), project);
 					}
 				} finally {
-					pm.done();
+					progress.done();
 					fullAnalyzersRunning.decrementAndGet();
 					getThread().setPriority(priortity);
 				}
@@ -1187,7 +1188,7 @@ public final class ProjectSourceParser {
 		Job.getJobManager().beginRule(rule, new NullProgressMonitor());
 
 		try {
-			internalDoAnalyzeWithReferences(new NullProgressMonitor());
+			internalDoAnalyzeWithReferences(null);
 		} catch (Exception e) {
 			ErrorReporter.logExceptionStackTrace(e);
 		} finally {

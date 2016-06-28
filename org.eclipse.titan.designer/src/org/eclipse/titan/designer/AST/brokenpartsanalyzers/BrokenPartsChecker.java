@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
@@ -24,7 +24,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  */
 public final class BrokenPartsChecker {
 
-	private final SubProgressMonitor semanticMonitor;
+	private final SubMonitor progress;
 
 	private final IProgressMonitor monitor;
 
@@ -32,11 +32,12 @@ public final class BrokenPartsChecker {
 
 	private final SelectionMethodBase selectionMethod;
 
-	public BrokenPartsChecker(final IProgressMonitor monitor, final CompilationTimeStamp compilationCounter, final SelectionMethodBase selectionMethod) {
+	public BrokenPartsChecker(final SubMonitor monitor, final CompilationTimeStamp compilationCounter, final SelectionMethodBase selectionMethod) {
 		this.compilationCounter = compilationCounter;
 		this.selectionMethod = selectionMethod;
 		this.monitor = monitor;
-		semanticMonitor = new SubProgressMonitor(this.monitor, 1);
+
+		progress = SubMonitor.convert(monitor, 100);
 	}
 
 	public void doChecking() {
@@ -68,11 +69,12 @@ public final class BrokenPartsChecker {
 			module.postCheck();
 		}
 		
-		semanticMonitor.done();
+		progress.done();
 	}
 	//TODO check if this can be merged with the following one
 	private void generalChecker() {
-		semanticMonitor.beginTask("Semantic check", selectionMethod.getModulesToCheck().size());
+		progress.setTaskName("Semantic check");
+		progress.setWorkRemaining(selectionMethod.getModulesToCheck().size());
 		
 		for (Module module : selectionMethod.getModulesToSkip()) {
 			module.setSkippedFromSemanticChecking(true);
@@ -83,9 +85,11 @@ public final class BrokenPartsChecker {
 
 		// process the modules one-by-one
 		for (final Module module : selectionMethod.getModulesToCheck()) {
-			semanticMonitor.subTask("Semantically checking module: " + module.getName());
+			progress.subTask("Semantically checking module: " + module.getName());
+
 			module.check(compilationCounter);
-			semanticMonitor.worked(1);
+
+			progress.worked(1);
 		}
 
 		for (final Module module : selectionMethod.getModulesToSkip()) {
@@ -94,19 +98,21 @@ public final class BrokenPartsChecker {
 	}
 
 	private void definitionsChecker(final Map<Module, List<Assignment>> moduleAndBrokenDefs) {
-		semanticMonitor.beginTask("Semantic check", moduleAndBrokenDefs.size());
+		progress.setTaskName("Semantic check");
+		progress.setWorkRemaining(moduleAndBrokenDefs.size());
 
 		for (Map.Entry<Module, List<Assignment>> entry : moduleAndBrokenDefs.entrySet()) {
 			Module module = entry.getKey();
 
-			semanticMonitor.subTask("Semantically checking broken parts in module: " + module.getName());
+			progress.subTask("Semantically checking broken parts in module: " + module.getName());
 
 			if (module instanceof TTCN3Module) {
 				((TTCN3Module) module).checkWithDefinitions(compilationCounter, entry.getValue());
 			} else {
 				module.check(compilationCounter);
 			}
-			semanticMonitor.worked(1);
+
+			progress.worked(1);
 		}
 	}
 }

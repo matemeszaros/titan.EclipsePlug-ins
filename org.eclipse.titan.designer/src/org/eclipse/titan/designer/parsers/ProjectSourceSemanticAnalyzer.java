@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.parsers.TITANMarker;
@@ -304,8 +305,9 @@ public class ProjectSourceSemanticAnalyzer {
 			semanticAnalyzer.moduleMap.clear();
 		}
 		// Semantic checking starts here
-		monitor.beginTask("On-the-fly semantic checking of everything ", 1);
-		monitor.subTask("Checking the importations of the modules");
+		SubMonitor progress = SubMonitor.convert(monitor, 1);
+		progress.setTaskName("On-the-fly semantic checking of everything ");
+		progress.subTask("Checking the importations of the modules");
 		
 		try{
 			final String option = preferenceService.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.REPORTUNSUPPORTEDCONSTRUCTS, GeneralConstants.WARNING, null);
@@ -365,7 +367,7 @@ public class ProjectSourceSemanticAnalyzer {
 					referenceChain.clear();
 				}
 
-				monitor.subTask("Calculating the list of modules to be checked");
+				progress.subTask("Calculating the list of modules to be checked");
 
 				IBaseAnalyzer selectionMethod = new BrokenPartsViaReferences(SelectionAlgorithm.BROKENREFERENCESINVERTED, compilationCounter);
 				SelectionMethodBase selectionMethodBase = (SelectionMethodBase)selectionMethod;
@@ -377,7 +379,7 @@ public class ProjectSourceSemanticAnalyzer {
 					return Status.CANCEL_STATUS;
 				}
 				
-				BrokenPartsChecker brokenPartsChecker = new BrokenPartsChecker(monitor, compilationCounter, selectionMethodBase);
+				BrokenPartsChecker brokenPartsChecker = new BrokenPartsChecker(progress.newChild(1), compilationCounter, selectionMethodBase);
 				brokenPartsChecker.doChecking();
 				
 				// re-enable the markers on the skipped modules.
@@ -398,7 +400,7 @@ public class ProjectSourceSemanticAnalyzer {
 				TITANDebugConsole.println("  ** Had to start checking at " + nofModulesTobeChecked + " modules. ", stream);
 				TITANDebugConsole.println("  **On-the-fly semantic checking of projects (" + allModules.size() + " modules) took " + (System.nanoTime() - semanticCheckStart) * (1e-9) + " seconds", stream);
 			}
-			monitor.subTask("Cleanup operations");
+			progress.subTask("Cleanup operations");
 			
 			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
 				ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
@@ -416,7 +418,7 @@ public class ProjectSourceSemanticAnalyzer {
 			// wrong inside the analysis.
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		monitor.done();
+		progress.done();
 
 		for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
 			GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).setLastTimeChecked(compilationCounter);

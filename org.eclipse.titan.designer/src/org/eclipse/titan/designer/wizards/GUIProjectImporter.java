@@ -28,12 +28,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.common.path.PathConverter;
 import org.eclipse.titan.common.path.PathUtil;
@@ -241,7 +240,7 @@ public final class GUIProjectImporter {
 	 * 
 	 * @return the read project data, or null if there was an error.
 	 * */
-	public ProjectInformation loadProjectFile(final String projectFile, final IProgressMonitor monitor, final boolean headless) {
+	public ProjectInformation loadProjectFile(final String projectFile, final SubMonitor monitor, final boolean headless) {
 		Document document = getDocumentFromFile(projectFile);
 		if (document == null) {
 			return null;
@@ -267,9 +266,9 @@ public final class GUIProjectImporter {
 
 		final NodeList rootList = document.getDocumentElement().getChildNodes();
 		int size = rootList.getLength();
-		IProgressMonitor internalMonitor = new SubProgressMonitor(monitor, 1);
-		internalMonitor.beginTask("Loading data", size);
-		internalMonitor.subTask("Loading Data");
+		final SubMonitor progress = SubMonitor.convert(monitor, size);
+		progress.setTaskName("Loading data");
+
 		for (int j = 0; j < size; j++) {
 			Node node = rootList.item(j);
 			String nodeName = node.getNodeName();
@@ -293,16 +292,17 @@ public final class GUIProjectImporter {
 			} else if ("Others".equals(nodeName)) {
 				loadListSettings(node, "Other", projectInformation.others);
 			} else if ("Included_Projects".equals(nodeName)) {
-				loadIncludedProjects(node, projectInformation, internalMonitor);
+				loadIncludedProjects(node, projectInformation, progress.newChild(1));
 			} else if ("File_Group".equals(nodeName)) {
 				projectInformation.fileGroupRoot = new FileGroup();
-				loadFileGroups(node, projectInformation.fileGroupRoot, projectFile, internalMonitor,headless);
+				loadFileGroups(node, projectInformation.fileGroupRoot, projectFile, progress.newChild(1), headless);
 			} else {
 				reportError("Incorrect node name `" + nodeName + "' within node `Project' in file `" + projectFile + "'", headless);
 			}
-			internalMonitor.worked(1);
+
+			progress.setWorkRemaining(size - j - 1);
 		}
-		internalMonitor.done();
+		progress.done();
 
 		return projectInformation;
 	}
@@ -391,30 +391,29 @@ public final class GUIProjectImporter {
 	 * @throws CoreException
 	 *                 in case of problems.
 	 * */
-	public static void applySettings(final IProject project, final ProjectInformation info, final IProgressMonitor monitor) throws CoreException {
-		IProgressMonitor internalMonitor = new SubProgressMonitor(monitor, 1);
-		internalMonitor.beginTask("Creating settings", 9);
-		internalMonitor.subTask("Creating settings");
-		setGeneralSettings(project, info, internalMonitor);
-		internalMonitor.worked(1);
+	public static void applySettings(final IProject project, final ProjectInformation info, final SubMonitor monitor) throws CoreException {
+		final SubMonitor progress = SubMonitor.convert(monitor, 8);
+		progress.setTaskName("Creating settings");
+
+		setGeneralSettings(project, info, progress.newChild(1));
 
 		// modules
-		setListSettings(project, info.sourceFile, info.modules, internalMonitor);
+		setListSettings(project, info.sourceFile, info.modules, progress.newChild(1));
 		// test ports
-		setListSettings(project, info.sourceFile, info.testports, internalMonitor);
+		setListSettings(project, info.sourceFile, info.testports, progress.newChild(1));
 		// other source files
-		setListSettings(project, info.sourceFile, info.otherSources, internalMonitor);
+		setListSettings(project, info.sourceFile, info.otherSources, progress.newChild(1));
 		// configuration files
-		setListSettings(project, info.sourceFile, info.configs, internalMonitor);
+		setListSettings(project, info.sourceFile, info.configs, progress.newChild(1));
 		// other files
-		setListSettings(project, info.sourceFile, info.others, internalMonitor);
+		setListSettings(project, info.sourceFile, info.others, progress.newChild(1));
 
-		setGroupFileSettings(project, info.sourceFile, info.fileGroupRoot, internalMonitor);
+		setGroupFileSettings(project, info.sourceFile, info.fileGroupRoot, progress.newChild(1));
 		setIncludedProjects(project, info);
-		internalMonitor.worked(1);
-		setUnusedFiles(project, info, internalMonitor);
-		internalMonitor.worked(1);
-		internalMonitor.done();
+
+		setUnusedFiles(project, info, progress.newChild(1));
+
+		progress.done();
 	}
 
 	/**
@@ -619,19 +618,20 @@ public final class GUIProjectImporter {
 	 * @param monitor
 	 *                the monitor to report progress on.
 	 * */
-	private static void setListSettings(final IProject project, final String basePath, final List<String> list, final IProgressMonitor monitor) {
-		IProgressMonitor internalMonitor = new SubProgressMonitor(monitor, 1);
-		internalMonitor.beginTask("Creating links", list.size());
+	private static void setListSettings(final IProject project, final String basePath, final List<String> list, final SubMonitor monitor) {
+		final SubMonitor progress = SubMonitor.convert(monitor, list.size());
+		progress.setTaskName("Creating links");
+
 		for (String element : list) {
-			internalMonitor.subTask("Resolving the path `" + element + "'");
+			progress.subTask("Resolving the path `" + element + "'");
 			String absolutePath = PathConverter.getAbsolutePath(basePath, element);
 			if (absolutePath != null) {
-				internalMonitor.subTask("creating link for `" + absolutePath + "'");
+				progress.subTask("creating link for `" + absolutePath + "'");
 				createLink(project, absolutePath);
 			}
-			internalMonitor.worked(1);
+			progress.worked(1);
 		}
-		internalMonitor.done();
+		progress.done();
 	}
 
 	/**
@@ -770,12 +770,14 @@ public final class GUIProjectImporter {
 		boolean reportDebugInformation = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, false, null);
 
+		final SubMonitor progress = SubMonitor.convert(monitor, 100);
+
 		if (pathAttribute != null) {
 			String path = pathAttribute.getTextContent();
 			if (reportDebugInformation) {
 				TITANDebugConsole.println("Read the file group path `" + path + "'");
 			}
-			monitor.subTask("Resolving the path `" + path + "'");
+			progress.subTask("Resolving the path `" + path + "'");
 			path = PathConverter.getAbsolutePath(basePath, path);
 			if (reportDebugInformation) {
 				TITANDebugConsole.println("The absolute file group path relative to `" + basePath + "' is `" + path + "'");
@@ -798,11 +800,12 @@ public final class GUIProjectImporter {
 			}
 
 			FileGroup newGroup = new FileGroup();
-			IProgressMonitor groupMonitor = new SubProgressMonitor(monitor, 1);
-			groupMonitor.beginTask("Loading group: " + file.getAbsolutePath(), 1);
+			SubMonitor groupMonitor = progress.newChild(1);
+			groupMonitor.setTaskName("Loading group: " + file.getAbsolutePath());
 			groupMonitor.subTask("Loading group: " + file.getAbsolutePath());
-			loadFileGroups(document.getDocumentElement(), newGroup, path, groupMonitor,headless);
+			loadFileGroups(document.getDocumentElement(), newGroup, path, groupMonitor.newChild(1),headless);
 			groupMonitor.done();
+			progress.done();
 			fileGroup.groups.add(newGroup);
 			if (reportDebugInformation) {
 				TITANDebugConsole.println("Added file group `" + newGroup.name + "'");
@@ -820,7 +823,7 @@ public final class GUIProjectImporter {
 		}
 
 		final NodeList nodeList = generalNode.getChildNodes();
-		IProgressMonitor groupMonitor = new SubProgressMonitor(monitor, 1);
+		SubMonitor groupMonitor = progress.newChild(1);
 		groupMonitor.beginTask("Loading group: " + fileGroup.name, nodeList.getLength());
 		groupMonitor.subTask("Loading group: " + fileGroup.name);
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -850,7 +853,7 @@ public final class GUIProjectImporter {
 				}
 			} else if ("File_Groups".equals(nodeName)) {
 				final NodeList nodeList2 = node.getChildNodes();
-				IProgressMonitor groupMonitor2 = new SubProgressMonitor(groupMonitor, 1);
+				IProgressMonitor groupMonitor2 = groupMonitor.newChild(1);
 				groupMonitor2.beginTask("Loading internal group nodes", nodeList2.getLength());
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					Node node2 = nodeList2.item(j);
@@ -871,6 +874,7 @@ public final class GUIProjectImporter {
 			groupMonitor.worked(1);
 		}
 		groupMonitor.done();
+		progress.done();
 	}
 
 	/**
@@ -891,23 +895,23 @@ public final class GUIProjectImporter {
 			return;
 		}
 
-		IProgressMonitor internalMonitor = new SubProgressMonitor(monitor, 1);
-		internalMonitor.beginTask("Creating settings", group.files.size() + group.groups.size());
+		final SubMonitor progress = SubMonitor.convert(monitor, group.files.size() + group.groups.size());
+		progress.setTaskName("Creating settings");
 		for (int i = 0, size = group.files.size(); i < size; i++) {
 			String temp = group.files.get(i);
-			internalMonitor.subTask("Resolving the path `" + temp + "'");
+			progress.subTask("Resolving the path `" + temp + "'");
 			String absolutePath = PathConverter.getAbsolutePath(sourceFile, temp);
 			if (absolutePath != null) {
-				internalMonitor.subTask("creating link for `" + absolutePath + "'");
+				progress.subTask("creating link for `" + absolutePath + "'");
 				createLink(project, absolutePath);
 			}
-			internalMonitor.worked(1);
+			progress.worked(1);
 		}
 
 		for (int i = 0, size = group.groups.size(); i < size; i++) {
-			setGroupFileSettings(project, sourceFile, group.groups.get(i), internalMonitor);
+			setGroupFileSettings(project, sourceFile, group.groups.get(i), progress.newChild(1));
 		}
-		internalMonitor.done();
+		progress.done();
 	}
 
 	/**
@@ -929,21 +933,22 @@ public final class GUIProjectImporter {
 	 */
 	protected static void createProject(final IProjectDescription description, final IProject projectHandle, final IProgressMonitor monitor)
 			throws CoreException {
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+		final SubMonitor progress = SubMonitor.convert(monitor, 3);
+
 		try {
-			internalMonitor.beginTask(CREATING_PROJECT, 2000);
+			progress.setTaskName(CREATING_PROJECT);
 
-			projectHandle.create(description, new SubProgressMonitor(internalMonitor, 1000));
+			projectHandle.create(description, progress.newChild(1));
 
-			if (internalMonitor.isCanceled()) {
+			if (progress.isCanceled()) {
 				throw new OperationCanceledException();
 			}
 
-			projectHandle.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(internalMonitor, 1000));
+			projectHandle.open(IResource.BACKGROUND_REFRESH, progress.newChild(1));
 
-			projectHandle.refreshLocal(IResource.DEPTH_ONE, internalMonitor);
+			projectHandle.refreshLocal(IResource.DEPTH_ONE, progress.newChild(1));
 		} finally {
-			internalMonitor.done();
+			progress.done();
 		}
 	}
 
@@ -976,8 +981,8 @@ public final class GUIProjectImporter {
 		TITANNature.addTITANNatureToProject(description);
 
 		try {
-			createProject(description, newProjectHandle, new NullProgressMonitor());
-			GUIProjectImporter.applySettings(newProjectHandle, info, new NullProgressMonitor());
+			createProject(description, newProjectHandle, null);
+			GUIProjectImporter.applySettings(newProjectHandle, info, null);
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
@@ -1010,7 +1015,7 @@ public final class GUIProjectImporter {
 			processedProjectFiles.add(tempPath.toOSString());
 
 			GUIProjectImporter importer = new GUIProjectImporter();
-			ProjectInformation tempProjectInformation = importer.loadProjectFile(tempPath.toOSString(), new NullProgressMonitor(),true); //true: headless
+			ProjectInformation tempProjectInformation = importer.loadProjectFile(tempPath.toOSString(), null,true); //true: headless
 			if(tempProjectInformation == null) {
 				continue;
 			}

@@ -23,10 +23,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -203,22 +202,22 @@ public final class NewTITANProjectWizard extends BasicNewResourceWizard implemen
 	 */
 	protected void createProject(final IProjectDescription description, final IProject projectHandle, final IProgressMonitor monitor)
 			throws CoreException {
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+		final SubMonitor progress = SubMonitor.convert(monitor, 101);
 		try {
-			internalMonitor.beginTask(CREATING_PROJECT, 2000);
+			progress.setTaskName(CREATING_PROJECT);
 
-			projectHandle.create(description, new SubProgressMonitor(internalMonitor, 1000));
+			projectHandle.create(description, progress.newChild(50));
 
-			if (internalMonitor.isCanceled()) {
+			if (progress.isCanceled()) {
 				throw new OperationCanceledException();
 			}
 
-			projectHandle.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(internalMonitor, 1000));
+			projectHandle.open(IResource.BACKGROUND_REFRESH, progress.newChild(50));
 
-			projectHandle.refreshLocal(IResource.DEPTH_ONE, internalMonitor);
+			projectHandle.refreshLocal(IResource.DEPTH_ONE, progress.newChild(1));
 			isCreated = true;
 		} finally {
-			internalMonitor.done();
+			progress.done();
 		}
 	}
 

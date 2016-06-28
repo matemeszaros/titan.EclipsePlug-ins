@@ -10,6 +10,7 @@ package org.eclipse.titan.designer.wizards;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
@@ -131,11 +132,10 @@ public class TITANProjectImportMainPage extends WizardPage {
 
 				@Override
 				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Importing the data of the project", 1);
+					final SubMonitor progress = SubMonitor.convert(monitor, 1);
+					progress.setTaskName("Importing the data of the project");
 
-					checkProjectFile(monitor);
-
-					monitor.done();
+					checkProjectFile(progress.newChild(1));
 				}
 			});
 		} catch (Exception e) {
@@ -150,7 +150,7 @@ public class TITANProjectImportMainPage extends WizardPage {
 	 * @param monitor
 	 *                the monitor used to report progress.
 	 * */
-	private void checkProjectFile(final IProgressMonitor monitor) {
+	private void checkProjectFile(final SubMonitor monitor) {
 		GUIProjectImporter importer = new GUIProjectImporter();
 		projectInformation = importer.loadProjectFile(projectFile, monitor, false); //false: not headless
 

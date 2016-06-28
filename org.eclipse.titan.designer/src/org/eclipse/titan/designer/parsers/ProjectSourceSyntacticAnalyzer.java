@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
@@ -361,7 +361,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 			return Status.CANCEL_STATUS;
 		}
 		MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
-		monitor.beginTask("On-the-fly syntactic checking of project: " + project.getName(), 1);
+		SubMonitor progress = SubMonitor.convert(monitor, 1);
+		progress.setTaskName("On-the-fly syntactic checking of project: " + project.getName());
 
 		if (syntacticallyOutdated) {
 			syntacticallyOutdated = false;
@@ -404,8 +405,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 			allCheckedFiles.addAll(asn1FilesToCheck);
 
 			// parsing the files
-			final SubProgressMonitor parseMonitor = new SubProgressMonitor(monitor, 1);
-			parseMonitor.beginTask("Parse", ttcn3FilesToCheck.size() + asn1FilesToCheck.size());
+			final SubMonitor parseProgress = SubMonitor.convert(progress, ttcn3FilesToCheck.size() + asn1FilesToCheck.size());
+			parseProgress.setTaskName("Parse");
 
 			final ThreadPoolExecutor executor = new ThreadPoolExecutor(NUMBER_OF_PROCESSORS, NUMBER_OF_PROCESSORS, 10, TimeUnit.SECONDS,
 					new LinkedBlockingQueue<Runnable>());
@@ -424,9 +425,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 			for (IFile file : ttcn3FilesToCheck) {
 				// parse a file only if the operation was not
 				// canceled and the file is not yet up-to-date
-				if (monitor.isCanceled()) {
-					parseMonitor.done();
-					monitor.done();
+				if (parseProgress.isCanceled()) {
+					parseProgress.done();
 					return Status.CANCEL_STATUS;
 				} else if (!file.isAccessible()) {
 					if (reportDebugInformation) {
@@ -434,7 +434,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 					}
 					latch.countDown();
 				} else if (!uptodateFiles.containsKey(file) && !highlySyntaxErroneousFiles.contains(file)) {
-					parseMonitor.subTask("Syntactically analyzing file: " + file.getProjectRelativePath().toOSString());
+					parseProgress.subTask("Syntactically analyzing file: " + file.getProjectRelativePath().toOSString());
 					// parse the contents of the file
 					final IFile tempFile = file;
 					final int index = nofFilesProcessed;
@@ -442,14 +442,14 @@ public final class ProjectSourceSyntacticAnalyzer {
 					executor.execute(new Runnable() {
 						@Override
 						public void run() {
-							if (monitor.isCanceled()) {
+							if (parseProgress.isCanceled()) {
 								return;
 							}
 
 							TemporalParseData temp = fileBasedTTCN3Analysis(tempFile);
 							tempResults[index] = temp;
 							latch.countDown();
-							parseMonitor.worked(1);
+							parseProgress.worked(1);
 
 							LoadBalancingUtilities.syntaxAnalyzerProcessedAFile();
 						}
@@ -462,9 +462,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 			for (IFile file : asn1FilesToCheck) {
 				// parse a file only if the operation was not
 				// canceled and the file is not yet up-to-date
-				if (monitor.isCanceled()) {
-					parseMonitor.done();
-					monitor.done();
+				if (parseProgress.isCanceled()) {
+					parseProgress.done();
 					return Status.CANCEL_STATUS;
 				} else if (!file.isAccessible()) {
 					if (reportDebugInformation) {
@@ -472,7 +471,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 					}
 					latch.countDown();
 				} else if (!uptodateFiles.containsKey(file) && !highlySyntaxErroneousFiles.contains(file)) {
-					parseMonitor.subTask("Syntactically analyzing file: " + file.getProjectRelativePath().toOSString());
+					parseProgress.subTask("Syntactically analyzing file: " + file.getProjectRelativePath().toOSString());
 					// parse the contents of the file
 					final IFile tempFile = file;
 					final int index = nofFilesProcessed;
@@ -480,14 +479,14 @@ public final class ProjectSourceSyntacticAnalyzer {
 					executor.execute(new Runnable() {
 						@Override
 						public void run() {
-							if (monitor.isCanceled()) {
+							if (parseProgress.isCanceled()) {
 								return;
 							}
 
 							TemporalParseData temp = fileBasedASN1Analysis(tempFile);
 							tempResults[index] = temp;
 							latch.countDown();
-							parseMonitor.worked(1);
+							parseProgress.worked(1);
 
 							LoadBalancingUtilities.syntaxAnalyzerProcessedAFile();
 						}
@@ -510,7 +509,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 
 			MarkerHandler.removeAllOnTheFlyMarkedMarkers(project);
 
-			parseMonitor.done();
+			parseProgress.done();
 			asn1FilesToCheck.clear();
 			if (reportDebugInformation) {
 				//MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
@@ -519,8 +518,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 								+ " got syntactically analyzed",stream);
 			}
 		} else {
-			monitor.worked(1);
-			monitor.done();
+			progress.worked(1);
+			progress.done();
 		}
 
 		return Status.OK_STATUS;
@@ -567,7 +566,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 		}
 
 		MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
-		monitor.beginTask("On-the-fly syntactic checking of project: " + project.getName(), 1);
+		SubMonitor progress = SubMonitor.convert(monitor, 1);
+		progress.setTaskName("On-the-fly syntactic checking of project: " + project.getName());
 
 		if (syntacticallyOutdated) {
 			syntacticallyOutdated = false;
@@ -635,8 +635,9 @@ public final class ProjectSourceSyntacticAnalyzer {
 			allCheckedFiles.addAll(asn1FilesToCheck);
 
 			// parsing the files
-			final SubProgressMonitor parseMonitor = new SubProgressMonitor(monitor, 1);
-			parseMonitor.beginTask("Parse", ttcn3FilesToCheck.size() + asn1FilesToCheck.size());
+			final SubMonitor parseProgress = SubMonitor.convert(progress, ttcn3FilesToCheck.size() + asn1FilesToCheck.size());
+			parseProgress.setTaskName("Syntactically analyzing");
+
 
 			final ThreadPoolExecutor executor = new ThreadPoolExecutor(NUMBER_OF_PROCESSORS, NUMBER_OF_PROCESSORS, 10, TimeUnit.SECONDS,
 					new LinkedBlockingQueue<Runnable>());
@@ -655,9 +656,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 			for (IFile file : ttcn3FilesToCheck) {
 				// parse a file only if the operation was not
 				// canceled and the file is not yet up-to-date
-				if (monitor.isCanceled()) {
-					parseMonitor.done();
-					monitor.done();
+				if (parseProgress.isCanceled()) {
+					parseProgress.done();
 					return Status.CANCEL_STATUS;
 				} else if (!file.isAccessible()) {
 					if (reportDebugInformation) {
@@ -685,7 +685,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 						}
 					}
 
-					parseMonitor.subTask("Syntactically analyzing file: " + file.getProjectRelativePath().toOSString());
+					parseProgress.subTask(" file: " + file.getProjectRelativePath().toOSString());
 					// parse the contents of the file
 					final IFile tempFile = file;
 					final int index = nofFilesProcessed;
@@ -693,9 +693,9 @@ public final class ProjectSourceSyntacticAnalyzer {
 					executor.execute(new Runnable() {
 						@Override
 						public void run() {
-							if (monitor.isCanceled()) {
+							if (parseProgress.isCanceled()) {
 								latch.countDown();
-								parseMonitor.worked(1);
+								parseProgress.worked(1);
 								return;
 							}
 
@@ -704,7 +704,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 								tempResults[index] = temp;
 							} finally {
 								latch.countDown();
-								parseMonitor.worked(1);
+								parseProgress.worked(1);
 
 								LoadBalancingUtilities.syntaxAnalyzerProcessedAFile();
 							}
@@ -718,9 +718,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 			for (IFile file : asn1FilesToCheck) {
 				// parse a file only if the operation was not
 				// canceled and the file is not yet up-to-date
-				if (monitor.isCanceled()) {
-					parseMonitor.done();
-					monitor.done();
+				if (parseProgress.isCanceled()) {
+					parseProgress.done();
 					return Status.CANCEL_STATUS;
 				} else if (!file.isAccessible()) {
 					if (reportDebugInformation) {
@@ -733,7 +732,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 						return Status.CANCEL_STATUS;
 					}
 				} else if (!uptodateFiles.containsKey(file) && !highlySyntaxErroneousFiles.contains(file)) {
-					parseMonitor.subTask("Syntactically analyzing file: " + file.getProjectRelativePath().toOSString());
+					parseProgress.subTask(" file: " + file.getProjectRelativePath().toOSString());
 					// parse the contents of the file
 					final IFile tempFile = file;
 					final int index = nofFilesProcessed;
@@ -741,9 +740,9 @@ public final class ProjectSourceSyntacticAnalyzer {
 					executor.execute(new Runnable() {
 						@Override
 						public void run() {
-							if (monitor.isCanceled()) {
+							if (parseProgress.isCanceled()) {
 								latch.countDown();
-								parseMonitor.worked(1);
+								parseProgress.worked(1);
 								return;
 							}
 
@@ -752,7 +751,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 								tempResults[index] = temp;
 							} finally {
 								latch.countDown();
-								parseMonitor.worked(1);
+								parseProgress.worked(1);
 
 								LoadBalancingUtilities.syntaxAnalyzerProcessedAFile();
 							}
@@ -780,7 +779,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 				}
 			}
 
-			parseMonitor.done();
+			parseProgress.done();
 			asn1FilesToCheck.clear();
 			if (reportDebugInformation) {
 				//MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
@@ -789,8 +788,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 								+ " got syntactically analyzed",stream);
 			}
 		} else {
-			monitor.worked(1);
-			monitor.done();
+			progress.worked(1);
+			progress.done();
 		}
 
 		return Status.OK_STATUS;

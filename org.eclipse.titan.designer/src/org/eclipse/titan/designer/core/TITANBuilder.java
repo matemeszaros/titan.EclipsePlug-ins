@@ -39,7 +39,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -748,7 +748,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			return project.getReferencedProjects();
 		}
 		
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+		final SubMonitor progress = SubMonitor.convert(monitor);
 		
 		
 		String consoleActionBeforeBuild = store.getString(PreferenceConstants.CONSOLE_ACTION_BEFORE_BUILD);	 
@@ -768,12 +768,12 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			TITANDebugConsole.println("starting to build " + project.getName());
 		}
 
-		internalMonitor.beginTask("Build", 6);
-		IProgressMonitor initialisationMonitor = new SubProgressMonitor(internalMonitor, 1);
+		progress.beginTask("Build", 6);
+		IProgressMonitor initialisationMonitor = progress.newChild(1);
 		initialisationMonitor.beginTask("Checking prerequisites", 3);
 		if (!isBuilderEnabled(project)) {
 			initialisationMonitor.done();
-			internalMonitor.done();
+			progress.done();
 			if (reportDebugInformation) {
 				TITANDebugConsole.println("Finished building " + project.getName());
 			}
@@ -784,7 +784,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 
 		if (workingDir == null) {
 			initialisationMonitor.done();
-			internalMonitor.done();
+			progress.done();
 			if (reportDebugInformation) {
 				TITANDebugConsole.println("Finished building " + project.getName());
 			}
@@ -858,7 +858,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		// to check the source code and place back markers.
 		if (nofChangedResources == 0 && kind != FULL_BUILD) {
 			initialisationMonitor.done();
-			internalMonitor.done();
+			progress.done();
 			if (reportDebugInformation) {
 				TITANDebugConsole.println("Finished building " + project.getName());
 			}
@@ -893,10 +893,10 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			buildJob.removeOnTheFlyMarkers();
 		}
 
-		IProgressMonitor symboliclinkMonitor = new SubProgressMonitor(internalMonitor, 1);
+		final SubMonitor symboliclinkMonitor = progress.newChild(1);
 		symboliclinkMonitor.beginTask("Refreshing symbolic links", 3);
 		SymbolicLinkHandler
-				.copyExternalFileToWorkingDirectory(files, workingDir.toOSString(), new SubProgressMonitor(symboliclinkMonitor, 1));
+				.copyExternalFileToWorkingDirectory(files, workingDir.toOSString(), symboliclinkMonitor.newChild(1));
 
 		boolean automaticMakefileGeneration = ProjectBuildPropertyData.useAutomaticMakefilegeneration(project);
 		boolean useInternalMakefileGeneration = ProjectBuildPropertyData.useInternalMakefilegeneration(project);
@@ -905,10 +905,10 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		if (useSymbolicLinks){
 
 			SymbolicLinkHandler.addSymlinkRemovingCommandForRemovedFiles(workingDir.toOSString(), buildJob,
-					deltavisitor.getLastTimeRemovedFiles(), new SubProgressMonitor(symboliclinkMonitor, 1));
+					deltavisitor.getLastTimeRemovedFiles(), symboliclinkMonitor.newChild(1));
 
 			SymbolicLinkHandler.addSymlinkCreationCommand(files, workingDir.toOSString(), buildJob, deltavisitor
-					.getLastTimeRemovedFiles(), new SubProgressMonitor(symboliclinkMonitor, 1), automaticMakefileGeneration);
+					.getLastTimeRemovedFiles(), symboliclinkMonitor.newChild(1), automaticMakefileGeneration);
 		}
 		symboliclinkMonitor.done();
 
@@ -923,8 +923,8 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			return project.getReferencedProjects();
 		}
 
-		IProgressMonitor filepreparerMonitor = new SubProgressMonitor(internalMonitor, 1);
-		filepreparerMonitor.beginTask("removing markers from files", files.size());
+		final SubMonitor filepreparserMonitor = progress.newChild(1);
+		filepreparserMonitor.beginTask("removing markers from files", files.size());
 		if (PreferenceConstantValues.ONTHEFLYOPTIONREMOVE.equals(store.getString(PreferenceConstants.ONTHEFLYMARKERSAFTERCOMPILER))) {
 
 			List<IFile> outdatedFiles = new ArrayList<IFile>();
@@ -949,7 +949,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 				} catch (CoreException e) {
 					ErrorReporter.logExceptionStackTrace("While deleting markers from `" + tempFile.getName() + "'", e);
 				}
-				filepreparerMonitor.worked(1);
+				filepreparserMonitor.worked(1);
 			}
 
 			if (!outdatedFiles.isEmpty()) {
@@ -960,7 +960,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			}
 
 		}
-		filepreparerMonitor.done();
+		filepreparserMonitor.done();
 
 		IPath makefile = new Path(workingDir.toOSString() + File.separatorChar + MAKEFILE);
 		boolean makefileExists = makefile.toFile().exists();
@@ -1092,7 +1092,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			ErrorReporter.logError(BUILD_WITHOUT_MAKEFILE_ERROR + project.getName());
 		}
 
-		IStatus status = buildJob.runInWorkspace(new SubProgressMonitor(internalMonitor, 3));
+		IStatus status = buildJob.runInWorkspace(progress.newChild(3));
 		try {
 			project.setSessionProperty(GeneralConstants.PROJECT_UP_TO_DATE, status.isOK());
 			TITANDecorator.refreshSelectively(project);
@@ -1103,8 +1103,8 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			TITANDebugConsole.println("Finished building " + project.getName());
 		}
 
-		internalMonitor.done();
-		if (buildJob.foundErrors() || internalMonitor.isCanceled()) {
+		progress.done();
+		if (buildJob.foundErrors() || progress.isCanceled()) {
 			if (project != null && (kind == FULL_BUILD || kind == INCREMENTAL_BUILD)) {
 				final IProject project2 = project;
 				WorkspaceJob op = new WorkspaceJob("Touching the project") {
@@ -1146,14 +1146,15 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			return;
 		}
 
-		monitor.beginTask("Cleaning", 2);
+		final SubMonitor progress = SubMonitor.convert(monitor,2);
+		progress.setTaskName("Cleaning");
 
-		getProject().touch(new SubProgressMonitor(monitor, 1));
+		getProject().touch(progress.newChild(1));
 
 		IPath workingDir = ProjectBasedBuilder.getProjectBasedBuilder(getProject()).getWorkingDirectoryPath(true);
 
 		if (workingDir == null) {
-			monitor.done();
+			progress.done();
 			return;
 		}
 
@@ -1172,13 +1173,13 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 			command.add(MAKE_CLEAN);
 			titanJob.addCommand(command, MAKE_CLEAN);
 
-			titanJob.runInWorkspace(new SubProgressMonitor(monitor, 1));
+			titanJob.runInWorkspace(progress.newChild(1));
 		} else {
 			TITANConsole.println(MessageFormat.format(CLEAN_WITHOUT_MAKEFILE_ERROR, getProject().getName()));
 			ErrorReporter.logError(MessageFormat.format(CLEAN_WITHOUT_MAKEFILE_ERROR, getProject().getName()));
 		}
 
-		monitor.done();
+		progress.done();
 	}
 
 	/**
