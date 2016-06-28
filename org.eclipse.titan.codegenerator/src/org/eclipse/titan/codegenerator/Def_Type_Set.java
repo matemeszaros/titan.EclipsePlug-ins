@@ -85,7 +85,7 @@ public class Def_Type_Set {
 				+ ")message).omitField) return false;" + "\r\n");
 		setString.append("if(pattern.anyField&&(("
 				+ nodeName
-				+ ")message).anyField) return false;" + "\r\n");
+				+ ")message).omitField) return false;" + "\r\n");
 
 
 

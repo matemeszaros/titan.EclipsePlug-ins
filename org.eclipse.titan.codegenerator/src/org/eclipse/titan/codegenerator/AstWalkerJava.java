@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -77,7 +79,7 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 
 
 
-	// ttcn3-ból másolt
+	// copied from ttcn-3
 
 	static {
 		try {
@@ -151,7 +153,8 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 			// get files in the folder
 			File folder = new File(folderPath.toString());
 			File[] listOfFiles = folder.listFiles();
-
+			// Sort them in ascending order (temporary fix for linux)
+			Arrays.sort(listOfFiles);
 			String leadingPath = "";
 
 			for (int i = 0; i < path.segmentCount(); i++) {
@@ -191,23 +194,26 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 				}
 			}
 
+			//initialize common files
 			myASTVisitor.currentFileName = "Constants";
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); // erre
+			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); 
 			myASTVisitor.visualizeNodeToJava("class Constants{\r\n}\r\n");
 
 			myASTVisitor.currentFileName = "Templates";
 
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); // erre
+			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
 			myASTVisitor.visualizeNodeToJava("class Templates{\r\n}\r\n");
 
 			myASTVisitor.currentFileName = "TTCN_functions";
 
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); // erre
+			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); 
 			myASTVisitor.visualizeNodeToJava("class TTCN_functions{\r\n}\r\n");
 			
 			
 			if (fileNames.size() > 0) {
 				for (int i = 0, num = files.size(); i < num; i++) {
+					
+					//process files
 					currentTTCN3module = (TTCN3Module) doAnalysis(files.get(i),
 							null);
 					modules.put(fileNames.get(i), currentTTCN3module);
@@ -230,6 +236,8 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 
 					Object[] modulestart = modules.get(fileNames.get(i))
 							.getOutlineChildren();
+					
+					//start AST processing
 					walkChildren(modulestart);
 
 				}
@@ -247,18 +255,18 @@ public class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 
 			
 			
-			
+			//write additional classes
 			Additional_Class_Writer additional_class=new Additional_Class_Writer();
 			myASTVisitor.currentFileName = "HC";
 			
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); //erre
+			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); 
 			myASTVisitor.visualizeNodeToJava(additional_class.writeHCClass());
 			
 			myASTVisitor.currentFileName = "HCType";
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); //erre
+			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings); 
 			myASTVisitor.visualizeNodeToJava(additional_class.writeHCTypeClass());
 			
-			
+			//clear lists 
 			myASTVisitor.componentList.clear();
 			myASTVisitor.testCaseList.clear();
 			myASTVisitor.testCaseRunsOnList.clear();

@@ -68,20 +68,17 @@ public class Def_Type_Union {
 		unionString.append("if(!(message instanceof " + nodeName
 				+ "))return false;" + "\r\n");
 
-		/*if (AstWalkerJava.areCommentsAllowed) {
-			unionString.append("System.out.println(\"" + nodeName
-					+ " tipusegyezes2\");" + "\r\n");
-		}*/
+
 
 		unionString.append("if(pattern.omitField&&((" + nodeName
 				+ ")message).omitField) return true;" + "\r\n");
 		unionString.append("if(pattern.anyOrOmitField) return true;" + "\r\n");
-		unionString.append("if(pattern.anyField&&((" + nodeName
+		unionString.append("if(pattern.anyField&&!((" + nodeName
 				+ ")message).omitField) return true;" + "\r\n");
-		unionString.append("if(pattern.omitField&&((" + nodeName
+		unionString.append("if(pattern.omitField&&!((" + nodeName
 				+ ")message).omitField) return false;" + "\r\n");
 		unionString.append("if(pattern.anyField&&((" + nodeName
-				+ ")message).anyField) return false;" + "\r\n");
+				+ ")message).omitField) return false;" + "\r\n");
 
 		for (int l = 0; l < compFieldTypes.size(); l++) {
 			unionString.append("if(pattern instanceof " + "SC_" + (l + 1) + "_"
@@ -150,14 +147,14 @@ public class Def_Type_Union {
 					+ ")message).omitField) return true;" + "\r\n");
 			unionChildString.append("if(pattern.anyOrOmitField) return true;"
 					+ "\r\n");
-			unionChildString.append("if(pattern.anyField&&((" + "SC_" + (i + 1)
+			unionChildString.append("if(pattern.anyField&&!((" + "SC_" + (i + 1)
 					+ "_" + nodeName + ")message).omitField) return true;"
 					+ "\r\n");
-			unionChildString.append("if(pattern.omitField&&((" + "SC_"
+			unionChildString.append("if(pattern.omitField&&!((" + "SC_"
 					+ (i + 1) + "_" + nodeName
 					+ ")message).omitField) return false;" + "\r\n");
 			unionChildString.append("if(pattern.anyField&&((" + "SC_" + (i + 1)
-					+ "_" + nodeName + ")message).anyField) return false;"
+					+ "_" + nodeName + ")message).omitField) return false;"
 					+ "\r\n");
 
 			unionChildString.append("	return " + compFieldTypes.get(i)

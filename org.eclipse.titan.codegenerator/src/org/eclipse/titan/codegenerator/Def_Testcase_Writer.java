@@ -115,7 +115,7 @@ public class Def_Testcase_Writer {
 				+ testCaseNode.getLocation().getFile().getFullPath()
 						.lastSegment() + "\";" + "\r\n");
 		testCaseString.append("int rownum=" +tcStatementBlock.getLocation().getLine()+ ";\r\n");
-		testCaseString.append("if(!created) return;" + "\r\n");
+		testCaseString.append("while(!created);" + "\r\n");
 		
 		testCaseString.append("TTCN3Logger.writeLog(\"mtc\", \"PARALLEL\", sourcefilename, rownum, \"testcase\", \""+nodeName+"\", \"Testcase started on mtc\", false);"+ "\r\n");
 		int currentCounterValue=0;
@@ -205,7 +205,7 @@ public class Def_Testcase_Writer {
 					testCaseString.append("rownum="+tc_connectStatement.getLocation().getLine()+";\r\n");
 					testCaseString.append("hc.connect("+"\"" +tcConnectValues.get(currentConnectValue)+"\"");
 					
-					logValues[logWriteCounter]=tcConnectValues.get(currentCounterValue);
+					logValues[logWriteCounter]=tcConnectValues.get(currentConnectValue);
 					currentConnectValue++;
 
 					logWriteCounter++;

@@ -59,12 +59,10 @@ public class Def_Type_Enum {
 		for(int i=0;i<enumItems.size();i++){
 			enumString.append("values.put(\""+enumItems.get(i)+"\","+i+");" + "\r\n");
 		}
-		enumString.append("}");
+		enumString.append("}"+ "\r\n");
 		
 		enumString.append("public Method(String v){"+ "\r\n");
-		for(int i=0;i<enumItems.size();i++){
-			enumString.append("values.put(\""+enumItems.get(i)+"\","+i+");" + "\r\n");
-		}
+		enumString.append("this();"+ "\r\n");
 		enumString.append("setValue(v);}");
 	}
 
