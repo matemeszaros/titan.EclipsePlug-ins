@@ -68,7 +68,7 @@ import org.eclipse.ui.console.MessageConsole;
  * This class is used to generate the Makefile used by the build system of Titan.
  * 
  * This variant of the Makefile generator is able to write the Makefile directly from eclipse,
- *   while having access to all eclipse resources and data fro mthe on-he-fly analyzer.
+ *   while having access to all eclipse resources and data from the on-he-fly analyzer.
  *
  * @author Kristof Szabados
  * */
@@ -2053,6 +2053,7 @@ public final class InternalMakefileGenerator {
 					ResourceUtils.refreshResources(Arrays.asList(folder));
 				}
 				IFile sampleMakefile = project.getFile(samplePath.append("/" + makefileName));
+				sampleMakefile.refreshLocal(0, null);
 				if (sampleMakefile.exists()) {
 					sampleMakefile.setContents(new ByteArrayInputStream(contents.toString().getBytes()), IResource.FORCE
 							| IResource.KEEP_HISTORY, null);
