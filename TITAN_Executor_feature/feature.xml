@@ -146,7 +146,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.core.variables"/>
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.core.expressions"/>
-      <import plugin="org.eclipse.titan.designer" version="5.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.filesystem"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.antlr.runtime" version="4.3.0" match="greaterOrEqual"/>
