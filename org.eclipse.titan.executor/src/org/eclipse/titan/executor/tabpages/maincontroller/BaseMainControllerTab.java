@@ -18,18 +18,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -419,13 +419,13 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 	protected final void handleWorkingDirectoryModified() {
 		if (!EMPTY.equals(workingdirectoryText.getStringValue())) {
 			IProject project = getProject();
-			IPath path;
+			URI uri;
 			if (project == null) {
-				path = new Path(workingdirectoryText.getStringValue());
+				uri = URIUtil.toURI(workingdirectoryText.getStringValue());
 			} else {
-				path = TITANPathUtilities.resolvePath(workingdirectoryText.getStringValue(), getProject().getLocation().toOSString());
+				uri = TITANPathUtilities.resolvePathURI(workingdirectoryText.getStringValue(), getProject().getLocation().toOSString());
 			}
-			File file = path.toFile();
+			File file = new File(uri);
 			if (file.exists() && file.isDirectory()) {
 				workingDirectoryIsValid = true;
 				return;
@@ -451,10 +451,10 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 	 *
 	 * @return the information extracted.
 	 * */
-	public static ExecutableCalculationHelper checkExecutable(final ILaunchConfiguration configuration, final IProject project, final IPath executableFileName) {
+	public static ExecutableCalculationHelper checkExecutable(final ILaunchConfiguration configuration, final IProject project, final URI executableFileName) {
 		ExecutableCalculationHelper result = new ExecutableCalculationHelper();
 
-		File file = executableFileName.toFile();
+		File file = new File(executableFileName);
 		if (!file.exists() || !file.isFile()) {
 			return result;
 		}
@@ -482,7 +482,7 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		
 		MessageConsoleStream stream = TITANConsole.getConsole().newMessageStream();
 		Process proc;
-		String exename = PathConverter.convert(executableFileName.toOSString(), true, TITANDebugConsole.getConsole());
+		String exename = PathConverter.convert(executableFileName.getPath(), true, TITANDebugConsole.getConsole());
 		StringBuilder lastParam = new StringBuilder(exename);
 		lastParam.append(" -v");
 		List<String> shellCommand;
@@ -581,14 +581,14 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 			@Override
 			public void run() {
 				IProject project = getProject();
-				IPath path;
+				URI uri;
 				if (project == null) {
-					path = new Path(executableFileText.getStringValue());
+					uri = URIUtil.toURI(executableFileText.getStringValue());
 				} else {
-					path = TITANPathUtilities.resolvePath(executableFileText.getStringValue(), getProject().getLocation().toOSString());
+					uri = TITANPathUtilities.resolvePathURI(executableFileText.getStringValue(), getProject().getLocation().toOSString());
 				}
 				
-				ExecutableCalculationHelper helper = checkExecutable(lastConfiguration, DynamicLinkingHelper.getProject(projectNameText.getText()), path);
+				ExecutableCalculationHelper helper = checkExecutable(lastConfiguration, DynamicLinkingHelper.getProject(projectNameText.getText()), uri);
 				executableFileIsValid = helper.executableFileIsValid;
 				executableIsExecutable = helper.executableIsExecutable;
 				executableIsForSingleMode = helper.executableIsForSingleMode;
@@ -618,18 +618,18 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		}
 
 		IProject project = getProject();
-		IPath path;
+		URI uri;
 		if (project == null) {
-			path = new Path(configurationFileText.getStringValue());
+			uri = URIUtil.toURI(configurationFileText.getStringValue());
 		} else {
-			path = TITANPathUtilities.resolvePath(configurationFileText.getStringValue(), getProject().getLocation().toOSString());
+			uri = TITANPathUtilities.resolvePathURI(configurationFileText.getStringValue(), getProject().getLocation().toOSString());
 		}
 
-		File file = path.toFile();
+		File file = new File(uri);
 		if (file.exists() && file.isFile()) {
 			exceptions.clear();
 			ConfigFileHandler configHandler = new ConfigFileHandler();
-			configHandler.readFromFile(path.toOSString());
+			configHandler.readFromFile(uri.getPath());
 			if (configHandler.parseExceptions().isEmpty()) {
 				Map<String, String> env = new HashMap<String, String>(System.getenv());
 				Map<String, String> tempEnvironmentalVariables;
@@ -654,7 +654,7 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		}
 		configurationFileIsValid = false;
 		exceptions.clear();
-		exceptions.add(new Exception("The path `" + path + "' does not seem to be correct."));
+		exceptions.add(new Exception("The path `" + uri.getPath() + "' does not seem to be correct."));
 		automaticExecuteSectionExecution.setEnabled(false);
 	}
 
@@ -762,8 +762,8 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 			return false;
 		}
 
-		final IPath path = TITANPathUtilities.resolvePath(workingDirectory, project.getLocation().toOSString());
-		File file = path.toFile();
+		final URI uri = TITANPathUtilities.resolvePathURI(workingDirectory, project.getLocation().toOSString());
+		File file = new File(uri);
 		if (!file.exists()) {
 			ErrorReporter.parallelErrorDisplayInMessageDialog(
 					"An error was found while creating the default launch configuration for project " + project.getName(),
@@ -780,10 +780,10 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 
 		final String executable = getExecutableForProject(project);
 		ExecutableCalculationHelper helper;
-		final IPath path2 = TITANPathUtilities.resolvePath(executable, project.getLocation().toOSString());
+		final URI uri2 = TITANPathUtilities.resolvePathURI(executable, project.getLocation().toOSString());
 		if (null != executable && executable.length() > 0) {
-			file = path2.toFile();
-			helper = checkExecutable(configuration, project, path2);
+			file = new File(uri2);
+			helper = checkExecutable(configuration, project, uri2);
 			if (!file.exists()) {
 				ErrorReporter.parallelErrorDisplayInMessageDialog(
 					"An error was found while creating the default launch configuration for project " + project.getName(),
@@ -832,8 +832,8 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		TestSetTab.setTestcases(configuration, helper.availableTestcases.toArray(new String[helper.availableTestcases.size()]));
 
 		if (!"".equals(configFilePath)) {
-			IPath path3 = TITANPathUtilities.resolvePath(configFilePath, project.getLocation().toOSString());
-			file = path3.toFile();
+			URI uri3 = TITANPathUtilities.resolvePathURI(configFilePath, project.getLocation().toOSString());
+			file = new File(uri3);
 			if (!file.exists()) {
 				ErrorReporter.parallelErrorDisplayInMessageDialog(
 					"An error was found while creating the default launch configuration for project " + project.getName(),

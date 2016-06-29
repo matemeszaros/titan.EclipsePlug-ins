@@ -7,11 +7,12 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.properties.pages;
 
+import java.net.URI;
+
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -461,8 +462,8 @@ public final class MakefileCreationTab {
 			setProperty(project, MakefileCreationData.DEFAULT_TARGET_PROPERTY, defaultTarget.getActualValue());
 
 			String temp = temporalTargetExecutableFileFieldEditor.getStringValue();
-			IPath path = new Path(temp);
-			IPath resolvedPath = TITANPathUtilities.resolvePath(temp, project.getLocation().toOSString());
+			URI path = URIUtil.toURI(temp);
+			URI resolvedPath = TITANPathUtilities.resolvePathURI(temp, project.getLocation().toOSString());
 			if (path.equals(resolvedPath)) {
 				temp = PathUtil.getRelativePath(project.getLocation().toOSString(), temp);
 			}

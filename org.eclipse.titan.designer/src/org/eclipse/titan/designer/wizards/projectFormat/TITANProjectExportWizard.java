@@ -160,7 +160,7 @@ public class TITANProjectExportWizard extends Wizard implements IExportWizard {
 			return false;
 		}
 		
-		URI projectFileURI = TITANPathUtilities.getURI(projectFile, project.getLocation().toOSString());
+		URI projectFileURI = TITANPathUtilities.resolvePathURI(projectFile, project.getLocation().toOSString());
 		IPath projectFilePath = URIUtil.toPath(projectFileURI);
 		if( projectFilePath == null ) {
 			ErrorReporter.logError("Invalid target tpd file name. Use the Browse button to get a valid file path");

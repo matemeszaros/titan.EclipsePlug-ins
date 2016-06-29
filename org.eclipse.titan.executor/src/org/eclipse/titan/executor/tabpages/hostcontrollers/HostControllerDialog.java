@@ -13,12 +13,12 @@ import static org.eclipse.titan.executor.GeneralConstants.REPLACEABLEHOSTWORKIGN
 import static org.eclipse.titan.executor.GeneralConstants.REPLACEABLEMCHOST;
 import static org.eclipse.titan.executor.GeneralConstants.REPLACEABLEMCPORT;
 
+import java.net.URI;
 import java.net.UnknownHostException;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -147,21 +147,21 @@ public final class HostControllerDialog extends Dialog {
 		String example = "example command: " + commandText.getText();
 		example = example.replace(REPLACEABLEHOSTNAME, hostNameText.getText());
 
-		IPath workingDirPath;
+		URI workingDirPath;
 		if (null == project) {
-			workingDirPath = new Path(workingdirectoryText.getStringValue());
+			workingDirPath = URIUtil.toURI(workingdirectoryText.getStringValue());
 		} else {
-			workingDirPath = TITANPathUtilities.resolvePath(workingdirectoryText.getStringValue(), project.getLocation().toOSString());
+			workingDirPath = TITANPathUtilities.resolvePathURI(workingdirectoryText.getStringValue(), project.getLocation().toOSString());
 		}
-		example = example.replace(REPLACEABLEHOSTWORKIGNDIRECTORY, workingDirPath.toOSString());
+		example = example.replace(REPLACEABLEHOSTWORKIGNDIRECTORY, workingDirPath.getPath());
 
-		IPath executablePath;
+		URI executablePath;
 		if (null == project) {
-			executablePath = new Path(executableText.getStringValue());
+			executablePath = URIUtil.toURI(executableText.getStringValue());
 		} else {
-			executablePath = TITANPathUtilities.resolvePath(executableText.getStringValue(), project.getLocation().toOSString());
+			executablePath = TITANPathUtilities.resolvePathURI(executableText.getStringValue(), project.getLocation().toOSString());
 		}
-		String path = PathUtil.getRelativePath(workingDirPath.toOSString(), executablePath.toOSString());
+		String path = PathUtil.getRelativePath(workingDirPath.getPath(), executablePath.getPath());
 		example = example.replace(REPLACEABLEHOSTEXECUTABLE, path);
 
 		String hostName;

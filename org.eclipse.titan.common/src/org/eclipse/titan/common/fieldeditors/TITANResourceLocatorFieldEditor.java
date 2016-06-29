@@ -250,17 +250,18 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 	 */
 	private void handleBrowseButtonPressed() {
 		String selection = null;
-		final IPath resolvedPath = TITANPathUtilities.resolvePath(target, rootPath);
+		final URI resolvedPath = TITANPathUtilities.resolvePathURI(target, rootPath);
 
 		if (type == IResource.FILE) {
 			final FileDialog dialog = new FileDialog(getTextControl().getShell());
 			dialog.setText("Select the target file.");
-			dialog.setFilterPath(resolvedPath.removeLastSegments(1).toOSString());
+			Path path = new Path(resolvedPath.getPath());
+			dialog.setFilterPath(path.removeLastSegments(1).toOSString());
 			selection = dialog.open();
 		} else {
 			final DirectoryDialog dialog = new DirectoryDialog(getTextControl().getShell());
 			dialog.setMessage("Select the target folder.");
-			dialog.setFilterPath(resolvedPath.toOSString());
+			dialog.setFilterPath(resolvedPath.getPath());
 			selection = dialog.open();
 		}
 		if (selection != null) {
@@ -284,10 +285,9 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 			return;
 		}
 
-		final IPath path = new Path(target);
-		final IPath resolvedPath = TITANPathUtilities.resolvePath(target, rootPath);		
-		final URI uri = URIUtil.toURI(resolvedPath); 
-		final String message = "Resolved location: " + uri.toString();
+		final URI path = URIUtil.toURI(target);
+		final URI resolvedPath = TITANPathUtilities.resolvePathURI(target, rootPath);		 
+		final String message = "Resolved location: " + resolvedPath.getPath();
 		resolvedPathLabelText.setText(message);
 		
 

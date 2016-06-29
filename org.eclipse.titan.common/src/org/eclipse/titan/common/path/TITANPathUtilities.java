@@ -84,16 +84,17 @@ public final class TITANPathUtilities {
 	 * 
 	 * @return the resolved path.
 	 * */
-	public static IPath resolvePath(final String pathToBeResolved, final String basePath) {
+	public static URI resolvePathURI(final String pathToBeResolved, final String basePath) {
 		final DebugPlugin debugPlugin = DebugPlugin.getDefault();
+
 		if (debugPlugin == null) {
 			ErrorReporter.logError("There was an error while resolving `" + pathToBeResolved + "'"
 					+ "the DebugPlugin was not yet initialized");
-			return new Path(pathToBeResolved);
+			return URI.create(pathToBeResolved);
 		}
 
 		final Map<?, ?> envVariables = debugPlugin.getLaunchManager().getNativeEnvironmentCasePreserved();
-		return resolvePath(pathToBeResolved, basePath, envVariables, ResourcesPlugin.getWorkspace().getPathVariableManager());
+		return resolvePathURI(pathToBeResolved, basePath, envVariables, ResourcesPlugin.getWorkspace().getPathVariableManager());
 	}
 
 	/**
@@ -107,42 +108,24 @@ public final class TITANPathUtilities {
 	 * 
 	 * @return the resolved path.
 	 * */
-	public static IPath resolvePath(final String pathToBeResolved, final String basePath, final Map<?, ?> envVariables,
+	private static URI resolvePathURI(final String pathToBeResolved, final String basePath, final Map<?, ?> envVariables,
 			final IPathVariableManager pathVariableManager) {
 		final String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolveIgnoreErrors(pathToBeResolved, envVariables);
 		final String tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);
-
-		final IPath path2 = new Path(tmp2);
-		IPath resolvedPath = pathVariableManager.resolvePath(path2);
-
-		if (basePath != null && !"".equals(basePath) && !resolvedPath.isAbsolute()) {
+		
+		URI uri = URIUtil.toURI(tmp2);
+		URI resolvedURI = pathVariableManager.resolveURI(uri);
+	
+		if (basePath != null && !"".equals(basePath) && !resolvedURI.isAbsolute()) {
 			final String temp = PathUtil.getAbsolutePath(basePath, tmp2);
 			if (temp != null) {
-				resolvedPath = new Path(temp);
+				resolvedURI = URIUtil.toURI(temp);
 			}
 		}
 
-		return resolvedPath;
+		return resolvedURI;
 	}
 
-	/**
-	 * Resolves the provided path relative to the provided base path and
-	 * returns the result as an URI.
-	 * 
-	 * @param path
-	 *                the path to be resolved.
-	 * @param rootPath
-	 *                the full path to which the resolvable one might be
-	 *                relative to.
-	 * 
-	 * @return the resolved URI.
-	 * */
-	public static URI getURI(final String path, final String rootPath) {
-		final IPath resolvedPath = resolvePath(path, rootPath);
-
-		return URIUtil.toURI(resolvedPath);
-	}
-	
 	/**
 	 * Converts the provided uri relative to the provided base uri
 	 * Environment variables and path variables will not be resolved.

@@ -633,7 +633,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 				new QualifiedName(ProjectBuildPropertyData.QUALIFIER, MakeAttributesData.TEMPORAL_MAKEFILE_SCRIPT_PROPERTY));
 
 		if (makefileScript != null && makefileScript.length() > 0) {
-			URI uri = TITANPathUtilities.getURI(makefileScript, getProject().getLocation().toOSString());
+			URI uri = TITANPathUtilities.resolvePathURI(makefileScript, getProject().getLocation().toOSString());
 			makefileScript = URIUtil.toPath(uri).toOSString();
 
 			List<String> command = new ArrayList<String>();
@@ -816,7 +816,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 		String targetExecutable = project.getPersistentProperty(
 				new QualifiedName(ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.TARGET_EXECUTABLE_PROPERTY));
 		if (targetExecutable != null && targetExecutable.length() != 0) {
-			URI uri = TITANPathUtilities.getURI(targetExecutable, project.getLocation().toOSString());
+			URI uri = TITANPathUtilities.resolvePathURI(targetExecutable, project.getLocation().toOSString());
 			IPath path = URIUtil.toPath(uri);
 			path = path.removeLastSegments(1);
 			targetExecutable = path.toOSString();

@@ -14,8 +14,6 @@ import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -373,7 +371,7 @@ public final class MakeAttributesTab {
 				return false;
 			}
 
-			URI uri = TITANPathUtilities.getURI(temporalMakefileScriptFileFieldEditor.getStringValue(), project.getLocation()
+			URI uri = TITANPathUtilities.resolvePathURI(temporalMakefileScriptFileFieldEditor.getStringValue(), project.getLocation()
 					.toOSString());
 
 			File file = URIUtil.toPath(uri).toFile();
@@ -392,7 +390,7 @@ public final class MakeAttributesTab {
 			return false;
 		}
 
-		URI uri = TITANPathUtilities.getURI(workingDirFieldEditor.getStringValue(), project.getLocation().toOSString());
+		URI uri = TITANPathUtilities.resolvePathURI(workingDirFieldEditor.getStringValue(), project.getLocation().toOSString());
 		uri = uri.normalize();
 		if (project.getLocationURI().equals(uri)) {
 			page.setErrorMessage("The working directory of the project and its location can not be the same folder.");
@@ -454,8 +452,8 @@ public final class MakeAttributesTab {
 			setProperty(project, MakeAttributesData.BUILD_LEVEL_PROPERTY, buildLevel.getText());
 
 			String temp = temporalMakefileScriptFileFieldEditor.getStringValue();
-			IPath path = new Path(temp);
-			IPath resolvedPath = TITANPathUtilities.resolvePath(temp, project.getLocation().toOSString());
+			URI path = URIUtil.toURI(temp);
+			URI resolvedPath = TITANPathUtilities.resolvePathURI(temp, project.getLocation().toOSString());
 			if (path.equals(resolvedPath)) {
 				temp = PathUtil.getRelativePath(project.getLocation().toOSString(), temp);
 			}
@@ -464,8 +462,8 @@ public final class MakeAttributesTab {
 					temporalMakefileFlagsStringFieldEditor.getStringValue());
 
 			temp = workingDirFieldEditor.getStringValue();
-			path = new Path(temp);
-			resolvedPath = TITANPathUtilities.resolvePath(temp, project.getLocation().toOSString());
+			path = URIUtil.toURI(temp);
+			resolvedPath = TITANPathUtilities.resolvePathURI(temp, project.getLocation().toOSString());
 			if (path.equals(resolvedPath)) {
 				temp = PathUtil.getRelativePath(project.getLocation().toOSString(), temp);
 			}

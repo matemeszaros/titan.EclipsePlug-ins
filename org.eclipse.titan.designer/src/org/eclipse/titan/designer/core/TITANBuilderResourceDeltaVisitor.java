@@ -69,7 +69,7 @@ public final class TITANBuilderResourceDeltaVisitor implements IResourceDeltaVis
 			makefileScript = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakeAttributesData.TEMPORAL_MAKEFILE_SCRIPT_PROPERTY));
 			if (makefileScript != null) {
-				URI uri = TITANPathUtilities.getURI(makefileScript, project.getLocation().toOSString());
+				URI uri = TITANPathUtilities.resolvePathURI(makefileScript, project.getLocation().toOSString());
 				makefileScript = URIUtil.toPath(uri).toOSString();
 			}
 		} catch (CoreException e) {
