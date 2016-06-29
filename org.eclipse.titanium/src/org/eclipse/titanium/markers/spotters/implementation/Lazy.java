@@ -15,9 +15,13 @@ import java.util.Set;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
+import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.IVisitableNode;
+import org.eclipse.titan.designer.AST.ParameterisedSubReference;
 import org.eclipse.titan.designer.AST.Reference;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.ActualParameter;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.ActualParameterList;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Altstep;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Function;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Testcase;
@@ -25,12 +29,16 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.FormalParameter;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.FormalParameterList;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.IParameterisedAssignment;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Value_ActualParameter;
 import org.eclipse.titan.designer.AST.TTCN3.statements.AltGuard;
+import org.eclipse.titan.designer.AST.TTCN3.statements.Function_Instance_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.If_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Return_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.SelectCase_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
+import org.eclipse.titan.designer.AST.TTCN3.templates.ParsedActualParameters;
+import org.eclipse.titan.designer.AST.TTCN3.values.Expression_Value;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titanium.markers.spotters.BaseModuleCodeSmellSpotter;
 import org.eclipse.titanium.markers.types.CodeSmellType;
@@ -43,7 +51,7 @@ import org.eclipse.titanium.markers.types.CodeSmellType;
  * Also ... if an "in" parameter is not used on every possible execution path,
  * the code might become faster if it is set as @lazy.
  * 
- * @author Peter Olah
+ * @author Peter Olah, Istvan Bohm
  * 
  * TODO: does not check if the parameter is used as an actual parameter to a lazy formal parameter.
  */
@@ -116,39 +124,51 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 	public class RelevantNodeBuilder extends ASTVisitor {
 
 		private IVisitableNode root;
-
 		private List<RelevantNodeBuilder> nodes;
 
 		// Contains possible FormalParameters of expression block of If_Statement and SelectCase_Statement.
 		private Set<FormalParameter> strictFormalParameters;
 
 		// Contains possible FormalParameters of StatementBloc and Statement and AltGuard.
-		private HashSet<FormalParameter> referencedFormalParameters;
+		private Set<FormalParameter> referencedFormalParameters;
 
+		// If this is a lazy formal parameter transmission, then the formal parameter is not relevant unless it is in some expression
+		private boolean nextFormalParameterIsNotRelevant = false;
+		
 		public RelevantNodeBuilder(final IVisitableNode node) {
 			root = node;
 			referencedFormalParameters = new HashSet<FormalParameter>();
 			strictFormalParameters = new HashSet<FormalParameter>();
 			nodes = new ArrayList<RelevantNodeBuilder>();
 		}
+		
+		public RelevantNodeBuilder(IVisitableNode node,boolean skipNextFormalParameter) {
+			this(node);
+			this.nextFormalParameterIsNotRelevant = skipNextFormalParameter;
+		}
 
 		@Override
 		public int visit(final IVisitableNode node) {
+			
+			if(nextFormalParameterIsNotRelevant) {
+				if(node instanceof Expression_Value) {
+					nextFormalParameterIsNotRelevant = false;
+				} else if(!(node instanceof Value_ActualParameter)){
+					return V_SKIP;
+				}
+			}
+			
 			if ((node instanceof StatementBlock || node instanceof Statement || node instanceof AltGuard) && !node.equals(root)) {
-				RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(node);
+				RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(node,nextFormalParameterIsNotRelevant);
 
 				// Handle separately the expression block of If_Statement and SelectCase_Statement.
 				// Store the possible FormalParameters in strictFormalParameters collection.
 				if (root instanceof If_Statement || root instanceof SelectCase_Statement) {
 					statementBlockCollector.strictFormalParameters.addAll(strictFormalParameters);
-
 					strictFormalParameters.clear();
 				}
-
 				nodes.add(statementBlockCollector);
-
 				node.accept(statementBlockCollector);
-
 				return V_SKIP;
 			}
 
@@ -156,29 +176,57 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 			if (node instanceof Reference) {
 				Reference reference = (Reference) node;
 
-				Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), true);
+				Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 
+				if (assignment instanceof Def_Function) {
+					FormalParameterList formalParameterList=((Def_Function)assignment).getFormalParameterList();
+					ISubReference subreference = ((Reference) node).getSubreferences().get(0);
+					
+					if(!(subreference instanceof ParameterisedSubReference)) {
+						return V_SKIP;
+					}
+
+					ParameterisedSubReference subref = (ParameterisedSubReference)((Reference) node).getSubreferences().get(0);
+					ParsedActualParameters parsedActualParameters = subref.getParsedParameters();
+					
+					ActualParameterList nonLazyActualParameters = new ActualParameterList();
+					ActualParameterList lazyActualParameters = new ActualParameterList();
+					formalParameterList.collateLazyAndNonLazyActualParameters(CompilationTimeStamp.getBaseTimestamp(),parsedActualParameters, lazyActualParameters, nonLazyActualParameters);
+
+					if(nonLazyActualParameters.getNofParameters()!=0) {
+						RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(root);
+						nodes.add(statementBlockCollector);
+						nonLazyActualParameters.accept(statementBlockCollector);
+					}
+					for(int i=0,size=lazyActualParameters.getNofParameters();i<size;++i) {
+						ActualParameter lazyActualParameter = lazyActualParameters.getParameter(i);
+						if(lazyActualParameter instanceof Value_ActualParameter) {
+							RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(root,true);
+							nodes.add(statementBlockCollector);
+							lazyActualParameter.accept(statementBlockCollector);
+						}
+					}
+					return V_SKIP;
+				}
+				
 				if (assignment instanceof FormalParameter) {
 					FormalParameter formalParameter = (FormalParameter) assignment;
-
+					if(nextFormalParameterIsNotRelevant) return V_CONTINUE;
 					if (formalParameterCollector.getItems().contains(formalParameter)) {
 						if (root instanceof If_Statement || root instanceof SelectCase_Statement) {
 							strictFormalParameters.add(formalParameter);
 						} else {
 							referencedFormalParameters.add(formalParameter);
-
 						}
 					}
 				}
-				
-				//TODO it would be more precise to check the actual parameters if parameterized references
 			}
 
 			return V_CONTINUE;
 		}
 
 		public Set<FormalParameter> collectRelevantReferences() {
-			HashSet<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
+			Set<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
 
 			// After that we disregard content's of nodes
 			if (root instanceof Return_Statement) {
@@ -186,30 +234,24 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 				return referencedFormalParameters;
 			}
 
-			if (nodes.isEmpty()) {
+			if (nodes.size() == 0) {
 				return referencedFormalParameters;
 			} else {
-
 				Set<FormalParameter> tempStricts = new HashSet<FormalParameter>();
-
 				for (int index = 0, nodeSize = nodes.size(); index < nodeSize; ++index) {
 					if (haveToContinue) {
-
 						tempStricts.addAll(nodes.get(index).strictFormalParameters);
-
 						Set<FormalParameter> temp = nodes.get(index).collectRelevantReferences();
-
-						if (root instanceof StatementBlock || root instanceof Definition || root instanceof AltGuard) {
+						if (root instanceof StatementBlock || root instanceof Definition || root instanceof AltGuard || root instanceof Function_Instance_Statement) {
 							shouldBeEvaluated.addAll(temp);
 						} else {
 							if (((root instanceof If_Statement || root instanceof SelectCase_Statement) && nodeSize == 1)) {
 								break;
 							}
-
 							// We have to branching because of intersections of empty and non empty set.
 							// Have to check index too!
 							// If index==0 and shouldBeEvaluated.size()==0 then we have to initialize set with addAll() method.
-							if (shouldBeEvaluated.isEmpty() && index == 0) {
+							if (shouldBeEvaluated.size() == 0 && index == 0) {
 								shouldBeEvaluated.addAll(temp);
 							} else {
 								shouldBeEvaluated.retainAll(temp);
@@ -217,11 +259,9 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 						}
 					}
 				}
-
 				shouldBeEvaluated.addAll(tempStricts);
 				shouldBeEvaluated.addAll(referencedFormalParameters);
 			}
-
 			return shouldBeEvaluated;
 		}
 	}
@@ -242,12 +282,9 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		public int visit(final IVisitableNode node) {
 			if (node instanceof IParameterisedAssignment) {
 				FormalParameterList formalParameterList = ((IParameterisedAssignment) node).getFormalParameterList();
-
 				for (int i = 0; i < formalParameterList.getNofParameters(); ++i) {
 					FormalParameter formalParameter = formalParameterList.getParameterByIndex(i);
-
 					Assignment_type type = formalParameter.getAssignmentType();
-
 					switch (type) {
 						case A_PAR_VAL:
 						case A_PAR_VAL_IN:
@@ -257,11 +294,9 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 						default:
 							continue;
 					}
-
 				}
 				return V_ABORT;
 			}
-
 			return V_CONTINUE;
 		}
 
