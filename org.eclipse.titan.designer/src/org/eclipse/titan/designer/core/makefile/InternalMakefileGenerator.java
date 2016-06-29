@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -781,7 +782,7 @@ public final class InternalMakefileGenerator {
 					String tempProjectLocation = location.toOSString();
 					for (String temp : optionList) {
 						URI uri = TITANPathUtilities.resolvePathURI(temp, tempProjectLocation);
-						temp = PathConverter.convert(uri.getPath(), reportDebugInformation,
+						temp = PathConverter.convert(URIUtil.toPath(uri).toOSString(), reportDebugInformation,
 								TITANDebugConsole.getConsole());
 						contents.append(" -I").append(temp);
 					}
@@ -835,7 +836,7 @@ public final class InternalMakefileGenerator {
 						String tempProjectLocation = location.toOSString();
 						for (String option : optionList) {
 							URI uri = TITANPathUtilities.resolvePathURI(option, tempProjectLocation);
-							option = PathConverter.convert(uri.getPath(), true, TITANDebugConsole.getConsole());
+							option = PathConverter.convert(URIUtil.toPath(uri).toOSString(), true, TITANDebugConsole.getConsole());
 							contents.append(" -I").append(option);
 						}
 					}
@@ -2112,7 +2113,7 @@ public final class InternalMakefileGenerator {
 						String tempProjectLocation = location.toOSString();
 						for (String option : optionList) {
 							URI uri = TITANPathUtilities.resolvePathURI(option, tempProjectLocation);
-							option = PathConverter.convert(uri.getPath(), reportDebugInformation,
+							option = PathConverter.convert(URIUtil.toPath(uri).toOSString(), reportDebugInformation,
 									TITANDebugConsole.getConsole());
 							contents.append(' ').append(option);
 						}
@@ -2138,7 +2139,7 @@ public final class InternalMakefileGenerator {
 					String tempProjectLocation = location.toOSString();
 					for (String temp : optionList) {
 						URI uri = TITANPathUtilities.resolvePathURI(temp, tempProjectLocation);
-						temp = PathConverter.convert(uri.getPath(), true, TITANDebugConsole.getConsole());
+						temp = PathConverter.convert(URIUtil.toPath(uri).toOSString(), true, TITANDebugConsole.getConsole());
 						contents.append(" -L").append(temp);
 					}
 				}
@@ -2244,7 +2245,7 @@ public final class InternalMakefileGenerator {
 		String temp = ResourceUtils.getPersistentProperty(project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.TARGET_EXECUTABLE_PROPERTY);
 		if (temp != null && temp.trim().length() > 0) {
 			URI resolvedURI = TITANPathUtilities.resolvePathURI(temp, projectLocation);
-			etsName = PathConverter.convert(resolvedURI.getPath(), reportDebugInformation, TITANDebugConsole.getConsole());
+			etsName = PathConverter.convert(URIUtil.toPath(resolvedURI).toOSString(), reportDebugInformation, TITANDebugConsole.getConsole());
 		} else {
 			temp = project.getName();
 			if (Platform.OS_WIN32.equals(Platform.getOS())) {

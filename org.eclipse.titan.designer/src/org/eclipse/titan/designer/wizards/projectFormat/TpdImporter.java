@@ -748,7 +748,7 @@ public class TpdImporter {
 
 			if (headless) {
 				try {
-					pathVariableManager.setValue(variableName, new Path(variableValue));
+					pathVariableManager.setURIValue(variableName, URIUtil.toURI(variableValue));
 				} catch (CoreException e) {
 					ErrorReporter.logExceptionStackTrace("While setting path variable `" + variableName + "' in headless mode", e);
 				}
@@ -758,22 +758,22 @@ public class TpdImporter {
 					public void run() {
 						try {
 							if (pathVariableManager.isDefined(variableName)) {
-								IPath path = pathVariableManager.getValue(variableName);
-								if (!variableValue.equals(path.toString())) {
-									EditPathVariableDialog dialog = new EditPathVariableDialog(shell, variableName, path, new Path(
+								URI uri = pathVariableManager.getURIValue(variableName);
+								if (!variableValue.equals(URIUtil.toPath(uri))) {
+									EditPathVariableDialog dialog = new EditPathVariableDialog(shell, variableName, uri, URIUtil.toURI(
 											variableValue));
 									if (Window.OK == dialog.open()) {
-										IPath actualValue = dialog.getActualValue();
-										pathVariableManager.setValue(variableName, actualValue);
+										URI actualValue = dialog.getActualValue();
+										pathVariableManager.setURIValue(variableName, actualValue);
 									}
 								}
 							} else {
 								// check whether we have non null shell
 								if (shell != null) {
-									NewPathVariableDialog dialog = new NewPathVariableDialog(shell, variableName, new Path(variableValue));
+									NewPathVariableDialog dialog = new NewPathVariableDialog(shell, variableName, URIUtil.toURI(variableValue));
 									if (Window.OK == dialog.open()) {
-										IPath actualValue = dialog.getActualValue();
-										pathVariableManager.setValue(variableName, actualValue);
+										URI actualValue = dialog.getActualValue();
+										pathVariableManager.setURIValue(variableName, actualValue);
 									}
 								}
 							}

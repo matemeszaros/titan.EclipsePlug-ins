@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.eclipse.titan.common.fieldeditors;
 
+import static org.eclipse.titan.common.utils.StringUtils.isNullOrEmpty;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,9 +44,6 @@ import org.eclipse.titan.common.utils.environment.EnvironmentVariableResolver;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.ide.dialogs.PathVariableSelectionDialog;
-
-
-import static org.eclipse.titan.common.utils.StringUtils.isNullOrEmpty;
 
 /**
  * @author Kristof Szabados
@@ -255,13 +254,13 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 		if (type == IResource.FILE) {
 			final FileDialog dialog = new FileDialog(getTextControl().getShell());
 			dialog.setText("Select the target file.");
-			Path path = new Path(resolvedPath.getPath());
+			IPath path = URIUtil.toPath(resolvedPath);
 			dialog.setFilterPath(path.removeLastSegments(1).toOSString());
 			selection = dialog.open();
 		} else {
 			final DirectoryDialog dialog = new DirectoryDialog(getTextControl().getShell());
 			dialog.setMessage("Select the target folder.");
-			dialog.setFilterPath(resolvedPath.getPath());
+			dialog.setFilterPath(URIUtil.toPath(resolvedPath).toOSString());
 			selection = dialog.open();
 		}
 		if (selection != null) {
@@ -286,8 +285,8 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 		}
 
 		final URI path = URIUtil.toURI(target);
-		final URI resolvedPath = TITANPathUtilities.resolvePathURI(target, rootPath);		 
-		final String message = "Resolved location: " + resolvedPath.getPath();
+		final URI resolvedPath = TITANPathUtilities.resolvePathURI(target, rootPath);
+		final String message = "Resolved location: " + URIUtil.toPath(resolvedPath);
 		resolvedPathLabelText.setText(message);
 		
 
@@ -317,23 +316,16 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 		}
 
 		final IPathVariableManager pathVariableManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
-		final IPath path2 = new Path(result);
-		IPath resolvedPath = pathVariableManager.resolvePath(path2);
-		if (!resolvedPath.isValidPath(resolvedPath.toOSString())) {
-			//FIXME more precise error message
-			setErrorMessage("Invalid value");
-			return false;
-		}
+		URI uri = URIUtil.toURI(result);
+		URI resolvedURI = pathVariableManager.resolveURI(uri);
 
-		if (rootPath != null && !resolvedPath.isAbsolute()) {
-			final IPath path = new Path(target);
-			final String temp = PathUtil.getAbsolutePath(rootPath, path.toOSString());
-			if (temp != null) {
-				resolvedPath = new Path(temp);
-				if (!resolvedPath.isAbsolute()) {
-					setErrorMessage("Could not be resolved to an absolute path");
-					return false;
-				}
+		if (rootPath != null && !resolvedURI.isAbsolute()) {
+			URI root = URIUtil.toURI(rootPath);
+			URI absoluteURI = root.resolve(resolvedURI);
+
+			if (absoluteURI != null && !absoluteURI.isAbsolute()) {
+				setErrorMessage("Could not be resolved to an absolute path");
+				return false;
 			}
 		}
 

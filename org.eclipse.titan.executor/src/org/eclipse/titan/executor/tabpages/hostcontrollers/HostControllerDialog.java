@@ -153,7 +153,7 @@ public final class HostControllerDialog extends Dialog {
 		} else {
 			workingDirPath = TITANPathUtilities.resolvePathURI(workingdirectoryText.getStringValue(), project.getLocation().toOSString());
 		}
-		example = example.replace(REPLACEABLEHOSTWORKIGNDIRECTORY, workingDirPath.getPath());
+		example = example.replace(REPLACEABLEHOSTWORKIGNDIRECTORY, URIUtil.toPath(workingDirPath).toOSString());
 
 		URI executablePath;
 		if (null == project) {
@@ -161,7 +161,7 @@ public final class HostControllerDialog extends Dialog {
 		} else {
 			executablePath = TITANPathUtilities.resolvePathURI(executableText.getStringValue(), project.getLocation().toOSString());
 		}
-		String path = PathUtil.getRelativePath(workingDirPath.getPath(), executablePath.getPath());
+		String path = PathUtil.getRelativePath(URIUtil.toPath(workingDirPath).toOSString(), URIUtil.toPath(executablePath).toOSString());
 		example = example.replace(REPLACEABLEHOSTEXECUTABLE, path);
 
 		String hostName;

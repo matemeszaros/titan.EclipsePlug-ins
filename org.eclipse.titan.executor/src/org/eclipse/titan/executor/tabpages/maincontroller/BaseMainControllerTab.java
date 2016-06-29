@@ -482,7 +482,7 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		
 		MessageConsoleStream stream = TITANConsole.getConsole().newMessageStream();
 		Process proc;
-		String exename = PathConverter.convert(executableFileName.getPath(), true, TITANDebugConsole.getConsole());
+		String exename = PathConverter.convert(file.getPath(), true, TITANDebugConsole.getConsole());
 		StringBuilder lastParam = new StringBuilder(exename);
 		lastParam.append(" -v");
 		List<String> shellCommand;
@@ -629,7 +629,7 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		if (file.exists() && file.isFile()) {
 			exceptions.clear();
 			ConfigFileHandler configHandler = new ConfigFileHandler();
-			configHandler.readFromFile(uri.getPath());
+			configHandler.readFromFile(file.getPath());
 			if (configHandler.parseExceptions().isEmpty()) {
 				Map<String, String> env = new HashMap<String, String>(System.getenv());
 				Map<String, String> tempEnvironmentalVariables;
@@ -654,7 +654,7 @@ public abstract class BaseMainControllerTab extends AbstractLaunchConfigurationT
 		}
 		configurationFileIsValid = false;
 		exceptions.clear();
-		exceptions.add(new Exception("The path `" + uri.getPath() + "' does not seem to be correct."));
+		exceptions.add(new Exception("The path `" + URIUtil.toPath(uri) + "' does not seem to be correct."));
 		automaticExecuteSectionExecution.setEnabled(false);
 	}
 

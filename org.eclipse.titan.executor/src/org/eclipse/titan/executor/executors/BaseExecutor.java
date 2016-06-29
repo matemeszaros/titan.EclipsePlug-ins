@@ -283,7 +283,7 @@ public abstract class BaseExecutor {
 		String path = configuration.getAttribute(attribute, (String) null);
 		if (!isNullOrEmpty(path)) {
 			URI uri = TITANPathUtilities.resolvePathURI(path, projectLocation);
-			path = uri.getPath();
+			path = URIUtil.toPath(uri).toOSString();
 		}
 		return path;
 	}
@@ -535,7 +535,7 @@ public abstract class BaseExecutor {
 					path = TITANPathUtilities.resolvePathURI(controller.workingdirectory(), actualProject.getLocation().toOSString());
 				}
 			}
-			String workingDirResult = PathConverter.convert(oldStyleWorkingDir ? controller.workingdirectory() : path.getPath(), true, TITANConsole.getConsole());
+			String workingDirResult = PathConverter.convert(oldStyleWorkingDir ? controller.workingdirectory() : URIUtil.toPath(path).toOSString(), true, TITANConsole.getConsole());
 			command = command.replace(REPLACEABLEHOSTWORKIGNDIRECTORY, workingDirResult);
 
 			boolean oldStyleExecutable = true;
@@ -548,7 +548,7 @@ public abstract class BaseExecutor {
 					path = TITANPathUtilities.resolvePathURI(controller.executable(), actualProject.getLocation().toOSString());
 				}
 			}
-			String executableResult = PathConverter.convert(oldStyleExecutable ? controller.executable() : path.getPath(), true, TITANConsole.getConsole());
+			String executableResult = PathConverter.convert(oldStyleExecutable ? controller.executable() : URIUtil.toPath(path).toOSString(), true, TITANConsole.getConsole());
 			String result = PathUtil.getRelativePath(workingDirResult, executableResult);
 			if (!result.equals(executableResult)) {
 				result = "./" + result;

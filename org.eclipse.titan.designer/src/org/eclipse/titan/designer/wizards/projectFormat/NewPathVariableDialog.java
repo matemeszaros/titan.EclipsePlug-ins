@@ -7,7 +7,9 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.wizards.projectFormat;
 
-import org.eclipse.core.runtime.IPath;
+import java.net.URI;
+
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
@@ -26,7 +28,7 @@ import org.eclipse.swt.widgets.Text;
  * */
 public class NewPathVariableDialog extends Dialog {
 	private String name;
-	private IPath actualValue;
+	private URI actualValue;
 	private Text newValue;
 
 	private final ModifyListener modifyListener = new ModifyListener() {
@@ -37,7 +39,7 @@ public class NewPathVariableDialog extends Dialog {
 		}
 	};
 
-	public NewPathVariableDialog(final Shell shell, final String name, final IPath actualValue) {
+	public NewPathVariableDialog(final Shell shell, final String name, final URI actualValue) {
 		super(shell);
 		setShellStyle(shell.getStyle() | SWT.RESIZE);
 		this.name = name;
@@ -50,7 +52,7 @@ public class NewPathVariableDialog extends Dialog {
 		newShell.setText("Errors during loading path variables.");
 	}
 
-	public IPath getActualValue() {
+	public URI getActualValue() {
 		return actualValue;
 	}
 
@@ -90,7 +92,7 @@ public class NewPathVariableDialog extends Dialog {
 		String temp = newValue.getText();
 		Path tempPath = new Path(temp);
 		if (tempPath.isValidPath(temp)) {
-			actualValue = tempPath;
+			actualValue = URIUtil.toURI(tempPath);
 			getButton(OK).setEnabled(true);
 		} else {
 			getButton(OK).setEnabled(false);

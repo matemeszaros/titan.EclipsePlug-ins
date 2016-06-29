@@ -7,10 +7,19 @@
  ******************************************************************************/
 package org.eclipse.titan.executor.views.notification;
 
+import static org.eclipse.titan.executor.views.executormonitor.ExecutorMonitorView.EXECUTORMONITOR_VIEW_ID;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -37,15 +46,6 @@ import org.eclipse.titan.executor.views.executormonitor.MainControllerElement;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.eclipse.titan.executor.views.executormonitor.ExecutorMonitorView.EXECUTORMONITOR_VIEW_ID;
 
 /**
  * @author Kristof Szabados
@@ -302,7 +302,7 @@ public final class NotificationView extends ViewPart implements ISelectionListen
 		}
 
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		final IFile[] outputFiles = root.findFilesForLocation(new Path(filePath));
+		final IFile[] outputFiles = root.findFilesForLocationURI(URIUtil.toURI(filePath));
 		ResourceUtils.refreshResources(Arrays.asList(outputFiles));
 	}
 }

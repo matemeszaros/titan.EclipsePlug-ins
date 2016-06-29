@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -153,7 +154,7 @@ public final class ConfigFileHandler {
 	private void processFile(final Path actualFile) {
 		final CfgAnalyzer analyzer = new CfgAnalyzer();
 		final IWorkspaceRoot wroot = ResourcesPlugin.getWorkspace().getRoot();
-		final IFile[] files = wroot.findFilesForLocation(actualFile);
+		final IFile[] files = wroot.findFilesForLocationURI(URIUtil.toURI(actualFile));
 
 		if (files.length == 0) {
 			ErrorReporter.logError("The file " + actualFile.toOSString()
