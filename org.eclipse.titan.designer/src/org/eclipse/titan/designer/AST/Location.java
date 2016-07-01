@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.GeneralConstants;
-import org.eclipse.titan.designer.OutOfMemoryCheck;
 
 /**
  * The Location class represents a location in the source code.
