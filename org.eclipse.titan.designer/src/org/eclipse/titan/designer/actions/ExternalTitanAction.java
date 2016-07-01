@@ -190,7 +190,7 @@ public abstract class ExternalTitanAction extends AbstractHandler implements IWo
 
 		IPreferencesService prefs = Platform.getPreferencesService();
 		if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.TITANACTIONS_DEFAULT_AS_OMIT, false, null)) {
-			builder.append("d");
+			builder.append('d');
 		}
 		
 		return builder.toString();

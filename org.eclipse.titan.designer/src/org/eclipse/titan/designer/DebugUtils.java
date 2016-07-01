@@ -21,14 +21,14 @@ public final class DebugUtils {
 		for (int i = depth+1 > stackTrace.length - 1 ? stackTrace.length - 1 : depth+1;i > 1; i--) {
 			final String[] classPath = stackTrace[i].getClassName().split("\\.");
 			if (classPath.length > 0) {
-				builder.append(classPath[classPath.length -1]).append(":");
+				builder.append(classPath[classPath.length -1]).append(':');
 			}
 			builder.append(stackTrace[i].getMethodName());
 			if (i>2) {
 				builder.append(" -> ");
 			}
 		}
-		builder.append(")");
+		builder.append(')');
 		return builder.toString();
 	}
 
