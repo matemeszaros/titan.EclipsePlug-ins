@@ -213,8 +213,6 @@ public final class NamingConventionHelper {
 
 			resource = resource.getParent();
 		}
-
-		return;
 	}
 
 	/**
