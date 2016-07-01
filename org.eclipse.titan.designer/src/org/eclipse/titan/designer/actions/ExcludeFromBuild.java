@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -142,7 +142,7 @@ public final class ExcludeFromBuild extends AbstractHandler implements IObjectAc
 		@Override
 		public IStatus runInWorkspace(final IProgressMonitor monitor) {
 			projects = new ArrayList<IProject>();
-			final Vector<WorkspaceJob> exclusionJobs = new Vector<WorkspaceJob>(structSelection.size());
+			final ConcurrentLinkedQueue<WorkspaceJob> exclusionJobs = new ConcurrentLinkedQueue<WorkspaceJob>();
 
 			final Set<IResource> resourcesToRefresh = new HashSet<IResource>();
 			final Set<IProject> projectsToRefresh = new HashSet<IProject>();
@@ -225,8 +225,8 @@ public final class ExcludeFromBuild extends AbstractHandler implements IObjectAc
 			WorkspaceJob op = new WorkspaceJob("Waiting for exclusion threads to finish.") {
 				@Override
 				public IStatus runInWorkspace(final IProgressMonitor monitor) {
-					for (int i = 0; i < exclusionJobs.size(); i++) {
-						WorkspaceJob job = exclusionJobs.get(i);
+					while (!exclusionJobs.isEmpty()) {
+						WorkspaceJob job = exclusionJobs.poll();
 						try {
 							if (job != null) {
 								job.join();
