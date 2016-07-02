@@ -26,7 +26,6 @@ import org.eclipse.titan.designer.AST.Type;
 import org.eclipse.titan.designer.AST.TypeCompatibilityInfo;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
-import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.AST.TTCN3.templates.ITTCN3Template;
 import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;

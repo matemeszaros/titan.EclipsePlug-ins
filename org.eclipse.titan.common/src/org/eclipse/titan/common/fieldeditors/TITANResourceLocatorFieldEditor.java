@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.StringFieldEditor;

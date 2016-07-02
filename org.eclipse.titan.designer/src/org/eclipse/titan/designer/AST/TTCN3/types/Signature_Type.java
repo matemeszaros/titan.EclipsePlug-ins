@@ -15,8 +15,6 @@ import java.util.Set;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ArraySubReference;
-import org.eclipse.titan.designer.AST.Assignment;
-import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.FieldSubReference;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
@@ -490,7 +488,7 @@ public final class Signature_Type extends Type {
 					this.getFullName(), nofTypeParameters, nofTemplateComponents));
 		}
 
-// The compiler does not do this check:
+// TODO The compiler does not do this check:
 //		if(nofTemplateComponents > nofTypeParameters) {
 //			template.getLocation().reportSemanticError(
 //					MessageFormat.format("Too many elements in value list notation for type `{0}'': {1} was expected instead of {2}",
