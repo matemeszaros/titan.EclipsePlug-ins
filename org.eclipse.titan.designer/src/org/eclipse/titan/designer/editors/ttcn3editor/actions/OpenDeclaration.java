@@ -26,6 +26,7 @@ import org.eclipse.titan.designer.core.TITANNature;
 import org.eclipse.titan.designer.declarationsearch.Declaration;
 import org.eclipse.titan.designer.declarationsearch.IdentifierFinderVisitor;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Editor;
+import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
@@ -152,7 +153,13 @@ public final class OpenDeclaration extends AbstractHandler implements IEditorAct
 
 		if (module == null) {
 			if (reportDebugInformation) {
-				TITANDebugConsole.println("Can not find the module.");
+				TITANDebugConsole.println("The file " + file.getLocation() + "does not seem to contain a valid module.");
+				CompilationTimeStamp timestamp = projectSourceParser.getLastTimeChecked();
+				if(timestamp == null) {
+					TITANDebugConsole.println("The project " + file.getProject() + " was not yet analyzed semantically");
+				} else {
+					TITANDebugConsole.println("The project " + file.getProject() + " was last checked in " + projectSourceParser.getLastTimeChecked().toString());
+				}
 			}
 			return;
 		}
