@@ -7,7 +7,7 @@
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<project basedir="." default="build" name="org.eclipse.titan.common" xmlns:ac="antlib:net.sf.antcontrib">
+<project basedir="." default="build" name="org.eclipse.titan.common">
 	
 	<import file="build_import.xml" />
 
@@ -32,13 +32,13 @@
     </target>
     <target name="clean">
         <delete dir="bin"/>
-		<delete>
-			<fileset dir="${antlr.src.dir}" includes="*.java">
-				<present targetdir="${antlr.src.dir}">
-					<mapper type="glob" from="*.g" to="*.java" />
-				</present>
-			</fileset>
-		</delete>
+	<delete>
+		<fileset dir="${antlr.src.dir}" includes="*.java">
+			<present targetdir="${antlr.src.dir}">
+				<mapper type="glob" from="*.g" to="*.java" />
+			</present>
+		</fileset>
+	</delete>
     </target>
 
     <target depends="clean" name="cleanall"/>

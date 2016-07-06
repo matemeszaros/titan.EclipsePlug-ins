@@ -7,17 +7,8 @@
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<project basedir="." name="import" xmlns:ac="antlib:net.sf.antcontrib">
+<project basedir="." name="import" xmlns:if="ant:if" xmlns:unless="ant:unless">
 	<import file="build_config.xml"/>
-
-	<taskdef
-		uri="antlib:net.sf.antcontrib"
-		resource="net/sf/antcontrib/antlib.xml"
-		classpath="${ant-contrib.location}">
-		<classpath>
-			<pathelement location="${ant-contrib.location}"/>
-		</classpath>
-	</taskdef>
 
     <path id="PDE.classpath">
 		<fileset dir="${ECLIPSE_HOME}/plugins">
@@ -64,6 +55,75 @@
 			<echo message="${current.time} @{message}" />
 		</sequential> 
 	</macrodef>  
+
+	<!--
+	    Logging macro for debug purposes.
+	-->
+	<macrodef name="log">
+		<attribute name="message"/>
+		<sequential>
+			<!-- Comment in for logging -->
+			<!--
+			<timestamp.echo message="@{message}" />
+			-->
+		</sequential>
+	</macrodef>
+
+	<!--
+            Iterates over a list.
+	    List element can be accessed within the <iterate> tags as ${element}
+            @param list a string, which represents a list, delimiter is ":"
+	                for example: /home/user1/file1.txt:/home/user1/file2.txt:/home/user1/file3.txt
+
+	    Example usage:
+	        <fileset id = "a" ...>
+	            ...
+	        </fileset>
+                <pathconvert property="list" refid="a" targetos="unix"/>
+                <iterate list="${list}" unless:blank="${list}">
+		    <echo message="I see:" />
+		    <echo message="${element}" />
+		</iterate>
+	
+            Source:
+	    http://stackoverflow.com/questions/1467991/ant-how-to-execute-a-command-for-each-file-in-directory
+	-->
+	<macrodef name="iterate">
+		<attribute name="list" />
+		<element name="call" implicit="yes" />
+		<sequential>
+			<log message="-> iterate( @{list} )"/>
+			<local name="element" />
+			<local name="tail" />
+			<local name="hasMoreElements" />
+			<!-- unless to not get a error on empty lists -->
+			<loadresource property="element" unless:blank="@{list}" >
+				<concat>@{list}</concat>
+				<filterchain>
+					<replaceregex pattern="([^:]*).*" replace="\1" />
+				</filterchain>
+			</loadresource>
+			<!-- call the tasks that handle the element -->
+			<call />
+
+			<!-- recursion -->
+			<condition property="hasMoreElements">
+				<contains string="@{list}" substring=":" />
+			</condition>
+
+			<loadresource property="tail" if:true="${hasMoreElements}">
+				<concat>@{list}</concat>
+				<filterchain>
+					<replaceregex pattern="[^:]*:(.*)" replace="\1" />
+				</filterchain>
+			</loadresource>
+
+			<iterate list="${tail}" if:true="${hasMoreElements}">
+				<call />
+			</iterate>
+		</sequential>
+	</macrodef>
+
 </project>
 
 
