@@ -397,14 +397,11 @@ public class PreprocessedTokenStream extends BufferedTokenStream {
 			warnings.add(marker);
 		}
 		// check if the file is already loaded into an editor
-		IDocument document = null;
-		ISemanticTITANEditor editor = null;
-		List<ISemanticTITANEditor> editors = null;
 		String code = null;
 		if (EditorTracker.containsKey(includedFile)) {
-			editors = EditorTracker.getEditor(includedFile);
-			editor = editors.get(0);
-			document = editor.getDocument();
+			List<ISemanticTITANEditor> editors = EditorTracker.getEditor(includedFile);
+			ISemanticTITANEditor editor = editors.get(0);
+			IDocument document = editor.getDocument();
 			code = document.get();
 		}
 		// create lexer and set it up
