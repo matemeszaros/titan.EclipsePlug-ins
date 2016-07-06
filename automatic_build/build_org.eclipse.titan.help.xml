@@ -8,7 +8,7 @@
  http://www.eclipse.org/legal/epl-v10.html
  -->
 <project basedir="." default="build" name="org.eclipse.titan.help"
-	xmlns:ac="antlib:net.sf.antcontrib">
+	xmlns:if="ant:if" xmlns:unless="ant:unless">
 
 	<import file="build_import.xml"/>
 
@@ -25,6 +25,7 @@
 
 	<target name="check.doc2pdf.jar">
 		<available file="${doc2pdf.jar}" property="doc2pdf.jar.present"/>
+		<echo message="${doc2pdf.jar} file present? ${doc2pdf.jar.present}" />
 	</target>
 
 	<target name="build.pdf" depends="check.doc2pdf.jar" if="doc2pdf.jar.present">
@@ -65,47 +66,80 @@
 	<macrodef name="build.usrguide">
 		<attribute name="usrguide.dir"/>
 		<sequential>
-			<ac:if>
-				<equals arg1="${build.help}" arg2="true"/>
-				<then>
-					<echo message="Creating userguide pdfs from dir: @{usrguide.dir}"/>
-
-					<fileset id="@{usrguide.dir}.docFiles" dir="@{usrguide.dir}">
-						<include name="*.doc"/>
-					</fileset>
-
-					<pathconvert property="@{usrguide.dir}.usrguide.list" refid="@{usrguide.dir}.docFiles" targetos="unix"/>
-
-					<ac:for list="${@{usrguide.dir}.usrguide.list}" parallel="false" keepgoing="true" param="docFile" delimiter=":">
-						<sequential>
-							<ac:propertyregex property="@{docFile}.pdfFileName"
-										input="@{docFile}"
-										regexp="([.]*)(\.doc)"
-										replace="\1.pdf" />
-							<!--
-                                                        Set this option below to mark build as failed, if the doc2pdf comes back with an error message:
-                                                        jvm="${java6}" failonerror="true">
-                                                        -->
-							<java jar="${doc2pdf.jar}" timeout="180000" fork="true"
-								jvm="${java6}" failonerror="false">
-								<arg value="@{docFile}"/>
-								<arg value="${@{docFile}.pdfFileName}"/>
-							</java>
-						</sequential>
-					</ac:for>
-
-					<copy todir="${build.dir}/${help.name}/docs">
-						<fileset dir="@{usrguide.dir}">
-							<include name="*.pdf"/>
-						</fileset>
-					</copy>
-				</then>
-			</ac:if>
+			<log message="-> build.usrguide( @{usrguide.dir} )"/>
+			<condition property="build.help.true">
+				<istrue value="${build.help}" />
+			</condition>
+			<log message="build.help = ${build.help}"/>
+			<log message="build.help.true = ${build.help.true}"/>
+			<build.usrguide.if.build.help
+				if:set="build.help.true"
+				usrguide.dir="@{usrguide.dir}" />
 		</sequential>
 	</macrodef>
 
-    <target name="clean">
-        <delete dir="bin"/>
-    </target>
-    <target depends="clean" name="cleanall"/>
+	<macrodef name="build.usrguide.if.build.help">
+		<attribute name="usrguide.dir"/>
+		<sequential>
+			<log message="-> build.usrguide.if.build.help( @{usrguide.dir} )"/>
+			<echo message="Creating userguide pdfs from dir: @{usrguide.dir}"/>
+
+			<fileset id="@{usrguide.dir}.docFiles" dir="@{usrguide.dir}">
+				<include name="*.doc"/>
+			</fileset>
+
+			<pathconvert property="@{usrguide.dir}.usrguide.list" refid="@{usrguide.dir}.docFiles" targetos="unix"/>
+			<log message="usrguide.dir.usrguide.list = ${@{usrguide.dir}.usrguide.list}"/>
+
+			<iterate list="${@{usrguide.dir}.usrguide.list}" unless:blank="${@{usrguide.dir}.usrguide.list}">
+				<convert.pdf docFile="${element}" />
+			</iterate>
+
+			<copy todir="${build.dir}/${help.name}/docs">
+				<fileset dir="@{usrguide.dir}">
+					<include name="*.pdf"/>
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<!--
+	    Converts doc file to pdf, new file is created in the same directory
+            @param docFile the doc filename with full path
+	-->
+	<macrodef name="convert.pdf">
+		<attribute name="docFile"/>
+		<sequential>
+			<log message="-> convert.pdf( @{docFile} )"/>
+			<!-- Create pdf file name from doc filename -->
+			<!-- result will be written in ${@{docFile}.pdfFile}, the input @{docFile} is left untouched -->
+			<exec executable="sed" inputstring="@{docFile}" outputproperty="@{docFile}.pdfFile">
+				<arg value="s/\.doc$/\.pdf/g"/>
+			</exec>
+			<log message="docFile = @{docFile}"/>
+			<log message="docFile.pdfFile = ${@{docFile}.pdfFile}"/>
+			<!--
+				Set this option below to mark build as failed, if the doc2pdf comes back with an error message:
+				jvm="${java6}" failonerror="true">
+			-->
+			<!-- Comment out for debug purposes, it is very slow -->
+			<java jar="${doc2pdf.jar}" timeout="180000" fork="true"
+				jvm="${java6}" failonerror="false">
+				<arg value="@{docFile}"/>
+				<arg value="${@{docFile}.pdfFile}"/>
+			</java>
+			<!-- Keep it for debug purposes,
+			     copying doc to pdf is a simple way to have pdf
+			     if pdf conversion is commented out -->
+			<!--
+			<copy file="@{docFile}" tofile="${@{docFile}.pdfFile}"/>
+			-->
+		</sequential>
+	</macrodef>
+
+	<target name="clean">
+		<delete dir="bin"/>
+	</target>
+
+	<target depends="clean" name="cleanall"/>
 </project>

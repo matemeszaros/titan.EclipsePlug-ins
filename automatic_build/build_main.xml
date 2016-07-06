@@ -7,7 +7,7 @@
  which accompanies this distribution, and is available at
  http://www.eclipse.org/legal/epl-v10.html
  -->
-<project basedir="." default="updatesite.experimental" name="build_main" xmlns:ac="antlib:net.sf.antcontrib">
+<project basedir="." default="updatesite.experimental" name="build_main" xmlns:if="ant:if" xmlns:unless="ant:unless">
 	
 	<import file="build_import.xml"/>
 
@@ -84,6 +84,7 @@
 		<attribute name="updatesite.name"/>
 		<attribute name="updatesite.url"/>
 		<sequential>
+			<timestamp.echo message="-> build.feature( @{dir}, @{name}, @{updatesite.name}, @{updatesite.url} )" />
 			<record name="${log.dir}/feature_@{name}.txt" action="start"/>
             <!--
 			<cvs cvsRoot="${cvsRoot}"
@@ -138,6 +139,7 @@
 		<attribute name="updatesite.name"/>
 		<attribute name="updatesite.url"/>
 		<sequential>
+			<log message="-> build.features( @{updatesite.name}, @{updatesite.url} )" />
 
 			<build.feature  dir="TITAN_Designer_feature"
 							name="TITAN_Designer"
@@ -165,16 +167,32 @@
 		<attribute name="url"/>
 		
 		<sequential>
+			<log message="-> build.updatesite( @{site.name}, @{location}, @{url} )" />
 			<!-- Create the directories for the update site. -->
 			<mkdir dir="@{location}/features"/>
 			<mkdir dir="@{location}/plugins"/>
 
 			<!-- Replace the whitespaces with underscores -->
-			<ac:propertyregex property="tmp.dir.name"
-						   input="@{site.name}"
-						   regexp=" "
-						   replace="_"
-						   global="true"/>
+			<!-- result will be written in ${tmp.dir.name}, the input @{site.name} is left untouched -->
+			<exec executable="sed" inputstring="@{site.name}" outputproperty="tmp.dir.name">
+				<arg value="s/ /_/g"/>
+			</exec>
+
+			<!-- another solution for the same thing -->
+			<!-- 
+			<echo message="@{site.name}" file="site.name.tmp.txt" />
+			<loadfile property="tmp.dir.name" srcFile="site.name.tmp.txt">
+				<filterchain>
+					<tokenfilter>
+						<replaceregex pattern=" " replace="_" flags="g"/>
+					</tokenfilter>
+				</filterchain>
+			</loadfile>
+			<delete file="site.name.tmp.txt">
+			-->
+
+			<log message="site.name    = @{site.name}" />
+			<log message="tmp.dir.name = ${tmp.dir.name}" />
 			<record name="${log.dir}/updatesite_@{site.name}.txt" action="start"/>
 
 			<!-- build every feature -->
@@ -294,30 +312,33 @@
 		<attribute name="url"/>
 		<attribute name="tmp.location"/>
 		<sequential>
+			<log message="-> create.updatesite.tmp( @{site.name}, @{location}, @{url}, @{tmp.location} )" />
 			<!-- 
 				The update site will be created in the ${result.dir}/update_site_${logname}_tmp location.
 				If the build fails, the real update site will not be affected.
 			-->
 			<timestamp.echo message="Starting to copy the original update site" />
-			<ac:if>
+			<condition property="site.xml.exists">
 				<available file="@{location}/site.xml"/>
-				<then>
-					<echo message="@{location}/site.xml exists.(updatesite already exists)"/>
-					<sync todir="@{tmp.location}"
+			</condition>
+
+			<!-- IF site.xml exists -->
+			<echo if:set="site.xml.exists" message="@{location}/site.xml exists.(updatesite already exists)"/>
+			<sync if:set="site.xml.exists" todir="@{tmp.location}"
 							verbose="true"
 							failonerror="true"
 							overwrite="false"
 							includeEmptyDirs="true">
-						<fileset dir="@{location}" />
-					</sync>
-				</then>
-				<else>
-				<!-- Here we have to create a new updatesite from the scrach
-					Create the initial site.xml file -->
-					<mkdir dir="@{tmp.location}/plugins" />
-					<mkdir dir="@{tmp.location}/features" />
-					<echo file="@{tmp.location}/site.xml"
-							message=
+				<fileset dir="@{location}" />
+			</sync>
+
+			<!-- ELSE -->
+			<!-- Here we have to create a new updatesite from the scrach
+				Create the initial site.xml file -->
+			<mkdir unless:set="site.xml.exists" dir="@{tmp.location}/plugins" />
+			<mkdir unless:set="site.xml.exists" dir="@{tmp.location}/features" />
+			<echo unless:set="site.xml.exists" file="@{tmp.location}/site.xml"
+				message=
 					"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 					&lt;site&gt;
 						&lt;description url=&quot;@{url}&quot;&gt;
@@ -325,8 +346,6 @@
 						&lt;/description&gt;/&gt;
 						&lt;category-def name=&quot;TITAN_on_Eclipse&quot; label=&quot;TITAN_on_Eclipse&quot;/&gt;
 					&lt;/site&gt;"/>
-				</else>
-			</ac:if>
 		</sequential>
 	</macrodef>
 
@@ -403,19 +422,18 @@
 	<macrodef name="clean.plugin">
 		<attribute name="name"/>
 		<sequential>
-			<ac:if>
+			<condition property="plugin.exists">
 				<available file="${build.dir}/@{name}"/>
-				<then>
-					<echo message="Calling ant: dir:'${build.dir}/@{name}'${line.separator}
-												antfile:'${base.dir}/build_@{name}.xml'${line.separator}
-												target: clean"/>
-					<ant dir="${build.dir}/@{name}"
-						 antfile="${base.dir}/build_@{name}.xml"
-						 target="clean">
-						<property name="build.config" value="${build.config}"/>
-					</ant>
-				</then>
-			</ac:if>
+			</condition>
+
+			<echo if:set="plugin.exists" message="Calling ant: dir:'${build.dir}/@{name}'${line.separator}
+								antfile:'${base.dir}/build_@{name}.xml'${line.separator}
+								target: clean"/>
+			<ant if:set="plugin.exists" dir="${build.dir}/@{name}"
+				 antfile="${base.dir}/build_@{name}.xml"
+				 target="clean">
+				<property name="build.config" value="${build.config}"/>
+			</ant>
 		</sequential>
 	</macrodef>
 </project>
