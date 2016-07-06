@@ -856,63 +856,58 @@ public final class T3Doc {
 			return null;
 		}
 
+		if (!EditorTracker.containsKey(file)) {
+			return null;
+		}
+
 		// get comment from file stored memory if present
-		IDocument document = null;
-		ISemanticTITANEditor editor = null;
+		List<ISemanticTITANEditor> editors = EditorTracker.getEditor(file);
+		ISemanticTITANEditor editor = editors.get(0);
+		IDocument document = editor.getDocument();
+		if (document == null) {
+			return null;
+		}
 
-		if (EditorTracker.containsKey(file)) {
-			List<ISemanticTITANEditor> editors = EditorTracker.getEditor(file);
-			editor = editors.get(0);
-			document = editor.getDocument();
-			if (document == null) {
-				return null;
+		List<String> arraylistMemory = new ArrayList<String>();
+
+		String completeFile;
+		try {
+			completeFile = document
+					.get(commentLocation.getOffset(), commentLocation.getEndOffset() - commentLocation.getOffset());
+		} catch (BadLocationException e1) {
+			ErrorReporter.logExceptionStackTrace(e1);
+			return null;
+		}
+
+		// store offset
+		int offset = 0;
+		boolean circulate = true;
+		boolean simpleNewline = false;
+		while (circulate) {
+			// NEWLINE
+			int loc = completeFile.indexOf(NEWLINE, offset);
+			if (loc < 0) {
+				// give a try with \n
+				loc = completeFile.indexOf('\n', offset);
+				if (loc < 0) {
+					circulate = false;
+					break;
+				}
+				simpleNewline = true;
+			} else {
+				simpleNewline = false;
 			}
-			List<String> arraylistMemory = new ArrayList<String>();
 
-			String completeFile;
-			try {
-				completeFile = document
-						.get(commentLocation.getOffset(), commentLocation.getEndOffset() - commentLocation.getOffset());
-
-				// store offset
-				int offset = 0;
-				boolean circulate = true;
-				boolean simpleNewline = false;
-				while (circulate) {
-					// NEWLINE
-					int loc = completeFile.indexOf(NEWLINE, offset);
-					if (loc < 0) {
-						// give a try with \n
-						loc = completeFile.indexOf('\n', offset);
-						if (loc < 0) {
-							circulate = false;
-							break;
-						}
-						simpleNewline = true;
-					} else {
-						simpleNewline = false;
-					}
-
-					String stringLine = completeFile.substring(offset, loc);
-					arraylistMemory.add(stringLine);
-					if (simpleNewline) {
-						offset = loc + "\n".length();
-					} else {
-						offset = loc + NEWLINE.length();
-					}
-
-				}
-
-				if (arraylistMemory != null) {
-					return arraylistMemory;
-				}
-
-			} catch (BadLocationException e1) {
-				ErrorReporter.logExceptionStackTrace(e1);
+			String stringLine = completeFile.substring(offset, loc);
+			arraylistMemory.add(stringLine);
+			if (simpleNewline) {
+				offset = loc + "\n".length();
+			} else {
+				offset = loc + NEWLINE.length();
 			}
 		}
 
-		return null;
+		return arraylistMemory;
 	}
 
 	public static String getCommentStringBasedOnReference(final DeclarationCollector declarationCollector,
