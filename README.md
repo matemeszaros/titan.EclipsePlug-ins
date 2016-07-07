@@ -32,5 +32,4 @@ listed on the titan.core page
 
 #Compressed update site and SHA512 checksum for the Eclipse plug-ins:
 
-* https://www.eclipse.org/downloads/download.php?file=/titan/TITAN_on_Eclipse_5.4.0.CRL_113_200_5_R4A_20151113-1513.zip
-* https://www.eclipse.org/downloads/download.php?file=/titan/TITAN_on_Eclipse_5.4.0.CRL_113_200_5_R4A_20151113-1513.zip.sha512
+* https://www.eclipse.org/downloads/
