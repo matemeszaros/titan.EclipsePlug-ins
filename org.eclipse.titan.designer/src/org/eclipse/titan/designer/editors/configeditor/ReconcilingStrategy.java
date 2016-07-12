@@ -76,7 +76,7 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		}
 	}
 
-	private void analyze() {
+	void analyze() {
 		final IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
 
 		if (file == null) {
