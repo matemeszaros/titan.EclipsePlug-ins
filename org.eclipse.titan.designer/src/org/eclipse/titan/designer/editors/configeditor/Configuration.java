@@ -113,6 +113,7 @@ public final class Configuration extends TextSourceViewerConfiguration {
 		if (reconciler == null) {
 			ReconcilingStrategy strategy = new ReconcilingStrategy();
 			strategy.setEditor(editor);
+			strategy.analyze();
 
 			reconciler = new MonoReconciler(strategy, false);
 			reconciler.setProgressMonitor(new NullProgressMonitor());
