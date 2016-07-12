@@ -319,40 +319,26 @@ public class Reconciler implements IReconciler {
 
 		@Override
 		public void inputDocumentAboutToBeChanged(final IDocument oldInput, final IDocument newInput) {
-			if (oldInput == document) {
-
-				if (document != null) {
-					document.removeDocumentListener(this);
-				}
-
-				if (isIncrementalReconciler()) {
-					if (document != null && document.getLength() > 0 && backgroundThread.isDirty() && backgroundThread.isAlive()) {
-						DocumentEvent e = new DocumentEvent(document, 0, document.getLength(), "");
-						createDirtyRegion(e);
-						backgroundThread.reset();
-					}
-				} else {
-					requestFullAnalyzes();
-				}
-
-				document = null;
-			}
+			// Do nothing
 		}
 
 		@Override
 		public void inputDocumentChanged(final IDocument oldInput, final IDocument newInput) {
+			backgroundThread.reset();
+
+			if (oldInput != null) {
+				oldInput.removeDocumentListener(this);
+			}
+
 			document = newInput;
-			if (document == null) {
+			if (newInput == null) {
 				return;
 			}
 			
-			reconcilerDocumentChanged(document);
+			newInput.addDocumentListener(this);
+			reconcilerDocumentChanged(newInput);
 
-			document.addDocumentListener(this);
-
-			if (!backgroundThread.isDirty()) {
-				aboutToBeReconciled();
-			}
+			aboutToBeReconciled();
 
 			startReconciling();
 		}
