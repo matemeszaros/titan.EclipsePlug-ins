@@ -53,6 +53,7 @@ import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.core.LoadBalancingUtilities;
 import org.eclipse.titan.designer.core.ProjectBasedBuilder;
 import org.eclipse.titan.designer.core.TITANNature;
+import org.eclipse.titan.designer.editors.DocumentTracker;
 import org.eclipse.titan.designer.editors.EditorTracker;
 import org.eclipse.titan.designer.editors.FoldingSupport;
 import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
@@ -838,13 +839,11 @@ public final class ProjectSourceSyntacticAnalyzer {
 			return null;
 		}
 
-		IDocument document = null;
-		ISemanticTITANEditor editor = null;
+		IDocument document = DocumentTracker.get(file);
+
 		List<ISemanticTITANEditor> editors = null;
 		if (EditorTracker.containsKey(file)) {
 			editors = EditorTracker.getEditor(file);
-			editor = editors.get(0);
-			document = editor.getDocument();
 		}
 
 		unsupportedConstructMap.remove(file);

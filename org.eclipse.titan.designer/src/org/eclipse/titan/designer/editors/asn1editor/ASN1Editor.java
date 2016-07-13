@@ -116,7 +116,7 @@ public final class ASN1Editor extends AbstractDecoratedTextEditor implements ISe
 		colorManager = new ColorManager();
 		configuration = new Configuration(colorManager, this);
 		setSourceViewerConfiguration(configuration);
-		DocumentSetupParticipant participant = new DocumentSetupParticipant();
+		DocumentSetupParticipant participant = new DocumentSetupParticipant(this);
 		ForwardingDocumentProvider forwardingProvider = new ForwardingDocumentProvider(PartitionScanner.ASN1_PARTITIONING, participant,
 				new TextFileDocumentProvider());
 		setDocumentProvider(forwardingProvider);

@@ -129,7 +129,7 @@ public final class TTCN3Editor extends AbstractDecoratedTextEditor implements IS
 		configuration = new Configuration(colorManager, this);
 		setSourceViewerConfiguration(configuration);
 		ForwardingDocumentProvider forwardingProvider = new ForwardingDocumentProvider(PartitionScanner.TTCN3_PARTITIONING,
-				new DocumentSetupParticipant(), new TextFileDocumentProvider());
+				new DocumentSetupParticipant(this), new TextFileDocumentProvider());
 		setDocumentProvider(forwardingProvider);
 		setEditorContextMenuId(EDITOR_CONTEXT);
 

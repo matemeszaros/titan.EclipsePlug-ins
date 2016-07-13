@@ -135,7 +135,7 @@ public final class TTCNPPEditor extends AbstractDecoratedTextEditor implements I
 		colorManager = new ColorManager();
 		configuration = new Configuration(colorManager, this);
 		setSourceViewerConfiguration(configuration);
-		DocumentSetupParticipant participant = new DocumentSetupParticipant();
+		DocumentSetupParticipant participant = new DocumentSetupParticipant(this);
 		ForwardingDocumentProvider forwardingProvider = new ForwardingDocumentProvider(PartitionScanner.TTCNPP_PARTITIONING, participant,
 				new TextFileDocumentProvider());
 		setDocumentProvider(forwardingProvider);
