@@ -12,6 +12,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class OutOfMemoryCheck {
+	private static final long DecimalGigaByte = 1000 * 1000;
 	private static boolean isOutOfMemory = false;
 
 	public static final String OUTOFMEMORYERROR =
@@ -78,7 +79,7 @@ public class OutOfMemoryCheck {
 			long free = Rt.freeMemory();
 			long total = Rt.totalMemory();
 
-			long limit = Math.min(200000000, Math.round(total * (double)0.1));
+			long limit = Math.min(200 * DecimalGigaByte, Math.round(total * (double)0.1));
 
 			if (free < limit) {
 				ErrorReporter.logError("limit: "+String.valueOf(limit)+", free: " + String.valueOf(free));
