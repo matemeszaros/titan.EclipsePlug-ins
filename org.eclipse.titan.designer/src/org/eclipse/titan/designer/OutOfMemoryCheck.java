@@ -84,11 +84,9 @@ public class OutOfMemoryCheck {
 			if (free < limit) {
 				ErrorReporter.logError("limit: "+String.valueOf(limit)+", free: " + String.valueOf(free));
 				return true;
-			} else {
-				return false;
 			}
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 }
