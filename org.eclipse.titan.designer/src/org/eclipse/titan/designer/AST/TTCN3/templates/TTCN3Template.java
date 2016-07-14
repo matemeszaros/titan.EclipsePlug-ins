@@ -57,7 +57,7 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 	protected static final String RESTRICTIONERROR = "Restriction on {0} does not allow usage of `{1}''";
 	protected static final String OMITRESTRICTIONERROR = "Restriction 'omit' on {0} does not allow usage of `{1}''";
 	protected static final String VALUERESTRICTIONERROR = "Restriction ''value'' on {0} does not allow usage of {1}";
-	protected static final String PRESENTRESTRICTIONERROR = "Restriction 'present' on {0} does not allow usage of `{1}''";
+	protected static final String PRESENTRESTRICTIONERROR = "Restriction ''present'' on {0} does not allow usage of `{1}''";
 	private static final String LENGTHRESTRICTIONERROR = "Restriction on {0} does not allow usage of length restriction";
 
 	/** The type of the template, which also happens to be its governor. */
@@ -976,7 +976,7 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 		switch (templateRestriction) {
 		case TR_VALUE:
 			if (!isValue(timestamp)) {
-				usageLocation.reportSemanticError(MessageFormat.format(VALUERESTRICTIONERROR, definitionName, "not completely initialized template"));
+				usageLocation.reportSemanticError(MessageFormat.format(VALUERESTRICTIONERROR, definitionName, "this template"));//TODO:"This template" should be refined!
 			}
 			//Intentional fall-through
 		case TR_OMIT:
@@ -991,6 +991,7 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 			if (isIfpresent || getTemplateReferencedLast(timestamp).isIfpresent) {
 				usageLocation.reportSemanticError(MessageFormat.format(PRESENTRESTRICTIONERROR, definitionName, "ifpresent"));
 			}
+			//if TR_NONE -> warning
 			break;
 		default:
 			return;
@@ -1024,7 +1025,7 @@ public abstract class TTCN3Template extends GovernedSimple implements IReference
 			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
 		}
 
-		usageLocation.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
+		//usageLocation.reportSemanticError(MessageFormat.format(RESTRICTIONERROR, definitionName, getTemplateTypeName()));
 		return false;
 	}
 

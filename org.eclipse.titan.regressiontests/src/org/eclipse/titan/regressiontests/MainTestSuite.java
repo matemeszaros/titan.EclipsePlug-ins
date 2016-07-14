@@ -34,7 +34,7 @@ public final class MainTestSuite {
 
 	//public static final String LICENSE_FILE = "/home/ekripnd/license.dat";
 	//public static final String PATH_TO_WORKSPACE = "file:///home/ekripnd/workspace/titan_eclipse/";
-	public static final String PATH_TO_WORKSPACE = "file:///c:/Users/ethbaat/git/titan_eclipse/";
+	public static final String PATH_TO_WORKSPACE = "file:///c:/Users/ethbaat/git/titan.EclipsePlug-ins/";
 
 	static {
 		try {

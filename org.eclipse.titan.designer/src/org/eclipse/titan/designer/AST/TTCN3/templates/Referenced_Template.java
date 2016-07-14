@@ -238,19 +238,31 @@ public final class Referenced_Template extends TTCN3Template {
 		TTCN3Template template = this;
 		Assignment ass = reference.getRefdAssignment(timestamp, true);
 
-		if (ass != null && ass.getAssignmentType() == Assignment_type.A_TEMPLATE) {
-			tempReferenceChain.markState();
+		if (ass != null) { 
+			switch(ass.getAssignmentType()) {
+			case A_TEMPLATE:
+			case A_VAR_TEMPLATE:
+			case A_FUNCTION_RTEMP:
+			case A_MODULEPAR_TEMPLATE:
+			case A_PAR_TEMP_OUT:
+			case A_PAR_TEMP_INOUT:
 
-			if (tempReferenceChain.add(this)) {
-				ITTCN3Template refd = getTemplateReferenced(timestamp, tempReferenceChain);
-				if (refd != this) {
-					template = refd.getTemplateReferencedLast(timestamp, referenceChain);
+				tempReferenceChain.markState();
+
+				if (tempReferenceChain.add(this)) {
+					ITTCN3Template refd = getTemplateReferenced(timestamp, tempReferenceChain);
+					if (refd != this) {
+						template = refd.getTemplateReferencedLast(timestamp, referenceChain);
+					}
+				} else {
+					setIsErroneous(true);
 				}
-			} else {
+
+				tempReferenceChain.previousState();
+				break;
+			default:
 				setIsErroneous(true);
 			}
-
-			tempReferenceChain.previousState();
 		} else {
 			setIsErroneous(true);
 		}
@@ -404,18 +416,21 @@ public final class Referenced_Template extends TTCN3Template {
 	@Override
 	public boolean checkValueomitRestriction(final CompilationTimeStamp timestamp, final String definitionName, final boolean omitAllowed,
 			final Location usageLocation) {
-		if (omitAllowed) {
-			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+		if(reference == null) {
+			if (omitAllowed) {
+				checkRestrictionCommon(timestamp, getTemplateTypeName(), TemplateRestriction.Restriction_type.TR_OMIT, usageLocation);
+			} else {
+				checkRestrictionCommon(timestamp, getTemplateTypeName(), TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
+			}
 		} else {
-			checkRestrictionCommon(timestamp, definitionName, TemplateRestriction.Restriction_type.TR_VALUE, usageLocation);
-		}
-
-		if (reference != null) {
+		//if (reference != null):
 			Assignment ass = reference.getRefdAssignment(timestamp, true);
 			switch (ass.getAssignmentType()) {
 			case A_TEMPLATE:
 				ITTCN3Template templateLast = getTemplateReferencedLast(timestamp);
-				return templateLast.checkValueomitRestriction(timestamp, definitionName, omitAllowed, usageLocation);
+				if(! this.equals(templateLast)) {
+					templateLast.checkValueomitRestriction(timestamp, getTemplateTypeName(), omitAllowed, usageLocation); // -- return would be too early.
+				}
 			case A_VAR_TEMPLATE:
 			case A_EXT_FUNCTION_RTEMP:
 			case A_FUNCTION_RTEMP:
@@ -425,11 +440,10 @@ public final class Referenced_Template extends TTCN3Template {
 				if (ass instanceof Definition) {
 					TemplateRestriction.Restriction_type refdTemplateRestriction = ((Definition) ass).getTemplateRestriction();
 					refdTemplateRestriction = TemplateRestriction.getSubRestriction(refdTemplateRestriction, timestamp, reference);
-					// if restriction not satisfied issue
-					// warning
+					// if restriction is not satisfied issue warning
 					if (TemplateRestriction.isLessRestrictive(omitAllowed ? TemplateRestriction.Restriction_type.TR_OMIT
 							: TemplateRestriction.Restriction_type.TR_VALUE, refdTemplateRestriction)) {
-						getLocation().reportSemanticError(
+						getLocation().reportSemanticWarning(
 								MessageFormat.format(INADEQUATETEMPLATERESTRICTION, ass.getAssignmentName(), reference.getDisplayName()));
 						return true;
 					}

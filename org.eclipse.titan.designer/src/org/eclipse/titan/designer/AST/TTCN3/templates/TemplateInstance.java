@@ -331,7 +331,7 @@ public final class TemplateInstance extends ASTNode implements ILocateableNode, 
 		IType localGovernor = checkType(timestamp, governor);
 		localGovernor = checkDerivedReference(timestamp, localGovernor);
 		ITTCN3Template temporalBody = localGovernor.checkThisTemplateRef(timestamp, templateBody);
-		temporalBody.checkThisTemplateGeneric(timestamp, localGovernor, derivedReference != null, true, true, true, false);
+		temporalBody.checkThisTemplateGeneric(timestamp, localGovernor, derivedReference != null, true, true, true, false);//TODO: too much automatic true (baat)
 
 		lastTimeChecked = timestamp;
 	}
@@ -353,9 +353,10 @@ public final class TemplateInstance extends ASTNode implements ILocateableNode, 
 			Assignment ass = derivedReference.getRefdAssignment(timestamp, true);
 			switch (ass.getAssignmentType()) {
 			case A_TEMPLATE:
+			case A_VAR_TEMPLATE:
 				needsRuntimeCheck = TemplateRestriction.check(timestamp, definition, templateBody, null);
 				break;
-			case A_VAR_TEMPLATE:
+			//case A_VAR_TEMPLATE:
 			case A_EXT_FUNCTION_RTEMP:
 			case A_FUNCTION_RTEMP:
 			case A_PAR_TEMP_IN:
