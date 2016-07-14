@@ -251,7 +251,12 @@ public class ProjectSourceSemanticAnalyzer {
 	 *            the name of the module to be removed.
 	 * */
 	void removeModule(final String moduleName) {
-		fileModuleMap.remove(internalGetModuleByName(moduleName, false).getLocation().getFile());
+		final Module module = internalGetModuleByName(moduleName, false);
+		if (module == null) {
+			return;
+		}
+
+		fileModuleMap.remove(module.getLocation().getFile());
 		synchronized (outdatedModuleMap) {
 			outdatedModuleMap.remove(moduleName);
 		}
