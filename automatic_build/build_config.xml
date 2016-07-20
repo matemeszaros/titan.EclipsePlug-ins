@@ -96,9 +96,5 @@
 
 	<!-- The java 6 executable (needed for the doc2pdf.jar) -->
 	<property name="java6" location="/app/j2re/1.6.0_22/LMWP3/bin/java"/>
-
-	<!-- The location of the ant-contrib package -->
-	<property name="ant-contrib.location"
-			  location="${lib.dir}/ant-contrib/lib/ant-contrib.jar"/>
 </project>
 
