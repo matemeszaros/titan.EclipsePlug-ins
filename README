@@ -76,7 +76,6 @@ It modifies the source, you need to rebuild org.eclipse.titan.common plug-in pro
     PDF documentation can be created only inside Ericcson network
     doc2pdf.jar (optional, pdf will not be created if file not found at this location)
       For Ericsson users only: Download the plugin from http://ttcn.ericsson.se/download/third_party/ OR write to any contact person at Project Titan
-    ant-contrib.jar (mandatory if doc2pdf.jar exists)
 
   These jars are needed by titanium.plugin
     org.apache.commons.collections15/collections-generic-4.01.jar
@@ -149,7 +148,6 @@ ant \
 -Dcompiler.location=$HOME/git/titan/ \
 -Dantlr4.jar.location=${LIB_DIR_LOCAL}/antlr-4.3-complete.jar \
 -Ddoc2pdf.jar=${LIB_DIR_GIT}/doc2pdf.jar \
--Dant-contrib.location=$HOME/git/titan_playground/jar/ant-contrib/lib/ant-contrib.jar \
 -Djava6=$HOME/jdk/bin/java \
 -lib ${LIB_DIR_GIT}/edu.uci.ics.jung/jung-graph-impl-2.0.1.jar \
 -lib ${LIB_DIR_GIT}/edu.uci.ics.jung/jung-visualization-2.0.1.jar \
