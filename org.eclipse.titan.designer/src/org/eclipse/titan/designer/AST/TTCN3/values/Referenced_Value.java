@@ -50,7 +50,7 @@ public final class Referenced_Value extends Value {
 	private static final String UNEXPECTEDASSIGNMENT1 = "Reference to a value or template was expected instead of {0}";
 	private static final String UNEXPECTEDASSIGNMENT2 = "Reference to a value was expected instead of {0}";
 
-	private static final String CIRCULARVALUEREFERENCE = "circular value reference chain: `{0}''";
+	//private static final String CIRCULARVALUEREFERENCE = "circular value reference chain: `{0}''";
 	private static final String INFORMATIONFROMOBJECTNOTVALUE = "InformationFromObjects construct `{0}'' does not refer to a value";
 	private static final String VALUERETURNEXPECTED =
 			"Reference to a value was expected instead of a call of {0}, which does not have a return type";
