@@ -289,12 +289,6 @@ public final class Referenced_Value extends Value {
 		}
 		case A_EXT_CONST:
 		case A_MODULEPAR:
-		case A_MODULEPAR_TEMPLATE:
-		case A_PAR_TEMP_IN:
-		case A_PAR_TEMP_INOUT:
-		case A_PAR_TEMP_OUT:
-		case A_TEMPLATE:
-		case A_VAR_TEMPLATE:
 		case A_VAR:
 		case A_FUNCTION_RVAL:
 		case A_FUNCTION_RTEMP:
@@ -304,7 +298,14 @@ public final class Referenced_Value extends Value {
 		case A_PAR_VAL_IN:
 		case A_PAR_VAL_OUT:
 		case A_PAR_VAL_INOUT:
+		case A_MODULEPAR_TEMPLATE:
+		case A_PAR_TEMP_IN:
+		case A_PAR_TEMP_INOUT:
+		case A_PAR_TEMP_OUT:
+		case A_TEMPLATE:
+		case A_VAR_TEMPLATE:
 			// the referred definition is not a constant
+			//errors will be reported in Types.java
 			referencedValue = this;
 			break;
 		case A_FUNCTION:

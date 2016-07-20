@@ -595,8 +595,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			case A_PAR_TEMP_IN:
 			case A_PAR_TEMP_OUT:
 			case A_PAR_TEMP_INOUT:
-				if (!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue) 
-						&& (!Expected_Value_type.EXPECTED_DYNAMIC_VALUE.equals(expectedValue))) {
+				if (!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)) {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format("Reference to a value was expected instead of {0}",
 									assignment.getDescription()));

@@ -196,7 +196,7 @@ public final class Referenced_Template extends TTCN3Template {
 
 		Assignment ass = reference.getRefdAssignment(timestamp, true);
 
-		if (ass == null || !Assignment_type.A_TEMPLATE.equals(ass.getAssignmentType())) {
+		if (ass == null || !Assignment_type.A_TEMPLATE.equals(ass.getAssignmentType())) { //TODO: more template shall be accepted
 			// the error was already reported
 			setIsErroneous(true);
 			return this;
@@ -244,9 +244,10 @@ public final class Referenced_Template extends TTCN3Template {
 			case A_VAR_TEMPLATE:
 			case A_FUNCTION_RTEMP:
 			case A_MODULEPAR_TEMPLATE:
+			case A_PAR_TEMP_IN:
 			case A_PAR_TEMP_OUT:
 			case A_PAR_TEMP_INOUT:
-
+				
 				tempReferenceChain.markState();
 
 				if (tempReferenceChain.add(this)) {
