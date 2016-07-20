@@ -131,10 +131,10 @@ public final class Return_Statement extends Statement {
 
 			// General:
 			template.setMyGovernor(returnType);
-			final ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template);// FIXME: remove this line ???
+			final ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template);
 			temporalTemplate.checkThisTemplateGeneric(timestamp, returnType, false, /* isModified */
 					false, /* allowOmit */
-					true, /* allowAnyOrOmit */
+					true, /* allowAnyOrOmit */ //TODO:false
 					true, /* subCheck */
 					false /* implicitOmit */);
 			TemplateRestriction.check(timestamp, definition, temporalTemplate, null);
