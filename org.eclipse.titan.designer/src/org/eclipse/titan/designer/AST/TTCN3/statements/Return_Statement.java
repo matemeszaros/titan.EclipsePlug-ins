@@ -16,6 +16,7 @@ import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.Type;
+import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Function;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
@@ -131,7 +132,7 @@ public final class Return_Statement extends Statement {
 
 			// General:
 			template.setMyGovernor(returnType);
-			final ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template);
+			final ITTCN3Template temporalTemplate = returnType.checkThisTemplateRef(timestamp, template,Expected_Value_type.EXPECTED_DYNAMIC_VALUE,null);
 			temporalTemplate.checkThisTemplateGeneric(timestamp, returnType, false, /* isModified */
 					false, /* allowOmit */
 					true, /* allowAnyOrOmit */ //TODO:false
@@ -147,7 +148,7 @@ public final class Return_Statement extends Statement {
 			} else {
 				final Type returnType1 = ((Def_Function) definition).getType(timestamp);
 				template.setMyGovernor(returnType1);
-				final ITTCN3Template temporalTemplate1 = returnType1.checkThisTemplateRef(timestamp, template);
+				final ITTCN3Template temporalTemplate1 = returnType1.checkThisTemplateRef(timestamp, template,Expected_Value_type.EXPECTED_TEMPLATE,null);
 				temporalTemplate1.checkThisTemplateGeneric(timestamp, returnType1, true, /* isModified */
 						true, /* allowOmit */
 						true, /* allowAnyOrOmit */

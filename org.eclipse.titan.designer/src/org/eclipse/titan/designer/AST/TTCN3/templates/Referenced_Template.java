@@ -198,7 +198,7 @@ public final class Referenced_Template extends TTCN3Template {
 
 		if (ass == null || !Assignment_type.A_TEMPLATE.equals(ass.getAssignmentType())) { //TODO: more template shall be accepted
 			// the error was already reported
-			setIsErroneous(true);
+			//setIsErroneous(true);
 			return this;
 		}
 

@@ -777,8 +777,17 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 		}
 	}
 
-	@Override
-	public ITTCN3Template checkThisTemplateRef(final CompilationTimeStamp timestamp, final ITTCN3Template t) {
+	/**
+	 * 
+	 * @param timestamp 
+	 * @param t	- the template to be checked
+	 * @param expectedValue - the expected value type. 
+	 * @param referenceChain
+	 * @return
+	 */
+	
+	public ITTCN3Template checkThisTemplateRef(final CompilationTimeStamp timestamp, final ITTCN3Template t, final Expected_Value_type expectedValue,
+			final IReferenceChain referenceChain) {
 		switch( t.getTemplatetype() ){
 		case SUPERSET_MATCH:
 		case SUBSET_MATCH:
@@ -815,7 +824,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 
 		switch (value.getValuetype()) {
 		case REFERENCED_VALUE:
-			Assignment assignment = ((Referenced_Value) value).getReference().getRefdAssignment(timestamp, false, null);
+			Assignment assignment = ((Referenced_Value) value).getReference().getRefdAssignment(timestamp, false, referenceChain); //FIXME: referenceChain or null?
 			if (assignment == null) {
 				template.setIsErroneous(true);
 			} else {
@@ -915,6 +924,12 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 				case A_PAR_TEMP_INOUT:
 				case A_FUNCTION_RTEMP:
 				case A_EXT_FUNCTION_RTEMP:
+					if(!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)){
+						template.getLocation().reportSemanticError(
+								MessageFormat.format("Reference to a value was expected instead of {0}",
+										assignment.getDescription()));
+						template.setIsErroneous(true);
+					}
 					return template.setTemplatetype(timestamp, Template_type.TEMPLATE_REFD);
 				default:
 					break;
@@ -941,6 +956,13 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 		}
 		
 		return template;
+	
+	}
+	
+	//TODO: This function is obsolete, use the general function everywhere instead!
+	@Override
+	public ITTCN3Template checkThisTemplateRef(final CompilationTimeStamp timestamp, final ITTCN3Template t) {
+		return checkThisTemplateRef(timestamp,t,Expected_Value_type.EXPECTED_TEMPLATE, null);
 	}
 
 	/**
