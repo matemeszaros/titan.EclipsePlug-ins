@@ -16,11 +16,13 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class TextHover implements ITextHover {
 	private ISourceViewer sourceViewer;
 
@@ -44,7 +46,19 @@ public final class TextHover implements ITextHover {
 					Position markerPosition = annotationModel.getPosition(actualMarker);
 					if (markerPosition.getOffset() <= hoverRegion.getOffset()
 							&& markerPosition.getOffset() + markerPosition.getLength() >= hoverRegion.getOffset()) {
-						return actualMarker.getText();
+						String message = actualMarker.getText();
+						if ( message != null ) {
+							// Marker error text hover (or tooltip in other words) handles error message
+							// in HTML format, and there can be situation, when the message contains
+							// < and > characters, which are handled as HTML control tags, so they
+							// are not visible. So these < and > characters are removed.
+							// Example: ANTLR sends the following error message during parsing:
+							//   "mismatched input 'control' expecting <EOF>"
+							message = message.replaceAll( "\\<([A-Z]+)\\>", "$1" );
+						} else {
+							ErrorReporter.INTERNAL_ERROR("BaseTextHover.getHoverInfo(): message == null");
+						}
+						return message;
 					}
 				}
 			}
