@@ -21,7 +21,8 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class AnnotationHover implements IAnnotationHover {
 
 	@Override
@@ -29,16 +30,26 @@ public final class AnnotationHover implements IAnnotationHover {
 		final List<IMarker> markers = getMarkerForLine(sourceViewer, lineNumber);
 		final StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < markers.size(); i++) {
-			final String message = markers.get(i).getAttribute(IMarker.MESSAGE, (String) null);
-			if (message != null && message.trim().length() > 0) {
-				if (i != 0) {
-					// Perfect newline for TextHoverControl
-					// builder.append('\n');
-					// DefaultInformationControl needs html
-					// like newline
-					builder.append("<BR></BR>");
+			String message = markers.get(i).getAttribute(IMarker.MESSAGE, (String) null);
+			if ( message != null ) {
+				message = message.trim();
+				if ( message.length() > 0 ) {
+					// Marker error text hover (or tooltip in other words) handles error message
+					// in HTML format, and there can be situation, when the message contains
+					// < and > characters, which are handled as HTML control tags, so they
+					// are not visible. So these < and > characters are removed.
+					// Example: ANTLR sends the following error message during parsing:
+					//   "mismatched input 'control' expecting <EOF>"
+					message = message.replaceAll( "\\<([A-Z]+)\\>", "$1" );
+					if (i != 0) {
+						// Perfect newline for TextHoverControl
+						// builder.append('\n');
+						// DefaultInformationControl needs html
+						// like newline
+						builder.append("<BR></BR>");
+					}
+					builder.append( message );
 				}
-				builder.append(message.trim());
 			}
 		}
 		return builder.toString();
