@@ -103,6 +103,10 @@ public final class CfgAnalyzer {
 		return includeSectionHandler;
 	}
 
+	public IncludeSectionHandler getOrderedIncludeSectionHandler() {
+		return orderedIncludeSectionHandler;
+	}
+
 	public DefineSectionHandler getDefineSectionHandler() {
 		return defineSectionHandler;
 	}
@@ -207,7 +211,7 @@ public final class CfgAnalyzer {
 		externalCommandsSectionHandler = parser.getExternalCommandsSectionHandler();
 		executeSectionHandler = parser.getExecuteSectionHandler();
 		includeSectionHandler = parser.getIncludeSectionHandler();
-		orderedIncludeSectionHandler = parser.getIncludeSectionHandler();
+		orderedIncludeSectionHandler = parser.getOrderedIncludeSectionHandler();
 		defineSectionHandler = parser.getDefineSectionHandler();
 		loggingSectionHandler = parser.getLoggingSectionHandler();
 		
