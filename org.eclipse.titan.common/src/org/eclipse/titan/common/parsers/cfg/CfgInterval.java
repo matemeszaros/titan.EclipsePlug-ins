@@ -11,7 +11,8 @@ import org.eclipse.titan.common.parsers.Interval;
 
 /**
  * @author eferkov
- * */
+ * @author Arpad Lovassy
+ */
 public final class CfgInterval extends Interval {
 	public enum section_type {
 		LOGGING,
@@ -23,6 +24,7 @@ public final class CfgInterval extends Interval {
 		GROUPS,
 		COMPONENTS,
 		INCLUDE,
+		ORDERED_INCLUDE,
 		DEFINE,
 		PROFILER,
 		 // Error indicator.
