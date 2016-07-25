@@ -45,7 +45,7 @@ import org.eclipse.titan.common.parsers.cfg.CfgInterval.section_type;
 	private boolean mCloseLastInterval = false;
 
 	public CfgInterval getRootInterval() {
-		return mIntervalDetector.getRootInterval();
+		return (CfgInterval) mIntervalDetector.getRootInterval();
 	}
 
 	public void initRootInterval( final int aLength ) {
