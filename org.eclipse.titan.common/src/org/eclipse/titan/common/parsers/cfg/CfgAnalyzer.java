@@ -19,6 +19,9 @@ import org.antlr.v4.runtime.CommonTokenFactory;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.UnbufferedCharStream;
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileInfo;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.titan.common.logging.ErrorReporter;
@@ -141,22 +144,36 @@ public final class CfgAnalyzer {
      * @param code the contents of an editor, or null.
      */
 	public void directParse(final IFile file, final String fileName, final String code) {
-		CfgLexer lexer;
-		Reader reader = null;
+		final Reader reader;
+		final int fileLength;
 		if (null != code) {
 			reader = new StringReader(code);
+			fileLength = code.length();
 		} else if (null != file) {
 			try {
 				reader = new BufferedReader(new InputStreamReader(file.getContents(), StandardCharsets.UTF8));
+				IFileStore store;
+				try {
+					store = EFS.getStore( file.getLocationURI() );
+				} catch (CoreException e) {
+					ErrorReporter.logExceptionStackTrace( e );
+					return;
+				}
+				IFileInfo fileInfo = store.fetchInfo();
+				fileLength = (int) fileInfo.getLength();
 			} catch (CoreException e) {
 				ErrorReporter.logExceptionStackTrace("Could not get the contents of `" + fileName + "'", e);
 				return;
 			}
+		} else {
+			ErrorReporter.INTERNAL_ERROR("CfgAnalyzer.directParse(): nothing to parse");
+			return;
 		}
 
 		final CharStream charStream = new UnbufferedCharStream(reader);
-		lexer = new CfgLexer(charStream);
+		CfgLexer lexer = new CfgLexer(charStream);
 		lexer.setTokenFactory(new CommonTokenFactory(true));
+		lexer.initRootInterval( fileLength );
 		lexerListener = new TitanListener();
 		lexer.removeErrorListeners(); // remove ConsoleErrorListener
 		lexer.addErrorListener(lexerListener);
@@ -194,5 +211,6 @@ public final class CfgAnalyzer {
 		defineSectionHandler = parser.getDefineSectionHandler();
 		loggingSectionHandler = parser.getLoggingSectionHandler();
 		
+		rootInterval = lexer.getRootInterval();
 	}
 }

@@ -7,11 +7,18 @@
  ******************************************************************************/
 package org.eclipse.titan.common.parsers;
 
+import java.util.List;
+
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.titan.common.parsers.Interval.interval_type;
+import org.eclipse.titan.common.parsers.cfg.CfgParseTreePrinter;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public class IntervalDetector {
 	/** the root interval of the interval hierarchy tree. */
 	protected Interval rootInterval = null;
@@ -69,6 +76,10 @@ public class IntervalDetector {
 		actualInterval.setStartLine(line);
 	}
 
+	public final void pushInterval(final Token aToken, final TokenStream aTokenStream, final interval_type aType ) {
+		pushInterval( aToken.getCharPositionInLine(), aToken.getLine(), aType );
+	}
+
 	/**
 	 * Pops the actual interval off of the stack, making its parent the actual interval. The ending offset of the popped off interval is set here.
 	 * <p>
@@ -90,6 +101,31 @@ public class IntervalDetector {
 		}
 	}
 
+	public final void popInterval(final Token aToken, final TokenStream aTokenStream ) {
+		popInterval( aToken.getCharPositionInLine(), aToken.getLine() );
+	}
+
+	public final void popInterval( final CommonTokenStream aTokenStream ) {
+		final int nonHiddenIndex = getNonHiddenTokensBefore( aTokenStream.index() - 1, aTokenStream.getTokens() );
+		final Token t = aTokenStream.get( nonHiddenIndex );
+		popInterval( t, aTokenStream );
+	}
+
+	/**
+	 * @param aIndex the token index, where the search is started
+	 * @param aTokens token list from token stream
+	 * @return the index of the first non-hidden token to the left
+	 */
+	private final int getNonHiddenTokensBefore( final int aIndex,
+												final List<Token> aTokens ) {
+		// 1st non hidden token to the left
+		int nonHiddenIndex = aIndex;
+		while ( CfgParseTreePrinter.isHiddenToken( nonHiddenIndex, aTokens ) ) {
+			nonHiddenIndex--;
+		}
+		return nonHiddenIndex;
+	}
+	
 	/**
 	 * @return the root interval of this interval hierarchy tree.
 	 * */
