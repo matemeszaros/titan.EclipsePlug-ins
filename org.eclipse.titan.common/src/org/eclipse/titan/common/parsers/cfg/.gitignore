@@ -1,4 +1,5 @@
 /CfgLexer.java
 /CfgLexer.tokens
+/CfgLexerLogUtil.java
 /CfgParser.java
 /CfgParser.tokens

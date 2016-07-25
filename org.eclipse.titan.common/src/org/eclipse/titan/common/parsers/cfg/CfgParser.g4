@@ -157,6 +157,10 @@ import java.util.regex.Pattern;
 		return includeSectionHandler;
 	}
 
+	public IncludeSectionHandler getOrderedIncludeSectionHandler() {
+		return orderedIncludeSectionHandler;
+	}
+
 	public DefineSectionHandler getDefineSectionHandler() {
 		return defineSectionHandler;
 	}
