@@ -237,6 +237,7 @@ public class CfgParseTreePrinter {
 	 * </ul>
 	 * @param aFile the parse tree of this file to print
 	 * @param aParseTreeRoot root of the parse tree to print
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @param aResolveMode mode of resolving
 	 */
 	private void printResolved( final Path aFile,
@@ -255,6 +256,7 @@ public class CfgParseTreePrinter {
 	 * RECURSIVE
 	 * Builds parse tree text including hidden tokens
 	 * @param aParseTree parse tree
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @param aPrintHiddenBefore true to print hidden tokens before the parse tree
 	 *                           (NOTE: hidden tokens in the parse tree will be printed)
 	 * @param aResolveMode mode of resolving
@@ -309,6 +311,7 @@ public class CfgParseTreePrinter {
 	/**
 	 * Builds token text including hidden tokens before the token
 	 * @param aToken token to print
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @param aPrintHiddenBefore true to print hidden tokens before the token
 	 * @param aResolveMode mode of resolving
 	 * @param aFile the parse tree of this file to print
@@ -339,6 +342,7 @@ public class CfgParseTreePrinter {
 	/**
 	 * Builds hidden tokens before the token
 	 * @param aToken the token, this will NOT be printed
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 */
 	private void printHiddenTokensBefore( final Token aToken,
 										  final List<Token> aTokens ) {
@@ -363,6 +367,7 @@ public class CfgParseTreePrinter {
 	/**
 	 * Builds hidden tokens before the rule
 	 * @param aRule the rule, this will NOT be printed
+	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 */
 	private void printHiddenTokensBefore( final ParserRuleContext aRule, final List<Token> aTokens ) {
 		Token startToken = aRule.start;
@@ -377,7 +382,7 @@ public class CfgParseTreePrinter {
 	 * @param aTokens token list from the lexer (all, hidden and not hidden also)
 	 * @return true, iff token index is valid AND token is hidden
 	 */
-	private static boolean isHiddenToken( final int aIndex, final List<Token> aTokens ) {
+	public static boolean isHiddenToken( final int aIndex, final List<Token> aTokens ) {
 		if ( aTokens == null ) {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.isHiddenToken(): aTokens == null");
 			return false;
