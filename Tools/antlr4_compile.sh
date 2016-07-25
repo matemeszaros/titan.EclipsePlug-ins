@@ -55,3 +55,7 @@ cd $WORKSPACE_PATH/org.eclipse.titan.designer/src/org/eclipse/titan/designer/par
 $ANTLR4 ExtensionAttributeLexer.g4 -no-listener -no-visitor -encoding UTF-8 -package org.eclipse.titan.designer.parsers.extensionattributeparser
 $ANTLR4 ExtensionAttributeParser.g4 -no-listener -no-visitor -encoding UTF-8 -package org.eclipse.titan.designer.parsers.extensionattributeparser
 
+# Generating ...LexerLogUtil.java files form ...Lexer.java files for resolving token names (OPTIONAL)
+cd $WORKSPACE_PATH
+$DIR/antlr4_generate_lexerlogutil.pl
+

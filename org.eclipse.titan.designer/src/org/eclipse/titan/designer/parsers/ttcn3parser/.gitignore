@@ -2,6 +2,7 @@
 /Ttcn3BaseLexer.tokens
 /Ttcn3Lexer.java
 /Ttcn3Lexer.tokens
+/Ttcn3LexerLogUtil.java
 /Ttcn3KeywordlessLexer.java
 /Ttcn3KeywordlessLexer.tokens
 /Ttcn3CharstringLexer.java
