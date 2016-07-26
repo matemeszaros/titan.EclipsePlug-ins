@@ -17,7 +17,8 @@ import org.eclipse.titanium.markers.spotters.BaseModuleCodeSmellSpotter;
 import org.eclipse.titanium.markers.types.CodeSmellType;
 
 public class UninitializedVar extends BaseModuleCodeSmellSpotter {
-	private static final String ERROR_MESSAGE = "Variable templates should be initialized";
+	private static final String TEMPLATE_ERROR_MESSAGE = "Variable templates should be initialized";
+	private static final String VARIABLE_ERROR_MESSAGE = "Variables should be initialized";
 
 	public UninitializedVar() {
 		super(CodeSmellType.UNINITIALIZED_VARIABLE);
@@ -28,12 +29,12 @@ public class UninitializedVar extends BaseModuleCodeSmellSpotter {
 		if (node instanceof Def_Var_Template) {
 			Def_Var_Template d = (Def_Var_Template)node;
 			if (d.getInitialValue() == null) {
-				problems.report(d.getLocation(), ERROR_MESSAGE);
+				problems.report(d.getLocation(), TEMPLATE_ERROR_MESSAGE);
 			}
 		} else if (node instanceof Def_Var) {
 			Def_Var d = (Def_Var)node;
 			if (d.getInitialValue() == null) {
-				problems.report(d.getLocation(), ERROR_MESSAGE);
+				problems.report(d.getLocation(), VARIABLE_ERROR_MESSAGE);
 			}
 		} else {
 			return;
