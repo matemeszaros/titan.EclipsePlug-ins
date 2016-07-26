@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.titan.common.parsers.Interval.interval_type;
 import org.eclipse.titan.common.parsers.cfg.CfgParseTreePrinter;
 
@@ -82,10 +81,9 @@ public class IntervalDetector {
 	 * The ending offset of this interval is not yet set. @see #popInterval(int)
 	 *
 	 * @param aToken the first token of the interval
-	 * @param aTokenStream token stream to get the list of tokens for searching hidden tokens
 	 * @param aType the type of the interval
 	 */
-	public final void pushInterval(final Token aToken, final TokenStream aTokenStream, final interval_type aType ) {
+	public final void pushInterval(final Token aToken, final interval_type aType ) {
 		pushInterval( aToken.getCharPositionInLine(), aToken.getLine(), aType );
 	}
 
@@ -117,9 +115,8 @@ public class IntervalDetector {
 	 * invalid file.
 	 *
 	 * @param aToken the last token of the interval
-	 * @param aTokenStream token stream to get the list of tokens for searching hidden tokens
 	 */
-	public final void popInterval(final Token aToken, final TokenStream aTokenStream ) {
+	public final void popInterval( final Token aToken ) {
 		popInterval( aToken.getCharPositionInLine(), aToken.getLine() );
 	}
 
@@ -136,7 +133,7 @@ public class IntervalDetector {
 	public final void popInterval( final CommonTokenStream aTokenStream ) {
 		final int nonHiddenIndex = getNonHiddenTokensBefore( aTokenStream.index() - 1, aTokenStream.getTokens() );
 		final Token t = aTokenStream.get( nonHiddenIndex );
-		popInterval( t, aTokenStream );
+		popInterval( t );
 	}
 
 	/**
