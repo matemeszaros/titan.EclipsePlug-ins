@@ -464,7 +464,9 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 					
 				ActualParameter defaultValue = formalParameter.getDefaultValue();
 				Default_ActualParameter temp = new Default_ActualParameter(defaultValue);
-				temp.setLocation(defaultValue.getLocation());
+				if (defaultValue != null && !defaultValue.getIsErroneous()) {
+					temp.setLocation(defaultValue.getLocation());
+				}
 				if(formalParameter.getIsLazy()) {
 					actualLazyParameters.addParameter(temp);
 				} else {
@@ -485,7 +487,9 @@ public class FormalParameterList extends TTCN3Scope implements ILocateableNode, 
 			FormalParameter formalParameter = parameters.get(i);
 			ActualParameter defaultValue = formalParameter.getDefaultValue();
 			Default_ActualParameter temp = new Default_ActualParameter(defaultValue);
-			temp.setLocation(defaultValue.getLocation());
+			if (defaultValue != null && !defaultValue.getIsErroneous()) {
+				temp.setLocation(defaultValue.getLocation());
+			}
 			if(formalParameter.getIsLazy()) {
 				actualLazyParameters.addParameter(temp);
 			} else {
