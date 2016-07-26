@@ -23,7 +23,7 @@ import org.eclipse.titan.common.parsers.cfg.CfgInterval;
 
 /**
  * USED FOR LOGGING PURPOSES.<br>
- * Logger utility to print parse tree.
+ * Logger utility to print parse tree and interval tree.
  * @author Arpad Lovassy
  */
 public class ParserLogger {
@@ -336,7 +336,7 @@ public class ParserLogger {
 	}
 	
 	/**
-	 * Logs an interval.
+	 * Logs an interval tree.
 	 * @param aRootInterval the root of the interval tree
 	 */
 	public static void logInterval( final Interval aRootInterval ) {
@@ -344,7 +344,7 @@ public class ParserLogger {
 	}
 	
 	/**
-	 * Logs an interval.
+	 * Logs an interval tree.
 	 * Internal version.
 	 * RECURSIVE
 	 * @param aRootInterval the root of the interval tree
@@ -363,7 +363,7 @@ public class ParserLogger {
 			sb.append( ", " + ( ( CfgInterval )aRootInterval).getSectionType() );
 		}
 		if ( aRootInterval.getErroneous() ) {
-			sb.append( ", ERRORNEOUS" );
+			sb.append( ", ERRONEOUS" );
 		}
 		printIndent( sb.toString(), aLevel );
 		println();
