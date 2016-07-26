@@ -13,7 +13,8 @@ import org.eclipse.titan.common.parsers.cfg.CfgInterval.section_type;
 
 /**
  * @author eferkov
- * */
+ * @author Arpad Lovassy
+ */
 public final class CfgIntervalDetector extends IntervalDetector {
 	@Override
 	public void initRootInterval(final int length){
@@ -25,6 +26,17 @@ public final class CfgIntervalDetector extends IntervalDetector {
 		setMaxLength(length);
 	}
 	
+	/**
+	 * Creates and pushes a new interval onto the stack of intervals. This new interval becomes the actual one.
+	 * <p>
+	 * The ending offset of this interval is not yet set. @see #popInterval(int)
+	 *
+	 * @param offset the offset at which the new interval should start
+	 * @param line the line at which the new interval should start
+	 * @param type the type of the interval
+	 * @param sectionType the section type of the interval. This is used only for section intervals,
+	 *                    in this case type == interval_type.NORMAL && sectionType != section_type.UNKNOWN 
+	 */
 	public void pushInterval(final int offset, final int line, final interval_type type, final section_type sectionType) {
 		final CfgInterval tempInterval = new CfgInterval(actualInterval, type, sectionType);
 		actualInterval =  tempInterval;

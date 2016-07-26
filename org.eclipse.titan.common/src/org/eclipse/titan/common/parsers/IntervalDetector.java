@@ -66,7 +66,7 @@ public class IntervalDetector {
 	 * @param offset the offset at which the new interval should start
 	 * @param line the line at which the new interval should start
 	 * @param type the type of the interval
-	 * */
+	 */
 	public final void pushInterval(final int offset, final int line, final interval_type type) {
 		actualInterval = new Interval(actualInterval, type);
 		if (rootInterval == null) {
@@ -76,6 +76,15 @@ public class IntervalDetector {
 		actualInterval.setStartLine(line);
 	}
 
+	/**
+	 * Creates and pushes a new interval onto the stack of intervals. This new interval becomes the actual one.
+	 * <p>
+	 * The ending offset of this interval is not yet set. @see #popInterval(int)
+	 *
+	 * @param aToken the first token of the interval
+	 * @param aTokenStream token stream to get the list of tokens for searching hidden tokens
+	 * @param aType the type of the interval
+	 */
 	public final void pushInterval(final Token aToken, final TokenStream aTokenStream, final interval_type aType ) {
 		pushInterval( aToken.getCharPositionInLine(), aToken.getLine(), aType );
 	}
@@ -101,10 +110,29 @@ public class IntervalDetector {
 		}
 	}
 
+	/**
+	 * Pops the actual interval off of the stack, making its parent the actual interval. The ending offset of the popped off interval is set here.
+	 * <p>
+	 * If the actual interval is the root interval, than it is not popped off the stack. This situation can only happen in case of a syntactically
+	 * invalid file.
+	 *
+	 * @param aToken the last token of the interval
+	 * @param aTokenStream token stream to get the list of tokens for searching hidden tokens
+	 */
 	public final void popInterval(final Token aToken, final TokenStream aTokenStream ) {
 		popInterval( aToken.getCharPositionInLine(), aToken.getLine() );
 	}
 
+	/**
+	 * Pops the actual interval off of the stack, making its parent the actual interval. The ending offset of the popped off interval is set here.
+	 * <p>
+	 * If the actual interval is the root interval, than it is not popped off the stack. This situation can only happen in case of a syntactically
+	 * invalid file.
+	 * <p>
+	 * The last non-hidden token will be the end of the interval.
+	 *
+	 * @param aTokenStream token stream to get the list of tokens for searching hidden tokens
+	 */
 	public final void popInterval( final CommonTokenStream aTokenStream ) {
 		final int nonHiddenIndex = getNonHiddenTokensBefore( aTokenStream.index() - 1, aTokenStream.getTokens() );
 		final Token t = aTokenStream.get( nonHiddenIndex );
