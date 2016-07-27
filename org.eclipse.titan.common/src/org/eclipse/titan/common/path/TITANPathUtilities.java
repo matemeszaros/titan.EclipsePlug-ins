@@ -42,6 +42,7 @@ public final class TITANPathUtilities {
 	 * 
 	 * @return the resolved uri.
 	 * */
+	//TODO: call resolvePathURI, it is the same functionality!!!
 	public static URI resolvePath(final String pathToBeResolved, final URI basePath) {
 		Map<?, ?> envVariables;
 		if (DebugPlugin.getDefault() != null) {
@@ -50,10 +51,10 @@ public final class TITANPathUtilities {
 			envVariables = null;
 		}
 
-		String tmp1 = null;
+		
 		String tmp2 = null;
 		try {
-			tmp1 = EnvironmentVariableResolver.eclipseStyle().resolve(pathToBeResolved, envVariables);
+			final String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolve(pathToBeResolved, envVariables);
 			tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);	
 		} catch(VariableNotFoundException e){
 			ErrorReporter.logError("There was an error while resolving `" + pathToBeResolved + "'");
@@ -65,11 +66,13 @@ public final class TITANPathUtilities {
 			uri = pathVariableManager.resolveURI(uri);
 
 			if (basePath != null && uri != null && !uri.isAbsolute()) {
-				return org.eclipse.core.runtime.URIUtil.append(basePath, uri.toString());
-			
-			} else {
-				return uri;
-			}
+				final String basePathString = URIUtil.toPath(basePath).toOSString();
+				final String temp = PathUtil.getAbsolutePath(basePathString, tmp2);
+				if (temp != null) {
+					uri = URIUtil.toURI(temp);
+				}
+			}  
+			return uri;
 		
 	}
 
@@ -110,8 +113,15 @@ public final class TITANPathUtilities {
 	 * */
 	private static URI resolvePathURI(final String pathToBeResolved, final String basePath, final Map<?, ?> envVariables,
 			final IPathVariableManager pathVariableManager) {
-		final String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolveIgnoreErrors(pathToBeResolved, envVariables);
-		final String tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);
+
+		String tmp2 = null;
+		try {
+			final String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolve(pathToBeResolved, envVariables);
+			tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);	
+		} catch(VariableNotFoundException e){
+			ErrorReporter.logError("There was an error while resolving `" + pathToBeResolved + "'");
+			return null;
+		} 
 		
 		URI uri = URIUtil.toURI(tmp2);
 		URI resolvedURI = pathVariableManager.resolveURI(uri);
@@ -139,10 +149,11 @@ public final class TITANPathUtilities {
 	 * 
 	 * @return the resolved uri.
 	 * */
+	//not used, TODO: remove it!
 	public static URI convertToAbsoluteURI(final String pathToBeConverted, final String basePath) {
 		return convertToAbsoluteURI(pathToBeConverted, URIUtil.toURI(basePath));
 	}
-	
+	//not used, TODO: remove it!
 	public static URI convertToAbsoluteURI(final String pathToBeConverted, final URI basePath) {
 		final IPath tmp = new Path(pathToBeConverted);
 		if( basePath != null && tmp != null && !tmp.isAbsolute()) {
