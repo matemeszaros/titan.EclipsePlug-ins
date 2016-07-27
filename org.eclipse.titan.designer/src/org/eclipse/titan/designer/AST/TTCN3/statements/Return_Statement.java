@@ -114,6 +114,8 @@ public final class Return_Statement extends Statement {
 			}
 			
 			switch (template.getTemplatetype()) {
+			case SPECIFIC_VALUE:
+				break; //error handling in Types.java
 			case VALUE_LIST:
 				if (((ValueList_Template) template).getNofTemplates() == 1) {
 					// ValueList_Template with one element can be accepted as a
@@ -122,7 +124,9 @@ public final class Return_Statement extends Statement {
 					// for SingleExpression
 					break;
 				}
-			case SPECIFIC_VALUE:
+				//intentionally do not break
+			case VALUE_RANGE:
+			case TEMPLATE_LIST:
 			default:
 				if (!template.isValue(timestamp)) {
 					template.getLocation().reportSemanticError(SPECIFICVALUEEXPECTED);

@@ -830,8 +830,14 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			} else {
 				switch (assignment.getAssignmentType()) {
 				case A_VAR_TEMPLATE:
-					IType type = ((Def_Var_Template) assignment).getType(timestamp);
+					if(!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)){
+						template.getLocation().reportSemanticError(
+								MessageFormat.format("Reference to a value was expected instead of {0}",
+										assignment.getDescription()));
+						template.setIsErroneous(true);
+					}
 
+					IType type = ((Def_Var_Template) assignment).getType(timestamp);
 					switch (type.getTypetype()) {
 					case TYPE_BITSTRING:
 					case TYPE_BITSTRING_A:
