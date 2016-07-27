@@ -20,6 +20,7 @@ import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
+import org.eclipse.titan.designer.AST.Type;
 import org.eclipse.titan.designer.AST.ASN1.values.RelativeObjectIdentifier_Value;
 import org.eclipse.titan.designer.AST.Assignment.Assignment_type;
 import org.eclipse.titan.designer.AST.IType.Type_type;
@@ -353,7 +354,7 @@ public final class SizeOfExpression extends Expression_Value {
 			if (!Expected_Value_type.EXPECTED_TEMPLATE.equals(internalExpectedValue)) {
 				templateInstance.getLocation()
 						.reportSemanticError(
-								MessageFormat.format("Reference to a value was expected instead of {0}",
+								MessageFormat.format(Type.REFTOVALUEEXPECTED,
 										assignment.getDescription()));
 				setIsErroneous(true);
 				return -1;

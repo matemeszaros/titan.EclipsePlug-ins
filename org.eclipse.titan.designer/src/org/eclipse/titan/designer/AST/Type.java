@@ -55,7 +55,8 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * */
 public abstract class Type extends Governor implements IType, IIncrementallyUpdateable, IOutlineElement {
 	private static final String INCOMPATIBLEVALUE = "Incompatible value: `{0}'' was expected";
-
+	public static final String REFTOVALUEEXPECTED = "Reference to a value was expected instead of {0}";
+	public static final String REFTOVALUEEXPECTED_INSTEADOFCALL = "Reference to a value was expected instead of a call of {0}, which return a template";
 	private static final String TYPECOMPATWARNING = "Type compatibility between `{0}'' and `{1}''";
 
 	/** the parent type of this type */
@@ -597,7 +598,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			case A_PAR_TEMP_INOUT:
 				if (!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)) {
 					value.getLocation().reportSemanticError(
-							MessageFormat.format("Reference to a value was expected instead of {0}",
+							MessageFormat.format(REFTOVALUEEXPECTED,
 									assignment.getDescription()));
 					errorFlag = true;
 				}
@@ -653,7 +654,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 					value.getLocation()
 					.reportSemanticError(
 							MessageFormat.format(
-									"Reference to a value was expected instead of a call of {0}, which return a template",
+									REFTOVALUEEXPECTED_INSTEADOFCALL,
 									assignment.getDescription()));
 					errorFlag = true;
 				}
@@ -663,7 +664,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 					value.getLocation()
 					.reportSemanticError(
 							MessageFormat.format(
-									"Reference to a value was expected instead of a call of {0}, which return a template",
+									REFTOVALUEEXPECTED_INSTEADOFCALL,
 									assignment.getDescription()));
 					errorFlag = true;
 				}
@@ -832,7 +833,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 				case A_VAR_TEMPLATE:
 					if(!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)){
 						template.getLocation().reportSemanticError(
-								MessageFormat.format("Reference to a value was expected instead of {0}",
+								MessageFormat.format(REFTOVALUEEXPECTED,
 										assignment.getDescription()));
 						template.setIsErroneous(true);
 					}
@@ -932,7 +933,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 				case A_EXT_FUNCTION_RTEMP:
 					if(!Expected_Value_type.EXPECTED_TEMPLATE.equals(expectedValue)){
 						template.getLocation().reportSemanticError(
-								MessageFormat.format("Reference to a value was expected instead of {0}",
+								MessageFormat.format(REFTOVALUEEXPECTED,
 										assignment.getDescription()));
 						template.setIsErroneous(true);
 					}
