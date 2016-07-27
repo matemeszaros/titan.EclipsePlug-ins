@@ -89,8 +89,7 @@ public class ChangeTests {
 				}
 
 				markerlist2 = semanticMarkers2.get(resource);
-
-				assertEquals(markerlist1.size(), markerlist2.size());
+				assertEquals("In " + resource.getName(), markerlist1.size(), markerlist2.size());
 				for (int i = 0; i < markerlist1.size(); i++) {
 					MarkerHandlingLibrary.blindMarkerEquivencyCheck(markerlist1.get(i), markerlist2.get(i));
 				}
