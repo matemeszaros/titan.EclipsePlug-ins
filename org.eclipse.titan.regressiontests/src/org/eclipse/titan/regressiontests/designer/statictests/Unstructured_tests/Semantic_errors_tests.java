@@ -370,15 +370,17 @@ public class Semantic_errors_tests {
 	}
 
 	private ArrayList<MarkerToCheck> ReturnValueTest_ttcn_initializer() {
-		//ReturnValueTest.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(27);
-		int lineNum = 12;
+		// ReturnValueTest.ttcn
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(29);
+		int lineNum = 11;
 		markersToCheck.add(new MarkerToCheck("Missing return value. The function should return a value of type `integer'",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 38;
+		lineNum += 30;
+		markersToCheck.add(new MarkerToCheck("A specific value without matching symbols was expected as return value",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 11;
 		markersToCheck.add(new MarkerToCheck("A specific value without matching symbols was expected as return value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 8;
 		markersToCheck.add(new MarkerToCheck("A specific value without matching symbols was expected as return value",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 44;
+		lineNum += 52;
 		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
@@ -386,7 +388,9 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 8;
 		markersToCheck.add(new MarkerToCheck("A specific value without matching symbols was expected as return value",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 19;
+		lineNum += 5;
+		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of template `t_roi'",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 14;
 		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
@@ -429,6 +433,7 @@ public class Semantic_errors_tests {
 
 		return markersToCheck;
 	}
+
 
 
 	private ArrayList<MarkerToCheck> Syntax_warnings_ttcn_initializer() {

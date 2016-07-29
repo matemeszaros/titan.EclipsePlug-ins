@@ -1,7 +1,6 @@
-module Bug1 {
+module ReturnValueTest {
 //Artifact artf598689 : [DESIGNER] A specific value without matching symbols was expected as return value 
 // Return Statement regression test
-//TODO: put into plugin regression test !
 type record of integer RoI;
 
 function f_00()  {
@@ -38,6 +37,9 @@ function f_1_range() return integer {
   return 1..2;//expected error
 } 
 
+function f_1_range2() return integer {
+  return (1..2);//expected error
+}
 function f_1_expr() return integer {
   return 1+1;
 }
@@ -51,7 +53,7 @@ function f_2_range() return integer {
 } 
 
 function f_2expr1() return integer {
-  return (2+3); //expected error
+  return (2+3);
 }
 
 function f_2expr2() return integer {
@@ -70,22 +72,30 @@ function f_2_t() return template integer {
   return (2);
 }
 
+function f_2_t_range0() return template integer {
+  return 2..3; //missing ()=>error
+};
+
 function f_2_t_range1() return template integer {
-  return (2..3);
+  return (2..3); //ok
 };
 
 
 function f_2_t_range2() return template integer {
-  return (3, 5..7); //expected error
+  return (3,5..7); //expected error
+};
+
+function f_2_t_range3() return template integer {
+  return (3,(5..7)); //expected error
 };
 
 function f_2_t_range2v() return template integer {
-  template integer t_i := (3, 9, 5..7);
+  template integer t_i := (3, 9, (5..7));
   return t_i;
 };
 
 function f_2_t_range2vt() return template integer {
-  var template integer vt_i := (3, 9, 5 .. 7);
+  var template integer vt_i := (3, 9, (5 .. 7));
   return vt_i;
 };
 
@@ -110,12 +120,12 @@ function f_5() return RoI{
   return {1,2,"a"}; //expected error
 }
 
-function f_6_vl() return RoI{
-  return ({1,2}); //expected error
-}
+//function f_6_vl() return RoI{
+//  return ({1,2});//compiler error but no on-the fly marker
+//}
 
 function f_6() return RoI{
-  return ({1,2},{1}); //expected error
+  return ({1,2},{1}); //expected error, but no compiler error
 }
 
 function f_7() return RoI {

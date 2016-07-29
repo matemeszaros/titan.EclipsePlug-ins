@@ -55,16 +55,14 @@ public class Syntactical_errors_tests {
 	
 	private ArrayList<MarkerToCheck> ReturnValueTest_ttcn_initializer_syntactic() {
 		//ReturnValueTest.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(6);
-		int lineNum = 38;
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(5);
+		int lineNum = 37;
 		markersToCheck.add(new MarkerToCheck("mismatched input '..' expecting {'action', 'activate', 'all', 'alt', 'and', 'and4b', 'any', 'break', 'connect', 'const', 'continue', 'deactivate', 'disconnect', 'do', 'execute', 'for', 'goto', 'if', 'ifpresent', 'interleave', 'kill', 'label', 'length', 'log', 'map', 'mod', 'mtc', 'or', 'or4b', 'rem', 'repeat', 'return', 'select', 'self', 'setverdict', 'stop', 'template', 'testcase', 'timer', 'unmap', 'var', 'while', 'xor', 'xor4b', 'int2enum', 'string2ttcn', IDENTIFIER, '@try', ';', '{', '}', '<', '>', '!=', '>=', '<=', '==', '+', '-', '*', '/', '<<', '>>', '<@', '@>', '&'}",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 41;
+		lineNum += 39;
+		markersToCheck.add(new MarkerToCheck("mismatched input '..' expecting {'action', 'activate', 'all', 'alt', 'and', 'and4b', 'any', 'break', 'connect', 'const', 'continue', 'deactivate', 'disconnect', 'do', 'execute', 'for', 'goto', 'if', 'ifpresent', 'interleave', 'kill', 'label', 'length', 'log', 'map', 'mod', 'mtc', 'or', 'or4b', 'rem', 'repeat', 'return', 'select', 'self', 'setverdict', 'stop', 'template', 'testcase', 'timer', 'unmap', 'var', 'while', 'xor', 'xor4b', 'int2enum', 'string2ttcn', IDENTIFIER, '@try', ';', '{', '}', '<', '>', '!=', '>=', '<=', '==', '+', '-', '*', '/', '<<', '>>', '<@', '@>', '&'}",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 9;
 		markersToCheck.add(new MarkerToCheck("mismatched input '..' expecting {'and', 'and4b', 'ifpresent', 'length', 'mod', 'or', 'or4b', 'rem', 'xor', 'xor4b', ',', ')', '<', '>', '!=', '>=', '<=', '==', '+', '-', '*', '/', '<<', '>>', '<@', '@>', '&'}",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("mismatched input '..' expecting {'and', 'and4b', 'ifpresent', 'length', 'mod', 'or', 'or4b', 'rem', 'xor', 'xor4b', ',', ')', '<', '>', '!=', '>=', '<=', '==', '+', '-', '*', '/', '<<', '>>', '<@', '@>', '&'}",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("mismatched input '..' expecting {'and', 'and4b', 'ifpresent', 'length', 'mod', 'or', 'or4b', 'rem', 'xor', 'xor4b', ',', ')', '<', '>', '!=', '>=', '<=', '==', '+', '-', '*', '/', '<<', '>>', '<@', '@>', '&'}",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 132;
+		lineNum += 145;
 		markersToCheck.add(new MarkerToCheck("no viable alternative at input '?'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 61;
 		markersToCheck.add(new MarkerToCheck("no viable alternative at input '?'",  lineNum, IMarker.SEVERITY_ERROR));
