@@ -799,6 +799,7 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 			} else {
 				t.getLocation().reportSemanticError(
 						MessageFormat.format("{0} cannot be used for type {1}",t.getTemplateTypeName(), getTypename()));
+				t.setIsErroneous(true);
 				return t;
 			}
 				

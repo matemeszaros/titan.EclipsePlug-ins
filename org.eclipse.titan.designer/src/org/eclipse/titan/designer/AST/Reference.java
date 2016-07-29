@@ -193,7 +193,7 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 	 * @return true if the setting is erroneous, or false otherwise
 	 * */
 	public final boolean getIsErroneous(final CompilationTimeStamp timestamp) {
-		if (lastTimeChecked == null || !lastTimeChecked.isLess(timestamp)) {
+		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return isErroneous;
 		}
 

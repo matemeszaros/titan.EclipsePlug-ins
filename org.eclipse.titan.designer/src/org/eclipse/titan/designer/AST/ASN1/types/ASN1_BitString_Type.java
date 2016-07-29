@@ -198,12 +198,14 @@ public final class ASN1_BitString_Type extends ASN1Type {
 							MessageFormat.format(
 								"A non-negative INTEGER value was expected for named bit `{0}'' instead of {1}",
 								namedValue.getName().getDisplayName(), intValueObject));
+						value.setIsErroneous(true);
 						continue;
 					}
 					if (valueMap.containsKey(intValueObject)) {
 						value.getLocation().reportSemanticError(
 								MessageFormat.format("Duplicate value {0} for named bit `{1}''", intValueObject,
 										namedValue.getName().getDisplayName()));
+						value.setIsErroneous(true);
 						final NamedValue temp = valueMap.get(intValueObject);
 						temp.getLocation().reportSemanticError(
 								MessageFormat.format("Bit {0} is already assigned to name `{1}''", intValueObject,
@@ -215,6 +217,7 @@ public final class ASN1_BitString_Type extends ASN1Type {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format("INTEGER value `{0}'' is too big to be used as a named bit",
 									integerValue.getValueValue()));
+					value.setIsErroneous(true);
 				}
 				break;
 			}

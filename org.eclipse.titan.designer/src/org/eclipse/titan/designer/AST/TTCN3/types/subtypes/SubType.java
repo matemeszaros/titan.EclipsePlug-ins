@@ -136,7 +136,7 @@ public final class SubType implements IIncrementallyUpdateable {
 	 * @return true if the subtype is erroneous, or false otherwise
 	 */
 	public boolean getIsErroneous(final CompilationTimeStamp timestamp) {
-		if (lastTimeChecked == null || !lastTimeChecked.isLess(timestamp)) {
+		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return isErroneous;
 		}
 

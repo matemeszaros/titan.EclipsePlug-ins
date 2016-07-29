@@ -149,6 +149,7 @@ public final class Assignment_Statement extends Statement {
 				checkVarAssignment(timestamp, assignment, temporalValue);
 			} else {
 				template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
+				template.setIsErroneous(true);
 			}
 			break;
 		case A_PAR_VAL_OUT:
@@ -164,6 +165,7 @@ public final class Assignment_Statement extends Statement {
 					break;
 				} else {
 					template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
+					template.setIsErroneous(true);
 					return;
 				}
 			}
@@ -178,6 +180,7 @@ public final class Assignment_Statement extends Statement {
 					break;
 				} else {
 					template.getLocation().reportSemanticError(TEMPLATEASSIGNMENTTOVALUE);
+					template.setIsErroneous(true);
 					return;
 				}
 			}
@@ -196,6 +199,7 @@ public final class Assignment_Statement extends Statement {
 			break;
 		default:
 			reference.getLocation().reportSemanticError(MessageFormat.format(VARIABLEREFERENCEEXPECTED, assignment.getAssignmentName()));
+			reference.setIsErroneous(true);
 			isErroneous = true;
 		}
 	}
@@ -257,6 +261,7 @@ public final class Assignment_Statement extends Statement {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format(OMITTOMANDATORYASSIGNMENT2, lastField.getDisplayName(),
 									baseType.getTypename()));
+					value.setIsErroneous(true);
 				}
 				break;
 			case TYPE_ASN1_SEQUENCE:
@@ -265,6 +270,7 @@ public final class Assignment_Statement extends Statement {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format(OMITTOMANDATORYASSIGNMENT2, lastField.getDisplayName(),
 									baseType.getTypename()));
+					value.setIsErroneous(true);
 				}
 				break;
 			case TYPE_TTCN3_SET:
@@ -273,6 +279,7 @@ public final class Assignment_Statement extends Statement {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format(OMITTOMANDATORYASSIGNMENT2, lastField.getDisplayName(),
 									baseType.getTypename()));
+					value.setIsErroneous(true);
 				}
 				break;
 			case TYPE_ASN1_SET:
@@ -281,10 +288,12 @@ public final class Assignment_Statement extends Statement {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format(OMITTOMANDATORYASSIGNMENT2, lastField.getDisplayName(),
 									baseType.getTypename()));
+					value.setIsErroneous(true);
 				}
 				break;
 			default:
-				value.getLocation().reportSemanticError(OMITTOMANDATORYASSIGNMENT1);
+				value.getLocation().reportSemanticError(OMITTOMANDATORYASSIGNMENT1);//TODO:check this!!!
+				value.setIsErroneous(true);
 				isErroneous = true;
 				break;
 			}
@@ -360,6 +369,7 @@ public final class Assignment_Statement extends Statement {
 							.format("The length of the string to be assigned to a string element of type `{0}'' should be 1 instead of {1}",
 									type.getTypename(), stringLength);
 					value.getLocation().reportSemanticError(message);
+					value.setIsErroneous(true);
 				}
 			}
 		}
@@ -391,7 +401,8 @@ public final class Assignment_Statement extends Statement {
 			if (!template.isValue(timestamp)) {
 				template.getLocation().reportSemanticError(
 						TEMPLATEASSIGNMENTTOVALUE);
-				isErroneous = true;
+				template.setIsErroneous(true);
+				//isErroneous = true; //????
 				return;
 			}
 		}

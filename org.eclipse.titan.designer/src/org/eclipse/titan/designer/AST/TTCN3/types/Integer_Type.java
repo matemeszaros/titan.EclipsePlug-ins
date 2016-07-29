@@ -236,6 +236,7 @@ public final class Integer_Type extends Type {
 					&& Value.Value_type.INTEGER_VALUE.equals(upper.getValuetype())) {
 				if (!getIsErroneous(timestamp) && ((Integer_Value) lower).getValue() > ((Integer_Value) upper).getValue()) {
 					template.getLocation().reportSemanticError(INCORRECTBOUNDARIES);
+					template.setIsErroneous(true);
 				}
 			}
 			break;
@@ -252,10 +253,12 @@ public final class Integer_Type extends Type {
 		    break;
 		default:
 			template.getLocation().reportSemanticError(MessageFormat.format(TEMPLATENOTALLOWED, template.getTemplateTypeName()));
+			template.setIsErroneous(true);
 		}
 
 		if (template.getLengthRestriction() != null) {
 			template.getLocation().reportSemanticError(LENGTHRESTRICTIONNOTALLOWED);
+			template.setIsErroneous(true);
 		}
 	}
 

@@ -73,7 +73,7 @@ public abstract class ArrayDimension extends ASTNode implements ILocateableNode,
 	 *         the actual semantic check cycle, false otherwise.
 	 * */
 	public final boolean getIsErroneous(final CompilationTimeStamp timestamp) {
-		if (lastTimeChecked == null || !lastTimeChecked.isLess(timestamp)) {
+		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return isErroneous;
 		}
 
