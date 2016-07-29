@@ -26,14 +26,18 @@ public abstract class ReferencesProcessor extends AssignmentHandler {
 	public Set<String> computeReferences(final Set<Reference> references) {
 		final Set<String> result = new HashSet<String>();
 		for (final Reference reference : references) {
-			final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false, null);
-			
+			final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false,
+					null);
+
 			if (assignment == null || assignment.getIdentifier() == null) {
 				// if semantic error occurs, assignment will be null
 				// have to get reference id
-				result.add(reference.getId().getDisplayName());	
+				if (reference != null && reference.getId() != null) {
+					result.add(reference.getId().getDisplayName());
+				}
 			} else {
-				// the name of the assignment might differ from the reference in incremental parsing mode
+				// the name of the assignment might differ from the reference in
+				// incremental parsing mode
 				result.add(assignment.getIdentifier().getDisplayName());
 			}
 		}
