@@ -50,7 +50,7 @@ public final class Anytype_Value extends Value {
 	private final Identifier name;
 	private final IValue value;
 
-	public Anytype_Value(final Sequence_Value value) {
+	public Anytype_Value(final CompilationTimeStamp timestamp, final Sequence_Value value) {
 		copyGeneralProperties(value);
 		int valueSize = value.getNofComponents();
 		if (valueSize < 1) {
@@ -58,11 +58,13 @@ public final class Anytype_Value extends Value {
 			this.value = null;
 			value.getLocation().reportSemanticError(ONEFIELDEXPECTED1);
 			setIsErroneous(true);
+			lastTimeChecked = timestamp;
 		} else if (valueSize > 1) {
 			this.name = null;
 			this.value = null;
 			value.getLocation().reportSemanticError(MessageFormat.format(ONEFIELDEXPECTED2, valueSize));
 			setIsErroneous(true);
+			lastTimeChecked = timestamp;
 		} else {
 			NamedValue namedValue = value.getSeqValueByIndex(0);
 			this.name = namedValue.getName();

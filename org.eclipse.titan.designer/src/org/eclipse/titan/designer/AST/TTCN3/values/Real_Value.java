@@ -127,6 +127,7 @@ public final class Real_Value extends Value {
 
 		if (erroneous) {
 			setIsErroneous(true);
+			lastTimeChecked = timestamp;
 			value = 0;
 		} else {
 			value = (float) (mantissa * Math.pow(base, exponent));

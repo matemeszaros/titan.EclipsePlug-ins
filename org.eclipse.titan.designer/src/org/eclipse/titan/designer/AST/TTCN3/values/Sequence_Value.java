@@ -354,10 +354,10 @@ public final class Sequence_Value extends Value {
 			convertedValue =  new Set_Value(this);
 			break;
 		case CHOICE_VALUE:
-			convertedValue = new Choice_Value(this);
+			convertedValue = new Choice_Value(timestamp, this);
 			break;
 		case ANYTYPE_VALUE:
-			convertedValue = new Anytype_Value(this);
+			convertedValue = new Anytype_Value(timestamp, this);
 			break;
 		case REAL_VALUE:
 			convertedValue = new Real_Value(timestamp, this);
