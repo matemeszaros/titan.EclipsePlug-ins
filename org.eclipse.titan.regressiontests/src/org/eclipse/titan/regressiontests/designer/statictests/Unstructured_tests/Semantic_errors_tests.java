@@ -68,7 +68,7 @@ public class Semantic_errors_tests {
 	}
 
 	@Test
-	public void Semantic_errors5_ttcn() throws Exception {
+	public void ReturnValueTest_ttcn() throws Exception {
 		Designer_plugin_tests.checkSemanticMarkersOnFile(ReturnValueTest_ttcn_initializer(), "src/Unstructured_tests/ReturnValueTest.ttcn");
 	}
 	
@@ -370,8 +370,8 @@ public class Semantic_errors_tests {
 	}
 
 	private ArrayList<MarkerToCheck> ReturnValueTest_ttcn_initializer() {
-		// ReturnValueTest.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(29);
+		//ReturnValueTest.ttcn
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(27);
 		int lineNum = 11;
 		markersToCheck.add(new MarkerToCheck("Missing return value. The function should return a value of type `integer'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 30;
@@ -410,7 +410,9 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 15;
+		lineNum += 5;
+		markersToCheck.add(new MarkerToCheck("Field `c' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 10;
 		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
@@ -422,7 +424,9 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 17;
+		lineNum += 5;
+		markersToCheck.add(new MarkerToCheck("Field `c' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 12;
 		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
@@ -433,7 +437,6 @@ public class Semantic_errors_tests {
 
 		return markersToCheck;
 	}
-
 
 
 	private ArrayList<MarkerToCheck> Syntax_warnings_ttcn_initializer() {

@@ -31,8 +31,8 @@ public class Syntactical_errors_tests {
 	}
 	
 	@Test
-	public void SyntacticErrors5() throws Exception {
-		Designer_plugin_tests.checkSyntaxMarkersOnFile( ReturnValueTest_ttcn_initializer_syntactic(), "src/Unstructured_tests/ReturnValueTest.ttcn");
+	public void ReturnValueTest_ttcn() throws Exception {
+		Designer_plugin_tests.checkSyntaxMarkersOnFile( ReturnValueTest_ttcn_initializer(), "src/Unstructured_tests/ReturnValueTest.ttcn");
 	}
 
 	private ArrayList<MarkerToCheck> SemanticErrors2_asn_initializer() {
@@ -53,9 +53,9 @@ public class Syntactical_errors_tests {
 		return markersToCheck;
 	}
 	
-	private ArrayList<MarkerToCheck> ReturnValueTest_ttcn_initializer_syntactic() {
+	private ArrayList<MarkerToCheck> ReturnValueTest_ttcn_initializer() {
 		//ReturnValueTest.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(5);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(6);
 		int lineNum = 37;
 		markersToCheck.add(new MarkerToCheck("mismatched input '..' expecting {'action', 'activate', 'all', 'alt', 'and', 'and4b', 'any', 'break', 'connect', 'const', 'continue', 'deactivate', 'disconnect', 'do', 'execute', 'for', 'goto', 'if', 'ifpresent', 'interleave', 'kill', 'label', 'length', 'log', 'map', 'mod', 'mtc', 'or', 'or4b', 'rem', 'repeat', 'return', 'select', 'self', 'setverdict', 'stop', 'template', 'testcase', 'timer', 'unmap', 'var', 'while', 'xor', 'xor4b', 'int2enum', 'string2ttcn', IDENTIFIER, '@try', ';', '{', '}', '<', '>', '!=', '>=', '<=', '==', '+', '-', '*', '/', '<<', '>>', '<@', '@>', '&'}",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 39;
