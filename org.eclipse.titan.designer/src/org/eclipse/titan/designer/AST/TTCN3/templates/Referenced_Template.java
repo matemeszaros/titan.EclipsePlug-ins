@@ -330,7 +330,7 @@ public final class Referenced_Template extends TTCN3Template {
 	@Override
 	public void checkSpecificValue(final CompilationTimeStamp timestamp, final boolean allowOmit) {
 		TTCN3Template temp = getTemplateReferencedLast(timestamp);
-		if (!temp.getIsErroneous(timestamp)) {
+		if (temp != this && !temp.getIsErroneous(timestamp)) {
 			temp.checkSpecificValue(timestamp, allowOmit);
 		}
 	}
