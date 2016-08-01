@@ -29,7 +29,7 @@ import org.osgi.framework.Version;
 public class HeadlessRunner implements IApplication {
 	private static final String REGRESSION_TEST_ID = "org.eclipse.titan.regressiontests";
 	private static final String ARG_WORKSPACE = "workspace";
-	private static final String ARG_LICESNSE =  "license";
+	private static final String ARG_LICENSE =  "license";
 	private static final String ARG_XML_OUT =  "xml_out";
 
 	private Logger logger = Logger.getLogger(HeadlessRunner.class.getName());
@@ -123,8 +123,8 @@ public class HeadlessRunner implements IApplication {
 			throw new ArgumentException("Invalid URI: " + arguments.get(ARG_WORKSPACE));
 		}
 
-		if (arguments.containsKey(ARG_LICESNSE)) {
-			MainTestSuite.LICENSE_FILE = arguments.get(ARG_LICESNSE);
+		if (arguments.containsKey(ARG_LICENSE)) {
+			MainTestSuite.LICENSE_FILE = arguments.get(ARG_LICENSE);
 		}
 
 		System.out.println("ws location: " + MainTestSuite.getPathToWorkspace());
