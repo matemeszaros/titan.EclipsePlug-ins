@@ -55,7 +55,7 @@ public class HeadlessRunner implements IApplication {
 		} catch (final ArgumentException e) {
 			System.err.println(e.getMessage());
 			System.err.println(usage());
-			return -1;
+			return Integer.valueOf(-1);
 		}
 
 		JUnitCore junit = new JUnitCore();
@@ -75,7 +75,12 @@ public class HeadlessRunner implements IApplication {
 
 		Result result = junit.run(MainTestSuite.class);
 		printResult(result);
-		return IApplication.EXIT_OK;
+		
+		if(result.wasSuccessful()) {
+			return IApplication.EXIT_OK;
+		} else {
+			return Integer.valueOf(-1);
+		}
 	}
 
 	private String getBundleVersion(String symbolicName) {
