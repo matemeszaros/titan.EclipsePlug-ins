@@ -174,10 +174,12 @@ public class AltstepCoverage {
 					Identifier portId = param.getIdentifier();
 					Set<String> receivableTypes = new HashSet<String>();
 					TypeSet incomingTypes = type.getPortBody().getInMessages();
-					for (int j = 0; j < incomingTypes.getNofTypes(); ++j) {
-						receivableTypes.add(incomingTypes.getTypeByIndex(j).getTypename());
+					if (incomingTypes != null) {
+						for (int j = 0; j < incomingTypes.getNofTypes(); ++j) {
+							receivableTypes.add(incomingTypes.getTypeByIndex(j).getTypename());
+						}
+						visiblePorts.put(portId, receivableTypes);
 					}
-					visiblePorts.put(portId, receivableTypes);
 				}
 			}
 		}
