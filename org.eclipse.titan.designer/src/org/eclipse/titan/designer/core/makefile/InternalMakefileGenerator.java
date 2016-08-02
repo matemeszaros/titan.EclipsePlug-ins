@@ -782,9 +782,11 @@ public final class InternalMakefileGenerator {
 					String tempProjectLocation = location.toOSString();
 					for (String temp : optionList) {
 						URI uri = TITANPathUtilities.resolvePathURI(temp, tempProjectLocation);
-						temp = PathConverter.convert(URIUtil.toPath(uri).toOSString(), reportDebugInformation,
-								TITANDebugConsole.getConsole());
-						contents.append(" -I").append(temp);
+						if(uri != null) {
+							temp = PathConverter.convert(URIUtil.toPath(uri).toOSString(), reportDebugInformation,
+									TITANDebugConsole.getConsole());
+							contents.append(" -I").append(temp);
+						}
 					}
 				}
 			}
