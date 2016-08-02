@@ -103,7 +103,7 @@ public final class AssignmentHandlerAFTRerences extends ReferencesProcessor {
 			}
 			
 			final Assignment assignment = ((Reference) node).getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false, null);
-			if(assignment == null || !assignment.getIdentifier().equals(identifier)) {
+			if(assignment == null || assignment.getIdentifier() == null || !assignment.getIdentifier().equals(identifier)) {
 				setIsInfected(true);
 				setIsContagious(true);
 				return V_CONTINUE;
