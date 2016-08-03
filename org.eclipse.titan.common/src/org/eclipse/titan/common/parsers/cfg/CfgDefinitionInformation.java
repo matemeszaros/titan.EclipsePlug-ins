@@ -11,7 +11,8 @@ import java.util.List;
 
 /**
  * @author eferkov
- * */
+ * @author Arpad Lovassy
+ */
 public final class CfgDefinitionInformation {
 	private String value = null;
 	private List<CfgLocation> locations = null;
@@ -19,10 +20,6 @@ public final class CfgDefinitionInformation {
 	public CfgDefinitionInformation(final String value, final List<CfgLocation> locations) {
 		this.value = value;
 		this.locations = locations;
-	}
-	
-	public void addLocation(final CfgLocation location) {
-		locations.add(location);
 	}
 	
 	public String getValue() {
