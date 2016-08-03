@@ -242,10 +242,10 @@ public class ParserLogger {
 	 * For logging purposes
 	 * @param aRule rule
 	 * @param aTokens token list to get the tokens (all, hidden and not hidden also) from
-	 * @return escaped rule text
+	 * @return rule text including hidden tokens. First and last tokens are non-hidden.
 	 */
 	public static String getRuleText( final ParserRuleContext aRule,
-									   final List<Token> aTokens ) {
+									  final List<Token> aTokens ) {
 		final Token startToken = aRule.start;
 		if ( startToken == null ) {
 			println( "ERROR: ParseLogger.getEscapedRuleText() startToken == null" );
