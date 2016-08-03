@@ -33,11 +33,7 @@ public abstract class Setting extends ASTNode implements ISetting {
 
 	@Override
 	public final boolean getIsErroneous(final CompilationTimeStamp timestamp) {
-		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
-			return isErroneous;
-		}
-
-		return false;
+		return isErroneous;
 	}
 
 	@Override
