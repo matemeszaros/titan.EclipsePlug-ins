@@ -63,50 +63,28 @@ import java.util.regex.Pattern;
 	private IncludeSectionHandler orderedIncludeSectionHandler = new IncludeSectionHandler();
 	private DefineSectionHandler defineSectionHandler = new DefineSectionHandler();
 	private LoggingSectionHandler loggingSectionHandler = new LoggingSectionHandler();
-	
+
 	/**
-	 * Parsed macro info, collected during parsing, it will be processed after the parsing.
+	 * Adds a new definition
+	 * @param aName name
+	 * @param aValue definition value
+	 * @param aToken token of the definition for getting its location
 	 */
-	private class Macro {
-		/** parsed macro text */
-		private String mMacroName;
-		
-		/** macro token, needed for the text and position */
-		private Token mMacroToken;
-		
-		/** error message if macro is not found */
-		private String mErrorMessage;
-		
-		public Macro( final String aMacroName, final Token aMacroToken, final String aErrorMessage ) {
-			mMacroName = aMacroName;
-			mMacroToken = aMacroToken;
-			mErrorMessage = aErrorMessage;
-		}
-		
-		public String getMacroName() {
-			return mMacroName;
-		}
-
-		public Token getMacroToken() {
-			return mMacroToken;
-		}
-
-		public String getErrorMessage() {
-			return mErrorMessage;
-		}
+	private void addDefinition( final String aName, final String aValue, final Token aToken ) {
+		final ArrayList<CfgLocation> locations = new ArrayList<CfgLocation>();
+		locations.add( new CfgLocation( mActualFile, aToken, aToken ) );
+		mCfgParseResult.getDefinitions().put( aName, new CfgDefinitionInformation( aValue, locations ) );
 	}
 	
 	/**
-	 * Macro references, which are collected at parse time.
-	 * These are NOT macro definitions (those are collected in mCfgParseResult.mDefinitions),
-	 * these are macro references in expressions with locations and these are possible syntax errors.
-	 * At parse time we don't know, if a macro name is valid, or not, it can be defined later.
-	 * This list is evaluated after parsing. See checkMacroErrors() 
+	 * Adds a new macro reference
+	 * @param aMacroName name
+	 * @param aMacroToken token of the macro for getting its location
+	 * @param aErrorMarker error marker, it will be shown after parsing
+	 *                     if the definition referenced macro is not found 
 	 */
-	private List<Macro> mMacros = new ArrayList<Macro>();
-	
-	private void addMacro( final String aMacroName, final Token aMacroToken, final String aErrorMessage ) {
-		mMacros.add( new Macro( aMacroName, aMacroToken, aErrorMessage ) );
+	private void addMacro( final String aMacroName, final Token aMacroToken, final TITANMarker aErrorMarker ) {
+		mCfgParseResult.addMacro( aMacroName, aMacroToken, mActualFile, aErrorMarker );
 	}
 	
 	public void reportWarning(TITANMarker marker){
@@ -203,8 +181,25 @@ import java.util.regex.Pattern;
 	 *                  NOTE: end position is the column index after the token's last character.
 	 */
 	public void reportError( final String aMessage, final Token aStartToken, final Token aEndToken ) {
-		TITANMarker marker = createMarker( aMessage, aStartToken, aEndToken, IMarker.SEVERITY_ERROR, IMarker.PRIORITY_NORMAL );
+		TITANMarker marker = createError( aMessage, aStartToken, aEndToken );
 		mCfgParseResult.getWarnings().add(marker);
+	}
+
+	/**
+	 * Creates an error marker.
+	 * Locations of input tokens are not moved by offset and line yet, this function does this conversion.
+	 * @param aMessage marker message
+	 * @param aStartToken the 1st token, its line and start position will be used for the location
+	 *                  NOTE: start position is the column index of the tokens 1st character.
+	 *                        Column index starts with 0.
+	 * @param aEndToken the last token, its end position will be used for the location.
+	 *                  NOTE: end position is the column index after the token's last character.
+	 * @return the created error marker
+	 */
+	public TITANMarker createError( final String aMessage, final Token aStartToken, final Token aEndToken ) {
+		final TITANMarker marker = createMarker( aMessage, aStartToken, aEndToken, IMarker.SEVERITY_ERROR,
+												 IMarker.PRIORITY_NORMAL );
+		return marker;
 	}
 
 	/**
@@ -262,11 +257,11 @@ import java.util.regex.Pattern;
 	private String getMacroValue( final Token aMacroToken, final String aErrorFormatStr ) {
 		final String definition = getMacroName( aMacroToken.getText() );
 		final String errorMsg = String.format( aErrorFormatStr, definition );
-		addMacro( definition, aMacroToken, errorMsg );
 		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			//TODO: remove, macro errors are processed later
-			//reportError( errorMsg, aMacroToken, aMacroToken );
+			// macro errors are processed later
+			final TITANMarker errorMarker = createError( errorMsg, aMacroToken, aMacroToken );
+			addMacro( definition, aMacroToken, errorMarker );
 			return "";
 		}
 		return value;
@@ -283,27 +278,14 @@ import java.util.regex.Pattern;
 	private String getTypedMacroValue( Token aMacroToken, String aErrorFormatStr ) {
 		final String definition = getTypedMacroName( aMacroToken.getText() );
 		final String errorMsg = String.format( aErrorFormatStr, definition );
-		addMacro( definition, aMacroToken, errorMsg );
 		final String value = getDefinitionValue( definition );
 		if ( value == null ) {
-			//TODO: remove, macro errors are processed later
-			//reportError( errorMsg, aMacroToken, aMacroToken );
+			// macro errors are processed later
+			final TITANMarker errorMarker = createError( errorMsg, aMacroToken, aMacroToken );
+			addMacro( definition, aMacroToken, errorMarker );
 			return "";
 		}
 		return value;
-	}
-	
-	/**
-	 * Checks if all the collected macros are valid,
-	 * puts error markers if needed
-	 */
-	public void checkMacroErrors() {
-		for ( final Macro macro : mMacros ) {
-			final String value = getDefinitionValue( macro.getMacroName() );
-			if ( value == null ) {
-				reportError( macro.getErrorMessage(), macro.getMacroToken(), macro.getMacroToken() );
-			}
-		}
 	}
 	
 	/**
@@ -1156,9 +1138,7 @@ pr_MacroAssignment returns [ DefineSectionHandler.Definition definition ]
 	endCol = pr_DefinitionRValue { value = $endCol.text; }
 )
 {	if(name != null && value != null) {
-		ArrayList<CfgLocation> locations = new ArrayList<CfgLocation>();
-		locations.add(new CfgLocation(mActualFile, $col, $col));
-		mCfgParseResult.getDefinitions().put(name, new CfgDefinitionInformation(value, locations));
+		addDefinition( name, value, $col );
 	}
 
 	$definition = new DefineSectionHandler.Definition();

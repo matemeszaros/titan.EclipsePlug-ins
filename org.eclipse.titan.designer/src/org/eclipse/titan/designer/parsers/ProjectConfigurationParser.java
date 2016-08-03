@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -39,6 +40,8 @@ import org.eclipse.titan.common.parsers.cfg.CfgAnalyzer;
 import org.eclipse.titan.common.parsers.cfg.CfgDefinitionInformation;
 import org.eclipse.titan.common.parsers.cfg.CfgLocation;
 import org.eclipse.titan.common.parsers.cfg.CfgParseResult;
+import org.eclipse.titan.common.parsers.cfg.CfgParseResult.Macro;
+import org.eclipse.titan.common.path.PathConverter;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
@@ -230,48 +233,46 @@ public final class ProjectConfigurationParser {
 			MarkerHandler.markAllMarkersForRemoval(file, GeneralConstants.ONTHEFLY_MIXED_MARKER);
 		}
 
+
 		// Remove all markers and definitions from the files that need
 		// to be parsed. The innermost loop usually executes once.
 		// It's not that expensive. :)
-		for (IFile file : filesToCheck) {
-			MarkerHandler.markAllOnTheFlyMarkersForRemoval(file);
-			MarkerHandler.markAllTaskMarkersForRemoval(file);
-			Set<Map.Entry<String, CfgDefinitionInformation>> entries = definitions.entrySet();
-			for (Iterator<Map.Entry<String, CfgDefinitionInformation>> mapIter = entries.iterator(); mapIter.hasNext();) {
-				Map.Entry<String, CfgDefinitionInformation> entry = mapIter.next();
-				CfgDefinitionInformation info = entry.getValue();
-				List<CfgLocation> list = info.getLocations();
-				for (Iterator<CfgLocation> listIter = list.iterator(); listIter.hasNext();) {
-					CfgLocation location = listIter.next();
-					if (location.getFile().equals(file)) {
-						listIter.remove();
-					}
-				}
-				if (list.isEmpty()) {
-					mapIter.remove();
-				}
-			}
+		for ( final IFile file : filesToCheck ) {
+			removeMarkersAndDefinitions( file );
 		}
 
 		// parsing the files
-		monitor.beginTask(PARSING, filesToCheck.size() + 1);
+		monitor.beginTask( PARSING, IProgressMonitor.UNKNOWN );
 
-		for (IFile file : filesToCheck) {
-			// parse a file only if the operation was not canceled
-			// and the file is not yet up-to-date
-			if (monitor.isCanceled()) {
-				// just don't do anything
-			} else if (!file.isAccessible()) {
-				TITANDebugConsole.println("The file " + file.getLocationURI() + " does not seem to exist.");
-			} else if (!uptodateFiles.containsKey(file)) {
-				monitor.subTask(file.getProjectRelativePath().toOSString());
-				// parse the contents of the file
-				fileBasedAnalysis(file);
+		final List<Macro> macros = new ArrayList<Macro>();
+		final Map<String, String> env = System.getenv();
+ 
+		final List<IFile> filesChecked = new ArrayList<IFile>();
+		while( !filesToCheck.isEmpty() ) {
+			final IFile file = filesToCheck.get( 0 );
+			if( !filesChecked.contains( file ) ) {
+				// parse a file only if the operation was not canceled
+				// and the file is not yet up-to-date
+				if (monitor.isCanceled()) {
+					// just don't do anything
+				} else if (!file.isAccessible()) {
+					TITANDebugConsole.println("The file " + file.getLocationURI() + " does not seem to exist.");
+				} else if (!uptodateFiles.containsKey(file)) {
+					monitor.subTask(file.getProjectRelativePath().toOSString());
+					// parse the contents of the file
+					fileBasedAnalysis( file, macros, filesToCheck, filesChecked );
+				}
+				monitor.worked(1);
+				filesChecked.add( file );
 			}
-			monitor.worked(1);
+			filesToCheck.remove( 0 );
 		}
 
 		filesToCheck.clear();
+
+		// Check if macro references are valid.
+		// This can be done only after all of the files are parsed
+		checkMacroErrors( macros, definitions, env );
 
 		// Semantic checking will start here
 
@@ -288,6 +289,30 @@ public final class ProjectConfigurationParser {
 		}
 
 		return Status.OK_STATUS;
+	}
+
+	/**
+	 * Remove markers and definitions of file
+	 * @param aFile file
+	 */
+	private void removeMarkersAndDefinitions( final IFile aFile ) {
+		MarkerHandler.markAllOnTheFlyMarkersForRemoval( aFile );
+		MarkerHandler.markAllTaskMarkersForRemoval( aFile );
+		final Set<Map.Entry<String, CfgDefinitionInformation>> entries = definitions.entrySet();
+		for ( final Iterator<Map.Entry<String, CfgDefinitionInformation>> mapIter = entries.iterator(); mapIter.hasNext(); ) {
+			final Map.Entry<String, CfgDefinitionInformation> entry = mapIter.next();
+			final CfgDefinitionInformation info = entry.getValue();
+			final List<CfgLocation> list = info.getLocations();
+			for ( final Iterator<CfgLocation> listIter = list.iterator(); listIter.hasNext(); ) {
+				final CfgLocation location = listIter.next();
+				if ( location.getFile().equals( aFile ) ) {
+					listIter.remove();
+				}
+			}
+			if (list.isEmpty()) {
+				mapIter.remove();
+			}
+		}
 	}
 
 	/**
@@ -354,10 +379,15 @@ public final class ProjectConfigurationParser {
 	/**
 	 * Parses the provided file.
 	 * 
-	 * @param file
-	 *                the file to be parsed
+	 * @param file (in) the file to be parsed
+	 * @param aMacros (in/out) collected macro references
+	 * @param filesChecked 
+	 * @param filesToCheck 
 	 */
-	private void fileBasedAnalysis(final IFile file) {
+	private void fileBasedAnalysis( final IFile file,
+									final List<Macro> aMacros,
+									final List<IFile> aFilesToCheck,
+									final List<IFile> aFilesChecked ) {
 		List<TITANMarker> warnings = null;
 		List<SyntacticErrorStorage> errorsStored = null;
 		IDocument document = null;
@@ -383,7 +413,30 @@ public final class ProjectConfigurationParser {
 		final CfgParseResult cfgParseResult = cfgAnalyzer.getCfgParseResult();
 		errorsStored = cfgAnalyzer.getErrorStorage();
 		warnings = cfgParseResult.getWarnings();
-
+		aMacros.addAll( cfgParseResult.getMacros() );
+		definitions.putAll( cfgParseResult.getDefinitions() );
+		
+		// add included files to the aFilesToCheck list
+		final List<String> includeFilenames = cfgParseResult.getIncludeFiles();
+		for ( final String includeFilename : includeFilenames ) {
+			// example value: includeFilename == MyExample2.cfg
+			// example value: file == L/hw/src/MyExample.cfg
+			final IPath includeFilePath = PathConverter.getProjectRelativePath( file, includeFilename );
+			// example value: includeFilePath == src/MyExample2.cfg
+			if ( includeFilePath != null ) {
+				final IFile includeFile = project.getFile( includeFilePath );
+				// example value: includeFile == L/hw/src/MyExample2.cfg
+				// includeFile is null if the file does not exist in the project
+				if ( includeFile != null &&
+					 !uptodateFiles.containsKey( includeFile ) &&
+					 !aFilesChecked.contains( includeFile ) &&
+					 !aFilesToCheck.contains( includeFile ) ) {
+					removeMarkersAndDefinitions( includeFile );
+					aFilesToCheck.add( includeFile );
+				}
+			}
+		}
+		
 		if (editor != null && editor.getDocument() != null) {
 			ConfigEditor parentEditor = editor.getParentEditor();
 			if ( errorsStored == null || errorsStored.isEmpty() ) {
@@ -449,4 +502,49 @@ public final class ProjectConfigurationParser {
 			});
 		}
 	}
+
+	/**
+	 * Gets the value of a macro or an environment variable
+	 * @param aDefinition macro or environment variable
+	 * @param aDefines definitions from the [DEFINE] sections
+	 * @param aEnv environment variables
+	 * @return macro or environment variable value, or null if there is no such definition
+	 */
+	private String getDefinitionValue( final String aDefinition,
+									   final Map<String, CfgDefinitionInformation> aDefines,
+									   final Map<String, String> aEnv){
+		if ( aDefines != null && aDefines.containsKey( aDefinition ) ) {
+			return aDefines.get( aDefinition ).getValue();
+		} else if ( aEnv != null && aEnv.containsKey( aDefinition ) ) {
+			return aEnv.get( aDefinition );
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Checks if all the collected macros are valid,
+	 * puts error markers if needed
+	 * @param aMacros collected macro references
+	 * @param aDefines definitions from the [DEFINE] sections
+	 * @param aEnv environment variables
+	 */
+	public void checkMacroErrors( final List<Macro> aMacros,
+								  final Map<String, CfgDefinitionInformation> aDefines,
+								  final Map<String, String> aEnv ) {
+		for ( final Macro macro : aMacros ) {
+			final String value = getDefinitionValue( macro.getMacroName(), aDefines, aEnv );
+			if ( value == null ) {
+				final IFile file = macro.getFile();
+				if ( file != null && file.isAccessible() ) {
+					final TITANMarker marker = macro.getErrorMarker();
+					final Location location = new Location( file, marker.getLine(),
+															marker.getOffset(), marker.getEndOffset() );
+					location.reportExternalProblem( marker.getMessage(), marker.getSeverity(),
+													GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER );
+				}
+			}
+		}
+	}
+
 }

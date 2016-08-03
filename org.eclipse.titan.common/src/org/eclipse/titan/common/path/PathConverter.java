@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -35,6 +36,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
  * </ul>
  * 
  * @author Kristof Szabados
+ * @author Arpad Lovassy
  */
 public final class PathConverter {
 	private static final String EXECUTION_FAILED = "execution failed";
@@ -151,13 +153,42 @@ public final class PathConverter {
 	 * @return the absolute path of the file or null if not possible
 	 */
 	public static String getAbsolutePath(final String baseFile, final String file) {
-		final Path filePath = new Path(file);
+		final IPath filePath = new Path(file);
 		if (filePath.isAbsolute()) {
 			return file;
 		}
-		final Path path = new Path(baseFile);
-		final IPath currDir = path.makeAbsolute().removeLastSegments(1);
-		return currDir.append(filePath).makeAbsolute().toOSString();
+		// absolute path of the base file
+		final IPath baseFilePath = new Path(baseFile);
+		// absolute path of the base dir
+		final IPath baseDirPath = baseFilePath.makeAbsolute().removeLastSegments(1);
+		return baseDirPath.append(filePath).makeAbsolute().toOSString();
+	}
+
+	/**
+	 * Returns the project relative path of a file
+	 * which is given relative to the position of a base file.
+	 * 
+	 * @param aBaseFile the file to be used as the base of the path<br>
+	 *         example value: L/hw/src/MyExample.cfg
+	 * @param aFile the file name, whose RELATIVE path we wish to find, this must be relative to the base<br>
+	 *         example value: MyExample2.cfg
+	 * @return the RELATIVE path of the file<br>
+	 *         example return value: src/MyExample2.cfg
+	 */
+	public static IPath getProjectRelativePath( final IFile aBaseFile, final String aFile ) {
+		// relative (to the base) path of the file
+		final IPath filePath = new Path( aFile );
+
+		// relative (to the project) path of the base file
+		final IPath baseFilePath = aBaseFile.getProjectRelativePath();
+		// example value: baseFilePath == src/MyExample.cfg
+
+		// relative (to the project) path of the base dir
+		final IPath baseDirPath = baseFilePath.removeLastSegments( 1 );
+		// example value: baseFilePath == src
+
+		// relative (to the project) path of the file
+		return baseDirPath.append( filePath );
 	}
 
 	private static MessageConsoleStream printCommandToDebugConsole(final boolean reportDebugInformation, final MessageConsole outputConsole, final List<String> command) {

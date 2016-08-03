@@ -189,12 +189,12 @@ public final class CfgAnalyzer {
 		// 2. Changed from BufferedTokenStream to CommonTokenStream, otherwise tokens with "-> channel(HIDDEN)" are not filtered out in lexer.
 		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
 		final CfgParser parser = new CfgParser( tokenStream );
+		parser.setActualFile( file );
 		//parser tree is built by default
 		parserListener = new TitanListener();
 		parser.removeErrorListeners(); // remove ConsoleErrorListener
 		parser.addErrorListener(parserListener);
 		final ParserRuleContext parseTreeRoot = parser.pr_ConfigFile();
-		parser.checkMacroErrors();
 		
 		mCfgParseResult = parser.getCfgParseResult();
 		// manually add the result parse tree, and its corresponding token stream,

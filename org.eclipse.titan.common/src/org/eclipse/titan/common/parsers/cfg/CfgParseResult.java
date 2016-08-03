@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.titan.common.parsers.TITANMarker;
 
 /**
@@ -97,6 +98,58 @@ public class CfgParseResult {
 	
 	private Map<String, CfgDefinitionInformation> mDefinitions = new HashMap<String, CfgDefinitionInformation>();
 	  
+	/**
+	 * Parsed macro info, collected during parsing, it will be processed after the parsing.
+	 */
+	public class Macro {
+		/** parsed macro text */
+		private String mMacroName;
+		
+		/** macro token, needed for the text and position */
+		private Token mMacroToken;
+		
+		/** file for the error marker */
+		private IFile mFile;
+		
+		/** error marker if macro is not found */
+		private TITANMarker mErrorMarker;
+		
+		public Macro( final String aMacroName,
+					  final Token aMacroToken,
+					  final IFile aFile,
+					  final TITANMarker aErrorMarker ) {
+			mMacroName = aMacroName;
+			mMacroToken = aMacroToken;
+			mFile = aFile;
+			mErrorMarker = aErrorMarker;
+		}
+		
+		public String getMacroName() {
+			return mMacroName;
+		}
+
+		public Token getMacroToken() {
+			return mMacroToken;
+		}
+
+		public IFile getFile() {
+			return mFile;
+		}
+
+		public TITANMarker getErrorMarker() {
+			return mErrorMarker;
+		}
+	}
+	
+	/**
+	 * Macro references, which are collected at parse time.
+	 * These are NOT macro definitions (those are collected in mCfgParseResult.mDefinitions),
+	 * these are macro references in expressions with locations and these are possible syntax errors.
+	 * At parse time we don't know, if a macro name is valid, or not, it can be defined later.
+	 * This list is evaluated after parsing. See checkMacroErrors() 
+	 */
+	private List<Macro> mMacros = new ArrayList<Macro>();
+	
 	public ParserRuleContext getParseTreeRoot() {
 		return mParseTreeRoot;
 	}
@@ -213,7 +266,14 @@ public class CfgParseResult {
 		return mDefinitions;
 	}
 	
-	public void setDefinitions( Map<String,CfgDefinitionInformation> aDefinitions ) {
-		mDefinitions = aDefinitions;
+	public List<Macro> getMacros() {
+		return mMacros;
+	}
+
+	public void addMacro( final String aMacroName,
+						  final Token aMacroToken,
+						  final IFile aFile,
+						  final TITANMarker aErrorMarker ) {
+		getMacros().add( new Macro( aMacroName, aMacroToken, aFile, aErrorMarker ) );
 	}
 }
