@@ -33,9 +33,20 @@ import org.eclipse.titan.common.path.PathConverter;
 public final class ConfigFileHandler {
 	private LinkedHashMap<Path, CfgParseResult> originalASTs = new LinkedHashMap<Path, CfgParseResult>();
 	private final Map<String, CfgDefinitionInformation> definesMap = new HashMap<String, CfgDefinitionInformation>();
+
+	/**
+	 * List of files, which are already parsed, no need to parse it again
+	 */
 	private final List<Path> processedFiles = new ArrayList<Path>();
+
+	/**
+	 * List of files, which are needed to be parsed.
+	 * It contains 1 item at the beginning, this is the root configuration file,
+	 * others are included by the root or others recursively.
+	 * Parsing is done when this list becomes empty.
+	 */
 	private final List<Path> toBeProcessedFiles = new ArrayList<Path>();
-	
+
 	private int tcpPort = 0;
 	private String localAddress = null;
 	private double killTimer = 10.0;
@@ -138,6 +149,10 @@ public final class ConfigFileHandler {
 		}
 	}
 
+	/**
+	 * @param actualFile file name to check
+	 * @return true if file is already processed (parsed)
+	 */
 	private boolean isAlreadyProcessed(final Path actualFile) {
 		for (final Path processedFile : processedFiles) {
 			if (processedFile.equals(actualFile)) {
@@ -226,7 +241,12 @@ public final class ConfigFileHandler {
 			for ( String filename:includeFiles ) {
 				filename = PathConverter.getAbsolutePath( actualFile.toOSString(), filename );
 				if ( filename != null ) {
-					toBeProcessedFiles.add( new Path( filename ) );
+					final Path filePath = new Path( filename );
+					if ( !processedFiles.contains( filePath ) &&
+						 !toBeProcessedFiles.contains( filePath ) ) {
+						// make sure, that file is added only once
+						toBeProcessedFiles.add( filePath );
+					}
 				}
 			}
 
