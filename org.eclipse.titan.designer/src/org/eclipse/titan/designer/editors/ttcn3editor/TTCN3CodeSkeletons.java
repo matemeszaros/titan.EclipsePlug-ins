@@ -365,8 +365,10 @@ public final class TTCN3CodeSkeletons {
 			new SkeletonTemplateProposal("log", new Template("log", "", CONTEXT_IDENTIFIER, "log ( ${} );" + NEWLINE, false)),
 			new SkeletonTemplateProposal("match", new Template("match", "", CONTEXT_IDENTIFIER, "match ( ${Value}, ${Template} )"
 					+ NEWLINE, false)),
-			new SkeletonTemplateProposal("setverdict", new Template("setverdict", "", CONTEXT_IDENTIFIER,
-					"setverdict ( ${} );" + NEWLINE, false)),
+			new SkeletonTemplateProposal("setverdict", new Template("setverdict", "set a non-pass verdict", CONTEXT_IDENTIFIER,
+					"setverdict ( ${verdict}, \"${reason}\" );" + NEWLINE, false)),
+			new SkeletonTemplateProposal("setverdict", new Template("setverdict", "set pass as the verdict", CONTEXT_IDENTIFIER,
+					"setverdict ( pass );" + NEWLINE, false)),
 			new SkeletonTemplateProposal("any", new Template("any component", "", CONTEXT_IDENTIFIER, "any component", false)),
 			new SkeletonTemplateProposal("any", new Template("any port", "", CONTEXT_IDENTIFIER, "any port", false)),
 			new SkeletonTemplateProposal("any", new Template("any timer", "", CONTEXT_IDENTIFIER, "any timer", false)),
