@@ -20,38 +20,29 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.titan.designer.AST.ASTNode;
-import org.eclipse.titan.designer.AST.IVisitableNode;
-import org.eclipse.titan.designer.AST.Value;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Const;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
-import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.Omit_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.SequenceOf_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.Sequence_Value;
-import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 public class Def_Const_Writer {
 	private Def_Const constNode;
 
 	private StringBuilder constString = new StringBuilder("");
-	private CompilationTimeStamp compilationCounter = CompilationTimeStamp
-			.getNewCompilationCounter();
+	
 	private String nodeName = null;
 
-	private List<String> constValues = new ArrayList<String>();
+	public List<String> constValues = new ArrayList<String>();
 	private String constNodeType = null;
 	private int valueCounter = 0;
-	private List<Integer> constSetOfAmount = new ArrayList<Integer>();
-	private boolean isSetOf = false;
+	public List<Integer> constParamCount = new ArrayList<Integer>();
 
+	public boolean constValueIsAReference = false;
+	private boolean isSetOf = false;
 	private static Map<String, Object> constHashes = new LinkedHashMap<String, Object>();
 
+	
 	private Def_Const_Writer(Def_Const node) {
 		super();
 		this.constNode = node;
-		nodeName = node.getIdentifier().toString();
+		nodeName = constNode.getIdentifier().toString();
 	}
 
 	public static Def_Const_Writer getInstance(Def_Const node) {
@@ -63,20 +54,15 @@ public class Def_Const_Writer {
 				.toString());
 	}
 
-	public void addConstValues(String value) {
-		constValues.add(value);
-	}
+
 
 	public void setConstNodeType(String value) {
 		constNodeType = value;
 	}
 
-	public void setConstSetOfAmount(int num) {
-		this.constSetOfAmount.add(num);
-	}
-
 	public void writeConstConstructor(String rootNodeType,
 			String prefix) {
+		//type with children, child values need to be assigned
 		if (myASTVisitor.nodeNameChildrenNamesHashMap.containsKey(rootNodeType)) {
 
 			if (!isSetOf) {
@@ -107,6 +93,7 @@ public class Def_Const_Writer {
 
 					valueCounter++;
 				} else if (childrenNodeTypes[i].equals("INTEGER")) {
+
 					// printvalue
 					if (constValues.get(valueCounter).equals("omit")) {
 						constString.append(prefix + "." + childrenNodeNames[i]
@@ -115,9 +102,11 @@ public class Def_Const_Writer {
 								.append(prefix + "." + "omitField=true;\r\n");
 
 					} else {
+
 						constString.append(prefix + "." + childrenNodeNames[i]
-								+ "= new " + childrenNodeTypes[i] + "("
-								+ constValues.get(valueCounter) + ");\r\n");
+								+ "= new " + childrenNodeTypes[i] + "(new BigInteger(\""
+								+ constValues.get(valueCounter) + "\"));\r\n");
+						
 					}
 
 					valueCounter++;
@@ -181,24 +170,87 @@ public class Def_Const_Writer {
 				}
 
 			}
-		} else {
+		} else { //simple type, no child value assignments
 			if (myASTVisitor.nodeNameNodeTypeHashMap.containsKey(rootNodeType)) {
 
 				String type = myASTVisitor.nodeNameNodeTypeHashMap
 						.get(rootNodeType);
+				
+				
 				if (type.equals("CHARSTRING") || type.equals("INTEGER")) {
-					constString.append("value=new " + constNodeType + "(new "
-							+ type + "(" + constValues.get(valueCounter)
-							+ "));\r\n");
 
+					if(constValueIsAReference){
+						if(myASTVisitor.nodeNameNodeTypeHashMap.containsKey(constValues.get(valueCounter))){
+							if(myASTVisitor.nodeNameNodeTypeHashMap.get(constValues.get(valueCounter)).equals("constant")){
+								constString.append("value = new "+constNodeType+"("+constValues.get(valueCounter)+".value)"
+								+ ";\r\n");
+							}
+						}
+
+						
+						constString.append("value="+constValues.get(valueCounter)
+								+ ";\r\n");
+					}else{
+
+					constString.append("value=new " + constNodeType + "(new "
+							+ type + "(new BigInteger(\"" + constValues.get(valueCounter)
+							+ "\")));\r\n");
+					}
 					valueCounter++;
 				}
+			} else if(constNodeType.equals("INTEGER")){
+
+				if(constValueIsAReference){
+					constString.append("value="+constValues.get(valueCounter)
+							+ ";\r\n");
+				}else{
+				constString.append("value=new " + constNodeType + "(new BigInteger(\"" + constValues.get(valueCounter)
+						+ "\"));\r\n");
+				}
+
+				valueCounter++;
+			} else if(constNodeType.equals("BITSTRING")){
+				constString.append("value=new "
+						+ "BITSTRING" + "(\"" + constValues.get(valueCounter)
+						+ "\");\r\n");
+
+				valueCounter++;
+			} else if(constNodeType.equals("CHARSTRING")){
+				constString.append("value=new "
+						+ "CHARSTRING" + "(\"" + constValues.get(valueCounter)
+						+ "\");\r\n");
+
+				valueCounter++;
+			} else if(constNodeType.equals("OCTETSTRING")){
+				constString.append("value=new "
+						+ "OCTETSTRING" + "(\"" + constValues.get(valueCounter)
+						+ "\");\r\n");
+
+				valueCounter++;
+			} else if(constNodeType.equals("BOOLEAN")){
+				constString.append("value=new "
+						+ "BOOLEAN" + "(" + constValues.get(valueCounter)
+						+ ");\r\n");
+
+				valueCounter++;
 			}
 		}
+	}
+	
+	public void clearLists(){
+		valueCounter = 0;
+		
+		constValueIsAReference = false;
+		isSetOf = false;
+		
+		constParamCount.clear();
+		constValues.clear();
 	}
 
 	public String getJavaSource() {
 
+		AstWalkerJava.logToConsole("	Starting processing:  Constant " + nodeName );
+		
 		constString.append("public static " + constNodeType + " " + nodeName
 				+ "(){\r\n");
 		constString.append(constNodeType + " value;\r\n");
@@ -209,9 +261,8 @@ public class Def_Const_Writer {
 		String returnString = constString.toString();
 		valueCounter = 0;
 		constString.setLength(0);
-		constSetOfAmount.clear();
-		constValues.clear();
-
+		
+		AstWalkerJava.logToConsole("	Finished processing:  Constant " + nodeName );
 		return returnString;
 	}
 }
