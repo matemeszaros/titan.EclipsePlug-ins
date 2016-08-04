@@ -20,39 +20,31 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Port;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
-import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
-public class Def_Type_Component {
+public class Def_Type_Component_Writer {
 	private Def_Type typeNode;
 	private StringBuilder compString = new StringBuilder("");
-	private CompilationTimeStamp compilationCounter = CompilationTimeStamp
-			.getNewCompilationCounter();
-	private List<String> compFieldTypes = new ArrayList<String>();
-	private List<String> compFieldNames = new ArrayList<String>();
-	private String nodeName=null;
-	
+
+	public List<String> compFieldTypes = new ArrayList<String>();
+	public List<String> compFieldNames = new ArrayList<String>();
+	private String nodeName = null;
+
 	private static Map<String, Object> compHashes = new LinkedHashMap<String, Object>();
 
-	private Def_Type_Component(Def_Type typeNode) {
+	private Def_Type_Component_Writer(Def_Type typeNode) {
 		super();
 		this.typeNode = typeNode;
-		nodeName = typeNode.getIdentifier().toString();
+		nodeName = this.typeNode.getIdentifier().toString();
 	}
 
-	public static Def_Type_Component getInstance(Def_Type typeNode) {
+	public static Def_Type_Component_Writer getInstance(Def_Type typeNode) {
 		if (!compHashes.containsKey(typeNode.getIdentifier().toString())) {
 			compHashes.put(typeNode.getIdentifier().toString(),
-					new Def_Type_Component(typeNode));
+					new Def_Type_Component_Writer(typeNode));
 		}
-		return (Def_Type_Component) compHashes.get(typeNode.getIdentifier()
-				.toString());
-	}
-
-	public void addCompFields(String type, String name) {
-		compFieldTypes.add(type);
-		compFieldNames.add(name);
+		return (Def_Type_Component_Writer) compHashes.get(typeNode
+				.getIdentifier().toString());
 	}
 
 	public void writeCompFields() {
@@ -69,12 +61,15 @@ public class Def_Type_Component {
 		compString.append("super(name);" + "\r\n");
 		compString.append("hc=hcont;" + "\r\n");
 
-		compString.append("if(hc.debugmode)TTCN3Logger.writeLog(name, \"PARALLEL\", \"Test component \" + name + \" created.\", false);" + "\r\n");
-		
+		compString
+				.append("if(hc.debugmode)TTCN3Logger.writeLog(name, \"PARALLEL\", \"Test component \" + name + \" created.\", false);"
+						+ "\r\n");
+
 		for (int i = 0; i < compFieldNames.size(); i++) {
 
 			compString.append(compFieldNames.get(i) + " =new "
-					+ compFieldTypes.get(i) + "(this,\"+compFieldNames.get(i)+\");" + "\r\n");
+					+ compFieldTypes.get(i) + "(this,\""
+					+ compFieldNames.get(i) + "\");" + "\r\n");
 		}
 
 		compString.append("created = true;" + "\r\n");
@@ -130,7 +125,7 @@ public class Def_Type_Component {
 		compString.append("	" + "\r\n");
 		compString.append("}" + "\r\n");
 	}
-	
+
 	public void writeDomap() {
 		compString.append("" + "\r\n");
 		compString.append("@Override" + "\r\n");
@@ -138,15 +133,36 @@ public class Def_Type_Component {
 				.append("public void domap(String thisport, String remotecomp, String remoteport) {"
 						+ "\r\n");
 
-		//TODO
+		// TODO
+		for (int i = 0; i < compFieldTypes.size(); i++) {
+			if (myASTVisitor.nodeNameNodeTypeHashMap.get(compFieldTypes.get(i))
+					.equals("port")) {
+				if (!(myASTVisitor.portNamePortTypeHashMap.get(compFieldTypes
+						.get(i)).equals("TP_INTERNAL"))) {
+					compString.append("if(thisport.equals(\""
+							+ compFieldNames.get(i) + "\")) "
+							+ compFieldNames.get(i)
+							+ ".map(remotecomp, remoteport);" + "\r\n");
+				}
+			}
+		}
 
 		compString.append("	" + "\r\n");
 		compString.append("}" + "\r\n");
 	}
 
+	public void clearLists() {
+		compFieldTypes.clear();
+		compFieldNames.clear();
+	}
+
 	public String getJavaSource() {
-		compString.append("class " + nodeName
-				+ " extends ComponentDef{" + "\r\n");
+
+		AstWalkerJava.logToConsole("	Starting processing:  Component "
+				+ nodeName);
+
+		compString.append("class " + nodeName + " extends ComponentDef{"
+				+ "\r\n");
 		this.writeCompFields();
 		this.writeConstructor();
 		this.writeAnyPortReceive();
@@ -154,12 +170,13 @@ public class Def_Type_Component {
 		this.writeConnect();
 		this.writeDomap();
 		compString.append("\r\n}");
-		
+
 		String returnString = compString.toString();
 		compString.setLength(0);
-		compFieldTypes.clear();
-		compFieldNames.clear();
-		
+
+		AstWalkerJava.logToConsole("	Finished processing:  Component "
+				+ nodeName);
+
 		return returnString;
 	}
 }

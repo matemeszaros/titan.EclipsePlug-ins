@@ -20,20 +20,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.titan.designer.AST.ASTNode;
-import org.eclipse.titan.designer.AST.IVisitableNode;
-import org.eclipse.titan.designer.AST.Value;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Const;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Template;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
+import org.eclipse.titan.designer.AST.TTCN3.types.Integer_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Referenced_Type;
-import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.Omit_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.SequenceOf_Value;
-import org.eclipse.titan.designer.AST.TTCN3.values.Sequence_Value;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-import org.eclipse.titan.designer.AST.Reference;
 
 public class Def_Template_Writer {
 	private Def_Template templateNode;
@@ -43,18 +33,17 @@ public class Def_Template_Writer {
 			.getNewCompilationCounter();
 	private String nodeName = null;
 
-	private List<String> templateIdentifiers = new ArrayList<String>();
+	public List<String> templateListValues = new ArrayList<String>();
+	public List<String> templateIdentifiers = new ArrayList<String>();
+	public List<String> templateRefdVals = new ArrayList<String>();
 	private String templateNodeType = null;
 	private String modifierValue = null;
 
-	private int idCounter = 0;
 	private int firstIdentifier = 0;
 
 	private int paramCount = 0;
 	private List<String> paramNames = new ArrayList<String>();
 	private List<String> paramTypes = new ArrayList<String>();
-
-	private Map<String, String> idValuePairs = new LinkedHashMap<String, String>();
 
 	private static Map<String, Object> templateHashes = new LinkedHashMap<String, Object>();
 
@@ -62,30 +51,14 @@ public class Def_Template_Writer {
 		super();
 		this.templateNode = node;
 
-		if (node.getType(compilationCounter) instanceof Referenced_Type) {
-			templateNodeType = ((Referenced_Type) node
+		if (this.templateNode.getType(compilationCounter) instanceof Referenced_Type) {
+			templateNodeType = ((Referenced_Type) this.templateNode
 					.getType(compilationCounter)).getReference().getId()
 					.toString();
-		}
-		firstIdentifier = 1;
-		if (node.getFormalParameterList() != null) {
-			paramCount = node.getFormalParameterList().getNofParameters();
-			for (int i = 0; i < paramCount; i++) {
-				paramNames.add(node.getFormalParameterList()
-						.getParameterByIndex(i).getIdentifier().toString());
-				if (node.getFormalParameterList().getParameterByIndex(i)
-						.getType(compilationCounter) instanceof Referenced_Type) {
+		} else if (this.templateNode.getType(compilationCounter) instanceof Integer_Type) {
+			templateNodeType = "INTEGER";
 
-					paramTypes.add(((Referenced_Type) node
-							.getFormalParameterList().getParameterByIndex(i)
-							.getType(compilationCounter)).getReference()
-							.getId().toString());
-				}
-				firstIdentifier++;
-			}
 		}
-
-		idCounter = firstIdentifier;
 
 		nodeName = node.getIdentifier().toString();
 	}
@@ -99,11 +72,7 @@ public class Def_Template_Writer {
 				.toString());
 	}
 
-	public void addTemplateIdentifiers(String value) {
-		templateIdentifiers.add(value);
-	}
-
-	public void writeTempltaeConstructor(String rootNodeType, String prefix) {
+	public void writeTemplateConstructor(String rootNodeType, String prefix) {
 		if (myASTVisitor.nodeNameChildrenNamesHashMap.containsKey(rootNodeType)) {
 
 			if (myASTVisitor.nodeNameNodeTypeHashMap.get(rootNodeType).equals(
@@ -125,6 +94,10 @@ public class Def_Template_Writer {
 
 				prefix = "((SC_" + unionElementId + "_" + rootNodeType
 						+ ")value)";
+			} else if (myASTVisitor.nodeNameNodeTypeHashMap.get(rootNodeType).equals(
+					"record")){
+				templateString.append(prefix + "= new " + rootNodeType + "();\r\n");
+
 			}
 
 			String[] childrenNodeNames = myASTVisitor.nodeNameChildrenNamesHashMap
@@ -148,7 +121,7 @@ public class Def_Template_Writer {
 						String prefixBackup = prefix;
 						prefix = prefix.concat("." + childrenNodeNames[i]);
 
-						writeTempltaeConstructor(childrenNodeTypes[i], prefix);
+						writeTemplateConstructor(childrenNodeTypes[i], prefix);
 
 						prefix = prefixBackup;
 
@@ -159,6 +132,8 @@ public class Def_Template_Writer {
 								.containsKey(childrenNodeNames[i])) {
 							String currentvalue = myASTVisitor.templateIdValuePairs
 									.get(childrenNodeNames[i]);
+							
+							
 							if (myASTVisitor.nodeNameNodeTypeHashMap
 									.containsKey(currentvalue)) {
 								if (myASTVisitor.nodeNameNodeTypeHashMap.get(
@@ -183,7 +158,14 @@ public class Def_Template_Writer {
 										}
 									}
 								}
+							} else if (childrenNodeTypes[i].equals("INTEGER")){
+								templateString.append(prefix + "."
+										+ childrenNodeNames[i]
+										+ "= new INTEGER(new BigInteger(\"" + currentvalue
+										+ "\"));\r\n");
 							}
+							
+							
 						}
 
 						// everything else
@@ -301,13 +283,27 @@ public class Def_Template_Writer {
 							}
 						}
 					}
+				} if(templateListValues.size() > 0 ){
+					if (childrenNodeTypes[i].equals("INTEGER")){
+						templateString.append(prefix + "."
+								+ childrenNodeNames[i]
+								+ "= new INTEGER(new BigInteger(\"" + templateListValues.get(i)
+								+ "\"));\r\n");
+					}
 				}
+				
+				
 			}
+		} else if (rootNodeType.equals("INTEGER")) {
+			String integerValue = myASTVisitor.templateIdValuePairs
+					.get(nodeName);
+			templateString.append("value=new INTEGER(new BigInteger(\""
+					+ integerValue + "\"));\r\n");
 		}
 
 	}
 
-	public void writeModifierTempltaeConstructor(String rootNodeType,
+	public void writeModifierTemplateConstructor(String rootNodeType,
 			String prefix) {
 		if (myASTVisitor.nodeNameChildrenNamesHashMap.containsKey(rootNodeType)) {
 
@@ -325,9 +321,8 @@ public class Def_Template_Writer {
 					}
 				}
 
-				templateString.append(prefix + "= "
-						+ modifierValue
-						+ "();\r\n");
+				templateString
+						.append(prefix + "= " + modifierValue + "();\r\n");
 
 				prefix = "((SC_" + unionElementId + "_" + rootNodeType
 						+ ")value)";
@@ -368,7 +363,7 @@ public class Def_Template_Writer {
 						String prefixBackup = prefix;
 						prefix = prefix.concat("." + childrenNodeNames[i]);
 
-						writeModifierTempltaeConstructor(childrenNodeTypes[i],
+						writeModifierTemplateConstructor(childrenNodeTypes[i],
 								prefix);
 
 						prefix = prefixBackup;
@@ -425,15 +420,7 @@ public class Def_Template_Writer {
 
 						} else if (myASTVisitor.nodeNameNodeTypeHashMap.get(
 								childrenNodeTypes[i]).equals("CHARSTRING")) {
-							/*
-							 * templateString.append(prefix + "." +
-							 * childrenNodeNames[i] + "=new " +
-							 * childrenNodeTypes[i] + "(new " +
-							 * myASTVisitor.nodeNameNodeTypeHashMap
-							 * .get(childrenNodeTypes[i]) + "(\"" +
-							 * myASTVisitor.templateIdValuePairs
-							 * .get(childrenNodeNames[i]) + "\"));" + "\r\n");
-							 */
+							// TODO CHARSTRING
 
 						}
 
@@ -456,14 +443,7 @@ public class Def_Template_Writer {
 									childrenNodeNames[i], true, false, false,
 									true);
 						} else {
-
-							/*
-							 * templateString.append(prefix + "." +
-							 * childrenNodeNames[i] + "=new " +
-							 * childrenNodeTypes[i] + "(\"" +
-							 * myASTVisitor.templateIdValuePairs
-							 * .get(childrenNodeNames[i]) + "\");" + "\r\n");
-							 */
+							// TODO rest
 						}
 					}
 					if (myASTVisitor.nodeNameChildrenNamesHashMap
@@ -487,6 +467,15 @@ public class Def_Template_Writer {
 					}
 				}
 			}
+		} else if (rootNodeType.equals("INTEGER")) {
+			String integerValue = myASTVisitor.templateIdValuePairs
+					.get(nodeName);
+
+			// if (paramCount > 0) {
+			templateString.append("value=new INTEGER(new BigInteger(\""
+					+ integerValue + "\"));\r\n");
+			// }
+
 		}
 	}
 
@@ -533,7 +522,41 @@ public class Def_Template_Writer {
 		}
 	}
 
+	public void clearLists() {
+		templateListValues.clear();
+		templateIdentifiers.clear();
+		templateRefdVals.clear();
+		paramNames.clear();
+		paramTypes.clear();
+
+	}
+
+	public void init() {
+
+		firstIdentifier = 1;
+		if (templateNode.getFormalParameterList() != null) {
+			paramCount = templateNode.getFormalParameterList()
+					.getNofParameters();
+			for (int i = 0; i < paramCount; i++) {
+				paramNames.add(templateNode.getFormalParameterList()
+						.getParameterByIndex(i).getIdentifier().toString());
+				if (templateNode.getFormalParameterList()
+						.getParameterByIndex(i).getType(compilationCounter) instanceof Referenced_Type) {
+
+					paramTypes.add(((Referenced_Type) templateNode
+							.getFormalParameterList().getParameterByIndex(i)
+							.getType(compilationCounter)).getReference()
+							.getId().toString());
+				}
+				firstIdentifier++;
+			}
+		}
+	}
+
 	public String getJavaSource() {
+
+		AstWalkerJava.logToConsole("	Starting processing:  Template "
+				+ nodeName);
 
 		templateString.append("public static " + templateNodeType + " "
 				+ nodeName + "(");
@@ -547,20 +570,24 @@ public class Def_Template_Writer {
 		templateString.append(templateNodeType + " value;\r\n");
 
 		if ((modifierValue == null)) {
-			writeTempltaeConstructor(templateNodeType, "value");
+			writeTemplateConstructor(templateNodeType, "value");
 		} else {
-			writeModifierTempltaeConstructor(templateNodeType, "value");
-			
+			writeModifierTemplateConstructor(templateNodeType, "value");
+
 		}
 
 		templateString.append("return value;\r\n");
 		templateString.append("}\r\n");
 		String returnString = templateString.toString();
-		modifierValue=null;
-		idCounter = firstIdentifier;
+		modifierValue = null;
+
 		templateString.setLength(0);
 
+		AstWalkerJava.logToConsole("	Finished processing:  Template "
+				+ nodeName);
+
 		return returnString;
+
 	}
 
 	public void setModifierValue(String modifierValue) {

@@ -15,38 +15,34 @@
 
 package org.eclipse.titan.codegenerator;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
-import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
-
-public class Def_Type_Charstring {
+//TODO: duplicate of charstring, ONLY A PLACEHOLDER YET
+public class Def_Type_Bitstring_Writer {
 	private Def_Type typeNode;
 	private StringBuilder charStringString = new StringBuilder("");
-	private CompilationTimeStamp compilationCounter = CompilationTimeStamp
-			.getNewCompilationCounter();
+
 	private String charStringValue = null;
 	private String nodeName = null;
 
 	private static Map<String, Object> charStringHashes = new LinkedHashMap<String, Object>();
 
-	private Def_Type_Charstring(Def_Type typeNode) {
+	private Def_Type_Bitstring_Writer(Def_Type typeNode) {
 		super();
 		this.typeNode = typeNode;
-		nodeName = typeNode.getIdentifier().toString();
+		nodeName = this.typeNode.getIdentifier().toString();
 
 	}
 
-	public static Def_Type_Charstring getInstance(Def_Type typeNode) {
+	public static Def_Type_Bitstring_Writer getInstance(Def_Type typeNode) {
 		if (!charStringHashes.containsKey(typeNode.getIdentifier().toString())) {
 			charStringHashes.put(typeNode.getIdentifier().toString(),
-					new Def_Type_Charstring(typeNode));
+					new Def_Type_Bitstring_Writer(typeNode));
 
 		}
-		return (Def_Type_Charstring) charStringHashes.get(typeNode
+		return (Def_Type_Bitstring_Writer) charStringHashes.get(typeNode
 				.getIdentifier().toString());
 	}
 
@@ -86,7 +82,14 @@ public class Def_Type_Charstring {
 
 	}
 
+	public void clearLists(){
+		//TODO put lists and fields here which should be initialized
+	}
+	
 	public String getJavaSource() {
+		
+		AstWalkerJava.logToConsole("	Starting processing:  Bitstring " + nodeName );
+		
 		charStringString.append("class " + nodeName
 				+ " extends SubTypeDef<CHARSTRING>{" + "\r\n");
 		this.writeConstructor();
@@ -96,6 +99,9 @@ public class Def_Type_Charstring {
 		String returnString = charStringString.toString();
 		charStringString.setLength(0);
 		charStringValue = null;
+		
+		AstWalkerJava.logToConsole("	Finished processing:  Bitstring " + nodeName );
+		
 		return returnString;
 	}
 

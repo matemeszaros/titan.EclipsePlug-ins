@@ -47,6 +47,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("public class HCType {" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
 		hcTypeString.append("	boolean waitingforconnect;" + "\r\n");
+		hcTypeString.append("	boolean waitingformap;" + "\r\n");
 		hcTypeString.append("	Socket sock;" + "\r\n");
 		hcTypeString.append("	BufferedWriter writer;" + "\r\n");
 		hcTypeString.append("	BufferedReader reader;" + "\r\n");
@@ -61,6 +62,7 @@ public class Additional_Class_Writer {
 																	// sockets
 		hcTypeString.append("	public boolean debugmode; " + "\r\n");
 		hcTypeString.append("	" + "\r\n");
+		
 		hcTypeString.append("	public HCType(){" + "\r\n");
 		hcTypeString.append("		componentpool = new Vector<ComponentDef>();"
 				+ "\r\n");
@@ -69,6 +71,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("		this.debugmode=debugmode;"+ "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
+		
 		hcTypeString
 				.append("	public void connect(String comp1, String port1, String comp2, String port2){"
 						+ "\r\n");
@@ -84,6 +87,17 @@ public class Additional_Class_Writer {
 		hcTypeString.append("		}" + "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
+		
+		hcTypeString.append("public void map(String comp1, String port1, String comp2, String port2){" + "\r\n");
+		hcTypeString.append("	this.waitingformap=true;" + "\r\n");
+		hcTypeString.append("	sendtomc(\"map \"+comp1+\" \"+ port1+\" \"+comp2+\" \"+port2);" + "\r\n");
+		hcTypeString.append("	for(;this.waitingformap;){" + "\r\n");
+		hcTypeString.append("		try{" + "\r\n");
+		hcTypeString.append("			Thread.sleep(100);" + "\r\n");
+		hcTypeString.append("		}catch(Exception e){}" + "\r\n");
+		hcTypeString.append("	}" + "\r\n");
+		hcTypeString.append("}" + "\r\n");
+		
 		hcTypeString
 				.append("	public void start(String component, String function){"
 						+ "\r\n");
@@ -101,20 +115,7 @@ public class Additional_Class_Writer {
 						+ "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
-		hcTypeString.append("	public void sendtomc(String message){" + "\r\n"); // hc.sendtomc-kent
-																				// hivodik,
-																				// igy
-																				// nem
-																				// hc.writer-kent
-																				// hivatkozik
-																				// a
-																				// writerre.
-																				// itt
-																				// mar
-																				// hc-ban
-																				// (az
-																				// instance-ban)
-																				// vagyunk
+		hcTypeString.append("	public void sendtomc(String message){" + "\r\n"); 
 		hcTypeString.append("		try{" + "\r\n");
 		hcTypeString.append("			writer.write(message + \"\\r\\n\");" + "\r\n");
 		hcTypeString.append("			writer.flush();" + "\r\n");
@@ -129,9 +130,9 @@ public class Additional_Class_Writer {
 		hcTypeString
 		.append("	TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Creating PTC \" + name + \" with ID \" + ID, false);"+ "\r\n");
 
-		for (int i = 0; i < myASTVisitor.componentList.size(); i++) {
-			hcTypeString.append("		if(type.equals(\"" + myASTVisitor.componentList.get(i)
-					+ "\")) componentpool.add(new " + myASTVisitor.componentList.get(i)
+		for (int i = 0; i < AstWalkerJava.componentList.size(); i++) {
+			hcTypeString.append("		if(type.equals(\"" + AstWalkerJava.componentList.get(i)
+					+ "\")) componentpool.add(new " + AstWalkerJava.componentList.get(i)
 					+ "(this,name,ID));" + "\r\n");
 		}
 		hcTypeString.append("	}" + "\r\n");
@@ -183,7 +184,7 @@ public class Additional_Class_Writer {
 				+ "\r\n");
 		hcTypeString
 				.append("			writer = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));"
-						+ "\r\n"); // ezt bekommentezed, elszall
+						+ "\r\n"); 
 		hcTypeString
 				.append("			reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));"
 						+ "\r\n");
@@ -199,6 +200,9 @@ public class Additional_Class_Writer {
 		hcTypeString.append("				if(msg.equals(\"connected\")){" + "\r\n");
 		hcTypeString.append("					this.waitingforconnect=false;" + "\r\n");
 		hcTypeString.append("				}" + "\r\n");
+		hcTypeString.append("				if(msg.equals(\"mapped\")){" + "\r\n");
+		hcTypeString.append("					this.waitingformap=false;" + "\r\n");
+		hcTypeString.append("				}" + "\r\n");
 		hcTypeString.append("				String command = msg.split(\" \")[0];"
 				+ "\r\n");
 		hcTypeString.append("				//logged on receiver side instead of default sender side (because a test case might be the entry point of execution)"+ "\r\n");
@@ -208,21 +212,15 @@ public class Additional_Class_Writer {
 
 
 		
-		for (int i = 0; i < myASTVisitor.testCaseList.size(); i++) {
+		for (int i = 0; i < AstWalkerJava.testCaseList.size(); i++) {
 			hcTypeString.append("					if(tcasename.equals(\""
-					+ myASTVisitor.testCaseList.get(i) + "\")){" + "\r\n"); // minden egyes
-																// testcase-re
-																// kell ez az if
+					+ AstWalkerJava.testCaseList.get(i) + "\")){" + "\r\n"); 
 			hcTypeString.append("						if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Creating MTC\", false);" + "\r\n");
 			hcTypeString.append("						registercomponent(\"mtc\", \""
-					+ myASTVisitor.testCaseRunsOnList.get(i) + "\", \"2\");" + "\r\n"); // masodik//TODO ezmi
-																	// parameter
-																	// az adott
-																	// tc
-																	// runsonja
+					+ AstWalkerJava.testCaseRunsOnList.get(i) + "\", \"2\");" + "\r\n"); 
 			hcTypeString.append("						if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Starting new Thread for MTC\", false);" + "\r\n");
 			hcTypeString.append("						Thread testcasethread = new Thread(new "
-					+ myASTVisitor.testCaseList.get(i) + "((" + myASTVisitor.testCaseRunsOnList.get(i)
+					+ AstWalkerJava.testCaseList.get(i) + "((" + AstWalkerJava.testCaseRunsOnList.get(i)
 					+ ")getcomponent(\"mtc\")));" + "\r\n");
 			hcTypeString
 					.append("						getcomponent(\"mtc\").thread=testcasethread;"
@@ -271,10 +269,20 @@ public class Additional_Class_Writer {
 		hcTypeString.append("					if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Connecting to component \" + component + \" port \" + port + \" on \" + ip + \":\" + portnum, false);"+ "\r\n");
 		hcTypeString
 				.append("					getcomponent(component).connect(port,ip,portnum);"
-						+ "\r\n"); // cast az adott nevu komponens tipusara megy
-									// mindig
+						+ "\r\n"); 
 		hcTypeString.append("					sendtomc(\"connected\");" + "\r\n");
 		hcTypeString.append("				}" + "\r\n");
+		
+		hcTypeString.append("if(command.equals(\"map\")){" + "\r\n");
+		hcTypeString.append("	String thiscomp = msg.split(\" \")[1];" + "\r\n");
+		hcTypeString.append("	String thisport = msg.split(\" \")[2];" + "\r\n");
+		hcTypeString.append("	String remotecomp = msg.split(\" \")[3];" + "\r\n");
+		hcTypeString.append("	String remoteport = msg.split(\" \")[4];" + "\r\n");
+		hcTypeString.append("	getcomponent(thiscomp).domap(thisport, remotecomp, remoteport);" + "\r\n");
+		hcTypeString.append("	sendtomc(\"mapped\");" + "\r\n");
+		hcTypeString.append("}" + "\r\n");
+		
+		
 		hcTypeString.append("				if(command.equals(\"start\")){" + "\r\n");
 		hcTypeString
 				.append("					ComponentDef component = getcomponent(msg.split(\" \")[1]);"
@@ -283,17 +291,14 @@ public class Additional_Class_Writer {
 				+ "\r\n");
 
 
-		for (int i = 0; i < myASTVisitor.functionList.size(); i++) {
+		for (int i = 0; i < AstWalkerJava.functionList.size(); i++) {
 			hcTypeString.append("					if(function.equals(\""
-					+ myASTVisitor.functionList.get(i) + "\")){ " + "\r\n");// minden letezo
-																// fuggvenynevre
-																// kell ilyen if
+					+ AstWalkerJava.functionList.get(i) + "\")){ " + "\r\n");
 			hcTypeString
 					.append("						if(component.thread!=null) component.thread.join();"
-							+ "\r\n"); // ha fut rajta valami, elõbb joinolni
-										// kell
+							+ "\r\n"); 
 			hcTypeString.append("						Thread functionthread = new Thread(new "
-					+ myASTVisitor.functionList.get(i) + "((" + myASTVisitor.functionRunsOnList.get(i)
+					+ AstWalkerJava.functionList.get(i) + "((" + AstWalkerJava.functionRunsOnList.get(i)
 					+ ")component));" + "\r\n");
 			hcTypeString.append("						component.thread=functionthread;"
 					+ "\r\n");
@@ -313,7 +318,7 @@ public class Additional_Class_Writer {
 		hcTypeString
 				.append("								TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Waiting for component \" + c.name + \" to be done\", false);"
 						+ "\r\n");
-		hcTypeString.append("								c.thread.join();" + "\r\n");
+		hcTypeString.append("								if(c.thread!=null) c.thread.join();" + "\r\n");
 		hcTypeString.append("								//logged by mc too" + "\r\n");
 		hcTypeString
 				.append("								if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Component \" + c.name + \" is done\", false);"
@@ -362,6 +367,60 @@ public class Additional_Class_Writer {
 		hcTypeString.append("}" + "\r\n");
 
 		return hcTypeString.toString();
+	}
+
+	public static void writeExternalPortClass(String nodeName) {
+		StringBuilder externalPort=new StringBuilder();
+		
+		externalPort.append("package org.eclipse.titan.codegenerator.javagen;"+"\r\n");
+		externalPort.append("import java.io.ObjectInputStream;"+"\r\n");
+		externalPort.append("import java.io.ObjectOutputStream;"+"\r\n");
+		externalPort.append("import java.net.ServerSocket;"+"\r\n");
+		externalPort.append("import java.net.Socket;"+"\r\n");
+		externalPort.append("import java.util.Scanner; "+"\r\n");
+		
+		externalPort.append("import org.eclipse.titan.codegenerator.TTCN3JavaAPI.*;"+"\r\n");
+		
+		externalPort.append("public class TP_"+nodeName+" {"+"\r\n");
+		externalPort.append("	private "+nodeName+" port;"+"\r\n");
+		externalPort.append("	public TP_"+nodeName+"("+nodeName+" p){"+"\r\n");
+		externalPort.append("		port=p;"+"\r\n");
+		externalPort.append("	}"+"\r\n");
+		
+		externalPort.append("	//must block until map is done"+"\r\n");
+		externalPort.append("	public void user_map(String remotecomp, String remoteport){"+"\r\n");
+		externalPort.append("		new TestPortDaemon(this).start();"+"\r\n");
+		externalPort.append("	}"+"\r\n");
+		
+		externalPort.append("	//must block until unmap is done"+"\r\n");
+		externalPort.append("	public void user_unmap(String remotecomp, String remoteport){ "+"\r\n");
+		externalPort.append("	}"+"\r\n");
+		
+		externalPort.append("	public void user_send(Object o){"+"\r\n");
+		externalPort.append("		System.out.println(\"TESTPORT OUTPUT \" + ((CHARSTRING)o).toString());"+"\r\n"); //TODO fix logging
+		externalPort.append("	}"+"\r\n");
+		
+		externalPort.append("	class TestPortDaemon extends Thread{"+"\r\n");
+		externalPort.append("		private TP_"+nodeName+" testport;"+"\r\n");
+		externalPort.append("		public TestPortDaemon(TP_"+nodeName+" p){"+"\r\n");
+		externalPort.append("			testport = p;"+"\r\n");
+		externalPort.append("		}"+"\r\n");
+		externalPort.append("		public void run(){"+"\r\n");
+		externalPort.append("			testport.port.mapped=true;"+"\r\n");
+		externalPort.append("			Scanner scanner = new Scanner(System.in);"+"\r\n");
+		externalPort.append("			for(;;){"+"\r\n");
+		externalPort.append("				String inmsg = scanner.nextLine();"+"\r\n");
+		externalPort.append("				testport.port.enqueue(new CHARSTRING(inmsg));"+"\r\n");
+		externalPort.append("			}"+"\r\n");
+		externalPort.append("		}"+"\r\n");
+		externalPort.append("	}"+"\r\n");
+		externalPort.append("}"+"\r\n");
+		
+		String backupFilename=myASTVisitor.currentFileName;
+		myASTVisitor.currentFileName="TP_"+nodeName;
+		myASTVisitor.visualizeNodeToJava(externalPort.toString());
+		myASTVisitor.currentFileName=backupFilename;
+		
 	}
 
 }

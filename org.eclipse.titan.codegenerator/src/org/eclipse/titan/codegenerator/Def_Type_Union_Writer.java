@@ -21,39 +21,31 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
-import org.eclipse.titan.designer.AST.TTCN3.types.CompField;
-import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
-public class Def_Type_Union {
+public class Def_Type_Union_Writer {
 	private Def_Type typeNode;
 	private StringBuilder unionString = new StringBuilder("");
-	private CompilationTimeStamp compilationCounter = CompilationTimeStamp
-			.getNewCompilationCounter();
-	private List<String> compFieldTypes = new ArrayList<String>();
-	private List<String> compFieldNames = new ArrayList<String>();
+
+	public List<String> compFieldTypes = new ArrayList<String>();
+	public List<String> compFieldNames = new ArrayList<String>();
 	private String nodeName = null;
 
 	private static Map<String, Object> unionHashes = new LinkedHashMap<String, Object>();
 
-	private Def_Type_Union(Def_Type typeNode) {
+	private Def_Type_Union_Writer(Def_Type typeNode) {
 		super();
 		this.typeNode = typeNode;
-		nodeName = typeNode.getIdentifier().toString();
+		nodeName = this.typeNode.getIdentifier().toString();
 
 	}
 
-	public static Def_Type_Union getInstance(Def_Type typeNode) {
+	public static Def_Type_Union_Writer getInstance(Def_Type typeNode) {
 		if (!unionHashes.containsKey(typeNode.getIdentifier().toString())) {
 			unionHashes.put(typeNode.getIdentifier().toString(),
-					new Def_Type_Union(typeNode));
+					new Def_Type_Union_Writer(typeNode));
 		}
-		return (Def_Type_Union) unionHashes.get(typeNode.getIdentifier()
+		return (Def_Type_Union_Writer) unionHashes.get(typeNode.getIdentifier()
 				.toString());
-	}
-
-	public void addCompFields(String type, String name) {
-		compFieldTypes.add(type);
-		compFieldNames.add(name);
 	}
 
 	private void writeCompFields() {
@@ -67,8 +59,6 @@ public class Def_Type_Union {
 
 		unionString.append("if(!(message instanceof " + nodeName
 				+ "))return false;" + "\r\n");
-
-
 
 		unionString.append("if(pattern.omitField&&((" + nodeName
 				+ ")message).omitField) return true;" + "\r\n");
@@ -95,8 +85,8 @@ public class Def_Type_Union {
 	}
 
 	private void writeEquals() {
-		unionString.append("public boolean equals(" + nodeName + " v){ "
-				+ "\r\n");// 0901
+		unionString.append("public BOOLEAN equals(" + nodeName + " v){ "
+				+ "\r\n");
 
 		for (int l = 0; l < compFieldTypes.size(); l++) {
 
@@ -108,7 +98,7 @@ public class Def_Type_Union {
 
 		}
 
-		unionString.append("	return false;" + "\r\n");
+		unionString.append("	return new BOOLEAN(false);" + "\r\n");
 		unionString.append("}" + "\r\n");
 
 	}
@@ -135,10 +125,11 @@ public class Def_Type_Union {
 					+ (i + 1) + "_" + nodeName + " pattern, " + "Object"
 					+ " message){" + "\r\n");
 
-			/*if (AstWalkerJava.areCommentsAllowed) {
-				unionChildString.append("System.out.println(\"SC_" + (i + 1)
-						+ "\");" + "\r\n");
-			}*/
+			/*
+			 * if (AstWalkerJava.areCommentsAllowed) {
+			 * unionChildString.append("System.out.println(\"SC_" + (i + 1) +
+			 * "\");" + "\r\n"); }
+			 */
 
 			unionChildString.append("if(!(message instanceof " + "SC_"
 					+ (i + 1) + "_" + nodeName + ")) return false;" + "\r\n");
@@ -147,9 +138,9 @@ public class Def_Type_Union {
 					+ ")message).omitField) return true;" + "\r\n");
 			unionChildString.append("if(pattern.anyOrOmitField) return true;"
 					+ "\r\n");
-			unionChildString.append("if(pattern.anyField&&!((" + "SC_" + (i + 1)
-					+ "_" + nodeName + ")message).omitField) return true;"
-					+ "\r\n");
+			unionChildString.append("if(pattern.anyField&&!((" + "SC_"
+					+ (i + 1) + "_" + nodeName
+					+ ")message).omitField) return true;" + "\r\n");
 			unionChildString.append("if(pattern.omitField&&!((" + "SC_"
 					+ (i + 1) + "_" + nodeName
 					+ ")message).omitField) return false;" + "\r\n");
@@ -164,27 +155,27 @@ public class Def_Type_Union {
 
 			unionChildString.append("}\r\n");
 
-			unionChildString.append("public boolean equals(" + "SC_" + (i + 1)
-					+ "_" + nodeName + " v){" + "\r\n"); // 0901
+			unionChildString.append("public BOOLEAN equals(" + "SC_" + (i + 1)
+					+ "_" + nodeName + " v){" + "\r\n");
 
 			unionChildString.append("	return this." + compFieldNames.get(i)
 					+ ".equals(v." + compFieldNames.get(i) + ");" + "\r\n");
 
 			unionChildString.append("}" + "\r\n");
-			
+
 			unionChildString.append("public String toString(){" + "\r\n");
 			unionChildString.append("	return toString(\"\");" + "\r\n");
 			unionChildString.append("}" + "\r\n");
-			unionChildString.append("public String toString(String tabs){" + "\r\n");
+			unionChildString.append("public String toString(String tabs){"
+					+ "\r\n");
 			unionChildString.append("	if(anyField) return \"?\";" + "\r\n");
 			unionChildString.append("	if(omitField) return \"omit\";" + "\r\n");
-			unionChildString.append("	if(anyOrOmitField) return \"*\";" + "\r\n");
-			unionChildString.append("	return "+compFieldNames.get(i)+".toString(tabs);" + "\r\n");
+			unionChildString.append("	if(anyOrOmitField) return \"*\";"
+					+ "\r\n");
+			unionChildString.append("	return " + compFieldNames.get(i)
+					+ ".toString(tabs);" + "\r\n");
 			unionChildString.append("}" + "\r\n");
-			
-			
-			
-			
+
 			unionChildString.append("}" + "\r\n");
 			myASTVisitor.visualizeNodeToJava(unionChildString.toString());
 			unionChildString.delete(0, unionChildString.length());
@@ -193,17 +184,19 @@ public class Def_Type_Union {
 		myASTVisitor.currentFileName = fileNameBackup;
 
 	}
-	public void writeToString(){
+
+	public void writeToString() {
 		unionString.append("public String toString(){" + "\r\n");
 		unionString.append("return toString(\"\");" + "\r\n");
 		unionString.append("}\r\n");
 	}
-	public void writeToStringWithParam(){
+
+	public void writeToStringWithParam() {
 		unionString.append("public String toString(String tabs){" + "\r\n");
 		unionString.append("if(anyField) return \"?\";" + "\r\n");
 		unionString.append("if(omitField) return \"omit\";" + "\r\n");
 		unionString.append("if(anyOrOmitField) return \"*\";" + "\r\n");
-		
+
 		for (int l = 0; l < compFieldTypes.size(); l++) {
 
 			unionString.append("if(this instanceof " + "SC_" + (l + 1) + "_"
@@ -211,13 +204,20 @@ public class Def_Type_Union {
 					+ nodeName + ")this).toString(tabs);" + "\r\n");
 
 		}
-		
-		unionString.append("	return \"\";"+ "\r\n");
+
+		unionString.append("	return \"\";" + "\r\n");
 		unionString.append("}\r\n");
 	}
-	
-	
+
+	public void clearLists() {
+		compFieldTypes.clear();
+		compFieldNames.clear();
+	}
+
 	public String getJavaSource() {
+
+		AstWalkerJava.logToConsole("	Starting processing:  Union " + nodeName);
+
 		unionString.append("class " + nodeName + " extends UnionDef{" + "\r\n");
 		this.writeCompFields();
 		this.writeMatcher();
@@ -229,8 +229,9 @@ public class Def_Type_Union {
 		unionString.append("\r\n}");
 		String returnString = unionString.toString();
 		unionString.setLength(0);
-		compFieldTypes.clear();
-		compFieldNames.clear();
+
+		AstWalkerJava.logToConsole("	Finished processing:  Union " + nodeName);
+
 		return returnString;
 	}
 

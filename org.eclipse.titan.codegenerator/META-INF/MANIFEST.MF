@@ -10,23 +10,6 @@ Require-Bundle: org.eclipse.titan.designer;bundle-version="5.4.0",
  org.eclipse.jface;bundle-version="3.10.1",
  org.eclipse.ui;bundle-version="3.106.0",
  org.eclipse.ui.ide;bundle-version="3.10.0",
- org.eclipse.titan.common;bundle-version="5.4.0"
-Bundle-ClassPath: .
+ org.eclipse.ui.console;bundle-version="3.5.300",
+ org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: org.eclipse.titan.designer,
- org.eclipse.titan.designer.AST,
- org.eclipse.titan.designer.AST.ASN1,
- org.eclipse.titan.designer.AST.ASN1.Object,
- org.eclipse.titan.designer.AST.ASN1.definitions,
- org.eclipse.titan.designer.AST.ASN1.types,
- org.eclipse.titan.designer.AST.ASN1.values,
- org.eclipse.titan.designer.AST.TTCN3,
- org.eclipse.titan.designer.AST.TTCN3.attributes,
- org.eclipse.titan.designer.AST.TTCN3.definitions,
- org.eclipse.titan.designer.AST.TTCN3.statements,
- org.eclipse.titan.designer.AST.TTCN3.templates,
- org.eclipse.titan.designer.AST.TTCN3.types,
- org.eclipse.titan.designer.AST.TTCN3.types.subtypes,
- org.eclipse.titan.designer.AST.TTCN3.values,
- org.eclipse.titan.designer.AST.TTCN3.values.expressions
-
