@@ -746,7 +746,7 @@ public class TpdImporter {
 			final String variableName = nameNode.getTextContent();
 			final String variableValue = valueNode.getTextContent();
 
-			if (headless) {
+			if (headless || shell == null) {
 				try {
 					pathVariableManager.setURIValue(variableName, URIUtil.toURI(variableValue));
 				} catch (CoreException e) {
@@ -768,13 +768,10 @@ public class TpdImporter {
 									}
 								}
 							} else {
-								// check whether we have non null shell
-								if (shell != null) {
-									NewPathVariableDialog dialog = new NewPathVariableDialog(shell, variableName, URIUtil.toURI(variableValue));
-									if (Window.OK == dialog.open()) {
-										URI actualValue = dialog.getActualValue();
-										pathVariableManager.setURIValue(variableName, actualValue);
-									}
+								NewPathVariableDialog dialog = new NewPathVariableDialog(shell, variableName, URIUtil.toURI(variableValue));
+								if (Window.OK == dialog.open()) {
+									URI actualValue = dialog.getActualValue();
+									pathVariableManager.setURIValue(variableName, actualValue);
 								}
 							}
 						} catch (CoreException e) {
