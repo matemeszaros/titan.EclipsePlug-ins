@@ -384,17 +384,11 @@ public final class SpecificValue_Template extends TTCN3Template {
 			case A_FUNCTION_RTEMP:
 			case A_VAR_TEMPLATE:
 				boolean result = true;
-				Restriction_type rt = null;
-				try {
-					rt = ((Definition) assignment).getTemplateRestriction();
-					if (rt != null && !(
-							rt.equals(TemplateRestriction.Restriction_type.TR_VALUE) || 
-							rt.equals(TemplateRestriction.Restriction_type.TR_NONE))) {
-						result = false;
-					}
-				} catch (ClassCastException cce) {
+				Restriction_type rt = ((Definition) assignment).getTemplateRestriction();
+				if ( TemplateRestriction.Restriction_type.TR_OMIT.equals(rt) || 
+					TemplateRestriction.Restriction_type.TR_PRESENT.equals(rt)) {
 					result = false;
-				} 
+				}
 				TTCN3Template ttemplate = getTemplateReferencedLast(timestamp);
 				if ((!ttemplate.equals(this)) && (ttemplate.isValue(timestamp))) {
 					return result; //ok
