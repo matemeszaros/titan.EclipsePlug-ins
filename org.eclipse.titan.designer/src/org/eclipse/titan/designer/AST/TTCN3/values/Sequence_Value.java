@@ -401,7 +401,12 @@ public final class Sequence_Value extends Value {
 	@Override
 	public IValue getValueRefdLast(final CompilationTimeStamp timestamp, final Expected_Value_type expectedValue,
 			final IReferenceChain referenceChain) {
-		if (convertedValue == null || convertedValue.getIsErroneous(timestamp) ) {
+		if (convertedValue == null || convertedValue.getIsErroneous(timestamp)) {
+			return this;
+		}
+
+		final CompilationTimeStamp lastTimestamp = convertedValue.getLastTimeChecked();
+		if (lastTimestamp == null || lastTimestamp.isLess(timestamp)) {
 			return this;
 		}
 
