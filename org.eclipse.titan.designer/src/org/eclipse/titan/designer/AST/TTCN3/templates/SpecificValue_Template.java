@@ -28,6 +28,7 @@ import org.eclipse.titan.designer.AST.Scope;
 import org.eclipse.titan.designer.AST.TTCN3.Expected_Value_type;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction;
+import org.eclipse.titan.designer.AST.TTCN3.TemplateRestriction.Restriction_type;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.AST.TTCN3.types.Function_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Bitstring_Value;
@@ -382,15 +383,23 @@ public final class SpecificValue_Template extends TTCN3Template {
 			case A_PAR_TEMP_INOUT:
 			case A_FUNCTION_RTEMP:
 			case A_VAR_TEMPLATE:
+				boolean result = true;
+				Restriction_type rt = null;
+				try {
+					rt = ((Definition) assignment).getTemplateRestriction();
+					if (rt != null && !(
+							rt.equals(TemplateRestriction.Restriction_type.TR_VALUE) || 
+							rt.equals(TemplateRestriction.Restriction_type.TR_NONE))) {
+						result = false;
+					}
+				} catch (ClassCastException cce) {
+					result = false;
+				} 
 				TTCN3Template ttemplate = getTemplateReferencedLast(timestamp);
 				if ((!ttemplate.equals(this)) && (ttemplate.isValue(timestamp))) {
-					return true;
+					return result; //ok
 				} else {
-					try {
-						return ((Definition)assignment).getTemplateRestriction().equals(TemplateRestriction.Restriction_type.TR_VALUE);
-					} catch (ClassCastException cce) {
-						return false;
-					}
+					return false;
 				}
 			default:
 				return false;
