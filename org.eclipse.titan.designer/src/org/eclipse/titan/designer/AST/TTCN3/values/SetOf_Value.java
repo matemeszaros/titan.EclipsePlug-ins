@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.AST.TTCN3.values;
 
+import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,9 +119,9 @@ public final class SetOf_Value extends Value {
 			}
 
 			if (Value_type.INTEGER_VALUE.equals(valueIndex.getValuetype())) {
-					int index = ((Integer_Value) valueIndex).intValue();
+					BigInteger index = ((Integer_Value) valueIndex).getValueValue();
 
-					if (index < 0) {
+					if (index.compareTo(BigInteger.ZERO) == -1) {
 						arrayIndex.getLocation().reportSemanticError(MessageFormat.format(NONNEGATIVEINDEXEXPECTED, index, type.getTypename()));
 						return null;
 					}
@@ -131,18 +132,18 @@ public final class SetOf_Value extends Value {
 							indexedValue = indexedValue.getValueRefdLast(timestamp, refChain);
 
 							if (Value_type.INTEGER_VALUE.equals(indexedValue.getValuetype())
-									&& ((Integer_Value) indexedValue).intValue() == index) {
+									&& ((Integer_Value) indexedValue).getValueValue().compareTo(index) == 0) {
 								return values.getIndexedValueByIndex(i).getValue().getReferencedSubValue(
 										timestamp, reference, actualSubReference + 1, refChain);
 							}
 						}
 
 						arrayIndex.getLocation().reportSemanticError(MessageFormat.format(NOINDEX, index, values.getFullName()));
-					} else if (index >= values.getNofValues()) {
+					} else if (index.compareTo(BigInteger.valueOf(values.getNofValues())) >= 0) {
 						arrayIndex.getLocation().reportSemanticError(
 								MessageFormat.format(INDEXOVERFLOW, type.getTypename(), index, values.getNofValues()));
 					} else {
-						return values.getValueByIndex(index).getReferencedSubValue(timestamp, reference, actualSubReference + 1, refChain);
+						return values.getValueByIndex(index.intValue()).getReferencedSubValue(timestamp, reference, actualSubReference + 1, refChain);
 					}
 
 					return null;
@@ -264,9 +265,9 @@ public final class SetOf_Value extends Value {
 					IndexedValue localTemp = values.getIndexedValueByIndex(i);
 					boolean found = false;
 					for (int j = indicesuncovered.size() - 1; j >= 0 && !found; j--) {
-						IndexedValue otherTemp =  otherSetof.values.getIndexedValueByIndex(indicesuncovered.get(j));
+						IValue otherTemp =  otherSetof.values.getIndexedValueByRealIndex(indicesuncovered.get(j));
 
-						if (localTemp.getValue().checkEquality(timestamp, otherTemp.getValue())) {
+						if (localTemp.getValue().checkEquality(timestamp, otherTemp)) {
 							found = true;
 							indicesuncovered.remove(j);
 						}
