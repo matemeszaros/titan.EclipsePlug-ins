@@ -316,6 +316,8 @@ public final class ASN1_Integer_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(INTEGERVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 	
 	//this method accepts REAL_VALUE

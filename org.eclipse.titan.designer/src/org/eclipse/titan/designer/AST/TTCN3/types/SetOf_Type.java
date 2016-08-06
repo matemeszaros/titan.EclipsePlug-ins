@@ -370,6 +370,8 @@ public final class SetOf_Type extends AbstractOfType {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

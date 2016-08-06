@@ -329,6 +329,8 @@ public final class Altstep_Type extends Type {
 				subType.checkThisValue(timestamp, value);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

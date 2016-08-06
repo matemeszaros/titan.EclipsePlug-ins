@@ -519,6 +519,8 @@ public final class ASN1_Set_Type extends ASN1_Set_Seq_Choice_BaseType {
 					MessageFormat.format(last.isAsn() ? SETVALUEXPECTEDASN1 : SETVALUEXPECTEDTTCN3, getFullName()));
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	/**
@@ -601,6 +603,8 @@ public final class ASN1_Set_Type extends ASN1_Set_Seq_Choice_BaseType {
 				}
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

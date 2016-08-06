@@ -320,6 +320,8 @@ public final class TTCN3_Choice_Type extends TTCN3_Set_Seq_Choice_BaseType {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	private void checkThisValueChoice(final CompilationTimeStamp timestamp, final Choice_Value value, final Expected_Value_type expectedValue,
@@ -346,6 +348,8 @@ public final class TTCN3_Choice_Type extends TTCN3_Set_Seq_Choice_BaseType {
 		alternativeValue = alternativeType.checkThisValueRef(timestamp, alternativeValue);
 		alternativeType.checkThisValue(timestamp, alternativeValue, new ValueCheckingOptions(expectedValue,
 				incompleteAllowed, false, true, false, strElem));
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

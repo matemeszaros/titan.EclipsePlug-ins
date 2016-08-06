@@ -139,6 +139,8 @@ public final class ObjectDescriptor_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(OBJECTDESCRIPTORVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

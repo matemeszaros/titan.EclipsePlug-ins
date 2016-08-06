@@ -322,16 +322,18 @@ public final class Referenced_Type extends ASN1Type implements IReferencingType 
 					valueCheckingOptions.str_elem));
 			Definition def = value.getDefiningAssignment();
 			if (def != null) {
-					String referingModuleName = getMyScope().getModuleScope().getName();
-					if (!def.referingHere.contains(referingModuleName)) {
-						def.referingHere.add(referingModuleName);
-					}
+				String referingModuleName = getMyScope().getModuleScope().getName();
+				if (!def.referingHere.contains(referingModuleName)) {
+					def.referingHere.add(referingModuleName);
+				}
 			}
 		}
 
 		if (valueCheckingOptions.sub_check && (subType != null)) {
 			subType.checkThisValue(timestamp, value);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

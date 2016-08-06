@@ -120,6 +120,8 @@ public final class Default_Type extends Type {
 			value.getLocation().reportSemanticError(DEFAULTVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

@@ -269,6 +269,7 @@ public final class ASN1_BitString_Type extends ASN1Type {
 				default:
 					value.getLocation().reportSemanticError("(reference to) BIT STRING value was expected");
 					value.setIsErroneous(true);
+					value.setLastTimeChecked(timestamp);
 					return;
 				}
 			}
@@ -284,6 +285,7 @@ public final class ASN1_BitString_Type extends ASN1Type {
 					value.getLocation().reportSemanticError(
 							MessageFormat.format("No named bits are defined in type `{0}''", getTypename()));
 					value.setIsErroneous(true);
+					value.setLastTimeChecked(timestamp);
 					return;
 				}
 				final Named_Bits namedBits = (Named_Bits) last;
@@ -295,6 +297,7 @@ public final class ASN1_BitString_Type extends ASN1Type {
 								MessageFormat.format("No named bit with name `{0}'' is defined in type `{1}''",
 										id.getDisplayName(), getTypename()));
 						value.setIsErroneous(true);
+						value.setLastTimeChecked(timestamp);
 						return;
 					}
 
@@ -326,6 +329,7 @@ public final class ASN1_BitString_Type extends ASN1Type {
 			default:
 				value.getLocation().reportSemanticError(BITSTRINGVALUEEXPECTED1);
 				value.setIsErroneous(true);
+				value.setLastTimeChecked(timestamp);
 				return;
 			}
 		} else {
@@ -348,6 +352,8 @@ public final class ASN1_BitString_Type extends ASN1Type {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+		
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

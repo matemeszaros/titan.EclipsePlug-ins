@@ -173,6 +173,8 @@ public final class OctetString_Type extends ASN1Type {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

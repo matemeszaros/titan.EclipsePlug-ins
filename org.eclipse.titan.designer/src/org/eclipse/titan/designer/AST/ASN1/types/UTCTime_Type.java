@@ -135,6 +135,8 @@ public final class UTCTime_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(CharString_Type.CHARSTRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

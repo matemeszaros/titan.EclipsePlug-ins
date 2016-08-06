@@ -444,6 +444,8 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	/**
@@ -529,6 +531,8 @@ public final class SequenceOf_Type extends AbstractOfType implements IReferencea
 				}
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

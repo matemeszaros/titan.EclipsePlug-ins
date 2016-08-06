@@ -373,6 +373,7 @@ public final class Function_Type extends Type {
 					Scope valueScope = value.getMyScope();
 					if (valueScope == null) {
 						value.setIsErroneous(true);
+						value.setLastTimeChecked(timestamp);
 						return;
 					}
 					RunsOnScope runsOnScope =  valueScope.getScopeRunsOn();
@@ -517,6 +518,8 @@ public final class Function_Type extends Type {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

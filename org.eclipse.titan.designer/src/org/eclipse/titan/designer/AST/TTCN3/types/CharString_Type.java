@@ -174,6 +174,8 @@ public final class CharString_Type extends Type {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

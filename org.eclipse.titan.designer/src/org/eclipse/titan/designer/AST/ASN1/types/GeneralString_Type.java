@@ -143,6 +143,8 @@ public final class GeneralString_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(GENERALSTRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

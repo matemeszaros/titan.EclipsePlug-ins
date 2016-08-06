@@ -461,6 +461,8 @@ public final class TTCN3_Set_Type extends TTCN3_Set_Seq_Choice_BaseType {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+		
+		value.setLastTimeChecked(timestamp);
 	}
 
 	/**
@@ -537,6 +539,8 @@ public final class TTCN3_Set_Type extends TTCN3_Set_Seq_Choice_BaseType {
 				}
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

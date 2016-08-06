@@ -145,6 +145,8 @@ public final class BMPString_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(BMPSTRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

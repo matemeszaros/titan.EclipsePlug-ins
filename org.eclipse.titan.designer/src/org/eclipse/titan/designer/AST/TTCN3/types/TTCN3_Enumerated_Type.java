@@ -306,6 +306,8 @@ public final class TTCN3_Enumerated_Type extends Type implements ITypeWithCompon
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

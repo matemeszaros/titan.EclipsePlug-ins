@@ -143,6 +143,8 @@ public final class GraphicString_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(GRAPHICSTRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

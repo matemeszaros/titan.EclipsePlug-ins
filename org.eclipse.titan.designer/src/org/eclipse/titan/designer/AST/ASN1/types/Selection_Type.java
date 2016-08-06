@@ -171,6 +171,8 @@ public final class Selection_Type extends ASN1Type implements IReferencingType {
 		if (null != last && last != this) {
 			last.checkThisValue(timestamp, value, valueCheckingOptions);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

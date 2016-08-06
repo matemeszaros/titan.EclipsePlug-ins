@@ -497,7 +497,6 @@ public final class TTCN3_Sequence_Type extends TTCN3_Set_Seq_Choice_BaseType {
 			}
 		}
 
-		last.setLastTimeChecked(timestamp);
 		value.setLastTimeChecked(timestamp);
 	}
 
@@ -628,6 +627,8 @@ public final class TTCN3_Sequence_Type extends TTCN3_Set_Seq_Choice_BaseType {
 				}
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

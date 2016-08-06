@@ -145,6 +145,8 @@ public final class UniversalString_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(UNIVERSALSTRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

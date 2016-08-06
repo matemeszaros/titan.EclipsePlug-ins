@@ -145,6 +145,8 @@ public final class UTF8String_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(UTF8STRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

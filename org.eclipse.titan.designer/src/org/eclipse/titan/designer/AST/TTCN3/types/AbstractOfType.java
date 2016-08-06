@@ -431,6 +431,8 @@ public abstract class AbstractOfType extends ASN1Type {
 				}
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

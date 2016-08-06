@@ -143,6 +143,8 @@ public final class TeletexString_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(TELETEXSTRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

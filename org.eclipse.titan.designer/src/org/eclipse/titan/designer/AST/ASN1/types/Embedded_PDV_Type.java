@@ -106,6 +106,8 @@ public final class Embedded_PDV_Type extends ASN1Type implements IReferencingTyp
 		if (null != last && last != this) {
 			last.checkThisValue(timestamp, value, valueCheckingOptions);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

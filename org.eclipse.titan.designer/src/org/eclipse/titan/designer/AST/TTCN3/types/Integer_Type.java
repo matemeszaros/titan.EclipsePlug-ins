@@ -148,6 +148,8 @@ public final class Integer_Type extends Type {
 				subType.checkThisValue(timestamp, last);
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	/**

@@ -278,6 +278,8 @@ public final class Open_Type extends ASN1Type {
 			}
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	private void checkThisValueChoice(final CompilationTimeStamp timestamp, final Choice_Value value, final Expected_Value_type expectedValue,
@@ -307,6 +309,8 @@ public final class Open_Type extends ASN1Type {
 			alternativeType.checkThisValue(timestamp, alternativeValue, new ValueCheckingOptions(expectedValue, incompleteAllowed,
 					false, true, false, strElem));
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

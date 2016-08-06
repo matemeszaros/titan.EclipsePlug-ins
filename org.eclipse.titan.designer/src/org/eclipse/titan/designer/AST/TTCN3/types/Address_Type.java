@@ -146,6 +146,8 @@ public final class Address_Type extends Type implements IReferencingType {
 		if (tempType != this) {
 			tempType.checkThisValue(timestamp, value, valueCheckingOptions);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

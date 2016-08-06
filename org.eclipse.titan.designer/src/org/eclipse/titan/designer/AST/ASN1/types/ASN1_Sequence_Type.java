@@ -539,7 +539,6 @@ public final class ASN1_Sequence_Type extends ASN1_Set_Seq_Choice_BaseType {
 			value.setIsErroneous(true);
 		}
 
-		last.setLastTimeChecked(timestamp);
 		value.setLastTimeChecked(timestamp);
 	}
 
@@ -671,6 +670,8 @@ public final class ASN1_Sequence_Type extends ASN1_Set_Seq_Choice_BaseType {
 				}
 			}
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

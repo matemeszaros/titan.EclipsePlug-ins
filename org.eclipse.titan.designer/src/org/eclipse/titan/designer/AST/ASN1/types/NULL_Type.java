@@ -113,6 +113,8 @@ public final class NULL_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(NULLVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

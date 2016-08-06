@@ -105,6 +105,8 @@ public final class UnrestrictedString_Type extends ASN1Type implements IReferenc
 		if (null != last && last != this) {
 			last.checkThisValue(timestamp, value, valueCheckingOptions);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

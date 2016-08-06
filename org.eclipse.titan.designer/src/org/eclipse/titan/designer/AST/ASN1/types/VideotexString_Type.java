@@ -143,6 +143,8 @@ public final class VideotexString_Type extends ASN1Type {
 			value.getLocation().reportSemanticError(VIDEOTEXSTRINGVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

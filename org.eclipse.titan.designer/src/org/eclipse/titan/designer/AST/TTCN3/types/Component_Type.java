@@ -199,6 +199,8 @@ public final class Component_Type extends Type {
 			value.getLocation().reportSemanticError(COMPONENTVALUEEXPECTED);
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

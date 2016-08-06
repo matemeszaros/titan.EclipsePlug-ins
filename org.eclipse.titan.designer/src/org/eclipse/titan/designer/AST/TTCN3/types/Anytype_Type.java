@@ -294,6 +294,8 @@ public final class Anytype_Type extends Type {
 			value.getLocation().reportSemanticError(MessageFormat.format(ANYTYPEEXPECTED, getFullName()));
 			value.setIsErroneous(true);
 		}
+		
+		value.setLastTimeChecked(timestamp);
 	}
 
 	private void checkThisValueAnytype(final CompilationTimeStamp timestamp, final Anytype_Value value, final Expected_Value_type expectedValue,
@@ -311,6 +313,8 @@ public final class Anytype_Type extends Type {
 		alternativeValue = alternativeType.checkThisValueRef(timestamp, alternativeValue);
 		alternativeType.checkThisValue(
 				timestamp, alternativeValue, new ValueCheckingOptions(expectedValue, incompleteAllowed, false, true, false, strElem));
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override

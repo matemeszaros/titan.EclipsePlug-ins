@@ -356,6 +356,8 @@ public final class Signature_Type extends Type {
 			value.getLocation().reportSemanticError(MessageFormat.format(SIGNATUREEXPECTED, getTypename()));
 			value.setIsErroneous(true);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	/**

@@ -169,6 +169,8 @@ public final class ObjectClassField_Type extends ASN1Type implements IReferencin
 		if (null != last && last != this) {
 			last.checkThisValue(timestamp, value, valueCheckingOptions);
 		}
+
+		value.setLastTimeChecked(timestamp);
 	}
 
 	@Override
