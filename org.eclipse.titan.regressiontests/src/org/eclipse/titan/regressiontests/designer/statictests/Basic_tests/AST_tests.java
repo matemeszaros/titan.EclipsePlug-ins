@@ -6471,7 +6471,7 @@ public class AST_tests {
 
 	private ArrayList<MarkerToCheck> value_tests_ttcn_initializer() {
 		//value_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(5263);
 		int lineNum = 20;
 		markersToCheck.add(new MarkerToCheck("Value 1 is already assigned to `item1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate enumeration identifier `item2' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6479,7 +6479,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Duplicate enumeration identifier `item2' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 50;
 		int i = 0;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExistent' in module `value_tests'", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExistent' in module `value_tests'", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 16;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `guard2' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `timerName' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -6492,19 +6494,31 @@ public class AST_tests {
 		lineNum += 17;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 70; i++) { markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `integer' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `integer' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 70; i++) {
+			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `integer' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `integer' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6520,17 +6534,25 @@ public class AST_tests {
 		lineNum += 19;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("float value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("float value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 81; i++) { markersToCheck.add(new MarkerToCheck("float value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `float' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 81; i++) {
+			markersToCheck.add(new MarkerToCheck("float value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `float' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("float value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("float value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `float' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `float' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6540,19 +6562,31 @@ public class AST_tests {
 		lineNum += 24;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 72; i++) { markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `boolean' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 6; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `boolean' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 72; i++) {
+			markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `boolean' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 6; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `boolean' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `boolean' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `boolean' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6562,19 +6596,31 @@ public class AST_tests {
 		lineNum += 16;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 67; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 67; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `bitstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6591,19 +6637,31 @@ public class AST_tests {
 		lineNum += 17;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 66; i++) { markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `hexstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `hexstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 66; i++) {
+			markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `hexstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `hexstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `hexstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
@@ -6617,20 +6675,32 @@ public class AST_tests {
 		lineNum += 20;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Type mismatch: a value of type `octetstring' was expected instead of `bitstring'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 65; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 65; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `octetstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6647,17 +6717,29 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 6; i++) { markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 6; i++) {
+			markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 70; i++) { markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `verdicttype' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `verdicttype' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 70; i++) {
+			markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `verdicttype' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `verdicttype' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `verdicttype' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `verdicttype' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6667,22 +6749,36 @@ public class AST_tests {
 		lineNum += 8;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 70; i++) { markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myenum1' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myenum1' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 70; i++) {
+			markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myenum1' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myenum1' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.myenum1' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myenum1' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6695,20 +6791,34 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 70; i++) { markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `default' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `default' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 70; i++) {
+			markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `default' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `default' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `default' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `default' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6718,22 +6828,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `charstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6756,24 +6880,40 @@ public class AST_tests {
 		lineNum += 18;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 55; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 55; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `universal charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `universal charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `universal charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `universal charstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `universal charstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6787,52 +6927,86 @@ public class AST_tests {
 		lineNum += 8;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 70; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 10; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 70; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 10; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Referencing fields of a component is not allowed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Type `@value_tests.mycomponent' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Type `@value_tests.mycomponent' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.mycomponent' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 3;
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mycomponent' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@value_tests.myrecordofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@value_tests.myrecordofType' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
@@ -6841,38 +7015,56 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `@value_tests.myrecordofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,486,618,625 for indexing a value of `record of' type `@value_tests.myrecordofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 999,999,999,999,999,999 in the value `@value_tests.f_recordofValueTests.<statement_block>.statement_112.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 3 in the value `@value_tests.f_recordofValueTests.<statement_block>.statement_112.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.myrecordofType' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,530,494,977 for indexing a value of `record of' type `@value_tests.myrecordofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `record of' type `@value_tests.myrecordofType': the index is 999,999,999,999,999, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += -1;
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 5; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mysetofType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 5; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mysetofType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.running'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `all component.running'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6888,7 +7080,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@value_tests.mysetofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@value_tests.mysetofType' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
@@ -6896,16 +7090,16 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("It's not allowed to create hole(s) in constant values",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `@value_tests.mysetofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,486,618,625 for indexing a value of `record of' type `@value_tests.mysetofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `set of' type `@value_tests.mysetofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 999,999,999,999,999,999 in the value `@value_tests.f_setofValueTests.<statement_block>.statement_112.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 3 in the value `@value_tests.f_setofValueTests.<statement_block>.statement_112.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.mysetofType' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `@value_tests.mysetofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `set of' type `@value_tests.mysetofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `record of' type `@value_tests.mysetofType': the index is 10, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,486,618,625 for indexing a value of `record of' type `@value_tests.mysetofType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `set of' type `@value_tests.mysetofType': the index is 10, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `set of' type `@value_tests.mysetofType': the index is 999,999,999,999,999,999, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
@@ -6916,7 +7110,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field3' in set value for type `@value_tests.mysetType'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicated set field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6930,13 +7126,23 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 5; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mysetType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 5; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.mysetType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.running'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `all component.running'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6952,12 +7158,16 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent set field `nonExi' in type `@value_tests.mysetType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.mysetType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.mysetType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.mysetType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -6988,7 +7198,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field1' cannot appear after field `field2' in record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
@@ -7005,52 +7217,84 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myrecordType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myrecordType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myrecordType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myrecordType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent record field `nonExi' in type `@value_tests.myrecordType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myrecordType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myrecordType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.myrecordType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to field `nonExi' of omit value `@value_tests.f_recordValueTests.<statement_block>.statement_120.block.statement_1.def.field3'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Accessing an element with index of omit value `@value_tests.f_recordValueTests.<statement_block>.statement_120.block.statement_1.def.field3'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Accessing an element with index of omit value `@value_tests.f_recordValueTests.<statement_block>.statement_120.block.statement_1.def.field3'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicated record field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field4' in union value for type `@value_tests.myunionType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Only one field was expected in union value istead of 2", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Only one field was expected in union value istead of 2", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Only one field was expected in union value istead of 2",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 5; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myunionType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 5; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.myunionType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.running'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `all component.running'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7066,12 +7310,16 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to inactive field `field1' in a value of union type `@value_tests.myunionType'. The active field is `field2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent union field `nonExi' in type `@value_tests.myunionType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myunionType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myunionType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.myunionType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7099,7 +7347,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Runs on clause mismatch: type `@value_tests.t_function2' expects component type `@value_tests.mycomponent', but function runs on `@value_tests.NonEmpty_CT_1'", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Runs on clause mismatch: type `@value_tests.t_function2' expects component type `@value_tests.mycomponent', but function runs on `@value_tests.NonEmpty_CT_1'", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 1 was expected instead of 2",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7108,35 +7358,65 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Too few elements in the array value: 5 was expected instead of 2",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The lower boundary is greater than the upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Too few elements in the array value: 3 was expected instead of 2", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Too few elements in the array value: 3 was expected instead of 2", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("float value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("float value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 9; i++) { markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 9; i++) {
+			markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 9; i++) { markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 9; i++) {
+			markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 9; i++) { markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 9; i++) {
+			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 9; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 9; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Value list notation cannot be used for set type `@value_tests.mysetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@value_tests.myrecordType': 3 was expected instead of 5",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 2 and 3",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7166,17 +7446,19 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer[1]' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `integer[1]'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Array index underflow: the index value must be at least 0 instead of -1",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `record of' type `integer[1]': the index is 10, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Array index oveflow: the index value must be at most 0 instead of 10",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer[1]' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `integer[1]'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Array index underflow: the index value must be at least 0 instead of -1",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index -1 in the value `@value_tests.f_arrayValueTests.<statement_block>.statement_60.block.statement_1.def'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 10 in the value `@value_tests.f_arrayValueTests.<statement_block>.statement_60.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Array index oveflow: the index value must be at most 0 instead of 10",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 10 in the value `@value_tests.f_arrayValueTests.<statement_block>.statement_60.block.statement_1.def'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type6' has a `runs on self' clause and the current scope does not have a `runs on' clause, but function `@value_tests.f_function6' runs on `@value_tests.NonEmpty_CT_2'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -7185,23 +7467,37 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Runs on clause mismatch: type `@value_tests.t_function2' expects component type `@value_tests.mycomponent', but function runs on `@value_tests.NonEmpty_CT_1'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 16;
-		for (i = 0; i < 11; i++) { markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 11; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_function' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_function' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_function' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_function' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a function or external function was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but function `@value_tests.f_function2' returns a value of type `integer'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but external function `@value_tests.ef_f_ext_function2' returns a value of type `integer'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but function `@value_tests.f_function3' returns a template of type `integer'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7242,23 +7538,37 @@ public class AST_tests {
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		for (i = 0; i < 11; i++) { markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 11; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_altstep' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_altstep' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_altstep' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_altstep' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to an altstep was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.t_altstep2' does not have a `runs on' clause, but altstep runs on `@value_tests.mycomponent'.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_altstep' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
@@ -7273,23 +7583,37 @@ public class AST_tests {
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
-		for (i = 0; i < 11; i++) { markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 11; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_testcase' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_testcase' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_testcase' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@value_tests.t_testcase' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Reference to a testcase was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_testcase' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.t_testcase' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7301,45 +7625,73 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_testcase' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		for (i = 0; i < 11; i++) { markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 11; i++) {
+			markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Incompatible value: `NULL' was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 59; i++) { markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `NULL' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `NULL' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 59; i++) {
+			markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `NULL' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `NULL' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("NULL value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 18;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 67; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 67; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `bitstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `bitstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7354,22 +7706,36 @@ public class AST_tests {
 		lineNum += 23;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `BMPString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `BMPString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `BMPString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `BMPString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("BMP string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `BMPString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7379,22 +7745,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("General string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `GeneralString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7404,22 +7784,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `GraphicString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `GraphicString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `GraphicString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `GraphicString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Graphicl string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `GraphicString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7429,22 +7823,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `IA5String' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `IA5String' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `IA5String' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `IA5String' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `IA5String' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7454,22 +7862,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `NumericString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `NumericString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `NumericString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `NumericString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `NumericString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7479,19 +7901,31 @@ public class AST_tests {
 		lineNum += 23;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 7; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 7; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 65; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 65; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `octetstring' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `octetstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7501,22 +7935,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `VisibleString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7526,22 +7974,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `TeletexString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7551,22 +8013,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `PrintableString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `PrintableString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `PrintableString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `PrintableString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `PrintableString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7576,22 +8052,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `TeletexString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Teletex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `TeletexString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7601,22 +8091,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `UniversalString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `UniversalString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `UniversalString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `UniversalString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Universal string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `UniversalString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7626,22 +8130,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `UTF8String' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `UTF8String' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `UTF8String' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `UTF8String' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("UTF8 string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `UTF8String' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7651,22 +8169,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `VideotexString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `VideotexString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `VideotexString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `VideotexString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Videotex string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `VideotexString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7676,22 +8208,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `VisibleString' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `VisibleString' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7701,22 +8247,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralizedTime' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralizedTime' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralizedTime' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `GeneralizedTime' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `GeneralizedTime' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7726,22 +8286,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `UTCTime' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `UTCTime' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `UTCTime' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `UTCTime' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `UTCTime' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7751,22 +8325,36 @@ public class AST_tests {
 		lineNum += 21;
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 58; i++) { markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `ObjectDescriptor' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 13; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `ObjectDescriptor' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 58; i++) {
+			markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `ObjectDescriptor' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 13; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `ObjectDescriptor' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Objectdescriptor value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `ObjectDescriptor' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 1, but the string has only 0 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7793,24 +8381,38 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSetType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSetType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSetType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSetType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent set field `nonExi' in type `@ASNTypes.ASNSetType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSetType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSetType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@ASNTypes.ASNSetType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7830,7 +8432,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Field `field1' cannot appear after field `field2' in record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("General string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7843,82 +8447,134 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent record field `nonExi' in type `@ASNTypes.ASNSequenceType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSequenceType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSequenceType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@ASNTypes.ASNSequenceType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field4' in union value for type `@ASNTypes.ASNChoiceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Only one field was expected in union value istead of 2", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Only one field was expected in union value istead of 2", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Only one field was expected in union value istead of 2",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNChoiceType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNChoiceType' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNChoiceType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNChoiceType' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@ASNTypes.ASNChoiceType'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to inactive field `field1' in a value of union type `@ASNTypes.ASNChoiceType'. The active field is `field2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent union field `nonExi' in type `@ASNTypes.ASNChoiceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNChoiceType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNChoiceType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@ASNTypes.ASNChoiceType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += -1;
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceOf' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceOf' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceOf' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSequenceOf' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@ASNTypes.ASNSequenceOf' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@ASNTypes.ASNSequenceOf' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
@@ -7927,38 +8583,56 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `@ASNTypes.ASNSequenceOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,486,618,625 for indexing a value of `record of' type `@ASNTypes.ASNSequenceOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 999,999,999,999,999,999 in the value `@value_tests.f_ASNSequenceofValueTests.<statement_block>.statement_113.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 3 in the value `@value_tests.f_ASNSequenceofValueTests.<statement_block>.statement_113.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@ASNTypes.ASNSequenceOf' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,530,494,977 for indexing a value of `record of' type `@ASNTypes.ASNSequenceOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `record of' type `@ASNTypes.ASNSequenceOf': the index is 999,999,999,999,999, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += -1;
-		for (i = 0; i < 8; i++) { markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 8; i++) {
+			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 5; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSetOf' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `rnd()'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 5; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `@ASNTypes.ASNSetOf' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.running'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `all component.running'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `any component.alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -7974,7 +8648,9 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@ASNTypes.ASNSetOf' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@ASNTypes.ASNSetOf' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
@@ -7982,16 +8658,16 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("It's not allowed to create hole(s) in constant values",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `@ASNTypes.ASNSetOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,486,618,625 for indexing a value of `record of' type `@ASNTypes.ASNSetOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `set of' type `@ASNTypes.ASNSetOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 999,999,999,999,999,999 in the value `@value_tests.f_ASNSetofValueTests.<statement_block>.statement_113.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 3 in the value `@value_tests.f_ASNSetofValueTests.<statement_block>.statement_113.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@ASNTypes.ASNSetOf' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `record of' type `@ASNTypes.ASNSetOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a value of `set of' type `@ASNTypes.ASNSetOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `record of' type `@ASNTypes.ASNSetOf': the index is 10, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1,486,618,625 for indexing a value of `record of' type `@ASNTypes.ASNSetOf'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `set of' type `@ASNTypes.ASNSetOf': the index is 10, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow in a value of `set of' type `@ASNTypes.ASNSetOf': the index is 999,999,999,999,999,999, but the value has only 1 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
@@ -8003,30 +8679,48 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("An integer value less then `2,147,483,647' was expected in the number form instead of `99,999,999,999,999,999'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The value of first OBJECT IDENTIFIER component must be between 0 and 2 instead of 3",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("The value of second OBJECT IDENTIFIER component must be between 0 and 39 instead of 39", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The value of second OBJECT IDENTIFIER component must be between 0 and 39 instead of 39", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 69; i++) { markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `objid' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 4; i++) { markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
-		for (i = 0; i < 14; i++) { markersToCheck.add(new MarkerToCheck("Incompatible value: `objid' was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 69; i++) {
+			markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `objid' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 4; i++) {
+			markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		for (i = 0; i < 14; i++) {
+			markersToCheck.add(new MarkerToCheck("Incompatible value: `objid' was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 6; i++) { markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 6; i++) {
+			markersToCheck.add(new MarkerToCheck("objid value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `field1': type `objid' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `objid' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `objid' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `objid' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `objid' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
