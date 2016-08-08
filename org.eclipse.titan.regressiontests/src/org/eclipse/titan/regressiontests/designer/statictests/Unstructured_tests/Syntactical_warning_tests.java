@@ -42,28 +42,46 @@ public class Syntactical_warning_tests {
 
 	private ArrayList<MarkerToCheck> Semantic_errors_ttcn_initializer() {
 		//Semantic_errors.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(29);
 		int lineNum = 15;
 		markersToCheck.add(new MarkerToCheck("Recursive importation is deprecated and may be fully removed in a future edition of the TTCN-3 standard",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 1;
 		int i = 0;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 1;
-		for (i = 0; i < 3; i++) { markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions",  lineNum, IMarker.SEVERITY_WARNING));
 
@@ -72,7 +90,7 @@ public class Syntactical_warning_tests {
 
 	private ArrayList<MarkerToCheck> SemanticErrors3_asn_initializer() {
 		//SemanticErrors3.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 0;
 		markersToCheck.add(new MarkerToCheck("Missing IMPORTS clause is interpreted as `IMPORTS ; (import nothing) instead of importing all symbols from all modules.",  lineNum, IMarker.SEVERITY_WARNING));
 
@@ -81,7 +99,7 @@ public class Syntactical_warning_tests {
 
 	 private ArrayList<MarkerToCheck> Syntax_warnings_ttcn_initializer() {
 		//Syntax_warnings.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(3);
 		int lineNum = 10;
 		markersToCheck.add(new MarkerToCheck("Obsolete type `char' is taken as `charstring' ",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("Obsolete type `universal char' is taken as `universal charstring' ",  ++lineNum, IMarker.SEVERITY_WARNING));
@@ -94,7 +112,7 @@ public class Syntactical_warning_tests {
 
 	 private ArrayList<MarkerToCheck> Syntax_warnings2_ttcn_initializer() {
 		//Syntax_warnings2.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 10;
 		markersToCheck.add(new MarkerToCheck("Selective importation is not yet supported, importing all definitions",  lineNum, IMarker.SEVERITY_WARNING));
 

@@ -94,7 +94,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> SemanticErrors1_asn_initializer() {
 		//SemanticErrors1.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(16);
 		int lineNum = 7;
 		markersToCheck.add(new MarkerToCheck("Duplicate symbol with name `Duplicate-symbol' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate symbol with name `Duplicate-symbol' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
@@ -104,16 +104,18 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("Duplicate symbol with name `Duplicate-symbol-2' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `nonexi' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 19;
+		lineNum += 3;
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `nonexi' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 16;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `nonexi' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 136;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `nonexi' in module `SemanticErrors1'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `nonexi' in module `SemanticErrors1'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 32;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
 
@@ -122,12 +124,14 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> SemanticErrors2_asn_initializer() {
 		//SemanticErrors2.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(11);
 		int lineNum = 3;
 		markersToCheck.add(new MarkerToCheck("A module cannot import from itself",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `nonexi' in module `SemanticErrors2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate import from module `SemanticErrors1' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Symbol `X10' is not exported from module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An ASN.1 module cannot import from a TTCN-3 module",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The module referred by `Semantic-errors3' is not an ASN.1 module",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate import from module `SemanticErrors1' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `Duplicate-symbol-3' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
@@ -141,13 +145,15 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> SemanticErrors3_asn_initializer() {
 		//SemanticErrors3.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(59);
 		int lineNum = 11;
 		markersToCheck.add(new MarkerToCheck("BOOLEAN value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `b' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("BOOLEAN value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
 		int i = 0;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Duplicate definition with name `b' was declared here again", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Duplicate definition with name `b' was declared here again", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `ize' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `ize' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate number 1 for name `ize'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -160,11 +166,12 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("Duplicate value 1 for named bit `ize2'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("No named bits are defined in type `bitstring'",  lineNum, IMarker.SEVERITY_ERROR));
-		//			markersToCheck.add(new MarkerToCheck("Duplicate named bit `first'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("No named bit with name `forth' is defined in type `bitstring'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `ize' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `ize2' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Duplicate ENUMERATE identifier: `ize' was declared here again", lineNum, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Duplicate ENUMERATE identifier: `ize' was declared here again", lineNum, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Duplicate ENUMERATE identifier: `ize2' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate numeric value 1 for enumeration `ize'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate numeric value 1 for enumeration `ize2'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -172,7 +179,9 @@ public class Semantic_errors_tests {
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("Alternative `map-open' was first defined here",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Duplicate Alternative identifier in CHOICE: `map-open' was declared here again", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Duplicate Alternative identifier in CHOICE: `map-open' was declared here again", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("Component `eventTypeBCSM' was first defined here",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate Component identifier in SEQUENCE: `eventTypeBCSM' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -189,7 +198,9 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("There is no imported module with name `Non-exi'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: Bearerservicecode11 -> type reference: Bearerservicecode10 -> type reference: Bearerservicecode11'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 3;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: Bearerservicecode10 -> type reference: Bearerservicecode11 -> type reference: Bearerservicecode10'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: Bearerservicecode10 -> type reference: Bearerservicecode11 -> type reference: Bearerservicecode10'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 8;
 		markersToCheck.add(new MarkerToCheck("Cannot recognise this assignment",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Parameterized assignment expected",  lineNum, IMarker.SEVERITY_ERROR));
@@ -199,12 +210,16 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NON-EXI' in module `SemanticErrors3'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
 		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Mandatory component `field2' is missing from SEQUENCE value",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a non-existent component `field3' of SEQUENCE type `@SemanticErrors3.ASNSequenceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("Mandatory component `field2' is missing from SET value",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a non-existent component `field3' of SET type `@SemanticErrors3.ASNSetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
@@ -217,7 +232,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> Semantic_errors_ttcn_initializer() {
 		//Semantic_errors.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(55);
 		int lineNum = 11;
 		markersToCheck.add(new MarkerToCheck("There is no module with name `nonexiModule'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
@@ -225,7 +240,9 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("There is no module with name `nonExistent2'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
 		markersToCheck.add(new MarkerToCheck("There is no module with name `nonExistent3'",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 15;
+		lineNum += 11;
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `barmi1' in module `Semantic_errors'",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("Duplicate field name `x' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Duplicate field name `x' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
@@ -253,7 +270,9 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.no_choice -> type reference: no_choice -> type reference: @Semantic_errors.no_choice'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		int i = 0;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: no_choice -> type reference: @Semantic_errors.no_choice -> type reference: @Semantic_errors.no_choice'", lineNum++, IMarker.SEVERITY_ERROR)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: no_choice -> type reference: @Semantic_errors.no_choice -> type reference: @Semantic_errors.no_choice'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -266,50 +285,41 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: @Semantic_errors.MyUnion1'",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 23;
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 20;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExistent' in module `Semantic_errors'", lineNum, IMarker.SEVERITY_ERROR));
+		}
+		lineNum += 4;
+		for (i = 0; i < 3; i++) {
+			markersToCheck.add(new MarkerToCheck("Duplicate version attribute", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("Version template must be exactly <RnXnn>",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Version template must be exactly <RnXnn>",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Wrong format for product version information: The accepted formats resemble CRL 113 200/1 R9A",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Wrong format for version information: The accepted formats resemble R2D02 and R2D",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Wrong format for version information: The accepted formats resemble R2D02 and R2D",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The minor version number 2,147,483,648 is unexpectedly large, right now we can not handle such large numbers",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate version attribute",  ++lineNum, IMarker.SEVERITY_ERROR));
-		//markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The build version number 2,147,483,648 is unexpectedly large, right now we can not handle such large numbers",  lineNum, IMarker.SEVERITY_ERROR));
-		++lineNum; //markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no module with name `nonExi'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no module with name `nonExi'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 4;
+		markersToCheck.add(new MarkerToCheck("Wrong format for product version information: The accepted formats resemble CRL 113 200/1 R9A",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) lineNum++; //{ markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types", lineNum++, IMarker.SEVERITY_ERROR)); }
-		markersToCheck.add(new MarkerToCheck("Wrong format for product version information: The accepted formats resemble CRL 113 200/1 R9A",  --lineNum, IMarker.SEVERITY_ERROR));
-		++lineNum; //markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Wrong format for version information: The accepted formats resemble R2D02 and R2D",  lineNum, IMarker.SEVERITY_ERROR));
-		++lineNum; //markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Wrong format for version information: The accepted formats resemble R2D02 and R2D",  lineNum, IMarker.SEVERITY_ERROR));
-		++lineNum; //markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  ++lineNum, IMarker.SEVERITY_ERROR));
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Wrong format for version information: The accepted formats resemble R2D02 and R2D", lineNum++, IMarker.SEVERITY_ERROR));
+		}
 		markersToCheck.add(new MarkerToCheck("The minor version number 2,147,483,648 is unexpectedly large, right now we can not handle such large numbers",  lineNum, IMarker.SEVERITY_ERROR));
-		++lineNum; //markersToCheck.add(new MarkerToCheck("Extension attributes are not supported for types",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("The build version number 2,147,483,648 is unexpectedly large, right now we can not handle such large numbers",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The build version number 2,147,483,648 is unexpectedly large, right now we can not handle such large numbers",  ++lineNum, IMarker.SEVERITY_ERROR));
 
 		return markersToCheck;
 	}
 
 	private ArrayList<MarkerToCheck> Semantic_errors2_ttcn_initializer() {
 		//Semantic_errors2.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 8;
 		markersToCheck.add(new MarkerToCheck("Modules must be unique, but `Semantic_errors2' was declared multiple times",  lineNum, IMarker.SEVERITY_ERROR));
 
@@ -318,7 +328,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> Semantic_errors3_ttcn_initializer() {
 		//Semantic_errors3.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(22);
 		int lineNum = 18;
 		markersToCheck.add(new MarkerToCheck("Previous definition with identifier `cx1' in higher scope unit is here",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
@@ -328,7 +338,9 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("Definition `xc1' inherited from component type `@Semantic_errors3.mycomp5' collides with definition inherited from `@Semantic_errors3.mycomp4'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("The name of the inherited definition `cx1' is not unique in the scope hierarchy",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 8;
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("Type reference expected",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `akarmi' in module `Semantic_errors3'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("`myfunc' is not a reference to a type",  lineNum, IMarker.SEVERITY_ERROR));
@@ -357,7 +369,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> Semantic_errors4_ttcn_initializer() {
 		//Semantic_errors4.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(4);
 		int lineNum = 8;
 		markersToCheck.add(new MarkerToCheck("Modules must be unique, but `Semantic_errors2' was declared multiple times",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 16;
@@ -371,7 +383,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> ReturnValueTest_ttcn_initializer() {
 		//ReturnValueTest.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(27);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(31);
 		int lineNum = 11;
 		markersToCheck.add(new MarkerToCheck("Missing return value. The function should return a value of type `integer'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 30;
@@ -441,7 +453,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> Syntax_warnings_ttcn_initializer() {
 		//Syntax_warnings.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 17;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `anyport' in module `Syntax_warnings'",  lineNum, IMarker.SEVERITY_ERROR));
 

@@ -37,7 +37,7 @@ public class Syntactical_errors_tests {
 
 	private ArrayList<MarkerToCheck> SemanticErrors2_asn_initializer() {
 		//SemanticErrors2.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 5;
 		markersToCheck.add(new MarkerToCheck("`Semantic_errors3' is not a valid ASN.1 identifier. Did you mean `Semantic-errors3' ?",  lineNum, IMarker.SEVERITY_ERROR));
 
@@ -46,7 +46,7 @@ public class Syntactical_errors_tests {
 
 	private ArrayList<MarkerToCheck> SemanticErrors3_asn_initializer() {
 		//SemanticErrors3.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 20;
 		markersToCheck.add(new MarkerToCheck("Duplicate named bit `first'",  lineNum, IMarker.SEVERITY_ERROR));
 
@@ -55,7 +55,7 @@ public class Syntactical_errors_tests {
 	
 	private ArrayList<MarkerToCheck> ReturnValueTest_ttcn_initializer() {
 		//ReturnValueTest.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(6);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(5);
 		int lineNum = 37;
 		markersToCheck.add(new MarkerToCheck("mismatched input '..' expecting {'action', 'activate', 'all', 'alt', 'and', 'and4b', 'any', 'break', 'connect', 'const', 'continue', 'deactivate', 'disconnect', 'do', 'execute', 'for', 'goto', 'if', 'ifpresent', 'interleave', 'kill', 'label', 'length', 'log', 'map', 'mod', 'mtc', 'or', 'or4b', 'rem', 'repeat', 'return', 'select', 'self', 'setverdict', 'stop', 'template', 'testcase', 'timer', 'unmap', 'var', 'while', 'xor', 'xor4b', 'int2enum', 'string2ttcn', IDENTIFIER, '@try', ';', '{', '}', '<', '>', '!=', '>=', '<=', '==', '+', '-', '*', '/', '<<', '>>', '<@', '@>', '&'}",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 39;

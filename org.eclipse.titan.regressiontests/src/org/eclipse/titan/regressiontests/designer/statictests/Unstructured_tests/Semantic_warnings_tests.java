@@ -62,7 +62,7 @@ public class Semantic_warnings_tests {
 	
 	private ArrayList<MarkerToCheck> SemanticErrors1_asn_initializer() {
 		//SemanticErrors1.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 8;
 		int i = 0;
 		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("Possibly unused importation", lineNum++, IMarker.SEVERITY_WARNING)); }
@@ -72,7 +72,7 @@ public class Semantic_warnings_tests {
 
 	 private ArrayList<MarkerToCheck> SemanticErrors2_asn_initializer() {
 		//SemanticErrors2.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 3;
 		int i = 0;
 		for (i = 0; i < 5; i++) { markersToCheck.add(new MarkerToCheck("Possibly unused importation", lineNum++, IMarker.SEVERITY_WARNING)); }
@@ -81,48 +81,49 @@ public class Semantic_warnings_tests {
 	}
 
 	 private ArrayList<MarkerToCheck> Semantic_errors_ttcn_initializer() {
-			//Semantic_errors.ttcn
-			ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
-			int lineNum = 11;
-			markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 2;
-			markersToCheck.add(new MarkerToCheck("Circular import chain is not recommended: Semantic_errors -> Semantic_errors3 -> Semantic_errors",  lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 2;
-			markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("Possibly unused importation",  ++lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 10;
-			markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 11;
-			markersToCheck.add(new MarkerToCheck("There is no visible definition with name `barmi1' in module `Semantic_errors'",  lineNum, IMarker.SEVERITY_ERROR));
-			lineNum += 9;
-			markersToCheck.add(new MarkerToCheck("The value parameter `b' with name b breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("The value parameter `h' with name h breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 11;
-			markersToCheck.add(new MarkerToCheck("Definition `cx1' inherited from component type `@Semantic_errors.mycomp1' is here",  lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("The variable `@Semantic_errors.mycomp1.cx1' with name cx1 breaks the naming convention  `v_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("Inherited definition with name `Semantic_errors3' hides a module identifier",  ++lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("The variable `@Semantic_errors.mycomp1.Semantic_errors3' with name Semantic_errors3 breaks the naming convention  `v_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 9;
-			markersToCheck.add(new MarkerToCheck("The function `@Semantic_errors.myfunc1' with name myfunc1 breaks the naming convention  `f_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-			int i = 0;
-			for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("The value parameter `par' with name par breaks the naming convention  `pl_.*'", lineNum++, IMarker.SEVERITY_WARNING)); }
-			markersToCheck.add(new MarkerToCheck("Definition with name `Syntax_warnings' hides a module identifier",  ++lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("The variable `Syntax_warnings' with name Syntax_warnings breaks the naming convention  `vl.*'",  lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 1;
-			for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("The variable `x' with name x breaks the naming convention  `vl.*'", lineNum, IMarker.SEVERITY_WARNING)); }
-			lineNum += 2;
-			markersToCheck.add(new MarkerToCheck("Definition with name `nonexiModule' hides a module identifier",  lineNum, IMarker.SEVERITY_WARNING));
-			markersToCheck.add(new MarkerToCheck("The variable `nonexiModule' with name nonexiModule breaks the naming convention  `vl.*'",  lineNum, IMarker.SEVERITY_WARNING));
-			lineNum += 38;
-			for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExistent' in module `Semantic_errors'", lineNum, IMarker.SEVERITY_ERROR)); }
+		//Semantic_errors.ttcn
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(21);
+		int lineNum = 11;
+		markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("Circular import chain is not recommended: Semantic_errors -> Semantic_errors3 -> Semantic_errors",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 2;
+		int i = 0;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Possibly unused importation", lineNum++, IMarker.SEVERITY_WARNING));
+		}
+		lineNum += 9;
+		markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 20;
+		markersToCheck.add(new MarkerToCheck("The value parameter `b' with name b breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The value parameter `h' with name h breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 11;
+		markersToCheck.add(new MarkerToCheck("Definition `cx1' inherited from component type `@Semantic_errors.mycomp1' is here",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The variable `@Semantic_errors.mycomp1.cx1' with name cx1 breaks the naming convention  `v_.*'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Inherited definition with name `Semantic_errors3' hides a module identifier",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The variable `@Semantic_errors.mycomp1.Semantic_errors3' with name Semantic_errors3 breaks the naming convention  `v_.*'",  lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 9;
+		markersToCheck.add(new MarkerToCheck("The function `@Semantic_errors.myfunc1' with name myfunc1 breaks the naming convention  `f_.*'",  lineNum, IMarker.SEVERITY_WARNING));
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The value parameter `par' with name par breaks the naming convention  `pl_.*'", lineNum++, IMarker.SEVERITY_WARNING));
+		}
+		markersToCheck.add(new MarkerToCheck("Definition with name `Syntax_warnings' hides a module identifier",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The variable `Syntax_warnings' with name Syntax_warnings breaks the naming convention  `vl.*'",  lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 1;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The variable `x' with name x breaks the naming convention  `vl.*'", lineNum, IMarker.SEVERITY_WARNING));
+		}
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("Definition with name `nonexiModule' hides a module identifier",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The variable `nonexiModule' with name nonexiModule breaks the naming convention  `vl.*'",  lineNum, IMarker.SEVERITY_WARNING));
 
-			return markersToCheck;
+		return markersToCheck;
 	}
 
 	 private ArrayList<MarkerToCheck> Semantic_errors3_ttcn_initializer() {
 		//Semantic_errors3.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(22);
 		int lineNum = 10;
 		markersToCheck.add(new MarkerToCheck("Circular import chain is not recommended: Semantic_errors3 -> Semantic_errors -> Semantic_errors3",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 16;
@@ -151,7 +152,9 @@ public class Semantic_warnings_tests {
 		markersToCheck.add(new MarkerToCheck("The variable `huhhhuhuh' with name huhhhuhuh breaks the naming convention  `vl.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 3;
 		int i = 0;
-		for (i = 0; i < 2; i++) { markersToCheck.add(new MarkerToCheck("The variable `iter' with name iter breaks the naming convention  `vl.*'", lineNum, IMarker.SEVERITY_WARNING)); }
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The variable `iter' with name iter breaks the naming convention  `vl.*'", lineNum, IMarker.SEVERITY_WARNING));
+		}
 		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("The testcase `@Semantic_errors3.myTC1' with name myTC1 breaks the naming convention  `tc_.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("The testcase `@Semantic_errors3.myTC2' with name myTC2 breaks the naming convention  `tc_.*'",  ++lineNum, IMarker.SEVERITY_WARNING));
@@ -161,7 +164,7 @@ public class Semantic_warnings_tests {
 
 	 private ArrayList<MarkerToCheck> Semantic_errors4_ttcn_initializer() {
 		//Semantic_errors4.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(9);
 		int lineNum = 10;
 		markersToCheck.add(new MarkerToCheck("Type parameterization is not currently supported",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 6;
@@ -183,7 +186,7 @@ public class Semantic_warnings_tests {
 
 	 private ArrayList<MarkerToCheck> Syntax_warnings_ttcn_initializer() {
 		//Syntax_warnings.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(2);
 		int lineNum = 13;
 		markersToCheck.add(new MarkerToCheck("The function `@Syntax_warnings.myf' with name myf breaks the naming convention  `f_.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("The value parameter `z' with name z breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
@@ -193,7 +196,7 @@ public class Semantic_warnings_tests {
 
 	 private ArrayList<MarkerToCheck> Syntax_warnings2_ttcn_initializer() {
 		//Syntax_warnings2.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>();
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
 		int lineNum = 10;
 		markersToCheck.add(new MarkerToCheck("Possibly unused importation",  lineNum, IMarker.SEVERITY_WARNING));
 
