@@ -12,6 +12,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AllFromTest.class })
+@SuiteClasses({ AllFromTest.class, TemplateRestrictionTest.class })
 public class TemplateTestSuite {
 }

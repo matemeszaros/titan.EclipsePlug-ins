@@ -1,0 +1,67 @@
+//Bug: Eclipse plugin does not produce the same errors/warning as the compiler
+//This is a marker test
+//Status:  partially resolved
+//
+module templateRestrictionTest {
+
+// This module tests on-the-fly semantic errors (and warnings) related to template restrictions.
+// The errors must be displayed at the location, where they are used, and not where the template is declared.
+
+type record Rec {
+  integer i,
+  float f,
+  charstring cs, 
+  octetstring os
+}
+
+template (present) Rec t_original(in template (present) integer pl_i) := {
+  i := pl_i, //warning marker expected: Inadequate restriction on the referenced template parameter `pt_i', this may cause a dynamic test case error at runtime - NOT OK
+  f := ?,
+  cs := ?,
+  os := ?
+}
+
+template (present) Rec t_modifiedp(in template (present) integer pl_i, in template (present) float pl_f ) 
+  modifies t_original := {
+  f := pl_f //Not expected but compiler logs: warning marker expected: Inadequate restriction on the referenced template parameter `pl_f', this may cause a dynamic test case error at runtime - NOT OK
+} 
+
+template (value) Rec t_modifiedv1(in template (present) integer pl_i, in template (present) float pl_f )
+  modifies t_original := {
+  f := pl_f //Not expected but compiler logs: warning marker expected: Inadequate restriction on the referenced template parameter `pl_f', this may cause a dynamic test case error at runtime - NOT OK
+} 
+
+template (value) Rec t_modifiedv2(in template (value) integer pl_i, in template (value) float pl_f )
+  modifies t_original := {
+  f := pl_f //Not expected but compiler logs: warning marker expected: Inadequate restriction on the referenced template parameter `pl_f', this may cause a dynamic test case error at runtime - NOT OK
+} 
+
+template Rec t_modifiedn(in template (value) integer pl_i, in template (value) float pl_f ) //error expected, NOK
+  modifies t_original := {
+  f := pl_f //Not expected but compiler logs: warning marker expected: Inadequate restriction on the referenced template parameter `pl_f', this may cause a dynamic test case error at runtime - NOT OK
+} 
+function f_rec_temp(in template (value) Rec pl_rec_temp ) { 
+  log(pl_rec_temp);
+}
+
+template float t_f := (-10.0..-1.5);
+template charstring t_cs := ("abc", "def") ifpresent;
+
+function f_float_temp() return template (value) float { //omit->value
+  return t_f;// error marker displayed - OK : error: Restriction on return template does not allow usage of value range match
+} 
+
+control {
+  var template (present) charstring vt_cs := "a";
+  var template integer vt_i := 3;
+  f_rec_temp(t_modifiedp(3, f_float_temp())); // error marker expected: (Restriction on template formal parameter does not allow usage of any value - NOT OK
+  f_rec_temp(t_modifiedv1(3, f_float_temp()));  // error marker expected by compiler
+  f_rec_temp(t_modifiedv2(3, f_float_temp())); // error marker expected by compiler
+  f_rec_temp(t_modifiedn(3, f_float_temp())); // error marker expected by compiler 
+  f_rec_temp(t_modifiedn(3, 1.0)); //ok but error marker expected by compiler 
+  f_rec_temp(t_original(vt_i));  // error marker expected: Restriction on template formal parameter does not allow usage of any value - OK
+  // + warning marker expected: Inadequate restriction on the referenced template parameter `vt_i', this may cause a dynamic test case error at runtime (also for line 40) - NOT OK
+ vt_cs := t_cs; // error marker expected: Restriction on template does not allow usage of `ifpresent' - OK
+}
+
+}
