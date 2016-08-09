@@ -406,7 +406,7 @@ public class ChecklistGenerator extends AbstractHandler implements IActionDelega
 					printWriter.println("\t* Auto-generated method stub");
 					printWriter.println("\t* @param name The name of the test package");
 					printWriter.println("\t*/");
-					printWriter.println("\tpublic FILL_ME_OUT_contsructor(final String name) {");
+					printWriter.println("\tpublic FILL_ME_OUT_constructor(final String name) {");
 					printWriter.println("\t\tsuper(name);");
 					printWriter.println("\t}");
 					printWriter.println("");
@@ -424,7 +424,7 @@ public class ChecklistGenerator extends AbstractHandler implements IActionDelega
 					for (int i = 0; i < testSuiteElements.size(); i++) {
 						element = testSuiteElements.get(i);
 						
-						printWriter.println("\t\tsuite.addTest(new FILL_ME_OUT_contsructor(\"" + element.fileName.replace('.', '_') + "\"));");
+						printWriter.println("\t\tsuite.addTest(new FILL_ME_OUT_constructor(\"" + element.fileName.replace('.', '_') + "\"));");
 					}
 					
 					printWriter.println("");
