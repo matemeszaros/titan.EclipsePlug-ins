@@ -28,7 +28,7 @@ public class AST_warnings_tests {
 	//value_assignment_tests_ttcn
 	//value_tests_ttcn
 	//value_tests2_ttcn
-	
+
 	@org.junit.Test
 	public void ASNValues_asn() throws Exception {
 		Designer_plugin_tests.checkSemanticMarkersOnFile(ASNValues_asn_initializer(), "src/Basic_tests/ASNValues.asn");
@@ -101,7 +101,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> attribute_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> attribute_tests_ttcn_initializer() {
 		//attribute_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(248);
 		int lineNum = 21;
@@ -492,7 +492,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> expression_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> expression_tests_ttcn_initializer() {
 		//expression_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(468);
 		int lineNum = 118;
@@ -1077,7 +1077,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> namingConvention_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> namingConvention_ttcn_initializer() {
 		//namingConvention.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(19);
 		int lineNum = 18;
@@ -1122,7 +1122,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> specificValue_template_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> specificValue_template_tests_ttcn_initializer() {
 		//specificValue_template_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(14);
 		int lineNum = 152;
@@ -1156,7 +1156,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> statement_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> statement_tests_ttcn_initializer() {
 		//statement_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(38);
 		int lineNum = 134;
@@ -1224,7 +1224,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> subtype_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> subtype_tests_ttcn_initializer() {
 		//subtype_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(4);
 		int lineNum = 21;
@@ -1250,7 +1250,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> template_assignment_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> template_assignment_tests_ttcn_initializer() {
 		//template_assignment_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(30);
 		int lineNum = 147;
@@ -1303,7 +1303,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> template_specific_test_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> template_specific_test_ttcn_initializer() {
 		//template_specific_test.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(10);
 		int lineNum = 205;
@@ -1321,7 +1321,7 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> value_assignment_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> value_assignment_tests_ttcn_initializer() {
 		//value_assignment_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(27);
 		int lineNum = 148;
@@ -1369,9 +1369,9 @@ public class AST_warnings_tests {
 		return markersToCheck;
 	}
 
-	 private ArrayList<MarkerToCheck> value_tests_ttcn_initializer() {
+	private ArrayList<MarkerToCheck> value_tests_ttcn_initializer() {
 		//value_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(34);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(56);
 		int lineNum = 198;
 		markersToCheck.add(new MarkerToCheck("Rotating will not change the value",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 3;
@@ -1426,8 +1426,34 @@ public class AST_warnings_tests {
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("Identifier  or `iso' was expected instead of `itu_t' for number 1 in the NameAndNumberForm as the first OBJECT IDENTIFIER component",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("Identifier `itu_t' or `ccitt' was expected instead of `iso' for number 0 in the NameAndNumberForm as the first OBJECT IDENTIFIER component",  ++lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 152;
+		int i = 0;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName' was expected instead of `i'", lineNum++, IMarker.SEVERITY_WARNING));
+		}
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		lineNum += 2;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName' was expected instead of `i'", lineNum++, IMarker.SEVERITY_WARNING));
+		}
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
 
 		return markersToCheck;
 	}
-
 }

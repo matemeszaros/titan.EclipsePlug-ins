@@ -78,6 +78,7 @@ public class AST_tests {
 	@Test
 	public void value_tests_ttcn() throws Exception {
 		Designer_plugin_tests.checkSemanticMarkersOnFile(value_tests_ttcn_initializer(), "src/Basic_tests/value_tests.ttcn");
+	
 	}
 	
 	@Test
@@ -9126,12 +9127,11 @@ public class AST_tests {
 
 	private ArrayList<MarkerToCheck> value_tests_ttcn_initializer() {
 		//value_tests.ttcn
-		//value_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(5263);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(5283);
 		int lineNum = 20;
 		markersToCheck.add(new MarkerToCheck("Value 1 is already assigned to `item1'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate enumeration identifier `item2' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate numeric value 1 for enumeration `item2'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate numeric value 1 for enumeration `item2'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate enumeration identifier `item2' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate enumeration identifier `item2' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 50;
 		int i = 0;
@@ -9139,8 +9139,8 @@ public class AST_tests {
 			markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExistent' in module `value_tests'", lineNum, IMarker.SEVERITY_ERROR));
 		}
 		lineNum += 16;
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `guard2' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `timerName' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `guard2' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 18;
 		markersToCheck.add(new MarkerToCheck("The function has a return type, but it does not have any return statement",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 29;
@@ -9181,10 +9181,10 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 19;
@@ -9279,13 +9279,13 @@ public class AST_tests {
 		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `bitstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i2' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i2' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i2' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 10, but the string has only 2 elements",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 10, but the string has only 2 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
@@ -9529,8 +9529,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `charstring' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `charstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 18;
@@ -9663,10 +9663,10 @@ public class AST_tests {
 		for (i = 0; i < 4; i++) {
 			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@value_tests.myrecordofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@value_tests.myrecordofType' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@value_tests.myrecordofType' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@value_tests.myrecordofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("It's not allowed to create hole(s) in constant values",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -9683,21 +9683,21 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < 3; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
-		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR));
-		}
-		lineNum += -1;
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
@@ -9730,8 +9730,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `timer read'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `create()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -9739,10 +9739,10 @@ public class AST_tests {
 		for (i = 0; i < 4; i++) {
 			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@value_tests.mysetofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@value_tests.mysetofType' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@value_tests.mysetofType' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@value_tests.mysetofType' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("It's not allowed to create hole(s) in constant values",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -9765,19 +9765,18 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value", lineNum++, IMarker.SEVERITY_ERROR));
-		}
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  --lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field3' in set value for type `@value_tests.mysetType'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicated set field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field3' in set value for type `@value_tests.mysetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicated set field `field1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Value list notation cannot be used for set type `@value_tests.mysetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Character string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("set value was expected for type `@value_tests.mysetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -9808,8 +9807,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `timer read'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `create()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -9821,54 +9820,54 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent set field `nonExi' in type `@value_tests.mysetType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.mysetType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.mysetType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.mysetType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicated set field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicated set field `field1'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@value_tests.myrecordType': 3 was expected instead of 5",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Character string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field4' in record value for type `@value_tests.myrecordType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field4' in record value for type `@value_tests.myrecordType'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicated record field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 1;
+		markersToCheck.add(new MarkerToCheck("Duplicated record field `field1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' cannot appear after field `field2' in record value",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Character string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' cannot appear after field `field2' in record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Character string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Character string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("sequence value was expected for type `@value_tests.myrecordType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -9901,21 +9900,23 @@ public class AST_tests {
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent record field `nonExi' in type `@value_tests.myrecordType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myrecordType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.myrecordType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myrecordType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to field `nonExi' of omit value `@value_tests.f_recordValueTests.<statement_block>.statement_120.block.statement_1.def.field3'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Accessing an element with index of omit value `@value_tests.f_recordValueTests.<statement_block>.statement_120.block.statement_1.def.field3'", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicated record field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Accessing an element with index of omit value `@value_tests.f_recordValueTests.<statement_block>.statement_120.block.statement_1.def.field3'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicated record field `field1'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Union value was expected for type `@value_tests.myunionType'", lineNum++, IMarker.SEVERITY_ERROR));
@@ -9960,8 +9961,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `timer read'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `create()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -9973,11 +9974,12 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Reference to inactive field `field1' in a value of union type `@value_tests.myunionType'. The active field is `field2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent union field `nonExi' in type `@value_tests.myunionType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myunionType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.myunionType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.myunionType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_temp2'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -9989,8 +9991,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as lower boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as upper boundary",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as lower boundary",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The lower boundary is greater than the upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("The operand of operation `timer running': Reference to a single timer `TL_temp' cannot have field or array sub-references",  lineNum, IMarker.SEVERITY_ERROR));
@@ -9999,8 +10001,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Array index oveflow: the index value must be at most 3 instead of 4",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The first operand of operation `component running' should be a component reference instead of `timer `TL_temp''",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 20;
-		markersToCheck.add(new MarkerToCheck("A non-empty value was expected for type `@value_tests.mysetType'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-empty value was expected for type `@value_tests.mysetType'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field3' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		for (i = 0; i < 2; i++) {
@@ -10017,89 +10019,103 @@ public class AST_tests {
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Too few elements in the array value: 3 was expected instead of 2", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("integer value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("float value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("boolean value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("bitstring value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("hexstring value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("octetstring value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 9; i++) {
 			markersToCheck.add(new MarkerToCheck("Verdict value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 9; i++) {
 			markersToCheck.add(new MarkerToCheck("Enumerated value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("Default value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 7; i++) {
 			markersToCheck.add(new MarkerToCheck("Character string value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 7; i++) {
 			markersToCheck.add(new MarkerToCheck("Universal character string value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("Component value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 9; i++) {
 			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 9; i++) {
 			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Value list notation cannot be used for set type `@value_tests.mysetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@value_tests.myrecordType': 3 was expected instead of 5",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 2 and 3",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("A positive integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Using a large integer value (999999999999999) as an array dimension is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("A positive integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Integer value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Integer value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as lower boundary",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as upper boundary",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Using a large integer value (999999999999999) as the lower boundary of an array dimension is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Using a large integer value (999999999999999) as the upper boundary of an array dimension is not supported",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as upper boundary",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as lower boundary",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Using a large integer value (999999999999999) as the upper boundary of an array dimension is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Using a large integer value (999999999999999) as the lower boundary of an array dimension is not supported",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("The lower boundary is greater than the upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as lower boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as upper boundary",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as lower boundary",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as upper boundary",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Too many elements in the array value: 0 was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as upper boundary",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as lower boundary",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer[1]' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Array index underflow: the index value must be at least 0 instead of -1",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -10109,12 +10125,12 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer[1]' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Array index underflow: the index value must be at least 0 instead of -1",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no value assigned to index -1 in the value `@value_tests.f_arrayValueTests.<statement_block>.statement_60.block.statement_1.def'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index -1 in the value `@value_tests.f_arrayValueTests.<statement_block>.statement_60.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Array index underflow: the index value must be at least 0 instead of -1",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Array index oveflow: the index value must be at most 0 instead of 10",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 10 in the value `@value_tests.f_arrayValueTests.<statement_block>.statement_60.block.statement_1.def'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no value assigned to index 10 in the value `@value_tests.f_arrayValueTests.<statement_block>.statement_60.block.statement_1.def'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Array index oveflow: the index value must be at most 0 instead of 10",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type6' has a `runs on self' clause and the current scope does not have a `runs on' clause, but function `@value_tests.f_function6' runs on `@value_tests.NonEmpty_CT_2'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -10158,18 +10174,18 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but external function `@value_tests.ef_f_ext_function2' returns a value of type `integer'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but function `@value_tests.f_function3' returns a template of type `integer'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but external function `@value_tests.ef_f_ext_function3' returns a template of type `integer'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function that returns a template with no restriction, but function `@value_tests.f_function4' returns a template with value restriction",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but function `@value_tests.f_function4' returns a template of type `integer'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function that returns a template with no restriction, but external function `@value_tests.ef_f_ext_function4' returns a template with value restriction",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but external function `@value_tests.ef_f_ext_function4' returns a template of type `integer'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but function `@value_tests.f_function4' returns a template of type `integer'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function that returns a template with no restriction, but function `@value_tests.f_function4' returns a template with value restriction",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function without return type, but external function `@value_tests.ef_f_ext_function4' returns a template of type `integer'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type1' expects a function or external function that returns a template with no restriction, but external function `@value_tests.ef_f_ext_function4' returns a template with value restriction",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but function `@value_tests.f_function1' does not have a return type",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but external function `@value_tests.ef_f_ext_function1' does not have a return type",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but function `@value_tests.f_function3' returns a template",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but external function `@value_tests.ef_f_ext_function3' returns a template",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a template with no restriction, but function `@value_tests.f_function4' returns a template with value restriction",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but function `@value_tests.f_function4' returns a template",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a template with no restriction, but external function `@value_tests.ef_f_ext_function4' returns a template with value restriction",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but external function `@value_tests.ef_f_ext_function4' returns a template",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but function `@value_tests.f_function4' returns a template",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a template with no restriction, but function `@value_tests.f_function4' returns a template with value restriction",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a value of type `integer', but external function `@value_tests.ef_f_ext_function4' returns a template",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type2' expects a function or external function that returns a template with no restriction, but external function `@value_tests.ef_f_ext_function4' returns a template with value restriction",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type3' expects a function or external function that returns a template of type `integer', but function `@value_tests.f_function1' does not have a return type",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type3' expects a function or external function that returns a template of type `integer', but external function `@value_tests.ef_f_ext_function1' does not have a return type",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@value_tests.f_function_type3' expects a function or external function that returns a template of type `integer', but function `@value_tests.f_function2' returns a value",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -10232,10 +10248,10 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_altstep' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.t_altstep' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.t_altstep' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_altstep' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.t_altstep' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.t_altstep' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_altstep' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
@@ -10276,10 +10292,10 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_testcase' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.t_testcase' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Type `@value_tests.t_testcase' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_testcase' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Type `@value_tests.t_testcase' can not be indexed",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@value_tests.t_testcase' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `@value_tests.t_testcase' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
 		for (i = 0; i < 11; i++) {
 			markersToCheck.add(new MarkerToCheck("NULL value was expected", lineNum++, IMarker.SEVERITY_ERROR));
@@ -10350,13 +10366,13 @@ public class AST_tests {
 		}
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `bitstring' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i2' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i2' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected instead of -1 for indexing a string element",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i2' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 10, but the string has only 2 elements",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An integer value was expected as index",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Index overflow when accessing a string element: the index is 10, but the string has only 2 elements",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `cl_i3' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 23;
@@ -11021,18 +11037,18 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("A non-empty value was expected for type `@ASNTypes.ASNSetType'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field3' in set value for type `@ASNTypes.ASNSetType'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicated set field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Value list notation cannot be used for set type `@ASNTypes.ASNSetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("General string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field3' in set value for type `@ASNTypes.ASNSetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from set value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicated set field `field1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Value list notation cannot be used for set type `@ASNTypes.ASNSetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("set value was expected for type `@ASNTypes.ASNSetType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -11066,39 +11082,40 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent set field `nonExi' in type `@ASNTypes.ASNSetType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSetType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@ASNTypes.ASNSetType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSetType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 8;
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@ASNTypes.ASNSequenceType': 2 was expected instead of 5",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("General string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field4' in record value for type `@ASNTypes.ASNSequenceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Reference to a non-existent field `field4' in record value for type `@ASNTypes.ASNSequenceType'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicated record field `field1'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field1' is already given here",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicated record field `field1'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum, IMarker.SEVERITY_ERROR));
 		}
 		markersToCheck.add(new MarkerToCheck("Field `field1' cannot appear after field `field2' in record value",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("General string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@ASNTypes.ASNSequenceType': 2 was expected instead of 3",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("General string value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Too many elements in value list notation for type `@ASNTypes.ASNSequenceType': 2 was expected instead of 3",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Field `field1' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("General string value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("SEQUENCE value was expected for type `@ASNTypes.ASNSequenceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `xx4' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -11131,11 +11148,12 @@ public class AST_tests {
 		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent record field `nonExi' in type `@ASNTypes.ASNSequenceType'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSequenceType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@ASNTypes.ASNSequenceType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNSequenceType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
 		for (i = 0; i < 2; i++) {
@@ -11184,22 +11202,22 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Reference to inactive field `field1' in a value of union type `@ASNTypes.ASNChoiceType'. The active field is `field2'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to non-existent union field `nonExi' in type `@ASNTypes.ASNChoiceType'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNChoiceType' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `@ASNTypes.ASNChoiceType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `@ASNTypes.ASNChoiceType' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR));
-		}
-		lineNum += -1;
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
@@ -11231,10 +11249,10 @@ public class AST_tests {
 		for (i = 0; i < 4; i++) {
 			markersToCheck.add(new MarkerToCheck("record of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@ASNTypes.ASNSequenceOf' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@ASNTypes.ASNSequenceOf' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@ASNTypes.ASNSequenceOf' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@ASNTypes.ASNSequenceOf' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("It's not allowed to create hole(s) in constant values",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -11251,21 +11269,21 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `integer' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < 3; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `integer' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 5;
 		markersToCheck.add(new MarkerToCheck("The default timer duration should be a float value",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
-		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context", lineNum++, IMarker.SEVERITY_ERROR));
-		}
-		lineNum += -1;
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
 		for (i = 0; i < 8; i++) {
 			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR));
 		}
+		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
@@ -11298,8 +11316,8 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `alive'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `timer read'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `create()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("An evaluatable constant value was expected instead of operation `activate()'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `value_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -11307,10 +11325,10 @@ public class AST_tests {
 		for (i = 0; i < 4; i++) {
 			markersToCheck.add(new MarkerToCheck("set of value was expected", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@ASNTypes.ASNSetOf' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@ASNTypes.ASNSetOf' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate index value `1' for components 3 and 4",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A non-negative integer value was expected for indexing type `@ASNTypes.ASNSetOf' instead of `-1'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("A integer value less than `2,147,483,647' was expected for indexing type `@ASNTypes.ASNSetOf' instead of `99,999,999,999,999,999'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("It's not allowed to create hole(s) in constant values",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of timer `TL_t'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -11374,19 +11392,43 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `field1': type `objid' does not have fields.",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid field reference `nonExi': type `objid' does not have fields.",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `objid' can not be indexed", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type `objid' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `value_tests'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Invalid array element reference: type `objid' can not be indexed",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Invalid reference: internal parameterisation is not supported",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("INTEGER or OBJECT IDENTIFIER value was expected for the first component",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("INTEGER or RELATIVE-OID value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 33;
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of `out' value parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: `inout' value parameter was expected instead of value parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("1 formal parameters was expected instead of 2",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 1th parameter is not the same: value parameter was expected instead of `out' value parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("The kind of the 1th parameter is not the same: value parameter was expected instead of `inout' value parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of `out' template parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("2 formal parameters was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of `out' template parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: `inout' value parameter was expected instead of template parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("1 formal parameters was expected instead of 2",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 1th parameter is not the same: value parameter was expected instead of `out' template parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of template parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 1th parameter is not the same: value parameter was expected instead of template parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of template parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 1th parameter is not the same: value parameter was expected instead of `inout' template parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of template parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 1th parameter is not the same: value parameter was expected instead of template parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of template parameter",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("The kind of the 0th parameter is not the same: value parameter was expected instead of `out' template parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("2 formal parameters was expected instead of 1",  lineNum, IMarker.SEVERITY_ERROR));
 
 		return markersToCheck;
 	}
-	
 	
 	private ArrayList<MarkerToCheck> value_tests2_ttcn_initializer() {
 		//value_tests2.ttcn

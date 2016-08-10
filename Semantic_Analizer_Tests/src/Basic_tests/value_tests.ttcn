@@ -6106,4 +6106,42 @@ system mycomponent
   //dynamic behaviour
 }
 
+//=== function arg test === 
+type function f_function_type7(in integer pl_parameterName);
+type function f_function_type8(inout integer pl_parameterName);
+type function f_function_type9(in integer pl_parameterName1, in integer pl_parameterName2);
+
+function f_functionName1(out integer i){}
+function f_functionName2(in integer i, out integer j){}
+function f_functionName3(in integer i, out integer j){}
+function f_functionName4(in integer i, in integer j){}
+function f_functionName5(in integer i, inout integer j){}
+function f_functionName6(integer i, integer j){};
+
+function f_functionName7(out template integer i){}
+function f_functionName8(in template integer i, out template integer j){}
+function f_functionName9(in template integer i, out template integer j){}
+function f_functionName10(in template integer i, in template integer j){}
+function f_functionName11(in template integer i, inout template integer j){}
+function f_functionName12(template integer i, template integer j){};
+
+control {
+  var f_function_type7 variable1 := refers(f_functionName1);
+  var f_function_type8 variable2 := refers(f_functionName2);
+  var f_function_type9 variable3 := refers(f_functionName3);
+  var f_function_type9 variable4 := refers(f_functionName4);
+  var f_function_type9 variable5 := refers(f_functionName5);
+  var f_function_type9 variable6 := refers(f_functionName6);
+  var f_function_type9 variable7 := refers(f_functionName7);
+  
+  var f_function_type7 variable8 := refers(f_functionName7);
+  var f_function_type8 variable9 := refers(f_functionName8);
+  var f_function_type9 variable10 := refers(f_functionName9);
+  var f_function_type9 variable11 := refers(f_functionName10);
+  var f_function_type9 variable12 := refers(f_functionName11);
+  var f_function_type9 variable13 := refers(f_functionName12);
+  var f_function_type9 variable14 := refers(f_functionName7);
+}
+
+
 }  // end of module
