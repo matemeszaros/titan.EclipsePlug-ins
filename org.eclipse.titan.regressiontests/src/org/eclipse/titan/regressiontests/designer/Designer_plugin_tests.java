@@ -190,6 +190,9 @@ public class Designer_plugin_tests {
 		for (int i = expected.size() - 1; i >= 0; i--) {
 			MarkerHandlingLibrary.searchNDestroyFittingMarker(fileMarkerList, expected.get(i).getMarkerMap(), true);
 		}
+		
+		//TODO: modify the expected marker lists to execute the next function without AssertionError!
+		//assertEquals("Not checked semantic markers on file:" + file.getName(), 0, fileMarkerList.size());
 
 		expected.clear();
 	}
