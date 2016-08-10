@@ -1,0 +1,169 @@
+//This test checks if a template can be accepted or not 
+//where a template or a value is expected
+//E.g: if a value expected, template must not be accepted
+//If a template expected, template and value shall be accepted
+//Generally the type of the template is not important in this test 
+//TODO: Put into plugin regression_test
+module ExpectedValueTypeTest {
+
+//import from Types all;
+
+modulepar Rec tsp_rec := {1,"a"}; //
+modulepar template Rec tsp_trec := {1,"b"}; //A_MODULEPAR_TEMPLATE
+modulepar template integer tsp_i := 1; //A_MODULEPAR_TEMPLATE
+modulepar template Rec tsp_rec1 := 1; //expected error
+modulepar template Rec tsp_rec2 := {1, c_cs};
+const charstring c_cs := "Abba";
+
+type record Rec {
+  integer i,
+  charstring cs
+}
+
+template Rec t_rec(integer pl_i, charstring pl_cs) :={
+  i:=pl_i,
+  cs:=pl_cs 
+}
+
+template charstring t_cs := ?; 
+
+template Rec t_rec1( integer pt_i, template charstring pt_cs) := {
+  i := pt_i,
+  cs := pt_cs
+}
+
+template Rec t_rec1_1 := t_rec1(tsp_i,"a");//ok, expecting error
+
+template (value) Rec t_rec2( integer pt_i, template (value) charstring pt_cs) := {
+  i := pt_i,
+  cs := pt_cs
+}
+
+template (value) Rec t_rec3( integer pt_i, template charstring pt_cs) := { //ok, expecting error: Formal parameter without template restriction not allowed here
+  i := pt_i,
+  cs := pt_cs
+}
+
+//function returning a rec
+function fr() return Rec {
+  return tsp_rec;
+}
+
+//function returning a rec but gets a template
+function fr_wrong1() return Rec {
+  return tsp_trec; //OK: expecting error: Reference to a value was expected instead of
+}
+
+//function returning a rec but gets a template
+function fr_wrong2() return Rec {
+  return t_rec1(1,"a");//OK: expecting error: Reference to a value was expected instead of
+}
+
+function fr_wrong3() return Rec {
+  return t_rec2(1,"a");//OK: expecting error: Reference to a value was expected instead of
+}
+
+//function returning on a template rec
+function frt() return template Rec {
+  return tsp_trec;
+}
+
+function frt_wrong() return template Rec { 
+  return tsp_i; //ok, expeced error
+}
+
+function frt1() return template Rec {
+  var template Rec tl_rec := {1,tsp_i} //ok, expected error
+  template Rec tl_rec1 := {1,tsp_i} //ok, expected error
+  return tl_rec;
+}
+
+function frt_par(template Rec tpl_rec) return Rec {
+  return tpl_rec;//ok, expected error
+}
+
+function frt_parin(in template Rec tpl_rec) return Rec {
+  return tpl_rec;//ok, expected error
+}
+
+function frt_parout(out template Rec tpl_rec) return Rec {
+  return tpl_rec;//ok, expected error
+}
+
+function frt_parinout(inout template Rec tpl_rec) return Rec {
+  return tpl_rec;//ok, expected error
+}
+
+function frt_templatevar() return Rec {
+  var template Rec vt_rec_ := {1,"a"};
+  return vt_rec_; //ok, expected error
+}
+
+function frt_template() return Rec {
+  template Rec vt_rec := {1,"a"}
+  return vt_rec; //ok, expected error
+}
+
+function frt_templatevar_cs() return charstring {
+  var template charstring vt_cs := "a" & tsp_i; //ok, expected error
+  return vt_cs; //ok, expected error
+}
+
+function f(
+  integer pl_i,
+  template Rec tpl_rec,
+  in template Rec tpl_recin,
+  inout template Rec tpl_recinout,
+  out template Rec tpl_recout) {
+  var Rec vl_rec := tpl_rec; //ok, error expected: :8.21-27: error: Reference to a value was expected instead of template parameter `tpl_rec'
+  var Rec vl_rec2 := tsp_trec; //ok, error expected: Reference to a value was expected instead of ...
+  var Rec vl_rec3 := tpl_recin; //ok, error expected: Reference to a value was expected instead of 
+  var Rec vl_rec4 := tpl_recinout; //ok, error expected: Reference to a value was expected instead of
+  var Rec vl_rec5 := tpl_recout; //ok, error expected: Reference to a value was expected instead of
+  var Rec vl_rec6 := frt(); //ok, error expected: Reference to a value was expected instead of
+  var Rec vl_rec7 := fr();
+
+  var Rec vl_rec8 := vl_rec;
+  var template Rec vl_rec9 := vl_rec;
+  var Rec vl_rec10 := vl_rec9; //ok, error expected: Reference to a value was expected instead of
+}
+
+function f2(
+  integer pl_i,
+  template Rec tpl_rec,
+  in template Rec tpl_recin,
+  inout template Rec tpl_recinout,
+  out template Rec tpl_recout
+){
+  var template Rec vlt_rec := tpl_rec; //ok, no error
+  var template Rec vlt_rec2 := tsp_trec; //ok, no error
+  var template Rec vlt_rec3 := tpl_recin; //ok, no error
+  var template Rec vlt_rec4 := tpl_recinout; //ok, no error
+  var template Rec vlt_rec5 := tpl_recout; //ok, no error
+  var template Rec vlt_rec6 := frt(); //ok, no error
+  var template Rec vlt_rec7 := fr(); //ok, no error 
+  var template Rec vlt_rec8 := t_rec1(tsp_i,c_cs);
+  var template Rec vlt_rec9 := t_rec1(1,t_cs);//ok, no error 
+  var template integer vlt_i := 3+2;
+}
+
+
+
+type component CT {}
+
+
+testcase t() runs on CT {
+  var template Rec vlt_trec1:= {1,"a"};
+  var template Rec vlt_trec2:= {1,"a"};
+  template Rec vlt_trec3 := {1,"a"}
+  f(
+    pl_i:=1,
+    tpl_rec := t_rec(1,"a"),
+    tpl_recin := vlt_trec1,
+    tpl_recinout := vlt_trec2,
+    tpl_recout :=  vlt_trec3 //ok, expected error
+  );
+}
+
+}
+
