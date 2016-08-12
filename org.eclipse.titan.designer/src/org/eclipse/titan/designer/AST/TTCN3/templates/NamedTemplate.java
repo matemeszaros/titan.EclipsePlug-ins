@@ -92,7 +92,7 @@ public final class NamedTemplate extends ASTNode implements ILocateableNode, IIn
 	public NamedTemplate(final Identifier name, final TTCN3Template template, final boolean parsed) {
 		super();
 		this.name = name;
-		this.template.setTemplate(template);
+		this.template = new TemplateBody(template);
 		location = NULL_Location.INSTANCE;
 		this.parsed = parsed;
 
