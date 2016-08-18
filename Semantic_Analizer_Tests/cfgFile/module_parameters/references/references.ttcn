@@ -1,0 +1,794 @@
+/******************************************************************************
+ * Copyright (c) 2000-2016 Ericsson Telecom AB
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Balasko, Jeno
+ *   Baranyi, Botond
+ *
+ ******************************************************************************/
+
+module references {
+// This module contains tests for referencing other (or the same) module parameters
+// in module parameter initialization (in the configuration file)
+
+import from A all;
+/******** Types ********/
+type record Rec {
+  integer num,
+  charstring str optional
+}
+
+type record EmptyRec {};
+
+type union Uni {
+  integer ival,
+  boolean bval,
+  octetstring osval
+}
+
+type enumerated Size { Small, Medium, Large };
+
+type component CT {};
+
+type record of integer IntList;
+
+type record of charstring TwoStrings;
+
+/******** Module parameters ********/
+modulepar integer tsp_1 := 0;
+modulepar integer tsp_2 := 0;
+modulepar integer tsp_3 := 0;
+
+modulepar float tsp_4 := 0.0;
+modulepar float tsp_5 := 1.0;
+
+modulepar bitstring tsp_bs1 := '110'B;
+modulepar bitstring tsp_bs2 := '1'B;
+
+modulepar hexstring tsp_hs1 :='3CC'H;
+modulepar hexstring tsp_hs2 := '12AA'H;
+
+modulepar octetstring tsp_os1 := 'A0A0'O;
+modulepar octetstring tsp_os2 := '7FFF'O;
+
+modulepar charstring tsp_cs1 := "abc";
+modulepar charstring tsp_cs2 := "def";
+modulepar charstring tsp_cs3 := "ghi";
+
+modulepar universal charstring tsp_ucs1 := "noquads";
+modulepar universal charstring tsp_ucs2 := "x" & char(0, 0, 1, 113) & "x" & char(0, 0, 1, 97) & "x";
+
+modulepar boolean tsp_b1 := true;
+modulepar boolean tsp_b2 := false;
+
+modulepar objid tsp_objid1 := objid { 1 1 7 };
+modulepar objid tsp_objid2;
+
+modulepar verdicttype tsp_vt1 := pass;
+modulepar verdicttype tsp_vt2 := fail;
+
+modulepar CT tsp_cotsp_1 := null;
+modulepar CT tsp_cotsp_2;
+
+modulepar default tsp_def1 := null;
+modulepar default tsp_def2;
+
+modulepar Size tsp_enum1 := Small;
+modulepar Size tsp_enum2;
+
+modulepar IntList tsp_list1 := { };
+modulepar IntList tsp_list2 := { 1, 2 };
+
+modulepar Rec tsp_rec1 := { 10, "yyyy" };
+modulepar Rec tsp_rec2 := { num := 3, str := omit };
+modulepar Rec tsp_rec3;
+
+modulepar EmptyRec tsp_emptyrec1 := {};
+modulepar EmptyRec tsp_emptyrec2;
+
+modulepar Uni tsp_uni1 := { ival := 2 };
+modulepar Uni tsp_uni2 := { bval := true };
+modulepar Uni tsp_uni3;
+
+modulepar TwoStrings tsp_array1 := { "abc", "def" };
+modulepar TwoStrings tsp_array2 := { "xy", "yx" };
+
+modulepar template integer tsp_tint1 := 7;
+modulepar template integer tsp_tint2 := (3..6) ifpresent;
+
+modulepar template float tsp_tf1 := 33.33;
+modulepar template float tsp_tf2 := (33.0..66.0);
+
+modulepar template charstring tsp_tcs1 := ("a".."z");
+modulepar template charstring tsp_tcs2 := "abc";
+modulepar template charstring tsp_tcs3 := pattern "ab???x";
+
+modulepar template universal charstring tsp_tucs1 := (char(0,0,1,97)..char(0,0,1,113)) length (2);
+modulepar template universal charstring tsp_tucs2 := "abc" & char(0,0,1,113) & "cba";
+modulepar template universal charstring tsp_tucs3;
+
+modulepar template bitstring tsp_tbs1 := '1010'B;
+modulepar template bitstring tsp_tbs2 := * length (3..6);
+modulepar template bitstring tsp_tbs3 := '11??00'B;
+
+modulepar template hexstring tsp_ths1 := 'AB21'H;
+modulepar template hexstring tsp_ths2 := ? length (8);
+modulepar template hexstring tsp_ths3 := 'DE*555'H;
+
+modulepar template octetstring tsp_tos1 := '00'O;
+modulepar template octetstring tsp_tos2 := omit;
+modulepar template octetstring tsp_tos3 := 'A0*'O length (1..5);
+
+modulepar template boolean tsp_tb1 := true;
+modulepar template boolean tsp_tb2 := false;
+
+modulepar template CT tsp_tcomp1 := (null, mtc, system);
+modulepar template CT tsp_tcomp2;
+
+modulepar template default tsp_tdef1 := null;
+modulepar template default tsp_tdef2;
+
+modulepar template verdicttype tsp_tvt1 := none;
+modulepar template verdicttype tsp_tvt2 := (pass, fail, error);
+modulepar template verdicttype tsp_tvt3;
+
+modulepar template Size tsp_tenum1 := *;
+modulepar template Size tsp_tenum2 := (Small, Large);
+modulepar template Size tsp_tenum3;
+
+modulepar template objid tsp_tobjid1 := ?;
+modulepar template objid tsp_tobjid2 := (objid { 1 2 3 }, objid { 0 0 0 1 });
+
+modulepar template Rec tsp_trec1 := ?;
+modulepar template Rec tsp_trec2 := { ?, * };
+modulepar template Rec tsp_trec3 := { num := 6, str := omit };
+
+modulepar template EmptyRec tsp_temptyrec1;
+modulepar template EmptyRec tsp_temptyrec2 := {};
+
+modulepar template IntList tsp_tlist1 := omit;
+modulepar template IntList tsp_tlist2 := { 1, 2, * };
+modulepar template IntList tsp_tlist3 := { [0] := 0, [1] := 1, [2] := 0 };
+
+modulepar template Uni tsp_tuni1;
+modulepar template Uni tsp_tuni2 := complement ( { osval := '0000'O }, { ival := 31 } );
+modulepar template Uni tsp_tuni3 := { bval := false };
+
+modulepar template TwoStrings tsp_tarray1;
+modulepar template TwoStrings tsp_tarray2 := { "one", "two" };
+modulepar template TwoStrings tsp_tarray3 := { [1] := ?, [0] := "x" };
+
+/*****ASN.1 types*******/
+modulepar ASN1MyBooleanType tsp_TRUE := false;
+modulepar ASN1MyBooleanType tsp_FALSE:= true;
+modulepar ASN1MyBooleanType tsp_R1 := false;
+modulepar ASN1MyBooleanType tsp_RESULT2 := false;
+modulepar MyBitstringType tsp_asnbitstr1 := ''B;
+modulepar MyBitstringType tsp_asnbitstr2 := ''B;
+modulepar MyBitstringType tsp_asnbitstr3 := ''B;
+modulepar MyOctetStringType tsp_asnos1 := '01'O;
+modulepar MyOctetStringType tsp_asnos2 := '02'O;
+modulepar MyOctetStringType tsp_asnos3 := '03'O;
+
+modulepar MyPrintableString tsp_asnstr1 := "default1"
+modulepar MyPrintableString tsp_asnstr2 := "d2"
+modulepar MyPrintableString tsp_asnstr3 := "d3"
+
+modulepar MyIntegerType1 tsp_asnint1 :=0;
+modulepar MyIntegerType1 tsp_asnint2 :=0;
+modulepar MyIntegerType1 tsp_asnint3 :=0;
+
+modulepar MyRealType1 tsp_asnreal1 := 0.0
+modulepar MyRealType1 tsp_asnreal2 := 0.0
+modulepar MyRealType1 tsp_asnreal3 := 0.0
+
+/******** Test cases (for values) ********/
+testcase tc_ref_integer() runs on CT
+{
+  template integer t_mp1 := 2;
+  template integer t_mp2 := 7;
+  template integer t_mp3 := 21;
+  if (not match( tsp_1, t_mp1)) {
+    setverdict(fail, "Expected(mp1): ", t_mp1, ", got: ", tsp_1);
+  }
+  if (not match( tsp_2, t_mp2)) {
+    setverdict(fail, "Expected(mp2): ", t_mp2, ", got: ", tsp_2);
+  }
+  if (not match( tsp_3, t_mp3)) {
+    setverdict(fail, "Expected(mp3): ", t_mp3, ", got: ", tsp_3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_float() runs on CT
+{
+  template float t_mp4 := -3.0;
+  template float t_mp5 := -9.0;
+  if (not match( tsp_4, t_mp4)) {
+    setverdict(fail, "Expected(mp4): ", t_mp4, ", got: ", tsp_4);
+  }
+  if (not match( tsp_5, t_mp5)) {
+    setverdict(fail, "Expected(mp5): ", t_mp5, ", got: ", tsp_5);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_bitstring() runs on CT
+{
+  template bitstring t_mpbs1 := '110110110111101101101'B;
+  template bitstring t_mpbs2 := '11101101101'B;
+  if (not match( tsp_bs1, t_mpbs1)) {
+    setverdict(fail, "Expected(mpbs1): ", t_mpbs1, ", got: ", tsp_bs1);
+  }
+  if (not match( tsp_bs2, t_mpbs2)) {
+    setverdict(fail, "Expected(mpbs2): ", t_mpbs2, ", got: ", tsp_bs2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_hexstring() runs on CT
+{
+  template hexstring t_mphs1 := '77FF3CC12AA'H;
+  template hexstring t_mphs2 := '12AAEE'H;
+  if (not match( tsp_hs1, t_mphs1)) {
+    setverdict(fail, "Expected(mphs1): ", t_mphs1, ", got: ", tsp_hs1);
+  }
+  if (not match( tsp_hs2, t_mphs2)) {
+    setverdict(fail, "Expected(mphs2): ", t_mphs2, ", got: ", tsp_hs2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_octetstring() runs on CT
+{
+  template octetstring t_mpos1 := 'DEAD'O;
+  template octetstring t_mpos2 := 'A22CDEADC22A'O;
+  if (not match( tsp_os1, t_mpos1)) {
+    setverdict(fail, "Expected(mpos1): ", t_mpos1, ", got: ", tsp_os1);
+  }
+  if (not match( tsp_os2, t_mpos2)) {
+    setverdict(fail, "Expected(mpos2): ", t_mpos2, ", got: ", tsp_os2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_charstring() runs on CT
+{
+  template charstring t_mpcs1 := "abcdefghi";
+  template charstring t_mpcs2 := "xxabcdefghixxdef";
+  template charstring t_mpcs3 := "noquadsxx";
+  if (not match( tsp_cs1, t_mpcs1)) {
+    setverdict(fail, "Expected(mpcs1): ", t_mpcs1, ", got: ", tsp_cs1);
+  }
+  if (not match( tsp_cs2, t_mpcs2)) {
+    setverdict(fail, "Expected(mpcs2): ", t_mpcs2, ", got: ", tsp_cs2);
+  }
+  if (not match( tsp_cs3, t_mpcs3)) {
+    setverdict(fail, "Expected(mpcs3): ", t_mpcs3, ", got: ", tsp_cs3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_universal_charstring() runs on CT
+{
+  template universal charstring t_mpucs1 := "ax" & char(0, 0, 1, 113) & "x" & char(0, 0, 1, 97) & "x";
+  template universal charstring t_mpucs2 := char(0, 0, 1, 113) & "rhaj" & char(0, 0, 0, 243) & "abcdefghi" & char(3, 5, 10, 5) & "x";
+  if (not match( tsp_ucs1, t_mpucs1)) {
+    setverdict(fail, "Expected(mpucs1): ", t_mpucs1, ", got: ", tsp_ucs1);
+  }
+  if (not match( tsp_ucs2, t_mpucs2)) {
+    setverdict(fail, "Expected(mpucs2): ", t_mpucs2, ", got: ", tsp_ucs2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_boolean() runs on CT
+{
+  template boolean t_mpb1 := false;
+  template boolean t_mpb2 := true;
+  if (not match( tsp_b1, t_mpb1)) {
+    setverdict(fail, "Expected(mpb1): ", t_mpb1, ", got: ", tsp_b1);
+  }
+  if (not match( tsp_b2, t_mpb2)) {
+    setverdict(fail, "Expected(mpb2): ", t_mpb2, ", got: ", tsp_b2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_objid() runs on CT
+{
+  template objid t_mpobjid2 := objid { 1 1 7 };
+  if (not match( tsp_objid2, t_mpobjid2)) {
+    setverdict(fail, "Expected( tsp_objid2): ", t_mpobjid2, ", got: ", tsp_objid2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_verdicttype() runs on CT
+{
+  template verdicttype t_mpvt2 := pass;
+  if (not match( tsp_vt2, t_mpvt2)) {
+    setverdict(fail, "Expected( tsp_vt2): ", t_mpvt2, ", got: ", tsp_vt2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_component() runs on CT
+{
+  template CT t_mpcomp2 := null;
+  if (not match( tsp_tcomp2, t_mpcomp2)) {
+    setverdict(fail, "Expected( tsp_comp2): ", t_mpcomp2, ", got: ", tsp_tcomp2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_default() runs on CT
+{
+  template default t_mpdef2 := null;
+  if (not match( tsp_def2, t_mpdef2)) {
+    setverdict(fail, "Expected( tsp_def2): ", t_mpdef2, ", got: ", tsp_def2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_enumerated() runs on CT
+{
+  template Size t_mpenum1 := Large;
+  template Size t_mpenum2 := Small;
+  if (not match( tsp_enum1, t_mpenum1)) {
+    setverdict(fail, "Expected( tsp_enum1): ", t_mpenum1, ", got: ", tsp_enum1);
+  }
+  if (not match( tsp_enum2, t_mpenum2)) {
+    setverdict(fail, "Expected( tsp_enum2): ", t_mpenum2, ", got: ", tsp_enum2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_record_of() runs on CT
+{
+  template IntList t_mplist1 := { 1, 2 };
+  template IntList t_mplist2 := { 10, 3, 1, 2 };
+  if (not match( tsp_list1, t_mplist1)) {
+    setverdict(fail, "Expected(mplist1): ", t_mplist1, ", got: ", tsp_list1);
+  }
+  if (not match( tsp_list2, t_mplist2)) {
+    setverdict(fail, "Expected(mplist2): ", t_mplist2, ", got: ", tsp_list2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_record() runs on CT
+{
+  template Rec t_mprec1 := { num := 3, str := omit };
+  template Rec t_mprec2 := { num := 10, str := "yyyy" };
+  template Rec t_mprec3 := { num := 1, str := "abcdefghi" };
+  if (not match( tsp_rec1, t_mprec1)) {
+    setverdict(fail, "Expected( tsp_rec1): ", t_mprec1, ", got: ", tsp_rec1);
+  }
+  if (not match( tsp_rec2, t_mprec2)) {
+    setverdict(fail, "Expected( tsp_rec2): ", t_mprec2, ", got: ", tsp_rec2);
+  }
+  if (not match( tsp_rec3, t_mprec3)) {
+    setverdict(fail, "Expected( tsp_rec3): ", t_mprec3, ", got: ", tsp_rec3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_empty_record() runs on CT
+{
+  template EmptyRec t_mpemptyrec2 := { };
+  if (not match( tsp_emptyrec2, t_mpemptyrec2)) {
+    setverdict(fail, "Expected( tsp_emptyrec2): ", t_mpemptyrec2, ", got: ", tsp_emptyrec2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_union() runs on CT
+{
+  template Uni t_mpuni1 := { bval := true };
+  template Uni t_mpuni2 := { ival := 2 };
+  template Uni t_mpuni3 := { osval := 'DEADA22CDEADC22A'O };
+  if (not match( tsp_uni1, t_mpuni1)) {
+    setverdict(fail, "Expected( tsp_uni1): ", t_mpuni1, ", got: ", tsp_uni1);
+  }
+  if (not match( tsp_uni2, t_mpuni2)) {
+    setverdict(fail, "Expected( tsp_uni2): ", t_mpuni2, ", got: ", tsp_uni2);
+  }
+  if (not match( tsp_uni3, t_mpuni3)) {
+    setverdict(fail, "Expected(mpuni3): ", t_mpuni3, ", got: ", tsp_uni3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_array() runs on CT
+{
+  template TwoStrings t_mparray1 := { "xy", "abcdefghixx" };
+  template TwoStrings t_mparray2 := { "xy", "abcdefghixx" };
+  if (not match( tsp_array1, t_mparray1)) {
+    setverdict(fail, "Expected(mparray1): ", t_mparray1, ", got: ", tsp_array1);
+  }
+  if (not match( tsp_array2, t_mparray2)) {
+    setverdict(fail, "Expected(mparray2): ", t_mparray2, ", got: ", tsp_array2);
+  }
+  setverdict(pass);
+}
+
+/******** Test cases (for templates) ********/
+
+testcase tc_ref_integer_template() runs on CT
+{
+  template integer tint1_exp := (3 .. 6) ifpresent;
+  template integer tint2_exp := (8, 7, -21, -1);
+  if (log2str( tsp_tint1) != log2str( tint1_exp)) {
+    setverdict(fail, "Expected( tsp_tint1): ", tint1_exp, ", got: ", tsp_tint1);
+  }
+  if (log2str( tsp_tint2) != log2str( tint2_exp)) {
+    setverdict(fail, "Expected( tsp_tint2): ", tint2_exp, ", got: ", tsp_tint2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_float_template() runs on CT
+{
+  template float tf1_exp := (33.000000 .. 66.000000) ifpresent;
+  template float tf2_exp := (-1.500000, -13.500000);
+  if (log2str( tsp_tf1) != log2str( tf1_exp)) {
+    setverdict(fail, "Expected( mptf1): ", tf1_exp, ", got: ", tsp_tf1);
+  }
+  if (log2str( tsp_tf2) != log2str( tf2_exp)) {
+    setverdict(fail, "Expected( mptf2): ", tf2_exp, ", got: ", tsp_tf2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_bitstring_template() runs on CT
+{
+  template bitstring tbs1_exp := '110110110110111101101101011'B;
+  template bitstring tbs2_exp := * length (3 .. 6) ifpresent;
+  template bitstring tbs3_exp := '11??00'B;
+  if (log2str( tsp_tbs1) != log2str(tbs1_exp)) {
+    setverdict(fail, "Expected(mptbs1): ", tbs1_exp, ", got: ", tsp_tbs1);
+  }
+  if (log2str( tsp_tbs2) != log2str(tbs2_exp)) {
+    setverdict(fail, "Expected(mptbs2): ", tbs2_exp, ", got: ", tsp_tbs2);
+  }
+  if (log2str( tsp_tbs3) != log2str(tbs3_exp)) {
+    setverdict(fail, "Expected(mptbs3): ", tbs3_exp, ", got: ", tsp_tbs3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_hexstring_template() runs on CT
+{
+  template hexstring ths1_exp := 'AB77FF3CC12AABA'H;
+  template hexstring ths2_exp := ? length (8);
+  template hexstring ths3_exp := 'DE*555'H length (7 .. infinity);
+  if (log2str( tsp_ths1) != log2str(ths1_exp)) {
+    setverdict(fail, "Expected(mpths1): ", ths1_exp, ", got: ", tsp_ths1);
+  }
+  if (log2str( tsp_ths2) != log2str(ths2_exp)) {
+    setverdict(fail, "Expected(mpths2): ", ths2_exp, ", got: ", tsp_ths2);
+  }
+  if (log2str( tsp_ths3) != log2str(ths3_exp)) {
+    setverdict(fail, "Expected(mpths3): ", ths3_exp, ", got: ", tsp_ths3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_octetstring_template() runs on CT
+{
+  template octetstring tos1_exp := '01DEAD10'O;
+  template octetstring tos2_exp := omit;
+  template octetstring tos3_exp := 'A0*'O length (1 .. 5);
+  if (log2str( tsp_tos1) != log2str( tos1_exp)) {
+    setverdict(fail, "Expected(mptos1): ", tos1_exp, ", got: ", tsp_tos1);
+  }
+  if (log2str( tsp_tos2) != log2str( tos2_exp)) {
+    setverdict(fail, "Expected(mptos2): ", tos2_exp, ", got: ", tsp_tos2);
+  }
+  if (log2str( tsp_tos3) != log2str( tos3_exp)) {
+    setverdict(fail, "Expected(mptos3): ", tos3_exp, ", got: ", tsp_tos3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_charstring_template() runs on CT
+{
+  template charstring tcs1_exp := ("a" .. "z") length (2 .. 6);
+  template charstring tcs2_exp := "xxabcxx" ifpresent;
+  template charstring tcs3_exp := pattern "ab???xdtwo";
+  if (log2str( tsp_tcs1) != log2str(tcs1_exp)) {
+    setverdict(fail, "Expected( tsp_tcs1): ", tcs1_exp, ", got: ", tsp_tcs1);
+  }
+  if (log2str( tsp_tcs2) != log2str(tcs2_exp)) {
+    setverdict(fail, "Expected tsp_ptcs2): ", tcs2_exp, ", got: ", tsp_tcs2);
+  }
+  if (log2str( tsp_tcs3) != log2str(tcs3_exp)) {
+    setverdict(fail, "Expected( tsp_tcs3): ", tcs3_exp, ", got: ", tsp_tcs3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_universal_charstring_template() runs on CT
+{
+  template universal charstring tucs1_exp := pattern "a??bmacro\q{1,2,3,4}ax\q{0,0,1,113}x\q{0,0,1,97}x";
+  template universal charstring tucs2_exp := "zz" & char(0, 0, 1, 113) & "rhaj" & char(0, 0, 0, 243) & "abcdefghi" & char(3, 5, 10, 5) & "xzz";
+  template universal charstring tucs3_exp := ((char(0, 0, 1, 97) .. char(0, 0, 1, 113)) length (2), ("a" .. "z"));
+  if (log2str( tsp_tucs1) != log2str( tucs1_exp)) {
+    setverdict(fail, "Expected( tsp_tucs1): ", tucs1_exp, ", got: ", tsp_tucs1);
+  }
+  if (log2str( tsp_tucs2) != log2str(tucs2_exp)) {
+    setverdict(fail, "Expected( tsp_tucs2): ", tucs2_exp, ", got: ", tsp_tucs2);
+  }
+  if (log2str( tsp_tucs3) != log2str( tucs3_exp)) {
+    setverdict(fail, "Expected( tsp_tucs3): ", tucs3_exp, ", got: ", tsp_tucs3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_boolean_template() runs on CT
+{
+  template boolean tb1_exp := (true, false);
+  template boolean tb2_exp := false;
+  if (log2str( tsp_tb1) != log2str(tb1_exp)) {
+    setverdict(fail, "Expected( tsp_tb1): ", tb1_exp, ", got: ", tsp_tb1);
+  }
+  if (log2str( tsp_tb2) != log2str(tb2_exp)) {
+    setverdict(fail, "Expected( tsp_tb2): ", tb2_exp, ", got: ", tsp_tb2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_objid_template() runs on CT
+{
+  template objid tobjid1_exp := (objid { 1 2 3 }, objid { 0 0 0 1 });
+  template objid tobjid2_exp := objid { 1 1 7 };
+  if (log2str( tsp_tobjid1) != log2str(tobjid1_exp)) {
+    setverdict(fail, "Expected( tsp_tobjid1): ", tobjid1_exp, ", got: ", tsp_tobjid1);
+  }
+  if (log2str( tsp_tobjid2) != log2str(tobjid2_exp)) {
+    setverdict(fail, "Expected( tsp_tobjid2): ", tobjid2_exp, ", got: ", tsp_tobjid2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_verdicttype_template() runs on CT
+{
+  template verdicttype tvt1_exp := (pass, fail, error);
+  template verdicttype tvt2_exp := pass;
+  template verdicttype tvt3_exp := inconc;
+  if (log2str( tsp_tvt1) != log2str(tvt1_exp)) {
+    setverdict(fail, "Expected( tsp_tvt1): ", tvt1_exp, ", got: ", tsp_tvt1);
+  }
+  if (log2str( tsp_tvt2) != log2str( tvt2_exp)) {
+    setverdict(fail, "Expected(mptvt2): ", tvt2_exp, ", got: ", tsp_tvt2);
+  }
+  if (log2str( tsp_tvt3) != log2str( tvt3_exp)) {
+    setverdict(fail, "Expected(mptvt3): ", tvt3_exp, ", got: ", tsp_tvt3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_component_template() runs on CT
+{
+  template CT tcomp2_exp := (null, mtc, system);
+  if (log2str( tsp_tcomp2) != log2str( tcomp2_exp)) {
+    setverdict(fail, "Expected( tsp_tcomp2): ", tcomp2_exp, ", got: ", tsp_tcomp2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_default_template() runs on CT
+{
+  template default tdef2_exp := null;
+  if (log2str( tsp_tdef2) != log2str( tdef2_exp)) {
+    setverdict(fail, "Expected( tsp_tdef2): ", tdef2_exp, ", got: ", tsp_tdef2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_enumerated_template() runs on CT
+{
+  template Size tenum1_exp := (Small, Large);
+  template Size tenum2_exp := Small;
+  template Size tenum3_exp := Medium;
+  if (log2str( tsp_tenum1) != log2str( tenum1_exp)) {
+    setverdict(fail, "Expected(mptenum1): ", tenum1_exp, ", got: ", tsp_tenum1);
+  }
+  if (log2str( tsp_tenum2) != log2str( tenum2_exp)) {
+    setverdict(fail, "Expected(mptenum2): ", tenum2_exp, ", got: ", tsp_tenum2);
+  }
+  if (log2str( tsp_tenum3) != log2str( tenum3_exp)) {
+    setverdict(fail, "Expected( tsp_tenum3): ", tenum3_exp, ", got: ", tsp_tenum3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_record_of_template() runs on CT
+{
+  template IntList tlist1_exp := { *, 2, 1 } length (1 .. 4);
+  template IntList tlist2_exp := { 0, 1, 0 };
+  template IntList tlist3_exp := complement({ 0, 1, 0 }, { 1, 2 }, { 10, 3, 1, 2 });
+  if (log2str( tsp_tlist1) != log2str( tlist1_exp)) {
+    setverdict(fail, "Expected( tsp_tlist1): ", tlist1_exp, ", got: ", tsp_tlist1);
+  }
+  if (log2str( tsp_tlist2) != log2str( tlist2_exp)) {
+    setverdict(fail, "Expected( tsp_tlist2): ", tlist2_exp, ", got: ", tsp_tlist2);
+  }
+  if (log2str( tsp_tlist3) != log2str( tlist3_exp)) {
+    setverdict(fail, "Expected( tsp_tlist3): ", tlist3_exp, ", got: ", tsp_tlist3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_record_template() runs on CT
+{
+  template Rec trec1_exp := { num := ?, str := * };
+  template Rec trec2_exp := { num := ?, str := ("a" .. "z") length (2 .. 6) };
+  template Rec trec3_exp := ({ num := 6, str := omit }, { num := 3, str := omit }, { num := 10, str := "yyyy" }, { num := 1, str := "abcdefghi" });
+  if (log2str( tsp_trec1) != log2str( trec1_exp)) {
+    setverdict(fail, "Expected(mptrec1): ", trec1_exp, ", got: ", tsp_trec1);
+  }
+  if (log2str( tsp_trec2) != log2str( trec2_exp)) {
+    setverdict(fail, "Expected(mptrec2): ", trec2_exp, ", got: ", tsp_trec2);
+  }
+  if (log2str( tsp_trec3) != log2str( trec3_exp)) {
+    setverdict(fail, "Expected(mptrec3): ", trec3_exp, ", got: ", tsp_trec3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_empty_record_template() runs on CT
+{
+  template EmptyRec temptyrec1_exp := { };
+  template EmptyRec temptyrec2_exp := { };
+  if (log2str( tsp_temptyrec1) != log2str( temptyrec1_exp)) {
+    setverdict(fail, "Expected( tsp_temptyrec1): ", temptyrec1_exp, ", got: ", tsp_temptyrec1);
+  }
+  if (log2str( tsp_temptyrec2) != log2str( temptyrec2_exp)) {
+    setverdict(fail, "Expected( tsp_temptyrec2): ", temptyrec2_exp, ", got: ", tsp_temptyrec2);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_union_template() runs on CT
+{
+  template Uni tuni1_exp := complement ({ osval := '0000'O }, { ival := 31 });
+  template Uni tuni2_exp := { ival := (8, 7, -21, -1) };
+  template Uni tuni3_exp := ({ bval := true }, { ival := 2 }, { osval := 'DEADA22CDEADC22A'O });
+  if (log2str( tsp_tuni1) != log2str( tuni1_exp)) {
+    setverdict(fail, "Expected( tsp_tuni1): ", tuni1_exp, ", got: ", tsp_tuni1);
+  }
+  if (log2str( tsp_tuni2) != log2str(tuni2_exp)) {
+    setverdict(fail, "Expected( tsp_tuni2): ", tuni2_exp, ", got: ", tsp_tuni2);
+  }
+  if (log2str( tsp_tuni3) != log2str(tuni3_exp)) {
+    setverdict(fail, "Expected(mptuni3): ", tuni3_exp, ", got: ", tsp_tuni3);
+  }
+  setverdict(pass);
+}
+
+testcase tc_ref_array_template() runs on CT
+{
+  template TwoStrings tarray1_exp := { "one", "two" } ifpresent;
+  template TwoStrings tarray2_exp := { "x", ? };
+  template TwoStrings tarray3_exp := { "xy", "abcdefghixx" };
+  if (log2str( tsp_tarray1) != log2str( tarray1_exp)) {
+    setverdict(fail, "Expected( tsp_tarray1): ", tarray1_exp, ", got: ", tsp_tarray1);
+  }
+  if (log2str( tsp_tarray2) != log2str( tarray2_exp)) {
+    setverdict(fail, "Expected( tsp_tarray2): ", tarray2_exp, ", got: ", tsp_tarray2);
+  }
+  if (log2str( tsp_tarray3) != log2str( tarray3_exp)) {
+    setverdict(fail, "Expected( tsp_tarray3): ", tarray3_exp, ", got: ", tsp_tarray3);
+  }
+  setverdict(pass);
+}
+
+//********** ASN.1 *******************
+
+testcase tc_asn1_bool() runs on CT {
+  if(tsp_TRUE == true ){
+    setverdict(pass)
+  } else {
+    setverdict(fail, "true expected, false got")
+  }
+  if(tsp_FALSE == false ){
+    setverdict(pass)
+  } else {
+    setverdict(fail, "false expected, true got")
+  }
+}
+testcase tc_asn1_bitstr() runs on CT {
+  if(tsp_asnbitstr3 == '0010101'B) {
+    setverdict(pass);
+  } else {
+    setverdict(fail, "BIT STRING concat error")
+  }
+}
+
+testcase tc_asn1_octetstr() runs on CT {
+  if(tsp_asnos3 == '12EF0123456789'O){
+    setverdict(pass);
+  } else {
+    setverdict(fail, "OCTET STRING concat error")
+  }
+}
+
+testcase tc_asn1_charstr() runs on CT {
+  if(tsp_asnstr3 == "Laci1()tail"){
+    setverdict(pass);
+  } else {
+    setverdict(fail, "PrintableString concat error")
+  }
+}
+
+testcase tc_asn1_integer() runs on CT {
+  if(tsp_asnint3 == -4) {
+    setverdict(pass)
+  } else {
+    setverdict(fail,"INTEGER calc error in cfg file")
+  }
+}
+
+testcase tc_asn1_real() runs on CT {
+  var float vl_eps := 0.01;
+  log("tsp_asnreal1:",tsp_asnreal1)
+  log("tsp_asnreal2:",tsp_asnreal2)
+  log("tsp_asnreal3:",tsp_asnreal3)
+  if((-vl_eps < tsp_asnreal3-(-4.0)) and (tsp_asnreal3-(-4.0) < vl_eps) ) {
+    setverdict(pass)
+  } else {
+    setverdict(fail,"REAL calc error in cfg file")
+  }
+}
+control {
+  execute(tc_ref_integer());
+  execute(tc_ref_float());
+  execute(tc_ref_bitstring());
+  execute(tc_ref_hexstring());
+  execute(tc_ref_octetstring());
+  execute(tc_ref_charstring());
+  execute(tc_ref_universal_charstring());
+  execute(tc_ref_boolean());
+  execute(tc_ref_objid());
+  execute(tc_ref_verdicttype());
+  execute(tc_ref_component());
+  execute(tc_ref_default());
+  execute(tc_ref_enumerated());
+  execute(tc_ref_record_of());
+  execute(tc_ref_record());
+  execute(tc_ref_empty_record());
+  execute(tc_ref_union());
+  execute(tc_ref_array());
+  execute(tc_ref_integer_template());
+  execute(tc_ref_float_template());
+  execute(tc_ref_bitstring_template());
+  execute(tc_ref_hexstring_template());
+  execute(tc_ref_octetstring_template());
+  execute(tc_ref_charstring_template());
+  execute(tc_ref_universal_charstring_template());
+  execute(tc_ref_boolean_template());
+  execute(tc_ref_objid_template());
+  execute(tc_ref_verdicttype_template());
+  execute(tc_ref_component_template());
+  execute(tc_ref_default_template());
+  execute(tc_ref_enumerated_template());
+  execute(tc_ref_record_of_template());
+  execute(tc_ref_record_template());
+  execute(tc_ref_empty_record_template());
+  execute(tc_ref_union_template());
+  execute(tc_ref_array_template());
+  execute(tc_asn1_bool());
+  execute(tc_asn1_bitstr());
+  execute(tc_asn1_octetstr());
+  execute(tc_asn1_charstr());
+  execute(tc_asn1_integer());
+  //execute(tc_asn1_real());
+}
+
+}

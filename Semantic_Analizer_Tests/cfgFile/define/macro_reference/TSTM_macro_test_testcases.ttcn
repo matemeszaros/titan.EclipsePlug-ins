@@ -76,8 +76,8 @@ modulepar {
   charstring  tsp_i1:=""
   octetstring tsp_o1:=''O; 
 
-  integer mp_int := 0;
-  charstring mp_str := "cool";
+  integer tsp_int := 0;
+  charstring tsp_str := "cool";
 }
 
 type component MyComp_CT{}
@@ -275,8 +275,8 @@ testcase tc_defio1() runs on MyComp_CT {
 
 // Duplicate defines
 testcase tc_duplicate() runs on MyComp_CT {
-  if (mp_int == -8) { setverdict(pass) } else { setverdict(fail, "mp_int=", mp_int) }
-  if (mp_str == "not cool, man") { setverdict(pass) } else { setverdict(fail, "mp_str=", mp_str) }
+  if (tsp_int == -8) { setverdict(pass) } else { setverdict(fail, "mp_int=", tsp_int) }
+  if (tsp_str == "not cool, man") { setverdict(pass) } else { setverdict(fail, "mp_str=", tsp_str) }
 }
 
 control{

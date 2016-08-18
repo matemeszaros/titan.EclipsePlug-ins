@@ -352,7 +352,7 @@ group G3 {
   } with { extension  "internal"}
 
   type component CT {
-    port PT myport;
+    port PT myport_PT;
   }
 
   template MyRec t_rec9 := {*,?};
@@ -367,9 +367,9 @@ group G3 {
   }
 
   altstep as_1() runs on CT {
-    [] myport.receive(MyRec:*) { }
-    [] myport.receive(MyRec:modifies t_rec9 := {i:= (2..8)}) { }
-    [] myport.receive(t_rec9m) { 
+    [] myport_PT.receive(MyRec:*) { }
+    [] myport_PT.receive(MyRec:modifies t_rec9 := {i:= (2..8)}) { }
+    [] myport_PT.receive(t_rec9m) {
       return 1;
     }
 

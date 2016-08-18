@@ -136,7 +136,7 @@ modulepar MyRec tsp_record_MyRec1;
 modulepar MyRec tsp_record_MyRec_duplicate;
 modulepar MyRecursive tsp_record_MyRecursive1;
 modulepar MyRecursive tsp_record_MyRecursive2;
-modulepar MyRecEnum enum;
+modulepar MyRecEnum tsp_enum;
 
 // Set 
 modulepar EmptySet tsp_set_empty;
@@ -275,10 +275,10 @@ testcase tc_objid() runs on MyComp_CT {
   if (tsp_objid_number_init == objid {0 4 0 12345 6789})
     {setverdict(pass);} else { setverdict(fail); }
 
-  const objid expected := objid{itu_t(0) identified_organization(4) etsi(0) 12345 6789}
-  if (tsp_objid_name_number == expected )
+  const objid cl_expected := objid{itu_t(0) identified_organization(4) etsi(0) 12345 6789}
+  if (tsp_objid_name_number == cl_expected )
     {setverdict(pass);} else { setverdict(fail); }
-  if (tsp_objid_name_number_init == expected )
+  if (tsp_objid_name_number_init == cl_expected )
     {setverdict(pass);} else { setverdict(fail); }
 }
 
@@ -319,9 +319,9 @@ testcase tc_universal_charstring() runs on MyComp_CT {
 
   if (tsp_univ_charstr_empty_init == "") {setverdict(pass); } else {setverdict(fail); }
 
-  const universal charstring expected := 
+  const universal charstring cl_expected := 
     "Character " & char(0, 0, 1, 113) & " is a hungarian letter.";
-  if (tsp_univ_charstr_1 == expected)
+  if (tsp_univ_charstr_1 == cl_expected)
     { setverdict(pass); } else { setverdict(fail); }
 
 }
@@ -378,11 +378,11 @@ testcase tc_record() runs on MyComp_CT {
     and not isbound(tsp_record_MyRecursive1.field2))
   { setverdict(pass); } else {setverdict(fail, "tsp_record_MyRecursive1");}
 
-  const MyRecursive expected := {1, {2, {3}}};
-  if (tsp_record_MyRecursive2 == expected)
+  const MyRecursive cl_expected := {1, {2, {3}}};
+  if (tsp_record_MyRecursive2 == cl_expected)
   { setverdict(pass); } else {setverdict(fail, "tsp_record_MyRecursive2");}
 
-  if (enum.enum == 42)
+  if (tsp_enum.enum == 42)
   { setverdict(pass); } else {setverdict(fail, "enum.enum");}
 
 }
@@ -407,8 +407,8 @@ testcase tc_set() runs on MyComp_CT {
     and not isbound(tsp_set_MyRecursiveSet1.field2))
   { setverdict(pass); } else {setverdict(fail, "tsp_set_MyRecursiveSet");}
 
-  const MyRecursiveSet expected := {1, {2, {3}}};
-  if (tsp_set_MyRecursiveSet2 == expected)
+  const MyRecursiveSet cl_expected := {1, {2, {3}}};
+  if (tsp_set_MyRecursiveSet2 == cl_expected)
   { setverdict(pass); } else {setverdict(fail, "tsp_set_MyRecursiveSet");}
 
 }

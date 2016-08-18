@@ -13,7 +13,7 @@ template CreateSAPCSubscription t_sapc_data := {
   pcBlacklistService_list := {    "a",    "b",    "c"  }
 }
 
-template GetResponseSAPCSubscription g_resp := {
+template GetResponseSAPCSubscription t_resp := {
 permutation(
 "hello",
 all from t_sapc_data.pcBlacklistService_list
@@ -28,26 +28,26 @@ var template CreateSAPCSubscription vt_sapc_data := t_sapc_data
 //if (t_sapc_data==vt_sapc_data) { setverdict(pass); } else { setverdict(fail); }
 if (log2str(t_sapc_data)==log2str(vt_sapc_data)) { setverdict(pass); } else { setverdict(fail); }
 
-var template GetResponseSAPCSubscription resp; // initialized from a template
-var template GetResponseSAPCSubscription resp_vt; //          from a var template
-var template GetResponseSAPCSubscription resp_manual; // hacked by hand
+var template GetResponseSAPCSubscription vt_resp; // initialized from a template
+var template GetResponseSAPCSubscription vt_resp_vt; //          from a var template
+var template GetResponseSAPCSubscription vt_resp_manual; // hacked by hand
 
 if (sizeof (vt_sapc_data.pcBlacklistService_list) > 0) {
     select (sizeof (vt_sapc_data.pcBlacklistService_list)){
         case (1) {
-            resp_manual.pcBlacklistService_list := {
+            vt_resp_manual.pcBlacklistService_list := {
               permutation("hello", vt_sapc_data.pcBlacklistService_list[0], "goodbye")
             }
         }
         case (2) {
-            resp_manual.pcBlacklistService_list := {
+            vt_resp_manual.pcBlacklistService_list := {
                 permutation ("hello",
                     vt_sapc_data.pcBlacklistService_list[0], 
                     vt_sapc_data.pcBlacklistService_list[1], "goodbye")
             }
         }
         case (3) {
-            resp_manual.pcBlacklistService_list := {
+            vt_resp_manual.pcBlacklistService_list := {
                 permutation ("hello",
                     vt_sapc_data.pcBlacklistService_list[0],
                     vt_sapc_data.pcBlacklistService_list[1],
@@ -55,7 +55,7 @@ if (sizeof (vt_sapc_data.pcBlacklistService_list) > 0) {
             }
         }
         case else {
-            resp_manual.pcBlacklistService_list := {
+            vt_resp_manual.pcBlacklistService_list := {
                 permutation ("hello",
                     vt_sapc_data.pcBlacklistService_list[0],
                     vt_sapc_data.pcBlacklistService_list[1],
@@ -68,7 +68,7 @@ if (sizeof (vt_sapc_data.pcBlacklistService_list) > 0) {
 }
 
 // var template referring to a global template
-resp.pcBlacklistService_list := {
+vt_resp.pcBlacklistService_list := {
 permutation(
 "hello",
 all from t_sapc_data .pcBlacklistService_list,
@@ -76,22 +76,22 @@ all from t_sapc_data .pcBlacklistService_list,
 ) };
 
 // var template referring to another var template
-resp_vt.pcBlacklistService_list := {
+vt_resp_vt.pcBlacklistService_list := {
 permutation(
 "hello",
 all from vt_sapc_data .pcBlacklistService_list,
 "goodbye"
 ) };
 
-action("manual ", resp_manual.pcBlacklistService_list);
-action("all    ", resp       .pcBlacklistService_list);
-action("all vt ", resp_vt    .pcBlacklistService_list);
+action("manual ", vt_resp_manual.pcBlacklistService_list);
+action("all    ", vt_resp       .pcBlacklistService_list);
+action("all vt ", vt_resp_vt    .pcBlacklistService_list);
 
-if (log2str(resp.pcBlacklistService_list)==log2str(resp_manual.pcBlacklistService_list))
-{ setverdict(pass); } else { setverdict(fail, "at line ", __LINE__, "\n", resp.pcBlacklistService_list, " !=\n", resp_manual.pcBlacklistService_list); }
+if (log2str(vt_resp.pcBlacklistService_list)==log2str(vt_resp_manual.pcBlacklistService_list))
+{ setverdict(pass); } else { setverdict(fail, "at line ", __LINE__, "\n", vt_resp.pcBlacklistService_list, " !=\n", vt_resp_manual.pcBlacklistService_list); }
 
-if (log2str(resp_vt.pcBlacklistService_list)==log2str(resp_manual.pcBlacklistService_list))
-{ setverdict(pass); } else { setverdict(fail, "at line ", __LINE__, "\n", resp_vt.pcBlacklistService_list, " !=\n", resp_manual.pcBlacklistService_list); }
+if (log2str(vt_resp_vt.pcBlacklistService_list)==log2str(vt_resp_manual.pcBlacklistService_list))
+{ setverdict(pass); } else { setverdict(fail, "at line ", __LINE__, "\n", vt_resp_vt.pcBlacklistService_list, " !=\n", vt_resp_manual.pcBlacklistService_list); }
 
 } // testcase
 

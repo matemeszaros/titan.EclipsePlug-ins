@@ -22,8 +22,8 @@ modulepar {
 
 type component MyComp {}
 
-function f_setverdict_C(in charstring p_value,in charstring p_expected){
-   if(p_value == p_expected) { setverdict(pass) } else{ setverdict(fail, match(p_expected,p_value));};
+function f_setverdict_C(in charstring pl_value,in charstring pl_expected){
+   if(pl_value == pl_expected) { setverdict(pass) } else{ setverdict(fail, match(pl_expected,pl_value));};
 }
 with { extension "transparent" }
 

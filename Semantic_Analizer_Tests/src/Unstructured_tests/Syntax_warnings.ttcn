@@ -16,7 +16,7 @@ module Syntax_warnings
         {
         	[] anyport.receive
         	 {
-         	    var bitstring vl_bstr := '1'b;
+         	    var bitstring vl_bstr := '1'B;
          	    log(vl_bstr);
         	 	goto alt;
         	 }

@@ -16,7 +16,7 @@ const ASNSequenceOf cg_i0 := { null,
 const ASNSequenceOf cg_i1 := { 5.5 }
 
 template float t_f := 6.5;
-template integer t_i0 := 2;
+template integer t_i0 := 2; 
 const integer cg_i2 := 2;
 const integer cg_i3 := 3;
 //ASN1:

@@ -18,7 +18,7 @@ type port PCOType message {
 }
 
 type component CT {
-  port PCOType pt[3];
+  port PCOType PCOArray_PT[3];
 }
 
 testcase tc_portarray_index() runs on CT {
