@@ -15,6 +15,7 @@ import org.eclipse.titan.regressiontests.library.MarkerToCheck;
 import org.junit.Test;
 
 public class AST_tests {
+	//ASNValues_asn
 	//attribute_tests_ttcn
 	//expression_tests_ttcn
 	//specificValue_template_tests_ttcn
@@ -28,7 +29,12 @@ public class AST_tests {
 	//value_tests2_ttcn
 	//negativeTesting_ttcn
 	//ttcnpp_marker_test_with_syntax_errors_ttcnpp
+	//assignment_ttcn
 
+	@Test
+	public void ASNValues_asn() throws Exception {
+		Designer_plugin_tests.checkSemanticMarkersOnFile(ASNValues_asn_initializer(), "src/Basic_tests/ASNValues.asn");
+	}
 
 	@Test
 	public void attribute_tests_ttcn() throws Exception {
@@ -78,9 +84,9 @@ public class AST_tests {
 	@Test
 	public void value_tests_ttcn() throws Exception {
 		Designer_plugin_tests.checkSemanticMarkersOnFile(value_tests_ttcn_initializer(), "src/Basic_tests/value_tests.ttcn");
-	
+
 	}
-	
+
 	@Test
 	public void value_tests2_ttcn() throws Exception {
 		Designer_plugin_tests.checkSemanticMarkersOnFile(value_tests2_ttcn_initializer(), "src/Basic_tests/value_tests2.ttcn");
@@ -95,6 +101,20 @@ public class AST_tests {
 	public void ttcnpp_marker_test_with_syntax_errors_ttcnpp() throws Exception {
 		Designer_plugin_tests.checkSyntaxMarkersOnFile(ttcnpp_marker_test_with_syntax_errors_ttcnpp_initializer(), "src/Basic_tests/preprocessor_test/ttcnpp_marker_test_with_syntax_errors.ttcnpp");
 		Designer_plugin_tests.checkSemanticMarkersOnFile(ttcnpp_marker_test_with_syntax_errors_ttcnpp_initializer_semantic(), "src/Basic_tests/preprocessor_test/ttcnpp_marker_test_with_syntax_errors.ttcnpp");
+	}
+
+	@Test
+	public void assignment_ttcn() throws Exception {
+		Designer_plugin_tests.checkSemanticMarkersOnFile(assignment_ttcn_initializer(), "cfgFile/module_parameters/assignment/assignment.ttcn");
+	}
+
+	private ArrayList<MarkerToCheck> ASNValues_asn_initializer() {
+		//ASNValues.asn
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
+		int lineNum = 66;
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `myObjectIdentifierValue1' in module `ASNValues'",  lineNum, IMarker.SEVERITY_ERROR));
+
+		return markersToCheck;
 	}
 
 	private ArrayList<MarkerToCheck> attribute_tests_ttcn_initializer() {
@@ -11429,7 +11449,7 @@ public class AST_tests {
 
 		return markersToCheck;
 	}
-	
+
 	private ArrayList<MarkerToCheck> value_tests2_ttcn_initializer() {
 		//value_tests2.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(44);
@@ -11447,6 +11467,7 @@ public class AST_tests {
 		}
 		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
+		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of template `@value_tests2.t_f'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type mismatch: a value of type `integer' was expected instead of `float'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("The lower boundary cannot be +infinity",  lineNum, IMarker.SEVERITY_ERROR));
@@ -11455,6 +11476,7 @@ public class AST_tests {
 		}
 		markersToCheck.add(new MarkerToCheck("The lower boundary is higher than the upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
+		markersToCheck.add(new MarkerToCheck("Reference to a value was expected instead of template `@value_tests2.t_f'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Type mismatch: a value of type `integer' was expected instead of `float'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("The lower boundary cannot be +infinity",  lineNum, IMarker.SEVERITY_ERROR));
@@ -11462,8 +11484,8 @@ public class AST_tests {
 			markersToCheck.add(new MarkerToCheck("The upper boundary cannot be -infinity", lineNum++, IMarker.SEVERITY_ERROR));
 		}
 		markersToCheck.add(new MarkerToCheck("The lower boundary is higher than the upper boundary",  ++lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 5;
-		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  ++lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 6;
+		markersToCheck.add(new MarkerToCheck("INTEGER value was expected",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("`omit' value is not allowed in this context",  ++lineNum, IMarker.SEVERITY_ERROR));
 		for (i = 0; i < 7; i++) {
 			markersToCheck.add(new MarkerToCheck("INTEGER value was expected", lineNum, IMarker.SEVERITY_ERROR));
@@ -11480,7 +11502,7 @@ public class AST_tests {
 
 		return markersToCheck;
 	}
-	
+
 	private ArrayList<MarkerToCheck> ttcnpp_marker_test_with_syntax_errors_ttcnpp_initializer() {
 		//ttcnpp_marker_test_with_syntax_errors.ttcnpp
 		// !! Only syntax errors !!
@@ -11635,8 +11657,8 @@ public class AST_tests {
 
 		return markersToCheck;
 	}
-	
-	
+
+
 	private ArrayList<MarkerToCheck> ttcnpp_marker_test_with_syntax_errors_ttcnpp_initializer_semantic() {
 		//ttcnpp_marker_test_with_syntax_errors.ttcnpp
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(2);
@@ -11644,6 +11666,19 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck(" this is a wrong line  that will be signed by a marker",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum = 64;
 		markersToCheck.add(new MarkerToCheck("Invalid integer value: For input string: \"214748364888888888888\"",  lineNum, IMarker.SEVERITY_WARNING));		
+
+		return markersToCheck;
+	}
+
+	//assignment_ttcn
+
+	private ArrayList<MarkerToCheck> assignment_ttcn_initializer() {
+		//assignment.ttcn
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(2);
+		int lineNum = 381;
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 29;
+		markersToCheck.add(new MarkerToCheck("Field `field2' is missing from record value",  lineNum, IMarker.SEVERITY_ERROR));
 
 		return markersToCheck;
 	}

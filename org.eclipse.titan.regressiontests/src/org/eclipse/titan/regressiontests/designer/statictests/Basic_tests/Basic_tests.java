@@ -18,6 +18,9 @@ import org.junit.runners.Suite.SuiteClasses;
 	AST_tests.class, 
 	TemplateTestSuite.class, 
 	LazyTryCatchTest.class,
-	ExpectedValueTypeTest.class })
+	ExpectedValueTypeTest.class,
+	Structured.class,
+	ConfigFileTest.class
+})
 public class Basic_tests {
 }

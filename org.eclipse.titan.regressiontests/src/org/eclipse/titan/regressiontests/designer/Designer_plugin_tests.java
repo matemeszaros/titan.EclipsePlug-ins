@@ -33,6 +33,7 @@ import org.eclipse.titan.regressiontests.library.MarkerHandlingLibrary;
 import org.eclipse.titan.regressiontests.library.MarkerToCheck;
 import org.eclipse.titan.regressiontests.library.ProjectHandlingLibrary;
 import org.eclipse.titan.regressiontests.library.WorkspaceHandlingLibrary;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -61,10 +62,10 @@ public class Designer_plugin_tests {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		Locale.setDefault(new Locale("en", "EN")); // the number format used is the english one
+		Locale.setDefault(new Locale("en", "EN")); // the number format used is the English one
 
 		/**
-		 * The options that could be set can be fount in the Designer plug-in.
+		 * The options that could be set can be found in the Designer plug-in.
 		 * Those options which would be assigned their default value, should not be set, but left as they are initialized.
 		 * */
 		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.LICENSE_FILE_PATH, MainTestSuite.LICENSE_FILE);
@@ -101,7 +102,8 @@ public class Designer_plugin_tests {
 		Designer_plugin_tests.collectorTransformator();
 	}
 
-	public void unProcessedMarkerCheck() throws Exception {
+	@AfterClass
+	public static void unProcessedMarkerCheck() throws Exception {
 		int sum = 0;
 		for (IResource resource : syntacticMarkers.keySet()) {
 			List<Map<?, ?>> temp = syntacticMarkers.get(resource);
@@ -190,9 +192,6 @@ public class Designer_plugin_tests {
 		for (int i = expected.size() - 1; i >= 0; i--) {
 			MarkerHandlingLibrary.searchNDestroyFittingMarker(fileMarkerList, expected.get(i).getMarkerMap(), true);
 		}
-		
-		//TODO: modify the expected marker lists to execute the next function without AssertionError!
-		//assertEquals("Not checked semantic markers on file:" + file.getName(), 0, fileMarkerList.size());
 
 		expected.clear();
 	}

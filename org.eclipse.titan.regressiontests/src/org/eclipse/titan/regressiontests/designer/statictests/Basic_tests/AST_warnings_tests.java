@@ -1429,31 +1429,32 @@ public class AST_warnings_tests {
 		lineNum += 152;
 		int i = 0;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName' was expected instead of `i'", lineNum++, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName' was expected instead of `pl_i'", lineNum++, IMarker.SEVERITY_WARNING));
 		}
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 2;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName' was expected instead of `i'", lineNum++, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName' was expected instead of `pl_i'", lineNum++, IMarker.SEVERITY_WARNING));
 		}
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `j'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 1th parameter is not the same: `pl_parameterName2' was expected instead of `pl_j'",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("The name of the 0th parameter is not the same: `pl_parameterName1' was expected instead of `pl_i'",  ++lineNum, IMarker.SEVERITY_WARNING));
 
 		return markersToCheck;
 	}
+
 }

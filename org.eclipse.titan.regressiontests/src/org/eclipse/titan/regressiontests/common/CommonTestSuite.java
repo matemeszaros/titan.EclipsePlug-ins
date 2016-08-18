@@ -9,14 +9,12 @@ package org.eclipse.titan.regressiontests.common;
 
 import org.eclipse.titan.regressiontests.common.actions.FormatLogTest;
 import org.eclipse.titan.regressiontests.common.actions.MergeLogTest;
-import org.eclipse.titan.regressiontests.common.cfg.ConfigFileTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	ConfigFileTest.class,
 	FormatLogTest.class,
 	MergeLogTest.class
 	})

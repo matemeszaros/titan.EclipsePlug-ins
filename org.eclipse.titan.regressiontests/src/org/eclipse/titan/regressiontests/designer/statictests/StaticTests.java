@@ -23,7 +23,10 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({Basic_tests.class, Unstructured_tests.class })
+@SuiteClasses({
+	Basic_tests.class, 
+	Unstructured_tests.class
+	})
 public final class StaticTests {
 
 	private final static Logger LOGGER = Logger.getLogger(StaticTests.class.getName());
@@ -34,6 +37,8 @@ public final class StaticTests {
 
 	@BeforeClass
 	public static void setUp() {
+		//=== 1. Analyze all projects  ===
+		//Perhaps "Semantic_Analizer_Tests" is enough
 		IProject[] projects = WorkspaceHandlingLibrary.getProjectsInWorkspace();
 		ProjectHandlingLibrary projectLibrary = null;
 		for (IProject project : projects) {
@@ -41,6 +46,7 @@ public final class StaticTests {
 			projectLibrary = new ProjectHandlingLibrary(project);
 			try {
 				projectLibrary.clearMarkers(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER);
+				projectLibrary.clearMarkers(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER);
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -49,6 +55,7 @@ public final class StaticTests {
 			projectLibrary.analyzeProject();
 			LOGGER.info("Analyzation done: " + project.getName());
 		}
+		//=== 2.Designer_plugin test based check, uses the result of the analysis, stored in the workspace ===
 		try {
 			LOGGER.info("Collecting markers");
 			Designer_plugin_tests.collectorTransformator();
