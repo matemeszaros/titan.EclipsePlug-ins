@@ -4,7 +4,7 @@ Created-By: 23.6-b04 (Oracle Corporation)
 Bundle-ManifestVersion: 2
 Bundle-Name: Common TITAN on Eclipse Plug-in
 Bundle-SymbolicName: org.eclipse.titan.common;singleton:=true
-Bundle-Version: 5.5.0.CRL_113_200_5_R5A_20160422-1100
+Bundle-Version: 5.5.1.CRL_113_200_5_R5B_20160822-1500
 Bundle-Activator: org.eclipse.titan.common.Activator
 Bundle-Vendor: Eclipse Titan Project
 Require-Bundle: org.eclipse.ui,

@@ -10,11 +10,11 @@
 <feature
       id="TITAN_Log_Viewer"
       label="TITAN Log Viewer"
-      version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
+      version="5.5.1.CRL_113_200_5_R5B_20160822-1500"
       provider-name="Eclipse Titan Project">
 
-   <description url="http://ttcn.ericsson.se/download/update_site/releasenotes.pdf">
-      CRL 113 200/5 R5A (5.5.pl0) version of the TITAN Log Viewer plug-in.
+   <description url="https://www.eclipse.org/downloads/download.php?file=/titan/TitanDocuments.tgz">
+      CRL 113 200/5 R5B (5.5.pl1) version of the TITAN Log Viewer plug-in.
    </description>
 
    <copyright>
@@ -137,27 +137,27 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.ui.console"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import feature="TITAN_Designer" version="5.5.0" match="greaterOrEqual"/>
+      <import feature="TITAN_Designer" version="5.5.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="org.eclipse.titan.log.viewer"
          download-size="0"
          install-size="0"
-         version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
+         version="5.5.1.CRL_113_200_5_R5B_20160822-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.titan.common"
          download-size="0"
          install-size="0"
-         version="5.5.0.CRL_113_200_5_R5A_20160422-1100"
+         version="5.5.1.CRL_113_200_5_R5B_20160822-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.titan.help"
          download-size="0"
          install-size="0"
-         version="5.5.0.CRL_113_200_5_R5A_20160422-1100"/>
+         version="5.5.1.CRL_113_200_5_R5B_20160822-1500"/>
 
 </feature>

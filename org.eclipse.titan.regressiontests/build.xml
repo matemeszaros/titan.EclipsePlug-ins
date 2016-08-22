@@ -10,7 +10,7 @@
 <project basedir="." default="build" name="org.eclipse.titan.regressiontests">
 	<property environment="env"/>
 	<!-- The qualifier of the features -->
-	<property name="version" value="5.5.0.CRL_113_200_5_R5A_20160422-1100"/>
+	<property name="version" value="5.5.1.CRL_113_200_5_R5B_20160822-1500"/>
 	<tstamp/>
 	<property name="timestamp" value="${DSTAMP}-${TSTAMP}"/>
 	<property name="version.qualifier" value="${version}_${timestamp}"/>
