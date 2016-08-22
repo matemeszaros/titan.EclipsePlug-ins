@@ -244,12 +244,17 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 		case A_FUNCTION_RVAL:
 		case A_FUNCTION_RTEMP:
 		case A_EXT_FUNCTION_RVAL:
-		case A_EXT_FUNCTION_RTEMP:
+		case A_EXT_FUNCTION_RTEMP:{
 			reference.getMyScope().checkRunsOnScope(timestamp, assignment, reference, "call");
-			assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
+			final IType assingmentType = assignment.getType(timestamp);
+			if (assingmentType != null) {
+				assingmentType.getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
+			}
 			break;
-		case A_CONST:
-			if (assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false) != null) {
+		}
+		case A_CONST:{
+			final IType assingmentType = assignment.getType(timestamp);
+			if (assingmentType != null && assingmentType.getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false) != null) {
 				final IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 				if (assignment instanceof Def_Const) {
 					((Def_Const) assignment).getValue().getReferencedSubValue(timestamp, reference, 1, chain);
@@ -259,16 +264,23 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 				chain.release();
 			}
 			break;
-		case A_TEMPLATE:
-			if (assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false) != null) {
+		}
+		case A_TEMPLATE:{
+			final IType assingmentType = assignment.getType(timestamp);
+			if (assingmentType != null && assingmentType.getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false) != null) {
 				final IReferenceChain chain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
 				((Def_Template) assignment).getTemplate(timestamp).getReferencedSubTemplate(timestamp, reference, chain);
 				chain.release();
 			}
 			break;
-		case A_MODULEPAR_TEMPLATE:
-			assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
+		}
+		case A_MODULEPAR_TEMPLATE:{
+			final IType assingmentType = assignment.getType(timestamp);
+			if(assingmentType != null) {
+				assingmentType.getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
+			}
 			break;
+		}
 		case A_EXT_CONST:
 		case A_MODULEPAR:
 		case A_VAR:
@@ -279,9 +291,13 @@ public final class LogArgument extends ASTNode implements ILocateableNode, IIncr
 		case A_PAR_VAL_INOUT:
 		case A_PAR_TEMP_IN:
 		case A_PAR_TEMP_OUT:
-		case A_PAR_TEMP_INOUT:
-			assignment.getType(timestamp).getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
+		case A_PAR_TEMP_INOUT:{
+			final IType assingmentType = assignment.getType(timestamp);
+			if(assingmentType != null) {
+				assingmentType.getFieldType(timestamp, reference, 1, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, false);
+			}
 			break;
+		}
 		case A_PORT: {
 			final ArrayDimensions dimensions = ((Def_Port) assignment).getDimensions();
 			if (dimensions != null) {
