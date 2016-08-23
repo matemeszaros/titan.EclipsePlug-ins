@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="Titanium_external_dependencies"
+      label="Titanium_external_dependencies"
+      version="1.0.0.20160823-1130">
+
+   <description>
+      These feature packages Jung 2.0.1, org.apache.commons.collection15 4.01 and apache POI to ease installation.
+They are external features to the Titan toolset.
+   </description>
+
+   <copyright>
+      All rights regarding jung and org.apache.commons.collection15 belong to their respective owners.
+   </copyright>
+
+   <license url="">
+      These feature packages Jung 2.0.1 and org.apache.commons.collection15
+4.01
+They are external features to the Titan toolset.
+All rights regarding jung and org.apache.commons.collection15 belong to their respective owners.
+   </license>
+
+   <plugin
+         id="edu.uci.ics.jung"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.collections15"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.poi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
