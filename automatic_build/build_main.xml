@@ -134,6 +134,55 @@
 			<record name="${log.dir}/feature_@{name}.txt" action="stop"/>
 		</sequential>
 	</macrodef>
+	
+	<!-- Macro which builds a feature -->
+	<macrodef name="build.external_feature">
+		<attribute name="dir"/>
+		<attribute name="name"/>
+		<attribute name="updatesite.name"/>
+		<attribute name="updatesite.url"/>
+		<sequential>
+			<timestamp.echo message="-> build.feature( @{dir}, @{name}, @{updatesite.name}, @{updatesite.url} )" />
+			<record name="${log.dir}/feature_@{name}.txt" action="start"/>
+            <!--
+			<cvs cvsRoot="${cvsRoot}"
+				 command="get -d ${build.dir}/@{dir} ${cvs.module}/@{dir}"
+				 failonerror="true"/>
+                 -->
+
+			<!-- Updating the version qualifier in the feature.xml file -->
+			<echo message="Creating ${build.dir}/@{dir}/feature.xml"/>
+			<apply executable="xsltproc" output="${build.dir}/@{dir}/feature.xml_unformatted"
+				   verbose="true" error="${log.dir}/error/error_@{dir}.log" logError="true" failonerror="true"
+				   timeout="60000">
+				<arg value="--stringparam"/>
+					<arg value="version"/> <arg value="0.0.0"/>
+				<arg value="--stringparam"/>
+					<arg value="update_site_name"/> <arg value="@{updatesite.name}"/>
+				<arg value="--stringparam"/>
+					<arg value="update_site_url"/> <arg value="@{updatesite.url}"/>
+				<arg value="${base.dir}/feature_xml_transformer.xsl"/>
+				<fileset dir="${build.dir}/@{dir}">
+					<include name="feature.xml"/>
+				</fileset>
+			</apply>
+
+			<!-- Formatting the feature.xml file (also checks if the file is valid) -->
+			<apply executable="xmllint" output="${build.dir}/@{dir}/feature.xml" failonerror="true"
+				error="${log.dir}/error/error_@{dir}_xmllint.log" verbose="true">
+				<arg value="--format"/>
+				<fileset dir="${build.dir}/@{dir}">
+					<include name="feature.xml_unformatted"/>
+				</fileset>
+			</apply>
+
+			<mkdir dir="${result.dir}/features"/>
+			<jar
+				destfile="${result.dir}/features/@{name}_${version.qualifier}.jar"
+				basedir="${build.dir}/@{dir}"/>
+			<record name="${log.dir}/feature_@{name}.txt" action="stop"/>
+		</sequential>
+	</macrodef>
 
 	<macrodef name="build.features">
 		<attribute name="updatesite.name"/>
@@ -157,11 +206,11 @@
 							name="Titanium"
 							updatesite.name="@{updatesite.name}"
 							updatesite.url="@{updatesite.url}"/>
-			<build.feature  dir="Titan_external_dependencies_feature"
+			<build.external_feature  dir="Titan_external_dependencies_feature"
 							name="Titan_external_dependencies"
 							updatesite.name="@{updatesite.name}"
 							updatesite.url="@{updatesite.url}"/>
-			<build.feature  dir="Titanium_external_dependencies_feature"
+			<build.external_feature  dir="Titanium_external_dependencies_feature"
 							name="Titanium_external_dependencies"
 							updatesite.name="@{updatesite.name}"
 							updatesite.url="@{updatesite.url}"/>
