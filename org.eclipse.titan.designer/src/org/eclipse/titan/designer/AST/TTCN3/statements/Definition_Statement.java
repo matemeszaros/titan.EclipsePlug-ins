@@ -19,7 +19,6 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.ControlPart;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
-import org.eclipse.titan.designer.parsers.ttcn3parser.ReparseUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
@@ -125,7 +124,11 @@ public final class Definition_Statement extends Statement {
 
 	@Override
 	public List<Integer> getPossibleExtensionStarterTokens() {
-		return ReparseUtilities.getAllValidTokenTypes();
+		if (definition != null) {
+			return definition.getPossibleExtensionStarterTokens();
+		}
+
+		return new ArrayList<Integer>(0);
 	}
 
 	@Override
