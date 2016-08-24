@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2000-2015 Ericsson Telecom AB
+ * Copyright (c) 2000-2016 Ericsson Telecom AB
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import org.eclipse.titan.designer.properties.data.FolderBuildPropertyData;
  */
 public final class GeneralConstants {
 	public static final ProductIdentity ON_THE_FLY_ANALYZER_VERSION =
-			ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 5, 5, 0, 0);
+			ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 5, 5, 1, 0);
 	public static final boolean DEBUG = true;
 	public static final boolean ETSI_BUILD = false;
 
