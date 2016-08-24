@@ -25,6 +25,12 @@
 				<feature url="features/Titanium_{$version}.jar" id="Titanium" version="{$version}">
 					<category name="TITAN_on_Eclipse"/>
 				</feature>
+				<feature url="features/Titan_external_dependencies_{$version}.jar" id="Titan_external_dependencies" version="{$version}">
+				  <category name="TITAN_on_Eclipse"/>
+				</feature>
+				<feature url="features/Titanium_external_dependencies_{$version}.jar" id="Titanium_external_dependencies" version="{$version}">
+				  <category name="TITAN_on_Eclipse"/>
+				</feature>
 			<xsl:copy-of select="*[name() != 'description']"/> 
 		</xsl:copy>
 	</xsl:template>

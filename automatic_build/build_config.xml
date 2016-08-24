@@ -76,7 +76,9 @@
 	<property name="designer.feature.name" value="TITAN_Designer_feature"/>
 	<property name="executor.feature.name" value="TITAN_Executor_feature"/>
 	<property name="logviewer.feature.name" value="TITAN_Log_Viewer_Feature"/>
+	<property name="titan_external_dependency.feature.name" value="Titan_external_dependencies_feature"/>
 	<property name="titanium.feature.name" value="Titanium_Feature"/>
+	<property name="titanium_external_dependency.feature.name" value="Titanium_external_dependencies_feature"/>
 	
 	<property name="compiler.location" location="/home/titanrt/jenkins/titan_compiler_git/"/>
 	<property name="tpd.xsd" location="${compiler.location}/etc/xsd/TPD.xsd"/>

@@ -157,6 +157,14 @@
 							name="Titanium"
 							updatesite.name="@{updatesite.name}"
 							updatesite.url="@{updatesite.url}"/>
+			<build.feature  dir="Titan_external_dependencies_feature"
+							name="Titan_external_dependencies"
+							updatesite.name="@{updatesite.name}"
+							updatesite.url="@{updatesite.url}"/>
+			<build.feature  dir="Titanium_external_dependencies_feature"
+							name="Titanium_external_dependencies"
+							updatesite.name="@{updatesite.name}"
+							updatesite.url="@{updatesite.url}"/>
 		</sequential>
 	</macrodef>
 
