@@ -56,7 +56,7 @@ public final class TextHover implements ITextHover {
 							//   "mismatched input 'control' expecting <EOF>"
 							message = message.replaceAll( "\\<([A-Z]+)\\>", "$1" );
 						} else {
-							ErrorReporter.INTERNAL_ERROR("TextHover.getHoverInfo(): message == null");
+							ErrorReporter.INTERNAL_ERROR("The marker at " + markerPosition.getOffset() + " does not seem to have any text");
 						}
 						return message;
 					}
