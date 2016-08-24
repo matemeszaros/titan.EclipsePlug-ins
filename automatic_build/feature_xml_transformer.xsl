@@ -4,7 +4,8 @@
 
 
 	<!-- parameters:
-					version
+					feature_version
+					plugin_version
 					update_site_name
 					update_site_url
 	-->
@@ -22,7 +23,7 @@
 	<!--                                                     -->    
 	<xsl:template match="feature/@version">
 		<xsl:attribute name="version">
-			<xsl:value-of select="$version"/>
+			<xsl:value-of select="$feature_version"/>
 		</xsl:attribute>
 	</xsl:template>
 
@@ -40,7 +41,7 @@
 
 	<xsl:template match="feature/plugin/@version">
 		<xsl:attribute name="version">
-			<xsl:value-of select="$version"/>
+			<xsl:value-of select="$plugin_version"/>
 		</xsl:attribute>
 	</xsl:template>
 

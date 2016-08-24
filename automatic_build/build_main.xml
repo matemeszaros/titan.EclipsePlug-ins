@@ -98,7 +98,9 @@
 				   verbose="true" error="${log.dir}/error/error_@{dir}.log" logError="true" failonerror="true"
 				   timeout="60000">
 				<arg value="--stringparam"/>
-					<arg value="version"/> <arg value="${version.qualifier}"/>
+					<arg value="feature_version"/> <arg value="${version.qualifier}"/>
+				<arg value="--stringparam"/>
+					<arg value="plugin_version"/> <arg value="${version.qualifier}"/>
 				<arg value="--stringparam"/>
 					<arg value="update_site_name"/> <arg value="@{updatesite.name}"/>
 				<arg value="--stringparam"/>
@@ -156,7 +158,9 @@
 				   verbose="true" error="${log.dir}/error/error_@{dir}.log" logError="true" failonerror="true"
 				   timeout="60000">
 				<arg value="--stringparam"/>
-					<arg value="version"/> <arg value="0.0.0"/>
+					<arg value="feature_version"/> <arg value="${version.qualifier}"/>
+				<arg value="--stringparam"/>
+					<arg value="plugin_version"/> <arg value="0.0.0"/>
 				<arg value="--stringparam"/>
 					<arg value="update_site_name"/> <arg value="@{updatesite.name}"/>
 				<arg value="--stringparam"/>
