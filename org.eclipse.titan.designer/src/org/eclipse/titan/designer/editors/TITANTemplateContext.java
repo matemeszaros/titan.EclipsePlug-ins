@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.templates.DocumentTemplateContext;
@@ -25,6 +26,7 @@ import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.RangeMarker;
+import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.editors.actions.FirstCharAction;
@@ -60,12 +62,14 @@ public final class TITANTemplateContext extends DocumentTemplateContext {
 		// calculate base indentation prefix
 		IDocument document = getDocument();
 		String prefixString = "";
+		String delimeter = null;
 		try {
 			IRegion lineRegion = document.getLineInformationOfOffset(getCompletionOffset());
 			int firstCharLocation = FirstCharAction.firstVisibleCharLocation(document, lineRegion);
 			if (firstCharLocation != -1) {
 				prefixString = document.get(lineRegion.getOffset(), firstCharLocation - lineRegion.getOffset());
 			}
+			delimeter = document.getLineDelimiter(document.getLineOfOffset(getCompletionOffset()));
 		} catch (BadLocationException e) {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
@@ -80,6 +84,21 @@ public final class TITANTemplateContext extends DocumentTemplateContext {
 			edit.addChild(new InsertEdit(temporalDocument.getLineOffset(i), prefixString));
 		}
 		edit.addChildren(positions.toArray(new TextEdit[positions.size()]));
+
+		// replace line delimeters with the ones at the insertion
+		String delimeterZero = temporalDocument.getLineDelimiter(0);
+		if(delimeter != null && delimeterZero != null && !delimeter.equals(delimeterZero)) {
+			FindReplaceDocumentAdapter adapter = new FindReplaceDocumentAdapter(temporalDocument);
+			int startOffset = 0;
+			IRegion region = adapter.find(startOffset, delimeterZero, true, false, false, false);
+			while (region != null) {
+				edit.addChild(new ReplaceEdit(region.getOffset(), region.getLength(), delimeter));
+				
+				startOffset = region.getOffset() + region.getLength();
+				region = adapter.find(startOffset, delimeterZero, true, false, false, false);
+			}
+		}
+
 		edit.apply(temporalDocument, TextEdit.UPDATE_REGIONS);
 
 		positionsToVariables(positions, variables);
