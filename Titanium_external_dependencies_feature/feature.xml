@@ -24,19 +24,19 @@ All rights regarding jung and org.apache.commons.collection15 belong to their re
          id="edu.uci.ics.jung"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0.20160527-1200"/>
 
    <plugin
          id="org.apache.commons.collections15"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0.20160527-1200"/>
 
    <plugin
          id="org.apache.poi"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="3.9.0.v201405241750"
          unpack="false"/>
 
 </feature>
