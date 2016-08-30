@@ -803,12 +803,14 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 
 	@Override
 	public void findReferences(final ReferenceFinder referenceFinder, final List<Hit> foundIdentifiers) {
-		for (ISubReference sr : subReferences) {
-			sr.findReferences(referenceFinder, foundIdentifiers);
+		for (int i = 0; i < subReferences.size(); i++) {
+			subReferences.get(i).findReferences(referenceFinder, foundIdentifiers);
 		}
+
 		if (referredAssignment == null) {
 			return;
 		}
+
 		if (referenceFinder.fieldId == null) {
 			// we are searching for the assignment itself
 			if (referenceFinder.assignment != referredAssignment) {
@@ -847,8 +849,8 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 		}
 
 		if (subReferences != null) {
-			for (ISubReference sr : subReferences) {
-				if (!sr.accept(v)) {
+			for (int i = 0; i < subReferences.size(); i++) {
+				if (!subReferences.get(i).accept(v)) {
 					return false;
 				}
 			}
