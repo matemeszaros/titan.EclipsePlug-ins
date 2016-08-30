@@ -6875,9 +6875,11 @@ pr_TryCatchConstruct returns[Statement statement = null]:
 pr_Identifier returns [Identifier identifier = null]:
 	IDENTIFIER
 {
-	final String text = $IDENTIFIER.text;
-	if ( text != null) {
-		$identifier = new Identifier( Identifier_type.ID_TTCN, text, getLocation( $IDENTIFIER ) );
+	if($IDENTIFIER.getTokenIndex() >= 0) {
+		final String text = $IDENTIFIER.text;
+		if ( text != null) {
+			$identifier = new Identifier( Identifier_type.ID_TTCN, text, getLocation( $IDENTIFIER ) );
+		}
 	}
 };
 
