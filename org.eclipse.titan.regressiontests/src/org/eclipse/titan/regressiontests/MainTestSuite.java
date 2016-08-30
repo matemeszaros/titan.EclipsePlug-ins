@@ -28,13 +28,15 @@ import org.junit.runners.Suite.SuiteClasses;
 })
 public final class MainTestSuite {
 	
-	public static String LICENSE_FILE = "C:\\Users\\ethbaat\\license_98.dat";
+	//public static String LICENSE_FILE = "/home/earplov/license_13136.dat";
+	//public static String LICENSE_FILE = "C:\\Users\\ethbaat\\license_98.dat";
+	public static String LICENSE_FILE = System.getenv("TTCN3_LICENSE_FILE");
 	
 	private static URI pathToWorkspace;
 
-	//public static final String LICENSE_FILE = "/home/ekripnd/license.dat";
-	//public static final String PATH_TO_WORKSPACE = "file:///home/ekripnd/workspace/titan_eclipse/";
-	public static final String PATH_TO_WORKSPACE = "file:///c:/Users/ethbaat/git/titan.EclipsePlug-ins/";
+	//public static final String PATH_TO_WORKSPACE = "file:///home/earplov/gerrithub/eclipse/titan.EclipsePlug-ins/";
+	//public static final String PATH_TO_WORKSPACE = "file:///c:/Users/ethbaat/git/titan.EclipsePlug-ins/";
+	public static final String PATH_TO_WORKSPACE = "file://" + System.getProperty("user.dir") + "/../";
 
 	static {
 		try {
