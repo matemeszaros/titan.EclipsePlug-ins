@@ -401,8 +401,9 @@ pr_TTCN3File:
 // erroneous attribute specification syntax for negative testing
 //-----------------------------------------------------
 
-pr_ErroneousAttributeSpec returns [ErroneousAttributeSpecification errAttrSpec = null]
+pr_ErroneousAttributeSpec returns [ErroneousAttributeSpecification errAttrSpec]
 @init {
+	$errAttrSpec = null;
 	boolean isRaw = false;
 	boolean hasAllKeyword = false;
 }:
@@ -428,7 +429,10 @@ pr_ErroneousAttributeSpec returns [ErroneousAttributeSpecification errAttrSpec =
 	$errAttrSpec.setLocation(getLocation( $indicator.start, $z));
 };
 
-pr_ErroneousIndicator returns [Indicator_Type indicator = null]:
+pr_ErroneousIndicator returns [Indicator_Type indicator]
+@init {
+	$indicator = null;
+}:
 (	pr_ValueKeyword { $indicator = Indicator_Type.Value_Indicator; }
 |	id = pr_Identifier
 		{
@@ -509,7 +513,10 @@ pr_ObjIdComponentList returns [ObjectIdentifier_Value value]
 )+
 ;
 
-pr_ObjIdComponent returns [ObjectIdentifierComponent objidComponent = null]:
+pr_ObjIdComponent returns [ObjectIdentifierComponent objidComponent]
+@init {
+	$objidComponent = null;
+}:
 (	i = pr_Identifier
 		{	if ($i.identifier != null) {
 				$objidComponent = new ObjectIdentifierComponent($i.identifier, null);
@@ -526,7 +533,10 @@ pr_ObjIdComponent returns [ObjectIdentifierComponent objidComponent = null]:
 |	o2 = pr_NameAndNumberForm { $objidComponent = $o2.objidComponent;}
 );
 
-pr_NumberForm returns [ObjectIdentifierComponent objidComponent = null]:
+pr_NumberForm returns [ObjectIdentifierComponent objidComponent]
+@init {
+	$objidComponent = null;
+}:
 	NUMBER
 {
 	Value value = new Integer_Value($NUMBER.getText());
@@ -535,7 +545,10 @@ pr_NumberForm returns [ObjectIdentifierComponent objidComponent = null]:
 	$objidComponent.setLocation(getLocation( $NUMBER));
 };
 
-pr_NameAndNumberForm returns [ObjectIdentifierComponent objidComponent = null]:
+pr_NameAndNumberForm returns [ObjectIdentifierComponent objidComponent]
+@init {
+	$objidComponent = null;
+}:
 	i = pr_Identifier
 	LPAREN
 	NUMBER
@@ -549,7 +562,10 @@ pr_NameAndNumberForm returns [ObjectIdentifierComponent objidComponent = null]:
 
 // ASN.1 with TTCN-3 BNF Extension End
 
-pr_TTCN3ModuleId returns[Identifier identifier = null]:
+pr_TTCN3ModuleId returns[Identifier identifier]
+@init {
+	$identifier = null;
+}:
 (	i = pr_OwnGlobalModuleId
 	pr_LanguageSpec?
 )
@@ -557,7 +573,10 @@ pr_TTCN3ModuleId returns[Identifier identifier = null]:
 	$identifier = $i.identifier;
 };
 
-pr_OwnGlobalModuleId returns [Identifier identifier = null]:
+pr_OwnGlobalModuleId returns [Identifier identifier]
+@init {
+	$identifier = null;
+}:
 (	id = pr_Identifier
 	(	DOT
 		pr_ObjectIdentifierValue
@@ -651,7 +670,10 @@ pr_ModuleDef returns [List<Definition> definitions]
 //   Typdef Definitions  1.6.1.1  136
 // -----------------------------------------------------
 
-pr_TypeDef returns[Def_Type def_type = null]:
+pr_TypeDef returns[Def_Type def_type]
+@init {
+	$def_type = null;
+}:
 (	pr_TypeDefKeyword
 	(	d1 = pr_StructuredTypeDef { $def_type = $d1.def_type; }
 	|	d2 = pr_SubTypeDef { $def_type = $d2.def_type; }
@@ -666,7 +688,10 @@ pr_TypeDefKeyword:
 	TYPE
 ;
 
-pr_StructuredTypeDef returns[Def_Type def_type = null]:
+pr_StructuredTypeDef returns[Def_Type def_type]
+@init {
+	$def_type = null;
+}:
 (	t1 = pr_RecordOfDef { $def_type = $t1.def_type; }
 |	t2 = pr_RecordDef { $def_type = $t2.def_type; }
 |	t3 = pr_UnionDef { $def_type = $t3.def_type; }
@@ -680,8 +705,9 @@ pr_StructuredTypeDef returns[Def_Type def_type = null]:
 |	t11 = pr_TestcaseTypeDef { $def_type = $t11.def_type; }
 );
 
-pr_RecordDef returns[Def_Type def_type = null]
+pr_RecordDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	CompFieldMap compFieldMap = new CompFieldMap();
 }:
 (	col = pr_RecordKeyword
@@ -700,8 +726,9 @@ pr_RecordKeyword:
 	RECORD
 ;
 
-pr_StructDefBody[CompFieldMap compFieldMap] returns[Identifier identifier = null]
+pr_StructDefBody[CompFieldMap compFieldMap] returns[Identifier identifier]
 @init {
+	$identifier = null;
 	lexer.clearLastCommentLocation();
 }:
 (	(	i = pr_Identifier { $identifier = $i.identifier; }
@@ -736,8 +763,9 @@ pr_StructDefFormalPar:
 	pr_FormalValuePar
 ;
 
-pr_StructFieldDef returns[CompField compField = null]
+pr_StructFieldDef returns[CompField compField]
 @init {
+	$compField = null;
 	Type type = null;
 	ArrayDimensions dimensions = null;
 	List<ParsedSubType> parsedSubTypes = null;
@@ -780,7 +808,10 @@ pr_StructFieldDef returns[CompField compField = null]
 	lexer.clearLastCommentLocation();
 };
 
-pr_NestedTypeDef returns[Type type = null]:
+pr_NestedTypeDef returns[Type type]
+@init {
+	$type = null;
+}:
 (	t1 = pr_NestedRecordDef			{ $type = $t1.type; }
 |	t2 = pr_NestedUnionDef			{ $type = $t2.type; }
 |	t3 = pr_NestedSetDef			{ $type = $t3.type; }
@@ -792,8 +823,9 @@ pr_NestedTypeDef returns[Type type = null]:
 |	t9 = pr_NestedTestcaseTypeDef	{ $type = $t9.type; }
 );
 
-pr_NestedRecordDef returns[Type type = null]
+pr_NestedRecordDef returns[Type type]
 @init {
+	$type = null;
 	CompFieldMap compFieldMap = new CompFieldMap();
 }:
 (	col = pr_RecordKeyword
@@ -811,8 +843,9 @@ pr_NestedRecordDef returns[Type type = null]
 	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_NestedUnionDef returns[Type type = null]
+pr_NestedUnionDef returns[Type type]
 @init {
+	$type = null;
 	CompFieldMap compFieldMap = new CompFieldMap();
 }:
 (	col = pr_UnionKeyword
@@ -830,8 +863,9 @@ pr_NestedUnionDef returns[Type type = null]
 	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_NestedSetDef returns[Type type = null]
+pr_NestedSetDef returns[Type type]
 @init {
+	$type = null;
 	CompFieldMap compFieldMap = new CompFieldMap();
 }:
 (	col = pr_SetKeyword
@@ -849,8 +883,9 @@ pr_NestedSetDef returns[Type type = null]
 	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_NestedRecordOfDef returns[SequenceOf_Type type = null]
+pr_NestedRecordOfDef returns[SequenceOf_Type type]
 @init {
+	$type = null;
 	LengthRestriction restriction = null;
 	Type ofType = null;
 }:
@@ -871,8 +906,9 @@ pr_NestedRecordOfDef returns[SequenceOf_Type type = null]
 	$type.setLocation(getLocation( $col.start, getStopToken()));
 };
 
-pr_NestedSetOfDef returns[SetOf_Type type = null]
+pr_NestedSetOfDef returns[SetOf_Type type]
 @init {
+	$type = null;
 	LengthRestriction restriction = null;
 	Type ofType = null;
 }:
@@ -893,8 +929,9 @@ pr_NestedSetOfDef returns[SetOf_Type type = null]
 	$type.setLocation(getLocation( $col.start, getStopToken()));
 };
 
-pr_NestedEnumDef returns[Type type = null]
+pr_NestedEnumDef returns[Type type]
 @init {
+	$type = null;
 	EnumerationItems items = null;
 }:
 (	col = pr_EnumKeyword
@@ -908,8 +945,9 @@ pr_NestedEnumDef returns[Type type = null]
 	$type.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_NestedFunctionTypeDef returns[Type type = null]
+pr_NestedFunctionTypeDef returns[Type type]
 @init {
+	$type = null;
 	FormalParameterList parList = null;
 	ReturnType_Helper helper = null;
 	Type returnType = null;
@@ -939,8 +977,9 @@ pr_NestedFunctionTypeDef returns[Type type = null]
 	$type.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_NestedAltstepTypeDef returns[Type type = null]
+pr_NestedAltstepTypeDef returns[Type type]
 @init {
+	$type = null;
 	FormalParameterList parList = null;
 	Configuration_Helper confighelper =  new Configuration_Helper();
 }:
@@ -957,8 +996,9 @@ pr_NestedAltstepTypeDef returns[Type type = null]
 	$type.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_NestedTestcaseTypeDef returns[Type type = null]
+pr_NestedTestcaseTypeDef returns[Type type]
 @init {
+	$type = null;
 	FormalParameterList parList = null;
 	Configuration_Helper helper = null;
 	Reference runsonReference = null;
@@ -986,8 +1026,9 @@ pr_OptionalKeyword:
 	OPTIONAL
 ;
 
-pr_UnionDef returns[Def_Type def_type = null]
+pr_UnionDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	CompFieldMap compFieldMap = new CompFieldMap();
 }:
 (	col = pr_UnionKeyword
@@ -1005,8 +1046,9 @@ pr_UnionKeyword:
 	UNION
 ;
 
-pr_UnionDefBody[CompFieldMap compFieldMap] returns[Identifier identifier = null]
+pr_UnionDefBody[CompFieldMap compFieldMap] returns[Identifier identifier]
 @init {
+	$identifier = null;
 	CompField compField = null;
 }:
 (	(	i = pr_Identifier { $identifier = $i.identifier; }
@@ -1025,8 +1067,9 @@ pr_UnionDefBody[CompFieldMap compFieldMap] returns[Identifier identifier = null]
 	if( $compFieldMap != null ) { $compFieldMap.setLocation(getLocation( $begin.start, $endcol.stop )); }
 };
 
-pr_UnionFieldDef returns[CompField compField = null]
+pr_UnionFieldDef returns[CompField compField]
 @init {
+	$compField = null;
 	Type type = null;
 	ArrayDimensions dimensions = null;
 	List<ParsedSubType> parsedSubTypes = null;
@@ -1060,8 +1103,9 @@ pr_UnionFieldDef returns[CompField compField = null]
 	$compField.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_SetDef returns[Def_Type def_type = null]
+pr_SetDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	CompFieldMap compFieldMap = new CompFieldMap();
 }:
 (	col = pr_SetKeyword
@@ -1079,8 +1123,9 @@ pr_SetKeyword:
 	SET
 ;
 
-pr_RecordOfDef returns[Def_Type def_type = null]
+pr_RecordOfDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	Type_Identifier_Helper helper = null;
 	LengthRestriction restriction = null;
 	Location commentLocation = lexer.getLastCommentLocation();
@@ -1141,8 +1186,9 @@ pr_StructOfDefBody returns[Type_Identifier_Helper helper]
 	$helper.identifier = identifier;
 };
 
-pr_SetOfDef returns[Def_Type def_type = null]
+pr_SetOfDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	Type_Identifier_Helper helper = null;
 	LengthRestriction restriction = null;
 }:
@@ -1164,8 +1210,9 @@ pr_SetOfDef returns[Def_Type def_type = null]
 	}
 };
 
-pr_EnumDef returns[Def_Type def_type = null]
+pr_EnumDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	Identifier identifier = null;
 	EnumerationItems items = null;
 }:
@@ -1199,8 +1246,9 @@ pr_EnumerationList returns[EnumerationItems items]
 	)*
 );
 
-pr_Enumeration returns[EnumItem enumItem = null]
+pr_Enumeration returns[EnumItem enumItem]
 @init {
+	$enumItem = null;
 	Integer_Value value = null;
 	boolean minus = false;
 }:
@@ -1226,8 +1274,9 @@ pr_Enumeration returns[EnumItem enumItem = null]
 	}
 };
 
-pr_SubTypeDef returns[Def_Type def_type = null]
+pr_SubTypeDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	Identifier identifier = null;
 	ArrayDimensions dimensions = null;
 	List<ParsedSubType> parsedSubTypes = null;
@@ -1286,13 +1335,17 @@ pr_AllowedValues returns[List<ParsedSubType> parsedSubTypes]
 );
 
 // TODO: Rename for TemplateOrValue and rework its content !
-pr_ValueOrRange returns[ParsedSubType parsedSubType = null]:
+pr_ValueOrRange returns[ParsedSubType parsedSubType]
+@init {
+	$parsedSubType = null;
+}:
 (	p = pr_RangeDef { $parsedSubType = $p.parsedSubType; }
 |	v = pr_Expression { if($v.value != null) { $parsedSubType = new Single_ParsedSubType($v.value); } }
 );
 
-pr_RangeDef returns[ParsedSubType parsedSubType = null]
+pr_RangeDef returns[ParsedSubType parsedSubType]
 @init {
+	$parsedSubType = null;
 	boolean minExclusive = false;
 	boolean maxExclusive = false;
 }:
@@ -1312,8 +1365,9 @@ pr_ExcludeBound:
 	EXCLAMATIONMARK
 ;
 
-pr_StringLength returns[LengthRestriction restriction = null]
+pr_StringLength returns[LengthRestriction restriction]
 @init {
+	$restriction = null;
 	boolean range = false;
 }:
 (	col = pr_LengthKeyword
@@ -1337,7 +1391,10 @@ pr_LengthKeyword:
 	LENGTH
 ;
 
-pr_PortType returns[Reference reference = null]:
+pr_PortType returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	(	r = pr_GlobalModuleId { $reference = $r.reference; }
 		pr_Dot
 	)?
@@ -1353,8 +1410,9 @@ pr_PortType returns[Reference reference = null]:
 	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
-pr_PortDef returns[ Def_Type def_type = null]
+pr_PortDef returns[ Def_Type def_type]
 @init {
+	$def_type = null;
 	Location commentLocation = lexer.getLastCommentLocation();
 }:
 (	col = pr_PortKeyword
@@ -1376,7 +1434,10 @@ pr_PortKeyword:
 	PORT
 ;
 
-pr_PortDefAttribs returns[PortTypeBody body = null]:
+pr_PortDefAttribs returns[PortTypeBody body]
+@init {
+	$body = null;
+}:
 (	b = pr_MessageAttribs { $body = $b.body; }
 |	b2 = pr_ProcedureAttribs { $body = $b2.body; }
 |	b3 = pr_MixedAttribs { $body = $b3.body; }
@@ -1387,7 +1448,10 @@ pr_PortDefAttribs returns[PortTypeBody body = null]:
 	}
 };
 
-pr_MessageAttribs returns[PortTypeBody body = null]:
+pr_MessageAttribs returns[PortTypeBody body]
+@init {
+	$body = null;
+}:
 (	pr_MessageKeyword { $body = new PortTypeBody(OperationModes.OP_Message); }
 	pr_BeginChar
 	(	pr_MessageList[$body]
@@ -1427,7 +1491,10 @@ pr_TypeList returns[List<IType> types]
 	)*
 );
 
-pr_ProcedureAttribs returns[PortTypeBody body = null]:
+pr_ProcedureAttribs returns[PortTypeBody body]
+@init {
+	$body = null;
+}:
 (	pr_ProcedureKeyword { $body = new PortTypeBody(OperationModes.OP_Procedure); }
 	pr_BeginChar
 	(	pr_ProcedureList[$body]
@@ -1446,7 +1513,10 @@ pr_ProcedureList[PortTypeBody body]:
 |  INOUT	t = pr_AllOrTypeList{ $body.addInoutTypes($t.types); }
 );
 
-pr_MixedAttribs returns[PortTypeBody body = null]:
+pr_MixedAttribs returns[PortTypeBody body]
+@init {
+	$body = null;
+}:
 (	col = pr_MixedKeyword
 		{
 			$body = new PortTypeBody(OperationModes.OP_Mixed);
@@ -1469,8 +1539,9 @@ pr_MixedList[PortTypeBody body]:
 |  INOUT	t = pr_AllOrTypeList{ $body.addInoutTypes($t.types); }
 );
 
-pr_ComponentDef returns[Def_Type def_type = null]
+pr_ComponentDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	ComponentTypeBody component = null;
 	ComponentTypeReferenceList extends_refs = new ComponentTypeReferenceList();
 	Location commentLocation = lexer.getLastCommentLocation();
@@ -1511,7 +1582,10 @@ pr_ComponentKeyword:
 	COMPONENT
 ;
 
-pr_ComponentType returns[Reference reference = null]:
+pr_ComponentType returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	(	r = pr_GlobalModuleId { $reference = $r.reference; }
 		pr_Dot
 	)?
@@ -1527,7 +1601,10 @@ pr_ComponentType returns[Reference reference = null]:
 	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
-pr_ComponentTypeIdentifier returns [Identifier identifier = null]:
+pr_ComponentTypeIdentifier returns [Identifier identifier]
+@init {
+	$identifier = null;
+}:
 	i = pr_Identifier { $identifier = $i.identifier; }
 ;
 
@@ -1565,7 +1642,10 @@ pr_ComponentElementDef returns[List<Definition> definitions = null]
 	
 };
 
-pr_ComponentElementVisibility returns[VisibilityModifier modifier = VisibilityModifier.Public]:
+pr_ComponentElementVisibility returns[VisibilityModifier modifier]
+@init {
+	$modifier = VisibilityModifier.Public;
+}:
 (	PUBLIC	{ $modifier = VisibilityModifier.Public; }
 |	PRIVATE	{ $modifier = VisibilityModifier.Private; }
 |	FRIEND	{ $modifier = VisibilityModifier.Friend; }
@@ -1595,8 +1675,9 @@ pr_PortInstance returns[List<Definition> definitions]
 };
 
 pr_PortElement[Reference portTypeReference]
-	returns[ Def_Port def_port = null]
+	returns[ Def_Port def_port]
 @init {
+	$def_port = null;
 	ArrayDimensions dimensions = null;
 }:
 (	i = pr_Identifier
@@ -1637,8 +1718,9 @@ pr_ConstList[Type type] returns[List<Definition> array]
 	)*
 );
 
-pr_SingleConstDef[Type type] returns[ Def_Const def_const = null]
+pr_SingleConstDef[Type type] returns[ Def_Const def_const]
 @init {
+	$def_const = null;
 	ArrayDimensions dimensions = null;
 	Type tempType = $type;
 }:
@@ -1664,8 +1746,9 @@ pr_ConstKeyword:
 	CONST
 ;
 
-pr_FunctionTypeDef returns[Def_Type def_type = null]
+pr_FunctionTypeDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	FormalParameterList parList = null;
 	ReturnType_Helper helper = null;
 	Type returnType = null;
@@ -1699,8 +1782,9 @@ pr_FunctionTypeDef returns[Def_Type def_type = null]
 	}
 };
 
-pr_AltstepTypeDef returns[Def_Type def_type = null]
+pr_AltstepTypeDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	FormalParameterList parList = null;
 	Configuration_Helper confighelper = new Configuration_Helper();
 	Token endcol = null;
@@ -1722,8 +1806,9 @@ pr_AltstepTypeDef returns[Def_Type def_type = null]
 	}
 };
 
-pr_TestcaseTypeDef returns[Def_Type def_type = null]
+pr_TestcaseTypeDef returns[Def_Type def_type]
 @init {
+	$def_type = null;
 	FormalParameterList parList = null;
 	Configuration_Helper helper = null;
 	Reference runsonReference = null;
@@ -1752,8 +1837,9 @@ pr_TestcaseTypeDef returns[Def_Type def_type = null]
 	}
 };
 
-pr_TemplateDef returns[Def_Template def_template = null]
+pr_TemplateDef returns[Def_Template def_template]
 @init {
+	$def_template = null;
 	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 	Template_definition_helper helper = new Template_definition_helper();
 	Reference derivedReference = null;
@@ -1798,7 +1884,10 @@ pr_TemplateKeyword:
 	TEMPLATE
 ;
 
-pr_DerivedDef returns[Reference reference = null]:
+pr_DerivedDef returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	pr_ModifiesKeyword
 	r = pr_TemplateRef { $reference = $r.reference; }
 );
@@ -1808,8 +1897,9 @@ pr_ModifiesKeyword:
 {
 };
 
-pr_TemplateFormalParList returns[FormalParameterList parList = null]
+pr_TemplateFormalParList returns[FormalParameterList parList]
 @init {
+	$parList = null;
 	List<FormalParameter> parameters = new ArrayList<FormalParameter>();
 }:
 (	p = pr_TemplateFormalPar { if( $p.parameter != null ) { parameters.add( $p.parameter ); }}
@@ -1821,7 +1911,10 @@ pr_TemplateFormalParList returns[FormalParameterList parList = null]
 	$parList = new FormalParameterList( parameters );
 };
 
-pr_TemplateFormalPar  returns[FormalParameter parameter = null]:
+pr_TemplateFormalPar  returns[FormalParameter parameter]
+@init {
+	$parameter = null;
+}:
 (  p = pr_FormalTemplatePar { $parameter = $p.parameter; }
 |  p2 = pr_FormalValuePar { $parameter = $p2.parameter; }
 );
@@ -1838,19 +1931,26 @@ pr_ListOfTemplates returns [ListOfTemplates templates]
 	pr_RParen
 );
 
-pr_TemplateListItem returns [ITemplateListItem template = null] :
+pr_TemplateListItem returns [ITemplateListItem template]
+@init {
+	$template = null;
+}:
 (	t = pr_AllElementsFrom { $template = $t.template; }
 |	t2 = pr_TemplateBody { $template = $t2.body; }
 );
 
-pr_AllElementsFrom returns[ AllElementsFrom template = null; ]:
+pr_AllElementsFrom returns[ AllElementsFrom template]
+@init {
+	$template = null;
+}:
 (	pr_AllKeyword
 	pr_FromKeyword
 	b = pr_TemplateBody { if( $b.body!= null ) { $template = new AllElementsFrom( $b.body.getTemplate() ); } }
 );
 
-pr_TemplateBody returns[ TemplateBody body = null ]
+pr_TemplateBody returns[ TemplateBody body]
 @init {
+	$body = null;
 	TTCN3Template temp = null;
 }:
 (	(	t1 = pr_FieldSpecList { temp = $t1.template; }
@@ -1867,12 +1967,16 @@ pr_TemplateBody returns[ TemplateBody body = null ]
 	}
 };
 
-pr_SimpleSpec returns[TTCN3Template template = null]:
+pr_SimpleSpec returns[TTCN3Template template]
+@init {
+	$template = null;
+}:
 	t = pr_SingleValueOrAttrib { $template = $t.template;}
 ;
 
-pr_FieldSpecList returns[TTCN3Template template = null]
+pr_FieldSpecList returns[TTCN3Template template]
 @init {
+	$template = null;
 	NamedTemplates namedTemplates = new NamedTemplates();
 }:
 (	col = pr_BeginChar
@@ -1893,7 +1997,10 @@ pr_FieldSpecList returns[TTCN3Template template = null]
 };
 
 //From FieldSpec the AllElementsFrom handling is excluded therefore TemplateBody is replaced with its template
-pr_FieldSpec returns[NamedTemplate namedTemplate = null]:
+pr_FieldSpec returns[NamedTemplate namedTemplate]
+@init {
+	$namedTemplate = null;
+}:
 (	name = pr_StructFieldRef
 	pr_AssignmentChar
 	b = pr_TemplateBody
@@ -1905,13 +2012,19 @@ pr_FieldSpec returns[NamedTemplate namedTemplate = null]:
 	}
 };
 
-pr_FieldReference returns[Identifier identifier = null]:
+pr_FieldReference returns[Identifier identifier]
+@init {
+	$identifier = null;
+}:
 (	i = pr_StructFieldRef { $identifier = $i.identifier; }
 //|	subReference = pr_ArrayOrBitRef // covered by arrayspeclist
 //|	pr_ParRef // handled in pr_StructFieldRef
 );
 
-pr_StructFieldRef returns[Identifier identifier = null]:
+pr_StructFieldRef returns[Identifier identifier]
+@init {
+	$identifier = null;
+}:
 (	t = pr_PredefinedType
 		{	$identifier = new Identifier(Identifier_type.ID_TTCN, $t.type.getTypename(), getLocation( $t.start, $t.stop ));	}
 |	(	id = pr_Identifier { $identifier = $id.identifier; }
@@ -1919,8 +2032,9 @@ pr_StructFieldRef returns[Identifier identifier = null]:
 	)
 );
 
-pr_ArraySpecList returns[Indexed_Template_List indexed_template_list = null]
+pr_ArraySpecList returns[Indexed_Template_List indexed_template_list]
 @init {
+	$indexed_template_list = null;
 	IndexedTemplates templates = new IndexedTemplates();
 }:
 (	col = pr_BeginChar
@@ -1936,7 +2050,10 @@ pr_ArraySpecList returns[Indexed_Template_List indexed_template_list = null]
 	$indexed_template_list.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_ArraySpec returns[IndexedTemplate indexedTemplate = null]:
+pr_ArraySpec returns[IndexedTemplate indexedTemplate]
+@init {
+	$indexedTemplate = null;
+}:
 (	index = pr_ArrayOrBitRef
 	pr_AssignmentChar
 	b = pr_TemplateBody
@@ -1948,8 +2065,9 @@ pr_ArraySpec returns[IndexedTemplate indexedTemplate = null]:
 	}
 };
 
-pr_ArrayOrBitRefOrDash returns[ArraySubReference subReference = null]
+pr_ArrayOrBitRefOrDash returns[ArraySubReference subReference]
 @init {
+	$subReference = null;
 	Value value = null;
 }:
 (	col = pr_SquareOpen
@@ -1967,7 +2085,10 @@ pr_ArrayOrBitRefOrDash returns[ArraySubReference subReference = null]
 	$subReference.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_ArrayOrBitRef returns[ArraySubReference subReference = null]:
+pr_ArrayOrBitRef returns[ArraySubReference subReference]
+@init {
+	$subReference = null;
+}:
 (	col = pr_SquareOpen
 	v = pr_SingleExpression
 	endcol = pr_SquareClose
@@ -1977,7 +2098,10 @@ pr_ArrayOrBitRef returns[ArraySubReference subReference = null]:
 	$subReference.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_SingleValueOrAttrib returns[TTCN3Template template = null]:
+pr_SingleValueOrAttrib returns[TTCN3Template template]
+@init {
+	$template = null;
+}:
 (		v = pr_SingleExpression {
 		if( $v.value != null ) { $template = new SpecificValue_Template($v.value); }
 	}
@@ -1990,7 +2114,10 @@ pr_SingleValueOrAttrib returns[TTCN3Template template = null]:
 	}
 };
 
-pr_ArrayValueOrAttrib returns[TTCN3Template template = null]:
+pr_ArrayValueOrAttrib returns[TTCN3Template template]
+@init {
+	$template = null;
+}:
 (	col = pr_BeginChar
 	t = pr_ArrayElementSpecList
 	endcol = pr_EndChar
@@ -2014,8 +2141,9 @@ pr_ArrayElementSpecList returns[ListOfTemplates templates]
 	)*
 );
 
-pr_ArrayElementSpec returns[ TemplateBody body = null ]
+pr_ArrayElementSpec returns[ TemplateBody body]
 @init {
+	$body = null;
 	ListOfTemplates templates = null;
 }:
 (	t = pr_PermutationMatch
@@ -2040,8 +2168,9 @@ pr_NotUsedSymbol:
 
 //Replaced in the next pr_ : |  templates = pr_ValueOrAttribList { if( templates!= null) { template = new ValueList_Template(templates);}; }
 //by:
-pr_MatchingSymbol returns[TTCN3Template template = null]
+pr_MatchingSymbol returns[TTCN3Template template]
 @init {
+	$template = null;
 	PatternString ps = new PatternString();
 }:
 (	t1 = pr_Complement { $template = new ComplementedList_Template($t1.templates); }
@@ -2112,7 +2241,10 @@ pr_OctetStringMatch returns[String pattern]:
 	$pattern = $start.getText().replaceAll("^\'|\'O$", "");
 };
 
-pr_SubsetMatch returns[ListOfTemplates templates = null]:
+pr_SubsetMatch returns[ListOfTemplates templates]
+@init {
+	$templates = null;
+}:
 (	pr_SubsetKeyword
 	t = pr_ListOfTemplates { $templates = $t.templates; }
 );
@@ -2121,7 +2253,10 @@ pr_SubsetKeyword:
 	SUBSET
 ;
 
-pr_SupersetMatch returns[ListOfTemplates templates = null]:
+pr_SupersetMatch returns[ListOfTemplates templates]
+@init {
+	$templates = null;
+}:
 (	pr_SupersetKeyword
 	t = pr_ListOfTemplates { $templates = $t.templates; }
 );
@@ -2130,7 +2265,10 @@ pr_SupersetKeyword:
 	SUPERSET
 ;
 
-pr_PermutationMatch returns[ListOfTemplates templates = null]:
+pr_PermutationMatch returns[ListOfTemplates templates]
+@init {
+	$templates = null;
+}:
 (	pr_PermutationKeyword
 	t = pr_ListOfTemplates { $templates = $t.templates; }
 );
@@ -2178,7 +2316,10 @@ pr_PatternChunk[StringBuilder builder, boolean[] uni]:
 		}
 );
 
-pr_Complement returns[ListOfTemplates templates = null]:
+pr_Complement returns[ListOfTemplates templates]
+@init {
+	$templates = null;
+}:
 (	pr_ComplementKeyword
 	t = pr_ListOfTemplates { $templates = $t.templates; }
 );
@@ -2195,7 +2336,10 @@ pr_AnyOrOmit:
 	STAR
 ;
 
-pr_LengthMatch returns[LengthRestriction restriction = null]:
+pr_LengthMatch returns[LengthRestriction restriction]
+@init {
+	$restriction = null;
+}:
 	r = pr_StringLength { $restriction = $r.restriction; }
 ;
 
@@ -2203,7 +2347,10 @@ pr_IfPresentMatch:
 	IFPRESENT
 ;
 
-pr_Range returns[ValueRange valueRange = null]:
+pr_Range returns[ValueRange valueRange]
+@init {
+	$valueRange = null;
+}:
 (	col = pr_LParen
 	min = pr_LowerBound
 	RANGEOP
@@ -2214,20 +2361,30 @@ pr_Range returns[ValueRange valueRange = null]:
 	$valueRange = new ValueRange($min.value, $max.value);
 };
 
-pr_LowerBound returns[Value value = null]:
+pr_LowerBound returns[Value value]
+@init {
+	$value = null;
+}:
 	v = pr_SingleExpression { $value = $v.value; }
 ;
 
-pr_UpperBound returns[Value value = null]:
+pr_UpperBound returns[Value value]
+@init {
+	$value = null;
+}:
 	v = pr_SingleExpression { $value = $v.value; }
 ;
 
-pr_TemplateInstance returns[TemplateInstance templateInstance = null]:
+pr_TemplateInstance returns[TemplateInstance templateInstance]
+@init {
+	$templateInstance = null;
+}:
 	t = pr_InLineTemplate { $templateInstance = $t.templateInstance; }
 ;
 
-pr_TemplateRefWithParList returns[Reference reference = null]
+pr_TemplateRefWithParList returns[Reference reference]
 @init {
+	$reference = null;
 	ParsedActualParameters parameters = null;
 }:
 (	(	r = pr_GlobalModuleId { $reference = $r.reference; }
@@ -2250,7 +2407,10 @@ pr_TemplateRefWithParList returns[Reference reference = null]
 	$reference.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_TemplateRef returns[Reference reference = null]:
+pr_TemplateRef returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	(	r = pr_GlobalModuleId { $reference = $r.reference; }
 		pr_Dot
 	)?
@@ -2264,8 +2424,9 @@ pr_TemplateRef returns[Reference reference = null]:
 	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
-pr_InLineTemplate returns[TemplateInstance templateInstance = null]
+pr_InLineTemplate returns[TemplateInstance templateInstance]
 @init {
+	$templateInstance = null;
 	Type type = null;
 	Reference derived = null;
 }:
@@ -2285,7 +2446,10 @@ pr_InLineTemplate returns[TemplateInstance templateInstance = null]
 	}
 };
 
-pr_DerivedRefWithParList returns[Reference reference = null]:
+pr_DerivedRefWithParList returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	pr_ModifiesKeyword
 	r = pr_TemplateRefWithParList { $reference = $r.reference; }
 );
@@ -2305,7 +2469,10 @@ pr_TemplateActualParList returns [ParsedActualParameters parsedParameters]
 	$parsedParameters.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_TemplateActualPar returns[TemplateInstance instance = null]:
+pr_TemplateActualPar returns[TemplateInstance instance]
+@init {
+	$instance = null;
+}:
 (	pr_NotUsedSymbol
 	{
 		TTCN3Template template = new NotUsed_Template();
@@ -2316,13 +2483,19 @@ pr_TemplateActualPar returns[TemplateInstance instance = null]:
 |	t = pr_TemplateInstance { $instance = $t.templateInstance; }
 );
 
-pr_TemplateOps returns[Value value = null]:
+pr_TemplateOps returns[Value value]
+@init {
+	$value = null;
+}:
 
 (	v = pr_MatchOp { $value = $v.value; }
 |	v2 = pr_ValueofOp { $value = $v2.value; }
 );
 
-pr_MatchOp returns[MatchExpression value = null]:
+pr_MatchOp returns[MatchExpression value]
+@init {
+	$value = null;
+}:
 (	col = pr_MatchKeyword
 	pr_LParen
 	v = pr_Expression
@@ -2339,7 +2512,10 @@ pr_MatchKeyword:
 	MATCH
 ;
 
-pr_ValueofOp returns[ValueofExpression value = null]:
+pr_ValueofOp returns[ValueofExpression value]
+@init {
+	$value = null;
+}:
 (	col = pr_ValueofKeyword
 	pr_LParen
 	t = pr_TemplateInstance
@@ -2356,8 +2532,9 @@ pr_ValueofKeyword returns[String stringValue]:
 	$stringValue = $VALUEOF.getText();
 };
 
-pr_FunctionDef returns[Def_Function def_func = null]
+pr_FunctionDef returns[Def_Function def_func]
 @init {
+	$def_func = null;
 	FormalParameterList parameters = null;
 	StatementBlock statementBlock = null;
 	Configuration_Helper runsonHelper = new Configuration_Helper();
@@ -2401,8 +2578,9 @@ pr_FunctionKeyword:
 	FUNCTION
 ;
 
-pr_FunctionFormalParList returns[FormalParameterList parList = null]
+pr_FunctionFormalParList returns[FormalParameterList parList]
 @init {
+	$parList = null;
 	List<FormalParameter> parameters = new ArrayList<FormalParameter>();
 }:
 (	p = pr_FunctionFormalPar { if($p.parameter != null) { parameters.add($p.parameter); }}
@@ -2414,7 +2592,10 @@ pr_FunctionFormalParList returns[FormalParameterList parList = null]
 	$parList = new FormalParameterList(parameters);
 };
 
-pr_FunctionFormalPar returns[FormalParameter parameter = null]:
+pr_FunctionFormalPar returns[FormalParameter parameter]
+@init {
+	$parameter = null;
+}:
 (	p1 = pr_FormalTimerPar { $parameter = $p1.parameter; }
 |	p2 = pr_FormalTemplatePar { $parameter = $p2.parameter; }
 |	p3 = pr_FormalValuePar { $parameter = $p3.parameter; }
@@ -2514,7 +2695,10 @@ pr_FunctionLocalDef returns[List<Definition> definitions = null]:
 		}
 );
 
-pr_FunctionStatement returns[Statement statement = null]:
+pr_FunctionStatement returns[Statement statement]
+@init {
+	$statement = null;
+}:
 ( s1 = pr_BehaviourStatements		{ $statement = $s1.statement; }
 | s2 = pr_TimerStatements			{ $statement = $s2.statement; }
 | s3 = pr_ConfigurationStatements	{ $statement = $s3.statement; }
@@ -2525,8 +2709,9 @@ pr_FunctionStatement returns[Statement statement = null]:
 | s8 = pr_TestcaseStopStatement		{ $statement = $s8.statement; }
 );
 
-pr_TestcaseStopStatement returns[TestcaseStop_Statement statement = null]
+pr_TestcaseStopStatement returns[TestcaseStop_Statement statement]
 @init {
+	$statement = null;
 	LogArguments logArguments = null;
 }:
 (	TESTCASE DOT STOP
@@ -2540,8 +2725,9 @@ pr_TestcaseStopStatement returns[TestcaseStop_Statement statement = null]
 	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_FunctionInstance returns[Reference temporalReference = null]
+pr_FunctionInstance returns[Reference temporalReference]
 @init {
+	$temporalReference = null;
 	ParsedActualParameters parameters = null;
 }:
 (	t = pr_FunctionRef { $temporalReference = $t.reference; }
@@ -2563,7 +2749,10 @@ pr_FunctionInstance returns[Reference temporalReference = null]
 	}
 };
 
-pr_FunctionRef returns[Reference reference = null]:
+pr_FunctionRef returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	i1 = pr_Identifier
 	(	DOT
 		pr_ObjectIdentifierValue
@@ -2604,7 +2793,10 @@ pr_FunctionActualParList returns [ParsedActualParameters parsedParameters]
 );
 
 pr_FunctionActualorNamedPar [boolean isStillUnnamed, ParsedActualParameters parsedParameters]
-	returns [boolean isUnnamed = true]:
+	returns [boolean isUnnamed]
+@init {
+	$isUnnamed = true;
+}:
 (		i = pr_Identifier
 		pr_AssignmentChar
 		ins = pr_FunctionActualPar
@@ -2621,7 +2813,10 @@ pr_FunctionActualorNamedPar [boolean isStillUnnamed, ParsedActualParameters pars
 	}
 );
 
-pr_FunctionActualPar returns[TemplateInstance instance = null]:
+pr_FunctionActualPar returns[TemplateInstance instance]
+@init {
+	$instance = null;
+}:
 (	n = pr_NotUsedSymbol
 		{	TTCN3Template template = new NotUsed_Template();
 			template.setLocation(getLocation( $n.start, $n.stop));
@@ -2651,7 +2846,10 @@ pr_ApplyKeyword:
 	APPLY
 ;
 
-pr_DereferOp returns[Value value = null]:
+pr_DereferOp returns[Value value]
+@init {
+	$value = null;
+}:
 (	pr_DerefersKeyword
 	pr_LParen
 	v = pr_Expression { $value = $v.value; }
@@ -2662,8 +2860,9 @@ pr_DerefersKeyword:
 	DEREFERS
 ;
 
-pr_SignatureDef returns[ Def_Type def_type = null]
+pr_SignatureDef returns[ Def_Type def_type]
 @init {
+	$def_type = null;
 	SignatureFormalParameterList parameters = null;
 	Type returnType = null;
 	boolean no_block = false;
@@ -2702,8 +2901,9 @@ pr_SignatureKeyword:
 	SIGNATURE
 ;
 
-pr_SignatureFormalParList returns[SignatureFormalParameterList parList = null]
+pr_SignatureFormalParList returns[SignatureFormalParameterList parList]
 @init {
+	$parList = null;
 	SignatureFormalParameter parameter = null;
 	List<SignatureFormalParameter> parameters = new ArrayList<SignatureFormalParameter>();
 }:
@@ -2716,8 +2916,9 @@ pr_SignatureFormalParList returns[SignatureFormalParameterList parList = null]
 	$parList = new SignatureFormalParameterList(parameters);
 };
 
-pr_SignatureFormalPar returns[SignatureFormalParameter parameter = null]
+pr_SignatureFormalPar returns[SignatureFormalParameter parameter]
 @init {
+	$parameter = null;
 	Token startcol = null;
 	int parameterType = SignatureFormalParameter.PARAM_IN;
 }:
@@ -2733,7 +2934,10 @@ pr_SignatureFormalPar returns[SignatureFormalParameter parameter = null]
 	$parameter.setLocation(getLocation( startcol, $i.stop));
 };
 
-pr_ExceptionSpec returns[SignatureExceptions exceptions = null]:
+pr_ExceptionSpec returns[SignatureExceptions exceptions]
+@init {
+	$exceptions = null;
+}:
 (	col = pr_ExceptionKeyword
 	pr_LParen
 	t = pr_ExceptionTypeList
@@ -2762,7 +2966,10 @@ pr_NoBlockKeyword:
 	NOBLOCK
 ;
 
-pr_Signature returns[Reference reference = null]:
+pr_Signature returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	(	r = pr_GlobalModuleId { $reference = $r.reference; }
 		pr_Dot
 	)?
@@ -2778,8 +2985,9 @@ pr_Signature returns[Reference reference = null]:
 	$reference.setLocation(getLocation( $start, $id.stop));
 };
 
-pr_TestcaseDef returns[ Def_Testcase def_testcase = null]
+pr_TestcaseDef returns[ Def_Testcase def_testcase]
 @init {
+	$def_testcase = null;
 	FormalParameterList parameters = null;
 	Configuration_Helper helper = null;
 	Reference runsonReference = null;
@@ -2813,8 +3021,9 @@ pr_TestcaseKeyword:
 	TESTCASE
 ;
 
-pr_TestcaseFormalParList returns[TestcaseFormalParameterList parList = null]
+pr_TestcaseFormalParList returns[TestcaseFormalParameterList parList]
 @init {
+	$parList = null;
 	List<FormalParameter> parameters = new ArrayList<FormalParameter>();
 }:
 (	p = pr_TestcaseFormalPar { if( $p.parameter != null ) { parameters.add( $p.parameter ); } }
@@ -2826,7 +3035,10 @@ pr_TestcaseFormalParList returns[TestcaseFormalParameterList parList = null]
 	$parList = new TestcaseFormalParameterList( parameters );
 };
 
-pr_TestcaseFormalPar returns[FormalParameter parameter = null]:
+pr_TestcaseFormalPar returns[FormalParameter parameter]
+@init {
+	$parameter = null;
+}:
 (	p = pr_FormalTemplatePar { $parameter = $p.parameter; }
 |	p2 = pr_FormalValuePar { $parameter = $p2.parameter; }
 );
@@ -2852,8 +3064,9 @@ pr_SystemKeyword:
 	SYSTEM
 ;
 
-pr_TestcaseInstanceOp returns[Value value = null]
+pr_TestcaseInstanceOp returns[Value value]
 @init {
+	$value = null;
 	Value dereferredValue = null;
 	boolean isDereferred = false;
 	Reference temporalReference = null;
@@ -2894,8 +3107,9 @@ pr_TestcaseInstanceOp returns[Value value = null]
 
 };
 
-pr_TestcaseInstanceStatement returns[Statement statement = null]
+pr_TestcaseInstanceStatement returns[Statement statement]
 @init {
+	$statement = null;
 	Value dereferredValue = null;
 	boolean isDereferred = false;
 	Reference temporalReference = null;
@@ -2948,7 +3162,10 @@ pr_TestcaseActualParList returns [ParsedActualParameters parsedParameters]
 );
 
 pr_TestcaseActualorNamedPar [boolean isStillUnnamed, ParsedActualParameters parsedParameters]
-	returns [boolean isUnnamed = true]:
+	returns [boolean isUnnamed]
+@init {
+	$isUnnamed = true;
+}:
 (	id = pr_Identifier
 	pr_AssignmentChar
 	ins = pr_TestcaseActualPar
@@ -2965,7 +3182,10 @@ pr_TestcaseActualorNamedPar [boolean isStillUnnamed, ParsedActualParameters pars
 		}
 );
 
-pr_TestcaseActualPar returns[TemplateInstance instance = null]:
+pr_TestcaseActualPar returns[TemplateInstance instance]
+@init {
+	$instance = null;
+}:
 (	n = pr_NotUsedSymbol
 		{
 			TTCN3Template template = new NotUsed_Template();
@@ -2976,8 +3196,9 @@ pr_TestcaseActualPar returns[TemplateInstance instance = null]:
 |	i = pr_TemplateInstance { $instance = $i.templateInstance; }
 );
 
-pr_AltstepDef returns[ Def_Altstep  def_altstep = null]
+pr_AltstepDef returns[ Def_Altstep  def_altstep]
 @init {
+	$def_altstep = null;
 	FormalParameterList parameters = null;
 	Configuration_Helper runsonHelper = new Configuration_Helper();
 	AltGuards altGuards = null;
@@ -3044,7 +3265,10 @@ pr_AltstepLocalDef returns[ List<Definition> definitions = null]:
 	}
 };
 
-pr_AltstepInstance returns[Reference temporalReference = null]:
+pr_AltstepInstance returns[Reference temporalReference]
+@init {
+	$temporalReference = null;
+}:
 (	t = pr_FunctionInstance { $temporalReference = $t.temporalReference; }
 );
 
@@ -3220,7 +3444,10 @@ pr_AllModuleParWithExcept:
 	pr_AllKeyword (pr_ExceptKeyword pr_ModuleParRefList)?
 ;
 
-pr_ImportFromSpec returns [ImportModule impmod = null]:
+pr_ImportFromSpec returns [ImportModule impmod]
+@init {
+	$impmod = null;
+}:
 (	pr_FromKeyword
 	i = pr_ImportModuleId { $impmod = $i.impmod; }
 	pr_RecursiveKeyword?
@@ -3232,7 +3459,10 @@ pr_RecursiveKeyword:
 	reportWarning( "Recursive importation is deprecated and may be fully removed in a future edition of the TTCN-3 standard", $RECURSIVE );
 };
 
-pr_ImportModuleId returns [ImportModule impmod = null]:
+pr_ImportModuleId returns [ImportModule impmod]
+@init {
+	$impmod = null;
+}:
 (	i = pr_ImportGlobalModuleId { $impmod = new ImportModule($i.identifier); }
 	pr_LanguageSpec?
 );
@@ -3248,7 +3478,10 @@ pr_LanguageSpec:
 	pr_FreeText
 );
 
-pr_ImportGlobalModuleId returns [Identifier identifier = null]:
+pr_ImportGlobalModuleId returns [Identifier identifier]
+@init {
+	$identifier = null;
+}:
 (	i = pr_Identifier
 	(	DOT
 		pr_ObjectIdentifierValue
@@ -3259,8 +3492,10 @@ pr_ImportGlobalModuleId returns [Identifier identifier = null]:
 	}
 };
 
-pr_GlobalModuleId returns [Reference reference = null]
-:
+pr_GlobalModuleId returns [Reference reference]
+@init {
+	$reference = null;
+}:
 (	i = pr_Identifier
 	(		DOT
 			pr_ObjectIdentifierValue
@@ -3303,7 +3538,10 @@ pr_AllGroupsWithExcept:
 	)?
 ;
 
-pr_FullGroupIdentifier returns [Qualifier qualifier = null]:
+pr_FullGroupIdentifier returns [Qualifier qualifier]
+@init {
+	$qualifier = null;
+}:
 	i = pr_Identifier { $qualifier = new Qualifier(new FieldSubReference($i.identifier)); }
 	(	pr_Dot
 		i = pr_Identifier  { $qualifier.addSubReference(new FieldSubReference($i.identifier)); }
@@ -3509,7 +3747,10 @@ pr_GroupDef[Group parent_group]
 	}
 };
 
-pr_GroupIdentifier returns [ Identifier identifier = null]:
+pr_GroupIdentifier returns [ Identifier identifier]
+@init {
+	$identifier = null;
+}:
 (	pr_GroupKeyword
 	i = pr_Identifier { $identifier = $i.identifier; }
 );
@@ -3518,7 +3759,10 @@ pr_GroupKeyword:
 	GROUP
 ;
 
-pr_Visibility returns[VisibilityModifier modifier = VisibilityModifier.Public]:
+pr_Visibility returns[VisibilityModifier modifier]
+@init {
+	$modifier = VisibilityModifier.Public;
+}:
 (	PUBLIC	{$modifier = VisibilityModifier.Public;}
 |	PRIVATE	{$modifier = VisibilityModifier.Private;}
 |	FRIEND	{$modifier = VisibilityModifier.Friend;}
@@ -3553,8 +3797,9 @@ pr_FriendModuleDef[Group parent_group]
 	}
 };
 
-pr_ExtFunctionDef returns [Def_Extfunction def_extfunction = null]
+pr_ExtFunctionDef returns [Def_Extfunction def_extfunction]
 @init {
+	$def_extfunction = null;
 	FormalParameterList parameters = null;
 	Type returnType = null;
 	boolean returnsTemplate = false;
@@ -3742,8 +3987,9 @@ pr_TemplateModuleParList [Type type]
 	)*
 ;
 
-pr_ModuleControlPart returns [ControlPart controlpart = null]
+pr_ModuleControlPart returns [ControlPart controlpart]
 @init {
+	$controlpart = null;
 	Token endcol = null;
 	StatementBlock statementblock = null;
 	MultipleWithAttributes attributes = null;
@@ -3774,7 +4020,10 @@ pr_ControlKeyword:
 	CONTROL
 ;
 
-pr_ModuleControlBody returns [StatementBlock block = null]:
+pr_ModuleControlBody returns [StatementBlock block]
+@init {
+	$block = null;
+}:
 	( b = pr_ControlStatementOrDefList { $block = $b.statementblock; } )?
 {
 	if ( $block == null ) { $block = new StatementBlock(); }
@@ -3826,7 +4075,10 @@ pr_ControlStatementOrDef returns [List<Statement> statements]
 	}
 };
 
-pr_ControlStatement returns[Statement statement = null]:
+pr_ControlStatement returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	s1 = pr_BasicStatements { $statement = $s1.statement; }
 |	s2 = pr_SUTStatements { $statement = $s2.statement; }
 |	s3 = pr_TimerStatements { $statement = $s3.statement; }
@@ -3904,8 +4156,9 @@ pr_VarList[List<Definition> definitions, Type type]:
 	)*
 );
 
-pr_SingleVarInstance[Type type] returns[Def_Var definition = null]
+pr_SingleVarInstance[Type type] returns[Def_Var definition]
 @init {
+	$definition = null;
 	Value value = null;
 	ArrayDimensions dimensions = null;
 }:
@@ -3929,7 +4182,10 @@ pr_SingleVarInstance[Type type] returns[Def_Var definition = null]
 	}
 };
 
-pr_VarInitialValue returns[Value value = null]:
+pr_VarInitialValue returns[Value value]
+@init {
+	$value = null;
+}:
 	v = pr_Expression { $value = $v.value; }
 ;
 
@@ -3937,8 +4193,9 @@ pr_VarKeyword:
 	VAR
 ;
 
-pr_VariableRef returns[Reference reference = null]
+pr_VariableRef returns[Reference reference]
 @init {
+	$reference = null;
 	List<ISubReference> subReferences = null;
 }:
 (	r = pr_ValueReference { $reference = $r.reference; }
@@ -3978,8 +4235,9 @@ pr_TimerList returns[List<Definition> definitions]
 	)*
 );
 
-pr_SingleTimerInstance returns[Def_Timer def_timer = null]
+pr_SingleTimerInstance returns[Def_Timer def_timer]
 @init {
+	$def_timer = null;
 	ArrayDimensions dimensions = null;
 	Value value = null;
 }:
@@ -4000,16 +4258,23 @@ pr_TimerKeyword:
 	TIMER
 ;
 
-pr_TimerValue returns[Value value = null]:
+pr_TimerValue returns[Value value]
+@init {
+	$value = null;
+}:
 	v = pr_Expression { $value = $v.value; }
 ;
 
-pr_TimerRef returns[Reference reference = null]:
+pr_TimerRef returns[Reference reference]
+@init {
+	$reference = null;
+}:
 	r = pr_VariableRef { $reference = $r.reference; }
 ;
 
-pr_ConfigurationStatements returns[Statement statement = null]
+pr_ConfigurationStatements returns[Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance doneMatch = null;
 	Reference reference = null;
 }:
@@ -4044,15 +4309,19 @@ pr_ConfigurationStatements returns[Statement statement = null]
 |	s7 = pr_StartTCStatement	{ $statement = $s7.statement; }
 );
 
-pr_ConfigurationOps returns[Value value = null]:
+pr_ConfigurationOps returns[Value value]
+@init {
+	$value = null;
+}:
 (	v1 = pr_SelfOp { $value = $v1.value; }
 |	v2 = pr_SystemOp { $value = $v2.value; }
 |	v3 = pr_MTCOp { $value = $v3.value; }
 );
 
 pr_CreateOpEnd	[Reference temporalReference]
-	returns [ComponentCreateExpression value = null]
+	returns [ComponentCreateExpression value]
 @init {
+	$value = null;
 	Token endcol = null;
 	Value name = null;
 	Value location = null;
@@ -4078,29 +4347,39 @@ pr_CreateOpEnd	[Reference temporalReference]
 	$value.setLocation( getLocation( $temporalReference.getLocation(), endcol ) );
 };
 
-pr_SystemOp returns[SystemComponentExpression value = null]:
+pr_SystemOp returns[SystemComponentExpression value]
+@init {
+	$value = null;
+}:
 	SYSTEM
 {
 	$value = new SystemComponentExpression();
 	$value.setLocation(getLocation( $SYSTEM));
 };
 
-pr_SelfOp returns[SelfComponentExpression value = null]:
+pr_SelfOp returns[SelfComponentExpression value]
+@init {
+	$value = null;
+}:
 	SELF
 {
 	$value = new SelfComponentExpression();
 	$value.setLocation(getLocation( $SELF));
 };
 
-pr_MTCOp returns[MTCComponentExpression value = null]:
+pr_MTCOp returns[MTCComponentExpression value]
+@init {
+	$value = null;
+}:
 	MTC
 {
 	$value = new MTCComponentExpression();
 	$value.setLocation(getLocation( $MTC));
 };
 
-pr_KillTCStatement returns[Kill_Statement statement = null]
+pr_KillTCStatement returns[Kill_Statement statement]
 @init {
+	$statement = null;
 	Value value = null;
 }:
 (	(	(	v = pr_ComponentReferenceOrLiteral { value = $v.value; }
@@ -4123,7 +4402,10 @@ pr_KillKeyword:
 	KILL
 ;
 
-pr_ComponentId returns[Value value = null]:
+pr_ComponentId returns[Value value]
+@init {
+	$value = null;
+}:
 (	(	pr_AnyKeyword
 	|	pr_AllKeyword
 	)
@@ -4131,7 +4413,10 @@ pr_ComponentId returns[Value value = null]:
 |	v = pr_ComponentOrDefaultReference { $value = $v.value; }
 );
 
-pr_ComponentOrDefaultReference returns[Value value = null]:
+pr_ComponentOrDefaultReference returns[Value value]
+@init {
+	$value = null;
+}:
 (	(	r = pr_FunctionInstance
 			{	$value = new Referenced_Value( $r.temporalReference );
 				$value.setLocation( getLocation( $r.start, $r.stop ) );
@@ -4162,7 +4447,10 @@ pr_CreateKeyword:
 	CREATE
 ;
 
-pr_ConnectStatement returns[Connect_Statement statement = null]:
+pr_ConnectStatement returns[Connect_Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = pr_ConnectKeyword
 	h = pr_SingleConnectionSpec
 )
@@ -4174,7 +4462,10 @@ pr_ConnectStatement returns[Connect_Statement statement = null]:
 	}
 };
 
-pr_SingleConnectionSpec returns[Connection_Helper helper = null]:
+pr_SingleConnectionSpec returns[Connection_Helper helper]
+@init {
+	$helper = null;
+}:
 (	pr_LParen
 	h1 = pr_PortRef
 	pr_Comma
@@ -4191,7 +4482,10 @@ pr_ConnectKeyword:
 	CONNECT
 ;
 
-pr_PortRef returns[PortReference_Helper helper = null]:
+pr_PortRef returns[PortReference_Helper helper]
+@init {
+	$helper = null;
+}:
 (	c = pr_ComponentRef
 	pr_Colon
 	p = pr_Port
@@ -4202,15 +4496,19 @@ pr_PortRef returns[PortReference_Helper helper = null]:
 	}
 };
 
-pr_ComponentRef returns[Value value = null]:
+pr_ComponentRef returns[Value value]
+@init {
+	$value = null;
+}:
 (	v1 = pr_ComponentOrDefaultReference { $value = $v1.value; }
 |	v2 = pr_SystemOp { $value = $v2.value; }
 |	v3 = pr_SelfOp { $value = $v3.value; }
 |	v4 = pr_MTCOp { $value = $v4.value; }
 );
 
-pr_DisconnectStatement returns[Disconnect_Statement statement = null]
+pr_DisconnectStatement returns[Disconnect_Statement statement]
 @init {
+	$statement = null;
 	Connection_Helper helper = null;
 }:
 (	col = pr_DisconnectKeyword
@@ -4233,14 +4531,20 @@ pr_DisconnectKeyword:
 	DISCONNECT
 ;
 
-pr_SingleOrMultiConnectionSpec returns[Connection_Helper helper = null]:
+pr_SingleOrMultiConnectionSpec returns[Connection_Helper helper]
+@init {
+	$helper = null;
+}:
 (	h1 = pr_SingleConnectionSpec { $helper = $h1.helper; }
 |	h2 = pr_AllConnectionsSpec { $helper = $h2.helper; }
 |	h3 = pr_AllPortsSpec { $helper = $h3.helper; }
 |	h4 = pr_AllCompsAllPortsSpec { $helper = $h4.helper; }
 );
 
-pr_AllConnectionsSpec returns[Connection_Helper helper = null]:
+pr_AllConnectionsSpec returns[Connection_Helper helper]
+@init {
+	$helper = null;
+}:
 (	pr_LParen
 	h = pr_PortRef
 	pr_RParen
@@ -4249,7 +4553,10 @@ pr_AllConnectionsSpec returns[Connection_Helper helper = null]:
 	$helper = new Connection_Helper($h.helper, new PortReference_Helper(null, null));
 };
 
-pr_AllPortsSpec returns[Connection_Helper helper = null]:
+pr_AllPortsSpec returns[Connection_Helper helper]
+@init {
+	$helper = null;
+}:
 (	pr_LParen
 	v = pr_ComponentRef
 	pr_Colon
@@ -4261,7 +4568,10 @@ pr_AllPortsSpec returns[Connection_Helper helper = null]:
 	$helper = new Connection_Helper( new PortReference_Helper($v.value, null), new PortReference_Helper(null, null));
 };
 
-pr_AllCompsAllPortsSpec returns[Connection_Helper helper = null]:
+pr_AllCompsAllPortsSpec returns[Connection_Helper helper]
+@init {
+	$helper = null;
+}:
 (	pr_LParen
 	pr_AllKeyword
 	pr_ComponentKeyword
@@ -4274,7 +4584,10 @@ pr_AllCompsAllPortsSpec returns[Connection_Helper helper = null]:
 	$helper = new Connection_Helper( new PortReference_Helper(null, null), new PortReference_Helper(null, null));
 };
 
-pr_MapStatement returns[Map_Statement statement = null]:
+pr_MapStatement returns[Map_Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = pr_MapKeyword
 	h = pr_SingleConnectionSpec
 )
@@ -4290,8 +4603,9 @@ pr_MapKeyword:
 	MAP
 ;
 
-pr_UnmapStatement returns[Unmap_Statement statement = null]
+pr_UnmapStatement returns[Unmap_Statement statement]
 @init {
+	$statement = null;
 	Connection_Helper helper = null;
 }:
 (	col = pr_UnmapKeyword
@@ -4314,8 +4628,9 @@ pr_UnmapKeyword:
 	UNMAP
 ;
 
-pr_StartTCStatement returns[Statement statement = null]
+pr_StartTCStatement returns[Statement statement]
 @init {
+	$statement = null;
 	Value component = null;
 	Value dereferredValue = null;
 	Reference functionref = null;
@@ -4348,8 +4663,9 @@ pr_StartTCStatement returns[Statement statement = null]
 	}
 };
 
-pr_StopTCStatement returns[Statement statement = null]
+pr_StopTCStatement returns[Statement statement]
 @init {
+	$statement = null;
 	Value componentRef = null;
 	boolean all_component = false;
 }:
@@ -4370,17 +4686,26 @@ pr_StopTCStatement returns[Statement statement = null]
 	}
 };
 
-pr_ComponentReferenceOrLiteral returns[Value value = null]://addtest
+pr_ComponentReferenceOrLiteral returns[Value value]
+@init {
+	$value = null;
+}://addtest
 (	v1 = pr_ComponentOrDefaultReference { $value = $v1.value; }
 |	v2 = pr_MTCOp { $value = $v2.value; }
 |	v3 = pr_SelfOp { $value = $v3.value; }
 );
 
-pr_Port returns[Reference reference = null]:
+pr_Port returns[Reference reference]
+@init {
+	$reference = null;
+}:
 	r = pr_VariableRef { $reference = $r.reference; }
 ;
 
-pr_CommunicationStatements returns[Statement statement = null]:
+pr_CommunicationStatements returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	(	r = pr_Port
 		pr_Dot
 		(	s1 = pr_PortSendOp[$r.reference]				{ $statement = $s1.statement; }	//pr_SendStatement
@@ -4427,8 +4752,9 @@ pr_CommunicationStatements returns[Statement statement = null]:
 };
 
 pr_PortSendOp [Reference reference]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance parameter = null;
 	IValue toClause = null;
 }:
@@ -4446,11 +4772,17 @@ pr_SendOpKeyword:
 	SEND
 ;
 
-pr_SendParameter returns[TemplateInstance templateInstance = null]:
+pr_SendParameter returns[TemplateInstance templateInstance]
+@init {
+	$templateInstance = null;
+}:
 	t = pr_TemplateInstance { $templateInstance = $t.templateInstance; }
 ;
 
-pr_ToClause returns[IValue value = null]:
+pr_ToClause returns[IValue value]
+@init {
+	$value = null;
+}:
 (	a = pr_ToKeyword
 	(	b = pr_AddressRef
 			{	TemplateInstance templateInstance = $b.templateInstance;
@@ -4474,13 +4806,17 @@ pr_ToKeyword:
 	TO
 ;
 
-pr_AddressRef returns[TemplateInstance templateInstance = null]:
+pr_AddressRef returns[TemplateInstance templateInstance]
+@init {
+	$templateInstance = null;
+}:
 (	t = pr_TemplateInstance { $templateInstance = $t.templateInstance; }
 );
 
 pr_PortCallOp [Reference reference]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	AltGuards altGuards = null;
 	Value timerValue = null;
 	boolean noWait = false;
@@ -4520,8 +4856,9 @@ pr_CallBodyStatementList returns[AltGuards altGuards]
 (	( a = pr_CallBodyStatement { $altGuards.addAltGuard($a.altGuard); } )+
 );
 
-pr_CallBodyStatement returns[AltGuard altGuard = null]
+pr_CallBodyStatement returns[AltGuard altGuard]
 @init {
+	$altGuard = null;
 	StatementBlock statementBlock = null;
 }:
 (	v = pr_AltGuardChar
@@ -4537,7 +4874,10 @@ pr_CallBodyStatement returns[AltGuard altGuard = null]
 	$altGuard.setLocation(getLocation( $v.start, getStopToken()));
 };
 
-pr_CallBodyOps returns[Statement statement = null]:
+pr_CallBodyOps returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	r = pr_PortOrAny
 	pr_Dot
 	(	s = pr_PortGetReplyOp[$r.reference, false] { $statement = $s.statement; } //pr_GetReplyStatement
@@ -4546,8 +4886,9 @@ pr_CallBodyOps returns[Statement statement = null]:
 );
 
 pr_PortReplyOp [Reference reference]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	IValue toClause = null;
 	Value replyValue = null;
 }:
@@ -4568,14 +4909,18 @@ pr_ReplyKeyword:
 	REPLY
 ;
 
-pr_ReplyValue returns[Value value = null]:
+pr_ReplyValue returns[Value value]
+@init {
+	$value = null;
+}:
 (	pr_ValueKeyword
 	v = pr_Expression { $value = $v.value; }
 );
 
 pr_PortRaiseOp [Reference reference]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	IValue toClause = null;
 }:
 (	pr_RaiseKeyword
@@ -4595,15 +4940,19 @@ pr_RaiseKeyword:
 	RAISE
 ;
 
-pr_PortOrAny returns[Reference reference = null ]:
+pr_PortOrAny returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	r = pr_Port { $reference = $r.reference; }
 |	pr_AnyKeyword
 	pr_PortKeyword
 );
 
 pr_PortReceiveOp [Reference reference, boolean is_check]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance parameter = null;
 	TemplateInstance from = null;
 	PortRedirect_Helper helper = null;
@@ -4637,7 +4986,10 @@ pr_ReceiveOpKeyword:
 	RECEIVE
 ;
 
-pr_FromClause returns[TemplateInstance templateInstance = null]:
+pr_FromClause returns[TemplateInstance templateInstance]
+@init {
+	$templateInstance = null;
+}:
 (	pr_FromKeyword
 	t = pr_AddressRef { $templateInstance = $t.templateInstance; }
 );
@@ -4646,8 +4998,9 @@ pr_FromKeyword:
 	FROM
 ;
 
-pr_PortRedirect returns[PortRedirect_Helper helper = null]
+pr_PortRedirect returns[PortRedirect_Helper helper]
 @init {
+	$helper = null;
 	Reference value = null;
 	Reference sender = null;
 }:
@@ -4665,7 +5018,10 @@ pr_PortRedirectSymbol:
 	PORTREDIRECTSYMBOL
 ;
 
-pr_ValueSpec returns[Reference reference = null]:
+pr_ValueSpec returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	pr_ValueKeyword
 	r = pr_VariableRef { $reference = $r.reference; }
 );
@@ -4676,7 +5032,10 @@ pr_ValueKeyword returns[String stringValue]:
 	$stringValue = $VALUE.getText();
 };
 
-pr_SenderSpec returns[Reference reference = null]:
+pr_SenderSpec returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	pr_SenderKeyword
 	r = pr_VariableRef { $reference = $r.reference; }
 );
@@ -4686,8 +5045,9 @@ pr_SenderKeyword:
 ;
 
 pr_PortTriggerOp [Reference reference]
-	returns[Trigger_Port_Statement statement = null]
+	returns[Trigger_Port_Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance parameter = null;
 	TemplateInstance from = null;
 	PortRedirect_Helper helper = null;
@@ -4710,8 +5070,9 @@ pr_PortTriggerOp [Reference reference]
 };
 
 pr_PortGetCallOp [Reference reference, boolean is_check]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance parameter = null;
 	TemplateInstance from = null;
 	Redirection_Helper helper = null;
@@ -4761,12 +5122,18 @@ pr_RedirectWithParamSpec returns[Redirection_Helper helper]
 	$helper.senderReference = sender_reference;
 };
 
-pr_ParamSpec returns[Parameter_Redirect redirect = null]:
+pr_ParamSpec returns[Parameter_Redirect redirect]
+@init {
+	$redirect = null;
+}:
 (	PARAM
 	r = pr_ParamAssignmentList { $redirect = $r.redirect; }
 );
 
-pr_ParamAssignmentList returns[Parameter_Redirect redirect = null]:
+pr_ParamAssignmentList returns[Parameter_Redirect redirect]
+@init {
+	$redirect = null;
+}:
 (	col = pr_LParen
 	(	assignments = pr_AssignmentList	{ $redirect = new AssignmentList_Parameter_Redirect($assignments.parameterAssignments); }
 	|	entries = pr_VariableList	{ $redirect = new VariableList_Parameter_Redirect($entries.entries); }
@@ -4779,7 +5146,10 @@ pr_ParamAssignmentList returns[Parameter_Redirect redirect = null]:
 	}
 };
 
-pr_AssignmentList returns[Parameter_Assignments parameterAssignments = null]:
+pr_AssignmentList returns[Parameter_Assignments parameterAssignments]
+@init {
+	$parameterAssignments = null;
+}:
 (	p = pr_VariableAssignment
 		{	$parameterAssignments = new Parameter_Assignments();
 			if( $p.param_assignment != null ) { $parameterAssignments.add( $p.param_assignment ); }
@@ -4790,7 +5160,10 @@ pr_AssignmentList returns[Parameter_Assignments parameterAssignments = null]:
 	)*
 );
 
-pr_VariableAssignment returns[Parameter_Assignment param_assignment = null]:
+pr_VariableAssignment returns[Parameter_Assignment param_assignment]
+@init {
+	$param_assignment = null;
+}:
 (	r = pr_VariableRef
 	pr_AssignmentChar
 	i = pr_Identifier
@@ -4800,13 +5173,17 @@ pr_VariableAssignment returns[Parameter_Assignment param_assignment = null]:
 	$param_assignment.setLocation(getLocation( $r.start, $i.stop));
 };
 
-pr_PortRedirectWithValueAndParam returns[Redirection_Helper helper = null]:
+pr_PortRedirectWithValueAndParam returns[Redirection_Helper helper]
+@init {
+	$helper = null;
+}:
 (	pr_PortRedirectSymbol
 	h = pr_RedirectWithValueAndParamSpec { $helper = $h.helper; }
 );
 
-pr_RedirectWithValueAndParamSpec returns[Redirection_Helper helper = null]
+pr_RedirectWithValueAndParamSpec returns[Redirection_Helper helper]
 @init {
+	$helper = null;
 	Parameter_Redirect redirect = null;
 	Reference sender = null;
 }:
@@ -4817,15 +5194,19 @@ pr_RedirectWithValueAndParamSpec returns[Redirection_Helper helper = null]
 |	h = pr_RedirectWithParamSpec	{ $helper = $h.helper;}
 );
 
-pr_VariableList returns[Variable_Entries entries = null]:
+pr_VariableList returns[Variable_Entries entries]
+@init {
+	$entries = null;
+}:
 (	e = pr_VariableEntry	{ $entries = new Variable_Entries(); if( $e.entry != null ) { $entries.add( $e.entry ); } }
 	(	pr_Comma
 		e = pr_VariableEntry	{ if ( $e.entry != null ) { $entries.add( $e.entry ); } }
 	)*
 );
 
-pr_VariableEntry returns[Variable_Entry entry = null]
+pr_VariableEntry returns[Variable_Entry entry]
 @init {
+	$entry = null;
 	Reference reference = null;
 }:
 (	r = pr_VariableRef { reference = $r.reference; }
@@ -4837,8 +5218,9 @@ pr_VariableEntry returns[Variable_Entry entry = null]
 };
 
 pr_PortGetReplyOp [Reference reference, boolean is_check]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance parameter = null;
 	TemplateInstance valueMatch = null;
 	TemplateInstance from = null;
@@ -4874,13 +5256,19 @@ pr_GetReplyOpKeyword:
 	GETREPLY
 ;
 
-pr_ValueMatchSpec returns[TemplateInstance templateInstance = null]:
+pr_ValueMatchSpec returns[TemplateInstance templateInstance]
+@init {
+	$templateInstance = null;
+}:
 (	pr_ValueKeyword
 	t = pr_TemplateInstance { $templateInstance = $t.templateInstance; }
 );
 
 pr_PortCheckOp [Reference reference]
-	returns[Statement statement = null]:
+	returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = pr_CheckOpKeyword
 	(	pr_LParen
 		s = pr_CheckParameter[reference] { $statement = $s.statement; }
@@ -4896,15 +5284,19 @@ pr_CheckOpKeyword:
 ;
 
 pr_CheckParameter [Reference reference]
-	returns[Statement statement = null]:
+	returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	s1 = pr_CheckPortOpsPresent[$reference] { $statement = $s1.statement;}
 |	s2 = pr_FromClausePresent[$reference] { $statement = $s2.statement;}
 |	s3 = pr_RedirectPresent[$reference] { $statement = $s3.statement;}
 );
 
 pr_FromClausePresent [Reference reference]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance fromClause = null;
 	Reference redirectSender = null;
 }:
@@ -4919,7 +5311,10 @@ pr_FromClausePresent [Reference reference]
 };
 
 pr_CheckPortOpsPresent [Reference reference]
-	returns[Statement statement = null]:
+	returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	s1 = pr_PortReceiveOp[$reference, true] { $statement = $s1.statement; }
 |	s2 = pr_PortGetCallOp[$reference, true] { $statement = $s2.statement; }
 |	s3 = pr_PortGetReplyOp[$reference, true] { $statement = $s3.statement; }
@@ -4932,7 +5327,10 @@ pr_CheckPortOpsPresent [Reference reference]
 };
 
 pr_RedirectPresent [Reference reference]
-	returns[Statement statement = null]:
+	returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = pr_PortRedirectSymbol
 	redirectSender = pr_SenderSpec
 )
@@ -4942,8 +5340,9 @@ pr_RedirectPresent [Reference reference]
 };
 
 pr_PortCatchOp [Reference reference, boolean is_check]
-	returns[Statement statement = null]
+	returns[Statement statement]
 @init {
+	$statement = null;
 	CatchOp_Helper catchopHelper = null;
 	TemplateInstance from = null;
 	PortRedirect_Helper redirectHelper = null;
@@ -4977,8 +5376,9 @@ pr_CatchOpKeyword:
 	CATCH
 ;
 
-pr_CatchOpParameter returns[CatchOp_Helper helper = null]
+pr_CatchOpParameter returns[CatchOp_Helper helper]
 @init {
+	$helper = null;
 	Reference signatureReference = null;
 	TemplateInstance parameter = null;
 	boolean timeout = false;
@@ -5006,8 +5406,9 @@ pr_AnyKeyword:
 	ANY
 ;
 
-pr_TimerStatements returns[Statement statement = null]
+pr_TimerStatements returns[Statement statement]
 @init {
+	$statement = null;
 	Value timerValue = null;
 	Value dereferredValue = null;
     ParsedActualParameters parameters = null;
@@ -5056,7 +5457,10 @@ pr_TimerStatements returns[Statement statement = null]
 	}
 };
 
-pr_TimerOps returns[AnyTimerRunningExpression value = null]:
+pr_TimerOps returns[AnyTimerRunningExpression value]
+@init {
+	$value = null;
+}:
 (	col = pr_AnyKeyword
 	pr_TimerKeyword
 	pr_Dot
@@ -5071,7 +5475,10 @@ pr_TimeoutKeyword:
 	TIMEOUT
 ;
 
-pr_Type returns[Type type = null]:
+pr_Type returns[Type type]
+@init {
+	$type = null;
+}:
 (	t1 = pr_PredefinedType { $type = $t1.type; }
 |	t2 = pr_ReferencedType { $type = $t2.type; }
 )
@@ -5081,7 +5488,10 @@ pr_Type returns[Type type = null]:
 	}
 };
 
-pr_PredefinedType returns[Type type = null]:
+pr_PredefinedType returns[Type type]
+@init {
+	$type = null;
+}:
 (	BITSTRING	{ $type = new BitString_Type(); }
 |	HEXSTRING	{ $type = new HexString_Type(); }
 |	OCTETSTRING	{ $type = new OctetString_Type(); }
@@ -5116,8 +5526,9 @@ pr_PredefinedType returns[Type type = null]:
 );
 
 // TODO: this is very different from TITAN, check why
-pr_ReferencedType returns[Type type = null]
+pr_ReferencedType returns[Type type]
 @init {
+	$type = null;
 	Reference reference = null;
 	List<ISubReference> subReferences = null;
 }:
@@ -5143,7 +5554,10 @@ pr_ReferencedType returns[Type type = null]
 	$type = new Referenced_Type(reference);
 };
 
-pr_TypeReference returns[ Identifier identifier = null]:
+pr_TypeReference returns[ Identifier identifier]
+@init {
+	$identifier = null;
+}:
 (	i = pr_Identifier { $identifier = $i.identifier; }
 	(	t = pr_TypeActualParList
 			{	reportUnsupportedConstruct( "Reference to parameterized type is not currently supported ", $t.start, $t.stop );	}
@@ -5173,7 +5587,10 @@ pr_ArrayDef returns[ArrayDimensions dimensions]
 	)+
 );
 
-pr_ArrayDefRange returns[RangedArrayDimension dimension = null]:
+pr_ArrayDefRange returns[RangedArrayDimension dimension]
+@init {
+	$dimension = null;
+}:
 (	lower_boundary = pr_SingleExpression
 	RANGEOP
 	upper_boundary = pr_SingleExpression
@@ -5183,19 +5600,28 @@ pr_ArrayDefRange returns[RangedArrayDimension dimension = null]:
 	$dimension.setLocation(getLocation( $lower_boundary.start, $upper_boundary.stop));
 };
 
-pr_ArrayBounds returns[SingleArrayDimension dimension = null]:
+pr_ArrayBounds returns[SingleArrayDimension dimension]
+@init {
+	$dimension = null;
+}:
 	v = pr_SingleExpression
 {
 	$dimension = new SingleArrayDimension($v.value);
 	$dimension.setLocation(getLocation( $v.start, $v.stop));
 };
 
-pr_Value returns[Value value = null]:
+pr_Value returns[Value value]
+@init {
+	$value = null;
+}:
 (	v1 = pr_PredefinedValue { $value = $v1.value; }
 |	v2 = pr_ReferencedValue { $value = $v2.value; }
 );
 
-pr_PredefinedValue returns [Value value = null]:
+pr_PredefinedValue returns [Value value]
+@init {
+	$value = null;
+}:
 (	h = pr_HexString	{	$value = new Hexstring_Value($h.string);
 							$value.setLocation(getLocation( $h.start, $h.stop)); }
 |	b = pr_BitString	{	$value = new Bitstring_Value($b.string);
@@ -5216,7 +5642,10 @@ pr_PredefinedValue returns [Value value = null]:
 |	v8 = pr_Macro { $value = $v8.value; }
 );
 
-pr_FloatValue returns[Real_Value value = null]:
+pr_FloatValue returns[Real_Value value]
+@init {
+	$value = null;
+}:
 (   FLOATVALUE		{ $value = new Real_Value( Float.parseFloat( $FLOATVALUE.getText() ) ); }
 |   INFINITY		{ $value = new Real_Value( Float.POSITIVE_INFINITY ); }
 |   NOT_A_NUMBER	{ $value = new Real_Value( Float.NaN ); }
@@ -5225,7 +5654,10 @@ pr_FloatValue returns[Real_Value value = null]:
 	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
-pr_BooleanValue returns[Boolean_Value value = null]:
+pr_BooleanValue returns[Boolean_Value value]
+@init {
+	$value = null;
+}:
 (	TRUE	{ $value = new Boolean_Value(true); }
 |	FALSE	{ $value = new Boolean_Value(false); }
 )
@@ -5233,7 +5665,10 @@ pr_BooleanValue returns[Boolean_Value value = null]:
 	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
-pr_VerdictTypeValue returns[Verdict_Value value = null]:
+pr_VerdictTypeValue returns[Verdict_Value value]
+@init {
+	$value = null;
+}:
 (	PASS	{ $value = new Verdict_Value( Verdict_Value.Verdict_type.PASS   ); }
 |	FAIL	{ $value = new Verdict_Value( Verdict_Value.Verdict_type.FAIL   ); }
 |	INCONC	{ $value = new Verdict_Value( Verdict_Value.Verdict_type.INCONC ); }
@@ -5244,7 +5679,10 @@ pr_VerdictTypeValue returns[Verdict_Value value = null]:
 	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
-pr_CharStringValue returns[Value value = null ]:
+pr_CharStringValue returns[Value value]
+@init {
+	$value = null;
+}:
 (	string_value = pr_FreeText
 		{	if(UniversalCharstring.isCharstring($string_value.string)) {
 				$value = new Charstring_Value($string_value.string);
@@ -5258,7 +5696,10 @@ pr_CharStringValue returns[Value value = null ]:
 	if($value != null) { $value.setLocation(getLocation( $start, getStopToken())); }
 };
 
-pr_Quadruple returns[UniversalCharstring string = null]:
+pr_Quadruple returns[UniversalCharstring string]
+@init {
+	$string = null;
+}:
 (	CHARKEYWORD
 	pr_LParen
 	group = NUMBER
@@ -5277,8 +5718,9 @@ pr_Quadruple returns[UniversalCharstring string = null]:
 															Integer.parseInt($cell.getText())	) );
 };
 
-pr_ReferencedValue returns[Value value = null]
+pr_ReferencedValue returns[Value value]
 @init {
+	$value = null;
 	Reference temporalReference = null;
 	List<ISubReference> subReferences = null;
 }:
@@ -5303,7 +5745,10 @@ pr_ReferencedValue returns[Value value = null]
 	}
 };
 
-pr_ValueReference returns[Reference reference = null]:
+pr_ValueReference returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	(	r = pr_GlobalModuleId { $reference = $r.reference; }
 		pr_Dot
 	)?
@@ -5321,7 +5766,10 @@ pr_ValueReference returns[Reference reference = null]:
 	}
 };
 
-pr_AddressValue returns[Value value = null]:
+pr_AddressValue returns[Value value]
+@init {
+	$value = null;
+}:
 (	NULL1 { $value = new TTCN3_Null_Value(); }
 |	NULL2 { $value = new ASN1_Null_Value(); }
 )
@@ -5329,7 +5777,10 @@ pr_AddressValue returns[Value value = null]:
 	$value.setLocation(getLocation( $start, $start));
 };
 
-pr_Macro returns[Macro_Value value = null]:
+pr_Macro returns[Macro_Value value]
+@init {
+	$value = null;
+}:
 (	MACRO_MODULEID			{ $value = new Macro_Value(Macro_Value.Macro_type.MODULEID); }
 |	MACRO_DEFINITION_ID		{ $value = new Macro_Value(Macro_Value.Macro_type.DEFINITIONID); }
 |	MACRO_TESTCASEID		{ $value = new Macro_Value(Macro_Value.Macro_type.TESTCASEID); }
@@ -5347,8 +5798,9 @@ pr_Macro returns[Macro_Value value = null]:
 	}
 };
 
-pr_FormalValuePar returns[FormalParameter parameter = null]
+pr_FormalValuePar returns[FormalParameter parameter]
 @init {
+	$parameter = null;
 	Assignment_type assignmentType = Assignment_type.A_PAR_VAL;
 	boolean isLazy = false;
 	TemplateInstance default_value = null;
@@ -5381,8 +5833,9 @@ pr_FormalValuePar returns[FormalParameter parameter = null]
 	lexer.clearLastCommentLocation();
 };
 
-pr_FormalTimerPar returns[FormalParameter parameter = null]
+pr_FormalTimerPar returns[FormalParameter parameter]
 @init {
+	$parameter = null;
 	Token startcol = null;
 	TemplateInstance default_value = null;
 }:
@@ -5453,7 +5906,10 @@ pr_TemplateRestriction returns[TemplateRestriction.Restriction_type templateRest
 	pr_RParen
 );
 
-pr_WithStatement returns[MultipleWithAttributes attributes = null]:
+pr_WithStatement returns[MultipleWithAttributes attributes]
+@init {
+	$attributes = null;
+}:
 (	WITH
 	a = pr_WithAttribList { $attributes = $a.attributes;}
 )
@@ -5463,7 +5919,10 @@ pr_WithStatement returns[MultipleWithAttributes attributes = null]:
 	}
 };
 
-pr_WithAttribList returns[MultipleWithAttributes attributes = null]:
+pr_WithAttribList returns[MultipleWithAttributes attributes]
+@init {
+	$attributes = null;
+}:
 (	pr_BeginChar
 	a = pr_MultiWithAttrib { $attributes = $a.attributes;}
 	pr_EndChar
@@ -5478,8 +5937,9 @@ pr_MultiWithAttrib returns[MultipleWithAttributes attributes]
 	)*
 );
 
-pr_SingleWithAttrib returns [ SingleWithAttribute singleWithAttrib = null]
+pr_SingleWithAttrib returns [ SingleWithAttribute singleWithAttrib]
 @init {
+	$singleWithAttrib = null;
 	boolean hasOverride = false;
 	Qualifiers qualifiers = null;
 }:
@@ -5493,7 +5953,10 @@ pr_SingleWithAttrib returns [ SingleWithAttribute singleWithAttrib = null]
 	$singleWithAttrib.setLocation(getLocation( $t.start, $s.stop));
 };
 
-pr_AttribKeyword returns [Attribute_Type attributeType = null]:
+pr_AttribKeyword returns [Attribute_Type attributeType]
+@init {
+	$attributeType = null;
+}:
 (	ENCODE		{ $attributeType = Attribute_Type.Encode_Attribute; }
 |	DISPLAY		{ $attributeType = Attribute_Type.Display_Attribute; }
 |	EXTENSION	{ $attributeType = Attribute_Type.Extension_Attribute; }
@@ -5513,20 +5976,29 @@ pr_AttribKeyword returns [Attribute_Type attributeType = null]:
 		}
 );
 
-pr_AttribQualifier returns [Qualifiers qualifiers = null]:
+pr_AttribQualifier returns [Qualifiers qualifiers]
+@init {
+	$qualifiers = null;
+}:
 (	pr_LParen
 	q = pr_DefOrFieldRefList { $qualifiers = $q.qualifiers; }
 	pr_RParen
 );
 
-pr_DefOrFieldRefList returns [Qualifiers qualifiers = null]:
+pr_DefOrFieldRefList returns [Qualifiers qualifiers]
+@init {
+	$qualifiers = null;
+}:
 (	q = pr_DefOrFieldRef  { $qualifiers = new Qualifiers($q.qualifier); }
 	(	pr_Comma
 		q = pr_DefOrFieldRef  { $qualifiers.addQualifier($q.qualifier); }
 	)*
 );
 
-pr_DefOrFieldRef returns[Qualifier qualifier = null]:
+pr_DefOrFieldRef returns[Qualifier qualifier]
+@init {
+	$qualifier = null;
+}:
 (	(	i = pr_Identifier
 			{	$qualifier = new Qualifier(new FieldSubReference($i.identifier));
 				$qualifier.setLocation(getLocation( $i.start, $i.stop));
@@ -5575,14 +6047,20 @@ pr_AllRef:
 	( pr_ExceptKeyword	pr_BeginChar	pr_ModuleParRefList	pr_EndChar )?
 );
 
-pr_AttribSpec returns [AttributeSpecification attributeSpecficiation = null]:
+pr_AttribSpec returns [AttributeSpecification attributeSpecficiation]
+@init {
+	$attributeSpecficiation = null;
+}:
 ( s = pr_FreeText )
 {
 	$attributeSpecficiation = new AttributeSpecification($s.string);
 	$attributeSpecficiation.setLocation(getLocation( $s.start, $s.stop));
 };
 
-pr_BehaviourStatements returns[Statement statement = null]:
+pr_BehaviourStatements returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	s1 = pr_TestcaseInstanceStatement	{ $statement = $s1.statement; }
 |	s2 = pr_ReturnStatement				{ $statement = $s2.statement; }
 |	s3 = pr_AltConstruct				{ $statement = $s3.statement; }
@@ -5625,19 +6103,26 @@ pr_BehaviourStatements returns[Statement statement = null]:
 		}
 );
 
-pr_VerdictStatements returns[Statement statement = null]:
+pr_VerdictStatements returns[Statement statement]
+@init {
+	$statement = null;
+}:
 	s = pr_SetLocalVerdict { $statement = $s.statement; }
 ;
 
-pr_VerdictOps returns[GetverdictExpression value = null]:
+pr_VerdictOps returns[GetverdictExpression value]
+@init {
+	$value = null;
+}:
 	GETVERDICT
 {
 	$value = new GetverdictExpression();
 	$value.setLocation(getLocation( $GETVERDICT));
 };
 
-pr_SetLocalVerdict returns[Setverdict_Statement statement = null]
+pr_SetLocalVerdict returns[Setverdict_Statement statement]
 @init {
+	$statement = null;
 	LogArguments logarguments = null;
 }:
 (	col = SETVERDICT
@@ -5653,8 +6138,9 @@ pr_SetLocalVerdict returns[Setverdict_Statement statement = null]
 	$statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
-pr_SUTStatements returns[Action_Statement statement = null]
+pr_SUTStatements returns[Action_Statement statement]
 @init {
+	$statement = null;
 	LogArguments logArguments = null;
 }:
 (	col = ACTION
@@ -5671,8 +6157,9 @@ pr_SUTStatements returns[Action_Statement statement = null]
 
 //TODO: Update it!! In 6.1: 478.ReturnStatement ::= ReturnKeyword [Expression | InLineTemplate] (4.4.1 is the same)
 //pr_Expression or pr_InlineTemplate
-pr_ReturnStatement returns[Return_Statement statement = null]
+pr_ReturnStatement returns[Return_Statement statement]
 @init {
+	$statement = null;
 	TemplateBody body = null;
 }:
 (	RETURN
@@ -5687,7 +6174,10 @@ pr_ReturnStatement returns[Return_Statement statement = null]
 	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_AltConstruct returns[Statement statement = null]:
+pr_AltConstruct returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = ALT
 	pr_BeginChar
 	a = pr_AltGuardList
@@ -5707,8 +6197,9 @@ pr_AltGuardList returns [AltGuards altGuards]
 	)+
 );
 
-pr_GuardStatement returns [AltGuard altGuard = null]
+pr_GuardStatement returns [AltGuard altGuard]
 @init {
+	$altGuard = null;
 	Value value2 = null;
 	boolean invoked = false;
 	ParsedActualParameters parsedParameters = null;
@@ -5772,8 +6263,10 @@ pr_StatementBlock returns [StatementBlock statementblock]
 	}
 };
 
-pr_ElseStatement returns [Else_Altguard altGuard = null]
-:
+pr_ElseStatement returns [Else_Altguard altGuard]
+@init {
+	$altGuard = null;
+}:
 (	pr_SquareOpen
 	ELSE
 	pr_SquareClose
@@ -5785,14 +6278,18 @@ pr_ElseStatement returns [Else_Altguard altGuard = null]
 	$altGuard.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_AltGuardChar returns[Value value = null]:
+pr_AltGuardChar returns[Value value]
+@init {
+	$value = null;
+}:
 (	pr_SquareOpen
 	(	v = pr_BooleanExpression { $value = $v.value; }	)?
 	pr_SquareClose
 );
 
-pr_GuardOp returns[Statement statement = null]
+pr_GuardOp returns[Statement statement]
 @init {
+	$statement = null;
 	TemplateInstance doneMatch = null;
 	Reference reference = null;
 }:
@@ -5838,7 +6335,10 @@ pr_GuardOp returns[Statement statement = null]
 	}
 };
 
-pr_InterleavedConstruct returns[Statement statement = null]:
+pr_InterleavedConstruct returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	INTERLEAVE
 	pr_BeginChar
 	a = pr_InterleavedGuardList
@@ -5855,8 +6355,9 @@ pr_InterleavedGuardList returns[AltGuards altGuards]
 (	( a = pr_InterleavedGuardElement { $altGuards.addAltGuard($a.altGuard); } )+
 );
 
-pr_InterleavedGuardElement returns[AltGuard altGuard = null]
+pr_InterleavedGuardElement returns[AltGuard altGuard]
 @init {
+	$altGuard = null;
 	StatementBlock statementBlock = null;
 }:
 (	pr_SquareOpen
@@ -5874,7 +6375,10 @@ pr_InterleavedGuardElement returns[AltGuard altGuard = null]
 	$altGuard.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_LabelStatement returns[Label_Statement statement = null]:
+pr_LabelStatement returns[Label_Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = LABEL
 	i = pr_Identifier
 )
@@ -5883,8 +6387,9 @@ pr_LabelStatement returns[Label_Statement statement = null]:
 	$statement.setLocation(getLocation( $col, $i.stop));
 };
 
-pr_GotoStatement returns[Goto_statement statement = null]
+pr_GotoStatement returns[Goto_statement statement]
 @init {
+	$statement = null;
 	Identifier identifier = null;
 }:
 (	GOTO
@@ -5899,8 +6404,9 @@ pr_GotoStatement returns[Goto_statement statement = null]
 	}
 };
 
-pr_ActivateOp returns [Value value = null]
+pr_ActivateOp returns [Value value]
 @init {
+	$value = null;
 	ParsedActualParameters parameters = null;
 }:
 (	ACTIVATE
@@ -5926,8 +6432,9 @@ pr_ActivateOp returns [Value value = null]
 	}
 };
 
-pr_ActivateStatement returns[Statement statement = null]
+pr_ActivateStatement returns[Statement statement]
 @init {
+	$statement = null;
 	ParsedActualParameters parameters = null;
 }:
 (	ACTIVATE
@@ -5952,7 +6459,10 @@ pr_ActivateStatement returns[Statement statement = null]
 	}
 };
 
-pr_ReferOp returns[RefersExpression value = null]:
+pr_ReferOp returns[RefersExpression value]
+@init {
+	$value = null;
+}:
 (	REFERS
 	pr_LParen
 	r = pr_FunctionRef
@@ -5963,8 +6473,9 @@ pr_ReferOp returns[RefersExpression value = null]:
 	$value.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_DeactivateStatement returns[Deactivate_Statement statement = null]
+pr_DeactivateStatement returns[Deactivate_Statement statement]
 @init {
+	$statement = null;
 	Value value = null;
 }:
 (	DEACTIVATE
@@ -5978,7 +6489,10 @@ pr_DeactivateStatement returns[Deactivate_Statement statement = null]
 	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_BasicStatements returns[Statement statement = null]:
+pr_BasicStatements returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (       s1 = pr_Assignment				{ $statement = $s1.statement; }
 |       s2 = pr_LogStatement			{ $statement = $s2.statement; }
 |       s3 = pr_String2TtcnStatement	{ $statement = $s3.statement; }
@@ -5995,18 +6509,25 @@ pr_BasicStatements returns[Statement statement = null]:
 				}
 );
 
-pr_Expression returns[Value value = null]:
+pr_Expression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_SingleExpression { $value = $v.value; }
 );
 
-pr_CompoundExpression returns[Value value = null]:
+pr_CompoundExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v1 = pr_FieldExpressionList { $value = $v1.value; }
 |	v2 = pr_ArrayExpressionList { $value = $v2.value; }
 |	v3 = pr_ArrayExpression { $value = $v3.value; }
 );
 
-pr_FieldExpressionList returns[Sequence_Value value = null]
+pr_FieldExpressionList returns[Sequence_Value value]
 @init {
+	$value = null;
 	NamedValues values = new NamedValues();
 }:
 (	col = pr_BeginChar
@@ -6021,7 +6542,10 @@ pr_FieldExpressionList returns[Sequence_Value value = null]
 	$value.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_FieldExpressionSpec returns[NamedValue namedValue = null]:
+pr_FieldExpressionSpec returns[NamedValue namedValue]
+@init {
+	$namedValue = null;
+}:
 (	i = pr_FieldReference
 	pr_AssignmentChar
 	v = pr_NotUsedOrExpression
@@ -6031,8 +6555,9 @@ pr_FieldExpressionSpec returns[NamedValue namedValue = null]:
 	$namedValue.setLocation(getLocation( $i.start, $v.stop));
 };
 
-pr_ArrayExpressionList returns[SequenceOf_Value value = null]
+pr_ArrayExpressionList returns[SequenceOf_Value value]
 @init {
+	$value = null;
 	Values values = new Values(true);
 }:
 (	col = pr_BeginChar
@@ -6047,7 +6572,10 @@ pr_ArrayExpressionList returns[SequenceOf_Value value = null]
 	$value.setLocation(getLocation( $col.start, $endcol.stop));
 };
 
-pr_ArrayExpressionSpec returns[IndexedValue indexedValue = null]:
+pr_ArrayExpressionSpec returns[IndexedValue indexedValue]
+@init {
+	$indexedValue = null;
+}:
 (	s = pr_ArrayOrBitRef
 	pr_AssignmentChar
 	v = pr_Expression
@@ -6059,8 +6587,9 @@ pr_ArrayExpressionSpec returns[IndexedValue indexedValue = null]:
 	}
 };
 
-pr_ArrayExpression returns[SequenceOf_Value value = null]
+pr_ArrayExpression returns[SequenceOf_Value value]
 @init {
+	$value = null;
 	Values values = null;
 }:
 (	col = pr_BeginChar
@@ -6085,7 +6614,10 @@ pr_ArrayElementExpressionList returns[Values values]
 	)*
 );
 
-pr_NotUsedOrExpression returns[Value value = null]:
+pr_NotUsedOrExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_NotUsedSymbol
 		{	$value = new Notused_Value();
 			$value.setLocation(getLocation( $v.start, $v.stop));
@@ -6093,11 +6625,17 @@ pr_NotUsedOrExpression returns[Value value = null]:
 |	v2 = pr_Expression { $value = $v2.value; }
 );
 
-pr_BooleanExpression returns [Value value = null]:
+pr_BooleanExpression returns [Value value]
+@init {
+	$value = null;
+}:
 	v = pr_Expression { $value = $v.value; }
 ;
 
-pr_Assignment returns[Assignment_Statement statement = null]:
+pr_Assignment returns[Assignment_Statement statement]
+@init {
+	$statement = null;
+}:
 (	r = pr_VariableRef
 	pr_AssignmentChar
 	b = pr_TemplateBody
@@ -6112,7 +6650,10 @@ pr_Assignment returns[Assignment_Statement statement = null]:
 	$statement.setLocation(getLocation( $r.start, $b.stop));
 };
 
-pr_SingleExpression returns[Value value = null]:
+pr_SingleExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_XorExpression{ $value = $v.value; }
 	(	OR	v2 = pr_XorExpression
 			{	$value = new OrExpression( $value, $v2.value);
@@ -6121,7 +6662,10 @@ pr_SingleExpression returns[Value value = null]:
 	)*
 );
 
-pr_XorExpression returns[Value value = null]:
+pr_XorExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_AndExpression{ $value = $v.value; }
 	(	XOR	v2 = pr_AndExpression
 			{	$value = new XorExpression($value, $v2.value);
@@ -6130,7 +6674,10 @@ pr_XorExpression returns[Value value = null]:
 	)*
 );
 
-pr_AndExpression returns[Value value = null]:
+pr_AndExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_NotExpression{ $value = $v.value; }
 	(	AND v2 = pr_NotExpression
 			{	$value = new AndExpression($value, $v2.value);
@@ -6139,14 +6686,20 @@ pr_AndExpression returns[Value value = null]:
 	)*
 );
 
-pr_NotExpression returns[Value value = null]:
+pr_NotExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	NOT
 	v1 = pr_NotExpression	{	$value = new NotExpression($v1.value);
 								$value.setLocation(getLocation( $NOT, $v1.stop)); }
 |	v2 = pr_EqualExpression	{ $value = $v2.value; }
 );
 
-pr_EqualExpression returns[Value value = null]:
+pr_EqualExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_RelExpression	{ $value = $v.value; }
 	(	EQUAL	v1 = pr_RelExpression	{	$value = new EqualsExpression($value, $v1.value);
 											$value.setLocation(getLocation( $v.start, $v1.stop)); }
@@ -6155,7 +6708,10 @@ pr_EqualExpression returns[Value value = null]:
 	)*
 );
 
-pr_RelExpression returns[Value value = null]:
+pr_RelExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (   v = pr_ShiftExpression	{ $value = $v.value; }
 	(	LESSTHAN	v1 = pr_ShiftExpression	{	$value = new LessThanExpression($value, $v1.value);
 												$value.setLocation(getLocation( $v.start, $v1.stop)); }
@@ -6168,7 +6724,10 @@ pr_RelExpression returns[Value value = null]:
 	)*
 );
 
-pr_ShiftExpression returns[Value value = null]:
+pr_ShiftExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_BitOrExpression { $value = $v.value; }
 	(	SHIFTLEFT		v1 = pr_BitOrExpression	{	$value = new ShiftLeftExpression($value, $v1.value);
 													$value.setLocation(getLocation( $v.start, $v1.stop)); }
@@ -6181,35 +6740,50 @@ pr_ShiftExpression returns[Value value = null]:
 	)*
 );
 
-pr_BitOrExpression returns[Value value = null]:
+pr_BitOrExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_BitXorExpression { $value = $v.value; }
 	(	OR4B	v2 = pr_BitXorExpression	{	$value = new Or4bExpression($value, $v2.value);
 												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
-pr_BitXorExpression returns[Value value = null]:
+pr_BitXorExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_BitAndExpression { $value = $v.value; }
 	(	XOR4B	v2 = pr_BitAndExpression	{	$value = new Xor4bExpression($value, $v2.value);
 												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
-pr_BitAndExpression returns[Value value = null]:
+pr_BitAndExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_BitNotExpression { $value = $v.value; }
 	(	AND4B	v2 = pr_BitNotExpression	{	$value = new And4bExpression($value, $v2.value);
 												$value.setLocation(getLocation( $v.start, $v2.stop)); }
 	)*
 );
 
-pr_BitNotExpression returns[Value value = null]:
+pr_BitNotExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	NOT4B
 	v = pr_BitNotExpression {	$value = new Not4bExpression($v.value);
 								$value.setLocation(getLocation( $start, getStopToken())); }
 |	v2 = pr_AddExpression { $value = $v2.value; }
 );
 
-pr_AddExpression returns[Value value = null]:
+pr_AddExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_MulExpression { $value = $v.value; }
 	(	PLUS	v1 = pr_MulExpression	{	$value = new AddExpression($value, $v1.value);
 											$value.setLocation(getLocation( $v.start, $v1.stop)); }
@@ -6220,7 +6794,10 @@ pr_AddExpression returns[Value value = null]:
 	)*
 );
 
-pr_MulExpression returns[Value value = null]:
+pr_MulExpression returns[Value value]
+@init {
+	$value = null;
+}:
 (	v = pr_UnaryExpression { $value = $v.value; }
 	(	STAR	v1 = pr_UnaryExpression	{	$value = new MultiplyExpression($value, $v1.value);
 											$value.setLocation(getLocation( $v.start, $v1.stop)); }
@@ -6233,7 +6810,10 @@ pr_MulExpression returns[Value value = null]:
 	)*
 );
 
-pr_UnaryExpression returns [Value value = null]:
+pr_UnaryExpression returns [Value value]
+@init {
+	$value = null;
+}:
 (	NOT
 	v1 = pr_NotExpression	{	$value = new NotExpression($v1.value);
 								$value.setLocation(getLocation( $NOT, $v1.stop ));	}
@@ -6250,8 +6830,9 @@ pr_UnaryExpression returns [Value value = null]:
 |	v6 = pr_Primary	{	$value = $v6.value; }
 );
 
-pr_Primary returns[Value value = null]
+pr_Primary returns[Value value]
 @init {
+	$value = null;
 	Reference temporalReference = null;
 	List<ISubReference> subReferences = null;
 	ParsedActualParameters parameters = null;
@@ -6402,7 +6983,10 @@ pr_ExtendedFieldReference returns[List<ISubReference> subReferences]
 )+
 ;
 
-pr_OpCall returns[Value value = null]:
+pr_OpCall returns[Value value]
+@init {
+	$value = null;
+}:
 (	v1 = pr_VerdictOps			{ $value = $v1.value; }
 |	v2 = pr_TestcaseInstanceOp	{ $value = $v2.value; }
 |	v3 = pr_TemplateOps			{ $value = $v3.value; }
@@ -6411,8 +6995,9 @@ pr_OpCall returns[Value value = null]:
 |	v6 = pr_ReferOp				{ $value = $v6.value; }
 );
 
-pr_PredefinedOps returns[Value value = null]
+pr_PredefinedOps returns[Value value]
 @init {
+	$value = null;
 	LogArguments logArguments = null;
 }:
 (	//The ones with only one standard operand
@@ -6474,7 +7059,10 @@ pr_PredefinedOps returns[Value value = null]
 { $value.setLocation(getLocation( $start, getStopToken())); };
 
 //The ones with only one standard operand
-pr_PredefinedOps1 returns[Value value = null]:
+pr_PredefinedOps1 returns[Value value]
+@init {
+	$value = null;
+}:
 (	BIT2HEX
 	pr_LParen	v = pr_SingleExpression
 	pr_RParen	{	$value = new Bit2HexExpression($v.value); }
@@ -6590,7 +7178,10 @@ pr_PredefinedOps1 returns[Value value = null]:
 { $value.setLocation(getLocation( $start, getStopToken())); };
 
 //The ones with 2 standard operands
-pr_PredefinedOps2 returns[Value value = null]:
+pr_PredefinedOps2 returns[Value value]
+@init {
+	$value = null;
+}:
 (	INT2BIT
 	pr_LParen	v1 = pr_SingleExpression
 	pr_Comma	v2 = pr_SingleExpression
@@ -6607,7 +7198,10 @@ pr_PredefinedOps2 returns[Value value = null]:
 { $value.setLocation(getLocation( $start, getStopToken())); };
 
 //The ones with 3 or 4 standard operands
-pr_PredefinedOps3 returns[Value value = null]:
+pr_PredefinedOps3 returns[Value value]
+@init {
+	$value = null;
+}:
 (	DECOMP
 	pr_LParen	v1 = pr_SingleExpression
 	pr_Comma	v2 = pr_SingleExpression
@@ -6633,13 +7227,17 @@ pr_PredefinedOps3 returns[Value value = null]:
 )
 { $value.setLocation(getLocation( $start, getStopToken())); };
 
-pr_SizeofARG returns[Reference reference = null]:
+pr_SizeofARG returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	r1 = pr_FunctionInstance { $reference = $r1.temporalReference; }
 |	r2 = pr_VariableRef { $reference = $r2.reference; }
 );
 
-pr_LogStatement returns[Log_Statement statement = null]
+pr_LogStatement returns[Log_Statement statement]
 @init {
+	$statement = null;
 	LogArguments logArguments = null;
 }:
 (	col = LOG
@@ -6654,7 +7252,10 @@ pr_LogStatement returns[Log_Statement statement = null]
 	$statement.setLocation(getLocation( $col, $endcol.stop ) );
 };
 
-pr_String2TtcnStatement returns[String2Ttcn_Statement statement = null]:
+pr_String2TtcnStatement returns[String2Ttcn_Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = STRING2TTCN
 	pr_LParen
 	v = pr_SingleExpression
@@ -6667,7 +7268,10 @@ pr_String2TtcnStatement returns[String2Ttcn_Statement statement = null]:
 	$statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
-pr_Int2EnumStatement returns[Int2Enum_Statement statement = null]:
+pr_Int2EnumStatement returns[Int2Enum_Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = INT2ENUM
 	pr_LParen
 	v = pr_SingleExpression
@@ -6690,7 +7294,10 @@ pr_LogArguments returns[LogArguments logArguments]
 	)*
 );
 
-pr_LogItem returns[LogArgument item = null]:
+pr_LogItem returns[LogArgument item]
+@init {
+	$item = null;
+}:
 (	t = pr_TemplateInstance
 )
 {
@@ -6698,14 +7305,18 @@ pr_LogItem returns[LogArgument item = null]:
 	$item.setLocation(getLocation( $t.start, $t.stop));
 };
 
-pr_LoopConstruct returns[Statement statement = null]:
+pr_LoopConstruct returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	s = pr_ForStatement { $statement = $s.for_statement; }
 |	s2 = pr_WhileStatement { $statement = $s2.while_statement; }
 |	s3 = pr_DoWhileStatement { $statement = $s3.dowhile_statement; }
 );
 
-pr_ForStatement returns[Statement for_statement = null]
+pr_ForStatement returns[Statement for_statement]
 @init {
+	$for_statement = null;
 	For_Loop_Definitions definitions = null;
 	Assignment_Statement initialAssignment = null;
 }:
@@ -6747,11 +7358,17 @@ pr_InitialDefinitions returns[For_Loop_Definitions definitions]
 	$definitions.setLocation( getLocation( $d.start, $d.stop ) );
 };
 
-pr_InitialAssignment returns[Assignment_Statement assignment = null]:
+pr_InitialAssignment returns[Assignment_Statement assignment]
+@init {
+	$assignment = null;
+}:
 (	s = pr_Assignment { $assignment = $s.statement; }
 );
 
-pr_WhileStatement returns[Statement while_statement = null ]:
+pr_WhileStatement returns[Statement while_statement]
+@init {
+	$while_statement = null;
+}:
 (	col = WHILE
 	pr_LParen
 	v = pr_BooleanExpression
@@ -6763,7 +7380,10 @@ pr_WhileStatement returns[Statement while_statement = null ]:
 	$while_statement.setLocation(getLocation( $col, $sb.stop));
 };
 
-pr_DoWhileStatement returns[Statement dowhile_statement = null ]:
+pr_DoWhileStatement returns[Statement dowhile_statement]
+@init {
+	$dowhile_statement = null;
+}:
 (	col = DO
 	sb = pr_StatementBlock
 	WHILE
@@ -6776,8 +7396,9 @@ pr_DoWhileStatement returns[Statement dowhile_statement = null ]:
 	$dowhile_statement.setLocation(getLocation( $col, $endcol.stop));
 };
 
-pr_ConditionalConstruct returns[If_Statement ifStatement = null]
+pr_ConditionalConstruct returns[If_Statement ifStatement]
 @init {
+	$ifStatement = null;
 	If_Clauses ifClauses = new If_Clauses();
 	If_Clause ifClause = null;
 	StatementBlock statementblock2 = null;
@@ -6798,7 +7419,10 @@ pr_ConditionalConstruct returns[If_Statement ifStatement = null]
 	$ifStatement.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_ElseIfClause returns[If_Clause ifClause = null]:
+pr_ElseIfClause returns[If_Clause ifClause]
+@init {
+	$ifClause = null;
+}:
 (	col = ELSE
 	IF
 	pr_LParen
@@ -6811,12 +7435,18 @@ pr_ElseIfClause returns[If_Clause ifClause = null]:
 	$ifClause.setLocation( getLocation( $col, $sb.stop) );
 };
 
-pr_ElseClause returns[StatementBlock statementblock = null]:
+pr_ElseClause returns[StatementBlock statementblock]
+@init {
+	$statementblock = null;
+}:
 (	ELSE
 	s = pr_StatementBlock { $statementblock = $s.statementblock; }
 );
 
-pr_SelectCaseConstruct returns[Statement statement = null]:
+pr_SelectCaseConstruct returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	col = SELECT
 	pr_LParen
 	v = pr_SingleExpression
@@ -6837,8 +7467,9 @@ pr_SelectCaseBody returns[SelectCases selectCases]
 	pr_EndChar
 );
 
-pr_SelectCase returns[SelectCase selectCase = null]
+pr_SelectCase returns[SelectCase selectCase]
 @init {
+	$selectCase = null;
 	TemplateInstances templateInstances = null;
 }:
 (	CASE
@@ -6858,7 +7489,10 @@ pr_SelectCase returns[SelectCase selectCase = null]
 	$selectCase.setLocation( getLocation( $start, getStopToken()) );
 };
 
-pr_TryCatchConstruct returns[Statement statement = null]:
+pr_TryCatchConstruct returns[Statement statement]
+@init {
+	$statement = null;
+}:
 (	TITANSPECIFICTRY
 	sb1 = pr_StatementBlock
 	TITANSPECIFICCATCH
@@ -6961,8 +7595,9 @@ pr_EndOfFile:
 ;
 
 //timer, port and component handling as module names is a prohibited by the ttcn3 language !!!!
-pr_UnifiedReferenceParser returns[Reference reference = null]
+pr_UnifiedReferenceParser returns[Reference reference]
 @init {
+	$reference = null;
 	ISubReference arraySubReference = null;
 	ParsedActualParameters parameters = null;
 	Token startcol = null;
@@ -7075,13 +7710,19 @@ pr_UnifiedReferenceParser returns[Reference reference = null]
 	}
 };
 
-pr_KeywordLessIdentifier returns [KeywordLessIdentifier identifier = null]:
+pr_KeywordLessIdentifier returns [KeywordLessIdentifier identifier]
+@init {
+	$identifier = null;
+}:
 (	IDENTIFIER | pr_Macro // 1 token only in each case
 )
 {	$identifier = new KeywordLessIdentifier(Identifier_type.ID_TTCN, $start.getText(), getLocation( $start));
 };
 
-pr_KeywordLessGlobalModuleId returns [Reference reference = null]:
+pr_KeywordLessGlobalModuleId returns [Reference reference]
+@init {
+	$reference = null;
+}:
 (	i = pr_KeywordLessIdentifier
 	(	DOT
 		pr_ObjectIdentifierValue
