@@ -6872,7 +6872,10 @@ pr_TryCatchConstruct returns[Statement statement = null]:
 	$statement.setLocation(getLocation( $start, getStopToken()));
 };
 
-pr_Identifier returns [Identifier identifier = null]:
+pr_Identifier returns [Identifier identifier]
+@init {
+		$identifier = null;
+}:
 	IDENTIFIER
 {
 	if($IDENTIFIER.getTokenIndex() >= 0) {
