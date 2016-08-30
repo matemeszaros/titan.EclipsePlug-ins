@@ -381,8 +381,9 @@ public final class Def_Type extends Definition {
 				IIdentifierReparser r = new IdentifierReparser(reparser);
 				int result = r.parseAndSetNameChanged();
 				identifier = r.getIdentifier();
+
 				// damage handled
-				if (result == 0) {
+				if (result == 0 && identifier != null) {
 					enveloped = true;
 				} else {
 					removeBridge();

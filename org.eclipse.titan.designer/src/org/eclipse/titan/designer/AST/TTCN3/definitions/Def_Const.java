@@ -318,7 +318,7 @@ public final class Def_Const extends Definition {
 				int result = r.parseAndSetNameChanged();
 				identifier = r.getIdentifier();
 				// damage handled
-				if (result == 0) {
+				if (result == 0&& identifier != null) {
 					enveloped = true;
 				} else {
 					throw new ReParseException(result);
