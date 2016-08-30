@@ -343,7 +343,7 @@ public final class Def_Var extends Definition {
 				result = r.parseAndSetNameChanged();
 				identifier = r.getIdentifier();
 				// damage handled
-				if (result == 0&& identifier != null) {
+				if (result == 0 && identifier != null) {
 					enveloped = true;
 				} else {
 					throw new ReParseException(result);
