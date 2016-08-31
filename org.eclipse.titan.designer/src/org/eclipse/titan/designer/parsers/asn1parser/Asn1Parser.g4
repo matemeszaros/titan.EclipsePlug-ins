@@ -306,7 +306,7 @@ pr_Exports returns [Exports exports]
 	SEMICOLON
 );
 
-pr_Imports returns [Imports imports = null ]
+pr_Imports returns [Imports imports]
 @init { $imports = null; }:
 (
 	IMPORTS
