@@ -33,13 +33,13 @@ public void setModule(TTCN3Module module) {
  * @author Arpad Lovassy
  */
 
-pr_reparse_TTCN3ModuleId returns[Identifier identifier = null]:
+pr_reparse_TTCN3ModuleId returns[Identifier identifier]:
 (	i = pr_OwnGlobalModuleId { $identifier = $i.identifier; }
 	pr_LanguageSpec?
 	EOF
 );
 
-pr_reparse_Identifier returns[Identifier identifier = null]:
+pr_reparse_Identifier returns[Identifier identifier]:
 (	i = pr_Identifier { $identifier = $i.identifier; }
 	EOF
 );
@@ -213,11 +213,17 @@ pr_reparse_FriendModuleDef[ Group parent_group, List<FriendModule> all_friends, 
 	}
 };
 
-pr_reparser_optionalWithStatement returns[MultipleWithAttributes attributes = null]:
+pr_reparser_optionalWithStatement returns[MultipleWithAttributes attributes]:
+{
+	$attributes = null;
+}
 (	a = pr_WithStatement { $attributes = $a.attributes; }	)?
 ;
 
-pr_reparse_FunctionStatementOrDefList returns[List<Statement> statements = null]:
+pr_reparse_FunctionStatementOrDefList returns[List<Statement> statements]:
+{
+	$statements = null;
+}
 (	(	s = pr_FunctionStatementOrDefList { $statements = $s.statements; }
 	|	{ $statements = new ArrayList<Statement>(); }
 	)

@@ -1303,7 +1303,10 @@ pr_SubTypeDef returns[Def_Type def_type]
 	}
 };
 
-pr_SubTypeSpec returns[List<ParsedSubType> parsedSubTypes = null]:
+pr_SubTypeSpec returns[List<ParsedSubType> parsedSubTypes]
+@init {
+	$parsedSubTypes = null;
+}:
 (	a = pr_AllowedValues { $parsedSubTypes = $a.parsedSubTypes; }
 	( r = pr_StringLength
 		{	if($r.restriction != null && $parsedSubTypes != null) {
@@ -1470,8 +1473,11 @@ pr_MessageKeyword:
 	MESSAGE
 ;
 
-pr_AllOrTypeList returns[List<IType> types = null]:
-(	 pr_AllKeyword
+pr_AllOrTypeList returns[List<IType> types]
+@init {
+	$types = null;
+}:
+(	pr_AllKeyword
 |	t = pr_TypeList { $types = $t.types; }
 );
 
@@ -1620,8 +1626,9 @@ pr_ComponentDefList[Identifier identifier, ComponentTypeReferenceList extends_re
 	)*
 );
 
-pr_ComponentElementDef returns[List<Definition> definitions = null]
+pr_ComponentElementDef returns[List<Definition> definitions]
 @init {
+	$definitions = null;
 	VisibilityModifier modifier = null;
 }:
 (	(  m = pr_ComponentElementVisibility { modifier = $m.modifier; } )?
@@ -1690,7 +1697,7 @@ pr_PortElement[Reference portTypeReference]
 	}
 };
 
-pr_ConstDef returns[List<Definition> array = null]:
+pr_ConstDef returns[List<Definition> array]:
 (	col = pr_ConstKeyword
 	t = pr_Type
 	a = pr_ConstList[ $t.type ] { $array = $a.array; }
@@ -2647,7 +2654,10 @@ pr_SelfKeyword:
 	SELF
 ;
 
-pr_FunctionStatementOrDefList returns[List<Statement> statements = null]:
+pr_FunctionStatementOrDefList returns[List<Statement> statements]
+@init {
+	$statements = null;
+}:
 (
 	(	s = pr_FunctionStatementOrDef
 			{	if($statements == null) {$statements = $s.statements;}
@@ -2680,12 +2690,18 @@ pr_FunctionStatementOrDef returns[List<Statement> statements]
 	}
 };
 
-pr_FunctionLocalInst returns[List<Definition> definitions = null]:
+pr_FunctionLocalInst returns[List<Definition> definitions]
+@init {
+	$definitions = null;
+}:
 (	d = pr_VarInstance { $definitions = $d.definitions; }
 |	d2 = pr_TimerInstance { $definitions = $d2.definitions; }
 );
 
-pr_FunctionLocalDef returns[List<Definition> definitions = null]:
+pr_FunctionLocalDef returns[List<Definition> definitions]
+@init {
+	$definitions = null;
+}:
 (	d = pr_ConstDef { $definitions = $d.array; }
 |	def = pr_TemplateDef
 		{	if($def.def_template != null) {
@@ -3238,7 +3254,10 @@ pr_AltstepKeyword:
 	ALTSTEP
 ;
 
-pr_AltstepLocalDefList returns[ List<Definition> definitions = null]:
+pr_AltstepLocalDefList returns[ List<Definition> definitions]
+@init {
+	$definitions = null;
+}:
 (	d = pr_AltstepLocalDef { $definitions = $d.definitions; }
 	(	pr_SemiColon?
 		d2 = pr_AltstepLocalDef { if( $definitions != null && $d2.definitions != null) { $definitions.addAll($d2.definitions); }}
@@ -3246,7 +3265,10 @@ pr_AltstepLocalDefList returns[ List<Definition> definitions = null]:
 	pr_SemiColon?
 );
 
-pr_AltstepLocalDef returns[ List<Definition> definitions = null]:
+pr_AltstepLocalDef returns[ List<Definition> definitions]
+@init {
+	$definitions = null;
+}:
 (	d1 = pr_VarInstance { $definitions = $d1.definitions; }
 |	d2 = pr_TimerInstance { $definitions = $d2.definitions; }
 |	d3 = pr_ConstDef { $definitions = $d3.array; }
@@ -3863,8 +3885,9 @@ pr_ExtConstDef returns[List<Definition> definitions]
 //   Module parameter definitions    1.6.1.12
 //------------------------------------------------------
 
-pr_ModuleParDef returns [List<Definition> parameters = null]
+pr_ModuleParDef returns [List<Definition> parameters]
 @init {
+	$parameters = null;
 	Token endcol = null;
 	List<Definition> multitypedModulePar = null;
 }:
@@ -3906,12 +3929,12 @@ pr_ModuleParKeyword:
 	MODULEPAR
 ;
 
-pr_ModulePar returns [List<Definition> parameters = null]:
+pr_ModulePar returns [List<Definition> parameters]:
 (	t = pr_Type
 	p = pr_ModuleParList[ $t.type ] { $parameters = $p.parameters; }
 );
 
-pr_TemplateModulePar returns [List<Definition> parameters = null]:
+pr_TemplateModulePar returns [List<Definition> parameters]:
 (	pr_TemplateKeyword
 	t = pr_Type
 	p = pr_TemplateModuleParList[ $t.type ] { $parameters = $p.parameters; }
@@ -4209,7 +4232,7 @@ pr_VariableRef returns[Reference reference]
 	}
 };
 
-pr_TimerInstance returns[List<Definition> definitions = null]:
+pr_TimerInstance returns[List<Definition> definitions]:
 (	col = pr_TimerKeyword
 	d = pr_TimerList { $definitions = $d.definitions; }
 )
@@ -5852,9 +5875,10 @@ pr_FormalTimerPar returns[FormalParameter parameter]
 	$parameter.setLocation(getLocation( startcol, getStopToken()));
 };
 
-pr_FormalTemplatePar returns[FormalParameter parameter = null]
+pr_FormalTemplatePar returns[FormalParameter parameter]
 	locals [ Assignment_type assignmentType ]
 @init {
+	$parameter = null;
 	$assignmentType = Assignment_type.A_PAR_TEMP_IN;
 	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
 	boolean isLazy = false;

@@ -1369,7 +1369,10 @@ pr_DNSName:
 )
 ;
 
-pr_ModuleParam returns[ModuleParameterSectionHandler.ModuleParameter parameter = null]:
+pr_ModuleParam returns[ModuleParameterSectionHandler.ModuleParameter parameter]
+@init {
+	$parameter = null;
+}:
 	name = pr_ParameterName	{$parameter = $name.parameter;}
 	(	ASSIGNMENTCHAR9
 		val1 = pr_ParameterValue	{$parameter.setValue($val1.ctx);}
@@ -1378,7 +1381,7 @@ pr_ModuleParam returns[ModuleParameterSectionHandler.ModuleParameter parameter =
 	)
 ;
 
-pr_ParameterName returns[ModuleParameterSectionHandler.ModuleParameter parameter = null]:
+pr_ParameterName returns[ModuleParameterSectionHandler.ModuleParameter parameter]:
 {	$parameter = new ModuleParameterSectionHandler.ModuleParameter();
 	$parameter.setRoot( $ctx );
 }
