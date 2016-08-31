@@ -1473,7 +1473,10 @@ pr_MessageKeyword:
 	MESSAGE
 ;
 
-pr_AllOrTypeList returns[List<IType> types]:
+pr_AllOrTypeList returns[List<IType> types]
+@init {
+	$types = null;
+}:
 (	pr_AllKeyword
 |	t = pr_TypeList { $types = $t.types; }
 );
