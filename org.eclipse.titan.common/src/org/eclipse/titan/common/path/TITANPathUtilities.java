@@ -102,7 +102,6 @@ public final class TITANPathUtilities {
 
 	/**
 	 * Resolves the provided path relative to the provided base path.
-	 * 
 	 * @param pathToBeResolved
 	 *                the path to be resolved.
 	 * @param basePath
@@ -140,7 +139,7 @@ public final class TITANPathUtilities {
 	 * Converts the provided uri relative to the provided base uri
 	 * Environment variables and path variables will not be resolved.
 	 * If the pathToBeConverted is absolute or the basePath is null, the basePath is not used
-	 * 
+	 * @deprecated
 	 * @param pathToBeConverted
 	 *                the path to be resolved.
 	 * @param basePath
@@ -150,10 +149,13 @@ public final class TITANPathUtilities {
 	 * @return the resolved uri.
 	 * */
 	//not used, TODO: remove it!
+	@Deprecated
 	public static URI convertToAbsoluteURI(final String pathToBeConverted, final String basePath) {
 		return convertToAbsoluteURI(pathToBeConverted, URIUtil.toURI(basePath));
 	}
 	//not used, TODO: remove it!
+	
+	@Deprecated 
 	public static URI convertToAbsoluteURI(final String pathToBeConverted, final URI basePath) {
 		final IPath tmp = new Path(pathToBeConverted);
 		if( basePath != null && tmp != null && !tmp.isAbsolute()) {
