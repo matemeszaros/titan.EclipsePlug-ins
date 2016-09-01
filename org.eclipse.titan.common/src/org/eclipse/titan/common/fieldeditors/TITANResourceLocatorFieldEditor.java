@@ -101,7 +101,7 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 
 	@Override
 	protected void doFillIntoGrid(final Composite parent, final int numColumns) {
-		super.doFillIntoGrid(parent, numColumns - 1);
+		super.doFillIntoGrid(parent, numColumns);
 
 		getTextControl().addModifyListener(new ModifyListener() {
 			
@@ -112,7 +112,7 @@ public class TITANResourceLocatorFieldEditor extends StringFieldEditor {
 			}
 		});
 		composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(1, false);
 		composite.setLayout(layout);
 		GridData gd = new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 		gd.horizontalSpan = 3;

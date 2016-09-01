@@ -52,8 +52,8 @@ public class FolderListItemDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(final Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		container.setLayout(new GridLayout(2, false));
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		container.setLayout(new GridLayout(1, false));
+		container.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true, true));
 
 		itemText = new TITANResourceLocator(itemKind + ":", container, IResource.FOLDER, basePath);
 		itemText.setStringValue(item);
