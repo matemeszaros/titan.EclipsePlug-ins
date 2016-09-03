@@ -168,7 +168,7 @@
     <transfer icon="resources/icons/titan.gif" name="Titanium preferences"
       id="org.eclipse.titanium.preferences.export.all">
       <mapping scope="instance">
-        <entry node="org.eclipse.titanium" />
+        <entry node="org.eclipse.titanium"/>
       </mapping>
       <description>
         Export preferences of Titanium, including setting of
