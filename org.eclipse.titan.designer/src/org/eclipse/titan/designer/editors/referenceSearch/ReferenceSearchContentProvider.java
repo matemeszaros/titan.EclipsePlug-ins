@@ -165,7 +165,7 @@ public final class ReferenceSearchContentProvider implements ITreeContentProvide
 		}
 
 		if (element instanceof Match) {
-			((Match) element).getElement();
+			return ((Match) element).getElement();
 		}
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
