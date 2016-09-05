@@ -8,7 +8,9 @@
 package org.eclipse.titan.designer.editors.ttcn3editor;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +39,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * @author Kristof Szabados
  * */
 public class Reconciler implements IReconciler {
+	private static final ConcurrentHashMap<IDocument, LinkedList<Listener>> MAP = new ConcurrentHashMap<IDocument, LinkedList<Listener>>();
 
 	/**
 	 * Background thread for the reconciling activity.
@@ -292,6 +295,10 @@ public class Reconciler implements IReconciler {
 
 		@Override
 		public void documentChanged(final DocumentEvent e) {
+			if (this != MAP.get(document).getFirst()) {
+				return;
+			}
+			
 			if (!backgroundThread.isDirty() && backgroundThread.isAlive()) {
 				if (!isAllowedToModifyDocument && Thread.currentThread() == backgroundThread) {
 					throw new UnsupportedOperationException("The reconciler thread is not allowed to modify the document");
@@ -327,6 +334,7 @@ public class Reconciler implements IReconciler {
 			backgroundThread.reset();
 
 			if (oldInput != null) {
+				MAP.get(oldInput).remove(this);
 				oldInput.removeDocumentListener(this);
 			}
 
@@ -334,6 +342,11 @@ public class Reconciler implements IReconciler {
 			if (newInput == null) {
 				return;
 			}
+			
+			if(!MAP.containsKey(newInput)) {
+				MAP.put(newInput, new LinkedList<Reconciler.Listener>());
+			}
+			MAP.get(newInput).add(this);
 			
 			newInput.addDocumentListener(this);
 			reconcilerDocumentChanged(newInput);
@@ -353,6 +366,7 @@ public class Reconciler implements IReconciler {
 			if (oldInput == document) {
 				if (document != null) {
 					document.removeDocumentListener(this);
+					MAP.get(oldInput).remove(this);
 				}
 
 				if (isIncrementalReconciler()) {
