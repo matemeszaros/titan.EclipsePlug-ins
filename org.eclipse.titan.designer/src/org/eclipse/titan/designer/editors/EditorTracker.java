@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.eclipse.titan.designer.editors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +37,7 @@ public final class EditorTracker {
 	private EditorTracker() {
 	}
 
+
 	/**
 	 * Returns whether the file is opened in an editor.
 	 * 
@@ -62,6 +64,23 @@ public final class EditorTracker {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @return the list of all known editors
+	 * */
+	public static List<ISemanticTITANEditor> getEditors() {
+		ArrayList<ISemanticTITANEditor> result = new ArrayList<ISemanticTITANEditor>();
+
+		for(List<ISemanticTITANEditor> list: FILE_EDITOR_MAP.values()) {
+			for(ISemanticTITANEditor editor: list) {
+				if(!result.contains(editor)) {
+					result.add(editor);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -106,6 +125,18 @@ public final class EditorTracker {
 		}
 	}
 
+	/**
+	 * Removes and editor from the list of known editors.
+	 * 
+	 * @param editor the editor to be removed.
+	 * */
+	public static void remove(final ISemanticTITANEditor editor) {
+		for(IFile file: FILE_EDITOR_MAP.keySet()) {
+			List<ISemanticTITANEditor> editors = FILE_EDITOR_MAP.get(file);
+			editors.remove(editor);
+		}
+	}
+	
 	/**
 	 * Collects and returns a set of the files that are handled here.
 	 * 
