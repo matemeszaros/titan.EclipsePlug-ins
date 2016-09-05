@@ -51,7 +51,7 @@ public final class TITANPathUtilities {
 			envVariables = null;
 		}
 
-		
+
 		String tmp2 = null;
 		try {
 			final String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolve(pathToBeResolved, envVariables);
@@ -60,20 +60,20 @@ public final class TITANPathUtilities {
 			ErrorReporter.logError("There was an error while resolving `" + pathToBeResolved + "'");
 			return null;
 		} 
-		
-		final IPathVariableManager pathVariableManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
-			URI uri = URIUtil.toURI(tmp2);
-			uri = pathVariableManager.resolveURI(uri);
 
-			if (basePath != null && uri != null && !uri.isAbsolute()) {
-				final String basePathString = URIUtil.toPath(basePath).toOSString();
-				final String temp = PathUtil.getAbsolutePath(basePathString, tmp2);
-				if (temp != null) {
-					uri = URIUtil.toURI(temp);
-				}
-			}  
-			return uri;
-		
+		final IPathVariableManager pathVariableManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
+		URI uri = URIUtil.toURI(tmp2);
+		uri = pathVariableManager.resolveURI(uri);
+
+		if (basePath != null && uri != null && !uri.isAbsolute()) {
+			final String basePathString = URIUtil.toPath(basePath).toOSString();
+			final String temp = PathUtil.getAbsolutePath(basePathString, tmp2);
+			if (temp != null) {
+				uri = URIUtil.toURI(temp);
+			}
+		}  
+		return uri;
+
 	}
 
 	/**
