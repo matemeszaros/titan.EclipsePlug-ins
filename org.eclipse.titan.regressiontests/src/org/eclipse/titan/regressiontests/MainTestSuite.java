@@ -21,6 +21,9 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -36,11 +39,11 @@ public final class MainTestSuite {
 
 	//public static final String PATH_TO_WORKSPACE = "file:///home/earplov/gerrithub/eclipse/titan.EclipsePlug-ins/";
 	//public static final String PATH_TO_WORKSPACE = "file:///c:/Users/ethbaat/git/titan.EclipsePlug-ins/";
-	public static final String PATH_TO_WORKSPACE = "file://" + System.getProperty("user.dir") + "/../";
+	public static final String PATH_TO_WORKSPACE = "file:///" + System.getProperty("user.dir") + "/../";
 
 	static {
 		try {
-			pathToWorkspace = new URI(PATH_TO_WORKSPACE);
+			pathToWorkspace = URIUtil.fromString(PATH_TO_WORKSPACE);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -86,15 +89,18 @@ public final class MainTestSuite {
 	 * @return The license file, or null if it does not exist.
 	 */
 	private static boolean licenseFileExists() {
-		File licenseFile = new File(LICENSE_FILE);
-		if (licenseFile.exists()) {
-			return true;
-		}
-
+		if(LICENSE_FILE != null) {
+			File licenseFile = new File(LICENSE_FILE);
+			if (licenseFile != null && licenseFile.exists()) {
+				return true;
+			}
+		}		
+		//this code is repetition because  LICENSE_FILE is created in the same way
+		// can we remove ?
 		final String licenseFromEnv = System.getenv("TTCN3_LICENSE_FILE");
 		if (licenseFromEnv != null) {
-			licenseFile = new File(licenseFromEnv);
-			if (licenseFile.exists()) {
+			File licenseFile = new File(licenseFromEnv);
+			if (licenseFile != null && licenseFile.exists()) {
 				return true;
 			}
 		}
