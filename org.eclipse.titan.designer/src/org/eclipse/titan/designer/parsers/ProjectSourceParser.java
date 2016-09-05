@@ -964,8 +964,11 @@ public final class ProjectSourceParser {
 						for (Iterator<IFile> iterator = EditorTracker.keyset().iterator(); iterator.hasNext();) {
 							IFile file = iterator.next();
 							if (file.getProject() == project) {
-								ISemanticTITANEditor editor = EditorTracker.getEditor(file).get(0);
-								MarkerHandler.deprecateMarkers(editor, ParserMarkerSupport.getAllCompilerMarkers(project));
+								List<ISemanticTITANEditor> editors = EditorTracker.getEditor(file);
+								if (editors != null && !editors.isEmpty()) {
+									ISemanticTITANEditor editor = editors.get(0);
+									MarkerHandler.deprecateMarkers(editor, ParserMarkerSupport.getAllCompilerMarkers(project));
+								}
 							}
 						}
 					}
