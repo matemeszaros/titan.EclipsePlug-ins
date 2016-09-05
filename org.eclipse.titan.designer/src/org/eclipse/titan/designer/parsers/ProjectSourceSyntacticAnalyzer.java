@@ -841,11 +841,6 @@ public final class ProjectSourceSyntacticAnalyzer {
 
 		IDocument document = DocumentTracker.get(file);
 
-		List<ISemanticTITANEditor> editors = null;
-		if (EditorTracker.containsKey(file)) {
-			editors = EditorTracker.getEditor(file);
-		}
-
 		unsupportedConstructMap.remove(file);
 
 		try {
@@ -872,38 +867,6 @@ public final class ProjectSourceSyntacticAnalyzer {
 
 		if (document != null) {
 			GlobalIntervalHandler.putInterval(document, analyzer.getRootInterval());
-		}
-
-		if (document != null && editors != null && analyzer.getRootInterval() != null) {
-			final List<Position> positions = (new FoldingSupport()).calculatePositions(document);
-			final List<ISemanticTITANEditor> editors2 = editors;
-
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					for (ISemanticTITANEditor editor : editors2) {
-						editor.updateFoldingStructure(positions);
-						editor.invalidateTextPresentation();
-					}
-				}
-			});
-		}
-
-		// add annotations on inactive code
-		if (module != null && module instanceof TTCN3Module && document != null && editors != null) {
-			final TTCN3Module ttcnModule = (TTCN3Module) module;
-			final List<ISemanticTITANEditor> editors2 = editors;
-			final List<Location> icList = ttcnModule.getInactiveCodeLocations();
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					for (ISemanticTITANEditor editor : editors2) {
-						if (editor instanceof TTCNPPEditor) {
-							((TTCNPPEditor) editor).updateInactiveCodeAnnotations(icList);
-						}
-					}
-				}
-			});
 		}
 
 		return new TemporalParseData(module, file, unsupportedConstructs, hadParseErrors, document);

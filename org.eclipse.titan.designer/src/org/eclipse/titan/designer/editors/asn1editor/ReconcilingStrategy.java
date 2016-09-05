@@ -28,11 +28,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.designer.GeneralConstants;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
+import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 import org.eclipse.titan.designer.graphics.ImageCache;
-import org.eclipse.titan.designer.parsers.GlobalParser;
-import org.eclipse.titan.designer.parsers.ProjectConfigurationParser;
-import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -105,47 +103,30 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 		if (project == null) {
 			return;
 		}
-
-		Display.getDefault().asyncExec(new Runnable() {
+		
+		WorkspaceJob op = new WorkspaceJob(OUTLINEUPDATE) {
 			@Override
-			public void run() {
-				List<Position> positions = (new ASN1FoldingSupport()).calculatePositions(document);
-				getEditor().updateFoldingStructure(positions);
-			}
-		});
-
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		projectSourceParser.reportOutdating(editedFile);
-
-		if (isInitial || !editor.isSemanticCheckingDelayed()) {
-			projectSourceParser.analyzeAll();
-			ProjectConfigurationParser projectConfigurationParser = GlobalParser.getConfigSourceParser(project);
-			projectConfigurationParser.analyzeAll();
-
-			WorkspaceJob op = new WorkspaceJob(OUTLINEUPDATE) {
-				@Override
-				public IStatus runInWorkspace(final IProgressMonitor monitor) {
-					Display.getDefault().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							if (!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, editedFile) ||
-								!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_MIXED_MARKER, editedFile)	) {
-								getEditor().updateOutlinePage();
-							}
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						TITANDebugConsole.println("outline update started");
+						List<Position> positions = (new ASN1FoldingSupport()).calculatePositions(document);
+						getEditor().updateFoldingStructure(positions);
+						if (!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, editedFile) ||
+							!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_MIXED_MARKER, editedFile)	) {
+							getEditor().updateOutlinePage();
 						}
-					});
-					return Status.OK_STATUS;
-				}
-			};
-			op.setPriority(Job.LONG);
-			op.setUser(true);
-			op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
-			op.setRule(project);
-			op.schedule();
-		} else {
-			projectSourceParser.reportSyntacticOutdatingOnly(editedFile);
-			projectSourceParser.analyzeAllOnlySyntactically();
-		}
+					}
+				});
+				return Status.OK_STATUS;
+			}
+		};
+		op.setPriority(Job.LONG);
+		op.setUser(true);
+		op.setProperty(IProgressConstants.ICON_PROPERTY, ImageCache.getImageDescriptor("titan.gif"));
+		op.setRule(project);
+		op.schedule();
 	}
 
 	@Override

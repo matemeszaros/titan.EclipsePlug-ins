@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.ui.IEditorInput;
 
 /**
  * This interface represents an abstract editor that a syntactic/semantic
@@ -23,6 +24,13 @@ import org.eclipse.jface.text.Position;
  * */
 public interface ISemanticTITANEditor {
 	IDocument getDocument();
+
+	/**
+	 * Returns the editor input used by the editor.
+	 * 
+	 * @return the editorinput
+	 * */
+	public IEditorInput getEditorInput();
 
 	/**
 	 * Updates the folding structure.

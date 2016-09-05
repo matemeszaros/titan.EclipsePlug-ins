@@ -28,7 +28,10 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.common.logging.ErrorReporter;
 import org.eclipse.titan.designer.GeneralConstants;
+import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
+import org.eclipse.titan.designer.AST.Module;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.commonFilters.ResourceExclusionHelper;
 import org.eclipse.titan.designer.editors.GlobalIntervalHandler;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3FoldingSupport;
@@ -231,6 +234,12 @@ public final class ReconcilingStrategy implements IReconcilingStrategy, IReconci
 						public void run() {
 							if (!MarkerHandler.hasMarker(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, editedFile)) {
 								getEditor().updateOutlinePage();
+							}
+							
+							Module module = projectSourceParser.containedModule(editedFile);
+							if(module != null && module instanceof TTCN3Module) {
+								final List<Location> icList = ((TTCN3Module)module).getInactiveCodeLocations();
+								getEditor().updateInactiveCodeAnnotations(icList);
 							}
 						}
 					});
