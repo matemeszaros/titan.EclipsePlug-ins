@@ -254,7 +254,7 @@ public final class MultiplyExpression extends Expression_Value {
 				}
 				break;
 			case REAL_VALUE:
-				if (Double.compare((((Real_Value) last1).getValue()), 0) == 0
+				if (Double.compare(((Real_Value) last1).getValue(), 0) == 0
 						|| Double.compare(((Real_Value) last2).getValue(), 0) == 0) {
 					lastValue = new Real_Value(0);
 					lastValue.copyGeneralProperties(this);
