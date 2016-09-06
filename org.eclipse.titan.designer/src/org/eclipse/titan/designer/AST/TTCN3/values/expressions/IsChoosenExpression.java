@@ -146,10 +146,10 @@ public final class IsChoosenExpression extends Expression_Value {
 			return;
 		}
 
-		Reference tempReference = reference.newInstance();
+		final Reference tempReference = reference.newInstance();
 		tempReference.setFullNameParent(this);
 		tempReference.setMyScope(getMyScope());
-		ISubReference subreference = tempReference.removeLastSubReference();
+		final ISubReference subreference = tempReference.removeLastSubReference();
 		if (Subreference_type.fieldSubReference.equals(subreference.getReferenceType())) {
 			identifier = ((FieldSubReference) subreference).getId();
 		} else {
@@ -157,7 +157,7 @@ public final class IsChoosenExpression extends Expression_Value {
 			return;
 		}
 		
-		Assignment assignment = tempReference.getRefdAssignment(timestamp, true);
+		final Assignment assignment = tempReference.getRefdAssignment(timestamp, true);
 		if (assignment == null) {
 			setIsErroneous(true);
 			return;
@@ -177,14 +177,14 @@ public final class IsChoosenExpression extends Expression_Value {
 			value.setLocation(tempReference.getLocation());
 			value.setMyScope(getMyScope());
 
-			BridgingNamedNode tempNamedNode = new BridgingNamedNode(this, OPERAND);
+			final BridgingNamedNode tempNamedNode = new BridgingNamedNode(this, OPERAND);
 			value.setFullNameParent(tempNamedNode);
 
 			governor = value.getExpressionGovernor(timestamp, expectedValue);
 			if (governor == null) {
 				setIsErroneous(true);
 			} else {
-				IValue tempValue2 = governor.checkThisValueRef(timestamp, value);
+				final IValue tempValue2 = governor.checkThisValueRef(timestamp, value);
 				if (tempValue2.getIsErroneous(timestamp)) {
 					setIsErroneous(true);
 				}
@@ -200,7 +200,7 @@ public final class IsChoosenExpression extends Expression_Value {
 			template.setLocation(tempReference.getLocation());
 			template.setMyScope(getMyScope());
 
-			BridgingNamedNode tempNamedNode = new BridgingNamedNode(this, OPERAND);
+			final BridgingNamedNode tempNamedNode = new BridgingNamedNode(this, OPERAND);
 			template.setFullNameParent(tempNamedNode);
 
 			if (Expected_Value_type.EXPECTED_DYNAMIC_VALUE.equals(expectedValue)
@@ -213,7 +213,7 @@ public final class IsChoosenExpression extends Expression_Value {
 			if (governor == null) {
 				setIsErroneous(true);
 			} else {
-				TTCN3Template last = template.getTemplateReferencedLast(timestamp, referenceChain);
+				final TTCN3Template last = template.getTemplateReferencedLast(timestamp, referenceChain);
 				if (last.getIsErroneous(timestamp)) {
 					setIsErroneous(true);
 				}
