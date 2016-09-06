@@ -21,9 +21,6 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -95,16 +92,6 @@ public final class MainTestSuite {
 				return true;
 			}
 		}		
-		//this code is repetition because  LICENSE_FILE is created in the same way
-		// can we remove ?
-		final String licenseFromEnv = System.getenv("TTCN3_LICENSE_FILE");
-		if (licenseFromEnv != null) {
-			File licenseFile = new File(licenseFromEnv);
-			if (licenseFile != null && licenseFile.exists()) {
-				return true;
-			}
-		}
-
 		return false;
 	}
 
