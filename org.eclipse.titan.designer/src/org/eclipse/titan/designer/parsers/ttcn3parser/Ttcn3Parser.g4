@@ -1851,9 +1851,12 @@ pr_TemplateDef returns[Def_Template def_template]
 	Template_definition_helper helper = new Template_definition_helper();
 	Reference derivedReference = null;
 	TemplateBody body = null;
+	//TODO: handle lazy
+	boolean isLazy = false;
 }:
 (	col = pr_TemplateKeyword
 	( t = pr_TemplateRestriction { templateRestriction = $t.templateRestriction; } )?
+	(	lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }	)?
 	pr_BaseTemplate[helper]
 	( d = pr_DerivedDef { derivedReference = $d.reference; } )?
 	pr_AssignmentChar
@@ -2291,6 +2294,7 @@ pr_CharStringMatch[PatternString ps]
 	uni[0] = false;
 }:
 (	pr_PatternKeyword
+	pr_NoCaseModifier?
 	pr_PatternChunk[builder, uni] { if (uni[0]) { $ps.setPatterntype(PatternType.UNIVCHARSTRING_PATTERN); } }
 	(	STRINGOP
 		pr_PatternChunk[builder, uni]
@@ -2555,6 +2559,7 @@ pr_FunctionDef returns[Def_Function def_func]
 	}
 }:
 (	col = pr_FunctionKeyword
+	pr_DeterministicModifier?
 	i = pr_Identifier
 	start1 = pr_LParen
 	( p = pr_FunctionFormalParList { parameters = $p.parList; } )?
@@ -3829,6 +3834,7 @@ pr_ExtFunctionDef returns [Def_Extfunction def_extfunction]
 }:
 (	col = pr_ExtKeyword
 	pr_FunctionKeyword
+	pr_DeterministicModifier?
 	i = pr_Identifier
 	start1 = pr_LParen
 	( p = pr_FunctionFormalParList { parameters = $p.parList; } )?
@@ -4115,12 +4121,17 @@ pr_VarInstance returns[List<Definition> definitions]
 	$definitions = new ArrayList<Definition>();
 	List<Identifier> identifiers = null;
 	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
+	//TODO: handle lazy
+	boolean isLazy = false;
 }:
 (	col = pr_VarKeyword
 	(	tr = pr_TemplateOptRestricted { templateRestriction = $tr.templateRestriction; }
+		(	lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }	)?
 		t = pr_Type
 		pr_TempVarList[ $definitions, $t.type, templateRestriction ]
-	|	t2 = pr_Type
+	|
+		(	lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }	)?
+		t2 = pr_Type
 		pr_VarList[ $definitions, $t2.type ]
 	)
 )
@@ -4319,7 +4330,10 @@ pr_ConfigurationStatements returns[Statement statement]
 				pr_RParen
 			)?
 			(	col = pr_PortRedirectSymbol
-				r = pr_ValueSpec { reference = $r.reference; }
+				(	r = pr_ValueSpec { reference = $r.reference; }
+					pr_IndexSpec?
+				|	pr_IndexSpec
+				)
 			)?
 				{
 					$statement = new Done_Statement($componentValue.value, doneMatch, reference);
@@ -5028,9 +5042,12 @@ pr_PortRedirect returns[PortRedirect_Helper helper]
 	Reference sender = null;
 }:
 (	pr_PortRedirectSymbol
-	(	vs = pr_ValueSpec { value = $vs.reference; }
-		( ss = pr_SenderSpec { sender = $ss.reference; } )?
-	|	ss2 = pr_SenderSpec { sender = $ss2.reference; }
+	(	(	vs = pr_ValueSpec { value = $vs.reference; }
+			( ss = pr_SenderSpec { sender = $ss.reference; } )?
+		|	ss2 = pr_SenderSpec { sender = $ss2.reference; }
+		)
+		pr_IndexSpec?
+	|	pr_IndexSpec
 	)
 )
 {
@@ -5136,9 +5153,12 @@ pr_RedirectWithParamSpec returns[Redirection_Helper helper]
 	Parameter_Redirect redirectParameters = null;
 	Reference sender_reference = null;
 }:
-(	r = pr_ParamSpec { redirectParameters = $r.redirect; }
-	( s = pr_SenderSpec { sender_reference = $s.reference; } )?
-|	s = pr_SenderSpec { sender_reference = $s.reference; }
+(	(	r = pr_ParamSpec { redirectParameters = $r.redirect; }
+		( s = pr_SenderSpec { sender_reference = $s.reference; } )?
+	|	s = pr_SenderSpec { sender_reference = $s.reference; }
+	)
+	pr_IndexSpec?
+|	pr_IndexSpec
 )
 {
 	$helper.redirectParameters = redirectParameters;
@@ -5189,6 +5209,7 @@ pr_VariableAssignment returns[Parameter_Assignment param_assignment]
 }:
 (	r = pr_VariableRef
 	pr_AssignmentChar
+	pr_DecodedModifier?
 	i = pr_Identifier
 )
 {
@@ -5210,11 +5231,14 @@ pr_RedirectWithValueAndParamSpec returns[Redirection_Helper helper]
 	Parameter_Redirect redirect = null;
 	Reference sender = null;
 }:
-(	vs = pr_ValueSpec
-	( r = pr_ParamSpec { redirect = $r.redirect; } )?
-	( s = pr_SenderSpec { sender = $s.reference; } )?
-		{ $helper = new Redirection_Helper($vs.reference, redirect, sender); }
-|	h = pr_RedirectWithParamSpec	{ $helper = $h.helper;}
+(	(	vs = pr_ValueSpec
+		( r = pr_ParamSpec { redirect = $r.redirect; } )?
+		( s = pr_SenderSpec { sender = $s.reference; } )?
+			{ $helper = new Redirection_Helper($vs.reference, redirect, sender); }
+	|	h = pr_RedirectWithParamSpec	{ $helper = $h.helper;}
+	)
+	pr_IndexSpec?
+|	pr_IndexSpec
 );
 
 pr_VariableList returns[Variable_Entries entries]
@@ -5325,7 +5349,10 @@ pr_FromClausePresent [Reference reference]
 }:
 (	f = pr_FromClause { fromClause = $f.templateInstance; }
 	(	pr_PortRedirectSymbol
-		r = pr_SenderSpec { redirectSender = $r.reference; }
+		(	r = pr_SenderSpec { redirectSender = $r.reference; }
+			pr_IndexSpec?
+		|	pr_IndexSpec
+		)
 	)?
 )
 {
@@ -5353,13 +5380,17 @@ pr_RedirectPresent [Reference reference]
 	returns[Statement statement]
 @init {
 	$statement = null;
+	Reference redirectSender = null;
 }:
-(	col = pr_PortRedirectSymbol
-	redirectSender = pr_SenderSpec
+(	pr_PortRedirectSymbol
+	(	r = pr_SenderSpec { redirectSender = $r.reference; }
+		pr_IndexSpec?
+	|	pr_IndexSpec
+	)
 )
 {
-	$statement = new Check_Port_Statement( $reference, null, $redirectSender.reference );
-	$statement.setLocation( getLocation( $col.start, $redirectSender.stop ) );
+	$statement = new Check_Port_Statement( $reference, null, redirectSender );
+	$statement.setLocation( getLocation( $start, getStopToken() ) );
 };
 
 pr_PortCatchOp [Reference reference, boolean is_check]
@@ -5830,10 +5861,10 @@ pr_FormalValuePar returns[FormalParameter parameter]
 	Location commentLocation = lexer.getLastCommentLocation();
 }:
 (	(	IN { assignmentType = Assignment_type.A_PAR_VAL_IN; }
-		( TITANSPECIFICLAZY { isLazy = true; } )?
+		(	lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }	)?
 	|	INOUT { assignmentType = Assignment_type.A_PAR_VAL_INOUT; }
 	|	OUT { assignmentType = Assignment_type.A_PAR_VAL_OUT; }
-	|	TITANSPECIFICLAZY { isLazy = true; }
+	|	lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }
 	)?
 	t = pr_Type
 	i = pr_Identifier
@@ -5889,7 +5920,9 @@ pr_FormalTemplatePar returns[FormalParameter parameter]
 	|	INOUT { $assignmentType = Assignment_type.A_PAR_TEMP_INOUT; }
 	)?
 	tr = pr_TemplateOptRestricted { templateRestriction = $tr.templateRestriction; }
-	( { $assignmentType == Assignment_type.A_PAR_TEMP_IN }? TITANSPECIFICLAZY { isLazy = true; } )?
+	(	{ $assignmentType == Assignment_type.A_PAR_TEMP_IN }?
+		lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }
+	)?
 	t = pr_Type
 	i = pr_Identifier
 	(   pr_AssignmentChar
@@ -6326,7 +6359,10 @@ pr_GuardOp returns[Statement statement]
 				pr_RParen
 			)?
 			(	pr_PortRedirectSymbol
-				vs = pr_ValueSpec { reference = $vs.reference; }
+				(	vs = pr_ValueSpec { reference = $vs.reference; }
+					pr_IndexSpec?
+				|	pr_IndexSpec
+				)
 			)?
 			{ $statement = new Done_Statement($v.value, doneMatch, reference); } //Done_Statement
 		)
@@ -7232,6 +7268,7 @@ pr_PredefinedOps3 returns[Value value]
 	pr_Comma	v3 = pr_SingleExpression
 	pr_RParen	{	$value = new DecompExpression($v1.value, $v2.value, $v3.value); }
 |	REGEXP
+	pr_NoCaseModifier?
 	pr_LParen	t1 = pr_TemplateInstance
 	pr_Comma	t2 = pr_TemplateInstance
 	pr_Comma	v3 = pr_SingleExpression
@@ -7554,6 +7591,47 @@ pr_FreeText returns[String string]:
 	s = pr_CString
 {
 	$string = $s.string;
+};
+
+pr_NoCaseModifier:
+	NOCASEKEYWORD
+{
+	reportWarning( "Modifier '@nocase' is not currently supported.", $start, getStopToken() );
+};
+
+pr_LazyOrFuzzyModifier returns[ boolean isLazy ]
+@init {
+	$isLazy = false;
+}:
+(	LAZYKEYWORD	{ $isLazy = true; }
+|	FUZZYKEYWORD
+		{
+			reportWarning( "Modifier '@fuzzy' is not currently supported.", $start, getStopToken() );
+		}
+)
+;
+
+pr_DecodedModifier:
+	d = DECODEDKEYWORD
+	(	pr_LParen
+		v = pr_SingleExpression	//TODO: handle value: $v.value
+		pr_RParen
+	)?
+{
+	reportWarning( "Modifier '@decoded' is not currently supported.", $d );
+};
+
+pr_DeterministicModifier:
+	DETERMINISTICKEYWORD	//TODO: Modifier '@deterministic' is not currently supported.
+{
+	reportWarning( "Modifier '@deterministic' is not currently supported.", $start, getStopToken() );
+};
+
+pr_IndexSpec:
+	i = INDEXKEYWORD
+	pr_ValueSpec
+{
+	reportWarning( "Modifier '@index' is not currently supported.", $i );
 };
 
 //------------------------------------------------------

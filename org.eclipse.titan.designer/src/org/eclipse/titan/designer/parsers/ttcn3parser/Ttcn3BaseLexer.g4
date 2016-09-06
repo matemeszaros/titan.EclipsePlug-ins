@@ -374,7 +374,14 @@ MACRO_SCOPE:			'__SCOPE__';
 // TITAN specific keywords
 TITANSPECIFICTRY:	'@try';
 TITANSPECIFICCATCH:	'@catch';
-TITANSPECIFICLAZY:	'@lazy';
+
+// modifier keywords
+NOCASEKEYWORD:			'@nocase';
+LAZYKEYWORD:			'@lazy';
+DECODEDKEYWORD:			'@decoded';
+DETERMINISTICKEYWORD:	'@deterministic';
+FUZZYKEYWORD:			'@fuzzy';
+INDEXKEYWORD:			'@index';
 
 fragment DIGIT: [0-9];
 
