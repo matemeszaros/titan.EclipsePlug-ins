@@ -31,8 +31,9 @@ import Ttcn3BaseLexer;
   CONNECT: 'connect';               CONST: 'const';             CONTINUE: 'continue';
   CONTROL: 'control';               CREATE: 'create';
 
-  DEACTIVATE: 'deactivate';         DEFAULT: 'default';         DEREFERS: 'derefers';
-  DISCONNECT: 'disconnect';         DISPLAY: 'display';         DECVALUE: 'decvalue';
+  DEACTIVATE: 'deactivate';         DEFAULT: 'default';         DECMATCH: 'decmatch';
+  DECVALUE: 'decvalue';             DEREFERS: 'derefers';
+  DISCONNECT: 'disconnect';         DISPLAY: 'display';
   DO: 'do';                         DONE: 'done';
 
   ELSE: 'else';                     ENCODE: 'encode';           ENUMERATED: 'enumerated';

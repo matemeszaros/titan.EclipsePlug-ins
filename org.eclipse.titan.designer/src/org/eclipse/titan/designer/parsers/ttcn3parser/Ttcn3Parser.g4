@@ -1969,6 +1969,7 @@ pr_TemplateBody returns[ TemplateBody body]
 	|	t4 = pr_SimpleSpec { temp = $t4.template; }
 	)
 	(	pr_ExtraMatchingAttributes[temp]	)?
+|	dc = pr_DecodedContentMatch { temp = $dc.template; }
 )
 {
 	if( temp != null ) {
@@ -2285,6 +2286,28 @@ pr_PermutationMatch returns[ListOfTemplates templates]
 
 pr_PermutationKeyword:
 	PERMUTATION
+;
+
+pr_DecodedContentMatch returns[TTCN3Template template]
+@init {
+	$template = null;
+	Value value = null;
+	TemplateInstance templateInstance = null;
+}:
+	pr_DecodedMatchKeyword
+	(	pr_LParen
+		v = pr_SingleExpression { value = $v.value; }
+		pr_RParen
+	)?
+	ti = pr_InLineTemplate { templateInstance = $ti.templateInstance; }
+{
+	//TODO: create template object using value and templateInstance
+	//$template = new DecodedContentMatch( value, templateInstance );
+}
+;
+
+pr_DecodedMatchKeyword:
+	DECMATCH
 ;
 
 pr_CharStringMatch[PatternString ps]
@@ -5062,6 +5085,17 @@ pr_ValueSpec returns[Reference reference]
 @init {
 	$reference = null;
 }:
+	vss = pr_ValueStoreSpec { $reference = $vss.reference; } 
+|	pr_ValueKeyword
+	pr_LParen
+	pr_SingleValueSpecList
+	pr_RParen
+;
+
+pr_ValueStoreSpec returns[Reference reference]
+@init {
+	$reference = null;
+}:
 (	pr_ValueKeyword
 	r = pr_VariableRef { $reference = $r.reference; }
 );
@@ -5071,6 +5105,33 @@ pr_ValueKeyword returns[String stringValue]:
 {
 	$stringValue = $VALUE.getText();
 };
+
+pr_SingleValueSpecList:
+	pr_SingleValueSpec
+	(	pr_Comma
+		pr_SingleValueSpec
+	)*
+;
+
+pr_SingleValueSpec:
+	pr_VariableRef
+|	pr_VariableRef
+	pr_AssignmentChar
+	pr_DecodedModifier?
+	pr_PredefOrIdentifier
+	pr_ExtendedFieldReference?
+;
+
+pr_PredefOrIdentifier:
+(	pr_Identifier
+|	pr_PredefinedType
+|	pr_NullValue
+)
+;
+
+pr_NullValue:
+	NULL2
+;
 
 pr_SenderSpec returns[Reference reference]
 @init {
@@ -7617,9 +7678,7 @@ pr_DecodedModifier:
 		v = pr_SingleExpression	//TODO: handle value: $v.value
 		pr_RParen
 	)?
-{
-	reportWarning( "Modifier '@decoded' is not currently supported.", $d );
-};
+;
 
 pr_DeterministicModifier:
 	DETERMINISTICKEYWORD	//TODO: Modifier '@deterministic' is not currently supported.
@@ -7629,7 +7688,7 @@ pr_DeterministicModifier:
 
 pr_IndexSpec:
 	i = INDEXKEYWORD
-	pr_ValueSpec
+	pr_ValueStoreSpec
 {
 	reportWarning( "Modifier '@index' is not currently supported.", $i );
 };
