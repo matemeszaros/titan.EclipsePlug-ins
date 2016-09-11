@@ -1098,11 +1098,11 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
 				final List<Statement> statements = parser.pr_reparse_FunctionStatementOrDefList().statements;
-//				if ( parser.isErrorListEmpty() ) {
+				if ( parser.isErrorListEmpty() ) {
 					if (statements != null) {
 						addStatementsOrdered(statements);
 					}
-//				}
+				}
 			}
 		});
 	}
