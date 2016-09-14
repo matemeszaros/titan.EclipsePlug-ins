@@ -55,13 +55,13 @@ public class Ttcn3FileReparser implements ITtcn3FileReparser {
 					mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module);
 					mFileMap.put(mFile, actualTtcn3Module.getName());
 					mUptodateFiles.put(mFile, actualTtcn3Module.getName());
+					
+					if (actualTtcn3Module.getLocation().getEndOffset() == -1 && !parser.getErrors().isEmpty()) {
+						actualTtcn3Module.getLocation().setEndOffset((int) new File(mFile.getLocationURI()).length());
+					}
 				} else {
 					mSyntacticallyOutdated = true;
 					mHighlySyntaxErroneousFiles.add(mFile);
-				}
-
-				if (actualTtcn3Module.getLocation().getEndOffset() == -1 && !parser.getErrors().isEmpty()) {
-					actualTtcn3Module.getLocation().setEndOffset((int) new File(mFile.getLocationURI()).length());
 				}
 			}
 		});
