@@ -242,36 +242,34 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			return;
 		}
 
-		if (lastUniquenessCheckTimeStamp == null) {
-			definitionMap = new HashMap<String, Definition>(definitions.size());
-
-			String definitionName;
-			Definition definition;
-			for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
-				definition = iterator.next();
-				definitionName = definition.getIdentifier().getName();
-				if (definitionMap.containsKey(definitionName)) {
-					if (doubleDefinitions == null) {
-						doubleDefinitions = new ArrayList<Definition>();
-					}
-					doubleDefinitions.add(definition);
-				} else {
-					definitionMap.put(definitionName, definition);
+		if (doubleDefinitions != null) {
+			doubleDefinitions.clear();
+		}
+		
+		//(rebuild) definitionMap and doubleDefinitions from the updated field "definitions"
+		definitionMap = new HashMap<String, Definition>(definitions.size());
+		String definitionName;
+		Definition definition;
+		for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
+			definition = iterator.next();
+			definitionName = definition.getIdentifier().getName();
+			if (definitionMap.containsKey(definitionName)) {
+				if (doubleDefinitions == null) {
+					doubleDefinitions = new ArrayList<Definition>();
 				}
+				doubleDefinitions.add(definition);
+			} else {
+				definitionMap.put(definitionName, definition);
 			}
-
-			if (doubleDefinitions != null) {
-				for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
-					definitions.remove(doubleDefinitions.get(i));
-				}
-			}
-
 		}
 
+
 		if (doubleDefinitions != null) {
-			String definitionName;
+			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
+				definitions.remove(doubleDefinitions.get(i));
+			}
+
 			Identifier identifier;
-			Definition definition;
 			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
 				definition = doubleDefinitions.get(i);
 				identifier = definition.getIdentifier();
