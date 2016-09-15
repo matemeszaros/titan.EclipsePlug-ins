@@ -43,11 +43,21 @@ public final class RegexpExpression extends Expression_Value {
 	private final TemplateInstance templateInstance1;
 	private final TemplateInstance templateInstance2;
 	private final Value value3;
+	
+	/**
+	 * true,  if regexp is case insensitive
+	 * false, if regexp is case   sensitive
+	 */
+	private final boolean noCase;
 
-	public RegexpExpression(final TemplateInstance templateInstance1, final TemplateInstance templateInstance2, final Value value3) {
+	public RegexpExpression( final TemplateInstance templateInstance1,
+							 final TemplateInstance templateInstance2,
+							 final Value value3,
+							 final boolean noCase ) {
 		this.templateInstance1 = templateInstance1;
 		this.templateInstance2 = templateInstance2;
 		this.value3 = value3;
+		this.noCase = noCase;
 
 		if (templateInstance1 != null) {
 			templateInstance1.setFullNameParent(this);
@@ -73,6 +83,8 @@ public final class RegexpExpression extends Expression_Value {
 		builder.append(templateInstance2.createStringRepresentation());
 		builder.append(", ");
 		builder.append(value3.createStringRepresentation());
+		builder.append(", ");
+		builder.append(noCase);
 		builder.append(')');
 		return builder.toString();
 	}

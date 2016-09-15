@@ -1325,14 +1325,13 @@ pr_SubTypeSpec returns[List<ParsedSubType> parsedSubTypes]
 pr_AllowedValues returns[List<ParsedSubType> parsedSubTypes]
 @init {
 	$parsedSubTypes = new ArrayList<ParsedSubType>();
-	PatternString ps = new PatternString();
 }:
 (	pr_LParen
 	(	p = pr_ValueOrRange	{ if( $p.parsedSubType != null ) { $parsedSubTypes.add( $p.parsedSubType ); }}
 		(	pr_Comma
 			p = pr_ValueOrRange	{ if( $p.parsedSubType != null ) { $parsedSubTypes.add( $p.parsedSubType ); }}
 		)*
-	|	pr_CharStringMatch[ps]	// an unsupported construct, but must not be reported
+	|	pr_CharStringMatch	// an unsupported construct, but must not be reported
 	)
 	pr_RParen
 );
@@ -2182,7 +2181,6 @@ pr_NotUsedSymbol:
 pr_MatchingSymbol returns[TTCN3Template template]
 @init {
 	$template = null;
-	PatternString ps = new PatternString();
 }:
 (	t1 = pr_Complement { $template = new ComplementedList_Template($t1.templates); }
 |	v1 = pr_Range { $template = new Value_Range_Template($v1.valueRange); }
@@ -2192,8 +2190,8 @@ pr_MatchingSymbol returns[TTCN3Template template]
 |	p1 = pr_BitStringMatch { $template = new BitString_Pattern_Template($p1.pattern); }
 |	p2 = pr_HexStringMatch { $template = new HexString_Pattern_Template($p2.pattern); }
 |	p3 = pr_OctetStringMatch { $template = new OctetString_Pattern_Template($p3.pattern); }
-|	pr_CharStringMatch[ps]
-		{
+|	csm = pr_CharStringMatch
+		{	final PatternString ps = $csm.patternString; 
 			if (ps.getPatterntype() == PatternType.UNIVCHARSTRING_PATTERN) {
 				$template = new UnivCharString_Pattern_Template(ps);
 			} else {
@@ -2310,17 +2308,19 @@ pr_DecodedMatchKeyword:
 	DECMATCH
 ;
 
-pr_CharStringMatch[PatternString ps]
+pr_CharStringMatch returns[PatternString patternString]
 @init {
+	$patternString = new PatternString();
 	StringBuilder builder = new StringBuilder();
 	boolean[] uni = new boolean[1];
 	uni[0] = false;
+	boolean noCase = false;
 }:
 (	pr_PatternKeyword
-	pr_NoCaseModifier?
-	pr_PatternChunk[builder, uni] { if (uni[0]) { $ps.setPatterntype(PatternType.UNIVCHARSTRING_PATTERN); } }
+	(	pr_NoCaseModifier	{	noCase = true;	}	)?
+	pr_PatternChunk[builder, uni, noCase] { if (uni[0]) { $patternString.setPatterntype(PatternType.UNIVCHARSTRING_PATTERN); } }
 	(	STRINGOP
-		pr_PatternChunk[builder, uni]
+		pr_PatternChunk[builder, uni, noCase]
 	)*
 );
 
@@ -2328,7 +2328,8 @@ pr_PatternKeyword:
 	PATTERNKEYWORD
 ;
 
-pr_PatternChunk[StringBuilder builder, boolean[] uni]:
+pr_PatternChunk[StringBuilder builder, boolean[] uni, boolean noCase]:
+//TODOÉ use noCase
 (	a = pr_CString { $builder.append($a.string); }
 |	v = pr_ReferencedValue
 		{	$builder.append('{');
@@ -5088,8 +5089,11 @@ pr_ValueSpec returns[Reference reference]
 	vss = pr_ValueStoreSpec { $reference = $vss.reference; } 
 |	pr_ValueKeyword
 	pr_LParen
-	pr_SingleValueSpecList
+	svs = pr_SingleValueSpecList
 	pr_RParen
+		{
+			$reference = $svs.reference;
+		}
 ;
 
 pr_ValueStoreSpec returns[Reference reference]
@@ -5106,15 +5110,26 @@ pr_ValueKeyword returns[String stringValue]:
 	$stringValue = $VALUE.getText();
 };
 
-pr_SingleValueSpecList:
+pr_SingleValueSpecList returns[Reference reference]
+@init {
+	//TODO: fill
+	$reference = null;
+}:
 	pr_SingleValueSpec
 	(	pr_Comma
 		pr_SingleValueSpec
 	)*
 ;
 
-pr_SingleValueSpec:
-	pr_VariableRef
+pr_SingleValueSpec returns[Reference reference]
+@init {
+	//TODO: fill
+	$reference = null;
+}:
+	vr = pr_VariableRef
+		{
+			$reference = $vr.reference;
+		}
 |	pr_VariableRef
 	pr_AssignmentChar
 	pr_DecodedModifier?
@@ -7322,6 +7337,7 @@ pr_PredefinedOps2 returns[Value value]
 pr_PredefinedOps3 returns[Value value]
 @init {
 	$value = null;
+	boolean noCase = false;
 }:
 (	DECOMP
 	pr_LParen	v1 = pr_SingleExpression
@@ -7329,11 +7345,11 @@ pr_PredefinedOps3 returns[Value value]
 	pr_Comma	v3 = pr_SingleExpression
 	pr_RParen	{	$value = new DecompExpression($v1.value, $v2.value, $v3.value); }
 |	REGEXP
-	pr_NoCaseModifier?
+	(	pr_NoCaseModifier	{	noCase = true;	}	)?
 	pr_LParen	t1 = pr_TemplateInstance
 	pr_Comma	t2 = pr_TemplateInstance
 	pr_Comma	v3 = pr_SingleExpression
-	pr_RParen	{	$value = new RegexpExpression($t1.templateInstance, $t2.templateInstance, $v3.value); }
+	pr_RParen	{	$value = new RegexpExpression($t1.templateInstance, $t2.templateInstance, $v3.value, noCase); }
 |	SUBSTR
 	pr_LParen	t1 = pr_TemplateInstance
 	pr_Comma	v2 = pr_SingleExpression
@@ -7656,9 +7672,7 @@ pr_FreeText returns[String string]:
 
 pr_NoCaseModifier:
 	NOCASEKEYWORD
-{
-	reportWarning( "Modifier '@nocase' is not currently supported.", $start, getStopToken() );
-};
+;
 
 pr_LazyOrFuzzyModifier returns[ boolean isLazy ]
 @init {
