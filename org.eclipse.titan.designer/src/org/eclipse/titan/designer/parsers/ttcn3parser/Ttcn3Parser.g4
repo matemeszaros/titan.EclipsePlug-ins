@@ -756,7 +756,7 @@ pr_StructDefFormalParList:
 	endcol = pr_RParen
 )
 {
-	reportUnsupportedConstruct( "Type parameterization is not currently supported", $col.start, $endcol.stop );
+	reportUnsupportedConstruct( "Type parameterization is not yet supported", $col.start, $endcol.stop );
 };
 
 pr_StructDefFormalPar:
@@ -2329,7 +2329,7 @@ pr_PatternKeyword:
 ;
 
 pr_PatternChunk[StringBuilder builder, boolean[] uni, boolean noCase]:
-//TODOÉ use noCase
+//TODO: use noCase
 (	a = pr_CString { $builder.append($a.string); }
 |	v = pr_ReferencedValue
 		{	$builder.append('{');
@@ -4574,7 +4574,7 @@ pr_DisconnectStatement returns[Disconnect_Statement statement]
 }:
 (	col = pr_DisconnectKeyword
 	(	h = pr_SingleOrMultiConnectionSpec { helper = $h.helper; }
-	|	{	reportUnsupportedConstruct( "Disconnect operation on multiple connections is not currently supported", $col.start, $col.stop );	}
+	|	{	reportUnsupportedConstruct( "Disconnect operation on multiple connections is not yet supported", $col.start, $col.stop );	}
 	)
 )
 {
@@ -4584,7 +4584,7 @@ pr_DisconnectStatement returns[Disconnect_Statement statement]
 		$statement = new Disconnect_Statement(helper.componentReference1, new PortReference(helper.portReference1), helper.componentReference2, new PortReference(helper.portReference2));
 		$statement.setLocation(getLocation( $col.start, $h.stop));
 	} else {
-		reportUnsupportedConstruct( "Disconnect operation on multiple connections is not currently supported", $col.start, $col.stop );
+		reportUnsupportedConstruct( "Disconnect operation on multiple connections is not yet supported", $col.start, $col.stop );
 	}
 };
 
@@ -4671,7 +4671,7 @@ pr_UnmapStatement returns[Unmap_Statement statement]
 }:
 (	col = pr_UnmapKeyword
 	(	h = pr_SingleOrMultiConnectionSpec { helper = $h.helper; }
-	|	{	reportUnsupportedConstruct( "Unmap operation on multiple mappings is not currently supported", $col.start, $col.stop );	}
+	|	{	reportUnsupportedConstruct( "Unmap operation on multiple mappings is not yet supported", $col.start, $col.stop );	}
 	)
 )
 {
@@ -4681,7 +4681,7 @@ pr_UnmapStatement returns[Unmap_Statement statement]
 		$statement = new Unmap_Statement(helper.componentReference1, new PortReference(helper.portReference1), helper.componentReference2, new PortReference(helper.portReference2));
 		$statement.setLocation(getLocation( $col.start, $h.stop));
 	} else {
-		reportUnsupportedConstruct( "Unmap operation on multiple mappings is not currently supported", $col.start, $col.stop );
+		reportUnsupportedConstruct( "Unmap operation on multiple mappings is not yet supported", $col.start, $col.stop );
 	}
 };
 
@@ -4852,14 +4852,14 @@ pr_ToClause returns[IValue value]
 					if ( templateInstance.getType() == null && templateInstance.getDerivedReference() == null && template.getValue() != null ) {
 					$value = template.getValue();
 				} else {
-					reportUnsupportedConstruct( "Multicast communication is not currently supported", $b.start, $b.stop );
+					reportUnsupportedConstruct( "Multicast communication is not yet supported", $b.start, $b.stop );
 				}
 			}
 			}
 //	|	c = pr_AddressRefLis // covered by the previous rule
 	|	d = pr_AllKeyword
 		e = pr_ComponentKeyword
-			{	reportUnsupportedConstruct( "Broadcast communication is not currently supported", $d.start, $e.stop );	}
+			{	reportUnsupportedConstruct( "Broadcast communication is not yet supported", $d.start, $e.stop );	}
 	)
 );
 
@@ -5690,7 +5690,7 @@ pr_TypeReference returns[ Identifier identifier]
 }:
 (	i = pr_Identifier { $identifier = $i.identifier; }
 	(	t = pr_TypeActualParList
-			{	reportUnsupportedConstruct( "Reference to parameterized type is not currently supported ", $t.start, $t.stop );	}
+			{	reportUnsupportedConstruct( "Reference to parameterized type is not yet supported ", $t.start, $t.stop );	}
 	)?
 );
 
@@ -6150,7 +6150,7 @@ pr_DefOrFieldRef returns[Qualifier qualifier]
 			}
 	)?
 |	c = pr_AllRef
-		{	reportUnsupportedConstruct( "Reference to multiple definitions in attribute qualifiers is not currently supported", $c.start, $c.stop );	}
+		{	reportUnsupportedConstruct( "Reference to multiple definitions in attribute qualifiers is not yet supported", $c.start, $c.stop );	}
 );
 
 pr_AllRef:
@@ -7681,7 +7681,7 @@ pr_LazyOrFuzzyModifier returns[ boolean isLazy ]
 (	LAZYKEYWORD	{ $isLazy = true; }
 |	FUZZYKEYWORD
 		{
-			reportWarning( "Modifier '@fuzzy' is not currently supported.", $start, getStopToken() );
+			reportWarning( "Modifier '@fuzzy' is not yet supported.", $start, getStopToken() );
 		}
 )
 ;
@@ -7695,16 +7695,16 @@ pr_DecodedModifier:
 ;
 
 pr_DeterministicModifier:
-	DETERMINISTICKEYWORD	//TODO: Modifier '@deterministic' is not currently supported.
+	DETERMINISTICKEYWORD	//TODO: Modifier '@deterministic' is not yet supported.
 {
-	reportWarning( "Modifier '@deterministic' is not currently supported.", $start, getStopToken() );
+	reportWarning( "Modifier '@deterministic' is not yet supported.", $start, getStopToken() );
 };
 
 pr_IndexSpec:
 	i = INDEXKEYWORD
 	pr_ValueStoreSpec
 {
-	reportWarning( "Modifier '@index' is not currently supported.", $i );
+	reportWarning( "Modifier '@index' is not yet supported.", $i );
 };
 
 //------------------------------------------------------
