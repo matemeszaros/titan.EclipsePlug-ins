@@ -1024,7 +1024,7 @@ public final class TTCN3Module extends Module {
 
 		// edited outside the module
 		if (reparser.getDamageEnd() < location.getOffset()) {
-			// before the modue
+			// before the module
 			reparser.updateLocation(identifier.getLocation());
 			if (definitions != null) {
 				definitions.updateSyntax(reparser, importedModules, friendModules, controlpart);
