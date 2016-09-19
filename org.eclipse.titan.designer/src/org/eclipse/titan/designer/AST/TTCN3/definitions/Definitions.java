@@ -895,9 +895,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		}
 
 		if (result == 0) {
-			if (doubleDefinitions != null) {
-				definitions.removeAll(doubleDefinitions);
-			}
+			lastUniquenessCheckTimeStamp = null;
 		} else {
 			if (doubleDefinitions != null) {
 				doubleDefinitions.clear();

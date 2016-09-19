@@ -641,8 +641,8 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 			tempLocation = temp.getLocation();
 			if (reparser.envelopsDamage(tempLocation)) {
 				enveloped = true;
-				leftBoundary = tempLocation.getEndOffset();
-				rightBoundary = tempLocation.getOffset();
+				leftBoundary = tempLocation.getOffset();
+				rightBoundary = tempLocation.getEndOffset();
 			} else if (reparser.isDamaged(tempLocation)) {
 				nofDamaged++;
 				if (reparser.getDamageStart() == tempLocation.getEndOffset()) {
