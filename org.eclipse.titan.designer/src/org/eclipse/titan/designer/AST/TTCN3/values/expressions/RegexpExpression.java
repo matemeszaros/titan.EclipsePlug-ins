@@ -31,7 +31,8 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class RegexpExpression extends Expression_Value {
 	private static final String CANNOT_DETERMINE_ARG_TYPE = "Cannot determine the argument type of `regexp' operation";
 	private static final String OPERANDERROR1 = "The first operand of the `regexp' operation should be a (universal) charstring value";
