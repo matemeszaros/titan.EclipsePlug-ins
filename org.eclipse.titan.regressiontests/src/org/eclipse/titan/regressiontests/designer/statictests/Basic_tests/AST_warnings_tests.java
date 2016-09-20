@@ -346,147 +346,147 @@ public class AST_warnings_tests {
 		markersToCheck.add(new MarkerToCheck("The value parameter `f' with name f breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 13;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 14;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 11;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 45;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported", lineNum, IMarker.SEVERITY_WARNING));
+			markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported", lineNum, IMarker.SEVERITY_WARNING));
 		}
 
 		return markersToCheck;
@@ -1200,9 +1200,9 @@ public class AST_warnings_tests {
 		lineNum += 27;
 		markersToCheck.add(new MarkerToCheck("Control never reaches this statement",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 99;
-		markersToCheck.add(new MarkerToCheck("Broadcast communication is not currently supported",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Broadcast communication is not yet supported",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 105;
-		markersToCheck.add(new MarkerToCheck("Broadcast communication is not currently supported",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Broadcast communication is not yet supported",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 155;
 		markersToCheck.add(new MarkerToCheck("A variable entry for parameter `par1' is already given here",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 54;

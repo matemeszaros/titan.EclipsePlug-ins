@@ -166,20 +166,20 @@ public class Semantic_warnings_tests {
 		//Semantic_errors4.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(9);
 		int lineNum = 10;
-		markersToCheck.add(new MarkerToCheck("Type parameterization is not currently supported",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Type parameterization is not yet supported",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 6;
-		markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not currently supported",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Reference to multiple definitions in attribute qualifiers is not yet supported",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("The function `@Semantic_errors2.myf' with name myf breaks the naming convention  `f_.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("The value parameter `z' with name z breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("Reference to parameterized type is not currently supported ",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Reference to parameterized type is not yet supported ",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("The variable `akarmi' with name akarmi breaks the naming convention  `vl.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 4;
-		markersToCheck.add(new MarkerToCheck("Broadcast communication is not currently supported",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Broadcast communication is not yet supported",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("Disconnect operation on multiple connections is not currently supported",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("Unmap operation on multiple mappings is not currently supported",  ++lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Disconnect operation on multiple connections is not yet supported",  lineNum, IMarker.SEVERITY_WARNING));
+		markersToCheck.add(new MarkerToCheck("Unmap operation on multiple mappings is not yet supported",  ++lineNum, IMarker.SEVERITY_WARNING));
 
 		return markersToCheck;
 	}
