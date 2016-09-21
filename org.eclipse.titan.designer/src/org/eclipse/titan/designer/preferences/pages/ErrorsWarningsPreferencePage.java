@@ -104,7 +104,7 @@ public final class ErrorsWarningsPreferencePage extends FieldEditorPreferencePag
 	private static final String REPORTERRORSINEXTENSIONSYNTAX_TOOLTIP = "According to the standard"
 			+ " syntax errors in the extension attribute should not be reported,"
 			+ " but should be assumed as correct for some other tool.";
-	private static final String REPORT_STRICT_CONSTANTS = "Use stricter checks for constants";
+	private static final String REPORT_STRICT_CONSTANTS = "Use stricter checks for constants, templates and variables";
 	private static final String REPORT_STRICT_CONSTANTS_TOOLTIP = "Although it is valid to leave fields of constants and literals unbound,"
 			+ " in some cases this was not the intention.";
 	private static final String REPORT_GOTO = "Report the usage of label and goto statements";
