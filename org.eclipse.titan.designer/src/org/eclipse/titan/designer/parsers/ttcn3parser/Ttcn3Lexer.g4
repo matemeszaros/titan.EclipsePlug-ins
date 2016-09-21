@@ -32,13 +32,14 @@ import Ttcn3BaseLexer;
   CONTROL: 'control';               CREATE: 'create';
 
   DEACTIVATE: 'deactivate';         DEFAULT: 'default';         DECMATCH: 'decmatch';
-  DECVALUE: 'decvalue';             DEREFERS: 'derefers';
-  DISCONNECT: 'disconnect';         DISPLAY: 'display';
+  DECVALUE: 'decvalue';             DECVALUE_UNICHAR: 'decvalue_unichar';
+  DEREFERS: 'derefers';             DISCONNECT: 'disconnect';   DISPLAY: 'display';
   DO: 'do';                         DONE: 'done';
 
-  ELSE: 'else';                     ENCODE: 'encode';           ENUMERATED: 'enumerated';
+  ELSE: 'else';                     ENCODE: 'encode';           ENCVALUE: 'encvalue';
+  ENCVALUE_UNICHAR: 'encvalue_unichar';                         ENUMERATED: 'enumerated';
   ERROR: 'error';                   EXCEPT: 'except';           EXCEPTION: 'exception';
-  EXECUTE: 'execute';               EXTENDS: 'extends';         ENCVALUE: 'encvalue';
+  EXECUTE: 'execute';               EXTENDS: 'extends';
   EXTENSION: 'extension';           EXTERNAL: 'external';
 
   FAIL: 'fail';                     FALSE: 'false';             FLOAT: 'float';

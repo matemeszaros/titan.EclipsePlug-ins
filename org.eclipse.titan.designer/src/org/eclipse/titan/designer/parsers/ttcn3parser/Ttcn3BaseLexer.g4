@@ -174,14 +174,15 @@ tokens {
   CONNECT,               CONST,             CONTINUE,
   CONTROL,               CREATE,
 
-  DEACTIVATE,         DEFAULT,         DEREFERS,
-  DISCONNECT,         DISPLAY,         DECVALUE,
-  DO,                         DONE,
+  DEACTIVATE,         DECMATCH,           DECVALUE,
+  DECVALUE_UNICHAR,   DEFAULT,            DEREFERS,
+  DISCONNECT,         DISPLAY,            DO,
+  DONE,
 
-  ELSE,                     ENCODE,           ENUMERATED,
-  ERROR,                   EXCEPT,           EXCEPTION,
-  EXECUTE,               EXTENDS,         ENCVALUE,
-  EXTENSION,           EXTERNAL,
+  ELSE,               ENCODE,             ENCVALUE,
+  ENCVALUE_UNICHAR,   ENUMERATED,         ERROR,
+  EXCEPT,             EXCEPTION,          EXECUTE,
+  EXTENDS,            EXTENSION,          EXTERNAL,
 
   FAIL,                     FALSE,             FLOAT,
   FOR,                       FRIEND,           FROM,

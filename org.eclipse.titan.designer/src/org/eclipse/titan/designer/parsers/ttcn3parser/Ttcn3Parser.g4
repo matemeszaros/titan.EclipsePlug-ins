@@ -7191,8 +7191,51 @@ pr_PredefinedOps returns[Value value]
 	pr_LParen
 	t = pr_TemplateInstance
 	pr_RParen	{	$value = new Ttcn2StringExpression($t.templateInstance); }
+
+|	ENCVALUE_UNICHAR
+	{	Value stringSerialization = null;
+		Value encodingInfo = null;
+	}
+	pr_LParen
+	//template (value) any_type
+	inpar = pr_TemplateInstance
+	(	pr_Comma
+		// charstring
+		ss = pr_SingleExpression { stringSerialization = $ss.value; }
+	)?
+	(	pr_Comma
+		// universal charstring
+		ei = pr_SingleExpression { encodingInfo = $ei.value; }
+	)?
+	pr_RParen
+	//TODO: {	$value = new EncvalueUnicharExpression( $inpar.templateInstance, stringSerialization, encodingInfo );	}
+
+|	DECVALUE_UNICHAR
+	{	Value stringSerialization = null;
+		Value decodingInfo = null;
+	}
+	pr_LParen
+	// universal charstring
+	encodedValue = pr_SingleExpression
+	pr_Comma
+	// any_type decoded_value
+	decodedValue = pr_SingleExpression
+	(	pr_Comma
+		// charstring
+		ss = pr_SingleExpression { stringSerialization = $ss.value; }
+	)?
+	(	pr_Comma
+		// universal charstring
+		di = pr_SingleExpression { decodingInfo = $di.value; }
+	)?
+	pr_RParen
+	//TODO: {	$value = new DecvalueUnicharExpression( $encodedValue.value, $decodedValue.value, stringSerialization, decodingInfo );	}
 )
-{ $value.setLocation(getLocation( $start, getStopToken())); };
+{
+	if ( $value != null ) {
+		$value.setLocation(getLocation( $start, getStopToken()));
+	}
+};
 
 //The ones with only one standard operand
 pr_PredefinedOps1 returns[Value value]
