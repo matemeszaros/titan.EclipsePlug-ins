@@ -55,7 +55,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * @author Kristof Szabados
  * */
 public final class Port_Utility {
-	private static final String VALUEREDIRECTTYPEMISSMATCH = "Type missmatch in value redirect:"
+	private static final String VALUEREDIRECTTYPEMISSMATCH = "Type mismatch in value redirect:"
 			+ " A variable of type `{0}'' was expected instead of `{1}''";
 	private static final String PORTINCONTROLPART = "Port operation is not allowed in the control part";
 	private static final String PORTREFERENCEEXPECTED = "Reference to a port or port parameter was expected instead of {0}";

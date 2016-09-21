@@ -442,7 +442,7 @@ public final class Function_Type extends Type {
 				IType tempReturnType = assignment.getType(timestamp);
 				if (!returnType.isIdentical(timestamp, tempReturnType)) {
 					value.getLocation().reportSemanticError(MessageFormat.format(
-							"Return type missmatch: type `{0}'' expects a function or external function that returns a {1} of type `{2}'', "
+							"Return type mismatch: type `{0}'' expects a function or external function that returns a {1} of type `{2}'', "
 							+ "but {3} returns a template of type `{3}''"
 							, getTypename(), returnsTemplate ? "template" : "value", returnType.getTypename(),
 									assignment.getDescription(), tempReturnType.getTypename()));
@@ -471,7 +471,7 @@ public final class Function_Type extends Type {
 				IType tempReturnType = assignment.getType(timestamp);
 				if (!returnType.isIdentical(timestamp, tempReturnType)) {
 					value.getLocation().reportSemanticError(MessageFormat.format(
-							"Return type missmatch: type `{0}'' expects a function or external function that returns a {1} of type `{2}'', "
+							"Return type mismatch: type `{0}'' expects a function or external function that returns a {1} of type `{2}'', "
 							+ "but {3} returns a template of type `{3}''"
 							, getTypename(), returnsTemplate ? "template" : "value", returnType.getTypename(),
 									assignment.getDescription(), tempReturnType.getTypename()));
@@ -493,7 +493,7 @@ public final class Function_Type extends Type {
 				IType tempReturnType = assignment.getType(timestamp);
 				if (!returnType.isIdentical(timestamp, tempReturnType)) {
 					value.getLocation().reportSemanticError(MessageFormat.format(
-							"Return type missmatch: type `{0}'' expects a function or external function that returns a {1} of type `{2}'',"
+							"Return type mismatch: type `{0}'' expects a function or external function that returns a {1} of type `{2}'',"
 							+ " but {3} returns a value of type `{3}''"
 							, getTypename(), returnsTemplate ? "template" : "value", returnType.getTypename(),
 									assignment.getDescription(), tempReturnType.getTypename()));
