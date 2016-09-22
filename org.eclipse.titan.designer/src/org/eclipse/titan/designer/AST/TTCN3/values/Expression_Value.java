@@ -26,7 +26,8 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * Represents the base class of expressions.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public abstract class Expression_Value extends Value {
 	private static final String CONSTANTEXPECTED = "An evaluatable constant value was expected instead of operation `{0}''";
 	private static final String STATICVALUEEXPECTED = "A static value was expected instead of operation `{0}''";
@@ -148,7 +149,9 @@ public abstract class Expression_Value extends Value {
 		/** unichar2oct (unichar2oct(universal charstring [,charstring]))*/ 	UNICHAR2OCT_OPERATION,
 		/** encode_base64 (encode_base64(octetstring [,boolean])) */ 			ENCODE_BASE64_OPERATION,
 		/** decode_base64 (decode_base64(charstring)) */ 						DECODE_BASE64_OPERATION,
-		/** @profiler . running */								PROFILER_RUNNING_OPERATION
+		/** @profiler . running */								PROFILER_RUNNING_OPERATION,
+		/** encvalue_unichar(template (value) any_type [, charstring] [, universal charstring]) */ ENCVALUE_UNICHAR_OPERATION,
+		/** decvalue_unichar(universal charstring, any_type [, charstring] [, universal charstring]) */ DECVALUE_UNICHAR_OPERATION
 	}
 
 	/** The value of the expression if already evaluated, used to speed things up. */
