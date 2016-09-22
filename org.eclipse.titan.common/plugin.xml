@@ -61,4 +61,19 @@
       class="org.eclipse.titan.common.preferences.pages.TITANCommonPreferencePage"
       name="TITAN Common Preferences" />
   </extension>
+  <extension point="org.eclipse.ui.preferenceTransfer">
+    <transfer icon="icons/titan.gif" name="Titan preferences"
+      id="org.eclipse.titan.preferences.export.all">
+      <mapping scope="instance">
+        <entry node="org.eclipse.titan.common"/>
+        <entry node="org.eclipse.titan.designer"/>
+        <entry node="org.eclipse.titan.executor"/>
+        <entry node="org.eclipse.titan.log"/>
+      </mapping>
+      <description>
+        Export preferences of Titan, including preferences of
+        - common, designer, executor, logviewer plugins when they are installed
+      </description>
+    </transfer>
+  </extension>
 </plugin>
