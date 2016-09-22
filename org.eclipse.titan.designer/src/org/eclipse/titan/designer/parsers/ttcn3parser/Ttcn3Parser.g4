@@ -7208,7 +7208,7 @@ pr_PredefinedOps returns[Value value]
 		ei = pr_SingleExpression { encodingInfo = $ei.value; }
 	)?
 	pr_RParen
-	//TODO: {	$value = new EncvalueUnicharExpression( $inpar.templateInstance, stringSerialization, encodingInfo );	}
+	{	$value = new EncvalueUnicharExpression( $inpar.templateInstance, stringSerialization, encodingInfo );	}
 
 |	DECVALUE_UNICHAR
 	{	Value stringSerialization = null;
@@ -7216,10 +7216,10 @@ pr_PredefinedOps returns[Value value]
 	}
 	pr_LParen
 	// universal charstring
-	encodedValue = pr_SingleExpression
+	encodedValue = pr_VariableRef
 	pr_Comma
 	// any_type decoded_value
-	decodedValue = pr_SingleExpression
+	decodedValue = pr_VariableRef
 	(	pr_Comma
 		// charstring
 		ss = pr_SingleExpression { stringSerialization = $ss.value; }
@@ -7229,7 +7229,7 @@ pr_PredefinedOps returns[Value value]
 		di = pr_SingleExpression { decodingInfo = $di.value; }
 	)?
 	pr_RParen
-	//TODO: {	$value = new DecvalueUnicharExpression( $encodedValue.value, $decodedValue.value, stringSerialization, decodingInfo );	}
+	//TODO: {	$value = new DecvalueUnicharExpression( $encodedValue.reference, $decodedValue.reference, stringSerialization, decodingInfo );	}
 )
 {
 	if ( $value != null ) {
