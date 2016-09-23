@@ -184,7 +184,7 @@ public class TpdImporter {
 			// Hint: cp $TTCN3_DIR/etc/xsd/TPD.xsd designer/schema/
 		}
 
-		URI resolvedProjectFileURI = TITANPathUtilities.convertToAbsoluteURI(projectFile, (URI) null);
+		URI resolvedProjectFileURI = TITANPathUtilities.resolvePath(projectFile, (URI) null);
 		//====================================
 		// Loading all URI Documents (tpds) 
 		// and collect projects to be imported
@@ -572,7 +572,7 @@ public class TpdImporter {
 				try {
 					if (relativeURINode != null) {
 						String relativeLocation = relativeURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.convertToAbsoluteURI(relativeLocation, projectFileFolderURI);
+						URI absoluteURI = TITANPathUtilities.resolvePath(relativeLocation, projectFileFolderURI);
 						if (absoluteURI == null) {
 							// The URI cannot be resolved - for example it
 							// contains not existing environment variables
@@ -592,7 +592,7 @@ public class TpdImporter {
 						}
 					} else if (rawURINode != null) {
 						String rawLocation = rawURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.convertToAbsoluteURI(rawLocation, projectFileFolderURI);
+						URI absoluteURI = TITANPathUtilities.resolvePath(rawLocation, projectFileFolderURI);
 						if (TitanURIUtil.isPrefix(projectLocationURI, absoluteURI)) {
 							folder.create(false, true, null);
 						} else {
@@ -665,7 +665,7 @@ public class TpdImporter {
 				try {
 					if (relativeURINode != null) {
 						String relativeLocation = relativeURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.convertToAbsoluteURI(relativeLocation, projectFileFolderURI);
+						URI absoluteURI = TITANPathUtilities.resolvePath(relativeLocation, projectFileFolderURI);
 						if (absoluteURI == null) {
 							continue;
 						}
@@ -679,7 +679,7 @@ public class TpdImporter {
 						}
 					} else if (rawURINode != null) {
 						String rawURI = rawURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.convertToAbsoluteURI(rawURI, projectFileFolderURI);
+						URI absoluteURI = TITANPathUtilities.resolvePath(rawURI, projectFileFolderURI);
 						if (absoluteURI == null) {
 							continue;
 						}
@@ -1114,7 +1114,7 @@ public class TpdImporter {
 
 			String unresolvedProjectLocationURI = locationNode.getTextContent();
 
-			URI absoluteURI = TITANPathUtilities.convertToAbsoluteURI(unresolvedProjectLocationURI, URIUtil.toURI(projectFileFolderPath));
+			URI absoluteURI = TITANPathUtilities.resolvePath(unresolvedProjectLocationURI, URIUtil.toURI(projectFileFolderPath));
 
 			String fileName;
 			// Determine tpdname
