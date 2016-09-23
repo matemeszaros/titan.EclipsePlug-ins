@@ -7229,7 +7229,7 @@ pr_PredefinedOps returns[Value value]
 		di = pr_SingleExpression { decodingInfo = $di.value; }
 	)?
 	pr_RParen
-	//TODO: {	$value = new DecvalueUnicharExpression( $encodedValue.reference, $decodedValue.reference, stringSerialization, decodingInfo );	}
+	{	$value = new DecvalueUnicharExpression( $encodedValue.reference, $decodedValue.reference, stringSerialization, decodingInfo );	}
 )
 {
 	if ( $value != null ) {
