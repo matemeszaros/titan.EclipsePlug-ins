@@ -62,7 +62,7 @@ public final class TITANPathUtilities {
 		} 
 
 		final IPathVariableManager pathVariableManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
-		URI uri = URIUtil.toURI(tmp2);
+		URI uri = URIUtil.toURI(tmp2);//the trailing dots are removed but later corrected
 		uri = pathVariableManager.resolveURI(uri);
 
 		if (basePath != null && uri != null && !uri.isAbsolute()) {
@@ -148,12 +148,12 @@ public final class TITANPathUtilities {
 	 * 
 	 * @return the resolved uri.
 	 * */
-	//not used, TODO: remove it!
+	//not used, TODO: remove it! use resolvePath(String,String)
 	@Deprecated
 	public static URI convertToAbsoluteURI(final String pathToBeConverted, final String basePath) {
 		return convertToAbsoluteURI(pathToBeConverted, URIUtil.toURI(basePath));
 	}
-	//not used, TODO: remove it!
+	//not used, TODO: remove it!, use resovePath(String,URI)
 	
 	@Deprecated 
 	public static URI convertToAbsoluteURI(final String pathToBeConverted, final URI basePath) {
