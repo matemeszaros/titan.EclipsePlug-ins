@@ -169,30 +169,34 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 		if (lastUniquenessCheck != null && !lastUniquenessCheck.isLess(timestamp)) {
 			return;
 		}
+		
+		lastUniquenessCheck = timestamp;
 
-		if (lastUniquenessCheck == null) {
-			componentFieldMap = new HashMap<String, CompField>(fields.size());
+		if (doubleComponents != null) {
+			doubleComponents.clear();
+		}
 
-			for (int i = 0, size = fields.size(); i < size; i++) {
-				CompField field = fields.get(i);
+		componentFieldMap = new HashMap<String, CompField>(fields.size());
 
-				Identifier fieldIdentifier = field.getIdentifier();
-				String fieldName = fieldIdentifier.getName();
-				if (componentFieldMap.containsKey(fieldName)) {
-					if (doubleComponents == null) {
-						doubleComponents = new ArrayList<CompField>();
-					}
-					doubleComponents.add(field);
-				} else {
-					componentFieldMap.put(fieldName, field);
+		for (int i = 0, size = fields.size(); i < size; i++) {
+			CompField field = fields.get(i);
+
+			Identifier fieldIdentifier = field.getIdentifier();
+			String fieldName = fieldIdentifier.getName();
+			if (componentFieldMap.containsKey(fieldName)) {
+				if (doubleComponents == null) {
+					doubleComponents = new ArrayList<CompField>();
 				}
+				doubleComponents.add(field);
+			} else {
+				componentFieldMap.put(fieldName, field);
 			}
+		}
 
-			if (doubleComponents != null) {
-				for (int i = 0, size = doubleComponents.size(); i < size; i++) {
-					CompField field = doubleComponents.get(i);
-					fields.remove(field);
-				}
+		if (doubleComponents != null) {
+			for (int i = 0, size = doubleComponents.size(); i < size; i++) {
+				CompField field = doubleComponents.get(i);
+				fields.remove(field);
 			}
 		}
 
@@ -209,7 +213,6 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 			}
 		}
 
-		lastUniquenessCheck = timestamp;
 	}
 
 	/**
