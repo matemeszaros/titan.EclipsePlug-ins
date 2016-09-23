@@ -70,7 +70,7 @@ public class CfgParseResult {
 	
 	/**
 	 * Setting for kill timer (in seconds).
-	 * The executing process is killed, if there is no answer form the Main Controller. <br>
+	 * The executing process is killed, if there is no answer from the Main Controller. <br>
 	 * NOTE: this value has effect only for the Titan Eclipse Executor plug-in, works only in JNI Executor mode <br>
 	 * This value is read from the [MAIN_CONTROLLER] section with this parameter:
 	 * <pre>

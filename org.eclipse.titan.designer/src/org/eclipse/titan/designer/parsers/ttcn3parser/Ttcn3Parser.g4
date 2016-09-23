@@ -64,7 +64,7 @@ P : NOT E4 | NOT4B E11 | ( '+' | '-' ) P | '(' E1 ')' | v
   P: last rule with unary operations
   v: atomic expression without any operators, pr_Primary in case of Ttcn3Parser.g4
 
-NOTE: unary operators, which are not on the highest priority level, are used twice, because they must be handled at their precendence level,
+NOTE: unary operators, which are not on the highest priority level, are used twice, because they must be handled at their precedence level,
       and also at the last (highest precedence) level, if there is no match to other operators.
       If any of these unary operators was matched in the last rule, control must jump back to the rule of its precedence level ( NOT E4, NOT4B E11 ).
       Example case:
