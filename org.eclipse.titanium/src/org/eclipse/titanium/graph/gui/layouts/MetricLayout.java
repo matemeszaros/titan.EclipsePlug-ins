@@ -31,7 +31,7 @@ public class MetricLayout<E> extends BaseHierarchicalLayout<NodeDescriptor, E> {
 	 * @param size : The size of the canvas
 	 * @param metric : The chosen metric type for ordering
 	 */
-	public MetricLayout(Graph<NodeDescriptor, E> g, Dimension size, IMetricEnum metric) {
+	public MetricLayout(final Graph<NodeDescriptor, E> g, final Dimension size, final IMetricEnum metric) {
 		super(g,size,metric);
 	}
 
@@ -41,7 +41,7 @@ public class MetricLayout<E> extends BaseHierarchicalLayout<NodeDescriptor, E> {
 	}
 
 	@Override
-	protected Collection<NodeDescriptor> getNeighbours(NodeDescriptor v) {
+	protected Collection<NodeDescriptor> getNeighbours(final NodeDescriptor v) {
 		return graph.getPredecessors(v);
 	}
 	

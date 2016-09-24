@@ -31,12 +31,12 @@ public class UnusedRetval extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Unknown_Instance_Statement) {
-			Unknown_Instance_Statement u = (Unknown_Instance_Statement) node;
-			Statement s = u.getRealStatement();
+			final Unknown_Instance_Statement u = (Unknown_Instance_Statement) node;
+			final Statement s = u.getRealStatement();
 			if (s instanceof Function_Instance_Statement) {
-				Function_Instance_Statement f = (Function_Instance_Statement) s;
+				final Function_Instance_Statement f = (Function_Instance_Statement) s;
 
-				Assignment assignment = f.getReference().getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Assignment assignment = f.getReference().getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				if (assignment != null) {
 					String msg;
 					switch (assignment.getAssignmentType()) {
@@ -61,7 +61,7 @@ public class UnusedRetval extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Unknown_Instance_Statement.class);
 		return ret;
 	}

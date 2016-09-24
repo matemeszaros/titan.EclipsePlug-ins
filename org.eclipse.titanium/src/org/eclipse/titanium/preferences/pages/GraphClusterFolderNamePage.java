@@ -33,7 +33,7 @@ public class GraphClusterFolderNamePage extends FieldEditorPreferencePage implem
 
 	@Override
 	protected void createFieldEditors() {
-		ListEditor editor = new ListEditor(PreferenceConstants.CLUSTER_TRUNCATE, "List of prefixes", getFieldEditorParent());
+		final ListEditor editor = new ListEditor(PreferenceConstants.CLUSTER_TRUNCATE, "List of prefixes", getFieldEditorParent());
 		addField(editor);
 	}
 
@@ -44,9 +44,9 @@ public class GraphClusterFolderNamePage extends FieldEditorPreferencePage implem
 
 	@Override
 	public boolean performOk() {
-		boolean result = super.performOk();
+		final boolean result = super.performOk();
 
-		IEclipsePreferences node = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
+		final IEclipsePreferences node = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 		if (node != null) {
 			try {
 				node.flush();

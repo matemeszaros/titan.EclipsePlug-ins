@@ -25,10 +25,10 @@ public class UnusedGlobalDefinition extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Assignment) {
-			Assignment s = (Assignment) node;
+			final Assignment s = (Assignment) node;
 			if (!s.isUsed() && !s.isLocal() && !(s.getMyScope() instanceof ComponentTypeBody)) {
-				String name = s.getIdentifier().getDisplayName();
-				String msg = MessageFormat.format("The {0} `{1}'' seems to be never used globally", s.getAssignmentName(), name);
+				final String name = s.getIdentifier().getDisplayName();
+				final String msg = MessageFormat.format("The {0} `{1}'' seems to be never used globally", s.getAssignmentName(), name);
 				problems.report(s.getIdentifier().getLocation(), msg);
 			}
 		}
@@ -36,7 +36,7 @@ public class UnusedGlobalDefinition extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Assignment.class);
 		return ret;
 	}

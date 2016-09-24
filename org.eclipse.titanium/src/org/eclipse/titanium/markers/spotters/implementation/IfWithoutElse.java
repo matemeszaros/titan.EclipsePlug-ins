@@ -26,9 +26,9 @@ public class IfWithoutElse extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof If_Statement) {
-			If_Statement s = (If_Statement) node;
+			final If_Statement s = (If_Statement) node;
 			if (s.getStatementBlock() == null && s.getIfClauses() != null && s.getIfClauses().isExactlyOne()) {
-				StatementBlock parentBlock = s.getMyStatementBlock();
+				final StatementBlock parentBlock = s.getMyStatementBlock();
 				if (parentBlock != null && parentBlock.getSize() == 1) {
 					problems.report(s.getLocation(), ERROR_MESSAGE);
 				}
@@ -38,7 +38,7 @@ public class IfWithoutElse extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(If_Statement.class);
 		return ret;
 	}

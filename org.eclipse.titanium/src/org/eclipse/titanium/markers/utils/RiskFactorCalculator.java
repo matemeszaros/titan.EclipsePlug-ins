@@ -88,15 +88,15 @@ public class RiskFactorCalculator {
 	 */
 	// TODO: it worth reconsidering to refactor, i.e. the smell counting as a
 	// separate method of this class
-	public int measure(IProject project, Map<String, Integer> smellCount) {
-		MetricData data = MetricData.measure(project);
-		Number n = data.getStatistics(ModuleMetric.LINES_OF_CODE).get(StatColumn.TOTAL);
-		int loc = n.intValue();
+	public int measure(final IProject project, final Map<String, Integer> smellCount) {
+		final MetricData data = MetricData.measure(project);
+		final Number n = data.getStatistics(ModuleMetric.LINES_OF_CODE).get(StatColumn.TOTAL);
+		final int loc = n.intValue();
 
 		int riskFactor = 0;
 		int actualS, baseS, relativeOccurrene;
-		for (ProblemType  marker : USED_MARKERS) {
-			Integer count = smellCount.get(marker.toString());
+		for (final ProblemType  marker : USED_MARKERS) {
+			final Integer count = smellCount.get(marker.toString());
 			if (count == null) {
 				throw new IllegalArgumentException("The supplied map has no entry for " + marker.toString()
 						+ ". Collate the parameters and the 'usedMarkers' field.");
@@ -142,10 +142,10 @@ public class RiskFactorCalculator {
 	 * 
 	 * @return the quality assignment of the project
 	 */
-	public ProjectQualityLevel calculate(int riskFactor) {
+	public ProjectQualityLevel calculate(final int riskFactor) {
 		ProjectQualityLevel quality;
 		// denoted as T in the paper
-		int baseRiskFactor = Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, PreferenceConstants.BASE_RISK_FACTOR, 43, null);
+		final int baseRiskFactor = Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, PreferenceConstants.BASE_RISK_FACTOR, 43, null);
 		if (riskFactor < baseRiskFactor) {
 			quality = ProjectQualityLevel.VERY_HIGH;
 		} else if (riskFactor < 2 * baseRiskFactor) {
@@ -171,7 +171,7 @@ public class RiskFactorCalculator {
 
 		private String name;
 
-		ProjectQualityLevel(String name) {
+		ProjectQualityLevel(final String name) {
 			this.name = name;
 		}
 

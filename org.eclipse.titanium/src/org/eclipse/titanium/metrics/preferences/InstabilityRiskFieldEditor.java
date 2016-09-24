@@ -39,7 +39,8 @@ public class InstabilityRiskFieldEditor extends SimpleRiskFieldEditor {
 		for (final Spinner s : spinners) {
 			s.dispose();
 		}
-		Number[] limits = getLimits(m, toDefault);
+		final Number[] limits = getLimits(m, toDefault);
+
 		switch (m) {
 		case NEVER:
 			spinners = new Spinner[0];

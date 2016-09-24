@@ -28,12 +28,12 @@ public class ReverseDAGLayout<V,E> extends BaseHierarchicalLayout<V,E> {
 	 * @param g : The graph to show
 	 * @param size : The size of the canvas to draw on
 	 */
-	public ReverseDAGLayout(Graph<V,E> g, Dimension size) {
+	public ReverseDAGLayout(final Graph<V,E> g, final Dimension size) {
 		super(g, size);
 	}
 
 	@Override
-	protected Collection<V> getNeighbours(V v) {
+	protected Collection<V> getNeighbours(final V v) {
 		return graph.getSuccessors(v);
 	}
 

@@ -26,14 +26,14 @@ public class Goto extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Goto_statement) {
-			Goto_statement s = (Goto_statement) node;
+			final Goto_statement s = (Goto_statement) node;
 			problems.report(s.getLocation(), ERROR_MESSAGE);
 		}
 	}
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Goto_statement.class);
 		return ret;
 	}

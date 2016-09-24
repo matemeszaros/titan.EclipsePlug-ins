@@ -37,10 +37,10 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Start_Referenced_Component_Statement) {
-			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
-			Start_Referenced_Component_Statement s = (Start_Referenced_Component_Statement) node;
+			final CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
+			final Start_Referenced_Component_Statement s = (Start_Referenced_Component_Statement) node;
 
-			Value dereferredValue = s.getDereferredValue();
+			final Value dereferredValue = s.getDereferredValue();
 			if (dereferredValue == null) {
 				return;
 			}
@@ -70,7 +70,7 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 				return;
 			}
 
-			Function_Type functionType = (Function_Type) type;
+			final Function_Type functionType = (Function_Type) type;
 			if (functionType.isRunsOnSelf()) {
 				return;
 			}
@@ -78,7 +78,7 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 				return;
 			}
 
-			IType returnType = functionType.getReturnType();
+			final IType returnType = functionType.getReturnType();
 			if (returnType == null) {
 				return;
 			}
@@ -95,8 +95,8 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 					break;
 				}
 				if (lastType instanceof IReferencingType) {
-					IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
-					IType refd = ((IReferencingType) lastType).getTypeRefd(timestamp, refChain);
+					final IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+					final IType refd = ((IReferencingType) lastType).getTypeRefd(timestamp, refChain);
 					refChain.release();
 					if (lastType != refd) {
 						lastType = refd;
@@ -109,7 +109,7 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 			}
 
 			if (!returnTypeCorrect) {
-				String msg = MessageFormat.format(PROBLEM, functionType.getTypename(), returnType.getTypename());
+				final String msg = MessageFormat.format(PROBLEM, functionType.getTypename(), returnType.getTypename());
 				problems.report(dereferredValue.getLocation(), msg);
 			}
 		}
@@ -117,7 +117,7 @@ public class UnusedStartedRefFuncRetVal extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Start_Referenced_Component_Statement.class);
 		return ret;
 	}

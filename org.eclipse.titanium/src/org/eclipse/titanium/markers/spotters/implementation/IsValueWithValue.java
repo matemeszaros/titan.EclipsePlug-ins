@@ -39,14 +39,14 @@ public class IsValueWithValue extends BaseModuleCodeSmellSpotter {
 		if (!(node instanceof IsValueExpression)) {
 			return;
 		}
-		IsValueExpression ive = (IsValueExpression)node;
-		ExpressionVisitor visitor = new ExpressionVisitor(problems);
+		final IsValueExpression ive = (IsValueExpression)node;
+		final ExpressionVisitor visitor = new ExpressionVisitor(problems);
 		ive.accept(visitor);
 	}
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(IsValueExpression.class);
 		return ret;
 	}

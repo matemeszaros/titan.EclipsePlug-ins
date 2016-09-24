@@ -52,7 +52,7 @@ public class XlsProblemExporter extends BaseProblemExporter {
 	 * @param project
 	 *            candidate whose code smell markers are to save
 	 */
-	public XlsProblemExporter(IProject project) {
+	public XlsProblemExporter(final IProject project) {
 		super(project);
 	}
 
@@ -80,8 +80,8 @@ public class XlsProblemExporter extends BaseProblemExporter {
 	@Override
 	// Flow analysis thinks 'sheet' may be referenced as null, but it is
 	// guaranteed to be initialized first.
-	public void exportMarkers(final IProgressMonitor monitor, final String filename, Date date) throws IOException {
-		SubMonitor progress = SubMonitor.convert(monitor, 100);
+	public void exportMarkers(final IProgressMonitor monitor, final String filename, final Date date) throws IOException {
+		final SubMonitor progress = SubMonitor.convert(monitor, 100);
 		final  File file = new File(filename);
 		POIFSFileSystem fs = null;
 		HSSFWorkbook workbook = null;
@@ -117,14 +117,14 @@ public class XlsProblemExporter extends BaseProblemExporter {
 
 			final Map<TaskType, List<IMarker>> markers = collectMarkers();
 			// export the task markers:
-			for (TaskType t : TaskType.values()) {
+			for (final TaskType t : TaskType.values()) {
 				createTaskSheet(workbook, t, markers.get(t));
 
-				Row row1 = summarySheet.createRow(summaryRow++);
+				final Row row1 = summarySheet.createRow(summaryRow++);
 				label = row1.createCell(0);
 				label.setCellValue(t.getHumanReadableName());
 
-				int nofMarkers = markers.get(t).size();
+				final int nofMarkers = markers.get(t).size();
 				numberCell = row1.createCell(1);
 				numberCell.setCellValue(nofMarkers);
 
@@ -137,10 +137,10 @@ public class XlsProblemExporter extends BaseProblemExporter {
 			final MarkerHandler mh = AnalyzerCache.withAll().analyzeProject(progress.newChild(30), project);
 			progress.setWorkRemaining(CodeSmellType.values().length + 1);
 			// export the semantic problem markers:
-			for (CodeSmellType t : CodeSmellType.values()) {
+			for (final CodeSmellType t : CodeSmellType.values()) {
 				createCodeSmellSheet(workbook, mh, t);
 
-				Row row1 = summarySheet.createRow(summaryRow++);
+				final Row row1 = summarySheet.createRow(summaryRow++);
 				label = row1.createCell(0);
 				label.setCellValue(t.getHumanReadableName());
 
@@ -152,21 +152,21 @@ public class XlsProblemExporter extends BaseProblemExporter {
 				progress.worked(1);
 			}
 
-			Row row0 = summarySheet.createRow(0);
+			final Row row0 = summarySheet.createRow(0);
 			row0.createCell(0).setCellValue("Project: " + project.getName());
 
-			Row row1 = summarySheet.createRow(1);
+			final Row row1 = summarySheet.createRow(1);
 			row1.createCell(0).setCellValue("Code smell \\ date");
 
-			CellStyle cellStyle = workbook.createCellStyle();
+			final CellStyle cellStyle = workbook.createCellStyle();
 			cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("yyyy.mm.dd"));
 			label = row1.createCell(1);
 			label.setCellValue(date);
 			label.setCellStyle(cellStyle);
 
-			Row row2 = summarySheet.createRow(2);
+			final Row row2 = summarySheet.createRow(2);
 			row2.createCell(0).setCellValue("Commulative Project Risk Factor");
-			int riskFactor = new RiskFactorCalculator().measure(project, smellCount);
+			final int riskFactor = new RiskFactorCalculator().measure(project, smellCount);
 			row2.createCell(1).setCellValue(riskFactor);
 
 			summarySheet.autoSizeColumn(0);
@@ -204,32 +204,32 @@ public class XlsProblemExporter extends BaseProblemExporter {
 		
 		int summaryRow = 4;
 		Cell label;
-		for (TaskType t : TaskType.values()) {
-			Row row2 = timeSheet.createRow(summaryRow);	
+		for (final TaskType t : TaskType.values()) {
+			final Row row2 = timeSheet.createRow(summaryRow);	
 			label = row2.createCell(0);		
 			label.setCellValue(t.getHumanReadableName());
-			Cell minTimeCell = row2.createCell(1);
+			final Cell minTimeCell = row2.createCell(1);
 			minTimeCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 			minTimeCell.setCellFormula(t.getMinRepairTime() + "*Summary!$B" + (summaryRow + 1));
-			Cell avgTimeCell = row2.createCell(2);
+			final Cell avgTimeCell = row2.createCell(2);
 			avgTimeCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 			avgTimeCell.setCellFormula(t.getAvgRepairTime() + "*Summary!$B" + (summaryRow + 1));
-			Cell maxTimeCell = row2.createCell(3);
+			final Cell maxTimeCell = row2.createCell(3);
 			maxTimeCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 			maxTimeCell.setCellFormula(t.getMaxRepairTime() + "*Summary!$B" + (++summaryRow));
 		}
 		
-		for (CodeSmellType t : CodeSmellType.values()) {
-			Row row2 = timeSheet.createRow(summaryRow);	
+		for (final CodeSmellType t : CodeSmellType.values()) {
+			final Row row2 = timeSheet.createRow(summaryRow);	
 			label = row2.createCell(0);		
 			label.setCellValue(t.getHumanReadableName());
-			Cell minTimeCell = row2.createCell(1);
+			final Cell minTimeCell = row2.createCell(1);
 			minTimeCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 			minTimeCell.setCellFormula(t.getMinRepairTime() + "*Summary!$B" + (summaryRow + 1));
-			Cell avgTimeCell = row2.createCell(2);
+			final Cell avgTimeCell = row2.createCell(2);
 			avgTimeCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 			avgTimeCell.setCellFormula(t.getAvgRepairTime() + "*Summary!$B" + (summaryRow + 1));
-			Cell maxTimeCell = row2.createCell(3);
+			final Cell maxTimeCell = row2.createCell(3);
 			maxTimeCell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 			maxTimeCell.setCellFormula(t.getMaxRepairTime() + "*Summary!$B" + (++summaryRow));
 		}
@@ -237,15 +237,15 @@ public class XlsProblemExporter extends BaseProblemExporter {
 		final Row totalRow = timeSheet.createRow(1);	
 		totalRow.createCell(0).setCellValue("Total");
 		
-		Cell cell1 = totalRow.createCell(1);
+		final Cell cell1 = totalRow.createCell(1);
 		cell1.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 		cell1.setCellFormula("SUM($B4:$B" + summaryRow + ")");
 		
-		Cell cell2 = totalRow.createCell(2);
+		final Cell cell2 = totalRow.createCell(2);
 		cell2.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 		cell2.setCellFormula("SUM($C4:$C" + summaryRow + ")");
 		
-		Cell cell3 = totalRow.createCell(3);
+		final Cell cell3 = totalRow.createCell(3);
 		cell3.setCellType(HSSFCell.CELL_TYPE_FORMULA);
 		cell3.setCellFormula("SUM($D4:$D" + summaryRow + ")");
 
@@ -262,7 +262,7 @@ public class XlsProblemExporter extends BaseProblemExporter {
 	 * @param t the task type to export.
 	 * @param markers the list of markers.
 	 * */
-	private void createTaskSheet(final HSSFWorkbook workbook, TaskType t, List<IMarker> markers) {
+	private void createTaskSheet(final HSSFWorkbook workbook, final TaskType t, final List<IMarker> markers) {
 		if (markers.isEmpty()) {
 			return;
 		}
@@ -278,7 +278,7 @@ public class XlsProblemExporter extends BaseProblemExporter {
 
 		Cell label;
 		Cell numberCell;
-		for (IMarker m : markers) {
+		for (final IMarker m : markers) {
 			row = sheet.createRow(currentRow);
 			label = row.createCell(0);
 			try {
@@ -311,7 +311,7 @@ public class XlsProblemExporter extends BaseProblemExporter {
 	 * @param mh the markerhandler object knowing the occurences of the given code smell
 	 * @param t the codesmell type to export
 	 * */
-	private void createCodeSmellSheet(final HSSFWorkbook workbook, MarkerHandler mh, CodeSmellType t) {
+	private void createCodeSmellSheet(final HSSFWorkbook workbook, final MarkerHandler mh, final CodeSmellType t) {
 		if (mh.get(t).isEmpty()) {
 			return;
 		}
@@ -326,7 +326,7 @@ public class XlsProblemExporter extends BaseProblemExporter {
 
 		int currentRow = 1;
 		Cell label;
-		for (Marker m : mh.get(t)) {
+		for (final Marker m : mh.get(t)) {
 			if (m.getLine() == -1 || m.getResource() == null) {
 				// TODO this might need a second thought
 				continue;

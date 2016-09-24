@@ -90,7 +90,7 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 		}
 
 		final IStructuredSelection structSelection = (IStructuredSelection) selection;
-		for (Object selected : structSelection.toList()) {
+		for (final Object selected : structSelection.toList()) {
 			if (selected instanceof IProject) {
 				final IProject project = (IProject) selected;
 
@@ -117,7 +117,7 @@ public class ModuleGraphAction extends AbstractHandler implements IObjectActionD
 			IFile input = null;
 			try {
 				IResource[] members = project.members();
-				for (IResource res : members) {
+				for (final IResource res : members) {
 					if (res.getType() == IResource.FILE) {
 						input = (IFile) res;
 						break;

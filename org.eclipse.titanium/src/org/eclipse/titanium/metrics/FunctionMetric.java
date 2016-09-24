@@ -57,15 +57,15 @@ public enum FunctionMetric implements IMetricEnum {
 	private Set<StatColumn> requestedStatistics;
 	private boolean isInteger;
 
-	private FunctionMetric(String name, String hint) {
+	private FunctionMetric(final String name, final String hint) {
 		this(name, hint, EnumSet.allOf(StatColumn.class), true);
 	}
 
-	private FunctionMetric(String name, String hint, Set<StatColumn> requestedStatistics) {
+	private FunctionMetric(final String name, final String hint, final Set<StatColumn> requestedStatistics) {
 		this(name, hint, requestedStatistics, true);
 	}
 
-	private FunctionMetric(String name, String hint, Set<StatColumn> requestedStatistics, boolean isInteger) {
+	private FunctionMetric(final String name, final String hint, final Set<StatColumn> requestedStatistics, final boolean isInteger) {
 		this.displayName = name;
 		this.hint = hint;
 		this.requestedStatistics = requestedStatistics;

@@ -29,7 +29,7 @@ public class ExportAllMetrics extends InformationExporter {
 	}
 
 	@Override
-	protected void exportInformationForProject(String[] args, IProject project, IProgressMonitor monitor) {
+	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
 		final MetricData data = MetricData.measure(project);
 		
 		final RiskLevel r = RiskLevel.NO;

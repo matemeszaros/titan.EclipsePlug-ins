@@ -43,7 +43,7 @@ public class ExportDataForSonar extends InformationExporter {
 
 		final List<String> projectNames = Arrays.asList(args[1].split(","));
 		final IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
-		for (String name : projectNames) {
+		for (final String name : projectNames) {
 			final IProject project = wsRoot.getProject(name);
 			if (!project.isAccessible()) {
 				System.out.println("Project '" + name + "' is not accessible.");

@@ -28,7 +28,7 @@ public class ReadOnlyInOutPar extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof FormalParameter) {
-			FormalParameter s = (FormalParameter) node;
+			final FormalParameter s = (FormalParameter) node;
 			if (s.getMyParameterList().getMyDefinition() instanceof Def_Type) {
 				return;
 			}
@@ -36,7 +36,7 @@ public class ReadOnlyInOutPar extends BaseModuleCodeSmellSpotter {
 				switch (s.getAssignmentType()) {
 				case A_PAR_VAL_INOUT:
 				case A_PAR_TEMP_INOUT:
-					String msg = MessageFormat.format(READONLY, s.getDescription());
+					final String msg = MessageFormat.format(READONLY, s.getDescription());
 					problems.report(s.getLocation(), msg);
 					break;
 				default:
@@ -48,7 +48,7 @@ public class ReadOnlyInOutPar extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(FormalParameter.class);
 		return ret;
 	}

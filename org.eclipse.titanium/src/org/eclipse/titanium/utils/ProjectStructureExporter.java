@@ -93,7 +93,7 @@ public class ProjectStructureExporter {
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path)), "UTF-8"));
 			final MapAppender appender = new MapAppender(writer, StringUtils.lineSeparator(), ";");
-			for (ResourceData data : visitor.resources) {
+			for (final ResourceData data : visitor.resources) {
 				appender.append(data.type, data.projectRelativePath, data.absoluteURI.toString());
 			}
 		} finally {

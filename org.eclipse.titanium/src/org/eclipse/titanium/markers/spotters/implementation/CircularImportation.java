@@ -33,10 +33,10 @@ public class CircularImportation extends BaseProjectCodeSmellSpotter {
 
 	@Override
 	public void process(final IProject project, final Problems problems) {
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		Set<String> knownModuleNames = projectSourceParser.getKnownModuleNames();
-		List<Module> modules = new ArrayList<Module>();
-		for (String moduleName : new TreeSet<String>(knownModuleNames)) {
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
+		final Set<String> knownModuleNames = projectSourceParser.getKnownModuleNames();
+		final List<Module> modules = new ArrayList<Module>();
+		for (final String moduleName : new TreeSet<String>(knownModuleNames)) {
 			modules.add(projectSourceParser.getModuleByName(moduleName));
 		}
 
@@ -47,25 +47,25 @@ public class CircularImportation extends BaseProjectCodeSmellSpotter {
 			}
 		});
 
-		CycleCheck check = new CycleCheck(modules);
-		for (List<Module> c : check.cycles) {
-			StringBuilder sb = new StringBuilder("Importation cycle detected: ");
-			for (Module m : c) {
+		final CycleCheck check = new CycleCheck(modules);
+		for (final List<Module> c : check.cycles) {
+			final StringBuilder sb = new StringBuilder("Importation cycle detected: ");
+			for (final Module m : c) {
 				sb.append(m.getName());
 				sb.append(" -> ");
 			}
 			sb.append(c.get(0).getName());
-			String errMsg = sb.toString();
+			final String errMsg = sb.toString();
 
 			// Try to find the locations to report, i.e. the import statements.
 			// We handle only the case of TTCN3Module-s.
-			Iterator<Module> it = c.iterator();
+			final Iterator<Module> it = c.iterator();
 			Module imported = it.next();
 			Module importer;
 			while (it.hasNext()) {
 				importer = it.next();
 				if (importer instanceof TTCN3Module) {
-					for (ImportModule im : ((TTCN3Module) importer).getImports()) {
+					for (final ImportModule im : ((TTCN3Module) importer).getImports()) {
 						if (im.getName().equals(imported.getName())) {
 							problems.report(im.getLocation(), errMsg);
 						}
@@ -75,7 +75,7 @@ public class CircularImportation extends BaseProjectCodeSmellSpotter {
 			}
 			importer = c.get(0);
 			if (importer instanceof TTCN3Module) {
-				for (ImportModule im : ((TTCN3Module) importer).getImports()) {
+				for (final ImportModule im : ((TTCN3Module) importer).getImports()) {
 					if (im.getName().equals(imported.getName())) {
 						problems.report(im.getLocation(), errMsg);
 					}
@@ -111,13 +111,13 @@ class CycleCheck {
 	 */
 	public CycleCheck(final List<Module> modules) {
 		map = new HashMap<Module, Node>();
-		for (Module module : modules) {
+		for (final Module module : modules) {
 			map.put(module, new Node(module));
 		}
 		cycles = new ArrayList<List<Module>>();
 
-		for (Module module : modules) {
-			Node node = map.get(module);
+		for (final Module module : modules) {
+			final Node node = map.get(module);
 			if (node.state == State.WHITE) {
 				dfs(node);
 			}
@@ -126,8 +126,8 @@ class CycleCheck {
 
 	private void dfs(final Node n) {
 		n.state = State.GRAY;
-		for (Module m : n.module.getImportedModules()) {
-			Node child = map.get(m);
+		for (final Module m : n.module.getImportedModules()) {
+			final Node child = map.get(m);
 			if (child != null) {
 				switch (child.state) {
 				case WHITE:
@@ -146,7 +146,7 @@ class CycleCheck {
 	}
 
 	private void newCycle(final Node knot, final Node n) {
-		List<Module> cycle = new ArrayList<Module>();
+		final List<Module> cycle = new ArrayList<Module>();
 		if (knot.module != n.module) {
 			Node p = n;
 			do {

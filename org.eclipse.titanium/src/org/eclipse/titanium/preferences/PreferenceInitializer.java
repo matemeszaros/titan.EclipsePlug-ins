@@ -93,7 +93,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.ON_THE_FLY_SMELLS, false);
 
 		// Initialize default values of metrics
-		for (IMetricEnum metric : MetricGroup.knownMetrics()) {
+		for (final IMetricEnum metric : MetricGroup.knownMetrics()) {
 			final String name = metric.id();
 			preferenceStore.setDefault(PreferenceConstants.nameMetricEnabled(name), true);
 			preferenceStore.setDefault(PreferenceConstants.nameMetricRisk(name), 0);

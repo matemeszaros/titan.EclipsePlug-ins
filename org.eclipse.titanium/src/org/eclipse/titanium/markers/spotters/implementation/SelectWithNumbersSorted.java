@@ -56,19 +56,19 @@ public class SelectWithNumbersSorted extends  BaseModuleCodeSmellSpotter {
 			return;
 		}
 
-		SelectCase_Statement s = (SelectCase_Statement)node;
-		Value v = s.getExpression();
+		final SelectCase_Statement s = (SelectCase_Statement)node;
+		final Value v = s.getExpression();
 		if (v == null || v.getIsErroneous(timestamp)) {
 			return;
 		}
 		
-		SelectCases scs = s.getSelectCases();
+		final SelectCases scs = s.getSelectCases();
 		if (scs == null || scs.getSelectCaseArray() == null) {
 			return;
 		}
 		
 		//if there is an else branch, no smell will be reported
-		for (SelectCase sc: scs.getSelectCaseArray()) {
+		for (final SelectCase sc: scs.getSelectCaseArray()) {
 			if (sc.hasElse()) {
 				return;
 			}
@@ -85,10 +85,10 @@ public class SelectWithNumbersSorted extends  BaseModuleCodeSmellSpotter {
 		}
 		
 		//count number of cases in select, get used integer type case-items
-		CaseVisitorInteger caseVisitorInteger = new CaseVisitorInteger();
+		final CaseVisitorInteger caseVisitorInteger = new CaseVisitorInteger();
 		scs.accept(caseVisitorInteger);
 		
-		List<Long> usedIntegerItems = caseVisitorInteger.getItemsUsed();
+		final List<Long> usedIntegerItems = caseVisitorInteger.getItemsUsed();
 		if (caseVisitorInteger.containsUnfoldable()) {
 			return;
 		}
@@ -111,7 +111,7 @@ public class SelectWithNumbersSorted extends  BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(SelectCase_Statement.class);
 		return ret;
 	}
@@ -146,7 +146,7 @@ public class SelectWithNumbersSorted extends  BaseModuleCodeSmellSpotter {
 					return V_ABORT;
 				}
 				if (val instanceof Integer_Value) {
-					Long id = ((Integer_Value)val).getValue();
+					final Long id = ((Integer_Value)val).getValue();
 					itemsUsed.add(id);
 				}
 				

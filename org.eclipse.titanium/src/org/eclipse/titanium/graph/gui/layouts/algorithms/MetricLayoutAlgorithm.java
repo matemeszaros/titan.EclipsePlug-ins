@@ -49,7 +49,7 @@ public class MetricLayoutAlgorithm implements HierarcicalLayoutAlgorithm<NodeDes
 	 * @param metric : The chosen metric
 	 * @param nodes : The graph nodes that should be ordered
 	 */
-	public MetricLayoutAlgorithm(IMetricEnum metric, Collection<NodeDescriptor> nodes) {
+	public MetricLayoutAlgorithm(final IMetricEnum metric, final Collection<NodeDescriptor> nodes) {
 		this.nodes = new HashSet<NodeDescriptor>(nodes);
 		chosenMetric = metric;
 	}
@@ -70,16 +70,16 @@ public class MetricLayoutAlgorithm implements HierarcicalLayoutAlgorithm<NodeDes
 			return;
 		}
 		
-		Iterator<NodeDescriptor> it = nodes.iterator();
+		final Iterator<NodeDescriptor> it = nodes.iterator();
 		while (it.hasNext()) {
-			NodeDescriptor node = it.next();
-			ModuleMetricsWrapper wrapper = WrapperStore.getWrapper(node.getProject());
-			Number val = wrapper.getValue(chosenMetric, node.getName());
+			final NodeDescriptor node = it.next();
+			final ModuleMetricsWrapper wrapper = WrapperStore.getWrapper(node.getProject());
+			final Number val = wrapper.getValue(chosenMetric, node.getName());
 			if (val == null) {
 				it.remove();
 				badNodes.add(node);
 			} else {
-				Double tempVal = Double.valueOf(val.toString());
+				final Double tempVal = Double.valueOf(val.toString());
 				if (tempVal != null) {
 					values.put(node, tempVal);
 					if (minValue > tempVal) {
@@ -96,14 +96,14 @@ public class MetricLayoutAlgorithm implements HierarcicalLayoutAlgorithm<NodeDes
 	
 	private void genLevels() {
 		filledLevels = badNodes.isEmpty() ? 0 : 1;
-		double step = (maxValue - minValue) / LEVELS;
+		final double step = (maxValue - minValue) / LEVELS;
 		double actBound = minValue + step;
 		for (int actLevel = 0; actLevel < LEVELS; ++actLevel) {
-			Iterator<NodeDescriptor> it = nodes.iterator();
+			final Iterator<NodeDescriptor> it = nodes.iterator();
 			boolean isEmpty = true;
 			while (it.hasNext()) {
-				NodeDescriptor node = it.next();
-				Double value = values.get(node);
+				final NodeDescriptor node = it.next();
+				final Double value = values.get(node);
 				if (value != null && (value < actBound || Math.abs(value-actBound) <= EPSILON)) {
 					levels.put(node, filledLevels);
 					it.remove();
@@ -126,12 +126,12 @@ public class MetricLayoutAlgorithm implements HierarcicalLayoutAlgorithm<NodeDes
 			nodeCount[i] = 0;
 		}
 		
-		int badNodeCount = badNodes.size();
+		final int badNodeCount = badNodes.size();
 		if (badNodeCount != 0) {
 			nodeCount[0] = badNodeCount;
 		}
 		
-		for (int actIndex : levels.values()) {
+		for (final int actIndex : levels.values()) {
 			++nodeCount[actIndex];
 		}
 	}

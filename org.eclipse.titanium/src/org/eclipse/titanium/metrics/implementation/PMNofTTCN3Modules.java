@@ -21,7 +21,7 @@ public class PMNofTTCN3Modules extends BaseProjectMetric {
 	@Override
 	public Number measure(final MetricData data, final IProject p) {
 		int count = 0;
-		for (Module module : data.getModules()) {
+		for (final Module module : data.getModules()) {
 			if (module instanceof TTCN3Module) {
 				++count;
 			}

@@ -38,7 +38,7 @@ public class CheckParallelPaths<V, E> {
 	 * @param graph
 	 *            The graph to be tested
 	 */
-	public CheckParallelPaths(Graph<V, E> graph) {
+	public CheckParallelPaths(final Graph<V, E> graph) {
 		this.graph = graph;
 		paths = new HashSet<Deque<E>>();
 		hasRoot = false;
@@ -52,7 +52,7 @@ public class CheckParallelPaths<V, E> {
 	 * @param s
 	 *            The source node
 	 */
-	public CheckParallelPaths(Graph<V, E> graph, V s) {
+	public CheckParallelPaths(final Graph<V, E> graph, final V s) {
 		this(graph);
 		root = s;
 		hasRoot = true;
@@ -63,7 +63,7 @@ public class CheckParallelPaths<V, E> {
 	 */
 	public void init() {
 		predArc = new HashMap<V, E>();
-		for (V v : graph.getVertices()) {
+		for (final V v : graph.getVertices()) {
 			predArc.put(v, null);
 		}
 	}
@@ -78,7 +78,7 @@ public class CheckParallelPaths<V, E> {
 			init();
 			dfs(root);
 		} else {
-			for (V s : graph.getVertices()) {
+			for (final V s : graph.getVertices()) {
 				init();
 				dfs(s);
 			}
@@ -92,16 +92,16 @@ public class CheckParallelPaths<V, E> {
 	 * @param source
 	 *            The starting node
 	 */
-	protected void dfs(V source) {
-		Set<V> set = new HashSet<V>();
+	protected void dfs(final V source) {
+		final Set<V> set = new HashSet<V>();
 		set.add(source);
-		Deque<V> current = new LinkedList<V>();
+		final Deque<V> current = new LinkedList<V>();
 		current.add(source);
 		while (!current.isEmpty()) {
-			V v = current.removeLast();
+			final V v = current.removeLast();
 			set.add(v);
-			for (E e : graph.getOutEdges(v)) {
-				V w = graph.getDest(e);
+			for (final E e : graph.getOutEdges(v)) {
+				final V w = graph.getDest(e);
 				if (set.contains(w)) {
 					addPaths(v, w, e);
 				} else {
@@ -123,9 +123,9 @@ public class CheckParallelPaths<V, E> {
 	 * @param e
 	 *            Edge from which we arrive at w
 	 */
-	protected void addPaths(V v, V w, E e) {
-		Deque<E> path = new LinkedList<E>();
-		Deque<E> parallelpath = new LinkedList<E>();
+	protected void addPaths(final V v, final V w, final E e) {
+		final Deque<E> path = new LinkedList<E>();
+		final Deque<E> parallelpath = new LinkedList<E>();
 		buildPath(w, path);
 		buildPath(v, parallelpath);
 		parallelpath.add(e);
@@ -160,7 +160,7 @@ public class CheckParallelPaths<V, E> {
 	 * @param path
 	 *            The list to contain the path
 	 */
-	protected void buildPath(V s, Deque<E> path) {
+	protected void buildPath(final V s, final Deque<E> path) {
 		E e = predArc.get(s);
 		while (e != null) {
 			path.add(e);

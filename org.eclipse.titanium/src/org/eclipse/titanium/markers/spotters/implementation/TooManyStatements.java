@@ -32,9 +32,9 @@ public class TooManyStatements extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof StatementBlock) {
-			StatementBlock s = (StatementBlock) node;
+			final StatementBlock s = (StatementBlock) node;
 			if (s.getSize() > reportTooManyStatementsSize) {
-				String msg = MessageFormat.format(TOOMANYSTATEMENTS, reportTooManyStatementsSize, s.getSize());
+				final String msg = MessageFormat.format(TOOMANYSTATEMENTS, reportTooManyStatementsSize, s.getSize());
 				problems.report(s.getLocation(), msg);
 			}
 		}
@@ -43,7 +43,7 @@ public class TooManyStatements extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(StatementBlock.class);
 		return ret;
 	}

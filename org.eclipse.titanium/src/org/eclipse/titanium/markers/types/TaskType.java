@@ -100,8 +100,8 @@ public enum TaskType implements ProblemType{
 	}
 	
 	
-	private int getInt(String id) {
-		int val = Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, id, -1, null);
+	private int getInt(final String id) {
+		final int val = Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, id, -1, null);
 		if (val == -1) {
 			throw new IllegalArgumentException("The requested field for " + readableName + " is not found in the preference store. "
 					+ "Probably you forgot to add it in the PreferenceInitializer or in the RiskFactorPreferencePage.");
@@ -110,9 +110,9 @@ public enum TaskType implements ProblemType{
 		}
 	}
 	
-	private double getDouble(String id, double defaultValue) {
+	private double getDouble(final String id, final double defaultValue) {
 		return Platform.getPreferencesService().getDouble(Activator.PLUGIN_ID, id, defaultValue, null);
 	}
 
-	public abstract boolean equalType(IMarker m) throws CoreException;
+	public abstract boolean equalType(final IMarker m) throws CoreException;
 }

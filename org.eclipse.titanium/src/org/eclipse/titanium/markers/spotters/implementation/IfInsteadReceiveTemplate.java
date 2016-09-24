@@ -35,11 +35,11 @@ public class IfInsteadReceiveTemplate extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Operation_Altguard) {
-			Operation_Altguard ag = (Operation_Altguard) node;
-			Statement action = ag.getGuardStatement();
+			final Operation_Altguard ag = (Operation_Altguard) node;
+			final Statement action = ag.getGuardStatement();
 			if (action instanceof Receive_Port_Statement) {
-				Receive_Port_Statement receive = (Receive_Port_Statement) action;
-				SuspiciouslyUsedIf susp = new SuspiciouslyUsedIf(receive);
+				final Receive_Port_Statement receive = (Receive_Port_Statement) action;
+				final SuspiciouslyUsedIf susp = new SuspiciouslyUsedIf(receive);
 				ag.accept(susp);
 				if (susp.doesSmell()) {
 					problems.report(susp.getSuspicious().getLocation(), SHOULD_BRANCH);
@@ -50,7 +50,7 @@ public class IfInsteadReceiveTemplate extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(AltGuard.class);
 		return ret;
 	}
@@ -87,11 +87,11 @@ final class SuspiciouslyUsedIf extends ASTVisitor {
 	@Override
 	public int visit(final IVisitableNode node) {
 		if (node instanceof If_Statement) {
-			List<If_Clause> ifs = ((If_Statement) node).getIfClauses().getClauses();
-			for (If_Clause clause : ifs) {
-				Value cond = clause.getExpression();
+			final List<If_Clause> ifs = ((If_Statement) node).getIfClauses().getClauses();
+			for (final If_Clause clause : ifs) {
+				final Value cond = clause.getExpression();
 				if (cond != null) {
-					RefUsedInMatching mv = new RefUsedInMatching(redirectValue);
+					final RefUsedInMatching mv = new RefUsedInMatching(redirectValue);
 					cond.accept(mv);
 					if (mv.getUsed()) {
 						smells = true;
@@ -131,7 +131,7 @@ final class RefUsedInMatching extends ASTVisitor {
 	@Override
 	public int visit(final IVisitableNode node) {
 		if (node instanceof MatchExpression) {
-			ContainsRef cv = new ContainsRef(ref);
+			final ContainsRef cv = new ContainsRef(ref);
 			node.accept(cv);
 			used = used || cv.contains;
 			return V_SKIP;

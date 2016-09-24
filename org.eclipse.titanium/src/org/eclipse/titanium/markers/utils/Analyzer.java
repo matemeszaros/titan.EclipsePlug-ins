@@ -50,7 +50,7 @@ public class Analyzer {
 	private final Map<Class<? extends IVisitableNode>, Set<BaseModuleCodeSmellSpotter>> actions;
 	private final Set<BaseProjectCodeSmellSpotter> projectActions;
 
-	Analyzer(Map<Class<? extends IVisitableNode>, Set<BaseModuleCodeSmellSpotter>> actions, Set<BaseProjectCodeSmellSpotter> projectActions) {
+	Analyzer(final Map<Class<? extends IVisitableNode>, Set<BaseModuleCodeSmellSpotter>> actions, final Set<BaseProjectCodeSmellSpotter> projectActions) {
 		this.actions = actions;
 		this.projectActions = projectActions;
 	}
@@ -65,9 +65,9 @@ public class Analyzer {
 
 		@Override
 		public int visit(final IVisitableNode node) {
-			Set<BaseModuleCodeSmellSpotter> actionsOnNode = actions.get(node.getClass());
+			final Set<BaseModuleCodeSmellSpotter> actionsOnNode = actions.get(node.getClass());
 			if (actionsOnNode != null) {
-				for (BaseModuleCodeSmellSpotter spotter : actionsOnNode) {
+				for (final BaseModuleCodeSmellSpotter spotter : actionsOnNode) {
 					markers.addAll(spotter.checkNode(node));
 				}
 			}
@@ -75,17 +75,17 @@ public class Analyzer {
 		}
 	}
 
-	private List<Marker> internalAnalyzeModule(Module module) {
-		CodeSmellVisitor v = new CodeSmellVisitor();
+	private List<Marker> internalAnalyzeModule(final Module module) {
+		final CodeSmellVisitor v = new CodeSmellVisitor();
 		synchronized (module.getProject()) {
 			module.accept(v);
 		}
 		return v.markers;
 	}
 
-	private List<Marker> internalAnalyzeProject(IProject project) {
-		List<Marker> markers = new ArrayList<Marker>();
-		for (BaseProjectCodeSmellSpotter spotter : projectActions) {
+	private List<Marker> internalAnalyzeProject(final IProject project) {
+		final List<Marker> markers = new ArrayList<Marker>();
+		for (final BaseProjectCodeSmellSpotter spotter : projectActions) {
 			List<Marker> ms;
 			synchronized (project) {
 				ms = spotter.checkProject(project);
@@ -110,18 +110,18 @@ public class Analyzer {
 	 * 
 	 * @return the code smells found in the given module
 	 */
-	public MarkerHandler analyzeModule(IProgressMonitor monitor, Module module) {
-		SubMonitor progress = SubMonitor.convert(monitor, 100);
-		IResource res = module.getLocation().getFile();
+	public MarkerHandler analyzeModule(final IProgressMonitor monitor, final Module module) {
+		final SubMonitor progress = SubMonitor.convert(monitor, 100);
+		final IResource res = module.getLocation().getFile();
 		
-		Map<IResource, List<Marker>> markers = new HashMap<IResource, List<Marker>>();
+		final Map<IResource, List<Marker>> markers = new HashMap<IResource, List<Marker>>();
 		markers.put(res, internalAnalyzeModule(module));
 		progress.worked(80);
 		if (progress.isCanceled()) {
 			throw new OperationCanceledException();
 		}
 		
-		IProject project = module.getProject();
+		final IProject project = module.getProject();
 		markers.put(project, internalAnalyzeProject(project));
 		progress.worked(20);
 		return new MarkerHandler(markers);
@@ -141,20 +141,20 @@ public class Analyzer {
 	 * @return the code smells found in the given project
 	 */
 	public MarkerHandler analyzeProject(final IProgressMonitor monitor, final IProject project) {
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		Set<String> knownModuleNames = projectSourceParser.getKnownModuleNames();
-		SubMonitor progress = SubMonitor.convert(monitor, 1 + knownModuleNames.size());
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
+		final Set<String> knownModuleNames = projectSourceParser.getKnownModuleNames();
+		final SubMonitor progress = SubMonitor.convert(monitor, 1 + knownModuleNames.size());
 		progress.subTask("Project level analysis");
-		Map<IResource, List<Marker>> markers = new HashMap<IResource, List<Marker>>();
+		final Map<IResource, List<Marker>> markers = new HashMap<IResource, List<Marker>>();
 		markers.put(project, internalAnalyzeProject(project));
 		progress.worked(1);
-		for (String moduleName : knownModuleNames) {
+		for (final String moduleName : knownModuleNames) {
 			if (progress.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			Module mod = projectSourceParser.getModuleByName(moduleName);
+			final Module mod = projectSourceParser.getModuleByName(moduleName);
 			progress.subTask("Analyzing module " + mod.getName());
-			IResource moduleResource = mod.getLocation().getFile();
+			final IResource moduleResource = mod.getLocation().getFile();
 			markers.put(moduleResource, internalAnalyzeModule(mod));
 			progress.worked(1);
 		}

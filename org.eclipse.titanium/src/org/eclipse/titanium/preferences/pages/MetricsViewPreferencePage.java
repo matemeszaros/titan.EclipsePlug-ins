@@ -42,21 +42,21 @@ public class MetricsViewPreferencePage extends PreferencePage implements IWorkbe
 
 	@Override
 	protected Control createContents(final Composite parent) {
-		Composite page = new Composite(parent, 0);
-		GridLayout l = new GridLayout();
+		final Composite page = new Composite(parent, 0);
+		final GridLayout l = new GridLayout();
 		l.numColumns = 2;
 		page.setLayout(l);
-		for (MetricGroup type : MetricGroup.values()) {
-			Label header = new Label(page, 0);
+		for (final MetricGroup type : MetricGroup.values()) {
+			final Label header = new Label(page, 0);
 			header.setText(type.getGroupName() + " metrics");
-			GridData headerData = new GridData();
+			final GridData headerData = new GridData();
 			headerData.horizontalSpan = 2;
 			header.setLayoutData(headerData);
-			Composite padding = new Composite(page, 0);
+			final Composite padding = new Composite(page, 0);
 			padding.setLayoutData(new GridData(25, 0));
-			Composite inner = new Composite(page, 0);
-			for (IMetricEnum metric : type.getMetrics()) {
-				BooleanFieldEditor editor = new BooleanFieldEditor(PreferenceConstants.nameMetricEnabled(metric.id()),
+			final Composite inner = new Composite(page, 0);
+			for (final IMetricEnum metric : type.getMetrics()) {
+				final BooleanFieldEditor editor = new BooleanFieldEditor(PreferenceConstants.nameMetricEnabled(metric.id()),
 						metric.getName(), inner);
 				editor.getDescriptionControl(inner).setToolTipText(metric.getHint());
 				editor.setPage(this);
@@ -71,7 +71,7 @@ public class MetricsViewPreferencePage extends PreferencePage implements IWorkbe
 
 	@Override
 	protected void performDefaults() {
-		for (FieldEditor e : editors) {
+		for (final FieldEditor e : editors) {
 			e.loadDefault();
 		}
 		super.performDefaults();
@@ -79,7 +79,7 @@ public class MetricsViewPreferencePage extends PreferencePage implements IWorkbe
 
 	@Override
 	public boolean performOk() {
-		for (FieldEditor e : editors) {
+		for (final FieldEditor e : editors) {
 			e.store();
 		}
 		return super.performOk();

@@ -43,7 +43,7 @@ public class ClearAllProjects implements IApplication {
 		boolean result = true;
 
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		for (IProject project : projects) {
+		for (final IProject project : projects) {
 			try {
 				if (project.isLinked()) {
 					project.delete(false, false, null);

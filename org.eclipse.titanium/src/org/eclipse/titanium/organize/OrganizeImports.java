@@ -88,10 +88,10 @@ public final class OrganizeImports {
 	 *         <code>null</code> otherwise.
 	 */
 	public static Location findReferenceInProject(final Reference reference, final IProject project) {
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
-		DeclarationCollector declarationCollector = new DeclarationCollector(reference);
-		for (String moduleName : projectSourceParser.getKnownModuleNames()) {
-			Module m = projectSourceParser.getModuleByName(moduleName);
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(project);
+		final DeclarationCollector declarationCollector = new DeclarationCollector(reference);
+		for (final String moduleName : projectSourceParser.getKnownModuleNames()) {
+			final Module m = projectSourceParser.getModuleByName(moduleName);
 			if (m != null) {
 				m.getAssignments().addDeclaration(declarationCollector);
 			}
@@ -106,13 +106,13 @@ public final class OrganizeImports {
 		Location loc = null;
 
 		if (collected.size() > 1) {
-			List<String> files = new ArrayList<String>();
-			for (DeclarationCollectionHelper c : collected) {
+			final List<String> files = new ArrayList<String>();
+			for (final DeclarationCollectionHelper c : collected) {
 				files.add(c.location.getFile().getName());
 			}
 			TITANDebugConsole.println("Multiple possible imports for " + reference.getDisplayName() + ": " + files.toString());
 
-			ImportSelectionDialog dialog = new ImportSelectionDialog(reference, collected, reference.getLocation().getFile());
+			final ImportSelectionDialog dialog = new ImportSelectionDialog(reference, collected, reference.getLocation().getFile());
 			Display.getDefault().syncExec(dialog);
 			loc = dialog.getSelected();
 		} else if (collected.size() == 1) {
@@ -146,18 +146,18 @@ public final class OrganizeImports {
 		final String displayDebugInfo = org.eclipse.titan.designer.preferences.PreferenceConstants.DISPLAYDEBUGINFORMATION;
 		reportDebug = Platform.getPreferencesService().getBoolean(designerId, displayDebugInfo, false, null);
 
-		TextFileChange change = new TextFileChange(file.getName(), file);
+		final TextFileChange change = new TextFileChange(file.getName(), file);
 
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		Module actualModule = projectSourceParser.containedModule(file);
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(file.getProject());
+		final Module actualModule = projectSourceParser.containedModule(file);
 
 		if (!(actualModule instanceof TTCN3Module)) {
 			ErrorReporter.logError("The module is not a TTCN-3 module");
 			return change;
 		}
-		TTCN3Module module = (TTCN3Module) actualModule;
+		final TTCN3Module module = (TTCN3Module) actualModule;
 
-		IDocument doc = change.getCurrentDocument(null);
+		final IDocument doc = change.getCurrentDocument(null);
 		try {
 			change.setEdit(organizeImportsEdit(module, doc));
 		} catch (BadLocationException e) {
@@ -198,8 +198,8 @@ public final class OrganizeImports {
 
 		if (addImports) {
 			// register the new needed imports
-			Set<String> importNamesAdded = new HashSet<String>();
-			for (Reference ref : module.getMissingReferences()) {
+			final Set<String> importNamesAdded = new HashSet<String>();
+			for (final Reference ref : module.getMissingReferences()) {
 				final Location missLoc = findReferenceInProject(ref, prj);
 				if (missLoc != null) {
 					final IFile file = (IFile) missLoc.getFile();
@@ -207,7 +207,7 @@ public final class OrganizeImports {
 					final Module addMod = parser.containedModule(file);
 					final String importName = addMod.getIdentifier().getTtcnName();
 					if (!importNamesAdded.contains(importName)) {
-						StringBuilder impText = new StringBuilder("import from ").append(importName).append(" all;");
+						final StringBuilder impText = new StringBuilder("import from ").append(importName).append(" all;");
 						if (importChangeMethod.equals(OrganizeImportPreferencePage.COMMENT_THEM)) {
 							impText.append(" // Added automatically to resolve ").append(ref.getDisplayName());
 						}
@@ -215,7 +215,7 @@ public final class OrganizeImports {
 						importNamesAdded.add(importName);
 
 						if (reportDebug) {
-							StringBuilder sb = new StringBuilder("For ").append(ref.getDisplayName()).append(": ");
+							final StringBuilder sb = new StringBuilder("For ").append(ref.getDisplayName()).append(": ");
 							sb.append(impText.toString());
 							TITANDebugConsole.println(sb.toString());
 						}
@@ -246,7 +246,7 @@ public final class OrganizeImports {
 				final Definitions defs = module.getAssignmentsScope();
 				if (defs.getNofAssignments() > 0 && !oldImports.isEmpty()) {
 					for (int i = 0, size = defs.getNofAssignments(); i < size; ++i) {
-						int temp = defs.getAssignmentByIndex(i).getLocation().getOffset();
+						final int temp = defs.getAssignmentByIndex(i).getLocation().getOffset();
 						if (temp < lastImportOffset) {
 							needSorting = true;
 						}
@@ -257,7 +257,7 @@ public final class OrganizeImports {
 
 		if (needSorting || removeImports) {
 			// remove the imports not needed, or every if sorting is required
-			for (ImportModule m : module.getImports()) {
+			for (final ImportModule m : module.getImports()) {
 				final Location delImp = m.getLocation();
 				final IRegion startLineRegion = document.getLineInformationOfOffset(delImp.getOffset());
 				final IRegion endLineRegion = document.getLineInformationOfOffset(delImp.getEndOffset());
@@ -266,7 +266,7 @@ public final class OrganizeImports {
 
 				if (needSorting || (removeImports && !m.getUsedForImportation())) {
 					if (reportDebug) {
-						MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
+						final MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
 						TITANDebugConsole.println("Removing "
 								+ "'"
 								+ doc.substring(startLineRegion.getOffset(), endLineRegion.getOffset()
@@ -304,19 +304,19 @@ public final class OrganizeImports {
 
 			if (sortImports) {
 				if (needSorting || !newImports.isEmpty()) {
-					List<ImportText> results = new ArrayList<ImportText>();
+					final List<ImportText> results = new ArrayList<ImportText>();
 					results.addAll(importsKept);
 					results.addAll(newImports);
 					Collections.sort(results);
 
-					for (ImportText i : results) {
+					for (final ImportText i : results) {
 						insertEdit.addChild(new InsertEdit(startPos, i.getText()));
 					}
 				}
 			} else {
 				Collections.sort(newImports);
 
-				for (ImportText i : newImports) {
+				for (final ImportText i : newImports) {
 					insertEdit.addChild(new InsertEdit(startPos, i.getText()));
 				}
 			}
@@ -385,8 +385,8 @@ class ImportSelectionDialog implements Runnable {
 
 	@Override
 	public void run() {
-		OpenDeclarationLabelProvider labelProvider = new OpenDeclarationLabelProvider();
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(new Shell(Display.getCurrent()), labelProvider);
+		final OpenDeclarationLabelProvider labelProvider = new OpenDeclarationLabelProvider();
+		final ElementListSelectionDialog dialog = new ElementListSelectionDialog(new Shell(Display.getCurrent()), labelProvider);
 		dialog.setTitle("Add Import");
 		dialog.setMessage("For the missing reference: " + reference.getDisplayName() 
 				+ " in " + source.getProjectRelativePath().toString() + ".");

@@ -26,9 +26,9 @@ public class MissingImport extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof ImportModule) {
-			ImportModule s = (ImportModule) node;
+			final ImportModule s = (ImportModule) node;
 			if (s.getReferredModule() == null) {
-				String msg = MessageFormat.format(MISSING_MODULE, s.getIdentifier().getDisplayName());
+				final String msg = MessageFormat.format(MISSING_MODULE, s.getIdentifier().getDisplayName());
 				problems.report(s.getIdentifier().getLocation(), msg);
 			}
 		}
@@ -36,7 +36,7 @@ public class MissingImport extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(ImportModule.class);
 		return ret;
 	}

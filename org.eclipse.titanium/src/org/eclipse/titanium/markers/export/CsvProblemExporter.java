@@ -37,7 +37,7 @@ public class CsvProblemExporter extends BaseProblemExporter {
 	 * Constructor
 	 * @param proj : The project to export markers from
 	 */
-	public CsvProblemExporter(IProject proj) {
+	public CsvProblemExporter(final IProject proj) {
 		super(proj);
 	}
 	
@@ -63,23 +63,23 @@ public class CsvProblemExporter extends BaseProblemExporter {
 	 *             when writing the file fails
 	 */
 	@Override
-	public void exportMarkers(IProgressMonitor monitor, String filenamePrefix, Date date) throws IOException {
-		SubMonitor progress = SubMonitor.convert(monitor, 100);
-		PrintWriter summaryFile = new PrintWriter(new FileWriter(filenamePrefix + "_summary.csv"));
-		PrintWriter timesFile = new PrintWriter(new FileWriter(filenamePrefix + "_times.csv"));
+	public void exportMarkers(final IProgressMonitor monitor, final String filenamePrefix, final Date date) throws IOException {
+		final SubMonitor progress = SubMonitor.convert(monitor, 100);
+		final PrintWriter summaryFile = new PrintWriter(new FileWriter(filenamePrefix + "_summary.csv"));
+		final PrintWriter timesFile = new PrintWriter(new FileWriter(filenamePrefix + "_times.csv"));
 
 		try {
 			summaryFile.println("Smell name" + SEPARATOR + "Amount");
 			timesFile.println("Smell name" + SEPARATOR + "Minimal repair time"
 					 + SEPARATOR + "Average repair time"  + SEPARATOR + "Maximal repair time");
 			PrintWriter actualSmellFile = null;
-			Map<TaskType, List<IMarker>> markers = collectMarkers();
-			for (TaskType actSmell : TaskType.values()) {
+			final Map<TaskType, List<IMarker>> markers = collectMarkers();
+			for (final TaskType actSmell : TaskType.values()) {
 				int row = 0;
 				if (!markers.get(actSmell).isEmpty()) {
 					actualSmellFile = new PrintWriter(new FileWriter(filenamePrefix + "_" + actSmell.getHumanReadableName() + ".csv"));
 					actualSmellFile.println("Message" + SEPARATOR + "Smell name" + SEPARATOR + "Line number");
-					for (IMarker m : markers.get(actSmell)) {
+					for (final IMarker m : markers.get(actSmell)) {
 						actualSmellFile.println(
 								m.getAttribute(IMarker.MESSAGE).toString()
 								+ SEPARATOR
@@ -97,14 +97,14 @@ public class CsvProblemExporter extends BaseProblemExporter {
 			}
 			progress.worked(20);
 
-			MarkerHandler mh = AnalyzerCache.withAll().analyzeProject(progress.newChild(30), project);
+			final MarkerHandler mh = AnalyzerCache.withAll().analyzeProject(progress.newChild(30), project);
 			progress.setWorkRemaining(CodeSmellType.values().length);
-			for (CodeSmellType actSmell : CodeSmellType.values()) {
+			for (final CodeSmellType actSmell : CodeSmellType.values()) {
 				int row = 0;
 				if (!mh.get(actSmell).isEmpty()) {
 					actualSmellFile = new PrintWriter(new FileWriter(filenamePrefix + "_" + actSmell.name() + ".csv"));
 					actualSmellFile.println("Description; Resurce; Location");
-					for (Marker m : mh.get(actSmell)) {
+					for (final Marker m : mh.get(actSmell)) {
 						if (m.getLine() == -1 || m.getResource() == null) {
 							continue;
 						}

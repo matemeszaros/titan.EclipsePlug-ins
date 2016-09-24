@@ -40,7 +40,8 @@ public class ExportAllCodeSmells extends InformationExporter {
 
 	@Override
 	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
-		BaseProblemExporter exporter = new XlsProblemExporter(project);
+		final BaseProblemExporter exporter = new XlsProblemExporter(project);
+
 		try {
 			Date date;
 			if (args.length == 1) {

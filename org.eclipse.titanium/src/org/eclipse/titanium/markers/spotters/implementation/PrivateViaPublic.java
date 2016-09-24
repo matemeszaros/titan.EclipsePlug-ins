@@ -57,14 +57,14 @@ public class PrivateViaPublic {
 		}
 
 		protected boolean isVisibleInActualModule(final Assignment assignment) {
-			Module assignmentModule = assignment.getMyScope().getModuleScope();
+			final Module assignmentModule = assignment.getMyScope().getModuleScope();
 			return assignmentModule.equals(actualModule) ||
 				assignmentModule.isVisible(CompilationTimeStamp.getBaseTimestamp(), actualModule.getIdentifier(), assignment);
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(Module.class);
 			return ret;
 		}
@@ -81,7 +81,7 @@ public class PrivateViaPublic {
 		@Override
 		protected void process(final IVisitableNode node, final Problems problems) {
 			actualModule = (Module) node;
-			FieldCollector fieldCollector = new FieldCollector();
+			final FieldCollector fieldCollector = new FieldCollector();
 			actualModule.accept(fieldCollector);
 			check(fieldCollector, problems);
 		}
@@ -100,7 +100,7 @@ public class PrivateViaPublic {
 			@Override
 			public int visit(final IVisitableNode node) {
 				if (node instanceof Reference) {
-					Reference reference = (Reference) node;
+					final Reference reference = (Reference) node;
 					if (reference.getSubreferences().size() > 1) {
 						references.add(reference);
 					}
@@ -118,12 +118,12 @@ public class PrivateViaPublic {
 
 		private void checkReferences(final FieldCollector fieldCollector, final Problems problems) {
 
-			Iterator<Reference> referenceIterator = fieldCollector.references.iterator();
+			final Iterator<Reference> referenceIterator = fieldCollector.references.iterator();
 
 			while (referenceIterator.hasNext()) {
-				Reference actualReference = referenceIterator.next();
+				final Reference actualReference = referenceIterator.next();
 
-				List<ISubReference> subReferences = new ArrayList<ISubReference>(actualReference.getSubreferences());
+				final List<ISubReference> subReferences = new ArrayList<ISubReference>(actualReference.getSubreferences());
 
 				// subReferences.get(0) always irrelevant for us
 				if (subReferences.size() > 1) {
@@ -132,25 +132,25 @@ public class PrivateViaPublic {
 
 				for (int i = 0; i < subReferences.size(); ++i) {
 
-					ISubReference subReference = subReferences.get(i);
+					final ISubReference subReference = subReferences.get(i);
 
 					if (subReference.getReferenceType() == Subreference_type.fieldSubReference) {
-						Declaration declaration = actualReference.getReferencedDeclaration(subReference);
+						final Declaration declaration = actualReference.getReferencedDeclaration(subReference);
 		
 						// Have to check null if no visible elements found
 						// if(declaration instanceof FieldDeclaration) {
 						if(declaration != null)	{
-							Assignment assignment = declaration.getAssignment();
+							final Assignment assignment = declaration.getAssignment();
 
-							Identifier identifier = declaration.getIdentifier();
+							final Identifier identifier = declaration.getIdentifier();
 
 							if (!assignment.getIdentifier().equals(identifier) && (assignment instanceof Def_Type)) {
 
-								IdentifierToDefType identifierToDefType = new IdentifierToDefType(identifier);
+								final IdentifierToDefType identifierToDefType = new IdentifierToDefType(identifier);
 								assignment.accept(identifierToDefType);
 
 								if (identifierToDefType.getIsPrivate()) {
-									String msg = MessageFormat.format(ERROR_MESSAGE, subReference.getId().getDisplayName());
+									final String msg = MessageFormat.format(ERROR_MESSAGE, subReference.getId().getDisplayName());
 									problems.report(subReference.getLocation(), msg);
 								}
 							}
@@ -161,21 +161,21 @@ public class PrivateViaPublic {
 		}
 
 		private void checkNamedValues(final FieldCollector fieldCollector, final Problems problems) {
-			Iterator<NamedValue> namedValueIterator = fieldCollector.namedValues.iterator();
+			final Iterator<NamedValue> namedValueIterator = fieldCollector.namedValues.iterator();
 
 			while (namedValueIterator.hasNext()) {
 
-				NamedValue namedValue = namedValueIterator.next();
+				final NamedValue namedValue = namedValueIterator.next();
 
-				IType namedValueType = namedValue.getValue().getMyGovernor();
+				final IType namedValueType = namedValue.getValue().getMyGovernor();
 
 				if (namedValueType instanceof Referenced_Type) {
-					Reference namedValueReference = ((Referenced_Type) namedValueType).getReference();
+					final Reference namedValueReference = ((Referenced_Type) namedValueType).getReference();
 
 					Assignment namedValueAssignment = null;
 
 					if (namedValueReference.getSubreferences().size() > 1) {
-						INamedNode namedValueTypeRefd = namedValueType.getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp()).getNameParent();
+						final INamedNode namedValueTypeRefd = namedValueType.getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp()).getNameParent();
 
 						if (namedValueTypeRefd instanceof Def_Type) {
 							namedValueAssignment = (Assignment) namedValueTypeRefd;
@@ -187,8 +187,8 @@ public class PrivateViaPublic {
 					if (namedValueAssignment instanceof Def_Type) {
 
 						if (!isVisibleInActualModule((Assignment) namedValueAssignment)) {
-							Identifier namedValueIdentifier = namedValue.getName();
-							String msg = MessageFormat.format(ERROR_MESSAGE, namedValueIdentifier.getDisplayName());
+							final Identifier namedValueIdentifier = namedValue.getName();
+							final String msg = MessageFormat.format(ERROR_MESSAGE, namedValueIdentifier.getDisplayName());
 							problems.report(namedValueIdentifier.getLocation(), msg);
 						}
 					}
@@ -215,14 +215,14 @@ public class PrivateViaPublic {
 			public int visit(final IVisitableNode node) {
 
 				if (node instanceof CompField) {
-					CompField compField = (CompField) node;
+					final CompField compField = (CompField) node;
 
-					Type compFieldType = compField.getType();
+					final Type compFieldType = compField.getType();
 
 					if (compFieldType instanceof Referenced_Type) {
 
 						if (compField.getIdentifier().equals(identifierToFind)) {
-							INamedNode compFieldReferencedType = compFieldType.getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp()).getNameParent();
+							final INamedNode compFieldReferencedType = compFieldType.getTypeRefdLast(CompilationTimeStamp.getBaseTimestamp()).getNameParent();
 
 							if (compFieldReferencedType instanceof Def_Type) {
 
@@ -250,7 +250,7 @@ public class PrivateViaPublic {
 		@Override
 		protected void process(final IVisitableNode node, final Problems problems) {
 			actualModule = (Module) node;
-			ValueCollector valueCollector = new ValueCollector();
+			final ValueCollector valueCollector = new ValueCollector();
 			actualModule.accept(valueCollector);
 			check(valueCollector, problems);
 		}
@@ -277,12 +277,11 @@ public class PrivateViaPublic {
 		}
 
 		private void checkSequenceOfValues(final ValueCollector valueCollector, final Problems problems) {
-			Iterator<SequenceOf_Value> valueIterator = valueCollector.sequenceOfValues.iterator();
+			final Iterator<SequenceOf_Value> valueIterator = valueCollector.sequenceOfValues.iterator();
 
 			while (valueIterator.hasNext()) {
-				SequenceOf_Value actualValue = valueIterator.next();
-
-				IType myGovernorType = actualValue.getMyGovernor();
+				final SequenceOf_Value actualValue = valueIterator.next();
+				final IType myGovernorType = actualValue.getMyGovernor();
 
 				if (myGovernorType != null) {
 					INamedNode valueReferencedType;
@@ -299,7 +298,7 @@ public class PrivateViaPublic {
 
 					if (valueReferencedType instanceof Def_Type) {
 						if (!isVisibleInActualModule((Assignment) valueReferencedType)) {
-							String msg = MessageFormat.format(ERROR_MESSAGE, fieldName);
+							final String msg = MessageFormat.format(ERROR_MESSAGE, fieldName);
 							problems.report(actualValue.getLocation(), msg);
 						}
 					}

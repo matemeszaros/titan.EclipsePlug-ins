@@ -61,7 +61,7 @@ public class SatelliteView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(final Composite parent) {
-		Composite temp = new Composite(parent, SWT.NO_BACKGROUND | SWT.EMBEDDED);
+		final Composite temp = new Composite(parent, SWT.NO_BACKGROUND | SWT.EMBEDDED);
 		window = SWT_AWT.new_Frame(temp);
 		windowSize = new Dimension(parent.getSize().x, parent.getSize().y);
 
@@ -69,8 +69,8 @@ public class SatelliteView extends ViewPart {
 
 		parent.addListener(SWT.Resize, new Listener() {
 			@Override
-			public void handleEvent(org.eclipse.swt.widgets.Event event) {
-				Point tmpSize = parent.getSize();
+			public void handleEvent(final org.eclipse.swt.widgets.Event event) {
+				final Point tmpSize = parent.getSize();
 				windowSize = new Dimension(tmpSize.x, tmpSize.y);
 				if (satelliteGraph == null) {
 					window.setPreferredSize(windowSize);
@@ -81,7 +81,7 @@ public class SatelliteView extends ViewPart {
 			}
 		});
 
-		IEditorPart tmpEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IEditorPart tmpEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (tmpEditor instanceof GraphEditor) {
 			editor = (GraphEditor) tmpEditor;
 			editor.setSatellite(this);
@@ -92,7 +92,7 @@ public class SatelliteView extends ViewPart {
 	 * This method initializes the site attribute
 	 */
 	@Override
-	public void init(IViewSite site) throws PartInitException {
+	public void init(final IViewSite site) throws PartInitException {
 		setSite(site);
 	}
 
@@ -100,7 +100,7 @@ public class SatelliteView extends ViewPart {
 	 * This method initializes the site attribute
 	 */
 	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
+	public void init(final IViewSite site, final IMemento memento) throws PartInitException {
 		setSite(site);
 	}
 
@@ -126,15 +126,15 @@ public class SatelliteView extends ViewPart {
 			}
 		});
 
-		IWorkbenchWindow actWind = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		final IWorkbenchWindow actWind = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (actWind == null) {
 			return;
 		}
-		IWorkbenchPage actPage = actWind.getActivePage();
+		final IWorkbenchPage actPage = actWind.getActivePage();
 		if (actPage == null) {
 			return;
 		}
-		IEditorPart tmpEditor = actPage.getActiveEditor();
+		final IEditorPart tmpEditor = actPage.getActiveEditor();
 		if (tmpEditor != null && tmpEditor instanceof GraphEditor) {
 			((GraphEditor) tmpEditor).setSatellite(null);
 		}
@@ -148,7 +148,7 @@ public class SatelliteView extends ViewPart {
 	 * @param satGraph
 	 *            : The satellite graph to add
 	 */
-	public void add(CustomSatelliteViewer satGraph) {
+	public void add(final CustomSatelliteViewer satGraph) {
 		if (satGraph == null || satView == null) {
 			return;
 		}
@@ -178,7 +178,7 @@ public class SatelliteView extends ViewPart {
 	 * @param size
 	 *            : The new size
 	 */
-	public void setSize(Dimension size) {
+	public void setSize(final Dimension size) {
 		windowSize = size;
 		window.setSize(windowSize);
 		satView.setPreferredSize(windowSize);
@@ -210,7 +210,7 @@ public class SatelliteView extends ViewPart {
 	 * @param editor
 	 *            : The editor to set
 	 */
-	public void setEditor(GraphEditor editor) {
+	public void setEditor(final GraphEditor editor) {
 		this.editor = editor;
 	}
 

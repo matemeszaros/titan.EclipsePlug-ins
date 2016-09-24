@@ -36,10 +36,10 @@ public class MagicNumber extends BaseModuleCodeSmellSpotter {
 			@Override
 			public int visit(final IVisitableNode node) {
 				if (node instanceof Integer_Value) {
-					Integer_Value value = (Integer_Value) node;
-					BigInteger bigNumber = value.getValueValue();
+					final Integer_Value value = (Integer_Value) node;
+					final BigInteger bigNumber = value.getValueValue();
 					if (bigNumber.compareTo(BigInteger.valueOf(-5)) < 0 || bigNumber.compareTo(BigInteger.valueOf(5)) > 0) {
-						String msg = MessageFormat.format(MAGIC_NUMBER, ((Integer_Value) node).createStringRepresentation());
+						final String msg = MessageFormat.format(MAGIC_NUMBER, ((Integer_Value) node).createStringRepresentation());
 						problems.report(((Integer_Value) node).getLocation(), msg);
 					}
 				} else if (node instanceof Def_Const) {
@@ -53,7 +53,7 @@ public class MagicNumber extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(4);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(4);
 		ret.add(Def_Function.class);
 		ret.add(Def_Testcase.class);
 		ret.add(Def_Altstep.class);

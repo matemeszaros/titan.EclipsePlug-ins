@@ -83,7 +83,7 @@ public class ModuleGraphGenerator extends GraphGenerator {
 			collector.evaulateMissingModules();
 
 			// adding known modules
-			for (Identifier moduleName : collector.knownModules.values()) {
+			for (final Identifier moduleName : collector.knownModules.values()) {
 				final NodeDescriptor actNode = new NodeDescriptor(moduleName.getDisplayName(), moduleName.getName(), currentProject,
 						false, moduleName.getLocation());
 				globalKnownModules.put(moduleName.getName(), moduleName);
@@ -94,7 +94,7 @@ public class ModuleGraphGenerator extends GraphGenerator {
 			}
 
 			// adding missing modules
-			for (Identifier moduleName : collector.missingModules.values()) {
+			for (final Identifier moduleName : collector.missingModules.values()) {
 				if (!globalKnownModules.containsKey(moduleName.getName())) {
 					final NodeDescriptor actNode = new NodeDescriptor(moduleName.getDisplayName(), moduleName.getName(),
 							currentProject, true, moduleName.getLocation());
@@ -106,8 +106,8 @@ public class ModuleGraphGenerator extends GraphGenerator {
 			}
 
 			// building edges
-			for (String from : collector.importations.keySet()) {
-				for (String to : collector.importations.get(from)) {
+			for (final String from : collector.importations.keySet()) {
+				for (final String to : collector.importations.get(from)) {
 					final EdgeDescriptor edge = new EdgeDescriptor(from + "->" + to, Color.black);
 					// if(!graph.containsEdge(edge))
 					graph.addEdge(edge, labels.get(from), labels.get(to), EdgeType.DIRECTED);

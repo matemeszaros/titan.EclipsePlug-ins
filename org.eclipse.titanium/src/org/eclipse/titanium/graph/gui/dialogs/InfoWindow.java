@@ -95,7 +95,7 @@ public class InfoWindow extends Dialog {
 		final TableColumn tmpCol = new TableColumn(table, SWT.NONE);
 		tmpCol.setText("Property");
 		tmpCol.setWidth(COLUMN_WIDTH);
-		for (StatColumn actCol : StatColumn.values()) {
+		for (final StatColumn actCol : StatColumn.values()) {
 			final TableColumn tempCol = new TableColumn(table, SWT.BORDER);
 			tempCol.setText(actCol.getName());
 			tempCol.setWidth(COLUMN_WIDTH);
@@ -122,10 +122,10 @@ public class InfoWindow extends Dialog {
 		addRow(new ArrayList<String>(Arrays.asList("General Information")), Color.lightGray);
 		addRow(new ArrayList<String>(Arrays.asList("Module name", shownName)), Color.white);
 
-		for (MetricGroup type : new MetricGroup[] { MetricGroup.MODULE }) {
+		for (final MetricGroup type : new MetricGroup[] { MetricGroup.MODULE }) {
 			addRow(new ArrayList<String>(Arrays.asList(type.getGroupName() + " metrics")), Color.lightGray);
 
-			for (IMetricEnum metric : type.getMetrics()) {
+			for (final IMetricEnum metric : type.getMetrics()) {
 				if (!PreferenceManager.isEnabledOnModuleGraph(metric)) {
 					continue;
 				}
@@ -147,9 +147,9 @@ public class InfoWindow extends Dialog {
 			}
 		}
 
-		for (MetricGroup type : new MetricGroup[] { MetricGroup.ALTSTEP, MetricGroup.FUNCTION, MetricGroup.TESTCASE }) {
+		for (final MetricGroup type : new MetricGroup[] { MetricGroup.ALTSTEP, MetricGroup.FUNCTION, MetricGroup.TESTCASE }) {
 			addRow(new ArrayList<String>(Arrays.asList(type.getGroupName())), Color.lightGray);
-			for (IMetricEnum metric : type.getMetrics()) {
+			for (final IMetricEnum metric : type.getMetrics()) {
 				if (!PreferenceManager.isEnabledOnModuleGraph(metric)) {
 					continue;
 				}
@@ -157,7 +157,7 @@ public class InfoWindow extends Dialog {
 				actRow.add(metric.getName());
 				final Statistics stat = metricsProvider.getStats(metric, module.getName());
 
-				for (StatColumn actCol : StatColumn.values()) {
+				for (final StatColumn actCol : StatColumn.values()) {
 					final Number val = stat == null ? null : stat.get(actCol);
 					actRow.add(val == null ? "-" : val.toString());
 				}
@@ -202,7 +202,7 @@ public class InfoWindow extends Dialog {
 		actItem.setBackground(SWTResourceManager.getColor(new RGB(rowColour.getRed(), rowColour.getGreen(), rowColour.getBlue())));
 		String[] row = new String[rowData.size()];
 		int i = 0;
-		for (String cell : rowData) {
+		for (final String cell : rowData) {
 			row[i++] = cell;
 		}
 

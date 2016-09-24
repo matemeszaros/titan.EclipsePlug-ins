@@ -79,7 +79,7 @@ public class RegexpCluster extends BaseCluster {
 			return false;
 		}
 
-		for (String item : splittedList) {
+		for (final String item : splittedList) {
 			try {
 				final Pattern pattern = Pattern.compile(item);
 				final Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
@@ -110,12 +110,12 @@ public class RegexpCluster extends BaseCluster {
 	 */
 	private void collectMatchingNodes(final IProgressMonitor progress) {
 		mapNodeMatching = new HashMap<NodeDescriptor, List<String>>();
-		for (NodeDescriptor v : moduleGraph.getVertices()) {
+		for (final NodeDescriptor v : moduleGraph.getVertices()) {
 			final String name = v.getDisplayName();
 			progress.subTask("Checking " + name);
 
 			final List<String> matching = new LinkedList<String>();
-			for (Matcher matcher : matchers) {
+			for (final Matcher matcher : matchers) {
 				matcher.reset(name);
 				if (matcher.matches()) {
 					matching.add(matcher.pattern().toString());
@@ -129,7 +129,7 @@ public class RegexpCluster extends BaseCluster {
 	 * Clears the previous clustering to prevent interference.
 	 */
 	private void clearPrevClusters() {
-		for (NodeDescriptor v : moduleGraph.getVertices()) {
+		for (final NodeDescriptor v : moduleGraph.getVertices()) {
 			v.setCluster(null);
 		}
 	}
@@ -144,7 +144,7 @@ public class RegexpCluster extends BaseCluster {
 		mapPatternCluster.put("missing", missing);
 
 		boolean moreThanOneMatch = false;
-		for (NodeDescriptor v : moduleGraph.getVertices()) {
+		for (final NodeDescriptor v : moduleGraph.getVertices()) {
 			final List<String> matching = mapNodeMatching.get(v);
 			if (matching.isEmpty()) {
 				missing.add(v);
@@ -158,7 +158,7 @@ public class RegexpCluster extends BaseCluster {
 				moreThanOneMatch = true;
 				final StringBuilder message = new StringBuilder(msg);
 				message.append(v.getDisplayName()).append(":\t");
-				for (String pattern : matching) {
+				for (final String pattern : matching) {
 					message.append("   ").append(pattern);
 				}
 				message.append('\n');
@@ -172,7 +172,7 @@ public class RegexpCluster extends BaseCluster {
 	 * Adds the non empty clusters to the clustering.
 	 */
 	private void addClusters() {
-		for (Entry<String, Set<NodeDescriptor>> entry : mapPatternCluster
+		for (final Entry<String, Set<NodeDescriptor>> entry : mapPatternCluster
 				.entrySet()) {
 			final String name = entry.getKey();
 			final Set<NodeDescriptor> cluster = entry.getValue();

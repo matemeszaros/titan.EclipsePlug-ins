@@ -52,7 +52,7 @@ public class XLSExporter {
 			final HSSFWorkbook workbook = new HSSFWorkbook();
 
 			for (final MetricGroup type : new MetricGroup[] { MetricGroup.MODULE, MetricGroup.ALTSTEP, MetricGroup.FUNCTION,MetricGroup.TESTCASE }) {
-				for (IMetricEnum metric : type.getMetrics()) {
+				for (final IMetricEnum metric : type.getMetrics()) {
 					if (!(PreferenceManager.isEnabledOnView(metric))) {
 						continue;
 					}
@@ -67,7 +67,7 @@ public class XLSExporter {
 				}
 			}
 
-			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			final FileOutputStream fileOutputStream = new FileOutputStream(file);
 			workbook.write(fileOutputStream);
 
 			IOUtils.closeQuietly(fileOutputStream);
@@ -92,14 +92,14 @@ public class XLSExporter {
 	protected int printChildren(final Sheet sheet, final IContentNode n, final int col, final int line) {
 		final Object[] objs = n.getChildren(data);
 		final List<IContentNode> cns = new ArrayList<IContentNode>();
-		for (Object o : objs) {
+		for (final Object o : objs) {
 			cns.add((IContentNode) o);
 		}
 
 		Collections.sort(cns, new CNComparator(data));
 
 		int currentRow = line;
-		for (IContentNode c : cns) {
+		for (final IContentNode c : cns) {
 			final Row row = sheet.createRow(currentRow++);
 			final Cell cell = row.createCell(col);
 			cell.setCellValue(c.getColumnText(data, 0));

@@ -60,7 +60,7 @@ public final class AnalyzerCache {
 		PREFERENCE_BASED.set(Analyzer.builder().adaptPreferences().build());
 		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
-			public void propertyChange(PropertyChangeEvent event) {
+			public void propertyChange(final PropertyChangeEvent event) {
 				if (event.getProperty().startsWith(ProblemTypePreference.PREFIX)) {
 					PREFERENCE_BASED.set(Analyzer.builder().adaptPreferences().build());
 				}
@@ -69,8 +69,8 @@ public final class AnalyzerCache {
 	}
 
 	private static Analyzer buildAllBased() {
-		AnalyzerBuilder allBasedBuilder = Analyzer.builder();
-		for (CodeSmellType type : CodeSmellType.values()) {
+		final AnalyzerBuilder allBasedBuilder = Analyzer.builder();
+		for (final CodeSmellType type : CodeSmellType.values()) {
 			allBasedBuilder.addProblem(type);
 		}
 		return allBasedBuilder.build();
@@ -82,7 +82,7 @@ public final class AnalyzerCache {
 		ALL_BASED.set(buildAllBased());
 		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
-			public void propertyChange(PropertyChangeEvent event) {
+			public void propertyChange(final PropertyChangeEvent event) {
 				if (event.getProperty().startsWith(ProblemTypePreference.PREFIX)) {
 					ALL_BASED.set(buildAllBased());
 				}

@@ -32,9 +32,9 @@ public class TooManyParameters extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof FormalParameterList) {
-			FormalParameterList s = (FormalParameterList) node;
+			final FormalParameterList s = (FormalParameterList) node;
 			if (s.getNofParameters() > reportTooManyParametersSize) {
-				String msg = MessageFormat.format(TOOMANYPARAMETERS, reportTooManyParametersSize, s.getNofParameters());
+				final String msg = MessageFormat.format(TOOMANYPARAMETERS, reportTooManyParametersSize, s.getNofParameters());
 				problems.report(s.getLocation(), msg);
 			}
 		}
@@ -42,7 +42,7 @@ public class TooManyParameters extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(FormalParameterList.class);
 		return ret;
 	}

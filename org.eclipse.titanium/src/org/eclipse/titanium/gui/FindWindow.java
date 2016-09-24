@@ -59,7 +59,7 @@ public class FindWindow<T extends Comparable> extends Dialog {
 	 * 			  : The whole set to search on
 	 * @exception On illegal arguments
 	 */
-	public FindWindow(Shell parent, Searchable<T> view, Collection<T> totalList) throws IllegalArgumentException {
+	public FindWindow(final Shell parent, final Searchable<T> view, final Collection<T> totalList) throws IllegalArgumentException {
 		super(parent);
 		if (view==null) {
 			throw new IllegalArgumentException("The totalList parameter of FindWindow's constructor mustn't be null!");
@@ -81,7 +81,7 @@ public class FindWindow<T extends Comparable> extends Dialog {
 		createContents();
 		shlFind.open();
 		shlFind.layout();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		shlFind.setLocation(new Point(screenSize.width / 2, 20));
 
 		lblResults = new Label(shlFind, SWT.NONE);
@@ -95,14 +95,14 @@ public class FindWindow<T extends Comparable> extends Dialog {
 		tree.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				view.elemChosen((T) tree.getSelection()[0].getData());
 			}
 		});
 		tree.setBounds(10, 129, 318, 149);
 		showResultTable(false);
 
-		Display display = getParent().getDisplay();
+		final Display display = getParent().getDisplay();
 		while (!shlFind.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -143,21 +143,21 @@ public class FindWindow<T extends Comparable> extends Dialog {
 		btnCaseSensitive.setBounds(10, 72, 93, 16);
 		btnCaseSensitive.setText("Case sensitive");
 		
-		Button btnFind = new Button(shlFind, SWT.NONE);
+		final Button btnFind = new Button(shlFind, SWT.NONE);
 		btnFind.setBounds(258, 68, 75, 25);
 		btnFind.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				String name = text.getText();
-				boolean exactMatch = btnExactMatch.getSelection();
-				boolean caseSensitive = btnCaseSensitive.getSelection();
+				final boolean exactMatch = btnExactMatch.getSelection();
+				final boolean caseSensitive = btnCaseSensitive.getSelection();
 				boolean noResult = true;
 				
 				if (!caseSensitive) {
 					name = name.toLowerCase();
 				}
 
-				for (T actElem : totalSet) {
+				for (final T actElem : totalSet) {
 					String elemName = actElem.toString();
 					if (!caseSensitive) {
 						elemName = elemName.toLowerCase();
@@ -170,8 +170,8 @@ public class FindWindow<T extends Comparable> extends Dialog {
 					}
 				}
 				
-				for (T actElem : treeItems) {
-					TreeItem item = new TreeItem(tree, SWT.NONE);
+				for (final T actElem : treeItems) {
+					final TreeItem item = new TreeItem(tree, SWT.NONE);
 					item.setText(actElem.toString());
 					item.setData(actElem);
 					noResult = false;
@@ -186,15 +186,15 @@ public class FindWindow<T extends Comparable> extends Dialog {
 		});
 		btnFind.setText("Find");
 
-		Label nameLabel = new Label(shlFind, SWT.NONE);
+		final Label nameLabel = new Label(shlFind, SWT.NONE);
 		nameLabel.setBounds(10, 2, 283, 15);
 		nameLabel.setText("Name: ");
 
-		Button btnClearResult = new Button(shlFind, SWT.NONE);
+		final Button btnClearResult = new Button(shlFind, SWT.NONE);
 		btnClearResult.setBounds(177, 68, 75, 25);
 		btnClearResult.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				showResultTable(false);
 				view.clearResults();
 			}
@@ -203,7 +203,7 @@ public class FindWindow<T extends Comparable> extends Dialog {
 
 	}
 
-	private void showResultTable(boolean show) {
+	private void showResultTable(final boolean show) {
 		if (show) {
 			shlFind.setSize(EXT_SIZE.width, EXT_SIZE.height);
 		} else {

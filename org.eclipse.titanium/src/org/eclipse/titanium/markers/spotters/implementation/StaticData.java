@@ -33,7 +33,7 @@ public final class StaticData {
 	 * semantic problem.
 	 */
 	public static Map<CodeSmellType, BaseModuleCodeSmellSpotter[]> newSpotters() {
-		Map<CodeSmellType, BaseModuleCodeSmellSpotter[]> m = new HashMap<CodeSmellType, BaseModuleCodeSmellSpotter[]>();
+		final Map<CodeSmellType, BaseModuleCodeSmellSpotter[]> m = new HashMap<CodeSmellType, BaseModuleCodeSmellSpotter[]>();
 
 		m.put(CodeSmellType.ALTSTEP_COVERAGE, new BaseModuleCodeSmellSpotter[] { new AltstepCoverage.OnAltstep(),
 				new AltstepCoverage.OnAltStatement() });
@@ -108,7 +108,7 @@ public final class StaticData {
 	 * module itself. An example is finding circular importations.
 	 */
 	public static Map<CodeSmellType, BaseProjectCodeSmellSpotter[]> newProjectSpotters() {
-		Map<CodeSmellType, BaseProjectCodeSmellSpotter[]> pm = new HashMap<CodeSmellType, BaseProjectCodeSmellSpotter[]>();
+		final Map<CodeSmellType, BaseProjectCodeSmellSpotter[]> pm = new HashMap<CodeSmellType, BaseProjectCodeSmellSpotter[]>();
 
 		pm.put(CodeSmellType.CIRCULAR_IMPORTATION, new BaseProjectCodeSmellSpotter[] { new CircularImportation() });
 

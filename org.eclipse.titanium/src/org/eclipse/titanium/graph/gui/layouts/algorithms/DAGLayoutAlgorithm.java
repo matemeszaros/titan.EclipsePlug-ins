@@ -63,7 +63,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 * @param graph
 	 *            The graph whose layout we want to construct
 	 */
-	public DAGLayoutAlgorithm(Graph<V, E> graph) {
+	public DAGLayoutAlgorithm(final Graph<V, E> graph) {
 		g = graph;
 
 		minusLevels = 0;
@@ -79,7 +79,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 		mapCircleArcs = new HashMap<Set<V>, Integer>();
 		queue = new PriorityQueue<V>(nodenum, new Comparator<V>() {
 			@Override
-			public int compare(V v, V w) {
+			public int compare(final V v, final V w) {
 				final int priorv = arcs.get(v);
 				final int priorw = arcs.get(w);
 				if (priorv < priorw) {
@@ -121,7 +121,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 			nodesOnLevel[0] = isolateNodes.size();
 		}
 
-		for (int i : level.values()) {
+		for (final int i : level.values()) {
 			nodesOnLevel[i] += 1;
 		}
 	}
@@ -131,9 +131,9 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 */
 	protected void init() {
 		final Collection<V> vertices = g.getVertices();
-		Set<V> complexVerticses = new HashSet<V>();
+		final Set<V> complexVerticses = new HashSet<V>();
 
-		for (V v : vertices) {
+		for (final V v : vertices) {
 			if (getInDegree(v) == 0 && getOutDegree(v) == 0) {
 				isolateNodes.add(v);
 				minusLevels = 1;
@@ -142,7 +142,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 			}
 		}
 
-		for (V v : complexVerticses) {
+		for (final V v : complexVerticses) {
 			level.put(v, minusLevels);
 			arcs.put(v, getInDegree(v));
 			queue.offer(v);
@@ -193,9 +193,9 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The node to be checked
 	 * @see #updateNode(Object, int)
 	 */
-	protected void checkNonCircle(V v) {
+	protected void checkNonCircle(final V v) {
 		checked.add(v);
-		for (E e : getOutEdges(v)) {
+		for (final E e : getOutEdges(v)) {
 			final V w = getDest(e);
 			updateNode(w, level.get(v));
 		}
@@ -211,14 +211,14 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The node to be checked
 	 * @see #finalizeCircle(Set, int)
 	 */
-	protected void checkCircle(V v) {
+	protected void checkCircle(final V v) {
 		// find the circles
-		Set<V> circle = detectCircles(v);
+		final Set<V> circle = detectCircles(v);
 
 		// calculate the level for the circle, which is the maximum of the
 		// level of nodes contained in it.
 		int circleLevel = 0;
-		for (V w : circle) {
+		for (final V w : circle) {
 			final int currentLevel = level.get(w);
 			if (currentLevel > circleLevel) {
 				circleLevel = currentLevel;
@@ -227,12 +227,12 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 
 		// administer the changes to all nodes in the circle
 		int foundArcs = 0;
-		for (V u : circle) {
+		for (final V u : circle) {
 			level.put(u, circleLevel);
 			mapNodeCircle.put(u, circle);
 
-			for (E e : getInEdges(u)) {
-				V w = getSource(e);
+			for (final E e : getInEdges(u)) {
+				final V w = getSource(e);
 				if (!(checked.contains(w) || circle.contains(w))) {
 					++foundArcs;
 				}
@@ -253,10 +253,10 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 * @param v
 	 *            The node to be checked
 	 */
-	protected Set<V> detectCircles(V v) {
+	protected Set<V> detectCircles(final V v) {
 
-		Set<V> seenForward = new HashSet<V>();
-		Set<V> seenBackward = new HashSet<V>();
+		final Set<V> seenForward = new HashSet<V>();
+		final Set<V> seenBackward = new HashSet<V>();
 
 		dfsSeeForward(v, seenForward);
 		dfsSeeBackward(v, seenBackward);
@@ -276,11 +276,11 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 * @param circleLevel
 	 *            The level of the circle
 	 */
-	protected void finalizeCircle(Set<V> circle, int circleLevel) {
-		for (V u : circle) {
+	protected void finalizeCircle(final Set<V> circle, final int circleLevel) {
+		for (final V u : circle) {
 			checked.add(u);
-			for (E e : getOutEdges(u)) {
-				V w = getDest(e);
+			for (final E e : getOutEdges(u)) {
+				final V w = getDest(e);
 				if (!circle.contains(w)) {
 					updateNode(w, circleLevel);
 				}
@@ -298,7 +298,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 * @param parentLevel
 	 *            The level of the parent node
 	 */
-	protected void updateNode(V w, int parentLevel) {
+	protected void updateNode(final V w, final int parentLevel) {
 		boolean isnewlevel;
 
 		final int oldLevel = level.get(w);
@@ -315,10 +315,10 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 		}
 
 		if (mapNodeCircle.containsKey(w)) {
-			Set<V> circle = mapNodeCircle.get(w);
+			final Set<V> circle = mapNodeCircle.get(w);
 			mapCircleArcs.put(circle, mapCircleArcs.get(circle) - 1);
 			if (isnewlevel) {
-				for (V u : circle) {
+				for (final V u : circle) {
 					level.put(u, newLevel);
 				}
 			}
@@ -342,14 +342,14 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 * @param set
 	 *            The reachable nodes will be collected in this set
 	 */
-	protected void dfsSee(V source, Set<V> set, boolean forward) {
-		Deque<V> current = new LinkedList<V>();
+	protected void dfsSee(final V source, final Set<V> set, final boolean forward) {
+		final Deque<V> current = new LinkedList<V>();
 		current.add(source);
 		while (!current.isEmpty()) {
-			V v = current.removeLast();
+			final V v = current.removeLast();
 			set.add(v);
-			for (E e : getDirectedEdges(v, forward)) {
-				V w = getNodeOfDirectedEdge(e, forward);
+			for (final E e : getDirectedEdges(v, forward)) {
+				final V w = getNodeOfDirectedEdge(e, forward);
 				if (set.contains(w)) {
 					continue;
 				}
@@ -367,7 +367,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 * @param set
 	 *            The set that will contain the reachable nodes
 	 */
-	protected void dfsSeeForward(V source, Set<V> set) {
+	protected void dfsSeeForward(final V source, final Set<V> set) {
 		dfsSee(source, set, true);
 	}
 
@@ -379,7 +379,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 * @param set
 	 *            The set that will contain the reachable nodes
 	 */
-	protected void dfsSeeBackward(V source, Set<V> set) {
+	protected void dfsSeeBackward(final V source, final Set<V> set) {
 		dfsSee(source, set, false);
 	}
 
@@ -390,7 +390,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            False if we search in the reverse graph
 	 * @return The edges incident to the node in the (reverse) graph
 	 */
-	protected Collection<E> getDirectedEdges(V v, boolean forward) {
+	protected Collection<E> getDirectedEdges(final V v, final boolean forward) {
 		if (forward) {
 			return g.getOutEdges(v);
 		} else {
@@ -405,7 +405,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            False if we search in the reverse graph
 	 * @return The endpoint of the edge
 	 */
-	protected V getNodeOfDirectedEdge(E e, boolean forward) {
+	protected V getNodeOfDirectedEdge(final E e, final boolean forward) {
 		if (forward) {
 			return g.getDest(e);
 		} else {
@@ -450,7 +450,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The node
 	 * @return The in-degree of the node
 	 */
-	protected int getInDegree(V v) {
+	protected int getInDegree(final V v) {
 		return g.inDegree(v);
 	}
 
@@ -459,7 +459,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The node
 	 * @return The out-degree of the node
 	 */
-	protected int getOutDegree(V v) {
+	protected int getOutDegree(final V v) {
 		return g.outDegree(v);
 	}
 
@@ -468,7 +468,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The node
 	 * @return The in-edges of the node
 	 */
-	protected Collection<E> getInEdges(V v) {
+	protected Collection<E> getInEdges(final V v) {
 		return g.getInEdges(v);
 	}
 
@@ -477,7 +477,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The node
 	 * @return The out-edges of the node
 	 */
-	protected Collection<E> getOutEdges(V v) {
+	protected Collection<E> getOutEdges(final V v) {
 		return g.getOutEdges(v);
 	}
 
@@ -486,7 +486,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The edge
 	 * @return The source node of the edge
 	 */
-	protected V getSource(E e) {
+	protected V getSource(final E e) {
 		return g.getSource(e);
 	}
 
@@ -495,7 +495,7 @@ public class DAGLayoutAlgorithm<V, E> implements HierarcicalLayoutAlgorithm<V> {
 	 *            The edge
 	 * @return The tail of the edge
 	 */
-	protected V getDest(E e) {
+	protected V getDest(final E e) {
 		return g.getDest(e);
 	}
 }

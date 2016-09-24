@@ -76,14 +76,14 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		node.accept(formalParameterCollector);
 
 		// Build structure.
-		RelevantNodeBuilder relevantNodeBuilder = new RelevantNodeBuilder(node);
+		final RelevantNodeBuilder relevantNodeBuilder = new RelevantNodeBuilder(node);
 		node.accept(relevantNodeBuilder);
 
 		// Evaluate tree and return with FormalParameters which have to be evaluated.
-		Set<FormalParameter> shouldBeEvaluated = relevantNodeBuilder.collectRelevantReferences();
+		final Set<FormalParameter> shouldBeEvaluated = relevantNodeBuilder.collectRelevantReferences();
 
-		for (FormalParameter formalParameter : formalParameterCollector.getItems()) {
-			boolean isLazy = formalParameter.getIsLazy();
+		for (final FormalParameter formalParameter : formalParameterCollector.getItems()) {
+			final boolean isLazy = formalParameter.getIsLazy();
 
 			String message = null;
 
@@ -98,7 +98,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 			}
 
 			if (message != null) {
-				String msg = MessageFormat.format(ERROR_MESSAGE, formalParameter.getIdentifier().getDisplayName(), message);
+				final String msg = MessageFormat.format(ERROR_MESSAGE, formalParameter.getIdentifier().getDisplayName(), message);
 				problems.report(formalParameter.getLocation(), msg);
 			}
 		}
@@ -106,7 +106,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
 		ret.add(Def_Altstep.class);
 		ret.add(Def_Function.class);
 		ret.add(Def_Testcase.class);
@@ -142,7 +142,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 			nodes = new ArrayList<RelevantNodeBuilder>();
 		}
 		
-		public RelevantNodeBuilder(IVisitableNode node,boolean skipNextFormalParameter) {
+		public RelevantNodeBuilder(final IVisitableNode node, final boolean skipNextFormalParameter) {
 			this(node);
 			this.nextFormalParameterIsNotRelevant = skipNextFormalParameter;
 		}
@@ -159,7 +159,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 			}
 			
 			if ((node instanceof StatementBlock || node instanceof Statement || node instanceof AltGuard) && !node.equals(root)) {
-				RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(node,nextFormalParameterIsNotRelevant);
+				final RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(node,nextFormalParameterIsNotRelevant);
 
 				// Handle separately the expression block of If_Statement and SelectCase_Statement.
 				// Store the possible FormalParameters in strictFormalParameters collection.
@@ -174,34 +174,34 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 
 			// Only deal with Reference which referred FormalParameter.
 			if (node instanceof Reference) {
-				Reference reference = (Reference) node;
+				final Reference reference = (Reference) node;
 
-				Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 
 				if (assignment instanceof Def_Function) {
-					FormalParameterList formalParameterList=((Def_Function)assignment).getFormalParameterList();
-					ISubReference subreference = ((Reference) node).getSubreferences().get(0);
+					final FormalParameterList formalParameterList=((Def_Function)assignment).getFormalParameterList();
+					final ISubReference subreference = ((Reference) node).getSubreferences().get(0);
 					
 					if(!(subreference instanceof ParameterisedSubReference)) {
 						return V_SKIP;
 					}
 
-					ParameterisedSubReference subref = (ParameterisedSubReference)((Reference) node).getSubreferences().get(0);
-					ParsedActualParameters parsedActualParameters = subref.getParsedParameters();
+					final ParameterisedSubReference subref = (ParameterisedSubReference)((Reference) node).getSubreferences().get(0);
+					final ParsedActualParameters parsedActualParameters = subref.getParsedParameters();
 					
-					ActualParameterList nonLazyActualParameters = new ActualParameterList();
-					ActualParameterList lazyActualParameters = new ActualParameterList();
+					final ActualParameterList nonLazyActualParameters = new ActualParameterList();
+					final ActualParameterList lazyActualParameters = new ActualParameterList();
 					formalParameterList.collateLazyAndNonLazyActualParameters(CompilationTimeStamp.getBaseTimestamp(),parsedActualParameters, lazyActualParameters, nonLazyActualParameters);
 
 					if(nonLazyActualParameters.getNofParameters()!=0) {
-						RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(root);
+						final RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(root);
 						nodes.add(statementBlockCollector);
 						nonLazyActualParameters.accept(statementBlockCollector);
 					}
 					for(int i=0,size=lazyActualParameters.getNofParameters();i<size;++i) {
-						ActualParameter lazyActualParameter = lazyActualParameters.getParameter(i);
+						final ActualParameter lazyActualParameter = lazyActualParameters.getParameter(i);
 						if(lazyActualParameter instanceof Value_ActualParameter) {
-							RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(root,true);
+							final RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(root,true);
 							nodes.add(statementBlockCollector);
 							lazyActualParameter.accept(statementBlockCollector);
 						}
@@ -210,7 +210,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 				}
 				
 				if (assignment instanceof FormalParameter) {
-					FormalParameter formalParameter = (FormalParameter) assignment;
+					final FormalParameter formalParameter = (FormalParameter) assignment;
 					if(nextFormalParameterIsNotRelevant) return V_CONTINUE;
 					if (formalParameterCollector.getItems().contains(formalParameter)) {
 						if (root instanceof If_Statement || root instanceof SelectCase_Statement) {
@@ -226,7 +226,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		}
 
 		public Set<FormalParameter> collectRelevantReferences() {
-			Set<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
+			final Set<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
 
 			// After that we disregard content's of nodes
 			if (root instanceof Return_Statement) {
@@ -237,11 +237,11 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 			if (nodes.size() == 0) {
 				return referencedFormalParameters;
 			} else {
-				Set<FormalParameter> tempStricts = new HashSet<FormalParameter>();
+				final Set<FormalParameter> tempStricts = new HashSet<FormalParameter>();
 				for (int index = 0, nodeSize = nodes.size(); index < nodeSize; ++index) {
 					if (haveToContinue) {
 						tempStricts.addAll(nodes.get(index).strictFormalParameters);
-						Set<FormalParameter> temp = nodes.get(index).collectRelevantReferences();
+						final Set<FormalParameter> temp = nodes.get(index).collectRelevantReferences();
 						if (root instanceof StatementBlock || root instanceof Definition || root instanceof AltGuard || root instanceof Function_Instance_Statement) {
 							shouldBeEvaluated.addAll(temp);
 						} else {
@@ -281,10 +281,10 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof IParameterisedAssignment) {
-				FormalParameterList formalParameterList = ((IParameterisedAssignment) node).getFormalParameterList();
+				final FormalParameterList formalParameterList = ((IParameterisedAssignment) node).getFormalParameterList();
 				for (int i = 0; i < formalParameterList.getNofParameters(); ++i) {
-					FormalParameter formalParameter = formalParameterList.getParameterByIndex(i);
-					Assignment_type type = formalParameter.getAssignmentType();
+					final FormalParameter formalParameter = formalParameterList.getParameterByIndex(i);
+					final Assignment_type type = formalParameter.getAssignmentType();
 					switch (type) {
 						case A_PAR_VAL:
 						case A_PAR_VAL_IN:

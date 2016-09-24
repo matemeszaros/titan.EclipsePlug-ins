@@ -31,37 +31,37 @@ public class DAGLayoutReverseAlgorithm<V, E> extends
 	 * @param graph
 	 *            The graph whose layout we want to construct
 	 */
-	public DAGLayoutReverseAlgorithm(Graph<V, E> graph) {
+	public DAGLayoutReverseAlgorithm(final Graph<V, E> graph) {
 		super(graph);
 	}
 
 	@Override
-	protected int getInDegree(V v) {
+	protected int getInDegree(final V v) {
 		return super.getOutDegree(v);
 	}
 
 	@Override
-	protected int getOutDegree(V v) {
+	protected int getOutDegree(final V v) {
 		return super.getInDegree(v);
 	}
 
 	@Override
-	protected Collection<E> getInEdges(V v) {
+	protected Collection<E> getInEdges(final V v) {
 		return super.getOutEdges(v);
 	}
 
 	@Override
-	protected Collection<E> getOutEdges(V v) {
+	protected Collection<E> getOutEdges(final V v) {
 		return super.getInEdges(v);
 	}
 
 	@Override
-	protected V getSource(E e) {
+	protected V getSource(final E e) {
 		return super.getDest(e);
 	}
 
 	@Override
-	protected V getDest(E e) {
+	protected V getDest(final E e) {
 		return super.getSource(e);
 	}
 

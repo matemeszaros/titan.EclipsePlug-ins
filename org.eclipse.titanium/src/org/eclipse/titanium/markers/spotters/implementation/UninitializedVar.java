@@ -27,12 +27,12 @@ public class UninitializedVar extends BaseModuleCodeSmellSpotter {
 	@Override
 	protected void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Def_Var_Template) {
-			Def_Var_Template d = (Def_Var_Template)node;
+			final Def_Var_Template d = (Def_Var_Template)node;
 			if (d.getInitialValue() == null) {
 				problems.report(d.getLocation(), TEMPLATE_ERROR_MESSAGE);
 			}
 		} else if (node instanceof Def_Var) {
-			Def_Var d = (Def_Var)node;
+			final Def_Var d = (Def_Var)node;
 			if (d.getInitialValue() == null) {
 				problems.report(d.getLocation(), VARIABLE_ERROR_MESSAGE);
 			}
@@ -43,7 +43,7 @@ public class UninitializedVar extends BaseModuleCodeSmellSpotter {
 	
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(2);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(2);
 		ret.add(Def_Var_Template.class);
 		ret.add(Def_Var.class);
 		return ret;

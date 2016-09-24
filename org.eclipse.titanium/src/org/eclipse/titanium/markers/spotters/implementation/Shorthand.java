@@ -105,7 +105,7 @@ public class Shorthand extends BaseModuleCodeSmellSpotter {
 		} else {
 			return;
 		}
-		Statement s = (Statement)node;
+		final Statement s = (Statement)node;
 		check(s, problems);
 	}
 	
@@ -121,11 +121,11 @@ public class Shorthand extends BaseModuleCodeSmellSpotter {
 			}
 			curr = curr.getNameParent();
 		}
-		StatementBlock sb = s.getMyStatementBlock();
+		final StatementBlock sb = s.getMyStatementBlock();
 		if (sb == null) {
 			return;
 		}
-		Definition d = sb.getMyDefinition();
+		final Definition d = sb.getMyDefinition();
 		if (d == null) {
 			return;
 		}
@@ -141,7 +141,7 @@ public class Shorthand extends BaseModuleCodeSmellSpotter {
 	
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(13);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(13);
 		ret.add(Timeout_Statement.class);
 		ret.add(Receive_Port_Statement.class);
 		ret.add(Trigger_Port_Statement.class);

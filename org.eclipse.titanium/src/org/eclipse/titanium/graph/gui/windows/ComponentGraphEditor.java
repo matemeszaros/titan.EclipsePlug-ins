@@ -38,29 +38,29 @@ public class ComponentGraphEditor extends GraphEditor {
 	protected void initWindow() {
 		super.initWindow();
 
-		JRadioButtonMenuItem isom = Layouts.LAYOUT_ISOM.newInstance();
+		final JRadioButtonMenuItem isom = Layouts.LAYOUT_ISOM.newInstance();
 		isom.addActionListener(layoutListener);
 		layoutGroup.add(isom);
 		layoutMenu.add(isom);
 
-		JMenu dagMenu = new JMenu("Directed layouts");
+		final JMenu dagMenu = new JMenu("Directed layouts");
 		layoutMenu.add(dagMenu);
 
-		JRadioButtonMenuItem tdag = Layouts.LAYOUT_TDAG.newInstance();
+		final JRadioButtonMenuItem tdag = Layouts.LAYOUT_TDAG.newInstance();
 		tdag.setSelected(true);
 		tdag.addActionListener(layoutListener);
 		dagMenu.add(tdag);
 		layoutGroup.add(tdag);
 
-		JRadioButtonMenuItem rtdag = Layouts.LAYOUT_RTDAG.newInstance();
+		final JRadioButtonMenuItem rtdag = Layouts.LAYOUT_RTDAG.newInstance();
 		rtdag.addActionListener(layoutListener);
 		dagMenu.add(rtdag);
 		layoutGroup.add(rtdag);
 	}
 
 	@Override
-	public void recolour(Collection<NodeDescriptor> nodeSet) {
-		for (NodeDescriptor v : nodeSet) {
+	public void recolour(final Collection<NodeDescriptor> nodeSet) {
+		for (final NodeDescriptor v : nodeSet) {
 			v.setNodeColour(NodeColours.LIGHT_GREEN);
 		}
 	}

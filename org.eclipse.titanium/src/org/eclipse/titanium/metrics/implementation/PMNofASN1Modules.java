@@ -21,7 +21,7 @@ public class PMNofASN1Modules extends BaseProjectMetric {
 	@Override
 	public Number measure(final MetricData data, final IProject p) {
 		int count = 0;
-		for (Module m : data.getModules()) {
+		for (final Module m : data.getModules()) {
 			if (m instanceof ASN1Module) {
 				++count;
 			}

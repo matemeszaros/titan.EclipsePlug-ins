@@ -109,7 +109,7 @@ public final class OrganizeFromBrowser extends AbstractHandler implements IObjec
 
 		final List<IFile> files = new ArrayList<IFile>();
 		final Deque<IResource> res = new LinkedList<IResource>();
-		for (Object o : structSelection.toList()) {
+		for (final Object o : structSelection.toList()) {
 			if (o instanceof IResource) {
 				res.add((IResource) o);
 			}
@@ -120,7 +120,7 @@ public final class OrganizeFromBrowser extends AbstractHandler implements IObjec
 			if (resource instanceof IProject) {
 				final IProject project = (IProject) resource;
 				try {
-					for (IResource r2 : project.members()) {
+					for (final IResource r2 : project.members()) {
 						res.addLast(r2);
 					}
 				} catch (CoreException e) {
@@ -130,7 +130,7 @@ public final class OrganizeFromBrowser extends AbstractHandler implements IObjec
 			if (resource instanceof IFolder) {
 				try {
 					final IResource[] folder = ((IFolder) resource).members();
-					for (IResource r2 : folder) {
+					for (final IResource r2 : folder) {
 						res.addLast(r2);
 					}
 				} catch (CoreException e) {
@@ -175,13 +175,13 @@ class OrganizeImportsOp implements IRunnableWithProgress {
 	@Override
 	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		final Set<IProject> projects = new HashSet<IProject>();
-		for (IFile f : files) {
+		for (final IFile f : files) {
 			projects.add(f.getProject());
 		}
 
 		monitor.beginTask("Organize imports", files.size() + projects.size() * 20);
 
-		for (IProject project : projects) {
+		for (final IProject project : projects) {
 			final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(project);
 			final WorkspaceJob job = parser.analyzeAll();
 
@@ -198,7 +198,7 @@ class OrganizeImportsOp implements IRunnableWithProgress {
 		}
 
 		final CompositeChange compChange = new CompositeChange("Organize imports");
-		for (IFile f : files) {
+		for (final IFile f : files) {
 			monitor.subTask("Organizing " + f.getName());
 			try {
 				final TextFileChange change = OrganizeImports.organizeImportsChange(f);
@@ -222,7 +222,7 @@ class OrganizeImportsOp implements IRunnableWithProgress {
 			monitor.worked(1);
 		}
 
-		for (IProject project : projects) {
+		for (final IProject project : projects) {
 			GlobalParser.getProjectSourceParser(project).analyzeAll();
 		}
 

@@ -51,34 +51,34 @@ public class ConvertToEnum extends BaseModuleCodeSmellSpotter {
 		if (!(node instanceof SelectCase_Statement)) {
 			return;
 		}
-		SelectCase_Statement s = (SelectCase_Statement)node;
-		Value v = s.getExpression();
+		final SelectCase_Statement s = (SelectCase_Statement)node;
+		final Value v = s.getExpression();
 		if (v == null || v.getIsErroneous(timestamp)) {
 			return;
 		}
-		IType.Type_type type = v.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+		final IType.Type_type type = v.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 		if (!type.equals(Type_type.TYPE_TTCN3_ENUMERATED)) {
-			IType governor = v.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
+			final IType governor = v.getExpressionGovernor(timestamp, Expected_Value_type.EXPECTED_TEMPLATE);
 			if (governor != null && !governor.getIsErroneous(timestamp)) {
 				problems.report(v.getLocation(), MessageFormat.format(ERROR_MSG_SELECT, governor.getTypename()));
 			}
 		}
-		SelectCases scs = s.getSelectCases();
+		final SelectCases scs = s.getSelectCases();
 		if (scs == null || scs.getSelectCaseArray() == null) {
 			return;
 		}
-		for (SelectCase sc: scs.getSelectCaseArray()) {
+		for (final SelectCase sc: scs.getSelectCaseArray()) {
 			if (sc.hasElse()) {
 				continue;
 			}
-			CaseVisitor visitor = new CaseVisitor(problems);
+			final CaseVisitor visitor = new CaseVisitor(problems);
 			sc.accept(visitor);
 		}
 	}
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(SelectCase_Statement.class);
 		return ret;
 	}
@@ -98,8 +98,8 @@ public class ConvertToEnum extends BaseModuleCodeSmellSpotter {
 			} else if (node instanceof TemplateInstances) {
 				return V_CONTINUE;
 			} else if (node instanceof TemplateInstance) {
-				TemplateInstance ti = (TemplateInstance)node;
-				IType.Type_type type = ti.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+				final TemplateInstance ti = (TemplateInstance)node;
+				final IType.Type_type type = ti.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 				if (!type.equals(Type_type.TYPE_TTCN3_ENUMERATED)) {
 					problems.report(ti.getLocation(), ERROR_MSG_CASE);
 				}

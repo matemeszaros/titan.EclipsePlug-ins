@@ -27,7 +27,7 @@ import org.eclipse.titanium.metrics.utils.WrapperStore;
 public class MeasureableGraphHandler extends GraphHandler {
 	protected IMetricEnum chosenColouringMetric;
 
-	public MeasureableGraphHandler(Shell parent) {
+	public MeasureableGraphHandler(final Shell parent) {
 		super();
 		popupMenu = new MeasureableNodePopupMenu(this, parent);
 	}
@@ -43,15 +43,15 @@ public class MeasureableGraphHandler extends GraphHandler {
 	 *            color="red">ONLY</font> one metric)
 	 * @return The calculated node colour
 	 */
-	public Color calculateColour(NodeDescriptor node, IMetricEnum metric) {
+	public Color calculateColour(final NodeDescriptor node, final IMetricEnum metric) {
 		chosenColouringMetric = metric;
 		if (node.isMissing()) {
 			node.setNodeColour(NodeColours.MISSING_COLOUR);
 			return NodeColours.MISSING_COLOUR;
 		}
 		Color actColor;
-		ModuleMetricsWrapper actProvider = WrapperStore.getWrapper(node.getProject());
-		RiskLevel rColor = actProvider.getRisk(metric, node.getName());
+		final ModuleMetricsWrapper actProvider = WrapperStore.getWrapper(node.getProject());
+		final RiskLevel rColor = actProvider.getRisk(metric, node.getName());
 		switch (rColor) {
 		case NO:
 			actColor = NodeColours.DARK_GREEN;
@@ -76,7 +76,7 @@ public class MeasureableGraphHandler extends GraphHandler {
 	 * 
 	 * @param value
 	 */
-	public void enableInfoWindow(boolean value) {
+	public void enableInfoWindow(final boolean value) {
 		((MeasureableNodePopupMenu) popupMenu).enableInfoWindow(value);
 	}
 

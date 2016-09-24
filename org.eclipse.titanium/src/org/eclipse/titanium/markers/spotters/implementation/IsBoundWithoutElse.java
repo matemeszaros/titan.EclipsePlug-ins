@@ -59,29 +59,29 @@ public class IsBoundWithoutElse extends BaseModuleCodeSmellSpotter {
 		if (!(node instanceof If_Statement)) {
 			return;
 		}
-		If_Statement ifs = (If_Statement)node;
-		StatementBlock elseClause = ifs.getStatementBlock();
+		final If_Statement ifs = (If_Statement)node;
+		final StatementBlock elseClause = ifs.getStatementBlock();
 		if (elseClause != null) {
 			return;
 		}
 		//there is no else clause present
-		If_Clauses ifcs = ifs.getIfClauses();
+		final If_Clauses ifcs = ifs.getIfClauses();
 		if (ifcs == null) {
 			return;
 		}
-		List<If_Clause> ifcL = ifcs.getClauses();
+		final List<If_Clause> ifcL = ifcs.getClauses();
 		if (ifcL == null || ifcL.isEmpty()) {
 			return;
 		}
-		for (If_Clause ifc: ifcL) {
-			IfConditionVisitor visitor = new IfConditionVisitor(problems);
+		for (final If_Clause ifc: ifcL) {
+			final IfConditionVisitor visitor = new IfConditionVisitor(problems);
 			ifc.accept(visitor);
 		}
 	}
 	
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
 		ret.add(If_Statement.class);
 		return ret;
 	}
@@ -110,7 +110,7 @@ public class IsBoundWithoutElse extends BaseModuleCodeSmellSpotter {
 			}
 			//true if the visitor is at the expression node of a NotExpression
 			if (insideNotExpr) {
-				IfConditionVisitor visitor = new IfConditionVisitor(negationsNumber+1, problems);
+				final IfConditionVisitor visitor = new IfConditionVisitor(negationsNumber+1, problems);
 				node.accept(visitor);
 				insideNotExpr = false;
 				return V_SKIP;
@@ -120,7 +120,7 @@ public class IsBoundWithoutElse extends BaseModuleCodeSmellSpotter {
 			} else if (node instanceof IsBoundExpression || 
 					node instanceof IsPresentExpression ||
 					node instanceof IsChoosenExpression) {
-					Expression_Value ev = (Expression_Value)node;
+				final Expression_Value ev = (Expression_Value)node;
 				if (negationsNumber%2 == 0) {
 					problems.report(ev.getLocation(), MessageFormat.format(ERR_MSG, NAMES.get(ev.getClass())));
 				}

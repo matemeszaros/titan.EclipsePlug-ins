@@ -74,7 +74,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 
 	private static final Map<ProblemTypePreference, String> TOOLTIP_MAPPING;
 	static {
-		Map<ProblemTypePreference, String> m = new EnumMap<ProblemTypePreference, String>(ProblemTypePreference.class);
+		final Map<ProblemTypePreference, String> m = new EnumMap<ProblemTypePreference, String>(ProblemTypePreference.class);
 
 		m.put(ProblemTypePreference.ALTSTEP_COVERAGE, "Through it is not strictly necessary,"
 				+ " it recommendable for an altstep to handle any possible incoming message types");
@@ -181,7 +181,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 
 	@Override
 	protected Control createContents(final Composite parent) {
-		Composite pagecomp = new Composite(parent, SWT.NONE);
+		final Composite pagecomp = new Composite(parent, SWT.NONE);
 		pagecomp.setLayout(new GridLayout(1, true));
 		pagecomp.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 		return super.createContents(pagecomp);
@@ -192,20 +192,20 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 		final Composite tempParent = new Composite(getFieldEditorParent(), 0);
 		tempParent.setLayout(new GridLayout(1, true));
 
-		Group top = new Group(tempParent, SWT.SHADOW_ETCHED_IN);
+		final Group top = new Group(tempParent, SWT.SHADOW_ETCHED_IN);
 		top.setText("On-the-fly check");
 		top.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		top.setLayout(new FillLayout(SWT.VERTICAL));
-		BooleanFieldEditor b1 = new BooleanFieldEditor(PreferenceConstants.ON_THE_FLY_SMELLS, ON_THE_FLY, BooleanFieldEditor.SEPARATE_LABEL,
+		final BooleanFieldEditor b1 = new BooleanFieldEditor(PreferenceConstants.ON_THE_FLY_SMELLS, ON_THE_FLY, BooleanFieldEditor.SEPARATE_LABEL,
 				top);
 		b1.getLabelControl(top).setToolTipText(ON_THE_FLY_TOOLTIP);
 		addField(b1);
 		{
-			ExpandableComposite sec = new ExpandableComposite(tempParent,
+			final ExpandableComposite sec = new ExpandableComposite(tempParent,
 					ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
 			sec.setText("Potential Structural problems");
 			sec.setFont(fonts.getBold(""));
-			Composite comp = new Composite(sec, 0);
+			final 	Composite comp = new Composite(sec, 0);
 			comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			createField(comp, ProblemTypePreference.GOTO);
@@ -222,11 +222,11 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 			sec.setExpanded(true);
 		}
 		{
-			ExpandableComposite sec = new ExpandableComposite(tempParent,
+			final ExpandableComposite sec = new ExpandableComposite(tempParent,
 					ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
 			sec.setText("Code style problems");
 			sec.setFont(fonts.getBold(""));
-			Composite comp = new Composite(sec, 0);
+			final Composite comp = new Composite(sec, 0);
 			comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			createField(comp, ProblemTypePreference.LOGIC_INVERSION);
@@ -238,11 +238,11 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 			sec.setExpanded(false);
 		}
 		{
-			ExpandableComposite sec = new ExpandableComposite(tempParent,
+			final ExpandableComposite sec = new ExpandableComposite(tempParent,
 					ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
 			sec.setText("Potential performance problems");
 			sec.setFont(fonts.getBold(""));
-			Composite comp = new Composite(sec, 0);
+			final Composite comp = new Composite(sec, 0);
 			comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			createField(comp, ProblemTypePreference.INFINITE_LOOP);
@@ -256,11 +256,11 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 			sec.setExpanded(false);
 		}
 		{
-			ExpandableComposite sec = new ExpandableComposite(tempParent,
+			final ExpandableComposite sec = new ExpandableComposite(tempParent,
 					ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
 			sec.setText("Potential programming problems");
 			sec.setFont(fonts.getBold(""));
-			Composite comp = new Composite(sec, 0);
+			final Composite comp = new Composite(sec, 0);
 			comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			createField(comp, ProblemTypePreference.READONLY_VARIABLE);
@@ -295,11 +295,11 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 			sec.setExpanded(false);
 		}
 		{
-			ExpandableComposite sec = new ExpandableComposite(tempParent,
+			final ExpandableComposite sec = new ExpandableComposite(tempParent,
 					ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
 			sec.setText("Unnecessary code");
 			sec.setFont(fonts.getBold(""));
-			Composite comp = new Composite(sec, 0);
+			final Composite comp = new Composite(sec, 0);
 			comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			createField(comp, ProblemTypePreference.UNUSED_GLOBAL_DEFINITION);
@@ -313,7 +313,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 	}
 
 	private void createIntegerEditor(final Composite comp, final String name, final String labelText) {
-		IntegerFieldEditor temp = new IntegerFieldEditor(name, labelText, comp);
+		final IntegerFieldEditor temp = new IntegerFieldEditor(name, labelText, comp);
 		temp.setPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
 			public void propertyChange(final PropertyChangeEvent event) {
@@ -324,7 +324,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 	}
 
 	private void createField(final Composite comp, final ProblemTypePreference type) {
-		ComboFieldEditor comboedit = new ComboFieldEditor(type.getPreferenceName(), type.getDescription(), IGNORE_WARNING_ERROR, comp);
+		final ComboFieldEditor comboedit = new ComboFieldEditor(type.getPreferenceName(), type.getDescription(), IGNORE_WARNING_ERROR, comp);
 		comboedit.getLabelControl(comp).setToolTipText(TOOLTIP_MAPPING.get(type));
 		comboedit.setPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
@@ -359,7 +359,7 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 
 	@Override
 	public boolean performOk() {
-		boolean result = super.performOk();
+		final boolean result = super.performOk();
 
 		// it would be better to use IPreferenceStore.needsSaving(), but
 		// regardless the user
@@ -379,11 +379,11 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 				"Settings of the code smell analyzer have changed," +
 				   " the known projects have to be re-analyzed completly.\nThis might take some time.");
 
-			IProject[] projs = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			final IProject[] projs = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 			final Analyzer analyzer = AnalyzerCache.withPreference();
 			for (final IProject project : projs) {
 				if (TITANNature.hasTITANNature(project)) {
-					WorkspaceJob op = new WorkspaceJob("Code smells") {
+					final WorkspaceJob op = new WorkspaceJob("Code smells") {
 						@Override
 						public IStatus runInWorkspace(final IProgressMonitor monitor) {
 							MarkerHandler mh;
@@ -451,7 +451,7 @@ class CustomExpansionListener extends ExpansionAdapter {
 		}
 		// Depending on expansion/collapsion, we shall add/subtract the
 		// height
-		int dir = e.getState() ? 1 : -1;
+		final int dir = e.getState() ? 1 : -1;
 		sc.setMinHeight(sc.getMinHeight() + dir * height);
 	}
 }

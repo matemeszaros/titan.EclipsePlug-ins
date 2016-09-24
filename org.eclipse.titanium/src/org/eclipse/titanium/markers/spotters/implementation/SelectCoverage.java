@@ -59,17 +59,17 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 		if (!(node instanceof SelectCase_Statement)) {
 			return;
 		}
-		SelectCase_Statement s = (SelectCase_Statement)node;
-		Value v = s.getExpression();
+		final SelectCase_Statement s = (SelectCase_Statement)node;
+		final Value v = s.getExpression();
 		if (v == null || v.getIsErroneous(timestamp)) {
 			return;
 		}
 		//if there is an else branch, no smell will be reported
-		SelectCases scs = s.getSelectCases();
+		final SelectCases scs = s.getSelectCases();
 		if (scs == null || scs.getSelectCaseArray() == null) {
 			return;
 		}
-		for (SelectCase sc: scs.getSelectCaseArray()) {
+		for (final SelectCase sc: scs.getSelectCaseArray()) {
 			if (sc.hasElse()) {
 				return;
 			}
@@ -81,23 +81,23 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 		if (itype == null || !(itype instanceof TTCN3_Enumerated_Type)) {
 			return;
 		}
-		TTCN3_Enumerated_Type enumType = (TTCN3_Enumerated_Type)itype;
+		final TTCN3_Enumerated_Type enumType = (TTCN3_Enumerated_Type)itype;
 		//count number of items in enum, get all items from enum
-		EnumItemVisitor enumVisitor = new EnumItemVisitor();
+		final EnumItemVisitor enumVisitor = new EnumItemVisitor();
 		enumType.accept(enumVisitor);
-		int enumSize = enumVisitor.getCount();
-		List<Identifier> allEnumItems = enumVisitor.getItemsFound();
+		final int enumSize = enumVisitor.getCount();
+		final List<Identifier> allEnumItems = enumVisitor.getItemsFound();
 		//count number of TemplateInstances in select, get used enum items
-		CaseVisitor caseVisitor = new CaseVisitor();
+		final CaseVisitor caseVisitor = new CaseVisitor();
 		scs.accept(caseVisitor);
-		List<Identifier> usedEnumItems = caseVisitor.getItemsUsed();
+		final List<Identifier> usedEnumItems = caseVisitor.getItemsUsed();
 		if (caseVisitor.isContainsUnfoldable()) {
 			return;
 		}
-		int casesSize = caseVisitor.getCount();
+		final int casesSize = caseVisitor.getCount();
 		if (enumSize > casesSize) {
-			String enumName = itype.getTypename();
-			String itemsNotCovered = getItemsNotCovered(allEnumItems, usedEnumItems);
+			final String enumName = itype.getTypename();
+			final String itemsNotCovered = getItemsNotCovered(allEnumItems, usedEnumItems);
 			problems.report(v.getLocation(), MessageFormat.format(ERR_MSG, enumName, enumSize, casesSize, itemsNotCovered));
 		}
 		
@@ -108,9 +108,9 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 			return "";
 		}
 
-		StringBuilder ret = new StringBuilder();
+		final StringBuilder ret = new StringBuilder();
 		boolean start = true;
-		for (Identifier id : allEnumItems) {
+		for (final Identifier id : allEnumItems) {
 			if (!usedEnumItems.contains(id)) {
 				// id is not used
 				if (!start) {
@@ -126,7 +126,7 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(SelectCase_Statement.class);
 		return ret;
 	}
@@ -157,7 +157,7 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 			} else if (node instanceof TemplateInstances) {
 				return V_CONTINUE;
 			} else if (node instanceof TemplateInstance) {
-				TemplateInstance ti = (TemplateInstance)node;
+				final TemplateInstance ti = (TemplateInstance)node;
 				IValue val = ti.getTemplateBody().getValue();
 				if (val == null || val.getIsErroneous(timestamp) || val.isUnfoldable(timestamp)) {
 					containsUnfoldable = true;
@@ -166,8 +166,8 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 				if (val instanceof Undefined_LowerIdentifier_Value) {
 					val = val.setLoweridToReference(timestamp);
 					if (val instanceof Enumerated_Value) {
-						Enumerated_Value ev = (Enumerated_Value)val;
-						Identifier id = ev.getValue();
+						final Enumerated_Value ev = (Enumerated_Value)val;
+						final Identifier id = ev.getValue();
 						itemsUsed.add(id);
 					}
 				}

@@ -43,22 +43,22 @@ public class GraphMetricsPage extends PreferencePage implements IWorkbenchPrefer
 
 	@Override
 	protected Control createContents(final Composite parent) {
-		Composite page = new Composite(parent, 0);
-		GridLayout l = new GridLayout();
+		final Composite page = new Composite(parent, 0);
+		final GridLayout l = new GridLayout();
 		l.numColumns = 2;
 		page.setLayout(l);
-		for (MetricGroup type : new MetricGroup[] { MetricGroup.MODULE, MetricGroup.FUNCTION,
+		for (final MetricGroup type : new MetricGroup[] { MetricGroup.MODULE, MetricGroup.FUNCTION,
 				MetricGroup.TESTCASE, MetricGroup.ALTSTEP }) {
-			Label header = new Label(page, 0);
+			final Label header = new Label(page, 0);
 			header.setText(type.getGroupName() + " metrics");
-			GridData headerData = new GridData();
+			final GridData headerData = new GridData();
 			headerData.horizontalSpan = 2;
 			header.setLayoutData(headerData);
-			Composite padding = new Composite(page, 0);
+			final Composite padding = new Composite(page, 0);
 			padding.setLayoutData(new GridData(25, 0));
-			Composite inner = new Composite(page, 0);
-			for (IMetricEnum metric : type.getMetrics()) {
-				BooleanFieldEditor editor = new BooleanFieldEditor(PreferenceConstants.nameMetricGraph(metric.id()),
+			final Composite inner = new Composite(page, 0);
+			for (final IMetricEnum metric : type.getMetrics()) {
+				final BooleanFieldEditor editor = new BooleanFieldEditor(PreferenceConstants.nameMetricGraph(metric.id()),
 						metric.getName(), inner);
 				editor.getDescriptionControl(inner).setToolTipText(metric.getHint());
 				editor.setPage(this);
@@ -73,7 +73,7 @@ public class GraphMetricsPage extends PreferencePage implements IWorkbenchPrefer
 
 	@Override
 	protected void performDefaults() {
-		for (FieldEditor editor : editors) {
+		for (final FieldEditor editor : editors) {
 			editor.loadDefault();
 		}
 		super.performDefaults();
@@ -81,7 +81,7 @@ public class GraphMetricsPage extends PreferencePage implements IWorkbenchPrefer
 
 	@Override
 	public boolean performOk() {
-		for (FieldEditor editor : editors) {
+		for (final FieldEditor editor : editors) {
 			editor.store();
 		}
 

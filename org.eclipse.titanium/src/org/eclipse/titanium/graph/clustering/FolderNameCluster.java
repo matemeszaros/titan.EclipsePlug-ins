@@ -39,7 +39,7 @@ public class FolderNameCluster extends PathCluster {
 		progress.subTask("Checking " + project.getName());
 		final IResource[] contents = project.members();
 		final Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
-		for (IResource content : contents) {
+		for (final IResource content : contents) {
 			check(content, cluster, progress);
 		}
 		if (!cluster.isEmpty()) {
@@ -77,7 +77,7 @@ public class FolderNameCluster extends PathCluster {
 		monitor.subTask("Checking " + folder.getName());
 		final IResource[] contents = folder.members();
 		final Set<NodeDescriptor> cluster = new HashSet<NodeDescriptor>();
-		for (IResource nextContent : contents) {
+		for (final IResource nextContent : contents) {
 			check(nextContent, cluster, monitor);
 		}
 		addNewCluster(cluster, folder);

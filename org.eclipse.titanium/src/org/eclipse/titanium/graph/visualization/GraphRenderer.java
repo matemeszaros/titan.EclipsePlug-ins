@@ -48,7 +48,7 @@ class NodeShape<V> implements Transformer<V, Shape> {
 	 * @param labeller
 	 *            : the node name -> node's shown name converter
 	 */
-	public NodeShape(Transformer<V, String> labeller) {
+	public NodeShape(final Transformer<V, String> labeller) {
 		if (labeller != null) {
 			this.labeller = labeller;
 		} else {
@@ -60,7 +60,7 @@ class NodeShape<V> implements Transformer<V, Shape> {
 	 * @return returning constant round rectangle
 	 */
 	@Override
-	public Shape transform(V v) {
+	public Shape transform(final V v) {
 		final int textLength = labeller.transform(v).length();
 		final int textDrawnWidth = textLength * ESTIMATED_CHARACTER_WIDTH;
 		return new RoundRectangle2D.Double(-0.5 * textDrawnWidth, -0.5 * BOX_HEIGHT, textDrawnWidth, BOX_HEIGHT, 10, 10);
@@ -86,7 +86,7 @@ class NodeColour<V> implements Transformer<V, Paint> {
 	 * @param p
 	 *            : the describing class's instance
 	 */
-	public NodeColour(PickedState<V> p) {
+	public NodeColour(final PickedState<V> p) {
 		picked = p;
 	}
 
@@ -94,7 +94,7 @@ class NodeColour<V> implements Transformer<V, Paint> {
 	 * The function returns a colour as described in the class's documentation
 	 */
 	@Override
-	public Paint transform(V v) {
+	public Paint transform(final V v) {
 		if (picked.isPicked(v)) {
 			return NodeColours.PICKED_COLOUR;
 		} else {
@@ -123,7 +123,7 @@ class EdgeColour<E> implements Transformer<E, Paint> {
 	 * @param p
 	 *            : the class describing currently chosen edges
 	 */
-	public EdgeColour(PickedState<E> p) {
+	public EdgeColour(final PickedState<E> p) {
 		picked = p;
 	}
 
@@ -133,7 +133,7 @@ class EdgeColour<E> implements Transformer<E, Paint> {
 	 * chosen, but there are edges chosen (they will have red colour).
 	 */
 	@Override
-	public Paint transform(E e) {
+	public Paint transform(final E e) {
 		if (picked.getPicked().isEmpty()) {
 			if (e instanceof EdgeDescriptor) {
 				return ((EdgeDescriptor) e).getColor();
@@ -165,7 +165,7 @@ class NodeFont<V> extends DefaultVertexLabelRenderer {
 	 * @param pickedVertexLabelColor
 	 *            : The colour of selected nodes
 	 */
-	public NodeFont(Color pickedVertexLabelColor) {
+	public NodeFont(final Color pickedVertexLabelColor) {
 		super(pickedVertexLabelColor);
 	}
 
@@ -187,11 +187,11 @@ class NodeFont<V> extends DefaultVertexLabelRenderer {
 	 * @return Returns an object describing the current rendering of node text
 	 */
 	@Override
-	public <W extends Object> Component getVertexLabelRendererComponent(JComponent vv, Object value, Font font, boolean isSelected, W vertex) {
-		Component comp = super.getVertexLabelRendererComponent(vv, value, font, isSelected, vertex);
+	public <W extends Object> Component getVertexLabelRendererComponent(final JComponent vv, final Object value, final Font font, final boolean isSelected, final W vertex) {
+		final Component comp = super.getVertexLabelRendererComponent(vv, value, font, isSelected, vertex);
 
 		if (vertex instanceof NodeDescriptor) {
-			NodeDescriptor v = (NodeDescriptor) vertex;
+			final NodeDescriptor v = (NodeDescriptor) vertex;
 			comp.setFont(v.getFontType());
 			if (!isSelected) {
 				comp.setForeground(v.getFontColour());
@@ -233,7 +233,7 @@ public class GraphRenderer<V, E> {
 	 *            : A class that stores, which edges are selected currently on
 	 *            the graph
 	 */
-	public GraphRenderer(Transformer<V, String> labeller, PickedState<V> vertexPicked, PickedState<E> edgePicked) {
+	public GraphRenderer(final Transformer<V, String> labeller, final PickedState<V> vertexPicked, final PickedState<E> edgePicked) {
 		shape = new NodeShape<V>(labeller);
 		vertexColour = new NodeColour<V>(vertexPicked);
 		edgeColour = new EdgeColour<E>(edgePicked);

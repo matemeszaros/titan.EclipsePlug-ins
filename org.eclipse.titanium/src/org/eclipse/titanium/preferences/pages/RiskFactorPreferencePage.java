@@ -98,7 +98,7 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 	
 	@Override
 	protected Control createContents(final Composite parent) {
-		Composite tmpParent = new Composite(parent, 0);
+		final Composite tmpParent = new Composite(parent, 0);
 		GridData gd;
 
 		tmpParent.setLayout(new GridLayout(1, true));
@@ -106,7 +106,7 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 		gd.grabExcessHorizontalSpace = true;
 		tmpParent.setLayoutData(gd);
 
-		Composite head = new Composite(tmpParent, 0);
+		final Composite head = new Composite(tmpParent, 0);
 		head.setLayout(new GridLayout(2, false));
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
@@ -124,9 +124,9 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 		gd.widthHint = 100;
 		projectBase.setLayoutData(gd);
 
-		Group rest = new Group(tmpParent, 0);
+		final Group rest = new Group(tmpParent, 0);
 		rest.setText("Parameters of the code smells");
-		GridLayout layout = new GridLayout(3, false);
+		final GridLayout layout = new GridLayout(3, false);
 		rest.setLayout(layout);
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
@@ -151,7 +151,7 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 		gd.widthHint = 150;
 		label.setLayoutData(gd);
 
-		for (String markerName : USED_MARKERS.keySet()) {
+		for (final String markerName : USED_MARKERS.keySet()) {
 			createRow(markerName, rest);
 		}
 		load();
@@ -160,15 +160,15 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 
 	private void createRow(final String markerName, final Composite comp) {
 		GridData gd;
-		Label label = new Label(comp, 0);
+		final Label label = new Label(comp, 0);
 		label.setText(USED_MARKERS.get(markerName));
-		Combo imp = new Combo(comp, SWT.DROP_DOWN);
+		final Combo imp = new Combo(comp, SWT.DROP_DOWN);
 		imp.setItems(new String[] { "low", "medium", "high" });
 		imp.setTextLimit(6);
 		gd = new GridData();
 		gd.widthHint = 80;
 		imp.setLayoutData(gd);
-		Text bl = new Text(comp, SWT.SINGLE);
+		final Text bl = new Text(comp, SWT.SINGLE);
 		bl.setTextLimit(7);
 		gd = new GridData();
 		gd.widthHint = 60;

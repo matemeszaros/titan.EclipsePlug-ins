@@ -73,15 +73,15 @@ public enum ModuleMetric implements IMetricEnum {
 	private Set<StatColumn> requestedStatistics;
 	private boolean isInteger;
 
-	private ModuleMetric(String name, String hint) {
+	private ModuleMetric(final String name, final String hint) {
 		this(name, hint, EnumSet.allOf(StatColumn.class), true);
 	}
 
-	private ModuleMetric(String name, String hint, Set<StatColumn> requestedStatistics) {
+	private ModuleMetric(final String name, final String hint, final Set<StatColumn> requestedStatistics) {
 		this(name, hint, requestedStatistics, true);
 	}
 
-	private ModuleMetric(String name, String hint, Set<StatColumn> requestedStatistics, boolean isInteger) {
+	private ModuleMetric(final String name, final String hint, final Set<StatColumn> requestedStatistics, final boolean isInteger) {
 		this.displayName = name;
 		this.hint = hint;
 		this.requestedStatistics = requestedStatistics;

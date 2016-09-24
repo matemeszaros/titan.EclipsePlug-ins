@@ -32,9 +32,9 @@ public class UnusedLocalDefinition extends BaseModuleCodeSmellSpotter {
 			return;
 		}
 		// since we assume node is a Definition
-		Definition s = (Definition) node;
+		final Definition s = (Definition) node;
 		if (s instanceof FormalParameter) {
-			Definition enclose = ((FormalParameter) s).getMyParameterList().getMyDefinition();
+			final Definition enclose = ((FormalParameter) s).getMyParameterList().getMyDefinition();
 			// do not bother formal parameters in external functions and
 			// template definitions
 			if (enclose instanceof Def_Extfunction || enclose instanceof Def_Template || enclose instanceof Def_Type) {
@@ -44,15 +44,15 @@ public class UnusedLocalDefinition extends BaseModuleCodeSmellSpotter {
 		// report if not used local or not used formal parameter
 		final boolean report = !s.isUsed() && (s.isLocal() || s instanceof FormalParameter);
 		if (report) {
-			String name = s.getIdentifier().getDisplayName();
-			String msg = MessageFormat.format("The {0} `{1}'' seems to be never used locally", s.getAssignmentName(), name);
+			final String name = s.getIdentifier().getDisplayName();
+			final String msg = MessageFormat.format("The {0} `{1}'' seems to be never used locally", s.getAssignmentName(), name);
 			problems.report(s.getIdentifier().getLocation(), msg);
 		}
 	}
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Definition.class);
 		return ret;
 	}

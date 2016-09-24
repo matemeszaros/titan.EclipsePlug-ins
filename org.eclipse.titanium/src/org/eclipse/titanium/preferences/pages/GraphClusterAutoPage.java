@@ -26,7 +26,7 @@ public class GraphClusterAutoPage extends GraphClusterPage implements IWorkbench
 	@Override
 	protected Control createContents(final Composite parent) {
 
-		Composite page = new Composite(parent, 0);
+		final Composite page = new Composite(parent, 0);
 		page.setLayout(new GridLayout(1, false));
 		Composite inner;
 

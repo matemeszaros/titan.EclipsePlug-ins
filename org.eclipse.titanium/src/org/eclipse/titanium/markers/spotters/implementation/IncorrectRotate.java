@@ -64,19 +64,19 @@ public class IncorrectRotate {
 				return;
 			}
 
-			CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
-			long valueSize = getFirstRotateOperandLength(ct, value1);
-			Type_type tempType2 = value2.getExpressionReturntype(ct, null);
+			final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
+			final long valueSize = getFirstRotateOperandLength(ct, value1);
+			final Type_type tempType2 = value2.getExpressionReturntype(ct, null);
 			if (Type_type.TYPE_INTEGER != tempType2) {
 				return;
 			}
 
-			IValue tempValue = value2.getValueRefdLast(ct, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final IValue tempValue = value2.getValueRefdLast(ct, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 			if (!Value_type.INTEGER_VALUE.equals(tempValue.getValuetype())) {
 				return;
 			}
 
-			long rotationSize = ((Integer_Value) tempValue).getValue();
+			final long rotationSize = ((Integer_Value) tempValue).getValue();
 			if (!value1.isUnfoldable(ct)) {
 				if (valueSize == 0 || valueSize == 1) {
 					problems.report(location, EFFECTLESSROTATION);
@@ -86,7 +86,7 @@ public class IncorrectRotate {
 				} else if (rotationSize == 0) {
 					problems.report(location, MessageFormat.format(ZEROROTATEPROBLEM, actualRotation));
 				} else if (rotationSize > valueSize) {
-					String msg = MessageFormat.format(TOOBIGROTATEPROBLEM,
+					final String msg = MessageFormat.format(TOOBIGROTATEPROBLEM,
 							actualRotation, valueSize, rotationSize, rotationSize % valueSize);
 					problems.report(location, msg);
 				}
@@ -106,16 +106,16 @@ public class IncorrectRotate {
 				return;
 			}
 
-			RotateLeftExpression s = (RotateLeftExpression) node;
-			Value value1 = s.getValue1();
-			Value value2 = s.getValue2();
+			final RotateLeftExpression s = (RotateLeftExpression) node;
+			final Value value1 = s.getValue1();
+			final Value value2 = s.getValue2();
 
 			checkRotationOperands(problems, s.getLocation(), value1, value2);
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(RotateLeftExpression.class);
 			return ret;
 		}
@@ -133,16 +133,16 @@ public class IncorrectRotate {
 				return;
 			}
 
-			RotateRightExpression s = (RotateRightExpression) node;
-			Value value1 = s.getValue1();
-			Value value2 = s.getValue2();
+			final RotateRightExpression s = (RotateRightExpression) node;
+			final Value value1 = s.getValue1();
+			final Value value2 = s.getValue2();
 
 			checkRotationOperands(problems, s.getLocation(), value1, value2);
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(RotateRightExpression.class);
 			return ret;
 		}
@@ -158,8 +158,8 @@ public class IncorrectRotate {
 		if (value == null) {
 			return 0;
 		}
-		Type_type tempType = value.getExpressionReturntype(ct, null);
-		IValue refd = value.getValueRefdLast(ct, null);
+		final Type_type tempType = value.getExpressionReturntype(ct, null);
+		final IValue refd = value.getValueRefdLast(ct, null);
 		switch (tempType) {
 		case TYPE_BITSTRING:
 			if (Value_type.BITSTRING_VALUE.equals(refd.getValuetype())) {

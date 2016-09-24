@@ -30,7 +30,7 @@ public class LayoutEntry extends JRadioButtonMenuItem {
 	 * @param name
 	 *            : the name shown on the frame
 	 */
-	public LayoutEntry(String code, String name) {
+	public LayoutEntry(final String code, final String name) {
 		super(name);
 		wholeName = name;
 		shortName = code;
@@ -60,7 +60,7 @@ public class LayoutEntry extends JRadioButtonMenuItem {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (!(obj instanceof LayoutEntry)) {
 			return false;
 		} else {

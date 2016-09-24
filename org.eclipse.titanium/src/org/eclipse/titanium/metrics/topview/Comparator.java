@@ -40,7 +40,7 @@ class Comparator extends ViewerComparator {
 
 		double risk1 = 0;
 		double risk2 = 0;
-		for (IMetricEnum m : metrics) {
+		for (final IMetricEnum m : metrics) {
 			risk1 += mw.getRiskValue(m, m1.getName());
 			risk2 += mw.getRiskValue(m, m2.getName());
 		}

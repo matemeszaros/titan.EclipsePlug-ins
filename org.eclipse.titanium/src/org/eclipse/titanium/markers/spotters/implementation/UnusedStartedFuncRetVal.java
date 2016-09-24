@@ -36,12 +36,12 @@ public class UnusedStartedFuncRetVal extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Start_Component_Statement) {
-			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
-			Start_Component_Statement s = (Start_Component_Statement) node;
+			final CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
+			final Start_Component_Statement s = (Start_Component_Statement) node;
 
-			Component_Type compType = Port_Utility.checkComponentReference(timestamp, s, s.getComponent(), false, false);
+			final Component_Type compType = Port_Utility.checkComponentReference(timestamp, s, s.getComponent(), false, false);
 
-			Assignment assignment = s.getFunctionInstanceReference().getRefdAssignment(timestamp, false);
+			final Assignment assignment = s.getFunctionInstanceReference().getRefdAssignment(timestamp, false);
 			if (assignment == null) {
 				return;
 			}
@@ -55,8 +55,8 @@ public class UnusedStartedFuncRetVal extends BaseModuleCodeSmellSpotter {
 				return;
 			}
 
-			Def_Function function = (Def_Function) assignment;
-			IType runsOnType = function.getRunsOnType(timestamp);
+			final Def_Function function = (Def_Function) assignment;
+			final IType runsOnType = function.getRunsOnType(timestamp);
 
 			if (compType == null || runsOnType == null || !function.isStartable()) {
 				return;
@@ -74,8 +74,8 @@ public class UnusedStartedFuncRetVal extends BaseModuleCodeSmellSpotter {
 						break;
 					}
 					if (type instanceof IReferencingType) {
-						IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
-						IType refd = ((IReferencingType) type).getTypeRefd(timestamp, refChain);
+						final IReferenceChain refChain = ReferenceChain.getInstance(IReferenceChain.CIRCULARREFERENCE, true);
+						final IType refd = ((IReferencingType) type).getTypeRefd(timestamp, refChain);
 						refChain.release();
 						if (type != refd) {
 							type = refd;
@@ -88,7 +88,7 @@ public class UnusedStartedFuncRetVal extends BaseModuleCodeSmellSpotter {
 				}
 
 				if (!returnTypeCorrect) {
-					String msg = MessageFormat.format(PROBLEM, function.getDescription(), function.getType(timestamp)
+					final String msg = MessageFormat.format(PROBLEM, function.getDescription(), function.getType(timestamp)
 							.getTypename());
 					problems.report(s.getFunctionInstanceReference().getLocation(), msg);
 				}
@@ -101,7 +101,7 @@ public class UnusedStartedFuncRetVal extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Start_Component_Statement.class);
 		return ret;
 	}

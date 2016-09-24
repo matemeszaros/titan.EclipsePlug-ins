@@ -44,19 +44,19 @@ public class CustomVisualizationViewer extends VisualizationViewer<NodeDescripto
 	 *            : A reference to the popup menu to show on click to a graph
 	 *            node (null if nothing)
 	 */
-	public CustomVisualizationViewer(Layout<NodeDescriptor, EdgeDescriptor> layout, final NodePopupMenu popupMenu) {
+	public CustomVisualizationViewer(final Layout<NodeDescriptor, EdgeDescriptor> layout, final NodePopupMenu popupMenu) {
 		super(layout);
 
-		GraphMouseListener<NodeDescriptor> nodeMouseEvents = new GraphMouseListener<NodeDescriptor>() {
+		final GraphMouseListener<NodeDescriptor> nodeMouseEvents = new GraphMouseListener<NodeDescriptor>() {
 			
 			// nothing to do on this action
 			@Override
-			public void graphReleased(NodeDescriptor arg0, MouseEvent arg1) {
+			public void graphReleased(final NodeDescriptor arg0, final MouseEvent arg1) {
 				//do nothing because this function is not used
 			}
 
 			@Override
-			public void graphPressed(final NodeDescriptor node, MouseEvent e) {
+			public void graphPressed(final NodeDescriptor node, final MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3 && popupMenu != null) {
 					popupMenu.show(node, e.getX(), e.getY());
 				}
@@ -64,16 +64,16 @@ public class CustomVisualizationViewer extends VisualizationViewer<NodeDescripto
 
 			//nothing to do on this action
 			@Override
-			public void graphClicked(NodeDescriptor arg0, MouseEvent arg1) {
+			public void graphClicked(final NodeDescriptor arg0, final MouseEvent arg1) {
 				//do nothing because this function is not used
 			}
 
 		};
 
 		final VisualizationViewer<NodeDescriptor, EdgeDescriptor> thisViewer = this;
-		PluggableGraphMouse mouse = new PluggableGraphMouse() {
+		final PluggableGraphMouse mouse = new PluggableGraphMouse() {
 			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
+			public void mouseWheelMoved(final MouseWheelEvent e) {
 				float scale;
 				if (e.getWheelRotation() > 0) {
 					scale = 0.9f;
@@ -86,9 +86,9 @@ public class CustomVisualizationViewer extends VisualizationViewer<NodeDescripto
 		};
 
 		mouse.add(new ViewTranslatingGraphMousePlugin(InputEvent.BUTTON3_MASK));
-		PickingGraphMousePlugin<NodeDescriptor, EdgeDescriptor> pickingMouse = new PickingGraphMousePlugin<NodeDescriptor, EdgeDescriptor>() {
+		final PickingGraphMousePlugin<NodeDescriptor, EdgeDescriptor> pickingMouse = new PickingGraphMousePlugin<NodeDescriptor, EdgeDescriptor>() {
 			@Override
-			public void mouseDragged(MouseEvent e) {
+			public void mouseDragged(final MouseEvent e) {
 				if (down == null) {
 					return;
 				}
@@ -97,22 +97,22 @@ public class CustomVisualizationViewer extends VisualizationViewer<NodeDescripto
 		};
 		mouse.add(pickingMouse);
 
-		KeyListener keyboardEvents = new KeyListener() {
+		final KeyListener keyboardEvents = new KeyListener() {
 			
 			//nothing to do on this action
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyTyped(final KeyEvent e) {
 				//do nothing because this function is not used
 			}
 
 			//nothing to do on this action
 			@Override
-			public void keyReleased(KeyEvent e) {
+			public void keyReleased(final KeyEvent e) {
 				//do nothing because this function is not used
 			}
 
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyPressed(final KeyEvent e) {
 				char pressed = e.getKeyChar();
 				if (pressed != '-' && pressed != '+') {
 					return;
@@ -141,9 +141,9 @@ public class CustomVisualizationViewer extends VisualizationViewer<NodeDescripto
 	 * @param place
 	 *            : The destination place
 	 */
-	public void jumpToPlace(Point2D place) {
-		MutableTransformer modelTransformerMaster = getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT);
-		Point2D orig = getRenderContext().getMultiLayerTransformer().inverseTransform(getCenter());
+	public void jumpToPlace(final Point2D place) {
+		final MutableTransformer modelTransformerMaster = getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT);
+		final Point2D orig = getRenderContext().getMultiLayerTransformer().inverseTransform(getCenter());
 		modelTransformerMaster.translate(orig.getX() - place.getX(), orig.getY() - place.getY());
 	}
 

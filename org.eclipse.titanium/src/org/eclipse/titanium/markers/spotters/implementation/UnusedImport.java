@@ -26,7 +26,7 @@ public class UnusedImport extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof ModuleImportation) {
-			ModuleImportation s = (ModuleImportation) node;
+			final ModuleImportation s = (ModuleImportation) node;
 			if (!s.getUsedForImportation()) {
 				problems.report(s.getIdentifier().getLocation(), ERROR_MESSAGE);
 			}
@@ -35,7 +35,7 @@ public class UnusedImport extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(ImportModule.class);
 		return ret;
 	}

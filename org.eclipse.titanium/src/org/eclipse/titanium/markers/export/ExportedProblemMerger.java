@@ -56,7 +56,7 @@ public class ExportedProblemMerger {
 	private Map<String, Integer> smellrow;
 	private int smellindex;
 
-	public ExportedProblemMerger(List<File> files, File outfile) {
+	public ExportedProblemMerger(final List<File> files, final File outfile) {
 		this.files = files;
 		this.outfile = outfile;
 
@@ -79,7 +79,7 @@ public class ExportedProblemMerger {
 	private HSSFWorkbook createWorkbook() {
 		HSSFWorkbook workbook = null;
 		try {		
-			InputStream in = ExportedProblemMerger.class.getResourceAsStream("ProblemMarkers.xlt");
+			final InputStream in = ExportedProblemMerger.class.getResourceAsStream("ProblemMarkers.xlt");
 			
 			if (in == null) {
 				if (!outfile.exists()){
@@ -105,7 +105,7 @@ public class ExportedProblemMerger {
 	 *            The sheet
 	 * @return The project name contained in the sheet
 	 */
-	private String getProjectName(HSSFSheet sheet) {
+	private String getProjectName(final HSSFSheet sheet) {
 		final Cell cell = sheet.getRow(0).getCell(0);    
 		return cell.getStringCellValue();
 	}
@@ -118,7 +118,7 @@ public class ExportedProblemMerger {
 	 * @param sheet
 	 *            The sheet being processed
 	 */
-	private void collectDates(File file, HSSFSheet sheet) {
+	private void collectDates(final File file, final HSSFSheet sheet) {
 		
 		final int cols = sheet.getRow(1).getLastCellNum();
 		
@@ -129,7 +129,7 @@ public class ExportedProblemMerger {
 			if (cell.getCellType() != HSSFCell.CELL_TYPE_BLANK && cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
 
 				if (HSSFDateUtil.isCellDateFormatted(cell)) {
-					Date date = cell.getDateCellValue();
+					final Date date = cell.getDateCellValue();
 					if (!dates.contains(date)) {
 						dates.add(date);
 						datefile.put(date, file);
@@ -146,13 +146,13 @@ public class ExportedProblemMerger {
 	 * @param sheet
 	 *            The sheet to process
 	 */
-	private void collectSmellNames(HSSFSheet sheet) {
+	private void collectSmellNames(final HSSFSheet sheet) {
 		final int rows = sheet.getLastRowNum();
 		int row = 2;
 		while (row <= rows) {
-			HSSFRow actualRow = sheet.getRow(row);
+			final HSSFRow actualRow = sheet.getRow(row);
 			if (actualRow != null) {
-				Cell cell = actualRow.getCell(0);
+				final Cell cell = actualRow.getCell(0);
 				final String name = cell.getStringCellValue();
 				// new smell found
 				if (!smellrow.containsKey(name) && !name.isEmpty()) {
@@ -169,11 +169,11 @@ public class ExportedProblemMerger {
 	 */
 	private void collectData() {
 		boolean first = true;
-		for (File file : files) {
+		for (final File file : files) {
 			HSSFWorkbook workbook = null;
 			try {
 				workbook = new HSSFWorkbook(new FileInputStream(file));
-				HSSFSheet sheet = workbook.getSheetAt(0);
+				final HSSFSheet sheet = workbook.getSheetAt(0);
 				if (first) {
 					project = getProjectName(sheet);
 					first = false;
@@ -207,10 +207,10 @@ public class ExportedProblemMerger {
 	 * @throws WriteException
 	 */
 	private void writeBasics() {
-		Row row0 = summarysheet.createRow(0);
+		final Row row0 = summarysheet.createRow(0);
 		row0.createCell(0).setCellValue(project);
 		
-		Row row1 = summarysheet.createRow(1);
+		final Row row1 = summarysheet.createRow(1);
 		row1.createCell(0).setCellValue("Code smell \\ date");
 	}
 	/**
@@ -225,19 +225,19 @@ public class ExportedProblemMerger {
 	private void writeData() throws FileNotFoundException, IOException {
 		
 		int col = 1;
-		for (Date date : dates) {
+		for (final Date date : dates) {
 			if (col > 250) {
 				System.out.println("could not process date " + date + "\t column limit exceeded.");
 			} else {
-				File file = datefile.get(date);
+				final File file = datefile.get(date);
 				System.out.println("Processing file: " + file.getName() + " | date: " + new SimpleDateFormat("yyyy.MM.dd").format(date));
 				HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(file));
-				HSSFSheet sheet = workbook.getSheetAt(0);
+				final HSSFSheet sheet = workbook.getSheetAt(0);
 				
 				// add date
-				CellStyle cellStyle = outbook.createCellStyle();
+				final CellStyle cellStyle = outbook.createCellStyle();
 				cellStyle.setDataFormat(outbook.getCreationHelper().createDataFormat().getFormat("yyyy.mm.dd"));
-				Cell cell = summarysheet.getRow(1).createCell(col);
+				final Cell cell = summarysheet.getRow(1).createCell(col);
 				cell.setCellValue(date);
 				cell.setCellStyle(cellStyle);
 
@@ -262,23 +262,23 @@ public class ExportedProblemMerger {
 	 * @throws RowsExceededException
 	 * @throws WriteException
 	 */
-	private void writeSmellData(HSSFSheet sheet, Date date, int col) {
-		int rows = sheet.getLastRowNum();
-		int colinfile = datecol.get(date);
+	private void writeSmellData(final HSSFSheet sheet, final Date date, final int col) {
+		final int rows = sheet.getLastRowNum();
+		final int colinfile = datecol.get(date);
 		for (int row = 2; row <= rows; ++row)
 		{
-			HSSFRow actualRow = sheet.getRow(row);
+			final HSSFRow actualRow = sheet.getRow(row);
 			if(actualRow == null) {
 				continue;
 			}
 			Cell cell = actualRow.getCell(0);
-			String name = cell.getStringCellValue();
+			final String name = cell.getStringCellValue();
 			// the number of smells
 			cell = actualRow.getCell(colinfile);		
 			if (cell.getCellType() != HSSFCell.CELL_TYPE_BLANK) {
-				double value = cell.getNumericCellValue();				
-				Row r = summarysheet.getRow(smellrow.get(name));	
-				Cell number = r.createCell(col);
+				final double value = cell.getNumericCellValue();				
+				final Row r = summarysheet.getRow(smellrow.get(name));	
+				final Cell number = r.createCell(col);
 				number.setCellValue(value);	
 			}
 		}
@@ -291,9 +291,9 @@ public class ExportedProblemMerger {
 	 * @throws WriteException
 	 */
 	private void writeSmellNames() {
-		for (String name : smellrow.keySet()) {
-			Row row = summarysheet.createRow(smellrow.get(name));
-			Cell label = row.createCell(0);
+		for (final String name : smellrow.keySet()) {
+			final Row row = summarysheet.createRow(smellrow.get(name));
+			final Cell label = row.createCell(0);
 			label.setCellValue(name);
 		}
 	}
@@ -304,7 +304,7 @@ public class ExportedProblemMerger {
 	 */
 	private void resizeColumns() {
 		
-		int numberOfColumns = datecol.size() + 1;
+		final int numberOfColumns = datecol.size() + 1;
 		for (int i = 0; i < numberOfColumns; ++i)
 		{
 			summarysheet.autoSizeColumn(i);
@@ -317,7 +317,7 @@ public class ExportedProblemMerger {
 	 * @throws IOException
 	 */
 	private void close() throws FileNotFoundException, IOException {
-		FileOutputStream fileOutputStream = new FileOutputStream(outfile);
+		final FileOutputStream fileOutputStream = new FileOutputStream(outfile);
 
 		outbook.write(fileOutputStream);
 

@@ -62,14 +62,14 @@ public class UnnecessaryControl {
 				return;
 			}
 
-			For_Statement s = (For_Statement) node;
-			Value finalExpression = s.getFinalExpression();
+			final For_Statement s = (For_Statement) node;
+			final Value finalExpression = s.getFinalExpression();
 			if (finalExpression == null) {
 				return;
 			}
 
-			IValue lastValue = finalExpression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
-			Type_type temp = lastValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final IValue lastValue = finalExpression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final Type_type temp = lastValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			
 			if (Type_type.TYPE_BOOL == temp && !lastValue.isUnfoldable(timestamp)) {
 				if (((Boolean_Value) lastValue).getValue()) {
@@ -79,7 +79,7 @@ public class UnnecessaryControl {
 				}
 			}
 
-			StatementBlock statementblock = s.getStatementBlock();
+			final StatementBlock statementblock = s.getStatementBlock();
 			if (statementblock != null && ReturnStatus_type.RS_YES.equals(statementblock.hasReturn(timestamp))) {
 				problems.report(s.getLocation(), ONE_SHOT);
 			}
@@ -87,7 +87,7 @@ public class UnnecessaryControl {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(For_Statement.class);
 			return ret;
 		}
@@ -101,14 +101,14 @@ public class UnnecessaryControl {
 				return;
 			}
 
-			While_Statement s = (While_Statement) node;
-			Value expression = s.getExpression();
+			final While_Statement s = (While_Statement) node;
+			final Value expression = s.getExpression();
 			if (expression == null) {
 				return;
 			}
 
-			IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
-			Type_type tempType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final Type_type tempType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			if (!last.getIsErroneous(timestamp)) {
 				if (!Type_type.TYPE_BOOL.equals(tempType)) {
 					return;
@@ -121,7 +121,7 @@ public class UnnecessaryControl {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>();
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>();
 			ret.add(While_Statement.class);
 			return ret;
 		}
@@ -135,10 +135,10 @@ public class UnnecessaryControl {
 				return;
 			}
 
-			DoWhile_Statement s = (DoWhile_Statement) node;
-			Value expression = s.getExpression();
-			IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
-			Type_type tempType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final DoWhile_Statement s = (DoWhile_Statement) node;
+			final Value expression = s.getExpression();
+			final IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final Type_type tempType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 			if (!last.getIsErroneous(timestamp)) {
 				if (!Type_type.TYPE_BOOL.equals(tempType)) {
 					return;
@@ -150,7 +150,7 @@ public class UnnecessaryControl {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(DoWhile_Statement.class);
 			return ret;
 		}
@@ -165,16 +165,16 @@ public class UnnecessaryControl {
 				return;
 			}
 
-			SelectCase_Statement s = (SelectCase_Statement) node;
-			SelectCases cases = s.getSelectCases();
+			final SelectCase_Statement s = (SelectCase_Statement) node;
+			final SelectCases cases = s.getSelectCases();
 			if (cases == null) {
 				return;
 			}
-			List<SelectCase> selectcases = cases.getSelectCaseArray();
-			int size = selectcases.size();
+			final List<SelectCase> selectcases = cases.getSelectCaseArray();
+			final int size = selectcases.size();
 			boolean unreachable = false;
 			for (int i = 0; i < size; ++i) {
-				SelectCase sc = selectcases.get(i);
+				final SelectCase sc = selectcases.get(i);
 				if (unreachable) {
 					problems.report(sc.getLocation(), UNREACHABLE);
 				}
@@ -186,7 +186,7 @@ public class UnnecessaryControl {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(SelectCase_Statement.class);
 			return ret;
 		}
@@ -202,23 +202,23 @@ public class UnnecessaryControl {
 				return;
 			}
 
-			If_Statement s = (If_Statement) node;
-			If_Clauses clauses = s.getIfClauses();
+			final If_Statement s = (If_Statement) node;
+			final If_Clauses clauses = s.getIfClauses();
 			if (clauses == null) {
 				return;
 			}
-			List<If_Clause> ifclauses = clauses.getClauses();
-			int size = ifclauses.size();
+			final List<If_Clause> ifclauses = clauses.getClauses();
+			final int size = ifclauses.size();
 			boolean unreachable = false;
 			for (int i = 0; i < size; ++i) {
-				If_Clause ic = ifclauses.get(i);
+				final If_Clause ic = ifclauses.get(i);
 				if (unreachable) {
 					problems.report(ic.getLocation(), HANDLED);
 				}
-				Value expression = ic.getExpression();
+				final Value expression = ic.getExpression();
 				if (expression != null) {
-					IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
-					Type_type tempType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+					final IValue last = expression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+					final Type_type tempType = last.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 					if (!last.getIsErroneous(timestamp) && !Type_type.TYPE_UNDEFINED.equals(tempType)) {
 						if (!Type_type.TYPE_BOOL.equals(tempType)) {
 							continue;
@@ -241,7 +241,7 @@ public class UnnecessaryControl {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(If_Statement.class);
 			return ret;
 		}
@@ -256,15 +256,15 @@ public class UnnecessaryControl {
 				return;
 			}
 
-			Alt_Statement s = (Alt_Statement) node;
-			AltGuards altGuards = s.getAltGuards();
+			final Alt_Statement s = (Alt_Statement) node;
+			final AltGuards altGuards = s.getAltGuards();
 			if (altGuards == null) {
 				return;
 			}
-			int size = altGuards.getNofAltguards();
+			final int size = altGuards.getNofAltguards();
 			boolean unreachable = false;
 			for (int i = 0; i < size; ++i) {
-				AltGuard guard = altGuards.getAltguardByIndex(i);
+				final AltGuard guard = altGuards.getAltguardByIndex(i);
 				if (unreachable) {
 					problems.report(guard.getLocation(), AFTER_ELSE);
 				}
@@ -276,7 +276,7 @@ public class UnnecessaryControl {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(Alt_Statement.class);
 			return ret;
 		}

@@ -21,8 +21,8 @@ public class ListEditor extends ExcludeRegexpEditor {
 
 	@Override
 	protected String getNewInputObject() {
-		Shell shell = Display.getCurrent().getActiveShell();
-		DirectoryDialog dialog = new DirectoryDialog(shell);
+		final Shell shell = Display.getCurrent().getActiveShell();
+		final DirectoryDialog dialog = new DirectoryDialog(shell);
 		dialog.setMessage("Please select the directory whose name will be ommitted from cluster names.");
 		dialog.setText("Directory selection");
 
@@ -37,8 +37,8 @@ public class ListEditor extends ExcludeRegexpEditor {
 
 	@Override
 	protected String getEditInputObject(final String original) {
-		Shell shell = Display.getCurrent().getActiveShell();
-		DirectoryDialog dialog = new DirectoryDialog(shell);
+		final Shell shell = Display.getCurrent().getActiveShell();
+		final DirectoryDialog dialog = new DirectoryDialog(shell);
 		dialog.setMessage("Please select the directory whose name will be ommitted from cluster names.");
 		dialog.setText("Directory selection");
 		dialog.setFilterPath(original);

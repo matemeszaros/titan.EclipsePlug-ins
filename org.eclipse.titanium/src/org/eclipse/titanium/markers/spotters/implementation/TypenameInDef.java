@@ -50,13 +50,13 @@ public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 				!(node instanceof Def_Var)) {
 			return;
 		}
-		Definition s = (Definition)node;
+		final Definition s = (Definition)node;
 		check(s.getIdentifier(), s.getType(timestamp), s.getDescription(), problems);
 	}
 	
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(8);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(8);
 		ret.add(Def_Const.class);
 		ret.add(Def_ExternalConst.class);
 		ret.add(Def_Extfunction.class);
@@ -76,7 +76,7 @@ public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 		final String displayName = identifier.getDisplayName();
 		Identifier typeId = null;
 		if (type instanceof Referenced_Type) {
-			Referenced_Type referencedType = (Referenced_Type) type;
+			final Referenced_Type referencedType = (Referenced_Type) type;
 			typeId = referencedType.getReference().getId();
 		}
 
@@ -88,7 +88,7 @@ public class TypenameInDef extends BaseModuleCodeSmellSpotter {
 		}
 
 		if (displayName.contains(typeName)) {
-			String msg = MessageFormat.format(REPORT, description, displayName, typeName);
+			final String msg = MessageFormat.format(REPORT, description, displayName, typeName);
 			problems.report(identifier.getLocation(), msg);
 		}
 	}

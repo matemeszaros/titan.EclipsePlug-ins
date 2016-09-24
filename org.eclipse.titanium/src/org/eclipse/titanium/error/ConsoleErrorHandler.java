@@ -75,7 +75,7 @@ public class ConsoleErrorHandler implements ErrorHandler {
 	@Override
 	public void logException(final Exception exception) {
 		collectedMessage.append("Exception:\n" + exception.getMessage() + "\nStack trace:\n");
-		for (StackTraceElement elem : exception.getStackTrace()) {
+		for (final StackTraceElement elem : exception.getStackTrace()) {
 			collectedMessage.append(elem.toString()).append('\n');
 		}
 	}

@@ -22,7 +22,7 @@ public class MetricsLayoutEntry extends LayoutEntry {
 	 * Constructor
 	 * @param metric : The metric to be used for ordering
 	 */
-	public MetricsLayoutEntry(IMetricEnum metric) {
+	public MetricsLayoutEntry(final IMetricEnum metric) {
 		super(Layouts.METRIC_LAYOUT_CODE, metric.getName());
 		this.metric = metric;
 	}

@@ -35,9 +35,9 @@ public class ModuleName {
 		public abstract List<Class<? extends IVisitableNode>> getStartNode();
 
 		protected void check(final Identifier identifier, final Identifier moduleID, final String description, final Problems problems) {
-			String displayName = identifier.getDisplayName();
+			final String displayName = identifier.getDisplayName();
 			if (displayName.contains(moduleID.getDisplayName())) {
-				String msg = MessageFormat.format(REPORT, description, displayName, moduleID.getDisplayName());
+				final String msg = MessageFormat.format(REPORT, description, displayName, moduleID.getDisplayName());
 				problems.report(identifier.getLocation(), msg);
 			}
 		}
@@ -48,16 +48,16 @@ public class ModuleName {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if ((node instanceof Definition) && !(node instanceof FormalParameter)) {
-				Definition s = (Definition) node;
-				Identifier identifier = s.getIdentifier();
-				Identifier moduleID = s.getMyScope().getModuleScope().getIdentifier();
+				final Definition s = (Definition) node;
+				final Identifier identifier = s.getIdentifier();
+				final Identifier moduleID = s.getMyScope().getModuleScope().getIdentifier();
 				check(identifier, moduleID, s.getDescription(), problems);
 			}
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(Definition.class);
 			return ret;
 		}
@@ -68,16 +68,16 @@ public class ModuleName {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Group) {
-				Group s = (Group) node;
-				Identifier identifier = s.getIdentifier();
-				Identifier moduleID = s.getMyScope().getModuleScope().getIdentifier();
+				final Group s = (Group) node;
+				final Identifier identifier = s.getIdentifier();
+				final Identifier moduleID = s.getMyScope().getModuleScope().getIdentifier();
 				check(identifier, moduleID, "group", problems);
 			}
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(Group.class);
 			return ret;
 		}

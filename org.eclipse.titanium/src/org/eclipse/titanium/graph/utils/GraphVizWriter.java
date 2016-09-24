@@ -43,13 +43,13 @@ public class GraphVizWriter<V, E> {
 	 * @throws IOException
 	 * 			  On IO error
 	 */
-	public void save(Graph<V, E> g,String filename,Transformer<V,String> labeler,String graphName) throws IOException{
-		SortedSet<V> nodes = new TreeSet<V>();
-		Map<V,SortedSet<V>> successors = new HashMap<V, SortedSet<V>>();
-		for (V source : g.getVertices()) {
-			Collection<V> actSuccessors = g.getSuccessors(source);
-			SortedSet<V> successorTree = new TreeSet<V>();
-			for (V destination : actSuccessors) {
+	public void save(final Graph<V, E> g, final String filename, final Transformer<V,String> labeler, final String graphName) throws IOException{
+		final SortedSet<V> nodes = new TreeSet<V>();
+		final Map<V,SortedSet<V>> successors = new HashMap<V, SortedSet<V>>();
+		for (final V source : g.getVertices()) {
+			final Collection<V> actSuccessors = g.getSuccessors(source);
+			final SortedSet<V> successorTree = new TreeSet<V>();
+			for (final V destination : actSuccessors) {
 				successorTree.add(destination);
 			}
 			
@@ -57,11 +57,11 @@ public class GraphVizWriter<V, E> {
 			successors.put(source, successorTree);
 		}
 		
-		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
+		final BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 		writer.write("digraph \""+graphName+"\" {\n");
-		for (V from : nodes) {
-			Collection<V> actSuccessors = successors.get(from);
-			for (V to : actSuccessors) {
+		for (final V from : nodes) {
+			final Collection<V> actSuccessors = successors.get(from);
+			for (final V to : actSuccessors) {
 				writer.write("\t\""+labeler.transform(from)+"\" -> \""+labeler.transform(to)+"\";\n");
 			}
 			

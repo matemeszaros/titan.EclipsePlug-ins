@@ -36,7 +36,8 @@ public class ExportAllCodeSmellsToCSV extends InformationExporter {
 
 	@Override
 	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
-		BaseProblemExporter exporter = new CsvProblemExporter(project);
+		final BaseProblemExporter exporter = new CsvProblemExporter(project);
+
 		try {
 			exporter.exportMarkers(monitor, args[0] + project.getName(), Calendar.getInstance().getTime());
 		} catch (Exception e) {

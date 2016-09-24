@@ -81,7 +81,7 @@ public class ComponentGraphAction extends AbstractHandler implements IObjectActi
 		}
 
 		final IStructuredSelection structSelection = (IStructuredSelection) selection;
-		for (Object selected : structSelection.toList()) {
+		for (final Object selected : structSelection.toList()) {
 			if (selected instanceof IProject) {
 				final IProject project = (IProject) selected;
 
@@ -118,7 +118,7 @@ public class ComponentGraphAction extends AbstractHandler implements IObjectActi
 			final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IFile input = null;
 			IResource[] members = project.members();
-			for (IResource res : members) {
+			for (final IResource res : members) {
 				if (res.getType() == IResource.FILE) {
 					input = (IFile) res;
 					break;

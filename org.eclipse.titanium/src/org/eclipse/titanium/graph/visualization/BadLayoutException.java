@@ -24,7 +24,7 @@ public class BadLayoutException extends Exception {
 	 * @param str : Error message
 	 * @param t : The type of error {@see ErrorType}
 	 */
-	public BadLayoutException(String str, ErrorType t) {
+	public BadLayoutException(final String str, final ErrorType t) {
 		super(str);
 		type = t;
 	}
@@ -35,7 +35,7 @@ public class BadLayoutException extends Exception {
 	 * @param t : The type of error {@see ErrorType}
 	 * @param cause : The cause of the error (a Throwable object)
 	 */
-	public BadLayoutException(String str, ErrorType t, Throwable cause) {
+	public BadLayoutException(final String str, final ErrorType t, final Throwable cause) {
 		super(str, cause);
 		type = t;
 	}

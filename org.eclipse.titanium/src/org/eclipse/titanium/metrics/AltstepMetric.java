@@ -52,15 +52,15 @@ public enum AltstepMetric implements IMetricEnum {
 	private Set<StatColumn> requestedStatistics;
 	private boolean isInteger;
 
-	private AltstepMetric(String name, String hint) {
+	private AltstepMetric(final String name, final String hint) {
 		this(name, hint, EnumSet.allOf(StatColumn.class), true);
 	}
 
-	private AltstepMetric(String name, String hint, Set<StatColumn> requestedStatistics) {
+	private AltstepMetric(final String name, final String hint, final Set<StatColumn> requestedStatistics) {
 		this(name, hint, requestedStatistics, true);
 	}
 
-	private AltstepMetric(String name, String hint, Set<StatColumn> requestedStatistics, boolean isInteger) {
+	private AltstepMetric(final String name, final String hint, final Set<StatColumn> requestedStatistics, final boolean isInteger) {
 		this.displayName = name;
 		this.hint = hint;
 		this.requestedStatistics = requestedStatistics;

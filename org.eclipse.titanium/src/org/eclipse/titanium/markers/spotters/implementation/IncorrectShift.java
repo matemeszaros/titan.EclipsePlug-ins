@@ -58,18 +58,18 @@ public class IncorrectShift {
 				return;
 			}
 
-			CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
-			long stringSize = getFirstShiftOperandLength(ct, value1);
-			Type_type tempType2 = value2.getExpressionReturntype(ct, null);
+			final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
+			final long stringSize = getFirstShiftOperandLength(ct, value1);
+			final Type_type tempType2 = value2.getExpressionReturntype(ct, null);
 			if (Type_type.TYPE_INTEGER != tempType2) {
 				return;
 			}
 
-			IValue tempValue = value2.getValueRefdLast(ct, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final IValue tempValue = value2.getValueRefdLast(ct, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
 			if (!Value_type.INTEGER_VALUE.equals(tempValue.getValuetype())) {
 				return;
 			}
-			long shiftSize = ((Integer_Value) tempValue).getValue();
+			final long shiftSize = ((Integer_Value) tempValue).getValue();
 			if (!value1.isUnfoldable(ct)) {
 				if (shiftSize < 0) {
 					problems.report(location, MessageFormat.format(NEGATIVESHIFTPROBLEM,
@@ -77,7 +77,7 @@ public class IncorrectShift {
 				} else if (shiftSize == 0) {
 					problems.report(location, MessageFormat.format(ZEROSHIFTPROBLEM, actualShift));
 				} else if (shiftSize > stringSize) {
-					String msg = MessageFormat.format(TOOBIGSHIFTPROBLEM, actualShift, stringSize, shiftSize);
+					final String msg = MessageFormat.format(TOOBIGSHIFTPROBLEM, actualShift, stringSize, shiftSize);
 					problems.report(location, msg);
 				}
 			}
@@ -96,17 +96,16 @@ public class IncorrectShift {
 				return;
 			}
 
-			ShiftLeftExpression s = (ShiftLeftExpression) node;
-			
+			final ShiftLeftExpression s = (ShiftLeftExpression) node;
 
-			Value value1 = s.getValue1();
-			Value value2 = s.getValue2();
+			final Value value1 = s.getValue1();
+			final Value value2 = s.getValue2();
 			checkShiftOperands(problems, s.getLocation(), value1, value2);
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(ShiftLeftExpression.class);
 			return ret;
 		}
@@ -124,16 +123,16 @@ public class IncorrectShift {
 				return;
 			}
 
-			ShiftRightExpression s = (ShiftRightExpression) node;
+			final ShiftRightExpression s = (ShiftRightExpression) node;
 
-			Value value1 = s.getValue1();
-			Value value2 = s.getValue2();
+			final Value value1 = s.getValue1();
+			final Value value2 = s.getValue2();
 			checkShiftOperands(problems, s.getLocation(), value1, value2);
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(ShiftRightExpression.class);
 			return ret;
 		}
@@ -150,8 +149,8 @@ public class IncorrectShift {
 			return 0;
 		}
 
-		Type_type tempType1 = value.getExpressionReturntype(ct, null);
-		IValue refd = value.getValueRefdLast(ct, null);
+		final Type_type tempType1 = value.getExpressionReturntype(ct, null);
+		final IValue refd = value.getValueRefdLast(ct, null);
 		switch (tempType1) {
 		case TYPE_BITSTRING:
 			if (Value_type.BITSTRING_VALUE.equals(refd.getValuetype())) {

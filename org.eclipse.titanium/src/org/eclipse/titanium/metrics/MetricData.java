@@ -42,7 +42,7 @@ public class MetricData {
 	final IProject project;
 	final MutableMetricData data;
 
-	private MetricData(IProject project, MutableMetricData data) {
+	private MetricData(final IProject project, final MutableMetricData data) {
 		this.project = project;
 		this.data = data;
 	}
@@ -71,175 +71,175 @@ public class MetricData {
 		return data.risks;
 	}
 
-	public Number get(AltstepMetric metric, Def_Altstep altstep) {
+	public Number get(final AltstepMetric metric, final Def_Altstep altstep) {
 		return data.altstepMetrics.get(metric).get(altstep);
 	}
 
-	public Number get(FunctionMetric metric, Def_Function function) {
+	public Number get(final FunctionMetric metric, final Def_Function function) {
 		return data.functionMetrics.get(metric).get(function);
 	}
 
-	public Number get(TestcaseMetric metric, Def_Testcase testcase) {
+	public Number get(final TestcaseMetric metric, final Def_Testcase testcase) {
 		return data.testcaseMetrics.get(metric).get(testcase);
 	}
 
-	public double getRiskValue(AltstepMetric metric, Def_Altstep altstep) {
+	public double getRiskValue(final AltstepMetric metric, final Def_Altstep altstep) {
 		return data.risks.getRisk(metric).getRiskValue(get(metric, altstep));
 	}
 
-	public double getRiskValue(FunctionMetric metric, Def_Function function) {
+	public double getRiskValue(final FunctionMetric metric, final Def_Function function) {
 		return data.risks.getRisk(metric).getRiskValue(get(metric, function));
 	}
 
-	public double getRiskValue(TestcaseMetric metric, Def_Testcase testcase) {
+	public double getRiskValue(final TestcaseMetric metric, final Def_Testcase testcase) {
 		return data.risks.getRisk(metric).getRiskValue(get(metric, testcase));
 	}
 
-	public RiskLevel getRisk(AltstepMetric metric, Def_Altstep altstep) {
+	public RiskLevel getRisk(final AltstepMetric metric, final Def_Altstep altstep) {
 		return data.risks.getRisk(metric).getRiskLevel(get(metric, altstep));
 	}
 
-	public RiskLevel getRisk(FunctionMetric metric, Def_Function function) {
+	public RiskLevel getRisk(final FunctionMetric metric, final Def_Function function) {
 		return data.risks.getRisk(metric).getRiskLevel(get(metric, function));
 	}
 
-	public RiskLevel getRisk(TestcaseMetric metric, Def_Testcase testcase) {
+	public RiskLevel getRisk(final TestcaseMetric metric, final Def_Testcase testcase) {
 		return data.risks.getRisk(metric).getRiskLevel(get(metric, testcase));
 	}
 
-	public Number get(ModuleMetric metric, Module module) {
+	public Number get(final ModuleMetric metric, final Module module) {
 		return data.moduleMetrics.get(metric).get(module);
 	}
 
-	public Number getHighestRiskCauser(AltstepMetric metric, Module module) {
+	public Number getHighestRiskCauser(final AltstepMetric metric, final Module module) {
 		return data.altstepModuleStats.get(metric).get(module).getHighestRisk();
 	}
 
-	public Number getHighestRiskCauser(FunctionMetric metric, Module module) {
+	public Number getHighestRiskCauser(final FunctionMetric metric, final Module module) {
 		return data.functionModuleStats.get(metric).get(module).getHighestRisk();
 	}
 
-	public Number getHighestRiskCauser(TestcaseMetric metric, Module module) {
+	public Number getHighestRiskCauser(final TestcaseMetric metric, final Module module) {
 		return data.testcaseModuleStats.get(metric).get(module).getHighestRisk();
 	}
 
-	public double getRiskValue(ModuleMetric metric, Module module) {
+	public double getRiskValue(final ModuleMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskValue(get(metric, module));
 	}
 
-	public double getRiskValue(AltstepMetric metric, Module module) {
+	public double getRiskValue(final AltstepMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskValue(getHighestRiskCauser(metric, module));
 	}
 
-	public double getRiskValue(FunctionMetric metric, Module module) {
+	public double getRiskValue(final FunctionMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskValue(getHighestRiskCauser(metric, module));
 	}
 
-	public double getRiskValue(TestcaseMetric metric, Module module) {
+	public double getRiskValue(final TestcaseMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskValue(getHighestRiskCauser(metric, module));
 	}
 
-	public RiskLevel getRisk(ModuleMetric metric, Module module) {
+	public RiskLevel getRisk(final ModuleMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskLevel(get(metric, module));
 	}
 
-	public RiskLevel getRisk(AltstepMetric metric, Module module) {
+	public RiskLevel getRisk(final AltstepMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskLevel(getHighestRiskCauser(metric, module));
 	}
 
-	public RiskLevel getRisk(FunctionMetric metric, Module module) {
+	public RiskLevel getRisk(final FunctionMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskLevel(getHighestRiskCauser(metric, module));
 	}
 
-	public RiskLevel getRisk(TestcaseMetric metric, Module module) {
+	public RiskLevel getRisk(final TestcaseMetric metric, final Module module) {
 		return data.risks.getRisk(metric).getRiskLevel(getHighestRiskCauser(metric, module));
 	}
 
-	public Number get(ProjectMetric metric) {
+	public Number get(final ProjectMetric metric) {
 		return data.projectMetrics.get(metric);
 	}
 
-	public Number getHighestRiskCauser(ModuleMetric metric) {
+	public Number getHighestRiskCauser(final ModuleMetric metric) {
 		return data.moduleProjectStats.get(metric).getHighestRisk();
 	}
 
-	public Number getHighestRiskCauser(AltstepMetric metric) {
+	public Number getHighestRiskCauser(final AltstepMetric metric) {
 		return data.altstepProjectStats.get(metric).getHighestRisk();
 	}
 
-	public Number getHighestRiskCauser(FunctionMetric metric) {
+	public Number getHighestRiskCauser(final FunctionMetric metric) {
 		return data.functionProjectStats.get(metric).getHighestRisk();
 	}
 
-	public Number getHighestRiskCauser(TestcaseMetric metric) {
+	public Number getHighestRiskCauser(final TestcaseMetric metric) {
 		return data.testcaseProjectStats.get(metric).getHighestRisk();
 	}
 
-	public double getRiskValue(ProjectMetric metric) {
+	public double getRiskValue(final ProjectMetric metric) {
 		return data.risks.getRisk(metric).getRiskValue(get(metric));
 	}
 
-	public double getRiskValue(ModuleMetric metric) {
+	public double getRiskValue(final ModuleMetric metric) {
 		return data.risks.getRisk(metric).getRiskValue(getHighestRiskCauser(metric));
 	}
 
-	public double getRiskValue(AltstepMetric metric) {
+	public double getRiskValue(final AltstepMetric metric) {
 		return data.risks.getRisk(metric).getRiskValue(getHighestRiskCauser(metric));
 	}
 
-	public double getRiskValue(FunctionMetric metric) {
+	public double getRiskValue(final FunctionMetric metric) {
 		return data.risks.getRisk(metric).getRiskValue(getHighestRiskCauser(metric));
 	}
 
-	public double getRiskValue(TestcaseMetric metric) {
+	public double getRiskValue(final TestcaseMetric metric) {
 		return data.risks.getRisk(metric).getRiskValue(getHighestRiskCauser(metric));
 	}
 
-	public RiskLevel getRisk(ProjectMetric metric) {
+	public RiskLevel getRisk(final ProjectMetric metric) {
 		return data.risks.getRisk(metric).getRiskLevel(get(metric));
 	}
 
-	public RiskLevel getRisk(ModuleMetric metric) {
+	public RiskLevel getRisk(final ModuleMetric metric) {
 		return data.risks.getRisk(metric).getRiskLevel(getHighestRiskCauser(metric));
 	}
 
-	public RiskLevel getRisk(AltstepMetric metric) {
+	public RiskLevel getRisk(final AltstepMetric metric) {
 		return data.risks.getRisk(metric).getRiskLevel(getHighestRiskCauser(metric));
 	}
 
-	public RiskLevel getRisk(FunctionMetric metric) {
+	public RiskLevel getRisk(final FunctionMetric metric) {
 		return data.risks.getRisk(metric).getRiskLevel(getHighestRiskCauser(metric));
 	}
 
-	public RiskLevel getRisk(TestcaseMetric metric) {
+	public RiskLevel getRisk(final TestcaseMetric metric) {
 		return data.risks.getRisk(metric).getRiskLevel(getHighestRiskCauser(metric));
 	}
 
-	public Statistics getStatistics(AltstepMetric metric, Module module) {
+	public Statistics getStatistics(final AltstepMetric metric, final Module module) {
 		return data.altstepModuleStats.get(metric).get(module);
 	}
 
-	public Statistics getStatistics(FunctionMetric metric, Module module) {
+	public Statistics getStatistics(final FunctionMetric metric, final Module module) {
 		return data.functionModuleStats.get(metric).get(module);
 	}
 
-	public Statistics getStatistics(TestcaseMetric metric, Module module) {
+	public Statistics getStatistics(final TestcaseMetric metric, final Module module) {
 		return data.testcaseModuleStats.get(metric).get(module);
 	}
 
-	public Statistics getStatistics(AltstepMetric metric) {
+	public Statistics getStatistics(final AltstepMetric metric) {
 		return data.altstepProjectStats.get(metric);
 	}
 
-	public Statistics getStatistics(FunctionMetric metric) {
+	public Statistics getStatistics(final FunctionMetric metric) {
 		return data.functionProjectStats.get(metric);
 	}
 
-	public Statistics getStatistics(TestcaseMetric metric) {
+	public Statistics getStatistics(final TestcaseMetric metric) {
 		return data.testcaseProjectStats.get(metric);
 	}
 
-	public Statistics getStatistics(ModuleMetric metric) {
+	public Statistics getStatistics(final ModuleMetric metric) {
 		return data.moduleProjectStats.get(metric);
 	}
 
@@ -253,23 +253,23 @@ public class MetricData {
 	 * 
 	 * @return the composed result of the measurements
 	 */
-	public static MetricData measure(IProject project) {
+	public static MetricData measure(final IProject project) {
 		synchronized (project) {
 			// reading the lists of altsteps, testcases, functions and modules
 			// that are to be measured
-			ProjectSourceParser parser = GlobalParser.getProjectSourceParser(project);
-			Risks risks = new Risks();
-			MutableMetricData data = new MutableMetricData(risks);
+			final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(project);
+			final Risks risks = new Risks();
+			final MutableMetricData data = new MutableMetricData(risks);
 
-			List<Module> modules = new ArrayList<Module>();
-			Map<Module, List<Def_Function>> functions = new HashMap<Module, List<Def_Function>>();
-			Map<Module, List<Def_Testcase>> testcases = new HashMap<Module, List<Def_Testcase>>();
-			Map<Module, List<Def_Altstep>> altsteps = new HashMap<Module, List<Def_Altstep>>();
+			final List<Module> modules = new ArrayList<Module>();
+			final Map<Module, List<Def_Function>> functions = new HashMap<Module, List<Def_Function>>();
+			final Map<Module, List<Def_Testcase>> testcases = new HashMap<Module, List<Def_Testcase>>();
+			final Map<Module, List<Def_Altstep>> altsteps = new HashMap<Module, List<Def_Altstep>>();
 			for (final String modName : parser.getKnownModuleNames()) {
 				final Module module = parser.getModuleByName(modName);
 				modules.add(module);
 			}
-			for (Module module : modules) {
+			for (final Module module : modules) {
 				final List<Def_Function> funs = new ArrayList<Def_Function>();
 				final List<Def_Testcase> tcs = new ArrayList<Def_Testcase>();
 				final List<Def_Altstep> als = new ArrayList<Def_Altstep>();
@@ -288,55 +288,55 @@ public class MetricData {
 			MetricData immutableData = new MetricData(project, data);
 
 			// initiate the metrics
-			Metrics metrics = new Metrics();
-			for (AltstepMetric am : AltstepMetric.values()) {
+			final Metrics metrics = new Metrics();
+			for (final AltstepMetric am : AltstepMetric.values()) {
 				metrics.get(am).init(immutableData);
 			}
-			for (FunctionMetric fm : FunctionMetric.values()) {
+			for (final FunctionMetric fm : FunctionMetric.values()) {
 				metrics.get(fm).init(immutableData);
 			}
-			for (TestcaseMetric tm : TestcaseMetric.values()) {
+			for (final TestcaseMetric tm : TestcaseMetric.values()) {
 				metrics.get(tm).init(immutableData);
 			}
-			for (ModuleMetric mm : ModuleMetric.values()) {
+			for (final ModuleMetric mm : ModuleMetric.values()) {
 				metrics.get(mm).init(immutableData);
 			}
-			for (ProjectMetric pm : ProjectMetric.values()) {
+			for (final ProjectMetric pm : ProjectMetric.values()) {
 				metrics.get(pm).init(immutableData);
 			}
 
 			// execute the metrics, one by one
 			// altstep metrics and statistics
-			for (AltstepMetric am : AltstepMetric.values()) {
-				Statistics projectStats = measureEntities(data.altsteps, metrics.get(am), immutableData, data.altstepMetrics,
+			for (final AltstepMetric am : AltstepMetric.values()) {
+				final Statistics projectStats = measureEntities(data.altsteps, metrics.get(am), immutableData, data.altstepMetrics,
 						data.altstepModuleStats);
 				data.altstepProjectStats.put(am, projectStats);
 				immutableData = new MetricData(project, data);
 			}
 			// function metrics and statistics
-			for (FunctionMetric fm : FunctionMetric.values()) {
-				Statistics projectStats = measureEntities(data.functions, metrics.get(fm), immutableData, data.functionMetrics,
+			for (final FunctionMetric fm : FunctionMetric.values()) {
+				final Statistics projectStats = measureEntities(data.functions, metrics.get(fm), immutableData, data.functionMetrics,
 						data.functionModuleStats);
 				data.functionProjectStats.put(fm, projectStats);
 				immutableData = new MetricData(project, data);
 			}
 			// testcase metrics and statistics
-			for (TestcaseMetric tm : TestcaseMetric.values()) {
-				Statistics projectStats = measureEntities(data.testcases, metrics.get(tm), immutableData, data.testcaseMetrics,
+			for (final TestcaseMetric tm : TestcaseMetric.values()) {
+				final Statistics projectStats = measureEntities(data.testcases, metrics.get(tm), immutableData, data.testcaseMetrics,
 						data.testcaseModuleStats);
 				data.testcaseProjectStats.put(tm, projectStats);
 				immutableData = new MetricData(project, data);
 			}
 
 			// module metrics and statistics
-			for (ModuleMetric mm : ModuleMetric.values()) {
-				Map<Module, Number> metricResults = new HashMap<Module, Number>();
-				int numberOfModules = data.modules.size();
+			for (final ModuleMetric mm : ModuleMetric.values()) {
+				final Map<Module, Number> metricResults = new HashMap<Module, Number>();
+				final int numberOfModules = data.modules.size();
 
 				double[] projectLevelResults = new double[numberOfModules];
 				int projectLevelCounter = 0;
-				for (Module module : data.modules) {
-					Number result = metrics.get(mm).measure(immutableData, module);
+				for (final Module module : data.modules) {
+					final Number result = metrics.get(mm).measure(immutableData, module);
 					projectLevelResults[projectLevelCounter++] = result.doubleValue();
 					metricResults.put(module, result);
 				}
@@ -345,34 +345,34 @@ public class MetricData {
 			}
 
 			// project metrics
-			for (ProjectMetric pm : ProjectMetric.values()) {
-				Number result = metrics.get(pm).measure(immutableData, project);
+			for (final ProjectMetric pm : ProjectMetric.values()) {
+				final Number result = metrics.get(pm).measure(immutableData, project);
 				data.projectMetrics.put(pm, result);
 			}
 			return immutableData;
 		}
 	}
 
-	static <ENTITY, METRIC extends IMetricEnum> Statistics measureEntities(Map<Module, List<ENTITY>> entities, IMetric<ENTITY, METRIC> metric,
-			MetricData currentData, Map<METRIC, Map<ENTITY, Number>> metricResults, Map<METRIC, Map<Module, Statistics>> moduleStats) {
+	static <ENTITY, METRIC extends IMetricEnum> Statistics measureEntities(final Map<Module, List<ENTITY>> entities, final IMetric<ENTITY, METRIC> metric,
+			final MetricData currentData, final Map<METRIC, Map<ENTITY, Number>> metricResults, final Map<METRIC, Map<Module, Statistics>> moduleStats) {
 		int numberOfEntities = 0;
 		
-		for (List<ENTITY> entitylist : entities.values()) {
+		for (final List<ENTITY> entitylist : entities.values()) {
 			numberOfEntities += entitylist.size();
 		}
 
-		Map<ENTITY, Number> myMetricResults = new HashMap<ENTITY, Number>();
-		Map<Module, Statistics> myModuleStats = new HashMap<Module, Statistics>();
+		final Map<ENTITY, Number> myMetricResults = new HashMap<ENTITY, Number>();
+		final Map<Module, Statistics> myModuleStats = new HashMap<Module, Statistics>();
 
 		double[] projectLevelResults = new double[numberOfEntities];
 		int projectLevelCounter = 0;
-		for (Entry<Module, List<ENTITY>> entry : entities.entrySet()) {
-			Module module = entry.getKey();
-			List<ENTITY> entitiesOfModule = entry.getValue();
+		for (final Entry<Module, List<ENTITY>> entry : entities.entrySet()) {
+			final Module module = entry.getKey();
+			final List<ENTITY> entitiesOfModule = entry.getValue();
 			int moduleLevelCounter = 0;
 			double[] moduleLevelResults = new double[entitiesOfModule.size()];
-			for (ENTITY entity : entitiesOfModule) {
-				Number result = metric.measure(currentData, entity);
+			for (final ENTITY entity : entitiesOfModule) {
+				final Number result = metric.measure(currentData, entity);
 				moduleLevelResults[moduleLevelCounter++] = result.doubleValue();
 				projectLevelResults[projectLevelCounter++] = result.doubleValue();
 				myMetricResults.put(entity, result);
@@ -407,7 +407,7 @@ public class MetricData {
 
 		Risks risks;
 
-		public MutableMetricData(Risks risks) {
+		public MutableMetricData(final Risks risks) {
 			this.risks = risks;
 		}
 	}

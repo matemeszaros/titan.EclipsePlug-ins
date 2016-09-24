@@ -52,7 +52,7 @@ public class LayoutBuilder {
 	 * @param entry : The code of the claimed layout (see {@link LayoutEntry#getCode()})
 	 * @param size : The size of the canvas to work on
 	 */
-	public LayoutBuilder(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, LayoutEntry entry, Dimension size) {
+	public LayoutBuilder(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> graph, final LayoutEntry entry, final Dimension size) {
 		g = graph;
 		layoutEntry = entry;
 		this.size = size;
@@ -64,7 +64,7 @@ public class LayoutBuilder {
 	 * @param clusters : The clustering to set
 	 * @return This object, in order to implement builder pattern correctly
 	 */
-	public LayoutBuilder clusters(Set<Set<NodeDescriptor>> clusters) {
+	public LayoutBuilder clusters(final Set<Set<NodeDescriptor>> clusters) {
 		this.clusters = clusters;
 		return this;
 	}
@@ -74,7 +74,7 @@ public class LayoutBuilder {
 	 * @param trf : The transformer to set
 	 * @return This object, in order to implement builder pattern correctly
 	 */
-	public LayoutBuilder transformer(Transformer<NodeDescriptor, Point2D> trf) {
+	public LayoutBuilder transformer(final Transformer<NodeDescriptor, Point2D> trf) {
 		pointTransformer = trf;
 		return this;
 	}
@@ -87,7 +87,7 @@ public class LayoutBuilder {
 	public Layout<NodeDescriptor, EdgeDescriptor> build() throws BadLayoutException {
 		Layout<NodeDescriptor, EdgeDescriptor> layout;
 		
-		String layoutCode = layoutEntry.getCode();
+		final String layoutCode = layoutEntry.getCode();
 		if (layoutCode.equals(Layouts.LAYOUT_ISOM.getCode())) {
 			layout = new TitaniumISOMLayout<NodeDescriptor, EdgeDescriptor>(g);
 			((TitaniumISOMLayout<NodeDescriptor, EdgeDescriptor>)layout).setMaxIterations(Activator.getDefault().
@@ -119,7 +119,7 @@ public class LayoutBuilder {
 			if (clusters == null) {
 				throw new IllegalStateException("A clustering must be set before using cluster layout!");
 			}
-			ClusterTransformer trf = new ClusterTransformer(new FRLayout<NodeDescriptor, EdgeDescriptor>(g), clusters, size);
+			final ClusterTransformer trf = new ClusterTransformer(new FRLayout<NodeDescriptor, EdgeDescriptor>(g), clusters, size);
 			layout = new StaticLayout<NodeDescriptor, EdgeDescriptor>(g, trf);
 		} else if ("STATIC".equals(layoutCode)) {
 			if (pointTransformer == null) {

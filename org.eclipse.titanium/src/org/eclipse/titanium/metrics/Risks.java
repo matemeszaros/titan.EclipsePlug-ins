@@ -29,7 +29,7 @@ public class Risks {
 	 */
 	public Risks() {
 		risks = new HashMap<IMetricEnum, IRisk>();
-		for (IMetricEnum metric : MetricGroup.knownMetrics()) {
+		for (final IMetricEnum metric : MetricGroup.knownMetrics()) {
 			risks.put(metric, new LinearRisk(metric));
 		}
 		risks.put(ModuleMetric.INSTABILITY, new TriangleRisk(ModuleMetric.INSTABILITY));
@@ -38,7 +38,7 @@ public class Risks {
 	/**
 	 * Access the risk calculator of a metric
 	 */
-	public IRisk getRisk(IMetricEnum metric) {
+	public IRisk getRisk(final IMetricEnum metric) {
 		return risks.get(metric);
 	}
 }

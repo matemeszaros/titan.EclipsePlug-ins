@@ -40,7 +40,7 @@ public class InfiniteLoop {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof While_Statement) {
-				While_Statement s = (While_Statement) node;
+				final While_Statement s = (While_Statement) node;
 				if (s.isTerminating(null)) {
 					problems.report(s.getLocation(), ERROR_MESSAGE);
 				}
@@ -49,7 +49,7 @@ public class InfiniteLoop {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(While_Statement.class);
 			return ret;
 		}
@@ -68,20 +68,20 @@ public class InfiniteLoop {
 				return;
 			}
 
-			For_Statement s = (For_Statement) node;
-			StatementBlock sb = s.getStatementBlock();
+			final For_Statement s = (For_Statement) node;
+			final StatementBlock sb = s.getStatementBlock();
 			if (sb == null) {
 				return;
 			}
 
-			Value finalExpression = s.getFinalExpression();
+			final Value finalExpression = s.getFinalExpression();
 			if (finalExpression == null) {
 				return;
 			}
-			CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
+			final CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 			finalExpression.setLoweridToReference(timestamp);
-			IValue lastValue = finalExpression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
-			Type_type temp = lastValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
+			final IValue lastValue = finalExpression.getValueRefdLast(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE, null);
+			final Type_type temp = lastValue.getExpressionReturntype(timestamp, Expected_Value_type.EXPECTED_DYNAMIC_VALUE);
 
 			if (temp == Type_type.TYPE_BOOL && !lastValue.isUnfoldable(timestamp)
 					&& ((Boolean_Value) lastValue).getValue()) {
@@ -91,7 +91,7 @@ public class InfiniteLoop {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(For_Statement.class);
 			return ret;
 		}
@@ -107,7 +107,7 @@ public class InfiniteLoop {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof DoWhile_Statement) {
-				DoWhile_Statement s = (DoWhile_Statement) node;
+				final DoWhile_Statement s = (DoWhile_Statement) node;
 				if (s.isTerminating(null)) {
 					problems.report(s.getLocation(), ERROR_MESSAGE);
 				}
@@ -116,7 +116,7 @@ public class InfiniteLoop {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(DoWhile_Statement.class);
 			return ret;
 		}

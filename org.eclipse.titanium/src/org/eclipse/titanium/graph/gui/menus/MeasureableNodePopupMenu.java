@@ -46,21 +46,21 @@ public class MeasureableNodePopupMenu extends NodePopupMenu {
 		showInfo.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				VisualizationViewer<NodeDescriptor, EdgeDescriptor> actVisualisator = handler.getVisualizator();
+			public void actionPerformed(final ActionEvent e) {
+				final VisualizationViewer<NodeDescriptor, EdgeDescriptor> actVisualisator = handler.getVisualizator();
 				if (actVisualisator == null) {
 					return;
 				}
-				Layout<NodeDescriptor, EdgeDescriptor> tmpLayout = actVisualisator.getGraphLayout();
+				final Layout<NodeDescriptor, EdgeDescriptor> tmpLayout = actVisualisator.getGraphLayout();
 				if (tmpLayout == null) {
 					return;
 				}
-				Graph<NodeDescriptor, EdgeDescriptor> g = actVisualisator.getGraphLayout().getGraph();
+				final Graph<NodeDescriptor, EdgeDescriptor> g = actVisualisator.getGraphLayout().getGraph();
 
 				actVisualisator.getPickedVertexState().clear();
 				actVisualisator.getPickedVertexState().pick(node, true);
 				actVisualisator.getPickedEdgeState().clear();
-				for (EdgeDescriptor edge : g.getIncidentEdges(node)) {
+				for (final EdgeDescriptor edge : g.getIncidentEdges(node)) {
 					actVisualisator.getPickedEdgeState().pick(edge, true);
 				}
 
@@ -84,7 +84,7 @@ public class MeasureableNodePopupMenu extends NodePopupMenu {
 	 * @param value
 	 *            : the <code>boolean</code> value to set
 	 */
-	public void enableInfoWindow(boolean value) {
+	public void enableInfoWindow(final boolean value) {
 		showInfo.setEnabled(value);
 	}
 

@@ -30,13 +30,13 @@ public class MissingFriend extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof FriendModule) {
-			FriendModule s = (FriendModule) node;
-			Identifier identifier = s.getIdentifier();
-			ProjectSourceParser parser = GlobalParser.getProjectSourceParser(s.getProject());
+			final FriendModule s = (FriendModule) node;
+			final Identifier identifier = s.getIdentifier();
+			final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(s.getProject());
 			if (parser != null && identifier != null) {
-				Module referredModule = parser.getModuleByName(identifier.getName());
+				final Module referredModule = parser.getModuleByName(identifier.getName());
 				if (referredModule == null) {
-					String msg = MessageFormat.format(MISSING_MODULE, identifier.getDisplayName());
+					final String msg = MessageFormat.format(MISSING_MODULE, identifier.getDisplayName());
 					problems.report(identifier.getLocation(), msg);
 				}
 			}
@@ -46,7 +46,7 @@ public class MissingFriend extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(FriendModule.class);
 		return ret;
 	}

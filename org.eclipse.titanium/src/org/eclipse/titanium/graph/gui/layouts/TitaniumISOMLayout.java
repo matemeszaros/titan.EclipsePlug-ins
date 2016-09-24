@@ -68,7 +68,7 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 	 * 
 	 * @param g
 	 */
-	public TitaniumISOMLayout(Graph<V, E> g) {
+	public TitaniumISOMLayout(final Graph<V, E> g) {
 		super(g);
 		queue = new ArrayList<V>(g.getVertexCount());
 	}
@@ -76,7 +76,7 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 	/**
 	 * Sets the maximum number of iterations.
 	 */
-	public void setMaxIterations(int maxIterations) {
+	public void setMaxIterations(final int maxIterations) {
 		maxEpoch = maxIterations;
 	}
 
@@ -110,17 +110,17 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 
 	private synchronized void adjust() {
 		// Generate random position in graph space
-		Point2D tempXYD = new Point2D.Double();
+		final Point2D tempXYD = new Point2D.Double();
 
 		// creates a new XY data location
 		tempXYD.setLocation(10 + Math.random() * getSize().getWidth(), 10 + Math.random() * getSize().getHeight());
 
 		// Get closest vertex to random position
-		V winner = elementAccessor.getVertex(this, tempXYD.getX(), tempXYD.getY());
+		final V winner = elementAccessor.getVertex(this, tempXYD.getX(), tempXYD.getY());
 
 		try {
-			for (V v : getGraph().getVertices()) {
-				ISOMVertexData ivd = getISOMVertexData(v);
+			for (final V v : getGraph().getVertices()) {
+				final ISOMVertexData ivd = getISOMVertexData(v);
 				ivd.distance = 0;
 				ivd.visited = false;
 			}
@@ -132,16 +132,16 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 
 	private synchronized void updateParameters() {
 		epoch.incrementAndGet();
-		double factor = Math.exp(-1 * coolingFactor * (1.0 * epoch.get() / maxEpoch));
+		final double factor = Math.exp(-1 * coolingFactor * (1.0 * epoch.get() / maxEpoch));
 		adaption = Math.max(minAdaption, factor * initialAdaption);
 		if ((radius > minRadius) && (epoch.get() % radiusConstantTime == 0)) {
 			radius--;
 		}
 	}
 
-	private synchronized void adjustVertex(V v, Point2D tempXYD) {
+	private synchronized void adjustVertex(final V v, final Point2D tempXYD) {
 		queue.clear();
-		ISOMVertexData ivd = getISOMVertexData(v);
+		final ISOMVertexData ivd = getISOMVertexData(v);
 		ivd.distance = 0;
 		ivd.visited = true;
 		queue.add(v);
@@ -149,20 +149,20 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 
 		while (!queue.isEmpty()) {
 			current = queue.remove(queue.size() - 1);
-			ISOMVertexData currData = getISOMVertexData(current);
-			Point2D currXYData = transform(current);
+			final ISOMVertexData currData = getISOMVertexData(current);
+			final Point2D currXYData = transform(current);
 
-			double dx = tempXYD.getX() - currXYData.getX();
-			double dy = tempXYD.getY() - currXYData.getY();
-			double factor = adaption / Math.pow(2, currData.distance);
+			final double dx = tempXYD.getX() - currXYData.getX();
+			final double dy = tempXYD.getY() - currXYData.getY();
+			final double factor = adaption / Math.pow(2, currData.distance);
 
 			currXYData.setLocation(currXYData.getX() + (factor * dx), currXYData.getY() + (factor * dy));
 
 			if (currData.distance < radius) {
-				Collection<V> s = getGraph().getNeighbors(current);
+				final Collection<V> s = getGraph().getNeighbors(current);
 				try {
-					for (V child : s) {
-						ISOMVertexData childData = getISOMVertexData(child);
+					for (final V child : s) {
+						final ISOMVertexData childData = getISOMVertexData(child);
 						if (childData != null && !childData.visited) {
 							childData.visited = true;
 							childData.distance = currData.distance + 1;
@@ -176,7 +176,7 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 		}
 	}
 
-	protected ISOMVertexData getISOMVertexData(V v) {
+	protected ISOMVertexData getISOMVertexData(final V v) {
 		ISOMVertexData temp = isomVertexData.get(v);
 		if (temp == null) {
 			temp = new ISOMVertexData();

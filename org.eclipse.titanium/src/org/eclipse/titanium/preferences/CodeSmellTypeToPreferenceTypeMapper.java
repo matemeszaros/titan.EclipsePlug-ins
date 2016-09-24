@@ -18,8 +18,8 @@ public final class CodeSmellTypeToPreferenceTypeMapper {
 	private static final Map<CodeSmellType, ProblemTypePreference> MAPPING;
 	static {
 		final Map<CodeSmellType, ProblemTypePreference> m = new EnumMap<CodeSmellType, ProblemTypePreference>(CodeSmellType.class);
-		for (ProblemTypePreference p : ProblemTypePreference.values()) {
-			for (CodeSmellType s : p.getRelatedProblems()) {
+		for (final ProblemTypePreference p : ProblemTypePreference.values()) {
+			for (final CodeSmellType s : p.getRelatedProblems()) {
 				m.put(s, p);
 			}
 		}

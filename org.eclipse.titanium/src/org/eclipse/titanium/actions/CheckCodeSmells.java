@@ -96,7 +96,7 @@ public class CheckCodeSmells extends AbstractHandler {
 				projects.add(project);
 			} else if (resource instanceof IFolder) {
 				try {
-					for (IResource r2 : ((IFolder) resource).members()) {
+					for (final IResource r2 : ((IFolder) resource).members()) {
 						res.addLast(r2);
 					}
 				} catch (CoreException e) {

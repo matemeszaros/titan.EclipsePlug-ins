@@ -52,12 +52,12 @@ class MetricSelectorDialog implements Runnable {
 		shell.setText("Choose metrics");
 		shell.setLayout(new GridLayout());
 
-		ScrolledComposite sc = new ScrolledComposite(shell, SWT.V_SCROLL);
+		final ScrolledComposite sc = new ScrolledComposite(shell, SWT.V_SCROLL);
 		sc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		Composite content = new Composite(sc, 0);
+		final Composite content = new Composite(sc, 0);
 		sc.setContent(content);
 
-		GridLayout l = new GridLayout();
+		final GridLayout l = new GridLayout();
 		l.numColumns = 2;
 		content.setLayout(l);
 		content.setSize(200, 300);
@@ -93,7 +93,7 @@ class MetricSelectorDialog implements Runnable {
 	}
 
 	protected void okPressed() {
-		for (IMetricEnum m : bs.keySet()) {
+		for (final IMetricEnum m : bs.keySet()) {
 			if (bs.get(m).getSelection()) {
 				used.add(m);
 			}
@@ -101,17 +101,17 @@ class MetricSelectorDialog implements Runnable {
 	}
 
 	private void createSection(final Composite content, final String title, final IMetricEnum[] metrics) {
-		Label header = new Label(content, 0);
+		final Label header = new Label(content, 0);
 		header.setText(title);
-		GridData headerData = new GridData();
+		final GridData headerData = new GridData();
 		headerData.horizontalSpan = 2;
 		header.setLayoutData(headerData);
-		Composite padding = new Composite(content, 0);
+		final Composite padding = new Composite(content, 0);
 		padding.setLayoutData(new GridData(25, 0));
-		Composite inner = new Composite(content, 0);
+		final Composite inner = new Composite(content, 0);
 		inner.setLayout(new GridLayout());
-		for (IMetricEnum metric : metrics) {
-			Button b = new Button(inner, SWT.CHECK);
+		for (final IMetricEnum metric : metrics) {
+			final Button b = new Button(inner, SWT.CHECK);
 			b.setText(metric.getName());
 			b.setToolTipText(metric.getHint());
 			bs.put(metric, b);

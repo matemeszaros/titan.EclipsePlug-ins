@@ -65,10 +65,10 @@ public class TooComplexExpression {
 
 		protected void check(final IValue expression, final Problems problems) {
 			if (expression instanceof Expression_Value) {
-				ExpressionVisitor visitor = new ExpressionVisitor();
+				final ExpressionVisitor visitor = new ExpressionVisitor();
 				expression.accept(visitor);
 				if (visitor.getCount() > reportTooComplexExpressionSize) {
-					String msg = MessageFormat.format(COMPLEXITY, visitor.getCount(), reportTooComplexExpressionSize);
+					final String msg = MessageFormat.format(COMPLEXITY, visitor.getCount(), reportTooComplexExpressionSize);
 					problems.report(expression.getLocation(), msg);
 				}
 			}
@@ -81,15 +81,15 @@ public class TooComplexExpression {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof For_Statement) {
-				For_Statement s = (For_Statement) node;
-				Value expression = s.getFinalExpression();
+				final For_Statement s = (For_Statement) node;
+				final Value expression = s.getFinalExpression();
 				check(expression, problems);
 			}
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(For_Statement.class);
 			return ret;
 		}
@@ -100,15 +100,15 @@ public class TooComplexExpression {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof While_Statement) {
-				While_Statement s = (While_Statement) node;
-				Value expression = s.getExpression();
+				final While_Statement s = (While_Statement) node;
+				final Value expression = s.getExpression();
 				check(expression, problems);
 			}
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(While_Statement.class);
 			return ret;
 		}
@@ -119,15 +119,15 @@ public class TooComplexExpression {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof DoWhile_Statement) {
-				DoWhile_Statement s = (DoWhile_Statement) node;
-				Value expression = s.getExpression();
+				final DoWhile_Statement s = (DoWhile_Statement) node;
+				final Value expression = s.getExpression();
 				check(expression, problems);
 			}
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(DoWhile_Statement.class);
 			return ret;
 		}
@@ -138,15 +138,15 @@ public class TooComplexExpression {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof If_Clause) {
-				If_Clause s = (If_Clause) node;
-				Value expression = s.getExpression();
+				final If_Clause s = (If_Clause) node;
+				final Value expression = s.getExpression();
 				check(expression, problems);
 			}
 		}
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(If_Clause.class);
 			return ret;
 		}
@@ -157,10 +157,10 @@ public class TooComplexExpression {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Assignment_Statement) {
-				Assignment_Statement s = (Assignment_Statement) node;
-				CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
-				Assignment assignment = s.getReference().getRefdAssignment(ct, false);
-				TTCN3Template template = s.getTemplate();
+				final Assignment_Statement s = (Assignment_Statement) node;
+				final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
+				final Assignment assignment = s.getReference().getRefdAssignment(ct, false);
+				final TTCN3Template template = s.getTemplate();
 				if (assignment == null || template == null) {
 					// semantic error in the code.
 					return;
@@ -172,7 +172,7 @@ public class TooComplexExpression {
 				case A_PAR_VAL:
 				case A_VAR:
 					if (template.isValue(ct)) {
-						IValue tempValue = template.getValue();
+						final IValue tempValue = template.getValue();
 						check(tempValue, problems);
 					}
 					break;
@@ -184,7 +184,7 @@ public class TooComplexExpression {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(Assignment_Statement.class);
 			return ret;
 		}

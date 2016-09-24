@@ -28,9 +28,9 @@ public class UncommentedDefinition extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Definition) {
-			Definition s = (Definition) node;
+			final Definition s = (Definition) node;
 			if (s.getCommentLocation() == null) {
-				String msg = MessageFormat.format("The {0} {1} should have a comment", s.getAssignmentName(),
+				final String msg = MessageFormat.format("The {0} {1} should have a comment", s.getAssignmentName(),
 						s.getIdentifier().getDisplayName());
 				problems.report(s.getIdentifier().getLocation(), msg);
 			}
@@ -39,7 +39,7 @@ public class UncommentedDefinition extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
 		ret.add(Def_Altstep.class);
 		ret.add(Def_Function.class);
 		ret.add(Def_Testcase.class);

@@ -73,8 +73,8 @@ public abstract class PathCluster extends BaseCluster {
 	 * Adds the missing modules to a separate cluster.
 	 */
 	protected void addMissing() {
-		Set<NodeDescriptor> missing = new HashSet<NodeDescriptor>();
-		for (NodeDescriptor v : moduleGraph.getVertices()) {
+		final Set<NodeDescriptor> missing = new HashSet<NodeDescriptor>();
+		for (final NodeDescriptor v : moduleGraph.getVertices()) {
 			if (v.getCluster() == null) {
 				missing.add(v);
 				v.setCluster(missing);
@@ -102,7 +102,7 @@ public abstract class PathCluster extends BaseCluster {
 	 * Initializes the algorithm.
 	 */
 	protected void init() {
-		for (NodeDescriptor v : moduleGraph.getVertices()) {
+		for (final NodeDescriptor v : moduleGraph.getVertices()) {
 			v.setCluster(null);
 			mapNameNode.put(v.getName(), v);
 		}

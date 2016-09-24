@@ -71,8 +71,8 @@ public abstract class InformationExporter implements IApplication {
 
 		final List<IProject> existingProjects = getProjectsToHandle();
 
-		for (IProject project : existingProjects) {
-			ProjectAnalyzerJob job = new ProjectAnalyzerJob("Exporting information for project " + project.getName()) {
+		for (final IProject project : existingProjects) {
+			final  ProjectAnalyzerJob job = new ProjectAnalyzerJob("Exporting information for project " + project.getName()) {
 				@Override
 				public IStatus doPostWork(final IProgressMonitor monitor) {
 					System.out.println("Exporting information for " + getProject().getName());
@@ -112,7 +112,7 @@ public abstract class InformationExporter implements IApplication {
 	protected List<IProject> getAllAccessibleProjects() {
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		final List<IProject> existingProjects = new ArrayList<IProject>();
-		for (IProject project : projects) {
+		for (final IProject project : projects) {
 			if (project.isAccessible()) {
 				existingProjects.add(project);
 			}

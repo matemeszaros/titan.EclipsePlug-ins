@@ -33,12 +33,12 @@ public class Visibility extends BaseModuleCodeSmellSpotter {
 		if (node instanceof FormalParameter) {
 			return;
 		} else if (node instanceof Definition) {
-			Definition s = (Definition) node;
-			Identifier identifier = s.getIdentifier();
+			final Definition s = (Definition) node;
+			final Identifier identifier = s.getIdentifier();
 			check(identifier, s.getDescription(), problems);
 		} else if (node instanceof Group) {
-			Group s = (Group) node;
-			Identifier identifier = s.getIdentifier();
+			final Group s = (Group) node;
+			final Identifier identifier = s.getIdentifier();
 			check(identifier, "group", problems);
 		} else {
 			return;
@@ -47,7 +47,7 @@ public class Visibility extends BaseModuleCodeSmellSpotter {
 	
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(2);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(2);
 		ret.add(Definition.class);
 		ret.add(Group.class);
 		return ret;
@@ -55,9 +55,9 @@ public class Visibility extends BaseModuleCodeSmellSpotter {
 	
 
 	protected void check(final Identifier identifier, final String description, final Problems problems) {
-		String displayName = identifier.getDisplayName();
+		final String displayName = identifier.getDisplayName();
 		if (VISIBILITY_PATTERN.matcher(displayName).matches()) {
-			String msg = MessageFormat.format(REPORT, description, displayName);
+			final String msg = MessageFormat.format(REPORT, description, displayName);
 			problems.report(identifier.getLocation(), msg);
 		}
 	}

@@ -20,7 +20,7 @@ public class MMNofStatements extends BaseModuleMetric {
 
 	private static class StatementCounterVisitor extends CounterVisitor {
 
-		public StatementCounterVisitor(Counter n) {
+		public StatementCounterVisitor(final Counter n) {
 			super(n);
 		}
 

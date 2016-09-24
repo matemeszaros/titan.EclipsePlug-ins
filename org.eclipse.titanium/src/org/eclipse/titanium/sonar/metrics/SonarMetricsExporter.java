@@ -29,8 +29,8 @@ public class SonarMetricsExporter {
 
 		final ProjectMetricsDto project = new ProjectMetricsDto(metricData.getProject().getName());
 
-		for (Module module : metricData.getModules()) {
-			ModuleMetricsDto metricModule = new ModuleMetricsDto(module.getLocation().getFile().getProjectRelativePath().toPortableString());
+		for (final Module module : metricData.getModules()) {
+			final ModuleMetricsDto metricModule = new ModuleMetricsDto(module.getLocation().getFile().getProjectRelativePath().toPortableString());
 			metricModule.setLinesOfCode(metricData.get(ModuleMetric.LINES_OF_CODE, module).intValue());
 			metricModule.setStatements(metricData.get(ModuleMetric.NOF_STATEMENTS, module).intValue());
 			metricModule.setFunctions(metricData.get(ModuleMetric.NOF_FUNCTIONS, module).intValue());
@@ -46,15 +46,15 @@ public class SonarMetricsExporter {
 
 	private int calculateComplexity(final MetricData metricData, final Module module) {
 		int complexity = 0;
-		for (Def_Function function : metricData.getFunctions().get(module)) {
+		for (final Def_Function function : metricData.getFunctions().get(module)) {
 			complexity += metricData.get(FunctionMetric.CYCLOMATIC_COMPLEXITY, function).intValue();
 		}
 
-		for (Def_Altstep altstep : metricData.getAltsteps().get(module)) {
+		for (final Def_Altstep altstep : metricData.getAltsteps().get(module)) {
 			complexity += metricData.get(AltstepMetric.CYCLOMATIC_COMPLEXITY, altstep).intValue();
 		}
 
-		for (Def_Testcase testcase : metricData.getTestcases().get(module)) {
+		for (final Def_Testcase testcase : metricData.getTestcases().get(module)) {
 			complexity += metricData.get(TestcaseMetric.CYCLOMATIC_COMPLEXITY, testcase).intValue();
 		}
 		return complexity;

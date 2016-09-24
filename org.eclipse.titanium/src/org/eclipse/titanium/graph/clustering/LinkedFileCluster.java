@@ -35,7 +35,7 @@ public class LinkedFileCluster extends ModuleLocationCluster {
 	protected void checkProject(final IProgressMonitor progress) throws CoreException {
 		progress.subTask("Cheking " + project.getName());
 		final IResource[] contents = project.members();
-		for (IResource content : contents) {
+		for (final IResource content : contents) {
 			check(content, progress);
 		}
 	}
@@ -58,7 +58,7 @@ public class LinkedFileCluster extends ModuleLocationCluster {
 	protected void checkFolder(final IFolder folder, final IProgressMonitor monitor) throws CoreException {
 		monitor.subTask("Checking " + folder.getName());
 		final IResource[] contents = folder.members();
-		for (IResource content : contents) {
+		for (final IResource content : contents) {
 			check(content, monitor);
 		}
 		if (monitor.isCanceled()) {

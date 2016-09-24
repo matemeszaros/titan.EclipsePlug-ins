@@ -35,8 +35,8 @@ public final class MarkerHandler {
 
 	public MarkerHandler(final Map<IResource, List<Marker>> markers) {
 		markersByResource = new HashMap<IResource, List<Marker>>();
-		for (Entry<IResource, List<Marker>> entry : markers.entrySet()) {
-			for (Marker m : entry.getValue()) {
+		for (final Entry<IResource, List<Marker>> entry : markers.entrySet()) {
+			for (final Marker m : entry.getValue()) {
 				IResource belongsTo = m.getResource();
 				if (belongsTo == null) {
 					belongsTo = entry.getKey();
@@ -98,11 +98,11 @@ public final class MarkerHandler {
 	// used (for showing the markers in eclipse), but nevertheless
 	// expensive to produce
 	private synchronized void lazyInit() {
-		for (CodeSmellType type : CodeSmellType.values()) {
+		for (final CodeSmellType type : CodeSmellType.values()) {
 			markersByType.put(type, new ArrayList<Marker>());
 		}
-		for (IResource res : markersByResource.keySet()) {
-			for (Marker m : markersByResource.get(res)) {
+		for (final IResource res : markersByResource.keySet()) {
+			for (final Marker m : markersByResource.get(res)) {
 				markersByType.get(m.getProblemType()).add(m);
 			}
 		}
@@ -132,7 +132,7 @@ public final class MarkerHandler {
 	 * deleted (those of type {@link CodeSmellType#MARKER_ID}).
 	 */
 	public void showAll() {
-		for (IResource res : markersByResource.keySet()) {
+		for (final IResource res : markersByResource.keySet()) {
 			refresh(res);
 		}
 	}
@@ -141,7 +141,7 @@ public final class MarkerHandler {
 		org.eclipse.titan.designer.AST.MarkerHandler.markMarkersForRemoval(CodeSmellType.MARKER_ID, res);
 		final List<Marker> markers = markersByResource.get(res);
 		if (markers != null) {
-			for (Marker m : markers) {
+			for (final Marker m : markers) {
 				m.show();
 			}
 		}

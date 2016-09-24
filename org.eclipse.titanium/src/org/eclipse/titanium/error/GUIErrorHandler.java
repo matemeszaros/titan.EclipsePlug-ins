@@ -29,23 +29,23 @@ public class GUIErrorHandler implements ErrorHandler {
 	}
 
 	@Override
-	public void reportException(String context, Exception exception) {
+	public void reportException(final String context, final Exception exception) {
 		ErrorMessage.show("Exception", exception.getMessage() + ErrorMessage.LOG_ENTRY_NOTE, MessageDialog.ERROR);
 		ErrorReporter.logExceptionStackTrace("", exception);
 	}
 
 	@Override
-	public void reportErrorMessage(String text) {
+	public void reportErrorMessage(final String text) {
 		ErrorMessage.show("Error", text, MessageDialog.ERROR);
 	}
 
 	@Override
-	public void reportWarning(String text) {
+	public void reportWarning(final String text) {
 		ErrorMessage.show("Warning", text, MessageDialog.WARNING);
 	}
 
 	@Override
-	public void reportInformation(String text) {
+	public void reportInformation(final String text) {
 		ErrorMessage.show("Information", text, MessageDialog.INFORMATION);
 	}
 
@@ -64,7 +64,7 @@ public class GUIErrorHandler implements ErrorHandler {
 	 *            : The string that provides link to the preference page (for
 	 *            eg. <code>org.eclipse.titanium.preferences.pages...</code>
 	 */
-	public void reportBadSetting(String windowTitle, String message, String buttonTitle, String prefPage) {
+	public void reportBadSetting(final String windowTitle, final String message, final String buttonTitle, final String prefPage) {
 		ErrorMessage.show(windowTitle, message, buttonTitle, prefPage,MessageDialog.ERROR);
 	}
 
@@ -77,7 +77,7 @@ public class GUIErrorHandler implements ErrorHandler {
 	 *            : The message to add
 	 */
 	@Override
-	public void logError(String message) {
+	public void logError(final String message) {
 		collectedMessage.append(message).append('\n');
 	}
 
@@ -97,7 +97,7 @@ public class GUIErrorHandler implements ErrorHandler {
 	}
 
 	@Override
-	public void logException(Exception exception) {
+	public void logException(final Exception exception) {
 		ErrorReporter.logExceptionStackTrace("", exception);
 	}
 

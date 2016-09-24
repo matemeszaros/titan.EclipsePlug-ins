@@ -28,14 +28,14 @@ public class UnnecessaryValueof extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof ValueofExpression) {
-			ValueofExpression exp = (ValueofExpression) node;
-			CompilationTimeStamp stamp = CompilationTimeStamp.getBaseTimestamp();
+			final ValueofExpression exp = (ValueofExpression) node;
+			final CompilationTimeStamp stamp = CompilationTimeStamp.getBaseTimestamp();
 			if (exp.getIsErroneous(stamp) || exp.isUnfoldable(stamp, null)) {
 				return;
 			}
-			TemplateInstance inst = exp.getTemplateInstance();
+			final TemplateInstance inst = exp.getTemplateInstance();
 			if (inst != null && inst.getDerivedReference() == null && inst.getTemplateBody().isValue(stamp)) {
-				String msg = MessageFormat.format(TEXT, inst.getTemplateBody().getValue().createStringRepresentation());
+				final String msg = MessageFormat.format(TEXT, inst.getTemplateBody().getValue().createStringRepresentation());
 				problems.report(exp.getLocation(), msg);
 			}
 		}
@@ -43,7 +43,7 @@ public class UnnecessaryValueof extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(ValueofExpression.class);
 		return ret;
 	}

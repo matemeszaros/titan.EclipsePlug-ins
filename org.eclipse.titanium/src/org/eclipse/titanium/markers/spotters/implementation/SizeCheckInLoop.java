@@ -31,13 +31,13 @@ public class SizeCheckInLoop extends BaseModuleCodeSmellSpotter {
 	@Override
 	protected void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof For_Statement) {
-			For_Statement s = (For_Statement)node;
+			final For_Statement s = (For_Statement)node;
 			s.getFinalExpression().accept(new LoopVisitor(problems));
 		} else if (node instanceof While_Statement) {
-			While_Statement s = (While_Statement)node;
+			final While_Statement s = (While_Statement)node;
 			s.getExpression().accept(new LoopVisitor(problems));
 		} else if (node instanceof DoWhile_Statement) {
-			DoWhile_Statement s = (DoWhile_Statement)node;
+			final DoWhile_Statement s = (DoWhile_Statement)node;
 			s.getExpression().accept(new LoopVisitor(problems));
 		} else {
 			return;
@@ -46,7 +46,7 @@ public class SizeCheckInLoop extends BaseModuleCodeSmellSpotter {
 	
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(3);
 		ret.add(For_Statement.class);
 		ret.add(While_Statement.class);
 		ret.add(DoWhile_Statement.class);

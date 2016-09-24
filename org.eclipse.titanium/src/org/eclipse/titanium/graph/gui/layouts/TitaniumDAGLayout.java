@@ -29,12 +29,12 @@ public class TitaniumDAGLayout<V,E> extends BaseHierarchicalLayout<V, E> {
 	 * @param g : The graph to show
 	 * @param size : The size of the canvas to draw on
 	 */
-	public TitaniumDAGLayout(Graph<V, E> g, Dimension size) {
+	public TitaniumDAGLayout(final Graph<V, E> g, final Dimension size) {
 		super(g, size);
 	}
 
 	@Override
-	protected Collection<V> getNeighbours(V v) {
+	protected Collection<V> getNeighbours(final V v) {
 		return graph.getPredecessors(v);
 	}
 

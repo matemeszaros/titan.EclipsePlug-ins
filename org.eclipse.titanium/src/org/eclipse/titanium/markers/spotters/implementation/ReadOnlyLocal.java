@@ -35,12 +35,12 @@ public class ReadOnlyLocal {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Def_Var) {
-				Def_Var s = (Def_Var) node;
+				final Def_Var s = (Def_Var) node;
 				if (!(s.getMyScope() instanceof ComponentTypeBody) && !s.getWritten()) {
-					Value initialValue = s.getInitialValue();
-					CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
+					final Value initialValue = s.getInitialValue();
+					final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
 					if (initialValue != null && !initialValue.getIsErroneous(ct) && !initialValue.isUnfoldable(ct)) {
-						String msg = MessageFormat.format(READONLY, s.getDescription());
+						final String msg = MessageFormat.format(READONLY, s.getDescription());
 						problems.report(s.getIdentifier().getLocation(), msg);
 					}
 				}
@@ -49,7 +49,7 @@ public class ReadOnlyLocal {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(Def_Var.class);
 			return ret;
 		}
@@ -65,9 +65,9 @@ public class ReadOnlyLocal {
 		@Override
 		public void process(final IVisitableNode node, final Problems problems) {
 			if (node instanceof Def_Var_Template) {
-				Def_Var_Template s = (Def_Var_Template) node;
+				final Def_Var_Template s = (Def_Var_Template) node;
 				if (!s.getWritten()) {
-					String msg = MessageFormat.format(READONLY, s.getDescription());
+					final String msg = MessageFormat.format(READONLY, s.getDescription());
 					problems.report(s.getIdentifier().getLocation(), msg);
 				}
 			}
@@ -75,7 +75,7 @@ public class ReadOnlyLocal {
 
 		@Override
 		public List<Class<? extends IVisitableNode>> getStartNode() {
-			List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+			final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 			ret.add(Def_Var_Template.class);
 			return ret;
 		}

@@ -40,7 +40,7 @@ public class MagicString extends BaseModuleCodeSmellSpotter {
 			public int visit(final IVisitableNode node) {
 				if (node instanceof Bitstring_Value || node instanceof Charstring_Value || node instanceof Hexstring_Value
 						|| node instanceof Octetstring_Value) {
-					String msg = MessageFormat.format(MAGIC_STRING, ((Value) node).createStringRepresentation());
+					final String msg = MessageFormat.format(MAGIC_STRING, ((Value) node).createStringRepresentation());
 					problems.report(((Value) node).getLocation(), msg);
 				} else if (node instanceof Def_Const) {
 					// should not reach there
@@ -53,7 +53,7 @@ public class MagicString extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(4);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(4);
 		ret.add(Def_Function.class);
 		ret.add(Def_Testcase.class);
 		ret.add(Def_Altstep.class);

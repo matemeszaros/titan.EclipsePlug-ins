@@ -57,14 +57,14 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 		if (!(node instanceof FormalParameter)) {
 			return;
 		}
-		FormalParameter fp = (FormalParameter)node;
+		final FormalParameter fp = (FormalParameter)node;
 		this.toFind = fp;
-		Assignment_type at = fp.getAssignmentType();
+		final Assignment_type at = fp.getAssignmentType();
 		if (at != Assignment_type.A_PAR_VAL_OUT && at != Assignment_type.A_PAR_TEMP_OUT) {
 			return;
 		}
-		Definition d = fp.getMyParameterList().getMyDefinition();
-		NewFuncVisitor visitor = new NewFuncVisitor();
+		final Definition d = fp.getMyParameterList().getMyDefinition();
+		final NewFuncVisitor visitor = new NewFuncVisitor();
 		//call visitor on function in which the out parameter was found
 		d.accept(visitor);
 		
@@ -73,7 +73,7 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(FormalParameter.class);
 		return ret;
 	}
@@ -85,7 +85,7 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
-				StatementBlockVisitor visitor = new StatementBlockVisitor();
+				final StatementBlockVisitor visitor = new StatementBlockVisitor();
 				node.accept(visitor);
 				return V_SKIP;
 			}
@@ -112,23 +112,23 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 				if (node instanceof Log_Statement) {
 					return V_SKIP;
 				}
-				StatementVisitor visitor = new StatementVisitor();
+				final StatementVisitor visitor = new StatementVisitor();
 				node.accept(visitor);
-				boolean visWritten = visitor.isWritten();
+				final boolean visWritten = visitor.isWritten();
 				//special statements
 				if (node instanceof If_Statement) {
-					boolean allBlocksWritten = visitor.isAllBlocksWritten();
-					If_Statement ifs = (If_Statement)node;
-					boolean hasElse = ifs.getStatementBlock() != null;
+					final boolean allBlocksWritten = visitor.isAllBlocksWritten();
+					final If_Statement ifs = (If_Statement)node;
+					final boolean hasElse = ifs.getStatementBlock() != null;
 					if (hasElse && allBlocksWritten) {
 						written = true;
 					}
 				} else if (node instanceof SelectCase_Statement) {
-					boolean allBlocksWritten = visitor.isAllBlocksWritten();
-					SelectCase_Statement scs = (SelectCase_Statement)node;
-					List<SelectCase> cases = scs.getSelectCases().getSelectCaseArray();
+					final boolean allBlocksWritten = visitor.isAllBlocksWritten();
+					final SelectCase_Statement scs = (SelectCase_Statement)node;
+					final List<SelectCase> cases = scs.getSelectCases().getSelectCaseArray();
 					boolean hasElse = false;
-					for (SelectCase sc: cases) {
+					for (final SelectCase sc: cases) {
 						if (sc != null && sc.hasElse()) {
 							hasElse = true;
 							break;
@@ -179,9 +179,9 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 				return V_CONTINUE;
 			}
 			if (node instanceof StatementBlock) {
-				StatementBlockVisitor visitor = new StatementBlockVisitor();
+				final StatementBlockVisitor visitor = new StatementBlockVisitor();
 				node.accept(visitor);
-				boolean visWritten = visitor.isWritten();
+				final boolean visWritten = visitor.isWritten();
 				allBlocksWritten &= visWritten;
 				return V_SKIP;
 			}
@@ -205,12 +205,12 @@ public class ReadingOutParBeforeWritten extends BaseModuleCodeSmellSpotter {
 				return V_CONTINUE;
 			}
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
-				Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Reference ref = (Reference)node;
+				final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				if (!(as instanceof Definition)) {
 					return V_SKIP;
 				}
-				Definition def = (Definition)as;
+				final Definition def = (Definition)as;
 				if (def.equals(toFind)) {
 					if (ref.getUsedOnLeftHandSide()) {
 						//written

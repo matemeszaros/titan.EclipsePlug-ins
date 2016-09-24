@@ -148,17 +148,17 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 			}
 		});
 
-		IWorkbenchWindow wind = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		final IWorkbenchWindow wind = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (wind == null) {
 			return;
 		}
-		IEditorReference[] editors = wind.getActivePage().findEditors(null, GraphEditor.ID, IWorkbenchPage.MATCH_ID);
+		final IEditorReference[] editors = wind.getActivePage().findEditors(null, GraphEditor.ID, IWorkbenchPage.MATCH_ID);
 		if (editors != null && editors.length == 0 && satView != null) {
 			satView.setEditor(null);
 			satView.clear();
 		}
 
-		for (AbstractHandler hnd : handlers) {
+		for (final AbstractHandler hnd : handlers) {
 			hnd.dispose();
 		}
 	}
@@ -186,8 +186,8 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	 *            : the site to set
 	 */
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		IContextService contextService = (IContextService) site.getService(IContextService.class);
+	public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
+		final IContextService contextService = (IContextService) site.getService(IContextService.class);
 		contextService.activateContext(GRAPH_CONTEXT_ID);
 		handlerService = (IHandlerService) site.getService(IHandlerService.class);
 		setSite(site);
@@ -223,8 +223,8 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 
 		parent.addListener(SWT.Resize, new Listener() {
 			@Override
-			public void handleEvent(org.eclipse.swt.widgets.Event event) {
-				Point tmpSize = parent.getSize();
+			public void handleEvent(final org.eclipse.swt.widgets.Event event) {
+				final Point tmpSize = parent.getSize();
 				windowSize = new Dimension(tmpSize.x, tmpSize.y);
 				if (handler != null) {
 					handler.changeWindowSize(windowSize);
@@ -262,7 +262,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	 */
 	@Override
 	public void setFocus() {
-		IWorkbenchWindow tmpWnd = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		final IWorkbenchWindow tmpWnd = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (tmpWnd != null) {
 			satView = (SatelliteView) tmpWnd.getActivePage().findView(SatelliteView.ID);
 		}
@@ -291,11 +291,11 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 		menuBar = new JMenuBar();
 		window.add(menuBar, BorderLayout.NORTH);
 
-		JMenu mnFile = new JMenu("File");
+		final JMenu mnFile = new JMenu("File");
 
-		ActionListener saveGraph = new ActionListener() {
+		final ActionListener saveGraph = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				String path = "";
 				try {
 					path = project.getPersistentProperty(
@@ -343,9 +343,9 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 		mntmSave.addActionListener(saveGraph);
 		mnFile.add(mntmSave);
 
-		ActionListener exportImage = new ActionListener() {
+		final ActionListener exportImage = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				String path = "";
 				try {
 					path = project.getPersistentProperty(
@@ -471,13 +471,13 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 			}
 		};
 
-		JMenu findMenu = new JMenu("Find");
+		final JMenu findMenu = new JMenu("Find");
 		final JMenuItem nodeByName = new JMenuItem("Node by name (Ctrl+F)");
 
 		final GraphEditor thisEditor = this;
 		nodeByName.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
@@ -497,17 +497,17 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 
 		findMenu.add(nodeByName);
 
-		JMenu tools = new JMenu("Tools");
+		final JMenu tools = new JMenu("Tools");
 		final JMenuItem findCircles = new JMenuItem("Show circles");
 		final JMenuItem findPaths = new JMenuItem("Show parallel paths");
 		final JMenuItem clearResults = new JMenuItem("Clear Results");
 
 		findCircles.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent ev) {
-				Job circlesJob = new Job("Searching for circles") {
+			public void actionPerformed(final ActionEvent ev) {
+				final Job circlesJob = new Job("Searching for circles") {
 					@Override
-					protected IStatus run(IProgressMonitor monitor) {
+					protected IStatus run(final IProgressMonitor monitor) {
 						if (graph == null) {
 							return null;
 						}
@@ -536,10 +536,10 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 
 		findPaths.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent ev) {
-				Job pathsJob = new Job("Searching for parallel paths") {
+			public void actionPerformed(final ActionEvent ev) {
+				final Job pathsJob = new Job("Searching for parallel paths") {
 					@Override
-					protected IStatus run(IProgressMonitor monitor) {
+					protected IStatus run(final IProgressMonitor monitor) {
 						if (graph == null) {
 							return null;
 						}
@@ -568,8 +568,8 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 
 		clearResults.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent ev) {
-				for (EdgeDescriptor e : graph.getEdges()) {
+			public void actionPerformed(final ActionEvent ev) {
+				for (final EdgeDescriptor e : graph.getEdges()) {
 					e.setColour(Color.black);
 				}
 				refresh();
@@ -597,7 +597,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 
 		handlerService.activateHandler(GRAPH_SEARCHCMD_ID, new AbstractHandler() {
 			@Override
-			public Object execute(ExecutionEvent event) throws ExecutionException {
+			public Object execute(final ExecutionEvent event) throws ExecutionException {
 				nodeByName.getActionListeners()[0].actionPerformed(null);
 				handlers.add(this);
 				return null;
@@ -606,7 +606,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 
 		handlerService.activateHandler(GRAPH_SAVECMD_ID, new AbstractHandler() {
 			@Override
-			public Object execute(ExecutionEvent event) throws ExecutionException {
+			public Object execute(final ExecutionEvent event) throws ExecutionException {
 				mntmSave.getActionListeners()[0].actionPerformed(null);
 				handlers.add(this);
 				return null;
@@ -615,7 +615,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 
 		handlerService.activateHandler(GRAPH_EXPORTCMD_ID, new AbstractHandler() {
 			@Override
-			public Object execute(ExecutionEvent event) throws ExecutionException {
+			public Object execute(final ExecutionEvent event) throws ExecutionException {
 				mntmExportToImage.getActionListeners()[0].actionPerformed(null);
 				handlers.add(this);
 				return null;
@@ -638,7 +638,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	 * @param g
 	 *            : The graph to set
 	 */
-	public void setGraph(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> g) {
+	public void setGraph(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> g) {
 		this.graph = g;
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
@@ -671,7 +671,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	 * @param labeler
 	 *            : the labeler to set
 	 */
-	public void setLabeller(Transformer<NodeDescriptor, String> labeler) {
+	public void setLabeller(final Transformer<NodeDescriptor, String> labeler) {
 		this.labeler = labeler;
 	}
 
@@ -683,7 +683,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	 *            : The satellite viewer (<b>this should be unique in every
 	 *            workspace</b>)
 	 */
-	public void setSatellite(SatelliteView sat) {
+	public void setSatellite(final SatelliteView sat) {
 		satView = sat;
 		if (satView != null && handler != null) {
 			satView.add(handler.getSatelliteViewer());
@@ -746,7 +746,7 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	}
 	
 	@Override
-	public void setResults(Collection<NodeDescriptor> results){
+	public void setResults(final Collection<NodeDescriptor> results){
 		clearResults();
 		addResults(results);
 	}
@@ -757,18 +757,18 @@ public abstract class GraphEditor extends EditorPart implements Searchable<NodeD
 	}
 	
 	@Override
-	public void addResults(Collection<NodeDescriptor> results){
-		for (NodeDescriptor node : results) {
+	public void addResults(final Collection<NodeDescriptor> results){
+		for (final NodeDescriptor node : results) {
 			node.setNodeColour(NodeColours.RESULT_COLOUR);
 		}
 	}
 	
 	@Override
-	public void elemChosen(NodeDescriptor element){
-		CustomVisualizationViewer visualisator = handler.getVisualizator();
+	public void elemChosen(final NodeDescriptor element){
+		final CustomVisualizationViewer visualisator = handler.getVisualizator();
 		visualisator.jumpToPlace(visualisator.getGraphLayout().transform(element));
 		
-		for (NodeDescriptor node : graph.getVertices()) {
+		for (final NodeDescriptor node : graph.getVertices()) {
 			node.setNodeColour(NodeColours.NOT_RESULT_COLOUR);
 		}
 		element.setNodeColour(NodeColours.RESULT_COLOUR);

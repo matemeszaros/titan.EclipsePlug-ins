@@ -46,30 +46,30 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 	@Override
 	protected Control createContents(final Composite parent) {
 		final Composite page = new Composite(parent, 0);
-		GridLayout l = new GridLayout();
+		final GridLayout l = new GridLayout();
 		l.numColumns = 2;
 		page.setLayout(l);
-		for (MetricGroup type : MetricGroup.values()) {
-			Label header = new Label(page, 0);
+		for (final MetricGroup type : MetricGroup.values()) {
+			final Label header = new Label(page, 0);
 			header.setText(type.getGroupName() + " metrics");
-			GridData headerData = new GridData();
+			final GridData headerData = new GridData();
 			headerData.horizontalSpan = 2;
 			header.setLayoutData(headerData);
-			Composite padding = new Composite(page, 0);
+			final Composite padding = new Composite(page, 0);
 			padding.setLayoutData(new GridData(25, 0));
 			final Composite inner = new Composite(page, 0);
-			GridLayout layout = new GridLayout();
+			final GridLayout layout = new GridLayout();
 			layout.numColumns = 2;
 			inner.setLayout(layout);
 
-			IRiskEditorListener listener = new IRiskEditorListener() {
+			final IRiskEditorListener listener = new IRiskEditorListener() {
 				@Override
 				public void editorChanged() {
 					inner.layout();
 					page.layout();
 				}
 			};
-			IRiskEditorPropertyListener propertyListener = new IRiskEditorPropertyListener() {
+			final IRiskEditorPropertyListener propertyListener = new IRiskEditorPropertyListener() {
 				
 				@Override
 				public void propertyChange(final boolean valid) {
@@ -82,11 +82,11 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 				}
 			};
 
-			for (IMetricEnum metric : type.getMetrics()) {
-				Label name = new Label(inner, 0);
+			for (final IMetricEnum metric : type.getMetrics()) {
+				final Label name = new Label(inner, 0);
 				name.setText(metric.getName());
 				name.setToolTipText(metric.getHint());
-				IRiskFieldEditor editor = getRiskEditor(inner, metric);
+				final IRiskFieldEditor editor = getRiskEditor(inner, metric);
 				editor.addRiskEditorListener(listener);
 				editor.setPropListener(propertyListener);
 				editor.load();
@@ -99,7 +99,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 
 	@Override
 	protected void performDefaults() {
-		for (IRiskFieldEditor editor : editors) {
+		for (final IRiskFieldEditor editor : editors) {
 			editor.loadDefault();
 		}
 		checkState();
@@ -107,7 +107,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 
 	protected void checkState() {
 		boolean valid = true;
-		for (IRiskFieldEditor ed : editors) {
+		for (final IRiskFieldEditor ed : editors) {
 			valid = valid && ed.isValid();
 			if (!valid) {
 				break;
@@ -119,7 +119,7 @@ public class MetricsLimitPreferencePage extends PreferencePage implements IWorkb
 
 	@Override
 	public boolean performOk() {
-		for (IRiskFieldEditor ed : editors) {
+		for (final IRiskFieldEditor ed : editors) {
 			ed.store();
 		}
 		return true;

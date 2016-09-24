@@ -51,25 +51,25 @@ public class NodePopupMenu extends JPopupMenu {
 	 * @param handler
 	 *            : The handler of the analyzed graph
 	 */
-	public NodePopupMenu(GraphHandler handler) {
+	public NodePopupMenu(final GraphHandler handler) {
 		node = null;
-		JMenuItem selectNode = new JMenuItem("Select node");
-		JMenuItem getParalellPaths = new JMenuItem("Search paralell paths");
+		final JMenuItem selectNode = new JMenuItem("Select node");
+		final JMenuItem getParalellPaths = new JMenuItem("Search paralell paths");
 		this.handler = handler;
 
 		final NodePopupMenu thisPopUpMenu = this;
 		selectNode.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				VisualizationViewer<NodeDescriptor, EdgeDescriptor> actVisualisator = thisPopUpMenu.handler.getVisualizator();
+			public void actionPerformed(final ActionEvent e) {
+				final VisualizationViewer<NodeDescriptor, EdgeDescriptor> actVisualisator = thisPopUpMenu.handler.getVisualizator();
 				if (actVisualisator == null) {
 					return;
 				}
-				Layout<NodeDescriptor, EdgeDescriptor> tmpLayout = actVisualisator.getGraphLayout();
+				final Layout<NodeDescriptor, EdgeDescriptor> tmpLayout = actVisualisator.getGraphLayout();
 				if (tmpLayout == null) {
 					return;
 				}
-				Graph<NodeDescriptor, EdgeDescriptor> g = actVisualisator.getGraphLayout().getGraph();
+				final Graph<NodeDescriptor, EdgeDescriptor> g = actVisualisator.getGraphLayout().getGraph();
 				if (g == null) {
 					return;
 				}
@@ -81,7 +81,7 @@ public class NodePopupMenu extends JPopupMenu {
 				actVisualisator.getPickedVertexState().clear();
 				actVisualisator.getPickedVertexState().pick(node, true);
 				actVisualisator.getPickedEdgeState().clear();
-				for (EdgeDescriptor edge : g.getIncidentEdges(node)) {
+				for (final EdgeDescriptor edge : g.getIncidentEdges(node)) {
 					actVisualisator.getPickedEdgeState().pick(edge, true);
 				}
 			}
@@ -89,13 +89,13 @@ public class NodePopupMenu extends JPopupMenu {
 
 		getParalellPaths.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				final VisualizationViewer<NodeDescriptor, EdgeDescriptor> actVisualisator = thisPopUpMenu.handler.getVisualizator();
 				if (actVisualisator == null) {
 					return;
 				}
 
-				Layout<NodeDescriptor, EdgeDescriptor> tmpLayout = actVisualisator.getGraphLayout();
+				final Layout<NodeDescriptor, EdgeDescriptor> tmpLayout = actVisualisator.getGraphLayout();
 				if (tmpLayout == null) {
 					return;
 				}
@@ -106,9 +106,9 @@ public class NodePopupMenu extends JPopupMenu {
 				}
 
 				final Graph<NodeDescriptor, EdgeDescriptor> g = actVisualisator.getGraphLayout().getGraph();
-				Job searchJob = new Job("Searching for parallel paths...") {
+				final Job searchJob = new Job("Searching for parallel paths...") {
 					@Override
-					protected IStatus run(IProgressMonitor monitor) {
+					protected IStatus run(final IProgressMonitor monitor) {
 						CheckParallelPaths<NodeDescriptor, EdgeDescriptor> checker = new CheckParallelPaths<NodeDescriptor, EdgeDescriptor>(g, node);
 						if (checker.hasParallelPaths()) {
 							for (Deque<EdgeDescriptor> list : checker.getPaths()) {
@@ -130,12 +130,12 @@ public class NodePopupMenu extends JPopupMenu {
 
 		goToDefinition.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent event) {
+			public void actionPerformed(final ActionEvent event) {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						if (node != null) {
-							Location loc = node.getLocation();
+							final Location loc = node.getLocation();
 							if (loc == null || loc instanceof NULL_Location) {
 								return;
 							}
@@ -149,7 +149,7 @@ public class NodePopupMenu extends JPopupMenu {
 		add(goToDefinition);
 	}
 
-	protected NodePopupMenu(String label) {
+	protected NodePopupMenu(final String label) {
 		super(label);
 		handler = null;
 	}
@@ -164,7 +164,7 @@ public class NodePopupMenu extends JPopupMenu {
 	 * @param y
 	 *            : The Y coordinate of the node
 	 */
-	public void show(NodeDescriptor node, int x, int y) {
+	public void show(final NodeDescriptor node, final int x, final int y) {
 		this.node = node;
 		super.show(handler.getVisualizator(), x, y);
 	}
@@ -177,8 +177,8 @@ public class NodePopupMenu extends JPopupMenu {
 	 * @param listener
 	 *            : The action listener for the entry
 	 */
-	public void addEntry(String title, ActionListener listener) {
-		JMenuItem newItem = new JMenuItem(title);
+	public void addEntry(final String title, final ActionListener listener) {
+		final JMenuItem newItem = new JMenuItem(title);
 		newItem.addActionListener(listener);
 		add(newItem);
 	}
@@ -189,7 +189,7 @@ public class NodePopupMenu extends JPopupMenu {
 	 * @param value
 	 *            : True if entry should be enabled
 	 */
-	public void enableGoToDefinition(boolean value) {
+	public void enableGoToDefinition(final boolean value) {
 		goToDefinition.setEnabled(value);
 	}
 

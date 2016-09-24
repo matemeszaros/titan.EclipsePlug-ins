@@ -30,7 +30,7 @@ public class MetricsEntry extends JRadioButtonMenuItem {
 	 * @param metric
 	 *            : The associated metric
 	 */
-	public MetricsEntry(String name, IMetricEnum metric) {
+	public MetricsEntry(final String name, final IMetricEnum metric) {
 		super(name);
 		this.metric = metric;
 	}

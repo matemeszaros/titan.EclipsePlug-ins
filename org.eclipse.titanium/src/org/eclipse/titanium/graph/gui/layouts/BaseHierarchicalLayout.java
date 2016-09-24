@@ -54,7 +54,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 
 	protected final Comparator<V> nodeComparator = new Comparator<V>() {
 		@Override
-		public int compare(V v1, V v2) {
+		public int compare(final V v1, final V v2) {
 			return Integer.signum(getNeighbours(v2).size()
 					- getNeighbours(v1).size());
 		}
@@ -68,7 +68,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 * @param size
 	 *            : the layout's size
 	 */
-	public BaseHierarchicalLayout(Graph<V, E> g, Dimension size) {
+	public BaseHierarchicalLayout(final Graph<V, E> g, final Dimension size) {
 		graph = g;
 		places = new HashMap<V, Point2D>();
 		this.size = size;
@@ -78,7 +78,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 		initialize();
 	}
 	
-	public BaseHierarchicalLayout(Graph<V, E> g, Dimension size, IMetricEnum metric){
+	public BaseHierarchicalLayout(final Graph<V, E> g, final Dimension size, final IMetricEnum metric){
 		chosenMetric = metric;
 		graph = g;
 		places = new HashMap<V, Point2D>();
@@ -102,8 +102,9 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 * @return Returns the position calculated for a given node
 	 */
 	@Override
-	public Point2D transform(V v) {
-		Point2D p = places.get(v);
+	public Point2D transform(final V v) {
+		final Point2D p = places.get(v);
+
 		return p != null ? p : new Point2D.Double();
 	}
 
@@ -142,7 +143,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            : The node to check
 	 */
 	@Override
-	public boolean isLocked(V v) {
+	public boolean isLocked(final V v) {
 		return false;
 	}
 
@@ -155,7 +156,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            : Should we lock, or unlock it?
 	 */
 	@Override
-	public void lock(V v, boolean lock) {
+	public void lock(final V v, final boolean lock) {
 		// intentionally empty
 	}
 
@@ -174,7 +175,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            : the graph to set
 	 */
 	@Override
-	public void setGraph(Graph<V, E> g) {
+	public void setGraph(final Graph<V, E> g) {
 		graph = g;
 	}
 
@@ -186,7 +187,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            : The transformer to use
 	 */
 	@Override
-	public void setInitializer(Transformer<V, Point2D> trf) {
+	public void setInitializer(final Transformer<V, Point2D> trf) {
 		// intentionally empty
 	}
 
@@ -200,7 +201,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            : the claimed position
 	 */
 	@Override
-	public void setLocation(V v, Point2D p) {
+	public void setLocation(final V v, final Point2D p) {
 		places.put(v, p);
 	}
 
@@ -212,7 +213,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            : the size to use
 	 */
 	@Override
-	public void setSize(Dimension size) {
+	public void setSize(final Dimension size) {
 		this.size = size;
 	}
 
@@ -223,14 +224,14 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void organizeNodes() {
-		Map<V, Integer> nodeLevels = alg.getLevels();
-		int[] nodesPerLevel = alg.getNumberOfNodesPerLevel();
-		int noLevels = alg.getNumberOfLevels();
-		Set<V> isolateNodes = alg.getIsolateNodes();
-		double cellHeight = (double) size.height / noLevels;
+		final Map<V, Integer> nodeLevels = alg.getLevels();
+		final int[] nodesPerLevel = alg.getNumberOfNodesPerLevel();
+		final int noLevels = alg.getNumberOfLevels();
+		final Set<V> isolateNodes = alg.getIsolateNodes();
+		final double cellHeight = (double) size.height / noLevels;
 		double[] cellWidths = new double[noLevels];
 		Set<Integer>[] freePlaces = new HashSet[noLevels];
-		int baseLevel = isolateNodes.isEmpty() ? 0 : 1;
+		final int baseLevel = isolateNodes.isEmpty() ? 0 : 1;
 		Queue<V>[] levels = new PriorityQueue[noLevels];
 
 		for (int i = 0; i < noLevels; ++i) {
@@ -239,7 +240,7 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 
 		// build an array that contains the nodes ordered separated by the
 		// levels
-		for (Map.Entry<V, Integer> entry : nodeLevels.entrySet()) {
+		for (final Map.Entry<V, Integer> entry : nodeLevels.entrySet()) {
 			levels[entry.getValue()].add(entry.getKey());
 		}
 
@@ -254,11 +255,11 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 
 		// place first isolate nodes (if there is any)
 		int noPlacedElems = 0;
-		for (V v : isolateNodes) {
-			double actHeight = cellHeight * INNER_NODE_POSITION_RATIO_Y;
-			double actXPos = cellWidths[0]
+		for (final V v : isolateNodes) {
+			final double actHeight = cellHeight * INNER_NODE_POSITION_RATIO_Y;
+			final double actXPos = cellWidths[0]
 					* ((noPlacedElems++) + INNER_NODE_POSITION_RATIO_X);
-			Point2D p = new Point2D.Double(actXPos, actHeight);
+			final Point2D p = new Point2D.Double(actXPos, actHeight);
 			places.put(v, p);
 		}
 
@@ -268,10 +269,10 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 		
 		// place the initial first row's nodes
 		noPlacedElems = 0;
-		for (V v : levels[baseLevel]) {
-			double actHeight = cellHeight
+		for (final V v : levels[baseLevel]) {
+			final double actHeight = cellHeight
 					* (baseLevel + INNER_NODE_POSITION_RATIO_Y);
-			double actXPos = cellWidths[baseLevel]
+			final double actXPos = cellWidths[baseLevel]
 					* ((noPlacedElems++) + INNER_NODE_POSITION_RATIO_X);
 			places.put(v, new Point2D.Double(actXPos, actHeight));
 		}
@@ -291,10 +292,10 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 
 		// set optimal place for inner rows
 		for (int actLevel = baseLevel + 1; actLevel < noLevels; ++actLevel) {
-			double actHeight = cellHeight
+			final double actHeight = cellHeight
 					* (actLevel + INNER_NODE_POSITION_RATIO_Y);
 			noPlacedElems = 0;
-			for (V v : levels[actLevel]) {
+			for (final V v : levels[actLevel]) {
 				if (!badDistance) {
 					places.put(
 							v,
@@ -326,16 +327,16 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 * @return The optimal X coordinate
 	 * @throws Exception
 	 */
-	protected double getBestXPosition(V v, Set<Integer> freePlaces, double cellWidth){
+	protected double getBestXPosition(final V v, final Set<Integer> freePlaces, final double cellWidth){
 		double position = 0;
 
 		double actDistance = 0;
 		double minDistance = Double.POSITIVE_INFINITY;
 		Integer givenCell = Integer.MAX_VALUE;
-		Collection<V> neighbours = getNeighbours(v);
+		final Collection<V> neighbours = getNeighbours(v);
 
-		for (int actCell : freePlaces) {
-			double actPos = cellWidth * (actCell + INNER_NODE_POSITION_RATIO_X);
+		for (final int actCell : freePlaces) {
+			final double actPos = cellWidth * (actCell + INNER_NODE_POSITION_RATIO_X);
 			if (distanceAlgorithm.equals(SUM_DISTANCE_ALGORITHM)) {
 				actDistance = getSumDistance(actPos, neighbours);
 			} else if (distanceAlgorithm.equals(MAX_DISTANCE_ALGORITHM)) {
@@ -374,11 +375,11 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            successors)
 	 * @return The distance
 	 */
-	protected double getSumDistance(double pos, Collection<V> neighbours) {
+	protected double getSumDistance(final double pos, final Collection<V> neighbours) {
 		double distance = 0;
 
-		for (V node : neighbours) {
-			Point2D pn = places.get(node);
+		for (final V node : neighbours) {
+			final Point2D pn = places.get(node);
 			if (pn == null) {
 				continue;
 			}
@@ -398,15 +399,16 @@ public abstract class BaseHierarchicalLayout<V, E> implements Layout<V, E> {
 	 *            successors)
 	 * @return The distance
 	 */
-	protected double getMaxDistance(double pos, Collection<V> neighbours) {
+	protected double getMaxDistance(final double pos, final Collection<V> neighbours) {
 		double distance = Double.NEGATIVE_INFINITY;
 
-		for (V v : neighbours) {
-			Point2D pv = places.get(v);
+		for (final V v : neighbours) {
+			final Point2D pv = places.get(v);
 			if (pv == null) {
 				continue;
 			}
-			double actDist = Math.abs(pv.getX() - pos);
+
+			final double actDist = Math.abs(pv.getX() - pos);
 			if (actDist > distance) {
 				distance = actDist;
 			}

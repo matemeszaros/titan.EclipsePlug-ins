@@ -24,10 +24,10 @@ public class MMTimesImported extends BaseModuleMetric {
 	@Override
 	public void init(final MetricData data) {
 		imported.clear();
-		for (Module module : data.getModules()) {
+		for (final Module module : data.getModules()) {
 			imported.put(module, 0);
 		}
-		for (Module module : data.getModules()) {
+		for (final Module module : data.getModules()) {
 			for (final Module imp : module.getImportedModules()) {
 				final Integer count = imported.get(imp);
 				if (count != null) {

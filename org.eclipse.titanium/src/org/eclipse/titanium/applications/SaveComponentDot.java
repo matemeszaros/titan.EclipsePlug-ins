@@ -35,7 +35,8 @@ public class SaveComponentDot extends InformationExporter {
 	@Override
 	protected void exportInformationForProject(final String[] args, final IProject project, final IProgressMonitor monitor) {
 		final ErrorHandler errorHandler = new ConsoleErrorHandler();
-		GraphGenerator generator = new ComponentGraphGenerator(project, errorHandler);
+		final GraphGenerator generator = new ComponentGraphGenerator(project, errorHandler);
+
 		try {
 			generator.generateGraph();
 			GraphHandler.saveGraphToDot(generator.getGraph(), args[0] + project.getName() + ".dot",

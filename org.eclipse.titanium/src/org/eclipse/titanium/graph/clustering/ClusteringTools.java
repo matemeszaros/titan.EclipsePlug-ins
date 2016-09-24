@@ -66,7 +66,7 @@ public final class ClusteringTools {
 		final String stringList = Platform.getPreferencesService().getString(Activator.PLUGIN_ID, PreferenceConstants.CLUSTER_TRUNCATE, "", null);
 		final List<String> splittedList = ResourceExclusionHelper.intelligentSplit(stringList, '#', '\\');
 
-		for (String item : splittedList) {
+		for (final String item : splittedList) {
 			list.add(item);
 		}
 
@@ -76,7 +76,7 @@ public final class ClusteringTools {
 	public static String truncate(final String name) {
 		String best = null;
 		int size = 0;
-		for (String s : prefixes) {
+		for (final String s : prefixes) {
 			if (name.startsWith(s) && s.length() > size) {
 				size = s.length();
 				best = s;
@@ -105,10 +105,10 @@ public final class ClusteringTools {
 
 		final Map<Set<NodeDescriptor>, ClusterNode> mapClusterNode = new HashMap<Set<NodeDescriptor>, ClusterNode>();
 		final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> clusterGraph = new DirectedSparseGraph<NodeDescriptor, EdgeDescriptor>();
-		for (Entry<String, Set<NodeDescriptor>> entry : mapNameCluster.entrySet()) {  
+		for (final Entry<String, Set<NodeDescriptor>> entry : mapNameCluster.entrySet()) {  
 			final String name = entry.getKey();
 			final Set<NodeDescriptor> cluster = entry.getValue();
-			for (NodeDescriptor v : cluster) {
+			for (final NodeDescriptor v : cluster) {
 				v.setCluster(cluster);
 			}
 
@@ -116,7 +116,7 @@ public final class ClusteringTools {
 			clusterGraph.addVertex(clusternode);
 			mapClusterNode.put(cluster, clusternode);
 		}
-		for (EdgeDescriptor e : moduleGraph.getEdges()) {
+		for (final EdgeDescriptor e : moduleGraph.getEdges()) {
 			final NodeDescriptor v = moduleGraph.getSource(e);
 			final NodeDescriptor w = moduleGraph.getDest(e);
 			final Set<NodeDescriptor> clusterv = v.getCluster();
@@ -158,7 +158,7 @@ public final class ClusteringTools {
 
 		final Map<String, Set<NodeDescriptor>> mapNameCluster = new HashMap<String, Set<NodeDescriptor>>();
 		Integer i = 0;
-		for (Set<NodeDescriptor> cluster : clusters) {
+		for (final Set<NodeDescriptor> cluster : clusters) {
 			++i;
 			mapNameCluster.put(i.toString(), cluster);
 		}

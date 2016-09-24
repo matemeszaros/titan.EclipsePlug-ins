@@ -32,7 +32,7 @@ public class GraphClusterRegexpPage extends FieldEditorPreferencePage implements
 
 	@Override
 	protected void createFieldEditors() {
-		RegexpEditor editor = new RegexpEditor(PreferenceConstants.CLUSTER_REGEXP, "List of clusters", getFieldEditorParent());
+		final RegexpEditor editor = new RegexpEditor(PreferenceConstants.CLUSTER_REGEXP, "List of clusters", getFieldEditorParent());
 		addField(editor);
 	}
 
@@ -43,9 +43,9 @@ public class GraphClusterRegexpPage extends FieldEditorPreferencePage implements
 
 	@Override
 	public boolean performOk() {
-		boolean result = super.performOk();
+		final boolean result = super.performOk();
 
-		IEclipsePreferences node = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
+		final IEclipsePreferences node = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 		if (node != null) {
 			try {
 				node.flush();

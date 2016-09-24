@@ -27,7 +27,7 @@ public enum MetricGroup {
 	private List<IMetricEnum> metrics;
 	private String groupName;
 
-	<T extends IMetricEnum> MetricGroup(String groupName, List<T> metrics) {
+	<T extends IMetricEnum> MetricGroup(final String groupName, final List<T> metrics) {
 		this.metrics = new ArrayList<IMetricEnum>();
 		this.metrics.addAll(metrics);
 		this.groupName = groupName;
@@ -42,7 +42,7 @@ public enum MetricGroup {
 	}
 
 	public static List<IMetricEnum> knownMetrics() {
-		List<IMetricEnum> enums = new ArrayList<IMetricEnum>();
+		final List<IMetricEnum> enums = new ArrayList<IMetricEnum>();
 		enums.addAll(PROJECT.metrics);
 		enums.addAll(MODULE.metrics);
 		enums.addAll(FUNCTION.metrics);

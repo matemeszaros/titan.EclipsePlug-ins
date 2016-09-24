@@ -137,8 +137,8 @@ public enum CodeSmellType implements ProblemType{
 	}
 	
 	
-	private int getInt(String id, int defaultValue) {
-		int val = Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, id, -1, null);
+	private int getInt(final String id, final int defaultValue) {
+		final int val = Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, id, -1, null);
 		if (val == -1) {
 			throw new IllegalArgumentException("The requested field for " + readableName + " is not found in the preference store. "
 					+ "Probably you forgot to add it in the PreferenceInitializer or in the RiskFactorPreferencePage.");
@@ -147,7 +147,7 @@ public enum CodeSmellType implements ProblemType{
 		}
 	}
 	
-	private double getDouble(String id, double defaultValue) {
+	private double getDouble(final String id, final double defaultValue) {
 		return Platform.getPreferencesService().getDouble(Activator.PLUGIN_ID, id, defaultValue, null);
 	}
 

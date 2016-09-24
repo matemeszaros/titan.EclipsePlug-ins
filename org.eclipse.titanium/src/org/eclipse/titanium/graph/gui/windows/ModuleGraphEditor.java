@@ -116,7 +116,7 @@ public class ModuleGraphEditor extends GraphEditor {
 		layoutMenu.add(circle);
 		layoutGroup.add(circle);
 
-		JMenu dagMenu = new JMenu("Directed layouts");
+		final JMenu dagMenu = new JMenu("Directed layouts");
 		layoutMenu.add(dagMenu);
 
 		tdag.setSelected(true);
@@ -130,9 +130,9 @@ public class ModuleGraphEditor extends GraphEditor {
 		
 		layoutMenu.add(metricLayoutMenu);
 
-		ActionListener changeMetrics = new ActionListener() {
+		final ActionListener changeMetrics = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				MetricsEntry metric = (MetricsEntry) e.getSource();
 				chosenMetric = metric;
 				for (NodeDescriptor node : graph.getVertices()) {
@@ -153,11 +153,11 @@ public class ModuleGraphEditor extends GraphEditor {
 		JMenu actLayoutMenu = new JMenu(ModuleMetric.GROUP_NAME);
 		metricsMenu.add(actMenu);
 		metricLayoutMenu.add(actLayoutMenu);
-		for (ModuleMetric metric : ModuleMetric.values()) {
+		for (final ModuleMetric metric : ModuleMetric.values()) {
 			if (!PreferenceManager.isEnabledOnModuleGraph(metric)) {
 				continue;
 			}
-			MetricsEntry item = new MetricsEntry(metric.getName(), metric);
+			final MetricsEntry item = new MetricsEntry(metric.getName(), metric);
 			if (isFirst) {
 				item.setSelected(true);
 				chosenMetric = item;
@@ -166,7 +166,7 @@ public class ModuleGraphEditor extends GraphEditor {
 			item.addActionListener(changeMetrics);
 			metricsGroup.add(item);
 			actMenu.add(item);
-			MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
+			final MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
 			layoutItem.addActionListener(layoutListener);
 			layoutGroup.add(layoutItem);
 			actLayoutMenu.add(layoutItem);
@@ -176,15 +176,15 @@ public class ModuleGraphEditor extends GraphEditor {
 		actLayoutMenu = new JMenu(AltstepMetric.GROUP_NAME);
 		metricsMenu.add(actMenu);
 		metricLayoutMenu.add(actLayoutMenu);
-		for (AltstepMetric metric : AltstepMetric.values()) {
+		for (final AltstepMetric metric : AltstepMetric.values()) {
 			if (!PreferenceManager.isEnabledOnModuleGraph(metric)) {
 				continue;
 			}
-			MetricsEntry item = new MetricsEntry(metric.getName(), metric);
+			final MetricsEntry item = new MetricsEntry(metric.getName(), metric);
 			item.addActionListener(changeMetrics);
 			metricsGroup.add(item);
 			actMenu.add(item);
-			MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
+			final MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
 			layoutItem.addActionListener(layoutListener);
 			layoutGroup.add(layoutItem);
 			actLayoutMenu.add(layoutItem);
@@ -194,15 +194,15 @@ public class ModuleGraphEditor extends GraphEditor {
 		actLayoutMenu = new JMenu(FunctionMetric.GROUP_NAME);
 		metricLayoutMenu.add(actLayoutMenu);
 		metricsMenu.add(actMenu);
-		for (FunctionMetric metric : FunctionMetric.values()) {
+		for (final FunctionMetric metric : FunctionMetric.values()) {
 			if (!PreferenceManager.isEnabledOnModuleGraph(metric)) {
 				continue;
 			}
-			MetricsEntry item = new MetricsEntry(metric.getName(), metric);
+			final MetricsEntry item = new MetricsEntry(metric.getName(), metric);
 			item.addActionListener(changeMetrics);
 			metricsGroup.add(item);
 			actMenu.add(item);
-			MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
+			final MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
 			layoutItem.addActionListener(layoutListener);
 			layoutGroup.add(layoutItem);
 			actLayoutMenu.add(layoutItem);
@@ -212,24 +212,24 @@ public class ModuleGraphEditor extends GraphEditor {
 		actLayoutMenu = new JMenu(TestcaseMetric.GROUP_NAME);
 		metricLayoutMenu.add(actLayoutMenu);
 		metricsMenu.add(actMenu);
-		for (TestcaseMetric metric : TestcaseMetric.values()) {
+		for (final TestcaseMetric metric : TestcaseMetric.values()) {
 			if (!PreferenceManager.isEnabledOnModuleGraph(metric)) {
 				continue;
 			}
-			MetricsEntry item = new MetricsEntry(metric.getName(), metric);
+			final MetricsEntry item = new MetricsEntry(metric.getName(), metric);
 			item.addActionListener(changeMetrics);
 			metricsGroup.add(item);
 			actMenu.add(item);
-			MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
+			final MetricsLayoutEntry layoutItem = new MetricsLayoutEntry(metric);
 			layoutItem.addActionListener(layoutListener);
 			layoutGroup.add(layoutItem);
 			actLayoutMenu.add(layoutItem);
 		}
 		
-		JMenuItem recalcItem = new JMenuItem("Recalculate metrics");
+		final JMenuItem recalcItem = new JMenuItem("Recalculate metrics");
 		recalcItem.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				WrapperStore.clearStore();
 				GlobalParser.reAnalyzeSemantically();
 				recolour(graph.getVertices());
@@ -281,7 +281,7 @@ public class ModuleGraphEditor extends GraphEditor {
 
 		closeGraphClusters.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				chosenLayout.setSelected(false);
 				isom.setSelected(true);
 				chosenLayout = (LayoutEntry) isom;
@@ -301,8 +301,8 @@ public class ModuleGraphEditor extends GraphEditor {
 	}
 
 	@Override
-	public void recolour(Collection<NodeDescriptor> nodeSet) {
-		for (NodeDescriptor v : nodeSet) {
+	public void recolour(final Collection<NodeDescriptor> nodeSet) {
+		for (final NodeDescriptor v : nodeSet) {
 			if (v instanceof ClusterNode) {
 				v.setNodeColour(NodeColours.DARK_GREEN);
 			} else {
@@ -312,7 +312,7 @@ public class ModuleGraphEditor extends GraphEditor {
 		refresh();
 	}
 
-	protected void enableModuleMenus(boolean value) {
+	protected void enableModuleMenus(final boolean value) {
 		((MeasureableGraphHandler) handler).enableInfoWindow(value);
 		metricsMenu.setEnabled(value);
 		closeGraphClusters.setEnabled(!value);
@@ -343,20 +343,20 @@ public class ModuleGraphEditor extends GraphEditor {
 		private boolean grouping;
 		private LayoutEntry layout;
 		
-		public ClusteringAction(String algorithm, boolean grouping) {
+		public ClusteringAction(final String algorithm, final boolean grouping) {
 			this(algorithm, grouping, null);
 		}
 		
-		public ClusteringAction(String algorithm, boolean grouping, LayoutEntry layout) {
+		public ClusteringAction(final String algorithm, final boolean grouping, final LayoutEntry layout) {
 			this.algorithm = algorithm;
 			this.grouping = grouping;
 			this.layout = layout;
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent event) {
-			BaseCluster clusterer = new ClustererBuilder().setAlgorithm(algorithm).setGraph(graph).setProject(project).build();
-			ClusteringJob job = new ClusteringJob("Clustering of the module graph", clusterer, grouping, event, layout);
+		public void actionPerformed(final ActionEvent event) {
+			final BaseCluster clusterer = new ClustererBuilder().setAlgorithm(algorithm).setGraph(graph).setProject(project).build();
+			final ClusteringJob job = new ClusteringJob("Clustering of the module graph", clusterer, grouping, event, layout);
 			job.setSystem(false);
 			job.setUser(true);
 			job.schedule();
@@ -370,7 +370,7 @@ public class ModuleGraphEditor extends GraphEditor {
 		private ActionEvent event;
 		private LayoutEntry layout;
 		
-		public ClusteringJob(String name, BaseCluster clusterer, boolean grouping, ActionEvent event, LayoutEntry layout) {
+		public ClusteringJob(final String name, final BaseCluster clusterer, final boolean grouping, final ActionEvent event, final LayoutEntry layout) {
 			super(name);
 			this.clusterer = clusterer;
 			this.grouping = grouping;
@@ -379,7 +379,7 @@ public class ModuleGraphEditor extends GraphEditor {
 		}
 
 		@Override
-		protected IStatus run(IProgressMonitor monitor) {
+		protected IStatus run(final IProgressMonitor monitor) {
 			clusterer.run(monitor, grouping);
 			if (!clusterer.isOK()) {
 				return Status.OK_STATUS;

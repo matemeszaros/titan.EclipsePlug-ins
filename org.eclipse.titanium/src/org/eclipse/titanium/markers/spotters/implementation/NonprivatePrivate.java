@@ -38,12 +38,12 @@ public class NonprivatePrivate extends BaseModuleCodeSmellSpotter {
 			return;
 		}
 
-		Definition d = (Definition) node;
+		final Definition d = (Definition) node;
 		if (d.isUsed() && d.referingHere.size() == 1 &&
 				!VisibilityModifier.Private.equals(d.getVisibilityModifier()) && !d.isLocal()) {
-			String moduleName = d.getMyScope().getModuleScope().getName();
+			final String moduleName = d.getMyScope().getModuleScope().getName();
 			if (d.referingHere.get(0).equals(moduleName)) {
-				String msg = MessageFormat.format(SHOULD_BE_PRIVATE, d.getIdentifier().getDisplayName());
+				final String msg = MessageFormat.format(SHOULD_BE_PRIVATE, d.getIdentifier().getDisplayName());
 				problems.report(d.getIdentifier().getLocation(), msg);
 			}
 		}
@@ -51,7 +51,7 @@ public class NonprivatePrivate extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(8);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(8);
 		ret.add(Def_Altstep.class);
 		ret.add(Def_Const.class);
 		ret.add(Def_ExternalConst.class);

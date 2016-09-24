@@ -41,11 +41,11 @@ public class ReceiveAnyTemplate extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Operation_Altguard) {
-			Operation_Altguard ag = (Operation_Altguard) node;
-			Statement action = ag.getGuardStatement();
+			final Operation_Altguard ag = (Operation_Altguard) node;
+			final Statement action = ag.getGuardStatement();
 			if (action instanceof Receive_Port_Statement) {
-				Receive_Port_Statement receive = (Receive_Port_Statement) action;
-				SuperfluousTemplate st = new SuperfluousTemplate(receive);
+				final Receive_Port_Statement receive = (Receive_Port_Statement) action;
+				final SuperfluousTemplate st = new SuperfluousTemplate(receive);
 				receive.accept(st);
 				if (st.canReceiveAny() && st.hasValueRedirect()) {
 					if (st.getReceivable() == null) {
@@ -61,7 +61,7 @@ public class ReceiveAnyTemplate extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(AltGuard.class);
 		return ret;
 	}
@@ -91,10 +91,10 @@ final class SuperfluousTemplate extends ASTVisitor {
 	private boolean receivesAllOfType;
 
 	public SuperfluousTemplate(final Receive_Port_Statement rec) {
-		Port_Type port = rec.getPortType();
+		final Port_Type port = rec.getPortType();
 		receivableType = null;
 		if (port != null) {
-			TypeSet ts = port.getPortBody().getOutMessage();
+			final TypeSet ts = port.getPortBody().getOutMessage();
 			if (ts != null && ts.getNofTypes() == 1) {
 				receivableType = ts.getTypeByIndex(0);
 			}
@@ -137,9 +137,9 @@ final class SuperfluousTemplate extends ASTVisitor {
 	public int visit(final IVisitableNode node) {
 		if (node instanceof TemplateInstance) {
 			template = (TemplateInstance) node;
-			ITTCN3Template body = template.getTemplateBody();
+			final ITTCN3Template body = template.getTemplateBody();
 			if (body instanceof Any_Value_Template || body instanceof AnyOrOmit_Template) {
-				Type type = template.getType();
+				final Type type = template.getType();
 				if (type == null) {
 					// port.receive(?) or port.receive(*)
 					receivesAny = true;

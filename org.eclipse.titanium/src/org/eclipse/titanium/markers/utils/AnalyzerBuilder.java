@@ -78,11 +78,11 @@ public class AnalyzerBuilder {
 
 		actions.clear();
 		projectActions.clear();
-		IPreferencesService prefs = Platform.getPreferencesService();
+		final IPreferencesService prefs = Platform.getPreferencesService();
 
-		for (ProblemTypePreference prefType : ProblemTypePreference.values()) {
-			String prefName = prefType.getPreferenceName();
-			String warnLevel = prefs.getString(Activator.PLUGIN_ID, prefName, GeneralConstants.IGNORE, null);
+		for (final ProblemTypePreference prefType : ProblemTypePreference.values()) {
+			final String prefName = prefType.getPreferenceName();
+			final String warnLevel = prefs.getString(Activator.PLUGIN_ID, prefName, GeneralConstants.IGNORE, null);
 			if (!GeneralConstants.IGNORE.equals(warnLevel)) {
 				addPreferenceProblem(prefType);
 			}
@@ -99,12 +99,12 @@ public class AnalyzerBuilder {
 	 *            the analyzer will use its code smells
 	 * @return this for method chaining
 	 */
-	public AnalyzerBuilder addPreferenceProblem(ProblemTypePreference preferenceProblem) {
+	public AnalyzerBuilder addPreferenceProblem(final ProblemTypePreference preferenceProblem) {
 		if (exhausted) {
 			throw new IllegalStateException("One must not use the builder after build() method is called");
 		}
 
-		for (CodeSmellType problemType : preferenceProblem.getRelatedProblems()) {
+		for (final CodeSmellType problemType : preferenceProblem.getRelatedProblems()) {
 			addProblem(problemType);
 		}
 		return this;
@@ -115,17 +115,17 @@ public class AnalyzerBuilder {
 	 *            the analyzer will use this code smell
 	 * @return this for method chaining
 	 */
-	public AnalyzerBuilder addProblem(CodeSmellType problemType) {
+	public AnalyzerBuilder addProblem(final CodeSmellType problemType) {
 		if (exhausted) {
 			throw new IllegalStateException("One must not use the builder after build() method is called");
 		}
 
 		if (spotters.get(problemType) != null) {
-			for (BaseModuleCodeSmellSpotter spotter : spotters.get(problemType)) {
-				Queue<Class<? extends IVisitableNode>> subtypes = new ArrayDeque<Class<? extends IVisitableNode>>();
+			for (final BaseModuleCodeSmellSpotter spotter : spotters.get(problemType)) {
+				final Queue<Class<? extends IVisitableNode>> subtypes = new ArrayDeque<Class<? extends IVisitableNode>>();
 				subtypes.addAll(spotter.getStartNode());
 				while (!subtypes.isEmpty()) {
-					Class<? extends IVisitableNode> sub = subtypes.poll();
+					final Class<? extends IVisitableNode> sub = subtypes.poll();
 					if (StaticData.TYPE_HIERARCHY.get(sub) != null) {
 						Collections.addAll(subtypes, StaticData.TYPE_HIERARCHY.get(sub));
 					}
@@ -136,7 +136,7 @@ public class AnalyzerBuilder {
 				}
 			}
 		} else if (projectSpotters.get(problemType) != null) {
-			for (BaseProjectCodeSmellSpotter spotter : projectSpotters.get(problemType)) {
+			for (final BaseProjectCodeSmellSpotter spotter : projectSpotters.get(problemType)) {
 				projectActions.add(spotter);
 			}
 		}

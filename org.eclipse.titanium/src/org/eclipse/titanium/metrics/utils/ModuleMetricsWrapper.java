@@ -50,7 +50,7 @@ public class ModuleMetricsWrapper {
 	protected ModuleMetricsWrapper(final IProject project) {
 		modules = new HashMap<String, Module>();
 		data = MetricData.measure(project);
-		for (Module module : data.getModules()) {
+		for (final Module module : data.getModules()) {
 			modules.put(module.getName(), module);
 		}
 	}

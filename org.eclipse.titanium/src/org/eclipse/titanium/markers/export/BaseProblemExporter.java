@@ -41,7 +41,7 @@ public abstract class BaseProblemExporter {
 	 * Constructor
 	 * @param proj : The project to export markers from
 	 */
-	public BaseProblemExporter(IProject proj) {
+	public BaseProblemExporter(final IProject proj) {
 		project = proj;
 		reportDebugInformation = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				DISPLAYDEBUGINFORMATION, true, null);
@@ -54,16 +54,16 @@ public abstract class BaseProblemExporter {
 	 * @throws CoreException
 	 */
 	protected Map<TaskType, List<IMarker>> collectMarkers() throws CoreException {
-		Map<TaskType, List<IMarker>> markers = new EnumMap<TaskType, List<IMarker>>(TaskType.class);
-		for (TaskType t : TaskType.values()) {
+		final Map<TaskType, List<IMarker>> markers = new EnumMap<TaskType, List<IMarker>>(TaskType.class);
+		for (final TaskType t : TaskType.values()) {
 			markers.put(t, new ArrayList<IMarker>());
 		}
 
-		List<IProject> projects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
-		for(IProject tempProject : projects) {
-			IMarker[] ms = tempProject.findMarkers(GeneralConstants.ONTHEFLY_TASK_MARKER, false, IResource.DEPTH_INFINITE);
-			for (IMarker m : ms) {
-				for (TaskType t : TaskType.values()) {
+		final List<IProject> projects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
+		for(final IProject tempProject : projects) {
+			final IMarker[] ms = tempProject.findMarkers(GeneralConstants.ONTHEFLY_TASK_MARKER, false, IResource.DEPTH_INFINITE);
+			for (final IMarker m : ms) {
+				for (final TaskType t : TaskType.values()) {
 					if (t.equalType(m)) {
 						markers.get(t).add(m);
 					}

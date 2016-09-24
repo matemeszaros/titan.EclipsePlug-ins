@@ -96,7 +96,7 @@ public class GraphHandler {
 	 *            resolution bigger than this)
 	 * @throws BadLayoutException On wrong layout code or bad graph
 	 */
-	public void changeLayout(LayoutEntry newLayout, Dimension newWindowSize) throws BadLayoutException {
+	public void changeLayout(final LayoutEntry newLayout, final Dimension newWindowSize) throws BadLayoutException {
 		if (g == null) {
 			throw new BadLayoutException("You must draw a graph before!", ErrorType.NO_OBJECT);
 		}
@@ -114,7 +114,7 @@ public class GraphHandler {
 		actVisualisator.setPreferredSize(new Dimension(newWindowSize.width, newWindowSize.height));
 		actVisualisator.getRenderContext().setVertexLabelTransformer(NODE_LABELER);
 
-		GraphRenderer<NodeDescriptor, EdgeDescriptor> rnd = new GraphRenderer<NodeDescriptor, EdgeDescriptor>(NODE_LABELER,
+		final GraphRenderer<NodeDescriptor, EdgeDescriptor> rnd = new GraphRenderer<NodeDescriptor, EdgeDescriptor>(NODE_LABELER,
 				actVisualisator.getPickedVertexState(), actVisualisator.getPickedEdgeState());
 		setNodeRenderer(rnd, actVisualisator);
 		renderer = rnd;
@@ -139,7 +139,7 @@ public class GraphHandler {
 	 * @return A {@link Component} containing the graph parameter graph drawn.
 	 * @throws Exception
 	 */
-	public void drawGraph(DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> g, Dimension windowSize, LayoutEntry layout) 
+	public void drawGraph(final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> g, final Dimension windowSize, final LayoutEntry layout) 
 			throws BadLayoutException {
 		if (g == null) {
 			throw new BadLayoutException("There is no graph (it is set null)", ErrorType.NO_OBJECT);
@@ -161,21 +161,21 @@ public class GraphHandler {
 	 * @throws BadLayoutException
 	 *             on file handling error and own inner problems
 	 */
-	public static void saveGraphToPajek(Graph<NodeDescriptor, EdgeDescriptor> g, String path)
+	public static void saveGraphToPajek(final Graph<NodeDescriptor, EdgeDescriptor> g, final String path)
 			throws BadLayoutException {
 		if (g == null) {
 			throw new BadLayoutException("You must draw a graph before!", ErrorType.NO_OBJECT);
 		}
 
-		Transformer<EdgeDescriptor, Number> edgeWeights = new Transformer<EdgeDescriptor, Number>() {
+		final Transformer<EdgeDescriptor, Number> edgeWeights = new Transformer<EdgeDescriptor, Number>() {
 			@Override
-			public Number transform(EdgeDescriptor e) {
+			public Number transform(final EdgeDescriptor e) {
 				return e.getWeight();
 			}
 		};
 		
 		try{
-			PajekNetWriter<NodeDescriptor, EdgeDescriptor> writer = new PajekNetWriter<NodeDescriptor, EdgeDescriptor>();
+			final PajekNetWriter<NodeDescriptor, EdgeDescriptor> writer = new PajekNetWriter<NodeDescriptor, EdgeDescriptor>();
 			writer.save(g, path, NODE_LABELER, edgeWeights);
 		} catch (IOException e) {
 			throw new BadLayoutException("An error occured during writing to the output file.", ErrorType.IO_ERROR, e);
@@ -194,8 +194,8 @@ public class GraphHandler {
 	 * @throws Exception
 	 *             on file handling error
 	 */
-	public static void saveGraphToDot(Graph<NodeDescriptor, EdgeDescriptor> g, String path, 
-			String graphName) throws BadLayoutException {
+	public static void saveGraphToDot(final Graph<NodeDescriptor, EdgeDescriptor> g, final String path, 
+			final String graphName) throws BadLayoutException {
 		
 		if (g == null) {
 			throw new BadLayoutException("You must draw a graph before!", ErrorType.NO_OBJECT);
@@ -222,7 +222,7 @@ public class GraphHandler {
 	 * @throws Exception
 	 *             on file handling error
 	 */
-	public void saveToImage(String path, ImageExportType mode) throws BadLayoutException {
+	public void saveToImage(final String path, final ImageExportType mode) throws BadLayoutException {
 		if (layout == null || actVisualisator == null) {
 			throw new BadLayoutException("Either the layout or the visuaizer is not set (is null)", ErrorType.NO_OBJECT);
 		}
@@ -241,9 +241,9 @@ public class GraphHandler {
 				size = new Dimension(layout.getSize().width, layout.getSize().height);
 			}
 			
-			Transformer<NodeDescriptor, Point2D> trf = new Transformer<NodeDescriptor, Point2D>() {
+			final Transformer<NodeDescriptor, Point2D> trf = new Transformer<NodeDescriptor, Point2D>() {
 				@Override
-				public Point2D transform(NodeDescriptor v) {
+				public Point2D transform(final NodeDescriptor v) {
 					return layout.transform(v);
 				}
 			};
@@ -254,7 +254,7 @@ public class GraphHandler {
 			tempVisualisator.setSize(size);
 			tempVisualisator.getRenderContext().setVertexLabelTransformer(NODE_LABELER);
 			
-			GraphRenderer<NodeDescriptor, EdgeDescriptor> rnd = new GraphRenderer<NodeDescriptor, EdgeDescriptor>(NODE_LABELER,
+			final GraphRenderer<NodeDescriptor, EdgeDescriptor> rnd = new GraphRenderer<NodeDescriptor, EdgeDescriptor>(NODE_LABELER,
 					tempVisualisator.getPickedVertexState(), tempVisualisator.getPickedEdgeState());
 			setNodeRenderer(rnd, tempVisualisator);
 			tempVisualisator.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
@@ -273,11 +273,11 @@ public class GraphHandler {
 		}
 
 		BufferedImage image;
-		GUIErrorHandler errorHandler = new GUIErrorHandler();
+		final GUIErrorHandler errorHandler = new GUIErrorHandler();
 		try {
 			image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
 		} catch (OutOfMemoryError e) {
-			long needed = (long) size.width * (long) size.height * 4;
+			final long needed = (long) size.width * (long) size.height * 4;
 			String temp;
 			if (needed < 1024) {
 				temp = needed + " bytes";
@@ -286,20 +286,20 @@ public class GraphHandler {
 			} else {
 				temp = needed / 1024 / 1024 + " Mbytes";
 			}
-			String errorText = "Could not save an image of " + size.width + "*" + size.height + 
+			final String errorText = "Could not save an image of " + size.width + "*" + size.height + 
 					" size as there was not enough free memory (" + temp + ")";
 			errorHandler.reportErrorMessage(errorText);
 			ErrorReporter.logExceptionStackTrace(errorText, e);
 			return;
 		}
-		Graphics2D g2 = image.createGraphics();
+		final Graphics2D g2 = image.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		tempVisualisator.paint(g2);
 		g2.dispose();
 		try {
 			ImageIO.write(image, "png", new File(path));
 		} catch (IOException e) {
-			String message = "Error while writing to file" + path;
+			final String message = "Error while writing to file" + path;
 			ErrorReporter.logExceptionStackTrace(message, e);
 			errorHandler.reportException(message, e);
 		}
@@ -315,8 +315,8 @@ public class GraphHandler {
 	 *            - the visualisator to change
 	 * @see GraphRenderer
 	 */
-	public static void setNodeRenderer(GraphRenderer<NodeDescriptor, EdgeDescriptor> rnd,
-			VisualizationViewer<NodeDescriptor, EdgeDescriptor> visualisator) {
+	public static void setNodeRenderer(final GraphRenderer<NodeDescriptor, EdgeDescriptor> rnd,
+			final VisualizationViewer<NodeDescriptor, EdgeDescriptor> visualisator) {
 		if (visualisator == null || rnd == null) {
 			return;
 		}
@@ -328,7 +328,7 @@ public class GraphHandler {
 		visualisator.getRenderContext().setArrowFillPaintTransformer(rnd.getEdgeColour());
 		visualisator.getRenderContext().setArrowDrawPaintTransformer(rnd.getEdgeColour());
 		
-		EdgeStroke<EdgeDescriptor> stroke = new EdgeStroke<EdgeDescriptor>();
+		final EdgeStroke<EdgeDescriptor> stroke = new EdgeStroke<EdgeDescriptor>();
 		visualisator.getRenderContext().setEdgeStrokeTransformer(stroke);
 	}
 
@@ -338,7 +338,7 @@ public class GraphHandler {
 	 * @param newSize
 	 *            : the new window size to set
 	 */
-	public void changeWindowSize(Dimension newSize) {
+	public void changeWindowSize(final Dimension newSize) {
 		if (actVisualisator != null) {
 			actVisualisator.setPreferredSize(new Dimension(newSize.width, newSize.height));
 		}
@@ -377,11 +377,11 @@ public class GraphHandler {
 	 *            : The zooming multiplier (zoom out if <1 and zoom in if >1, no
 	 *            change in case of 1)
 	 */
-	public void zoom(float scale) {
+	public void zoom(final float scale) {
 		if (actVisualisator == null) {
 			return;
 		}
-		CrossoverScalingControl control = new CrossoverScalingControl();
+		final CrossoverScalingControl control = new CrossoverScalingControl();
 		control.scale(actVisualisator, scale, actVisualisator.getCenter());
 	}
 
@@ -391,7 +391,7 @@ public class GraphHandler {
 	 * 
 	 * @param clusters
 	 */
-	public void setClusters(Set<Set<NodeDescriptor>> clusters) {
+	public void setClusters(final Set<Set<NodeDescriptor>> clusters) {
 		this.clusters = clusters;
 	}
 
@@ -401,7 +401,7 @@ public class GraphHandler {
 	 * @param value
 	 *            : True if the menu entries should be enabled
 	 */
-	public void setMenusEnabled(boolean value) {
+	public void setMenusEnabled(final boolean value) {
 		if (popupMenu == null) {
 			return;
 		}

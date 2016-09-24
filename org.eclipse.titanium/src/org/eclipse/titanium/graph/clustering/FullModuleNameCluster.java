@@ -63,7 +63,7 @@ public class FullModuleNameCluster extends ModuleNameCluster {
 		final List<String> sortedNames = new ArrayList<String>(knownNames);
 		Collections.sort(sortedNames);
 
-		for (String name : sortedNames) {
+		for (final String name : sortedNames) {
 			check(name);
 		}
 	}
@@ -100,8 +100,9 @@ public class FullModuleNameCluster extends ModuleNameCluster {
 	 *            Name of the child node
 	 */
 	private void addEdge(final String prev, final String next) {
-		ClusterNode parent = mapNameNode.get(prev);
+		final ClusterNode parent = mapNameNode.get(prev);
 		final ClusterNode child = new ClusterNode(next, mapNameCluster.get(next));
+
 		clusterGraph.addVertex(child);
 		mapNameNode.put(next, child);
 

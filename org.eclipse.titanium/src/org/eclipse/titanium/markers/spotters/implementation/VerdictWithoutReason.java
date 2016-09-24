@@ -37,30 +37,30 @@ public class VerdictWithoutReason extends BaseModuleCodeSmellSpotter {
 			return;
 		}
 
-		Setverdict_Statement s = (Setverdict_Statement) node;
-		Value verdictValue = s.getVerdictValue();
-		LogArguments verdictReason = s.getVerdictReason();
-		CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
+		final Setverdict_Statement s = (Setverdict_Statement) node;
+		final Value verdictValue = s.getVerdictValue();
+		final LogArguments verdictReason = s.getVerdictReason();
+		final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
 
 		if (verdictValue == null) {
 			return;
 		}
 
-		Type_type temp = verdictValue.getExpressionReturntype(ct, Expected_Value_type.EXPECTED_TEMPLATE);
+		final Type_type temp = verdictValue.getExpressionReturntype(ct, Expected_Value_type.EXPECTED_TEMPLATE);
 		if(Type_type.TYPE_VERDICT != temp) {
 			return;
 		}
 
 		if (Value_type.VERDICT_VALUE.equals(verdictValue.getValuetype())
 				&& !Verdict_type.PASS.equals(((Verdict_Value) verdictValue).getValue()) && verdictReason == null) {
-			String msg = MessageFormat.format(WITHOUT_REASON, ((Verdict_Value) verdictValue).getValue());
+			final String msg = MessageFormat.format(WITHOUT_REASON, ((Verdict_Value) verdictValue).getValue());
 			problems.report(s.getLocation(), msg);
 		}
 	}
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Setverdict_Statement.class);
 		return ret;
 	}

@@ -28,9 +28,9 @@ public class StopInFunction extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof Stop_Execution_Statement) {
-			Stop_Execution_Statement s = (Stop_Execution_Statement) node;
-			StatementBlock sb = s.getMyStatementBlock();
-			Definition d = sb.getMyDefinition();
+			final Stop_Execution_Statement s = (Stop_Execution_Statement) node;
+			final StatementBlock sb = s.getMyStatementBlock();
+			final Definition d = sb.getMyDefinition();
 			if (d instanceof Def_Function) {
 				problems.report(s.getLocation(), ERROR_MESSAGE);
 			}
@@ -39,7 +39,7 @@ public class StopInFunction extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(Stop_Execution_Statement.class);
 		return ret;
 	}

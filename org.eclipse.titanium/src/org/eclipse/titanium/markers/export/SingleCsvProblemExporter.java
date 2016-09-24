@@ -35,7 +35,7 @@ public class SingleCsvProblemExporter extends CsvProblemExporter {
 	 * Constructor
 	 * @param proj : The project to be analyzed
 	 */
-	public SingleCsvProblemExporter(IProject proj) {
+	public SingleCsvProblemExporter(final IProject proj) {
 		super(proj);
 	}
 
@@ -47,18 +47,18 @@ public class SingleCsvProblemExporter extends CsvProblemExporter {
 	 * @see BaseProblemExporter#exportMarkers(IProgressMonitor, String, Date)
 	 */
 	@Override
-	public void exportMarkers(IProgressMonitor monitor, String path, Date date) {
-		SubMonitor progress = SubMonitor.convert(monitor, 100);
+	public void exportMarkers(final IProgressMonitor monitor, final String path, final Date date) {
+		final SubMonitor progress = SubMonitor.convert(monitor, 100);
 		BufferedWriter summaryFile = null;
 		try {
 			summaryFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path)),"UTF-8"));
 
-			MarkerHandler mh = AnalyzerCache.withAll().analyzeProject(progress.newChild(30), project);
+			final MarkerHandler mh = AnalyzerCache.withAll().analyzeProject(progress.newChild(30), project);
 
-			for (Map.Entry<IResource, List<Marker>> entry : mh.getMarkersByResource().entrySet()) {
-				IResource resource = entry.getKey();
+			for (final Map.Entry<IResource, List<Marker>> entry : mh.getMarkersByResource().entrySet()) {
+				final IResource resource = entry.getKey();
 
-				for (Marker marker : entry.getValue()) {
+				for (final Marker marker : entry.getValue()) {
 					summaryFile.write(resource.getProjectRelativePath().toString());
 					summaryFile.write(SEPARATOR);
 					summaryFile.write(String .valueOf(marker.getLine()));

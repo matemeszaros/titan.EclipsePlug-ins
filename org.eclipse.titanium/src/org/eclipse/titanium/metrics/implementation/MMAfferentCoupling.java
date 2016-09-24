@@ -35,7 +35,7 @@ public class MMAfferentCoupling extends BaseModuleMetric {
 		for (final Module module : data.getModules()) {
 			afferentCoupling.put(module, new HashSet<Assignment>());
 		}
-		for (Module module : data.getModules()) {
+		for (final Module module : data.getModules()) {
 			module.accept(new ASTVisitor() {
 				@Override
 				public int visit(final IVisitableNode node) {

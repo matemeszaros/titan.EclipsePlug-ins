@@ -45,7 +45,7 @@ public final class ClusterTransformer implements Transformer<NodeDescriptor, Poi
 		this.clusters = clusters;
 		mainLayout.setSize(extSize);
 
-		for (Set<NodeDescriptor> clust : clusters) {
+		for (final Set<NodeDescriptor> clust : clusters) {
 			groupCluster(clust);
 		}
 	}
@@ -60,7 +60,7 @@ public final class ClusterTransformer implements Transformer<NodeDescriptor, Poi
 		if (vertices.size() < mainLayout.getGraph().getVertexCount()) {
 			final Point2D center = mainLayout.transform(vertices.iterator().next());
 			final DirectedSparseGraph<NodeDescriptor, EdgeDescriptor> subGraph = new DirectedSparseGraph<NodeDescriptor, EdgeDescriptor>();
-			for (NodeDescriptor v : vertices) {
+			for (final NodeDescriptor v : vertices) {
 				subGraph.addVertex(v);
 			}
 

@@ -144,7 +144,8 @@ public class SimpleRiskFieldEditor implements IRiskFieldEditor {
 		for (final Spinner s : spinners) {
 			s.dispose();
 		}
-		Number[] limits = getLimits(m, toDefault);
+		final Number[] limits = getLimits(m, toDefault);
+
 		switch (m) {
 		case NEVER:
 			spinners = new Spinner[0];
@@ -186,7 +187,7 @@ public class SimpleRiskFieldEditor implements IRiskFieldEditor {
 	 */
 	protected void postUpdateSpinners() {
 		shell.layout();
-		for (IRiskEditorListener l : listeners) {
+		for (final IRiskEditorListener l : listeners) {
 			l.editorChanged();
 		}
 	}

@@ -50,16 +50,16 @@ public class ConsecutiveAssignments extends BaseModuleCodeSmellSpotter {
 		if (!(node instanceof StatementBlock)) {
 			return;
 		}
-		CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
+		final CompilationTimeStamp timestamp = CompilationTimeStamp.getBaseTimestamp();
 		int count = 0;
 		boolean limitReached = false;
 		Location smellLoc = null;
 		Assignment_Statement lastAs = null;
 		Assignment toMatch = null;
-		StatementBlock sb = (StatementBlock)node;
+		final StatementBlock sb = (StatementBlock)node;
 		//iterate statements in block
 		for (int i=0;i<sb.getSize();i++) {
-			Statement s = sb.getStatementByIndex(i);
+			final Statement s = sb.getStatementByIndex(i);
 			if (!(s instanceof Assignment_Statement)) {
 				if (limitReached) {
 					smellLoc.setEndOffset(lastAs.getLocation().getEndOffset());
@@ -70,9 +70,9 @@ public class ConsecutiveAssignments extends BaseModuleCodeSmellSpotter {
 				toMatch = null;
 				continue;
 			}
-			Assignment_Statement as = (Assignment_Statement)s;
-			Reference ref = as.getReference();
-			Assignment a = ref.getRefdAssignment(timestamp, false);
+			final Assignment_Statement as = (Assignment_Statement)s;
+			final Reference ref = as.getReference();
+			final Assignment a = ref.getRefdAssignment(timestamp, false);
 			if (a == null) {
 				if (limitReached) {
 					smellLoc.setEndOffset(lastAs.getLocation().getEndOffset());
@@ -112,7 +112,7 @@ public class ConsecutiveAssignments extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(StatementBlock.class);
 		return ret;
 	}

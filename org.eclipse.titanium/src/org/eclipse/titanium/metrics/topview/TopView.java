@@ -126,7 +126,7 @@ public class TopView extends ViewPart {
 				// Analyze project.
 				// To avoid further analysis requests, disable the refresh
 				// button.
-				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(selectedProjectName);
+				final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(selectedProjectName);
 				if (project != null) {
 					refresh.setEnabled(false);
 
@@ -195,7 +195,7 @@ public class TopView extends ViewPart {
 		gd.horizontalAlignment = SWT.FILL;
 		moduleTable.setLayoutData(gd);
 		if (!metrics.isEmpty()) {
-			TableViewer viewer = new TableViewer(moduleTable);
+			final TableViewer viewer = new TableViewer(moduleTable);
 			viewer.setContentProvider(new ArrayContentProvider());
 			viewer.setInput(mw.getMetricData().getModules());
 			moduleTable.setHeaderVisible(true);
@@ -212,7 +212,7 @@ public class TopView extends ViewPart {
 					if (!(element instanceof Module)) {
 						throw new AssertionError("Elements of the view should be modules");
 					}
-					Module module = (Module) element;
+					final Module module = (Module) element;
 
 					return module.getName();
 				}
@@ -233,7 +233,7 @@ public class TopView extends ViewPart {
 						}
 						final Module module = (Module) element;
 
-						double risk = mw.getRiskValue(m, module.getName());
+						final double risk = mw.getRiskValue(m, module.getName());
 						if (risk < 1) {
 							return Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
 						} else if (risk < 2) {
@@ -248,9 +248,9 @@ public class TopView extends ViewPart {
 						if (!(element instanceof Module)) {
 							throw new AssertionError("Elements of the view should be  modules");
 						}
-						Module module = (Module) element;
+						final Module module = (Module) element;
 
-						Number n = mw.getValue(m, module.getName());
+						final Number n = mw.getValue(m, module.getName());
 						return n == null ? "" : n.toString();
 					}
 				});
@@ -263,7 +263,7 @@ public class TopView extends ViewPart {
 	}
 
 	public void setSelectedProject(final IProject project) {
-		String name = project.getName();
+		final String name = project.getName();
 		int found = -1;
 		for (int index = 0; index < projectSelector.getItemCount(); ++index) {
 			if (name.equals(projectSelector.getItem(index))) {

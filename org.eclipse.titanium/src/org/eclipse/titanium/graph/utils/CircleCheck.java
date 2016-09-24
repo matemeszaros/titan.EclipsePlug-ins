@@ -37,7 +37,7 @@ public class CircleCheck<V, E> {
 	 * @param graph
 	 *            : The tested graph
 	 */
-	public CircleCheck(DirectedSparseGraph<V, E> graph) {
+	public CircleCheck(final DirectedSparseGraph<V, E> graph) {
 		g = graph;
 		circles = new LinkedList<Deque<E>>();
 		circleEdges = new LinkedList<E>();
@@ -52,7 +52,7 @@ public class CircleCheck<V, E> {
 		remaining = new ArrayList<V>(g.getVertices());
 		Collections.sort((List)remaining);
 		while (!remaining.isEmpty()) {
-			V v = remaining.get(remaining.size() - 1);
+			final V v = remaining.get(remaining.size() - 1);
 			circleVertices.push(v);
 			recursiveWalk(v);
 			circleVertices.pop();
@@ -62,15 +62,15 @@ public class CircleCheck<V, E> {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void recursiveWalk(V u) {
-		List<E> neighbours = new ArrayList<E>(g.getOutEdges(u));
+	private void recursiveWalk(final V u) {
+		final List<E> neighbours = new ArrayList<E>(g.getOutEdges(u));
 		Collections.sort((List)neighbours);
-		for (E e : neighbours) {
-			V v = g.getDest(e);
+		for (final E e : neighbours) {
+			final V v = g.getDest(e);
 			circleEdges.push(e);
 			if (circleVertices.contains(v)) {
 				final int index = ((LinkedList<V>)circleVertices).indexOf(v);
-				Deque<E> circle = new LinkedList<E>();
+				final Deque<E> circle = new LinkedList<E>();
 				for (int i = index; i >= 0; i--) {
 					circle.push(((LinkedList<E>)circleEdges).get(i));
 				}

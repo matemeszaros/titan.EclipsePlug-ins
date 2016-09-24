@@ -54,7 +54,7 @@ public class ExecuteAnalyzer implements IProjectProcesser {
 			return;
 		}
 		// Otherwise analyze the project for code smells
-		final MarkerHandler mh;
+		MarkerHandler mh;
 		synchronized (project) {
 			mh = AnalyzerCache.withPreference().analyzeProject(monitor, project);
 		}

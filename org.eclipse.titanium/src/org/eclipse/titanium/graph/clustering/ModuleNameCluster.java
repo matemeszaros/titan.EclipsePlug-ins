@@ -87,7 +87,7 @@ public class ModuleNameCluster extends BaseCluster {
 	 */
 	private void createNames(final IProgressMonitor monitor) {
 		addCluster(ALL);
-		for (NodeDescriptor v : moduleGraph.getVertices()) {
+		for (final NodeDescriptor v : moduleGraph.getVertices()) {
 			final String name = v.getDisplayName();
 			monitor.subTask("Checking " + name);
 			boolean small = false;
@@ -154,11 +154,11 @@ public class ModuleNameCluster extends BaseCluster {
 	 * Fill the clusters with the nodes.
 	 */
 	private void fillClusters() {
-		for (NodeDescriptor v : moduleGraph.getVertices()) {
+		for (final NodeDescriptor v : moduleGraph.getVertices()) {
 			final String name = v.getDisplayName();
 			int length = 0;
 			String match = null;
-			for (String word : knownNames) {
+			for (final String word : knownNames) {
 				if (word.length() > length && name.startsWith(word)) {
 					match = word;
 					length = word.length();
@@ -175,7 +175,7 @@ public class ModuleNameCluster extends BaseCluster {
 			}
 		}
 
-		for (String word : knownNames) {
+		for (final String word : knownNames) {
 			final Set<NodeDescriptor> cluster = mapNameCluster.get(word);
 			if (!cluster.isEmpty()) {
 				clusters.add(cluster);
@@ -186,12 +186,12 @@ public class ModuleNameCluster extends BaseCluster {
 	@Override
 	protected void createGraph() {
 		final Set<String> empty = new HashSet<String>();
-		for (String name : knownNames) {
+		for (final String name : knownNames) {
 			if (mapNameCluster.get(name).isEmpty()) {
 				empty.add(name);
 			}
 		}
-		for (String name : empty) {
+		for (final String name : empty) {
 			mapNameCluster.remove(name);
 		}
 		super.createGraph();

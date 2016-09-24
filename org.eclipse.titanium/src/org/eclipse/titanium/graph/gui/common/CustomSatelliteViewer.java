@@ -40,12 +40,12 @@ public class CustomSatelliteViewer extends SatelliteVisualizationViewer<NodeDesc
 	 * Constructor
 	 * @param master : the {@link VisualizationViewer} of the whole big graph. (Usually part of the graph editor window)
 	 */
-	public CustomSatelliteViewer(VisualizationViewer<NodeDescriptor, EdgeDescriptor> master) {
+	public CustomSatelliteViewer(final VisualizationViewer<NodeDescriptor, EdgeDescriptor> master) {
 		super(master);
 		actZoom = 1.0f;
-		PluggableGraphMouse satMouse = new PluggableGraphMouse() {
+		final PluggableGraphMouse satMouse = new PluggableGraphMouse() {
 			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
+			public void mouseWheelMoved(final MouseWheelEvent e) {
 				float scale;
 				if (e.getWheelRotation() > 0) {
 					scale = 0.9f;
@@ -59,7 +59,7 @@ public class CustomSatelliteViewer extends SatelliteVisualizationViewer<NodeDesc
 
 		satMouse.add(new SatelliteTranslatingGraphMousePlugin() {
 			@Override
-			public void mouseDragged(MouseEvent arg0) {
+			public void mouseDragged(final MouseEvent arg0) {
 				if (down == null) {
 					return;
 				}
@@ -68,17 +68,17 @@ public class CustomSatelliteViewer extends SatelliteVisualizationViewer<NodeDesc
 
 			@Override
 			@SuppressWarnings("unchecked")
-			public void mousePressed(MouseEvent e) {
-				VisualizationViewer<String, String> vv = (VisualizationViewer<String, String>) e.getSource();
-				boolean accepted = checkModifiers(e);
+			public void mousePressed(final MouseEvent e) {
+				final VisualizationViewer<String, String> vv = (VisualizationViewer<String, String>) e.getSource();
+				final boolean accepted = checkModifiers(e);
 				if (accepted && vv instanceof SatelliteVisualizationViewer) {
-					VisualizationViewer<String, String> vvMaster = ((SatelliteVisualizationViewer<String, String>) vv).
+					final VisualizationViewer<String, String> vvMaster = ((SatelliteVisualizationViewer<String, String>) vv).
 							getMaster();
 
-					MutableTransformer modelTransformerMaster = vvMaster.getRenderContext().getMultiLayerTransformer()
+					final MutableTransformer modelTransformerMaster = vvMaster.getRenderContext().getMultiLayerTransformer()
 							.getTransformer(Layer.LAYOUT);
-					Point2D orig = vvMaster.getRenderContext().getMultiLayerTransformer().inverseTransform(vvMaster.getCenter());
-					Point2D mouse = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(e.getPoint());
+					final Point2D orig = vvMaster.getRenderContext().getMultiLayerTransformer().inverseTransform(vvMaster.getCenter());
+					final Point2D mouse = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(e.getPoint());
 					modelTransformerMaster.translate(orig.getX() - mouse.getX(), orig.getY() - mouse.getY());
 				}
 				super.mousePressed(e);
@@ -93,14 +93,14 @@ public class CustomSatelliteViewer extends SatelliteVisualizationViewer<NodeDesc
 	 * it should not be called if the view is not in its original state
 	 */
 	@Override
-	public void scaleToLayout(ScalingControl scaler) {
+	public void scaleToLayout(final ScalingControl scaler) {
 		Dimension newSize = getPreferredSize();
 
 		if (this.isShowing()) {
 			newSize = getSize();
 		}
 
-		Dimension currentSize = getGraphLayout().getSize();
+		final Dimension currentSize = getGraphLayout().getSize();
 
 		if (!newSize.equals(currentSize) && newSize.getWidth() > 0 && newSize.getHeight() > 0) {
 			actZoom = newSize.getWidth() / currentSize.getWidth();
@@ -115,9 +115,9 @@ public class CustomSatelliteViewer extends SatelliteVisualizationViewer<NodeDesc
 	 * @param size
 	 *            : The size to set
 	 */
-	public void changeSize(Dimension size) {
+	public void changeSize(final Dimension size) {
 		setPreferredSize(size);
-		ScalingControl scaler = new CrossoverScalingControl();
+		final ScalingControl scaler = new CrossoverScalingControl();
 		scaler.scale(this, (float) (1.0f / actZoom), new Point2D.Double());
 		scaleToLayout(new CrossoverScalingControl());
 		setSize(size);

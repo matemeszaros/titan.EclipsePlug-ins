@@ -30,12 +30,12 @@ public class IfInsteadAltguard extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof AltGuard) {
-			AltGuard ag = (AltGuard) node;
-			StatementBlock statements = ag.getStatementBlock();
+			final AltGuard ag = (AltGuard) node;
+			final StatementBlock statements = ag.getStatementBlock();
 			if (statements != null && !statements.isEmpty()) {
-				Statement firstStatement = statements.getStatementByIndex(0);
+				final Statement firstStatement = statements.getStatementByIndex(0);
 				if (firstStatement instanceof If_Statement) {
-					Value condition = ((If_Statement) firstStatement).getIfClauses().getClauses().get(0).getExpression();
+					final Value condition = ((If_Statement) firstStatement).getIfClauses().getClauses().get(0).getExpression();
 					Location reportAt;
 					if (condition != null) {
 						reportAt = condition.getLocation();
@@ -50,7 +50,7 @@ public class IfInsteadAltguard extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(AltGuard.class);
 		return ret;
 	}

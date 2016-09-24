@@ -53,40 +53,40 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		if (!(node instanceof For_Statement)) {
 			return;
 		}
-		For_Statement fs = (For_Statement) node;
+		final For_Statement fs = (For_Statement) node;
 		
 		//find the loop variable
-		LoopVariableFinder lvVisitor = new LoopVariableFinder();
+		final LoopVariableFinder lvVisitor = new LoopVariableFinder();
 		fs.accept(lvVisitor);
-		Reference loopVar = lvVisitor.getLoopVariable();
+		final Reference loopVar = lvVisitor.getLoopVariable();
 		if (loopVar == null) {
 			return;
 		}
-		Assignment loopVarDef = loopVar.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+		final Assignment loopVarDef = loopVar.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 		if (loopVarDef == null) {
 			return;
 		}
 		//find the array over which the loop iterates
-		Value finalExpr = fs.getFinalExpression();
-		FinalExprVisitor exprVisitor = new FinalExprVisitor();
+		final Value finalExpr = fs.getFinalExpression();
+		final FinalExprVisitor exprVisitor = new FinalExprVisitor();
 		if (finalExpr == null) {
 			return;
 		}
 		finalExpr.accept(exprVisitor);
-		List<Reference> arraysIterated = exprVisitor.getArraysIterated();
+		final List<Reference> arraysIterated = exprVisitor.getArraysIterated();
 		if (arraysIterated.isEmpty()) {
 			return;
 		}
 		/* search every statement block for references that has the loop variable in them and the
 		 * reference differs from the reference of the array over which the for loop iterates */
-		StatementBlock sb = fs.getStatementBlock();
+		final StatementBlock sb = fs.getStatementBlock();
 		if (sb == null) {
 			return;
 		}
-		StatementBlockVisitor sbVisitor = new StatementBlockVisitor(loopVar, arraysIterated);
+		final StatementBlockVisitor sbVisitor = new StatementBlockVisitor(loopVar, arraysIterated);
 		sb.accept(sbVisitor);
-		List<Reference> matchingRefs = sbVisitor.getMatchingReferences();
-		for (Reference r: matchingRefs) {
+		final List<Reference> matchingRefs = sbVisitor.getMatchingReferences();
+		for (final Reference r: matchingRefs) {
 			if (r.getUsedOnLeftHandSide()) {
 				continue;
 			}
@@ -96,7 +96,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(For_Statement.class);
 		return ret;
 	}
@@ -113,7 +113,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof LengthofExpression || node instanceof SizeOfExpression) {
-				IteratedArrayFinder visitor = new IteratedArrayFinder();
+				final IteratedArrayFinder visitor = new IteratedArrayFinder();
 				node.accept(visitor);
 				arraysIterated.add(visitor.getArrayIterated());
 				return V_SKIP;
@@ -138,11 +138,11 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 			} else if (node instanceof Value) {
 				IValue v = (Value)node;
 				if (v instanceof Undefined_LowerIdentifier_Value) {
-					Undefined_LowerIdentifier_Value uliv = (Undefined_LowerIdentifier_Value)v;
+					final Undefined_LowerIdentifier_Value uliv = (Undefined_LowerIdentifier_Value)v;
 					v = uliv.setLoweridToReference(CompilationTimeStamp.getBaseTimestamp());
 				}
 				if (v instanceof Referenced_Value) {
-					Referenced_Value rv = (Referenced_Value)v;
+					final Referenced_Value rv = (Referenced_Value)v;
 					arrayIterated = rv.getReference();
 					if (arrayIterated != null) {
 						return V_ABORT;
@@ -181,31 +181,31 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 				return V_SKIP;
 			}
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
+				final Reference ref = (Reference)node;
 				parentReference = ref;
 				return V_CONTINUE;
 			} else if (node instanceof ArraySubReference) {
-				ArraySubReference asr = (ArraySubReference)node;
+				final ArraySubReference asr = (ArraySubReference)node;
 				Value val = asr.getValue();
 				if (val == null || val.getIsErroneous(CompilationTimeStamp.getBaseTimestamp())) {
 					return V_SKIP;
 				}
 				if (val instanceof Undefined_LowerIdentifier_Value) {
-					IValue cval = val.setLoweridToReference(CompilationTimeStamp.getBaseTimestamp());
+					final IValue cval = val.setLoweridToReference(CompilationTimeStamp.getBaseTimestamp());
 					if (cval instanceof Referenced_Value) {
 						val = (Referenced_Value)cval;
 					}
 				}
 				if (val instanceof Referenced_Value) {
-					Reference ref = ((Referenced_Value) val).getReference();
+					final Reference ref = ((Referenced_Value) val).getReference();
 					if (ref == null) {
 						return V_SKIP;
 					}
-					Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
-					Assignment parentRefDef = parentReference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
-					Assignment loopVariableDef = loopVariable.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
-					for (Reference arrayIterated: arraysIterated) {
-						Assignment arrayIteratedDef = arrayIterated.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+					final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+					final Assignment parentRefDef = parentReference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+					final Assignment loopVariableDef = loopVariable.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+					for (final Reference arrayIterated: arraysIterated) {
+						final Assignment arrayIteratedDef = arrayIterated.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 						if (as != loopVariableDef
 								|| (parentRefDef == arrayIteratedDef && hasSubreferencePrefix(arrayIterated, parentReference))) {
 							return V_SKIP;
@@ -227,19 +227,19 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 			if (prefix == null || toTest == null || prefix.getSubreferences() == null || toTest.getSubreferences() == null) {
 				return false;
 			}
-			ListIterator<ISubReference> itPrefix = prefix.getSubreferences().listIterator();
-			ListIterator<ISubReference> itToTest = toTest.getSubreferences().listIterator();
+			final ListIterator<ISubReference> itPrefix = prefix.getSubreferences().listIterator();
+			final ListIterator<ISubReference> itToTest = toTest.getSubreferences().listIterator();
 			while (itPrefix.hasNext() && itToTest.hasNext()) {
-				ISubReference srPrefix = itPrefix.next();
-				ISubReference srToTest = itToTest.next();
+				final ISubReference srPrefix = itPrefix.next();
+				final ISubReference srToTest = itToTest.next();
 				if (srPrefix instanceof ArraySubReference) {
 					if (!(srToTest instanceof ArraySubReference)) {
 						return false;
 					}
-					ArraySubReference asrPrefix = (ArraySubReference)srPrefix;
-					ArraySubReference asrToTest = (ArraySubReference)srToTest;
-					Value vPrefix = asrPrefix.getValue();
-					Value vToTest = asrToTest.getValue();
+					final ArraySubReference asrPrefix = (ArraySubReference)srPrefix;
+					final ArraySubReference asrToTest = (ArraySubReference)srToTest;
+					final Value vPrefix = asrPrefix.getValue();
+					final Value vToTest = asrToTest.getValue();
 					if (vPrefix == null || vToTest == null) {
 						return false;
 					}
@@ -272,7 +272,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 			if (node instanceof For_Statement) {
 				return V_CONTINUE;
 			} else if (node instanceof Assignment_Statement) {
-				Assignment_Statement as = (Assignment_Statement)node;
+				final Assignment_Statement as = (Assignment_Statement)node;
 				loopVariable = as.getReference();
 				return V_ABORT;
 			}

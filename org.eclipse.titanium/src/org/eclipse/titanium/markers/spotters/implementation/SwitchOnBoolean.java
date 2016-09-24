@@ -29,9 +29,9 @@ public class SwitchOnBoolean extends BaseModuleCodeSmellSpotter {
 	@Override
 	public void process(final IVisitableNode node, final Problems problems) {
 		if (node instanceof SelectCase_Statement) {
-			SelectCase_Statement s = (SelectCase_Statement) node;
-			Value expression = s.getExpression();
-			CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
+			final SelectCase_Statement s = (SelectCase_Statement) node;
+			final Value expression = s.getExpression();
+			final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
 
 			if (expression != null
 					&& Type_type.TYPE_BOOL.equals(expression.getExpressionReturntype(ct,
@@ -44,7 +44,7 @@ public class SwitchOnBoolean extends BaseModuleCodeSmellSpotter {
 
 	@Override
 	public List<Class<? extends IVisitableNode>> getStartNode() {
-		List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
+		final List<Class<? extends IVisitableNode>> ret = new ArrayList<Class<? extends IVisitableNode>>(1);
 		ret.add(SelectCase_Statement.class);
 		return ret;
 	}
