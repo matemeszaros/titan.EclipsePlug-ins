@@ -94,6 +94,14 @@
       </run>
     </application>
   </extension>
+  <extension id="org.eclipse.titanium.applications.ExportAllMetrics"
+    point="org.eclipse.core.runtime.applications">
+    <application cardinality="singleton-global" thread="main"
+      visible="true">
+      <run class="org.eclipse.titanium.applications.ExportAllMetrics">
+      </run>
+    </application>
+  </extension>
 
   <!-- Preference pages -->
   <extension point="org.eclipse.core.runtime.preferences">
