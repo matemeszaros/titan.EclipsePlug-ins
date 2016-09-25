@@ -22,14 +22,14 @@ public enum TaskType implements ProblemType{
 	//TODO What are the default times?
 	FIXME("FIXME tags", 0.0, 0.0, 0.0) {
 		@Override
-		public boolean equalType(IMarker m) throws CoreException {
+		public boolean equalType(final IMarker m) throws CoreException {
 			return IMarker.PRIORITY_HIGH == m.getAttribute(IMarker.PRIORITY, IMarker.PRIORITY_LOW);
 		}
 	},
 	//TODO What are the default times?
 	TODO("TODO tags", 0.0, 0.0, 0.0) {
 		@Override
-		public boolean equalType(IMarker m) throws CoreException {
+		public boolean equalType(final IMarker m) throws CoreException {
 			return IMarker.PRIORITY_NORMAL == m.getAttribute(IMarker.PRIORITY, IMarker.PRIORITY_LOW);
 		}
 	};
@@ -41,7 +41,7 @@ public enum TaskType implements ProblemType{
 	private String readableName;
 	private String innerName;
 	
-	TaskType(String name, Double minTime, Double avgTime, Double maxTime) {
+	TaskType(final String name, final Double minTime, final Double avgTime, final Double maxTime) {
 		readableName = name;
 		defaultMinTime = minTime;
 		defaultAvgTime = avgTime;

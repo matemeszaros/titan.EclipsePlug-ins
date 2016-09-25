@@ -22,24 +22,24 @@ public class ProblemNameToPreferenceMapper {
 	private static final String MAX = ".MAX";
 	private static final String TIME= " .TIME";
 	
-	public static String nameSmellAvgTime(String smellName) {
+	public static String nameSmellAvgTime(final String smellName) {
 		return smellName + AVG + TIME;
 	}
 	
-	public static String nameSmellMinTime(String smellName) {
+	public static String nameSmellMinTime(final String smellName) {
 		return smellName + MIN +TIME;
 	}
 	
-	public static String nameSmellMaxTime(String smellName) {
+	public static String nameSmellMaxTime(final String smellName) {
 		return smellName + MAX +TIME;
 	}
 	
 	// Some aid method to make accessing code smell data easier:
-	public static String nameSmellImpact(String smellName) {
+	public static String nameSmellImpact(final String smellName) {
 		return smellName + IMPACT;
 	}
 
-	public static String nameSmellBaseLine(String smellName) {
+	public static String nameSmellBaseLine(final String smellName) {
 		return smellName + BASELINE;
 	}
 }

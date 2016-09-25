@@ -78,7 +78,7 @@ public enum CodeSmellType implements ProblemType{
 	private String innerName;
 	private String readableName;
 	
-	private CodeSmellType(String name, Double minTime, Double avgTime, Double maxTime) {
+	private CodeSmellType(final String name, final Double minTime, final Double avgTime, final Double maxTime) {
 		this.defaultMinTime = minTime;
 		this.defaultAvgTime = avgTime;
 		this.defaultMaxTime = maxTime;
