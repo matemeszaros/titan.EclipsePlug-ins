@@ -59,7 +59,6 @@ public class IncorrectShift {
 			}
 
 			final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
-			final long stringSize = getFirstShiftOperandLength(ct, value1);
 			final Type_type tempType2 = value2.getExpressionReturntype(ct, null);
 			if (Type_type.TYPE_INTEGER != tempType2) {
 				return;
@@ -71,6 +70,7 @@ public class IncorrectShift {
 			}
 			final long shiftSize = ((Integer_Value) tempValue).getValue();
 			if (!value1.isUnfoldable(ct)) {
+				final long stringSize = getFirstShiftOperandLength(ct, value1);
 				if (shiftSize < 0) {
 					problems.report(location, MessageFormat.format(NEGATIVESHIFTPROBLEM,
 							actualShift, "left".equals(actualShift)?"right":actualShift));
@@ -144,13 +144,13 @@ public class IncorrectShift {
 	 * @return the length of the first operand if it can be determined
 	 */
 	private static long getFirstShiftOperandLength(final CompilationTimeStamp ct, final Value value) {
-		long stringSize = 0;
 		if (value == null) {
 			return 0;
 		}
 
 		final Type_type tempType1 = value.getExpressionReturntype(ct, null);
 		final IValue refd = value.getValueRefdLast(ct, null);
+		long stringSize = 0;
 		switch (tempType1) {
 		case TYPE_BITSTRING:
 			if (Value_type.BITSTRING_VALUE.equals(refd.getValuetype())) {

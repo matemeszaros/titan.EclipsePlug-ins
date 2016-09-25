@@ -85,17 +85,19 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 		//count number of items in enum, get all items from enum
 		final EnumItemVisitor enumVisitor = new EnumItemVisitor();
 		enumType.accept(enumVisitor);
-		final int enumSize = enumVisitor.getCount();
-		final List<Identifier> allEnumItems = enumVisitor.getItemsFound();
+
 		//count number of TemplateInstances in select, get used enum items
 		final CaseVisitor caseVisitor = new CaseVisitor();
 		scs.accept(caseVisitor);
-		final List<Identifier> usedEnumItems = caseVisitor.getItemsUsed();
 		if (caseVisitor.isContainsUnfoldable()) {
 			return;
 		}
+
 		final int casesSize = caseVisitor.getCount();
+		final int enumSize = enumVisitor.getCount();
 		if (enumSize > casesSize) {
+			final List<Identifier> allEnumItems = enumVisitor.getItemsFound();
+			final List<Identifier> usedEnumItems = caseVisitor.getItemsUsed();
 			final String enumName = itype.getTypename();
 			final String itemsNotCovered = getItemsNotCovered(allEnumItems, usedEnumItems);
 			problems.report(v.getLocation(), MessageFormat.format(ERR_MSG, enumName, enumSize, casesSize, itemsNotCovered));

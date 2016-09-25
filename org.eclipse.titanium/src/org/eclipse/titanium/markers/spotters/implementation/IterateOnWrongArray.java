@@ -68,10 +68,11 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 		}
 		//find the array over which the loop iterates
 		final Value finalExpr = fs.getFinalExpression();
-		final FinalExprVisitor exprVisitor = new FinalExprVisitor();
 		if (finalExpr == null) {
 			return;
 		}
+
+		final FinalExprVisitor exprVisitor = new FinalExprVisitor();
 		finalExpr.accept(exprVisitor);
 		final List<Reference> arraysIterated = exprVisitor.getArraysIterated();
 		if (arraysIterated.isEmpty()) {

@@ -87,12 +87,11 @@ public class SelectWithNumbersSorted extends  BaseModuleCodeSmellSpotter {
 		//count number of cases in select, get used integer type case-items
 		final CaseVisitorInteger caseVisitorInteger = new CaseVisitorInteger();
 		scs.accept(caseVisitorInteger);
-		
-		final List<Long> usedIntegerItems = caseVisitorInteger.getItemsUsed();
 		if (caseVisitorInteger.containsUnfoldable()) {
 			return;
 		}
-			
+
+		final List<Long> usedIntegerItems = caseVisitorInteger.getItemsUsed();
 		if (!checkIfIntegerCasesSorted(usedIntegerItems)) {
 			problems.report(s.getLocation(), ERR_MSG);	
 			

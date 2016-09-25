@@ -65,7 +65,6 @@ public class IncorrectRotate {
 			}
 
 			final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
-			final long valueSize = getFirstRotateOperandLength(ct, value1);
 			final Type_type tempType2 = value2.getExpressionReturntype(ct, null);
 			if (Type_type.TYPE_INTEGER != tempType2) {
 				return;
@@ -77,6 +76,7 @@ public class IncorrectRotate {
 			}
 
 			final long rotationSize = ((Integer_Value) tempValue).getValue();
+			final long valueSize = getFirstRotateOperandLength(ct, value1);
 			if (!value1.isUnfoldable(ct)) {
 				if (valueSize == 0 || valueSize == 1) {
 					problems.report(location, EFFECTLESSROTATION);
@@ -154,12 +154,12 @@ public class IncorrectRotate {
 	 * @return the length of the first operand if it can be determined
 	 */
 	private static long getFirstRotateOperandLength(final CompilationTimeStamp ct, final Value value) {
-		long valueSize = 0;
 		if (value == null) {
 			return 0;
 		}
 		final Type_type tempType = value.getExpressionReturntype(ct, null);
 		final IValue refd = value.getValueRefdLast(ct, null);
+		long valueSize = 0;
 		switch (tempType) {
 		case TYPE_BITSTRING:
 			if (Value_type.BITSTRING_VALUE.equals(refd.getValuetype())) {

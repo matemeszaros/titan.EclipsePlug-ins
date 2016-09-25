@@ -179,9 +179,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 				final Assignment assignment = reference.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 
 				if (assignment instanceof Def_Function) {
-					final FormalParameterList formalParameterList=((Def_Function)assignment).getFormalParameterList();
 					final ISubReference subreference = ((Reference) node).getSubreferences().get(0);
-					
 					if(!(subreference instanceof ParameterisedSubReference)) {
 						return V_SKIP;
 					}
@@ -189,6 +187,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 					final ParameterisedSubReference subref = (ParameterisedSubReference)((Reference) node).getSubreferences().get(0);
 					final ParsedActualParameters parsedActualParameters = subref.getParsedParameters();
 					
+					final FormalParameterList formalParameterList=((Def_Function)assignment).getFormalParameterList();
 					final ActualParameterList nonLazyActualParameters = new ActualParameterList();
 					final ActualParameterList lazyActualParameters = new ActualParameterList();
 					formalParameterList.collateLazyAndNonLazyActualParameters(CompilationTimeStamp.getBaseTimestamp(),parsedActualParameters, lazyActualParameters, nonLazyActualParameters);
@@ -210,8 +209,11 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 				}
 				
 				if (assignment instanceof FormalParameter) {
+					if(nextFormalParameterIsNotRelevant) {
+						return V_CONTINUE;
+					}
+
 					final FormalParameter formalParameter = (FormalParameter) assignment;
-					if(nextFormalParameterIsNotRelevant) return V_CONTINUE;
 					if (formalParameterCollector.getItems().contains(formalParameter)) {
 						if (root instanceof If_Statement || root instanceof SelectCase_Statement) {
 							strictFormalParameters.add(formalParameter);
@@ -226,14 +228,13 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 		}
 
 		public Set<FormalParameter> collectRelevantReferences() {
-			final Set<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
-
 			// After that we disregard content's of nodes
 			if (root instanceof Return_Statement) {
 				haveToContinue = false;
 				return referencedFormalParameters;
 			}
 
+			final Set<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
 			if (nodes.size() == 0) {
 				return referencedFormalParameters;
 			} else {

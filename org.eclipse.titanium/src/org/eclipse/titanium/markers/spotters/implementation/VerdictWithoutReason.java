@@ -39,18 +39,18 @@ public class VerdictWithoutReason extends BaseModuleCodeSmellSpotter {
 
 		final Setverdict_Statement s = (Setverdict_Statement) node;
 		final Value verdictValue = s.getVerdictValue();
-		final LogArguments verdictReason = s.getVerdictReason();
-		final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
 
 		if (verdictValue == null) {
 			return;
 		}
 
+		final CompilationTimeStamp ct = CompilationTimeStamp.getBaseTimestamp();
 		final Type_type temp = verdictValue.getExpressionReturntype(ct, Expected_Value_type.EXPECTED_TEMPLATE);
 		if(Type_type.TYPE_VERDICT != temp) {
 			return;
 		}
 
+		final LogArguments verdictReason = s.getVerdictReason();
 		if (Value_type.VERDICT_VALUE.equals(verdictValue.getValuetype())
 				&& !Verdict_type.PASS.equals(((Verdict_Value) verdictValue).getValue()) && verdictReason == null) {
 			final String msg = MessageFormat.format(WITHOUT_REASON, ((Verdict_Value) verdictValue).getValue());
