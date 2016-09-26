@@ -66,7 +66,7 @@ public class IfInsteadReceiveTemplate extends BaseModuleCodeSmellSpotter {
  * 
  */
 final class SuspiciouslyUsedIf extends ASTVisitor {
-	private Reference redirectValue;
+	private final Reference redirectValue;
 	private boolean smells;
 	private If_Clause suspicious;
 
@@ -113,7 +113,7 @@ final class SuspiciouslyUsedIf extends ASTVisitor {
  * 
  */
 final class RefUsedInMatching extends ASTVisitor {
-	private Reference ref;
+	private final Reference ref;
 	private boolean used;
 
 	public RefUsedInMatching(final Reference ref) {
@@ -141,7 +141,7 @@ final class RefUsedInMatching extends ASTVisitor {
 }
 
 final class ContainsRef extends ASTVisitor {
-	private Identifier id;
+	private final Identifier id;
 	public boolean contains;
 
 	public ContainsRef(final Reference ref) {

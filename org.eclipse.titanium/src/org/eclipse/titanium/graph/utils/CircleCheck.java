@@ -25,10 +25,10 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  *            edge type
  */
 public class CircleCheck<V, E> {
-	private DirectedSparseGraph<V, E> g;
-	private List<Deque<E>> circles;
-	private Deque<E> circleEdges;
-	private Deque<V> circleVertices;
+	private final DirectedSparseGraph<V, E> g;
+	private final List<Deque<E>> circles;
+	private final Deque<E> circleEdges;
+	private final Deque<V> circleVertices;
 	private List<V> remaining;
 
 	/**

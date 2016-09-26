@@ -43,10 +43,10 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 	}
 
 
-	private Map<V, ISOMVertexData> isomVertexData = new HashMap<V, TitaniumISOMLayout.ISOMVertexData>();
+	private final Map<V, ISOMVertexData> isomVertexData = new HashMap<V, TitaniumISOMLayout.ISOMVertexData>();
 
 	private int maxEpoch = 2000;
-	private AtomicInteger epoch = new AtomicInteger(1);
+	private final AtomicInteger epoch = new AtomicInteger(1);
 
 	private int radiusConstantTime;
 	private int radius;
@@ -60,7 +60,7 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 
 	private double coolingFactor;
 
-	private List<V> queue = new ArrayList<V>();
+	private final List<V> queue = new ArrayList<V>();
 
 	/**
 	 * Creates an <code>ISOMLayout</code> instance for the specified graph
@@ -70,7 +70,6 @@ public class TitaniumISOMLayout<V, E> extends AbstractLayout<V, E> implements It
 	 */
 	public TitaniumISOMLayout(final Graph<V, E> g) {
 		super(g);
-		queue = new ArrayList<V>(g.getVertexCount());
 	}
 
 	/**

@@ -76,11 +76,11 @@ public class RiskFactorPreferencePage extends PreferencePage implements IWorkben
 		insertSP(CodeSmellType.UNNECESSARY_CONTROLS);
 	}
 
-	private IPreferenceStore prefStore;
+	private final IPreferenceStore prefStore;
 	private Text projectBase;
-	private List<String> markers;
-	private List<Combo> impacts;
-	private List<Text> baselines;
+	private final List<String> markers;
+	private final List<Combo> impacts;
+	private final List<Text> baselines;
 	
 
 	public RiskFactorPreferencePage() {

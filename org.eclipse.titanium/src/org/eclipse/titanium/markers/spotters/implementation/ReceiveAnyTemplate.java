@@ -82,7 +82,7 @@ final class SuperfluousTemplate extends ASTVisitor {
 	// these are initialized according to the receive statement of the
 	// constructor
 	private IType receivableType;
-	private boolean hasValueRedirection;
+	private final boolean hasValueRedirection;
 	// this is the template of the receive statement, extracted during the
 	// visiting
 	private TemplateInstance template;

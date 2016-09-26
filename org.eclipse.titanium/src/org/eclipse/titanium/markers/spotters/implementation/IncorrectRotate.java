@@ -46,7 +46,7 @@ public class IncorrectRotate {
 		private static final String TOOBIGROTATEPROBLEM =
 				"Rotating a {1} long value to the {0} with {2} will have the same effect as rotating by {3}";
 
-		private String actualRotation;
+		private final String actualRotation;
 
 		private RotationChecker(final CodeSmellType type, final String actualRotation) {
 			super(type);

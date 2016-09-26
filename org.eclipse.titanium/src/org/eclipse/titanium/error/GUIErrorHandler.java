@@ -19,7 +19,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * @author Gabor Jenei
  */
 public class GUIErrorHandler implements ErrorHandler {
-	private StringBuilder collectedMessage;
+	private final StringBuilder collectedMessage;
 
 	/**
 	 * Constructor

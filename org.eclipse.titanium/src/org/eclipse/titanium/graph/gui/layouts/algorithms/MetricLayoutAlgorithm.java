@@ -36,9 +36,9 @@ public class MetricLayoutAlgorithm implements HierarcicalLayoutAlgorithm<NodeDes
 	
 	private Map<NodeDescriptor, Double> values;
 	private Map<NodeDescriptor, Integer> levels;
-	private Collection<NodeDescriptor> nodes;
+	private final Collection<NodeDescriptor> nodes;
 	private Set<NodeDescriptor> badNodes;
-	private IMetricEnum chosenMetric;
+	private final IMetricEnum chosenMetric;
 	private Double minValue;
 	private Double maxValue;
 	private int filledLevels;

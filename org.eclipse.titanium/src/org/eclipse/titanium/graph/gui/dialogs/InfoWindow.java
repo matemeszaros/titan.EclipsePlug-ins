@@ -42,11 +42,11 @@ import org.eclipse.titanium.swt.SWTResourceManager;
  * @see GraphView
  */
 public class InfoWindow extends Dialog {
-	private Table table;
-	private NodeDescriptor module;
-	private ModuleMetricsWrapper metricsProvider;
-	private IMetricEnum chosenMetric;
-	private Shell shell;
+	private final Table table;
+	private final NodeDescriptor module;
+	private final ModuleMetricsWrapper metricsProvider;
+	private final IMetricEnum chosenMetric;
+	private final Shell shell;
 	protected final GUIErrorHandler errorHandler = new GUIErrorHandler();
 
 	private static final Point WINDOW_SIZE = new Point(300, 300);

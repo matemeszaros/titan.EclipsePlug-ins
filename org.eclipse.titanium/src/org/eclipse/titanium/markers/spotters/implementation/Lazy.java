@@ -273,7 +273,7 @@ public class Lazy extends BaseModuleCodeSmellSpotter {
 	 * @author Peter Olah
 	 */
 	public class RelevantFormalParameterCollector extends ASTVisitor {
-		private List<FormalParameter> items;
+		private final List<FormalParameter> items;
 
 		public RelevantFormalParameterCollector() {
 			items = new ArrayList<FormalParameter>();

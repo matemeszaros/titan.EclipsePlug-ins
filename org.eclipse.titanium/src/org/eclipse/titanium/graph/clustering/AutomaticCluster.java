@@ -46,7 +46,7 @@ public class AutomaticCluster extends BaseCluster {
 	private boolean checkModulename;
 	private boolean checkRegexp;
 
-	private IProject project;
+	private final IProject project;
 
 	private Set<Set<NodeDescriptor>> clustersToCheck;
 	/**
@@ -70,7 +70,7 @@ public class AutomaticCluster extends BaseCluster {
 	 * The next free index for a cluster
 	 */
 	private int index;
-	private int nodenum;
+	private final int nodenum;
 	private int clusternum;
 	private double mq;
 	private double maxmq;

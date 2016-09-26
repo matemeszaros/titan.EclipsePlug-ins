@@ -50,10 +50,10 @@ public class ExportedProblemMerger {
 	private HSSFSheet summarysheet;
 
 	private String project;
-	private SortedSet<Date> dates;
-	private Map<Date, Integer> datecol;
-	private Map<Date, File> datefile;
-	private Map<String, Integer> smellrow;
+	private final SortedSet<Date> dates;
+	private final Map<Date, Integer> datecol;
+	private final Map<Date, File> datefile;
+	private final Map<String, Integer> smellrow;
 	private int smellindex;
 
 	public ExportedProblemMerger(final List<File> files, final File outfile) {

@@ -28,9 +28,9 @@ import edu.uci.ics.jung.graph.Graph;
 public class CheckParallelPaths<V, E> {
 	protected Graph<V, E> graph;
 	protected Map<V, E> predArc;
-	protected Set<Deque<E>> paths;
+	protected final Set<Deque<E>> paths;
 	protected V root;
-	private boolean hasRoot;
+	private final boolean hasRoot;
 
 	/**
 	 * Initialize the data to find all parallel paths.
@@ -53,7 +53,8 @@ public class CheckParallelPaths<V, E> {
 	 *            The source node
 	 */
 	public CheckParallelPaths(final Graph<V, E> graph, final V s) {
-		this(graph);
+		this.graph = graph;
+		paths = new HashSet<Deque<E>>();
 		root = s;
 		hasRoot = true;
 	}

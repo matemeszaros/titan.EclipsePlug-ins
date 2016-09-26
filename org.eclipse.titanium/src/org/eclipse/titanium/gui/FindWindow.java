@@ -45,7 +45,7 @@ public class FindWindow<T extends Comparable> extends Dialog {
 	private Label label;
 	private Label lblResults;
 	private Tree tree;
-	private SortedSet<T> treeItems;
+	private final SortedSet<T> treeItems;
 	protected final GUIErrorHandler errorHandler = new GUIErrorHandler();
 
 	/**

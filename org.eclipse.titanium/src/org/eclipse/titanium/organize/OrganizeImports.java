@@ -371,10 +371,10 @@ class ImportText implements Comparable<ImportText> {
 }
 
 class ImportSelectionDialog implements Runnable {
-	private Reference reference;
-	private List<DeclarationCollectionHelper> collected;
+	private final Reference reference;
+	private final List<DeclarationCollectionHelper> collected;
 	private Location selected;
-	private IResource source;
+	private final IResource source;
 
 	public ImportSelectionDialog(final Reference reference, final List<DeclarationCollectionHelper> collected, final IResource source) {
 		this.reference = reference;

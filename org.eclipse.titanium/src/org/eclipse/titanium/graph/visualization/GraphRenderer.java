@@ -77,7 +77,7 @@ class NodeShape<V> implements Transformer<V, Shape> {
  *            the node's type
  */
 class NodeColour<V> implements Transformer<V, Paint> {
-	private PickedState<V> picked;
+	private final PickedState<V> picked;
 
 	/**
 	 * Constructor, we need to store a reference of the class which tells us the
@@ -115,7 +115,7 @@ class NodeColour<V> implements Transformer<V, Paint> {
  *            edge's type
  */
 class EdgeColour<E> implements Transformer<E, Paint> {
-	private PickedState<E> picked;
+	private final PickedState<E> picked;
 
 	/**
 	 * We need to store a reference to the currently chosen edges

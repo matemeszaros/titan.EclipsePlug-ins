@@ -105,7 +105,7 @@ public class IterateOnWrongArray extends BaseModuleCodeSmellSpotter {
 	//call on Value (final expression of For_Statement)
 	private static final class FinalExprVisitor extends ASTVisitor {
 		
-		private List<Reference> arraysIterated = new ArrayList<Reference>();
+		private final List<Reference> arraysIterated = new ArrayList<Reference>();
 		
 		public List<Reference> getArraysIterated() {
 			return arraysIterated;

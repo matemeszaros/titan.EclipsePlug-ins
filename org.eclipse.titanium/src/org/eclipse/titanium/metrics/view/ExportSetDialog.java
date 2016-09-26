@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.titanium.metrics.utils.RiskLevel;
 
 class ExportSetDialog {
-	private Display parent;
+	private final Display parent;
 	private RiskLevel r;
 
 	public ExportSetDialog(final Display display) {

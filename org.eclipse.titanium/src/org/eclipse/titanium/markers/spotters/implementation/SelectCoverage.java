@@ -135,7 +135,7 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 	
 	private final class CaseVisitor extends ASTVisitor {
 
-		private List<Identifier> itemsUsed = new ArrayList<Identifier>();
+		private final List<Identifier> itemsUsed = new ArrayList<Identifier>();
 		private int count = 0;
 		private boolean containsUnfoldable = false;
 		
@@ -182,7 +182,7 @@ public class SelectCoverage extends BaseModuleCodeSmellSpotter {
 	}
 	private static final class EnumItemVisitor extends ASTVisitor {
 
-		private List<Identifier> itemsFound = new ArrayList<Identifier>();
+		private final List<Identifier> itemsFound = new ArrayList<Identifier>();
 		private int count = 0;
 		
 		public int getCount() {

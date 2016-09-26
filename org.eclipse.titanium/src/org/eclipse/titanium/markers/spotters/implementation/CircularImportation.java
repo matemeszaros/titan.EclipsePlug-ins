@@ -96,7 +96,7 @@ public class CircularImportation extends BaseProjectCodeSmellSpotter {
  * </p>
  */
 class CycleCheck {
-	private Map<Module, Node> map;
+	private final Map<Module, Node> map;
 	List<List<Module>> cycles;
 
 	/**

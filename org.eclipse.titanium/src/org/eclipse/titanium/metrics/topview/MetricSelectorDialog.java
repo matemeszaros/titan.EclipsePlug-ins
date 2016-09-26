@@ -37,8 +37,8 @@ import org.eclipse.titanium.metrics.TestcaseMetric;
  * 
  */
 class MetricSelectorDialog implements Runnable {
-	private Set<IMetricEnum> used;
-	private Map<IMetricEnum, Button> bs;
+	private final Set<IMetricEnum> used;
+	private final Map<IMetricEnum, Button> bs;
 
 	public MetricSelectorDialog() {
 		used = new HashSet<IMetricEnum>();

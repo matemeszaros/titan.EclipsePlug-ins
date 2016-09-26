@@ -88,9 +88,9 @@ public class PrivateViaPublic {
 
 		private class FieldCollector extends ASTVisitor {
 
-			private List<Reference> references;
+			private final List<Reference> references;
 
-			private List<NamedValue> namedValues;
+			private final List<NamedValue> namedValues;
 						
 			public FieldCollector() {
 				references = new ArrayList<Reference>();
@@ -198,7 +198,7 @@ public class PrivateViaPublic {
 
 		private class IdentifierToDefType extends ASTVisitor {
 
-			private Identifier identifierToFind;
+			private final Identifier identifierToFind;
 
 			private boolean isPrivate;
 
@@ -257,7 +257,7 @@ public class PrivateViaPublic {
 
 		private class ValueCollector extends ASTVisitor {
 
-			private List<SequenceOf_Value> sequenceOfValues;
+			private final List<SequenceOf_Value> sequenceOfValues;
 			
 			public ValueCollector() {
 				sequenceOfValues = new ArrayList<SequenceOf_Value>();

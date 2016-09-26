@@ -168,8 +168,8 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 		TOOLTIP_MAPPING = Collections.unmodifiableMap(m);
 	}
 
-	private FontRegistry fonts;
-	private List<ComboFieldEditor> editors;
+	private final FontRegistry fonts;
+	private final List<ComboFieldEditor> editors;
 
 	private boolean changed = false;
 
@@ -408,10 +408,10 @@ public final class MarkersPreferencePage extends FieldEditorPreferencePage imple
 class CustomExpansionListener extends ExpansionAdapter {
 	// The scrolled composite that is the (indirect) parent of our inner
 	// composite
-	private ScrolledComposite sc;
+	private final ScrolledComposite sc;
 	// Out inner composite, that is expanded/closed by the expandable
 	// composite
-	private Composite inner;
+	private final Composite inner;
 	// (current) height of the inner composite
 	private int height;
 

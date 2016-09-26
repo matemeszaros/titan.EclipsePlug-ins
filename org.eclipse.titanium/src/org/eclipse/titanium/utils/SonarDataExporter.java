@@ -42,7 +42,7 @@ public class SonarDataExporter {
 
 	private static final String SONAR_PROJECT_PROPERTIES_FILE = "sonar-project.properties";
 
-	private IProject project;
+	private final IProject project;
 
 	public SonarDataExporter(final IProject project) {
 		this.project = project;

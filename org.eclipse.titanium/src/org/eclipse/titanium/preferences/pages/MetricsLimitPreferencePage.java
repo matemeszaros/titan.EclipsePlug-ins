@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class MetricsLimitPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	private static final String DESCRIPTION = "Setting limits of metrics to warn";
-	private List<IRiskFieldEditor> editors;
+	private final List<IRiskFieldEditor> editors;
 
 	public MetricsLimitPreferencePage() {
 		super();

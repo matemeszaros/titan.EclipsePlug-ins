@@ -27,7 +27,7 @@ import org.eclipse.titan.common.utils.StringUtils;
 
 public class ProjectStructureExporter {
 
-	private IProject project;
+	private final IProject project;
 
 	private static class ResourceData {
 		enum ResourceType {
@@ -42,7 +42,7 @@ public class ProjectStructureExporter {
 	}
 
 	private static class ResourceVisitor implements IResourceVisitor {
-		private List<ResourceData> resources = new ArrayList<ResourceData>();
+		private final List<ResourceData> resources = new ArrayList<ResourceData>();
 
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {

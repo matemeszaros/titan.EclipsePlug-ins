@@ -117,7 +117,7 @@ public class SelectWithNumbersSorted extends  BaseModuleCodeSmellSpotter {
 	
 	private final class CaseVisitorInteger extends ASTVisitor {
 
-		private List<Long> itemsUsed = new ArrayList<Long>();
+		private final List<Long> itemsUsed = new ArrayList<Long>();
 		private boolean foundUnfoldable = false;
 		
 		public List<Long> getItemsUsed() {

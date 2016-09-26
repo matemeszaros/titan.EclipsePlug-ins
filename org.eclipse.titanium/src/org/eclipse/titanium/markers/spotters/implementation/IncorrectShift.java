@@ -40,7 +40,7 @@ public class IncorrectShift {
 		private static final String TOOBIGSHIFTPROBLEM =
 				"Shifting a {1} long string to the {0} with {2} will always result in a string of same size, but filled with '0' -s.";
 
-		private String actualShift;
+		private final String actualShift;
 
 		private ShiftChecker(final CodeSmellType type, final String actualShift) {
 			super(type);
