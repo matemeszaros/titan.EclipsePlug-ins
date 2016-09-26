@@ -29,7 +29,6 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  */
 public class FullModuleNameCluster extends ModuleNameCluster {
 
-	private ClusterNode root;
 	private Map<String, ClusterNode> mapNameNode;
 	private Deque<String> stack;
 
@@ -46,7 +45,7 @@ public class FullModuleNameCluster extends ModuleNameCluster {
 		clusterGraph = new DirectedSparseGraph<NodeDescriptor, EdgeDescriptor>();
 		stack = new LinkedList<String>();
 
-		root = new ClusterNode(ALL, mapNameCluster.get(ALL));
+		ClusterNode root = new ClusterNode(ALL, mapNameCluster.get(ALL));
 		clusterGraph.addVertex(root);
 		mapNameNode.put(ALL, root);
 
