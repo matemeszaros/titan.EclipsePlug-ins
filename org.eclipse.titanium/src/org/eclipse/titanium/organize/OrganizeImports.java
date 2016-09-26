@@ -190,7 +190,8 @@ public final class OrganizeImports {
 	private static MultiTextEdit organizeImportsEdit(final TTCN3Module module, final IDocument document) throws BadLocationException {
 		final IProject prj = module.getProject();
 		final String doc = document.get();
-		final MultiTextEdit insertEdit = new MultiTextEdit(), removeEdit = new MultiTextEdit();
+		final MultiTextEdit insertEdit = new MultiTextEdit();
+		final MultiTextEdit removeEdit = new MultiTextEdit();
 		final List<ImportText> newImports = new ArrayList<ImportText>();
 		final List<ImportText> importsKept = new ArrayList<ImportText>();
 
