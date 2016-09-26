@@ -29,7 +29,7 @@ public final class PreferenceManager {
 		// disabled constructor
 	}
 
-	public static IPreferenceStore getStore() {
+	public static synchronized IPreferenceStore getStore() {
 		if (store == null) {
 			store = Activator.getDefault().getPreferenceStore();
 		}
