@@ -128,8 +128,6 @@ public abstract class GraphGenerator {
 	 * {@link #graph} attribute, that represents the current state of the
 	 * project.
 	 * 
-	 * @throws Exception
-	 *             In case of any problem occurred during the generation
 	 */
-	protected abstract void createGraph() throws Exception;
+	protected abstract void createGraph();
 }
