@@ -39,7 +39,7 @@ import edu.uci.ics.jung.visualization.control.SatelliteVisualizationViewer;
  * @author Gabor Jenei
  */
 public class SatelliteView extends ViewPart {
-	private JPanel satView;
+	private final JPanel satView;
 	private Frame window;
 	private Dimension windowSize;
 	private CustomSatelliteViewer satelliteGraph;

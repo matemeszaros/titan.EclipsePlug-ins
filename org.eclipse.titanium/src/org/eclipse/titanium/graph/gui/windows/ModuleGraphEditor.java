@@ -365,10 +365,10 @@ public class ModuleGraphEditor extends GraphEditor {
 	
 	protected class ClusteringJob extends Job {
 
-		private BaseCluster clusterer;
-		private boolean grouping;
-		private ActionEvent event;
-		private LayoutEntry layout;
+		private final BaseCluster clusterer;
+		private final boolean grouping;
+		private final ActionEvent event;
+		private final LayoutEntry layout;
 		
 		public ClusteringJob(final String name, final BaseCluster clusterer, final boolean grouping, final ActionEvent event, final LayoutEntry layout) {
 			super(name);
