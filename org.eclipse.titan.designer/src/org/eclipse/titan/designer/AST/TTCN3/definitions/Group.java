@@ -47,12 +47,6 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 	/** Definitions in the current group. */
 	private final List<Definition> definitions;
 
-//	/**
-//	 * A hashmap of definitions, used to find multiple declarations and to
-//	 * speed up searches.
-//	 */
-//	//private Map<String, Definition> definitionMap;
-
 	/** Groups in the current group. */
 	private final List<Group> groups;
 
@@ -371,7 +365,6 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		}
 
 		Map<String, Definition> definitionMap = new HashMap<String, Definition>(definitions.size());
-
 		Map<String, Group> groupMap = new HashMap<String, Group>(groups.size());
 
 		for (Definition def : definitions) {
