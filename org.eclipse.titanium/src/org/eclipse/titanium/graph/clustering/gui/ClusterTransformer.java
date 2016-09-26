@@ -27,8 +27,8 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  * @author Gabor Jenei
  */
 public final class ClusterTransformer implements Transformer<NodeDescriptor, Point2D> {
-	private AggregateLayout<NodeDescriptor, EdgeDescriptor> mainLayout;
-	private Set<Set<NodeDescriptor>> clusters;
+	private final AggregateLayout<NodeDescriptor, EdgeDescriptor> mainLayout;
+	private final Set<Set<NodeDescriptor>> clusters;
 
 	/**
 	 * Constructor
