@@ -25,7 +25,7 @@ import org.eclipse.titanium.metrics.preferences.PreferenceManager;
  * 
  */
 class RootNode implements INode {
-	private final org.eclipse.titanium.metrics.MetricGroup type;
+	private final MetricGroup type;
 	private boolean initialized;
 	private Object[] children;
 
