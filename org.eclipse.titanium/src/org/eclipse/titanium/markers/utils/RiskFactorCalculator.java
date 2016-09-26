@@ -94,7 +94,7 @@ public class RiskFactorCalculator {
 		final int loc = n.intValue();
 
 		int riskFactor = 0;
-		int actualS, baseS, relativeOccurrene;
+		int relativeOccurrene;
 		for (final ProblemType  marker : USED_MARKERS) {
 			final Integer count = smellCount.get(marker.toString());
 			if (count == null) {
@@ -104,8 +104,8 @@ public class RiskFactorCalculator {
 			if (count.intValue() == 0) {
 				relativeOccurrene = 0;
 			} else {
-				actualS = loc / count;
-				baseS = marker.getBaseLine();
+				int actualS = loc / count;
+				int baseS = marker.getBaseLine();
 				if (actualS == 0) {
 					relativeOccurrene = 0;
 				} else if (actualS > baseS) {
