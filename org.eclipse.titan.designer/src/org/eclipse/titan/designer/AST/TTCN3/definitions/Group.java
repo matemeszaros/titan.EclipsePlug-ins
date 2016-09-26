@@ -47,11 +47,11 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 	/** Definitions in the current group. */
 	private final List<Definition> definitions;
 
-	/**
-	 * A hashmap of definitions, used to find multiple declarations and to
-	 * speed up searches.
-	 */
-	private Map<String, Definition> definitionMap;
+//	/**
+//	 * A hashmap of definitions, used to find multiple declarations and to
+//	 * speed up searches.
+//	 */
+//	//private Map<String, Definition> definitionMap;
 
 	/** Groups in the current group. */
 	private final List<Group> groups;
@@ -370,9 +370,7 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 			return;
 		}
 
-		if (lastUniquenessCheckTimeStamp == null) {
-			definitionMap = new HashMap<String, Definition>(definitions.size());
-		}
+		Map<String, Definition> definitionMap = new HashMap<String, Definition>(definitions.size());
 
 		Map<String, Group> groupMap = new HashMap<String, Group>(groups.size());
 
@@ -578,8 +576,8 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 			tempLocation = temp.getLocation();
 			if (reparser.envelopsDamage(tempLocation)) {
 				enveloped = true;
-				leftBoundary = tempLocation.getEndOffset();
-				rightBoundary = tempLocation.getOffset();
+				leftBoundary = tempLocation.getOffset();
+				rightBoundary = tempLocation.getEndOffset();
 			} else if (reparser.isDamaged(tempLocation)) {
 				nofDamaged++;
 			} else {
@@ -599,8 +597,8 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 			tempLocation = temp.getLocation();
 			if (reparser.envelopsDamage(tempLocation)) {
 				enveloped = true;
-				leftBoundary = tempLocation.getEndOffset();
-				rightBoundary = tempLocation.getOffset();
+				leftBoundary = tempLocation.getOffset();
+				rightBoundary = tempLocation.getEndOffset();
 			} else if (reparser.isDamaged(tempLocation)) {
 				nofDamaged++;
 			} else {
@@ -620,8 +618,8 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 			tempLocation = temp.getLocation();
 			if (reparser.envelopsDamage(tempLocation)) {
 				enveloped = true;
-				leftBoundary = tempLocation.getEndOffset();
-				rightBoundary = tempLocation.getOffset();
+				leftBoundary = tempLocation.getOffset();
+				rightBoundary = tempLocation.getEndOffset();
 			} else if (reparser.isDamaged(tempLocation)) {
 				nofDamaged++;
 			} else {
