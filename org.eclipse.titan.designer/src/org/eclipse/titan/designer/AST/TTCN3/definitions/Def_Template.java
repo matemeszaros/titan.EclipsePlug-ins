@@ -46,7 +46,8 @@ import org.eclipse.titan.designer.preferences.PreferenceConstants;
  * The Def_Template class represents TTCN3 template definitions.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class Def_Template extends Definition implements IParameterisedAssignment {
 	private static final String FULLNAMEPART1 = ".<type>";
 	private static final String FULLNAMEPART2 = ".<formal_parameter_list>";
@@ -114,15 +115,28 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 	 */
 	private CompilationTimeStamp recursiveDerivationChecked;
 	private NamedBridgeScope bridgeScope = null;
+	
+	/**
+	 * true, if and only if @lazy modifier is used before the definition
+	 * NOTE: currently there is no restriction of using @lazy modifier here,
+	 *       so no check is needed 
+	 */
+	private boolean mIsLazy;
 
-	public Def_Template(final TemplateRestriction.Restriction_type templateRestriction, final Identifier identifier, final Type type,
-			final FormalParameterList formalParList, final Reference derivedReference, final TTCN3Template body) {
+	public Def_Template( final TemplateRestriction.Restriction_type templateRestriction,
+						 final Identifier identifier,
+						 final Type type,
+						 final FormalParameterList formalParList,
+						 final Reference derivedReference,
+						 final TTCN3Template body,
+						 final boolean aIsLazy ) {
 		super(identifier);
 		this.templateRestriction = templateRestriction;
 		this.type = type;
 		this.formalParList = formalParList;
 		this.derivedReference = derivedReference;
 		this.body = body;
+		mIsLazy = aIsLazy;
 
 		if (type != null) {
 			type.setFullNameParent(this);
@@ -823,5 +837,12 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * @return true, if and only if @lazy modifier is used before the definition
+	 */
+	public boolean isLazy() {
+		return mIsLazy;
 	}
 }

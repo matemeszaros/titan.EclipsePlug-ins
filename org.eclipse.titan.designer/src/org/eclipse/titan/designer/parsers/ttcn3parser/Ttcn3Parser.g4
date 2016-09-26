@@ -1850,7 +1850,6 @@ pr_TemplateDef returns[Def_Template def_template]
 	Template_definition_helper helper = new Template_definition_helper();
 	Reference derivedReference = null;
 	TemplateBody body = null;
-	//TODO: handle lazy
 	boolean isLazy = false;
 }:
 (	col = pr_TemplateKeyword
@@ -1863,7 +1862,8 @@ pr_TemplateDef returns[Def_Template def_template]
 )
 {
 	if(helper.identifier != null && helper.type != null && $b.body != null) {
-		$def_template = new Def_Template(templateRestriction, helper.identifier, helper.type, helper.formalParList, derivedReference, $b.body.getTemplate());
+		$def_template = new Def_Template( templateRestriction, helper.identifier, helper.type, helper.formalParList,
+										  derivedReference, $b.body.getTemplate(), isLazy );
 		$def_template.setLocation(getLocation( $col.start, $b.stop));
 		$def_template.setCommentLocation(lexer.getLastCommentLocation());
 	}
@@ -4145,7 +4145,6 @@ pr_VarInstance returns[List<Definition> definitions]
 	$definitions = new ArrayList<Definition>();
 	List<Identifier> identifiers = null;
 	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
-	//TODO: handle lazy
 	boolean isLazy = false;
 }:
 (	col = pr_VarKeyword
@@ -4156,7 +4155,7 @@ pr_VarInstance returns[List<Definition> definitions]
 	|
 		(	lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }	)?
 		t2 = pr_Type
-		pr_VarList[ $definitions, $t2.type ]
+		pr_VarList[ $definitions, $t2.type, isLazy ]
 	)
 )
 {
@@ -4207,14 +4206,14 @@ pr_SingleTempVarInstance [List<Definition> definitions, Type type, TemplateRestr
 };
 
 
-pr_VarList[List<Definition> definitions, Type type]:
-(	d = pr_SingleVarInstance[type] { if($d.definition != null) { $definitions.add($d.definition); } }
+pr_VarList[List<Definition> definitions, Type type, boolean isLazy]:
+(	d = pr_SingleVarInstance[type, isLazy] { if($d.definition != null) { $definitions.add($d.definition); } }
 	(	pr_Comma
-			d = pr_SingleVarInstance[type] { if($d.definition != null) { $definitions.add($d.definition); } }
+			d = pr_SingleVarInstance[type, isLazy] { if($d.definition != null) { $definitions.add($d.definition); } }
 	)*
 );
 
-pr_SingleVarInstance[Type type] returns[Def_Var definition]
+pr_SingleVarInstance[Type type, boolean isLazy] returns[Def_Var definition]
 @init {
 	$definition = null;
 	Value value = null;
@@ -4235,7 +4234,7 @@ pr_SingleVarInstance[Type type] returns[Def_Var definition]
 				type2.setLocation(getLocation( $d.start, $d.stop));
 			}
 		}
-		$definition = new Def_Var($i.identifier, type2, value);
+		$definition = new Def_Var( $i.identifier, type2, value, $isLazy );
 		$definition.setLocation(getLocation( $start, getStopToken()));
 	}
 };
