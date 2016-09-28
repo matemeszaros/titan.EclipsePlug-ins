@@ -38,7 +38,6 @@ public final class NamedValues extends ASTNode implements IIncrementallyUpdateab
 	private final ArrayList<NamedValue> values;
 
 	private Map<String, NamedValue> namedValuesMap;
-	private List<NamedValue> duplicatedNames;
 	private CompilationTimeStamp lastUniquenessCheck;
 
 	public NamedValues() {
@@ -104,18 +103,12 @@ public final class NamedValues extends ASTNode implements IIncrementallyUpdateab
 	}
 
 	public boolean hasNamedValueWithName(final Identifier name) {
-		if (lastUniquenessCheck == null) {
-			checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
-		}
-
+		checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
 		return namedValuesMap.containsKey(name.getName());
 	}
 
 	public NamedValue getNamedValueByName(final Identifier name) {
-		if (lastUniquenessCheck == null) {
-			checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
-		}
-
+		checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
 		return namedValuesMap.get(name.getName());
 	}
 
@@ -132,37 +125,20 @@ public final class NamedValues extends ASTNode implements IIncrementallyUpdateab
 		Identifier identifier;
 		String name;
 
-		if (lastUniquenessCheck == null) {
-			namedValuesMap = new HashMap<String, NamedValue>(values.size());
-			duplicatedNames = new ArrayList<NamedValue>();
+		namedValuesMap = new HashMap<String, NamedValue>(values.size());
 
-			for (NamedValue value : values) {
-				identifier = value.getName();
-				name = identifier.getName();
-				if (namedValuesMap.containsKey(name)) {
-					if (duplicatedNames == null) {
-						duplicatedNames = new ArrayList<NamedValue>();
-					}
-					duplicatedNames.add(value);
-				} else {
-					namedValuesMap.put(name, value);
-				}
-			}
 
-			if (duplicatedNames != null) {
-				for (NamedValue value : duplicatedNames) {
-					values.remove(value);
-				}
-			}
-		}
-
-		if (duplicatedNames != null) {
-			for (NamedValue value : duplicatedNames) {
-				identifier = value.getName();
-				name = identifier.getName();
+		for (NamedValue value : values) {
+			identifier = value.getName();
+			name = identifier.getName();
+			if (namedValuesMap.containsKey(name)) {
 				namedValuesMap.get(name).getName().getLocation().reportSingularSemanticError(
 						MessageFormat.format(DUPLICATEIDENTIFIERFIRST, identifier.getDisplayName()));
-				value.getLocation().reportSemanticError(MessageFormat.format(DUPLICATEIDENTIFIERREPEATED, identifier.getDisplayName()));
+				value.getLocation().reportSemanticError(
+						MessageFormat.format(DUPLICATEIDENTIFIERREPEATED, identifier.getDisplayName()));
+
+			} else {
+				namedValuesMap.put(name, value);
 			}
 		}
 
@@ -188,15 +164,6 @@ public final class NamedValues extends ASTNode implements IIncrementallyUpdateab
 
 			value.updateSyntax(reparser, false);
 			reparser.updateLocation(value.getLocation());
-		}
-
-		if (duplicatedNames != null) {
-			for (int i = 0, size = duplicatedNames.size(); i < size; i++) {
-				value = duplicatedNames.get(i);
-
-				value.updateSyntax(reparser, false);
-				reparser.updateLocation(value.getLocation());
-			}
 		}
 	}
 
