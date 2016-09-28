@@ -57,8 +57,6 @@ public class ProjectSourceSemanticAnalyzer {
 	private static final String DUPLICATEMODULE = "Modules must be unique, but `{0}'' was declared multiple times";
 	public static final String CIRCULARIMPORTCHAIN = "Circular import chain is not recommended: {0}";
 
-	private final ProjectSourceParser sourceParser;
-
 	/**
 	 * file to Module map received from the syntax analysis.
 	 * Serves as the main/reliable source of information.
@@ -85,8 +83,7 @@ public class ProjectSourceSemanticAnalyzer {
 	 * */
 	private Set<String> semanticallyUptodateModules;
 
-	public ProjectSourceSemanticAnalyzer(final ProjectSourceParser sourceParser) {
-		this.sourceParser = sourceParser;
+	public ProjectSourceSemanticAnalyzer() {
 
 		fileModuleMap = new ConcurrentHashMap<IFile, Module>();
 		moduleMap = new ConcurrentHashMap<String, Module>();

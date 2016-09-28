@@ -148,7 +148,7 @@ public final class ProjectSourceParser {
 	public ProjectSourceParser(final IProject project) {
 		this.project = project;
 		syntacticAnalyzer = new ProjectSourceSyntacticAnalyzer(project, this);
-		semanticAnalyzer = new ProjectSourceSemanticAnalyzer(this);
+		semanticAnalyzer = new ProjectSourceSemanticAnalyzer();
 	}
 
 	ProjectSourceSyntacticAnalyzer getSyntacticAnalyzer() {
