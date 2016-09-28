@@ -47,7 +47,8 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * The Def_Var class represents TTCN3 variable definitions.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class Def_Var extends Definition {
 	private static final String FULLNAMEPART1 = ".<type>";
 	private static final String FULLNAMEPART2 = ".<initial_value>";
@@ -61,10 +62,18 @@ public final class Def_Var extends Definition {
 
 	private boolean wasAssigned;
 
-	public Def_Var(final Identifier identifier, final Type type, final Value initialValue) {
+	/**
+	 * true, if and only if @lazy modifier is used before the definition
+	 * NOTE: currently there is no restriction of using @lazy modifier here,
+	 *       so no check is needed 
+	 */
+	private boolean mIsLazy;
+	
+	public Def_Var( final Identifier identifier, final Type type, final Value initialValue, final boolean aIsLazy ) {
 		super(identifier);
 		this.type = type;
 		this.initialValue = initialValue;
+		mIsLazy = aIsLazy;
 
 		if (type != null) {
 			type.setFullNameParent(this);
@@ -418,5 +427,12 @@ public final class Def_Var extends Definition {
 
 	public boolean getWritten() {
 		return wasAssigned;
+	}
+	
+	/**
+	 * @return true, if and only if @lazy modifier is used before the definition
+	 */
+	public boolean isLazy() {
+		return mIsLazy;
 	}
 }

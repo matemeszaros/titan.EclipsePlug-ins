@@ -28,7 +28,8 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * The Statement class represents a try-catch statement.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public class TryCatch_Statement extends Statement {
 	
 	private static final String FULLNAMEPART1 = ".try";
@@ -53,7 +54,7 @@ public class TryCatch_Statement extends Statement {
 		catchSurroundingBlock.setLocation(exceptionIdentifier.getLocation());
 		final Type strType = new CharString_Type();
 		strType.setLocation(exceptionIdentifier.getLocation());
-		final Def_Var strDefinition = new Def_Var(exceptionIdentifier,strType,null);
+		final Def_Var strDefinition = new Def_Var( exceptionIdentifier, strType, null, false );
 		strDefinition.setLocation(exceptionIdentifier.getLocation());
 		final Statement strStatement = new Definition_Statement(strDefinition);
 		strStatement.setLocation(exceptionIdentifier.getLocation());
