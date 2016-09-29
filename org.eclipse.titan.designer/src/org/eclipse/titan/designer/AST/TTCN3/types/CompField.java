@@ -260,18 +260,19 @@ public final class CompField extends ASTNode
 	public void updateSyntax(final TTCN3ReparseUpdater reparser, final boolean isDamaged) throws ReParseException {
 		if (isDamaged) {
 			boolean enveloped = false;
-
-			Location tempIdentifier = name.getLocation();
-			if (reparser.envelopsDamage(tempIdentifier) || reparser.isExtending(tempIdentifier)) {
-				reparser.extendDamagedRegion(tempIdentifier);
-				IIdentifierReparser r = new IdentifierReparser(reparser);
-				int result = r.parse();
-				name = r.getIdentifier();
-				// damage handled
-				if (result == 0) {
-					enveloped = true;
-				} else {
-					throw new ReParseException(result);
+			if(name != null) {
+				Location tempIdentifier = name.getLocation();
+				if (reparser.envelopsDamage(tempIdentifier) || reparser.isExtending(tempIdentifier)) {
+					reparser.extendDamagedRegion(tempIdentifier);
+					IIdentifierReparser r = new IdentifierReparser(reparser);
+					int result = r.parse();
+					name = r.getIdentifier();
+					// damage handled
+					if (result == 0) {
+						enveloped = true;
+					} else {
+						throw new ReParseException(result);
+					}
 				}
 			}
 

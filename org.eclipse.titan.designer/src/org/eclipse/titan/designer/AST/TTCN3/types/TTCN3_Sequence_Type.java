@@ -748,6 +748,9 @@ public final class TTCN3_Sequence_Type extends TTCN3_Set_Seq_Choice_BaseType {
 			// check missing fields
 			for (int i = 0; i < nofTypeComponents; i++) {
 				Identifier identifier = getComponentIdentifierByIndex(i);
+				if(identifier==null){
+					continue;
+				}
 				if (!componentMap.containsKey(identifier.getName())) {
 					if (getComponentByIndex(i).isOptional() && implicitOmit) {
 						templateList.addNamedValue(new NamedTemplate(new Identifier(Identifier_type.ID_TTCN, identifier

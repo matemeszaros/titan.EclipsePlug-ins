@@ -565,6 +565,9 @@ public abstract class TTCN3_Set_Seq_Choice_BaseType extends Type implements ITyp
 
 	@Override
 	public Identifier getComponentIdentifierByName(final Identifier identifier) {
+		if(identifier == null){
+			return null;
+		}
 		final CompField cf = getComponentByName(identifier.getName());
 		return cf == null ? null : cf.getIdentifier();
 	}

@@ -169,8 +169,6 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 		if (lastUniquenessCheck != null && !lastUniquenessCheck.isLess(timestamp)) {
 			return;
 		}
-		
-		lastUniquenessCheck = timestamp;
 
 		if (doubleComponents != null) {
 			doubleComponents.clear();
@@ -182,6 +180,9 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 			CompField field = fields.get(i);
 
 			Identifier fieldIdentifier = field.getIdentifier();
+			if(fieldIdentifier == null) {
+				continue;
+			}
 			String fieldName = fieldIdentifier.getName();
 			if (componentFieldMap.containsKey(fieldName)) {
 				if (doubleComponents == null) {
@@ -207,7 +208,8 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 						MessageFormat.format(DUPLICATEFIELDNAMEREPEATED, fieldIdentifier.getDisplayName()));
 			}
 		}
-
+		
+		lastUniquenessCheck = timestamp;
 	}
 
 	/**
@@ -264,14 +266,17 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 	 *         prefix.
 	 * */
 	public List<CompField> getComponentsWithPrefix(final String prefix) {
-		if (lastUniquenessCheck == null) {
-			checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
-		}
+		
+		checkUniqueness(CompilationTimeStamp.getBaseTimestamp());
 
 		List<CompField> compFields = new ArrayList<CompField>();
+		Identifier id = null;
 		for (int i = 0; i < fields.size(); i++) {
-			if (fields.get(i).getIdentifier().getName().startsWith(prefix)) {
-				compFields.add(fields.get(i));
+			id = fields.get(i).getIdentifier();
+			if(id!=null){
+				if(id.getName().startsWith(prefix)){
+					compFields.add(fields.get(i));
+				}
 			}
 		}
 		return compFields;
