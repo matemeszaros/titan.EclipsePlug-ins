@@ -130,7 +130,7 @@ public final class TTCN3ReparseUpdater {
 	}
 
 	public final boolean envelopsDamage(Location location) {
-		if (location.getOffset() <= modificationStartOffset && location.getEndOffset() >= modificationEndOffset) {
+		if (location.getOffset() < modificationStartOffset && location.getEndOffset() > modificationEndOffset) {
 			return true;
 		}
 
