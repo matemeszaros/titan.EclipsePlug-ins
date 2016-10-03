@@ -306,7 +306,18 @@ public class RenameRefactoring extends Refactoring {
 		return result;
 	}
 
+	/**
+	 * Returns true if the resource (file, folder or project) is not excluded from the project and contains ttcnpp file 
+	 * not excluded from the project
+	 * 
+	 * @param resource
+	 * @return
+	 * @throws CoreException
+	 */
 	public static boolean hasTtcnppFiles(final IResource resource) throws CoreException {
+		if(ResourceExclusionHelper.isDirectlyExcluded((IFolder) resource)) {
+			return false;
+		}
 		if (resource instanceof IProject || resource instanceof IFolder) {
 			IResource[] children = resource instanceof IFolder ? ((IFolder) resource).members() : ((IProject) resource).members();
 			for (IResource res : children) {
