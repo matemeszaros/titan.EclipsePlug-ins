@@ -142,7 +142,7 @@ function f_2(
   var template Rec vt_rec5l := pl_recout; //ok, no error
   var template Rec vt_rec6l := f_rt(); //ok, no error
   var template Rec vt_rec7l := f_r(); //ok, no error 
-  var template Rec vt_rec8l := t_rec1(tsp_i,cg_cs);
+  var template Rec vt_rec8l := t_rec1(tsp_i,cg_cs);//ok, expected error
   var template Rec vt_rec9l := t_rec1(1,t_cs);//ok, no error 
   var template integer vt_il := 3+2;
 }
