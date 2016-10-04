@@ -172,6 +172,7 @@ public abstract class AbstractIndentAction extends AbstractHandler implements IE
 		}
 
 		Interval rootInterval = GlobalIntervalHandler.getInterval(document);
+
 		if (rootInterval == null) {
 			rootInterval = (new HeuristicalIntervalDetector()).buildIntervals(document);
 			GlobalIntervalHandler.putInterval(document, rootInterval);

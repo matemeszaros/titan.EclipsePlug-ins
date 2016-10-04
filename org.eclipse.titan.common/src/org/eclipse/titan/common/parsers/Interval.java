@@ -214,8 +214,12 @@ public class Interval {
 			return this;
 		}
 
+		//if the enclosing bracket "}" is missing, then the endOffset of the last subInterval is -1
+		//handle as +infinity
+		int lastEndOffset = subIntervals.get(subIntervals.size() - 1).getEndOffset();
+
 		if (!subIntervals.isEmpty() && subIntervals.get(0).getStartOffset() <= startOffset
-				&& endOffset <= subIntervals.get(subIntervals.size() - 1).getEndOffset()) {
+				&& (endOffset <= lastEndOffset || lastEndOffset == -1)) {
 			int lowLimit = 0;
 			int highLimit = subIntervals.size();
 			int middle;
@@ -225,8 +229,10 @@ public class Interval {
 				testedIntervall = subIntervals.get(middle);
 				if (endOffset < testedIntervall.startOffset) {
 					highLimit = middle;
-				} else if (startOffset > testedIntervall.endOffset) {
+				} else if (startOffset > testedIntervall.endOffset && testedIntervall.endOffset != -1) {
 					lowLimit = middle;
+				} else if (testedIntervall==this){
+					return this;//to avoid infinite loop
 				} else {
 					return testedIntervall.getSmallestEnclosingInterval(startOffset, endOffset);
 				}

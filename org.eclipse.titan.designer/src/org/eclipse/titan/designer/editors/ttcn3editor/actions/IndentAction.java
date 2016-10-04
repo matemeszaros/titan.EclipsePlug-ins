@@ -46,7 +46,7 @@ public final class IndentAction extends AbstractIndentAction {
 			return Math.max(0, startEnclosingInterval.getDepth() - 2);
 		}
 
-		if (startEnclosingInterval.getEndOffset() < lineEndOffset
+		if (startEnclosingInterval.getEndOffset()!=-1 && startEnclosingInterval.getEndOffset() < lineEndOffset
 				&& !containsNonWhiteSpace(document.get(realStartOffset,
 						Math.max(startEnclosingInterval.getEndOffset() - realStartOffset - 1, 0)))) {
 			// indent lines containing closing bracket according to
