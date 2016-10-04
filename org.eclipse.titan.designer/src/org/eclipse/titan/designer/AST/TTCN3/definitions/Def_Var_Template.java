@@ -44,25 +44,37 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * The Def_Var class represents TTCN3 template variables.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class Def_Var_Template extends Definition {
 	private static final String FULLNAMEPART1 = ".<type>";
 	private static final String FULLNAMEPART2 = ".<initial_value>";
 	public static final String PORTNOTALLOWED = "Template variable can not be defined for port type `{0}''";
+	private static final String PARAMETRIZED_LOCAL_TEMPLATE_VAR = "Code generation for parameterized local template variable `{0}'' is not yet supported";
 
 	private static final String KIND = " template variable definition";
 
 	private final Type type;
+	
+	/**
+	 * Formal parameters.
+	 * NOTE: It is not yet supported, so semantic error must be marked if not null 
+	 */
+	private FormalParameterList mFormalParList;
 	private final TTCN3Template initialValue;
 	private final TemplateRestriction.Restriction_type templateRestriction;
 
 	private boolean wasAssigned;
 
-	public Def_Var_Template(final TemplateRestriction.Restriction_type templateRestriction, final Identifier identifier, final Type type,
-			final TTCN3Template initialValue) {
+	public Def_Var_Template( final TemplateRestriction.Restriction_type templateRestriction,
+							 final Identifier identifier,
+							 final Type type,
+							 final FormalParameterList aFormalParList,
+							 final TTCN3Template initialValue) {
 		super(identifier);
 		this.templateRestriction = templateRestriction;
 		this.type = type;
+		mFormalParList = aFormalParList;
 		this.initialValue = initialValue;
 
 		if (type != null) {
@@ -201,6 +213,14 @@ public final class Def_Var_Template extends Definition {
 		if (withAttributesPath != null) {
 			withAttributesPath.checkGlobalAttributes(timestamp, false);
 			withAttributesPath.checkAttributes(timestamp);
+		}
+
+		if ( mFormalParList != null ) {
+			mFormalParList.reset();
+			mFormalParList.check(timestamp, getAssignmentType());
+			if ( isLocal() ) {
+				location.reportSemanticError(MessageFormat.format(PARAMETRIZED_LOCAL_TEMPLATE_VAR, getFullName()));
+			}
 		}
 	}
 

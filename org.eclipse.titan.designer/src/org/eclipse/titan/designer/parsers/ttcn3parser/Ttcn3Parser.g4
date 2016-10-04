@@ -4182,9 +4182,14 @@ pr_SingleTempVarInstance [List<Definition> definitions, Type type, TemplateRestr
 @init {
 	TemplateBody body = null;
 	ArrayDimensions dimensions = null;
+	FormalParameterList formalParList = null;
 }:
 (	i = pr_Identifier
 	( d = pr_ArrayDef { dimensions = $d.dimensions; } )?
+	(	pr_LParen
+		p = pr_TemplateFormalParList { formalParList = $p.parList; }
+		pr_RParen
+	)?
 	(	pr_AssignmentChar
 		b = pr_TemplateBody { body = $b.body; }
 	)?
@@ -4199,7 +4204,7 @@ pr_SingleTempVarInstance [List<Definition> definitions, Type type, TemplateRestr
 			}
 		}
 
-		Definition definition = new Def_Var_Template( $templateRestriction, $i.identifier, tempType, body != null ? body.getTemplate() : null );
+		Definition definition = new Def_Var_Template( $templateRestriction, $i.identifier, tempType, formalParList, body != null ? body.getTemplate() : null );
 		definition.setLocation(getLocation( $start, getStopToken()));
 		$definitions.add(definition);
 	}
