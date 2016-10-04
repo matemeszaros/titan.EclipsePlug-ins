@@ -218,9 +218,8 @@ public final class Def_Var_Template extends Definition {
 		if ( mFormalParList != null ) {
 			mFormalParList.reset();
 			mFormalParList.check(timestamp, getAssignmentType());
-			if ( isLocal() ) {
-				location.reportSemanticError(MessageFormat.format(PARAMETRIZED_LOCAL_TEMPLATE_VAR, getFullName()));
-			}
+			// template variable is always local
+			location.reportSemanticError(MessageFormat.format(PARAMETRIZED_LOCAL_TEMPLATE_VAR, getFullName()));
 		}
 	}
 
