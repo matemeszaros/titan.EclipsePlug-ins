@@ -75,6 +75,7 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 			+ " in the base template";
 	private static final String NOBASETEMPLATEFORDASH = "Only modified templates are allowed to use the not used symbol (`-')"
 			+ " as the default parameter";
+	private static final String PARAMETRIZED_LOCAL_TEMPLATE = "Code generation for parameterized local template `{0}'' is not yet supported";
 
 	private static final String KIND = " template";
 
@@ -374,8 +375,7 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 			formalParList.reset();
 			formalParList.check(timestamp, getAssignmentType());
 			if (isLocal()) {
-				location.reportSemanticError(MessageFormat.format(
-						"Code generation for parameterized local template `{0}'' is not yet supported", getFullName()));
+				location.reportSemanticError(MessageFormat.format(PARAMETRIZED_LOCAL_TEMPLATE, getFullName()));
 			}
 		}
 
