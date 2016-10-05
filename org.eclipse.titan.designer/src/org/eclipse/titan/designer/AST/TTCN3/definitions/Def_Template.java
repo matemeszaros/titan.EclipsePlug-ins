@@ -375,7 +375,7 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 			formalParList.reset();
 			formalParList.check(timestamp, getAssignmentType());
 			if (isLocal()) {
-				location.reportSemanticError(MessageFormat.format(PARAMETRIZED_LOCAL_TEMPLATE, getFullName()));
+				location.reportSemanticError(MessageFormat.format(PARAMETRIZED_LOCAL_TEMPLATE, getIdentifier()));
 			}
 		}
 
