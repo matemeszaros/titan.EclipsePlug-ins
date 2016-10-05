@@ -223,18 +223,18 @@ public class Interval {
 			int lowLimit = 0;
 			int highLimit = subIntervals.size();
 			int middle;
-			Interval testedIntervall;
+			Interval testedInterval;
 			while (true) {
 				middle = (lowLimit + highLimit) / 2;
-				testedIntervall = subIntervals.get(middle);
-				if (endOffset < testedIntervall.startOffset) {
+				testedInterval = subIntervals.get(middle);
+				if (endOffset < testedInterval.startOffset) {
 					highLimit = middle;
-				} else if (startOffset > testedIntervall.endOffset && testedIntervall.endOffset != -1) {
+				} else if (startOffset > testedInterval.endOffset && testedInterval.endOffset != -1) {
 					lowLimit = middle;
-				} else if (testedIntervall==this){
+				} else if (testedInterval==this){
 					return this;//to avoid infinite loop
 				} else {
-					return testedIntervall.getSmallestEnclosingInterval(startOffset, endOffset);
+					return testedInterval.getSmallestEnclosingInterval(startOffset, endOffset);
 				}
 				if (middle == (lowLimit + highLimit) / 2) {
 					return this;
