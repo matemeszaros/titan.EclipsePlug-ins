@@ -196,7 +196,7 @@ public final class TTCN3ReparseUpdater {
 			return false;
 		}
 
-		int line = getLineOfOfset(code, modificationStartOffset);
+		int line = getLineOfOffset(code, modificationStartOffset);
 		int column = getPositionInLine(code, modificationStartOffset);
 		String substring;
 		if (code.length() <= modificationEndOffset + shift) {
@@ -237,7 +237,7 @@ public final class TTCN3ReparseUpdater {
 			return false;
 		}
 
-		int line = getLineOfOfset(code, modificationStartOffset);
+		int line = getLineOfOffset(code, modificationStartOffset);
 		int column = getPositionInLine(code, modificationStartOffset);
 		String substring;
 		if (code.length() <= modificationEndOffset + shift) {
@@ -461,7 +461,7 @@ public final class TTCN3ReparseUpdater {
 		}
 	}
 
-	public static final int getLineOfOfset(final String text, final int offset) {
+	public static final int getLineOfOffset(final String text, final int offset) {
 		int lineCounter = 0;
 		for (int i = 0; i < offset; i++) {
 			if ('\n' == text.charAt(i)) {
@@ -507,7 +507,7 @@ public final class TTCN3ReparseUpdater {
 			return Integer.MAX_VALUE;
 		}
 
-		int line = getLineOfOfset(code, modificationStartOffset);
+		int line = getLineOfOffset(code, modificationStartOffset);
 		String substring;
 		if (code.length() <= modificationEndOffset + shift) {
 			substring = code.substring(modificationStartOffset);
