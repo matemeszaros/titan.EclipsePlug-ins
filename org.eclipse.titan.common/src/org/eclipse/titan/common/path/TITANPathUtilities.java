@@ -116,9 +116,9 @@ public final class TITANPathUtilities {
 		String tmp2 = null;
 		try {
 			final String tmp1 = EnvironmentVariableResolver.eclipseStyle().resolve(pathToBeResolved, envVariables);
-			tmp2 = EnvironmentVariableResolver.unixStyle().resolveIgnoreErrors(tmp1, envVariables);	
+			tmp2 = EnvironmentVariableResolver.unixStyle().resolve(tmp1, envVariables);	//In case of error, it throws exception
 		} catch(VariableNotFoundException e){
-			ErrorReporter.logError("There was an error while resolving `" + pathToBeResolved + "'");
+			ErrorReporter.logWarning("There was an error while resolving `" + pathToBeResolved + "'"); //this is a normal behavior
 			return null;
 		} 
 		
