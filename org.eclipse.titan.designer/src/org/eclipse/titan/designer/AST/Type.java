@@ -431,9 +431,11 @@ public abstract class Type extends Governor implements IType, IIncrementallyUpda
 					}
 				} else {
 					ErrorReporter.logError("The value `" + value.getFullName() + "' does not appear to be in a module");
+					value.setIsErroneous(true);
 				}
 			} else {
 				ErrorReporter.logError("The value `" + value.getFullName() + "' does not appear to be in a scope");
+				value.setIsErroneous(true);
 			}
 		}
 
