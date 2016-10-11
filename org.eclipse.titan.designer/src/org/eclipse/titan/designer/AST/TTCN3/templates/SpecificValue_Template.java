@@ -359,7 +359,9 @@ public final class SpecificValue_Template extends TTCN3Template {
 			if (Type_type.TYPE_FUNCTION.equals(last.getTypetype()) && ((Function_Type) last).returnsTemplate()) {
 				return false;
 			}
-		} else if (Value_type.REFERENCED_VALUE.equals(specificValue.getValuetype())) {
+		} else if (Value_type.REFERENCED_VALUE.equals(specificValue.getValuetype()) 
+				//|| Value_type.UNDEFINED_LOWERIDENTIFIER_VALUE.equals(specificValue.getValuetype())
+			) { //TODO: check this hack!  
 			Reference reference = getReference();
 			Assignment assignment = reference.getRefdAssignment(timestamp, true);
 			if (assignment == null) {

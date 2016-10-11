@@ -48,7 +48,7 @@ public final class GeneralConstants {
 	public static final String TYPE = "type";
 
 	public static final String VERSION_STRING = ON_THE_FLY_ANALYZER_VERSION.toString();
-	public static final String COPYRIGHT_STRING = "# Copyright (c) 2000-2015 Ericsson Telecom AB";
+	public static final String COPYRIGHT_STRING = "# Copyright (c) 2000-2016 Ericsson Telecom AB";
 
 	public static final String PROJECT_PROPERTY_PAGE = "org.eclipse.titan.designer.properties.pages.ProjectBuildPropertyPage";
 
