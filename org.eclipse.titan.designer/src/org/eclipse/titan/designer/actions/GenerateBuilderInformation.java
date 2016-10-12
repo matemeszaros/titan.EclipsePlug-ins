@@ -139,28 +139,27 @@ public final class GenerateBuilderInformation extends AbstractHandler implements
 		}
 		node = document.createElement("projectName");
 		node.appendChild(document.createTextNode(project.getName()));
+
 		makefileSettings.appendChild(node);
 		node = document.createElement("projectRoot");
 		node.appendChild(document.createTextNode(project.getLocationURI().toString()));
 		makefileSettings.appendChild(node);
+
 		temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, "workingDir"));
 		node = document.createElement("workingDirectory");
-		// temp = TITANPathUtilities.resolvePath(temp,
-		// project.getLocation().toOSString()).toOSString();
 		node.appendChild(document.createTextNode(TITANPathUtilities.resolvePathURI(temp, project.getLocation().toOSString()).toString()));
 		makefileSettings.appendChild(node);
+
 		temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, "targetExecutable"));
 		node = document.createElement("targetExecutable");
-		// temp = TITANPathUtilities.resolvePath(temp,
-		// project.getLocation().toOSString()).toOSString();
 		node.appendChild(document.createTextNode(TITANPathUtilities.resolvePathURI(temp, project.getLocation().toOSString()).toString()));
 		makefileSettings.appendChild(node);
+
 		temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, "makefileUpdateScript"));
 		node = document.createElement("MakefileScript");
-		// temp = TITANPathUtilities.resolvePath(temp,
-		// project.getLocation().toOSString()).toOSString();
 		node.appendChild(document.createTextNode(TITANPathUtilities.resolvePathURI(temp, project.getLocation().toOSString()).toString()));
 		makefileSettings.appendChild(node);
+
 		temp = project.getPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER, "makefileFlags"));
 		node = document.createElement("MakefileFlags");
 		node.appendChild(document.createTextNode(temp));

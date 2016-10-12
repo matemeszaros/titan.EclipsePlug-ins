@@ -66,6 +66,23 @@ public class EnvironmentVariableResolver {
 		return builder.toString();
 	}
 
+	//prerequisite: eclipseStyle resolver is created
+	public String replaceEnvVarsWithUnixEnvVars(final String original) {
+		
+		final Matcher matcher = pattern.matcher(original);
+		final StringBuffer builder = new StringBuffer(original.length());
+		boolean result2 = matcher.find();
+		while (result2) {
+			final String keyWithStartEnd = matcher.group();
+			final String key = keyWithStartEnd.substring(variableStart.length(), keyWithStartEnd.length() - 1);
+			final String result3 = "\\$\\{" + key + "\\}";
+			matcher.appendReplacement(builder, result3);
+			result2 = matcher.find();
+		}
+		matcher.appendTail(builder);
+		return builder.toString();
+	}
+
 	public static class VariableNotFoundException extends Exception {
 		public VariableNotFoundException(final String variableName) {
 			super("Variable " + variableName + " cannot be resolved.");
