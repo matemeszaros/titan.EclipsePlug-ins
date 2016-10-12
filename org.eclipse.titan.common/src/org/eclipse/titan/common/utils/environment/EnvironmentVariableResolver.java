@@ -66,7 +66,13 @@ public class EnvironmentVariableResolver {
 		return builder.toString();
 	}
 
-	//prerequisite: eclipseStyle resolver is created
+	/**
+	 * Replaces the environment variable/path variables, whose pattern is defined by the constructor input parameter, with the form of ${VAR}
+	 * Prerequisite: eclipseStyle resolver is created with the appropriate pattern
+	 * Usage: String retval = EnvironmentVariableResolver.eclipseStyle().replaceEnvVarsWithUnixEnvVars(pathToBeResolved);
+	 * @param original
+	 * @return
+	 */
 	public String replaceEnvVarsWithUnixEnvVars(final String original) {
 		
 		final Matcher matcher = pattern.matcher(original);
