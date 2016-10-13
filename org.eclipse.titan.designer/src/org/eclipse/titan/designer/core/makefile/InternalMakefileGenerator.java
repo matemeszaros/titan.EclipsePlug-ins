@@ -767,7 +767,7 @@ public final class InternalMakefileGenerator {
 		if (useRuntime2) {
 			contents.append(" -DTITAN_RUNTIME_2");
 		}
-
+		MessageConsole debugConsole = TITANDebugConsole.getConsole();
 		for (IProject reachableProject : reachableProjects) {
 			String[] optionList = PreprocessorIncludedOptionsData.getPreprocessorIncludes(reachableProject);
 			if (optionList.length > 0) {
@@ -779,7 +779,8 @@ public final class InternalMakefileGenerator {
 				} else {
 					String tempProjectLocation = location.toOSString();
 					for (String temp : optionList) {
-						temp = TITANPathUtilities.resolvePathURIForMakefile(temp, tempProjectLocation, reportDebugInformation);
+						temp = TITANPathUtilities.resolvePathURIForMakefile(temp, 
+								tempProjectLocation, reportDebugInformation,debugConsole);
 						contents.append(" -I").append(temp);
 					}
 				}
@@ -831,7 +832,8 @@ public final class InternalMakefileGenerator {
 					} else {
 						String tempProjectLocation = location.toOSString();
 						for (String option : optionList) {
-							option = TITANPathUtilities.resolvePathURIForMakefile(option, tempProjectLocation, reportDebugInformation);
+							option = TITANPathUtilities.resolvePathURIForMakefile(option, 
+									tempProjectLocation, reportDebugInformation,debugConsole);
 							contents.append(" -I").append(option);
 						}
 					}
@@ -2082,7 +2084,7 @@ public final class InternalMakefileGenerator {
 	private StringBuilder appendExecutableTarget(final StringBuilder contents, final String allObjects, final boolean externalLibrariesDisabled) {
 		boolean reportDebugInformation = Platform.getPreferencesService().getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, false, null);
-
+		MessageConsole debugConsole = TITANDebugConsole.getConsole();
 		final List<IProject> referencedProjects = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
 		if (dynamicLinking && library) {
 			contents.append("$(EXECUTABLE): $(LIBRARY)\n");
@@ -2107,7 +2109,8 @@ public final class InternalMakefileGenerator {
 					} else {
 						String tempProjectLocation = location.toOSString();
 						for (String option : optionList) {
-							option = TITANPathUtilities.resolvePathURIForMakefile(option, tempProjectLocation,reportDebugInformation);
+							option = TITANPathUtilities.resolvePathURIForMakefile(option, 
+									tempProjectLocation,reportDebugInformation,debugConsole);
 							contents.append(' ').append(option);
 						}
 					}
@@ -2131,7 +2134,8 @@ public final class InternalMakefileGenerator {
 				} else {
 					String tempProjectLocation = location.toOSString();
 					for (String temp : optionList) {
-						temp = TITANPathUtilities.resolvePathURIForMakefile(temp, tempProjectLocation, reportDebugInformation);
+						temp = TITANPathUtilities.resolvePathURIForMakefile(temp, 
+								tempProjectLocation, reportDebugInformation,debugConsole);
 						contents.append(" -L").append(temp);
 					}
 				}
@@ -2234,9 +2238,14 @@ public final class InternalMakefileGenerator {
 
 		allProjectsUseSymbolicLinks = usingSymbolicLinks;
 
-		String temp = ResourceUtils.getPersistentProperty(project, ProjectBuildPropertyData.QUALIFIER, MakefileCreationData.TARGET_EXECUTABLE_PROPERTY);
+		String temp = ResourceUtils.getPersistentProperty(
+				project, 
+				ProjectBuildPropertyData.QUALIFIER, 
+				MakefileCreationData.TARGET_EXECUTABLE_PROPERTY);
 		if (temp != null && temp.trim().length() > 0) {
-			etsName = TITANPathUtilities.resolvePathURIForMakefile(temp, projectLocation, reportDebugInformation);
+			MessageConsole debugConsole = TITANDebugConsole.getConsole();
+			etsName = TITANPathUtilities.resolvePathURIForMakefile(
+					temp, projectLocation, reportDebugInformation,debugConsole);
 		} else {
 			temp = project.getName();
 			if (Platform.OS_WIN32.equals(Platform.getOS())) {

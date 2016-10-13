@@ -31,5 +31,4 @@ Export-Package: org.eclipse.titan.common,
  org.eclipse.titan.common.utils.environment,
  org.eclipse.titan.common.utils.preferences
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.eclipse.titan.designer.consoles
 
