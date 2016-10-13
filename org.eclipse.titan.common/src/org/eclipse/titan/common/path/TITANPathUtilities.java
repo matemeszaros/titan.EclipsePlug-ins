@@ -23,6 +23,7 @@ import org.eclipse.ui.console.MessageConsole;
  * Utility class to resolve eclipse paths.
  * 
  * @author Kristof Szabados
+ * @author Jeno Balasko
  */
 public final class TITANPathUtilities {
 

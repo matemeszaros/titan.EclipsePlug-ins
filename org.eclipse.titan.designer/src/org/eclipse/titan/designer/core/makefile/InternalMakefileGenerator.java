@@ -71,6 +71,7 @@ import org.eclipse.ui.console.MessageConsole;
  *   while having access to all eclipse resources and data from the on-he-fly analyzer.
  *
  * @author Kristof Szabados
+ * @author Jeno Balasko
  * */
 //check out IWorkspaceRoot.findFilesForLocation
 public final class InternalMakefileGenerator {
