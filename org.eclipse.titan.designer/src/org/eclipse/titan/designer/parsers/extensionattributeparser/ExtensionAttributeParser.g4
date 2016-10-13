@@ -79,6 +79,7 @@ pr_ExtensionAttribute returns[ExtensionAttribute attribute]:
 |	pr_PortTypeAttribute		{$attribute = $pr_PortTypeAttribute.attribute;}
 |	pr_ExtendsAttribute			{$attribute = $pr_ExtendsAttribute.attribute;}
 |	pr_AnyTypeAttribute			{$attribute = $pr_AnyTypeAttribute.attribute;}
+|	pr_EncDecValueAttribute		{$attribute = $pr_EncDecValueAttribute.attribute;}
 |	pr_DoneAttribute			{$attribute = $pr_DoneAttribute.attribute;}
 |	pr_VersionAttribute			{$attribute = $pr_VersionAttribute.attribute;}
 |	pr_RequiresAttribute		{$attribute = $pr_RequiresAttribute.attribute;}
@@ -151,6 +152,13 @@ pr_Version returns [Identifier identifier]
 {
 	$identifier = new Identifier(Identifier_type.ID_TTCN, $temp, getLocation($start, $endCol));
 };
+
+pr_EncDecValueAttribute returns [ EncDecValueAttribute attribute ]
+@init {
+	$attribute = new EncDecValueAttribute();
+}:
+	pr_InOutTypeMappingList [ $attribute ]
+;
 
 pr_PrototypeAttribute returns[PrototypeAttribute attribute]
 @init { $attribute = null;}:
@@ -374,16 +382,13 @@ pr_PortTypeReference returns[Reference reference]
 	pr_Reference	{$reference = $pr_Reference.reference;}
 ;
 
-pr_InOutTypeMappingList[UserPortTypeAttribute attribute]
-	:
+pr_InOutTypeMappingList[ IInOutTypeMappingAttribute attribute ]:
 (	
 	pr_InOutTypeMapping[$attribute]
 )+
 ;
 
-pr_InOutTypeMapping[UserPortTypeAttribute attribute]
-	locals[TypeMappings typeMappings]
-	:
+pr_InOutTypeMapping[ IInOutTypeMappingAttribute attribute ]:
 (	
 	IN
 	LPAREN

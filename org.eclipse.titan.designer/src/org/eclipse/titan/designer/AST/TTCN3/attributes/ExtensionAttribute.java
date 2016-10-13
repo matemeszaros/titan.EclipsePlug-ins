@@ -18,11 +18,12 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * from this.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public abstract class ExtensionAttribute implements ILocateableNode, INamedNode {
 	public enum ExtensionAttribute_type {
 		PROTOTYPE, ENCODE, DECODE, ERRORBEHAVIOR, PRINTING, TRANSPARENT,
-		ANYTYPE, PORTTYPE, DONE, EXTENDS, VERSION, REQUIRES, TITANVERSION
+		ANYTYPE, ENCDECVALUE, PORTTYPE, DONE, EXTENDS, VERSION, REQUIRES, TITANVERSION
 	}
 
 	/** the time when this attribute was checked the last time. */

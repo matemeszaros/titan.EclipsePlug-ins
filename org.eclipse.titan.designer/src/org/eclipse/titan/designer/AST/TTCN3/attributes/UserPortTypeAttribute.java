@@ -15,7 +15,7 @@ import org.eclipse.titan.designer.AST.Reference;
  * 
  * @author Kristof Szabados
  * */
-public final class UserPortTypeAttribute extends PortTypeAttribute {
+public final class UserPortTypeAttribute extends PortTypeAttribute implements IInOutTypeMappingAttribute {
 
 	private final Reference reference;
 
