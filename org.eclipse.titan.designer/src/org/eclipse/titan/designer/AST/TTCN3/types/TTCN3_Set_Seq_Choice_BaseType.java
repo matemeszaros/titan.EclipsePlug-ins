@@ -47,8 +47,6 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  * @author Kristof Szabados
  * */
 public abstract class TTCN3_Set_Seq_Choice_BaseType extends Type implements ITypeWithComponents, IReferenceableElement {
-	public static final String NONEXISTENTFIELDREFERENCE = "Reference to non-existent field `{0}'' in type `{1}''";
-
 	protected CompFieldMap compFieldMap;
 
 	private boolean componentInternal;
