@@ -22,6 +22,7 @@ import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.MessageConsoleStream;
 
 /**
@@ -418,6 +419,10 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 	}
 
 	protected void writeDebugInfo(final Map<Module, List<AssignmentHandler>> moduleAndAssignments) {
+		if (!PlatformUI.isWorkbenchRunning()) {
+			return;
+		}
+
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
