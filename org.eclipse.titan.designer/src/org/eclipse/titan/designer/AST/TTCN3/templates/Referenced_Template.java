@@ -426,12 +426,14 @@ public final class Referenced_Template extends TTCN3Template {
 		} else {
 		//if (reference != null):
 			Assignment ass = reference.getRefdAssignment(timestamp, true);
-			switch (ass.getAssignmentType()) {
-			case A_TEMPLATE:
+			if (Assignment_type.A_TEMPLATE == ass.getAssignmentType()) {
 				ITTCN3Template templateLast = getTemplateReferencedLast(timestamp);
 				if(! this.equals(templateLast)) {
-					templateLast.checkValueomitRestriction(timestamp, getTemplateTypeName(), omitAllowed, usageLocation); // -- return would be too early.
+					templateLast.checkValueomitRestriction(timestamp, getTemplateTypeName(), omitAllowed, usageLocation);
 				}
+			}
+			switch (ass.getAssignmentType()) {
+			case A_TEMPLATE:
 			case A_VAR_TEMPLATE:
 			case A_EXT_FUNCTION_RTEMP:
 			case A_FUNCTION_RTEMP:
