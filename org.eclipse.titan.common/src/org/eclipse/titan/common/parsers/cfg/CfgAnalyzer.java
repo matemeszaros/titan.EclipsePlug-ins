@@ -156,13 +156,7 @@ public final class CfgAnalyzer {
 		} else if (null != file) {
 			try {
 				reader = new BufferedReader(new InputStreamReader(file.getContents(), StandardCharsets.UTF8));
-				IFileStore store;
-				try {
-					store = EFS.getStore( file.getLocationURI() );
-				} catch (CoreException e) {
-					ErrorReporter.logExceptionStackTrace( e );
-					return;
-				}
+				IFileStore store = EFS.getStore( file.getLocationURI() );
 				IFileInfo fileInfo = store.fetchInfo();
 				fileLength = (int) fileInfo.getLength();
 			} catch (CoreException e) {
