@@ -154,7 +154,7 @@ public final class ConfigTreeNodeUtilities {
 		}
 		if ( aParent instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParent;
-			if ( rule.children != null && aChild != null && aChild.getText() != null ) {
+			if ( rule.children != null && aChild.getText() != null ) {
 				//delete child by text
 				final List<ParseTree> list = rule.children;
 				final int size = list.size();
