@@ -31,7 +31,7 @@ import org.eclipse.titan.common.path.PathConverter;
  * @author Arpad Lovassy
  */
 public final class ConfigFileHandler {
-	private LinkedHashMap<Path, CfgParseResult> originalASTs = new LinkedHashMap<Path, CfgParseResult>();
+	private Map<Path, CfgParseResult> originalASTs = new LinkedHashMap<Path, CfgParseResult>();
 	private final Map<String, CfgDefinitionInformation> definesMap = new HashMap<String, CfgDefinitionInformation>();
 
 	/**

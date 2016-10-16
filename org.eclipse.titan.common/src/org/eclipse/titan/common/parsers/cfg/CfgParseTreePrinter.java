@@ -8,7 +8,6 @@
 package org.eclipse.titan.common.parsers.cfg;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,7 +87,7 @@ public class CfgParseTreePrinter {
 	 * original parse tree roots to resolve.
 	 * it can be null, if no resolving is done
 	 */
-	final LinkedHashMap<Path, CfgParseResult> mCfgParseResults;
+	final Map<Path, CfgParseResult> mCfgParseResults;
 
 	/**
 	 * macro definitions, which are collected during parsing from [DEFINE] sections.
@@ -123,7 +122,7 @@ public class CfgParseTreePrinter {
 	 */
 	public CfgParseTreePrinter( final StringBuilder aSb,
 								final List<Integer> aDisallowedNodes,
-								final LinkedHashMap<Path, CfgParseResult> aCfgParseResults,
+								final Map<Path, CfgParseResult> aCfgParseResults,
 								final Map<String, CfgDefinitionInformation> aDefinitions,
 								final Map<String, String> aEnvVariables,
 								final List<Path> aFilesToResolve ) {
@@ -190,7 +189,7 @@ public class CfgParseTreePrinter {
 	 *                        needed only if aResolveMode != NO_RESOLVING, otherwise it can be null
 	 * @return output parse tree text
 	 */
-	public static void printResolved( final LinkedHashMap<Path, CfgParseResult> aCfgParseResults,
+	public static void printResolved( final Map<Path, CfgParseResult> aCfgParseResults,
 									  final StringBuilder aSb,
 									  final List<Integer> aDisallowedNodes,
 									  final ResolveMode aResolveMode,
