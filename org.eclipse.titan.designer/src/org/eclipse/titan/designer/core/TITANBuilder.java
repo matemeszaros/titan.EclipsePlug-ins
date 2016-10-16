@@ -1105,7 +1105,7 @@ public final class TITANBuilder extends IncrementalProjectBuilder {
 
 		progress.done();
 		if (buildJob.foundErrors() || progress.isCanceled()) {
-			if (project != null && (kind == FULL_BUILD || kind == INCREMENTAL_BUILD)) {
+			if (kind == FULL_BUILD || kind == INCREMENTAL_BUILD) {
 				final IProject project2 = project;
 				WorkspaceJob op = new WorkspaceJob("Touching the project") {
 					@Override
