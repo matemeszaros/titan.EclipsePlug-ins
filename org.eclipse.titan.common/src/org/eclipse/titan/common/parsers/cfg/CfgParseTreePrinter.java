@@ -46,10 +46,10 @@ public class CfgParseTreePrinter {
 	private static final String INCLUDED_END = "//End of file: ";
 
 	/** pattern for matching macro string, for example: \$a, \${a} */
-	private final static Pattern PATTERN_MACRO = Pattern.compile("\\$\\s*\\{?\\s*([A-Za-z][A-Za-z0-9_]*)\\s*\\}?");
+	private static final Pattern PATTERN_MACRO = Pattern.compile("\\$\\s*\\{?\\s*([A-Za-z][A-Za-z0-9_]*)\\s*\\}?");
 
 	/** pattern for matching typed macro string, for example: ${a, float} */
-	private final static Pattern PATTERN_TYPED_MACRO = Pattern.compile("\\$\\s*\\{\\s*([A-Za-z][A-Za-z0-9_]*)\\s*,\\s*[A-Za-z][A-Za-z0-9_]*\\s*\\}");
+	private static final Pattern PATTERN_TYPED_MACRO = Pattern.compile("\\$\\s*\\{\\s*([A-Za-z][A-Za-z0-9_]*)\\s*,\\s*[A-Za-z][A-Za-z0-9_]*\\s*\\}");
 	
 	/**
 	 * Mode of resolving <br>
