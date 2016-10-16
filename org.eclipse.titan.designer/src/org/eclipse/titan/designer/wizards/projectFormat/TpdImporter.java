@@ -759,7 +759,7 @@ public class TpdImporter {
 						try {
 							if (pathVariableManager.isDefined(variableName)) {
 								URI uri = pathVariableManager.getURIValue(variableName);
-								if (!variableValue.equals(URIUtil.toPath(uri))) {
+								if (!variableValue.equals(URIUtil.toPath(uri).toString())) {
 									EditPathVariableDialog dialog = new EditPathVariableDialog(shell, variableName, uri, URIUtil.toURI(
 											variableValue));
 									if (Window.OK == dialog.open()) {
