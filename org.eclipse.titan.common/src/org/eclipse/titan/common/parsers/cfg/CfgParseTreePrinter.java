@@ -272,6 +272,7 @@ public class CfgParseTreePrinter {
 			ErrorReporter.logWarning("ConfigTreeNodeUtilities.print(): aParseTree == null");
 			return;
 		}
+
 		if ( aParseTree instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aParseTree;
 			if ( mDisallowedNodes != null && mDisallowedNodes.contains( rule.start.getType() ) ) {
@@ -282,22 +283,19 @@ public class CfgParseTreePrinter {
 				// about the hidden tokens, as it has no position in the token list, but the rule may have
 				printHiddenTokensBefore( rule, aTokens );
 			}
-		}
-		else if ( aParseTree instanceof TerminalNodeImpl ) {
+		} else if ( aParseTree instanceof TerminalNodeImpl ) {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aParseTree;
 			final Token token = tn.getSymbol();
 			if ( mDisallowedNodes == null || !mDisallowedNodes.contains( token.getType() ) ) {
 				printToken( token, aTokens, aPrintHiddenBefore, aResolveMode, aFile );
 			}
-		}
-		else if ( aParseTree instanceof AddedParseTree ) {
+		} else if ( aParseTree instanceof AddedParseTree ) {
 			final AddedParseTree t = (AddedParseTree)aParseTree;
 			mSb.append( t.getText() );
-		}
-		else {
+		} else {
 			ErrorReporter.INTERNAL_ERROR("ConfigTreeNodeUtilities.print(): unexpected ParseTree type");
 		}
-		
+
 		for ( int i = 0; i < aParseTree.getChildCount(); i++ ) {
 			ParseTree child = aParseTree.getChild( i );
 			if ( child == aParseTree ) {

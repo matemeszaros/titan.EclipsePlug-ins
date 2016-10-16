@@ -107,6 +107,7 @@ public class ParserLogger {
 			println( "ERROR: ParseTree is not build. Call Parser.setBuildParseTree( true ); BEFORE parsing. Or do NOT call Parser.setBuildParseTree( false );" );
 			return;
 		}
+
 		if ( aRoot instanceof ParserRuleContext ) {
 			final ParserRuleContext rule = (ParserRuleContext)aRoot;
 			final String ruleInfo = getRuleInfo( rule, aParser, aTokenNameResolver ); 
@@ -115,30 +116,31 @@ public class ParserLogger {
 			} else {
 				printIndent( ruleInfo, aLevel );
 			}
+
 			final int count = rule.getChildCount();
 			final boolean oneChild = count == 1 && rule.exception == null;
 			if ( !oneChild ) {
 				print( ": '" + getEscapedRuleText( rule, aTokens ) + "'" );
 				println();
 			}
+
 			for( int i = 0; i < count; i++ ) {
 				final ParseTree child = rule.getChild( i );
 				log( child, aParser, aTokens, aTokenNameResolver, aLevel + ( aParentOneChild ? 0 : 1 ), oneChild );
 			}
-		}
-		else if ( aRoot instanceof TerminalNodeImpl ) {
+		} else if ( aRoot instanceof TerminalNodeImpl ) {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aRoot;
 			if ( aParentOneChild ) {
 				print( ": '" + getEscapedTokenText( tn.getSymbol() ) + "'" );
 				println();
 			}
+
 			printIndent( getTokenInfo( tn.getSymbol(), aTokenNameResolver ), aLevel );
 			if ( tn.parent == null ) {
 				print(", parent == null <-------------------------------------------------------------- ERROR");
 			}
 			println();
-		}
-		else if ( aRoot instanceof AddedParseTree ) {
+		} else if ( aRoot instanceof AddedParseTree ) {
 			final AddedParseTree apt = (AddedParseTree)aRoot;
 			if ( aParentOneChild ) {
 				print( ": '" + getEscapedText( apt.getText() ) + "'" );
@@ -149,8 +151,7 @@ public class ParserLogger {
 				print(", parent == null <-------------------------------------------------------------- ERROR");
 			}
 			println();
-		}
-		else {
+		} else {
 			println( "ERROR: INVALID ParseTree type" );
 		}
 	}
