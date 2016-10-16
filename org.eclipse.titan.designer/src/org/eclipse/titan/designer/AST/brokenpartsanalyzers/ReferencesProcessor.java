@@ -32,7 +32,7 @@ public abstract class ReferencesProcessor extends AssignmentHandler {
 			if (assignment == null || assignment.getIdentifier() == null) {
 				// if semantic error occurs, assignment will be null
 				// have to get reference id
-				if (reference != null && reference.getId() != null) {
+				if (reference.getId() != null) {
 					result.add(reference.getId().getDisplayName());
 				}
 			} else {
