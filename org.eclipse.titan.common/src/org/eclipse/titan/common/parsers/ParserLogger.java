@@ -28,6 +28,10 @@ import org.eclipse.titan.common.parsers.cfg.CfgInterval;
  */
 public class ParserLogger {
 	
+	private ParserLogger() {
+		// intentionally private to disable instantiation
+	}
+
 	/**
 	 * Logs a parse tree
 	 * @param aRoot parse tree
