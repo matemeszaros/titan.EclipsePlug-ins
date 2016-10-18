@@ -7398,6 +7398,10 @@ pr_PredefinedOps2 returns[Value value]
 	pr_LParen	v1 = pr_SingleExpression
 	pr_Comma	v2 = pr_SingleExpression
 	pr_RParen	{	$value = new Int2OctExpression($v1.value, $v2.value); }
+|	ISTEMPLATEKIND
+	pr_LParen	t1 = pr_TemplateInstance
+	pr_Comma	v2 = pr_SingleExpression
+	pr_RParen	{	$value = new IsTemplateKindExpression($t1.templateInstance, $v2.value); }
 )
 { $value.setLocation(getLocation( $start, getStopToken())); };
 

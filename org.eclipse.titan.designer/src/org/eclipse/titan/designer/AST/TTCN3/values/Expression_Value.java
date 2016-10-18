@@ -152,7 +152,8 @@ public abstract class Expression_Value extends Value {
 		/** @profiler . running */								PROFILER_RUNNING_OPERATION,
 		/** encvalue_unichar(template (value) any_type [, charstring] [, universal charstring]) */ ENCVALUE_UNICHAR_OPERATION,
 		/** decvalue_unichar(universal charstring, any_type [, charstring] [, universal charstring]) */ DECVALUE_UNICHAR_OPERATION,
-		/** hostid(in charstring idkind := "Ipv4orIPv6") return charstring */	HOSTID_OPERATION
+		/** hostid(in charstring idkind := "Ipv4orIPv6") return charstring */	HOSTID_OPERATION,
+		/** istemplatekind (in template any_type invalue, in charstring kind) return boolean */	ISTEMPLATEKIND_OPERATION
 	}
 
 	/** The value of the expression if already evaluated, used to speed things up. */

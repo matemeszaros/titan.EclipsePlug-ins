@@ -54,6 +54,7 @@ import Ttcn3BaseLexer;
   IF: 'if';                         IFPRESENT: 'ifpresent';     IMPORT: 'import';
   IN: 'in';                         INCONC: 'inconc';           INFINITY: 'infinity';
   INOUT: 'inout';                   INTEGER: 'integer';         INTERLEAVE: 'interleave';
+  ISTEMPLATEKIND: 'istemplatekind';
 
   KILL: 'kill';                     KILLED: 'killed';
 
