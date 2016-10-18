@@ -21,7 +21,8 @@ import Ttcn3BaseLexer;
   ACTION: 'action';                 ACTIVATE: 'activate';       ADDRESS: 'address';
   ALIVE: 'alive';                   ALL: 'all';                 ALT: 'alt';
   ALTSTEP: 'altstep';               AND: 'and';                 AND4B: 'and4b';
-  ANY: 'any';                       ANYTYPE: 'anytype';         APPLY: 'apply';
+  ANY: 'any';                       ANYTYPE: 'anytype';         ANY2UNISTR: 'any2unistr';
+  APPLY: 'apply';
   
   BITSTRING: 'bitstring';           BOOLEAN: 'boolean';         BREAK: 'break';
 
