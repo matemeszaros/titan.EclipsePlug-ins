@@ -77,17 +77,17 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 
 		if (analyzeOnlyAssignments) {
 			final Map<Module, List<AssignmentHandler>> result = collectBrokenParts(startModules, invertedImports);
-			if (writeDebugInfo && (System.nanoTime()-start < TIMELIMIT)) {
+			if (writeDebugInfo && !isTooSlow()) {
 				writeDebugInfo(result);
 			}
 			collectRealBrokenParts(result);
 		}
 
-		if(writeDebugInfo && System.nanoTime() - start > TIMELIMIT) {
+		if(writeDebugInfo && isTooSlow()) {
 			TITANDebugConsole.println("  Switching back to old selection format");
 		}
 		// if we need to use the old selection or the new selection method took too long
-		if(!analyzeOnlyAssignments || (System.nanoTime()-start > TIMELIMIT)) {
+		if(!analyzeOnlyAssignments || isTooSlow()) {
 			analyzeOnlyAssignments = false;
 			modulesToCheck.clear();
 			moduleAndBrokenAssignments.clear();
@@ -104,6 +104,8 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		}
 	}
 
+	//Sets the flag "analyzeOnlyAssignments" to true, if the size of the broken modules is not too high 
+	//
 	public void computeAnalyzeOnlyDefinitionsFlag(final List<Module> allModules, final List<Module> startModules) {
 		float brokenModulesRatio = (float) ((startModules.size() * 100.0) / allModules.size());
 		if (Float.compare(brokenModulesRatio, (float) BROKEN_MODULE_LIMIT) < 0) {
@@ -112,7 +114,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 	}
 
 	/**
-	 * It is build an inverted import structure and identify startmodules, which CompilationTimeStamp is null.
+	 * It is build an inverted import structure and identify startmodules whose CompilationTimeStamp is null.
 	 * 
 	 * @param allModules
 	 *            the list of modules to be check. Initially all modules.
@@ -211,7 +213,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 
 		processStartModules(startModulesCopy, moduleAndBrokenAssignments);
 
-		for (int i = 0; i < startModulesCopy.size() && (System.nanoTime()-start < TIMELIMIT); ++i) {
+		for (int i = 0; i < startModulesCopy.size() && !isTooSlow(); ++i) {
 			final Module startModule = startModulesCopy.get(i);
 			List<AssignmentHandler> startAssignments;
 			if (moduleAndBrokenAssignments.containsKey(startModule)) {
@@ -299,7 +301,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 
 	public void processStartModules(final List<Module> startModules, final Map<Module, List<AssignmentHandler>> moduleAndBrokenAssignments) {
 		for (Module startModule : startModules) {
-			if(System.nanoTime()-start > TIMELIMIT) {
+			if(isTooSlow()) {
 				return;
 			}
 			if (startModule instanceof TTCN3Module && startModule.getLastCompilationTimeStamp() != null && !startModule.isCheckRoot()) {
@@ -416,6 +418,14 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				}
 			}
 		}
+	}
+	
+	// Returns true, if the time spent is over a time limit
+	// It is used to check if this kind of algorithm is too slow
+	// For debugging purposes you can set it for "false"
+	private boolean isTooSlow(){
+		return ((System.nanoTime()-start) > TIMELIMIT);
+		
 	}
 
 	protected void writeDebugInfo(final Map<Module, List<AssignmentHandler>> moduleAndAssignments) {
