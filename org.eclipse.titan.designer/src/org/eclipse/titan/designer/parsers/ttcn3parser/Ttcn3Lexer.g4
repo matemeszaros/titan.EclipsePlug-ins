@@ -49,7 +49,7 @@ import Ttcn3BaseLexer;
   GETCALL: 'getcall';               GETREPLY: 'getreply';       GETVERDICT: 'getverdict';
   GOTO: 'goto';                     GROUP: 'group';
 
-  HALT: 'halt';                     HEXSTRING: 'hexstring';
+  HALT: 'halt';                     HEXSTRING: 'hexstring';     HOSTID: 'hostid';
 
   IF: 'if';                         IFPRESENT: 'ifpresent';     IMPORT: 'import';
   IN: 'in';                         INCONC: 'inconc';           INFINITY: 'infinity';

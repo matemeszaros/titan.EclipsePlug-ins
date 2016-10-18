@@ -7246,6 +7246,15 @@ pr_PredefinedOps returns[Value value]
 	)?
 	pr_RParen
 	{	$value = new DecvalueUnicharExpression( $encodedValue.reference, $decodedValue.reference, stringSerialization, decodingInfo );	}
+|	HOSTID
+	{	Value idKind = null;
+	}
+	pr_LParen
+	(	// charstring
+		ik = pr_SingleExpression { idKind = $ik.value; }
+	)?
+	pr_RParen
+	{	$value = new HostIdExpression( idKind );	}
 )
 {
 	if ( $value != null ) {
