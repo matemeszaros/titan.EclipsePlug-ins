@@ -5,49 +5,31 @@
 # which accompanies this distribution, and is available at
 # http://www.eclipse.org/legal/epl-v10.html
 ###############################################################################
-Location of the required ANTLR plug-in :  http://antlreclipse.sourceforge.net/updates/
-Location of the required ProGuard plug-in :  http://obfuscate4e.partmaster.de/updates/
+
+Installing the requirements:
+- install antlr plugin "antlr4ide" as described here: https://github.com/jknack/antlr4ide
+- download an antlr compiler of version 4.3: http://www.antlr.org/download/antlr-4.3-complete.jar
+- to be able to try it out you need to install antlr runtime from orbit: http://download.eclipse.org/tools/orbit/downloads/drops/R20151221205849/repository/
+
+Setting up antlr4IDE
+===================
+Some of the default settings of antlr4ide need to be changed.
+
+1)
+  Go to Window / Preferences / ANTLR4 / Tool
+
+2)
+  In the antlr tool region of the preference page ass and enable the antlr compiler (version 4.3)
+
+3)
+  In the Options section:
+  - set Directory to: "./src/" (so that the files are generated next to the grammar files)
+  - turn off the generation of parse tree listener and parse tree visitors
 
 BASIC compilation of the plug-in
 ===================
 
-1)
-  In Eclipse turn off automatic build, refresh the contents of this project.
-  And Clean... the project.
-  
-2)
-  Go to the src/org.eclipse.titan.common.parsers.cfg package
-  
-3)
-  compile with ANTLR these files in this order:
-  - cfgBaseLexer.g
-  - cfgParser.g
-  
-    /* From here on it is not required to compile these files by hand as the automatic build will this for us */
-  - cfgResolver.g
-  - cfgComponentsSectionLexer.g
-  - cfgDefineSectionLexer.g
-  - cfgExecuteSectionLexer.g
-  - cfgExternalCommandsSectionLexer.g
-  - cfgGroupsSectionLexer.g
-  - cfgIncludeSectionLexer.g
-  - cfgLoggingSectionLexer.g
-  - cfgMainControllerSection.g
-  - cfgModuleParametersSectionLexer.g
-  - cfgTestportParametersSectionLexer.g
-  
-4)
-  Now you can enable automatic build, which will complete the build process.
-  
-OBFUSCATION
-=========
-After step 4 in the original build process.
+After antlr4ide is set up properly the automatic build should be able to compile the project without user intervention.
 
-5)
-Right click on MANIFEST.MF and select PDE Tools / Create ANT build file and PDE Tools / create CustomBuildCallbacks for Proguard
-
-6)
-Right click on the generated build.xml and select Run As / Ant Build
-
-7)
-After creating the package don't forget to remove the parser related .g, .smap, .txt files.
+In some cases the first compilation happens in a wrong order.
+To correct it just clear the whole project and let the automatic build try again from zero.
