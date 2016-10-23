@@ -11,13 +11,19 @@ package org.eclipse.titan.designer.parsers;
  * @author Kristof Szabados
  * */
 public final class CompilationTimeStamp {
+	/** static counter of timestamps.
+	 * Ensures that no 2 are handed out at the same time */
 	private static long compilationCounter = 0;
+
+	/** the base timestamp object has the least likelihood to trigger analysis,
+	 * as all already analysed node in the AST were analyzed later. */
 	private static final CompilationTimeStamp BASE_TIMESTAMP = new CompilationTimeStamp(0);
 
-	private final long compilationTimestamp;
+	/** The actual info on the current timestamp */
+	private final long internalCompilationTimestamp;
 
 	private CompilationTimeStamp(final long compilationTimestamp) {
-		this.compilationTimestamp = compilationTimestamp;
+		internalCompilationTimestamp = compilationTimestamp;
 	}
 
 	/**
@@ -59,11 +65,11 @@ public final class CompilationTimeStamp {
 	 * @return true if the provided timestamp is newer that the actual.
 	 * */
 	public boolean isLess(final CompilationTimeStamp other) {
-		return compilationTimestamp < other.compilationTimestamp;
+		return internalCompilationTimestamp < other.internalCompilationTimestamp;
 	}
 
 	@Override
 	public String toString() {
-		return "timestamp " + compilationTimestamp;
+		return "timestamp " + internalCompilationTimestamp;
 	}
 }
