@@ -334,6 +334,14 @@ public class ParserLogger {
 	 * @return resolved token name
 	 */
 	private static String getTokenName( final int aTokenType, TokenNameResolver aTokenNameResolver ) {
+		/*
+		TODO: use Vocabulary interface when ANTLR 4.5 is used
+		See https://github.com/antlr/antlr4/pull/712
+		
+		Vocabulary vocabulary = recognizer.getVocabulary();
+		final String symbolicName = vocabulary.getSymbolicName( aTokenType );
+		return symbolicName;
+		*/
 		if ( aTokenNameResolver == null ) {
 			aTokenNameResolver = new TokenNameResolver();
 		}
