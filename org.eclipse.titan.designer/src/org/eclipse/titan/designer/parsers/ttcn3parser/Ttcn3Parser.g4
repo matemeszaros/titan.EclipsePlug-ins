@@ -6645,20 +6645,21 @@ pr_BasicStatements returns[Statement statement]
 @init {
 	$statement = null;
 }:
-(       s1 = pr_Assignment				{ $statement = $s1.statement; }
-|       s2 = pr_LogStatement			{ $statement = $s2.statement; }
-|       s3 = pr_String2TtcnStatement	{ $statement = $s3.statement; }
-|		s4 = pr_Int2EnumStatement		{ $statement = $s4.statement; }
-|       s5 = pr_LoopConstruct			{ $statement = $s5.statement; }
-|       s6 = pr_ConditionalConstruct	{ $statement = $s6.ifStatement; }
-|       s7 = pr_SelectCaseConstruct		{ $statement = $s7.statement; }
-|       s8 = pr_TryCatchConstruct		{ $statement = $s8.statement; }
-|       s9 = pr_StatementBlock
-				{	if ($s9.statementblock != null) {
-						$statement = new StatementBlock_Statement($s9.statementblock);
-						$statement.setLocation(getLocation( $start, getStopToken()));
-					}
-				}
+(	assignment = pr_Assignment					{ $statement = $assignment.statement; }
+|	log = pr_LogStatement						{ $statement = $log.statement; }
+|	s2t = pr_String2TtcnStatement				{ $statement = $s2t.statement; }
+|	i2e = pr_Int2EnumStatement					{ $statement = $i2e.statement; }
+|	loop = pr_LoopConstruct						{ $statement = $loop.statement; }
+|	cond = pr_ConditionalConstruct				{ $statement = $cond.ifStatement; }
+|	select = pr_SelectCaseConstruct				{ $statement = $select.statement; }
+|	selectUnion = pr_SelectUnionCaseConstruct	{ $statement = $selectUnion.statement; }
+|	tryCatch = pr_TryCatchConstruct				{ $statement = $tryCatch.statement; }
+|	sb = pr_StatementBlock
+		{	if ($sb.statementblock != null) {
+				$statement = new StatementBlock_Statement($sb.statementblock);
+				$statement.setLocation(getLocation( $start, getStopToken()));
+			}
+		}
 );
 
 pr_Expression returns[Value value]
@@ -7700,6 +7701,55 @@ pr_SelectCase returns[SelectCase selectCase]
 {
 	$selectCase = new SelectCase(templateInstances, $s.statementblock);
 	$selectCase.setLocation( getLocation( $start, getStopToken()) );
+};
+
+pr_SelectUnionCaseConstruct returns[ Statement statement ]
+@init {
+	$statement = null;
+}:
+(	SELECT
+	pr_UnionKeyword
+	pr_LParen
+	v = pr_SingleExpression
+	pr_RParen
+	suc = pr_SelectUnionCaseBody
+)
+{
+	$statement = new SelectUnionCase_Statement( $v.value, $suc.selectUnionCases );
+	$statement.setLocation( getLocation( $start, $suc.stop ) );
+};
+
+pr_SelectUnionCaseBody returns[ SelectUnionCases selectUnionCases ]
+@init {
+	$selectUnionCases = new SelectUnionCases();
+}:
+(	pr_BeginChar
+	(	s = pr_SelectUnionCase
+			{	if ( $s.selectUnionCase != null ) {
+					$selectUnionCases.addSelectUnionCase( $s.selectUnionCase );
+				}
+			}
+	)+
+	pr_EndChar
+);
+
+pr_SelectUnionCase returns[ SelectUnionCase selectUnionCase ]
+@init {
+	$selectUnionCase = null;
+	Identifier identifier = null;
+}:
+(	CASE
+	(	pr_LParen
+		i = pr_Identifier	{ identifier = $i.identifier; }
+		pr_RParen
+	|	ELSE
+	)
+	s = pr_StatementBlock
+	pr_SemiColon?
+)
+{
+	$selectUnionCase = new SelectUnionCase( identifier, $s.statementblock );
+	$selectUnionCase.setLocation( getLocation( $start, getStopToken() ) );
 };
 
 pr_TryCatchConstruct returns[Statement statement]
