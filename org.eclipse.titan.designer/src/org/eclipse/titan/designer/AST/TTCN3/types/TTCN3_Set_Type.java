@@ -46,7 +46,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * */
 public final class TTCN3_Set_Type extends TTCN3_Set_Seq_Choice_BaseType {
 	public static final String INCOMPLETEPRESENTERROR = "Not used symbol `-' is not allowed in this context";
-	private static final String UNSUPPERTED_FIELDNAME =
+	private static final String UNSUPPORTED_FIELDNAME =
 			"Sorry, but it is not supported for set types to have a field with a name (`{0}'') "
 			+ "which exactly matches the name of the type definition.";
 	private static final String NONEMPTYEXPECTED = "A non-empty value was expected for type `{0}''";
@@ -353,7 +353,7 @@ public final class TTCN3_Set_Type extends TTCN3_Set_Seq_Choice_BaseType {
 	public void checkConstructorName(final String definitionName) {
 		if (hasComponentWithName(definitionName)) {
 			CompField field = getComponentByName(definitionName);
-			field.getIdentifier().getLocation().reportSemanticError(MessageFormat.format(UNSUPPERTED_FIELDNAME, field.getIdentifier().getDisplayName()));
+			field.getIdentifier().getLocation().reportSemanticError(MessageFormat.format(UNSUPPORTED_FIELDNAME, field.getIdentifier().getDisplayName()));
 		}
 	}
 
