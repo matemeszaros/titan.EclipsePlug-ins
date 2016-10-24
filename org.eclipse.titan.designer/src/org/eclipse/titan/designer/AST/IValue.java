@@ -49,7 +49,7 @@ public interface IValue extends IGovernedSimple, IIdentifierContainer, IVisitabl
 		ENUMERATED_VALUE,
 		/** undefined loweridentifier. */
 		UNDEFINED_LOWERIDENTIFIER_VALUE,
-		/** choice. */
+		/** choice (union) */
 		CHOICE_VALUE,
 		// choice
 
