@@ -46,6 +46,9 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
  */
 public final class DecvalueUnicharExpression extends Expression_Value {
 	private static final String OPERAND1_ERROR1 = "The 1st operand of the `decvalue_unichar' operation should be a universal charstring value";
+	private static final String OPERAND1_ERROR2 = "Reference to `{0}'' cannot be used as the first operand of the `decvalue_unichar'' operation";
+	private static final String OPERAND1_ERROR3 = "Specific value template was expected instead of `{0}''";
+	private static final String OPERAND1_ERROR4 = "Reference to `{0}'' cannot be used as the first operand of the `decvalue_unichar' operation";
 
 	private static final String OPERAND2_ERROR1 = "The 2nd operand of the `decvalue_unichar' operation is unable to hold a decoded value";
 
@@ -198,8 +201,7 @@ public final class DecvalueUnicharExpression extends Expression_Value {
 		case A_MODULEPAR:
 		case A_TEMPLATE:
 			reference1.getLocation().reportSemanticError(
-					MessageFormat.format("Reference to `{0}'' cannot be used as the first operand of the `decvalue'' operation",
-							temporalAssignment.getAssignmentName()));
+					MessageFormat.format(OPERAND1_ERROR2, temporalAssignment.getAssignmentName() ) );
 			setIsErroneous(true);
 			break;
 		case A_VAR:
@@ -217,9 +219,7 @@ public final class DecvalueUnicharExpression extends Expression_Value {
 			template.setFullNameParent(new BridgingNamedNode(this, ".<operand>"));
 			ITTCN3Template last = template.getTemplateReferencedLast(timestamp);
 			if (!Template_type.SPECIFIC_VALUE.equals(last.getTemplatetype()) && last != template) {
-				reference1.getLocation().reportSemanticError(
-						MessageFormat.format("Specific value template was expected instead of `{0}''",
-								last.getTemplateTypeName()));
+				reference1.getLocation().reportSemanticError( MessageFormat.format( OPERAND1_ERROR3, last.getTemplateTypeName() ) );
 				setIsErroneous(true);
 				return;
 			}
@@ -227,8 +227,7 @@ public final class DecvalueUnicharExpression extends Expression_Value {
 		}
 		default:
 			reference1.getLocation().reportSemanticError(
-					MessageFormat.format("Reference to `{0}'' cannot be used as the first operand of the `decvalue' operation",
-							temporalAssignment.getAssignmentName()));
+					MessageFormat.format( OPERAND1_ERROR4, temporalAssignment.getAssignmentName() ) );
 			setIsErroneous(true);
 			return;
 		}
