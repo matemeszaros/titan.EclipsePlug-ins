@@ -7146,7 +7146,39 @@ pr_OpCall returns[Value value]
 |	v4 = pr_PredefinedOps		{ $value = $v4.value; }
 |	v5 = pr_ActivateOp			{ $value = $v5.value; }
 |	v6 = pr_ReferOp				{ $value = $v6.value; }
+|	v7 = pr_CheckStateOp		{ $value = $v7.value; }
 );
+
+pr_CheckStateOp returns[Value value]
+@init {
+	final Reference reference;
+}:
+	(	r = pr_Port	{	reference = $r.reference;	}
+	|	pr_AnyKeyword
+		pr_PortKeyword
+			{	reference = new Reference(
+					new Identifier( Identifier_type.ID_TTCN, "any port", getLocation( $start, getStopToken() ) ) );
+			}
+	|	pr_AllKeyword
+		pr_PortKeyword
+			{	reference = new Reference(
+					new Identifier( Identifier_type.ID_TTCN, "all port", getLocation( $start, getStopToken() ) ) );
+			}
+	)
+	pr_Dot
+	pr_CheckStateKeyword
+	pr_LParen
+	v = pr_SingleExpression
+	pr_RParen
+
+{
+	$value = new CheckStateExpression( reference, $v.value );
+	$value.setLocation(getLocation( $start, getStopToken()));
+};
+
+pr_CheckStateKeyword:
+	CHECKSTATE
+;
 
 pr_PredefinedOps returns[Value value]
 @init {

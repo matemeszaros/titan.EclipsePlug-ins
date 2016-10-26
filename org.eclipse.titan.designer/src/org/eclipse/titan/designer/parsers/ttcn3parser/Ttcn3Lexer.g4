@@ -28,9 +28,9 @@ import Ttcn3BaseLexer;
 
   CALL: 'call';                     CASE: 'case';               CATCH: 'catch';
   CHARKEYWORD: 'char';              CHARSTRING: 'charstring';   CHECK: 'check';
-  CLEAR: 'clear';                   COMPLEMENTKEYWORD: 'complement';  COMPONENT: 'component';
-  CONNECT: 'connect';               CONST: 'const';             CONTINUE: 'continue';
-  CONTROL: 'control';               CREATE: 'create';
+  CHECKSTATE: 'checkstate';         CLEAR: 'clear';             COMPLEMENTKEYWORD: 'complement';
+  COMPONENT: 'component';           CONNECT: 'connect';         CONST: 'const';
+  CONTINUE: 'continue';             CONTROL: 'control';         CREATE: 'create';
 
   DEACTIVATE: 'deactivate';         DEFAULT: 'default';         DECMATCH: 'decmatch';
   DECVALUE: 'decvalue';             DECVALUE_UNICHAR: 'decvalue_unichar';

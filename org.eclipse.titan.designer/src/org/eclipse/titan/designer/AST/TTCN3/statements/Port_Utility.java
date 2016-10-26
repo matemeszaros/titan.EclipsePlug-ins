@@ -53,7 +53,8 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class Port_Utility {
 	private static final String VALUEREDIRECTTYPEMISSMATCH = "Type mismatch in value redirect:"
 			+ " A variable of type `{0}'' was expected instead of `{1}''";
@@ -94,7 +95,23 @@ public final class Port_Utility {
 		if (source.getMyStatementBlock() != null && source.getMyStatementBlock().getMyDefinition() == null) {
 			source.getLocation().reportSemanticError(PORTINCONTROLPART);
 		}
-
+		
+		return checkPortReference(timestamp, portReference);
+	}
+	
+	/**
+	 * Checks a port reference.
+	 * Statement independent version.
+	 *
+	 * @param timestamp
+	 *                the timestamp of the actual build cycle.
+	 * @param portReference
+	 *                the port reference to be checked
+	 *
+	 * @return the port type of the reference if it is a correct port
+	 *         reference, or null otherwise
+	 * */
+	public static Port_Type checkPortReference(final CompilationTimeStamp timestamp, final Reference portReference) {
 		if (portReference == null) {
 			return null;
 		}
