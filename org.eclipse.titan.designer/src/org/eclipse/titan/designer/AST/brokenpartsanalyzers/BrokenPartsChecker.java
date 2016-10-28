@@ -21,6 +21,7 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * Helper class to check broken parts.
  *
  * @author Peter Olah
+ * @author Jeno Attila Balasko
  */
 public final class BrokenPartsChecker {
 
@@ -115,4 +116,23 @@ public final class BrokenPartsChecker {
 			progress.worked(1);
 		}
 	}
+
+	//Not used, perhaps it can be removed
+//	private void markSemanticMarkersForRemoval(final Map<Module, List<Assignment>> moduleAndBrokenDefs) {
+//		progress.setTaskName("Removing old semantic markers");
+//		progress.setWorkRemaining(moduleAndBrokenDefs.size());
+//		for (Map.Entry<Module, List<Assignment>> entry : moduleAndBrokenDefs.entrySet()) {
+//			Module module = entry.getKey();
+//
+//			progress.subTask("Removing semantic markers of broken parts in module: " + module.getName());
+//
+//			List<Assignment> assignments = entry.getValue();
+//			if(assignments.isEmpty()) {
+//				continue;
+//			}
+//			MarkerHandler.markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, assignments);
+//
+//			progress.worked(1);
+//		}
+//	}
 }

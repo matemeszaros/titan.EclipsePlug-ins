@@ -32,6 +32,7 @@ import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportation;
 import org.eclipse.titan.designer.AST.ModuleImportationChain;
@@ -82,6 +83,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * 
  * @author Kristof Szabados
  * @author Arpad Lovassy
+ * @author Jeno Attila Balasko
  */
 public final class TTCN3Module extends Module {
 	private static final String FULLNAMEPART = ".control";
@@ -316,8 +318,14 @@ public final class TTCN3Module extends Module {
 		}
 
 		for (ImportModule impmod : importedModules) {
+			Location loc = impmod.getLocation();
+			MarkerHandler.markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, loc.getFile(), loc.getOffset(), loc.getEndOffset());
+			impmod.setUsedForImportation(false);
+		}
+		
+		for (ImportModule impmod : importedModules) {
 			referenceChain.markState();
-			impmod.checkImports(timestamp, referenceChain, moduleStack);
+			impmod.checkImports(timestamp, referenceChain, moduleStack);//This checks only existence, not used or not used //TODO: remove markers before this line!
 			referenceChain.previousState();
 			LoadBalancingUtilities.astNodeChecked();
 		}
@@ -393,7 +401,7 @@ public final class TTCN3Module extends Module {
 
 		T3Doc.check(this.getCommentLocation(), MODULE);
 
-		lastCompilationTimeStamp = timestamp;
+		lastCompilationTimeStamp = timestamp;//TODO: move down at the end.
 
 		if (getSkippedFromSemanticChecking()) {
 			return;
@@ -456,9 +464,9 @@ public final class TTCN3Module extends Module {
 			withAttributesPath.checkAttributes(timestamp);
 		}
 
-		//for (ImportModule impMod : importedModules) {
-		//	impMod.check(timestamp);
-		//}
+//		for (ImportModule impMod : importedModules) {
+//			impMod.check(timestamp);
+//		}
 
 		checkFriendModuleUniqueness();
 		for (FriendModule friendModule : friendModules) {

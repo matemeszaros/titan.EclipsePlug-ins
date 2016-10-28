@@ -197,8 +197,8 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 		if (doubleComponents != null) {
 			for (int i = 0, size = doubleComponents.size(); i < size; i++) {
 				CompField field = doubleComponents.get(i);
-				//remove duplication from fields:
-				fields.remove(field);
+				//remove duplication from fields - not used anymore
+				//fields.remove(field); 
 				//report duplication:
 				Identifier fieldIdentifier = field.getIdentifier();
 				String fieldName = fieldIdentifier.getName();
