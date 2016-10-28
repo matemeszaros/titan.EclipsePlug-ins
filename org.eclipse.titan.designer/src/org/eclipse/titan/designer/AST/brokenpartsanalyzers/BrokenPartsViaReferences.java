@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignments;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
@@ -27,6 +28,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 
 /**
  * @author Peter Olah
+ * @author Jeno Attila Balasko
  */
 //FIXME clean up selection methods if this way of working is tested to be OK
 public final class BrokenPartsViaReferences extends SelectionMethodBase implements IBaseAnalyzer {
@@ -104,8 +106,12 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		}
 	}
 
-	//Sets the flag "analyzeOnlyAssignments" to true, if the size of the broken modules is not too high 
-	//
+	/**
+	 * Sets the flag "analyzeOnlyAssignments" to true, if the size of the broken modules is not too high 
+	 * 
+	 * @param allModules
+	 * @param startModules - the broken modules
+	 */
 	public void computeAnalyzeOnlyDefinitionsFlag(final List<Module> allModules, final List<Module> startModules) {
 		float brokenModulesRatio = (float) ((startModules.size() * 100.0) / allModules.size());
 		if (Float.compare(brokenModulesRatio, (float) BROKEN_MODULE_LIMIT) < 0) {
@@ -244,13 +250,14 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 						if (startAssignment.getIsContagious()) {
 							for (int d = 0; d < dependentAssignments.size(); ++d) {
 								final AssignmentHandler dependentAssignment = dependentAssignments.get(d);
-								dependentAssignment.check(startAssignment);
+								dependentAssignment.check(startAssignment); //only infection and contagion are checked
 								if (dependentAssignment.getIsInfected()) {
 									if (!startModulesCopy.contains(dependentModule)) {
 										startModulesCopy.add(dependentModule);
 									}
-
-									brokens.add(dependentAssignment);
+									if( !brokens.contains(dependentAssignment) ) {
+										brokens.add(dependentAssignment);
+									}
 								}
 							}
 						}
@@ -312,6 +319,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 					final Assignment startAssignment = startAssignments.getAssignmentByIndex(d);
 					final AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(startAssignment);
 					if (startAssignment.getLastTimeChecked() == null) {
+						MarkerHandler.markAllSemanticMarkersForRemoval(startAssignment);
 						startAssignment.check(timestamp);
 					}
 
@@ -340,6 +348,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				}
 			} else {
 				if (startModule.getLastCompilationTimeStamp() == null) {
+					MarkerHandler.markAllSemanticMarkersForRemoval(startModule.getLocation().getFile());
 					startModule.check(timestamp);
 				}
 
@@ -425,7 +434,6 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 	// For debugging purposes you can set it for "false"
 	private boolean isTooSlow(){
 		return ((System.nanoTime()-start) > TIMELIMIT);
-		
 	}
 
 	protected void writeDebugInfo(final Map<Module, List<AssignmentHandler>> moduleAndAssignments) {

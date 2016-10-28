@@ -50,6 +50,7 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
  *  Such differences should be removed by the next on-the-fly analysis.
  *  
  *  @author Kristof Szabados
+ *  @author Jeno Attila Balasko
  * */
 public final class MarkerHandler {
 	private static final String MARKER_HANDLING_ERROR = "Marker handling error";
@@ -81,6 +82,45 @@ public final class MarkerHandler {
 
 	/** private constructor to disable instantiation */
 	private MarkerHandler() {
+	}
+
+	/**
+	 * Marks the markers located in certain assignments
+	 * If they will not be refreshed till the end of an operation, they could be removed by the removeMarkedMarkers function.
+	 * Experimental, used for incremental parsing
+	 *
+	 * @param markerTypeID
+	 * @param assignments
+	 */
+	public static void markMarkersForRemoval(final String markerTypeID, final List<Assignment> assignments) {
+		if (!MARKERS.containsKey(markerTypeID)) {
+			return;
+		}
+
+		for(Assignment assignment: assignments){
+			markAllMarkersForRemoval(markerTypeID,assignment);
+		}
+	}
+
+	public static void markAllSemanticMarkersForRemoval(final List<Assignment> assignments) {
+		for(Assignment assignment: assignments){
+			markAllSemanticMarkersForRemoval(assignment);
+		}
+	}
+
+	public static void markAllMarkersForRemoval(final String markerTypeID, final Assignment assignment) {
+		Location loc = assignment.getLocation();
+		if(loc != null) {
+			markMarkersForRemoval(markerTypeID, loc.getFile(), loc.getOffset(), loc.getEndOffset());
+		}
+	}
+
+	public static void markAllSemanticMarkersForRemoval(final Assignment assignment) {
+		Location loc = assignment.getLocation();
+		if(loc != null) {
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, loc.getFile(), loc.getOffset(), loc.getEndOffset());
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_MIXED_MARKER, loc.getFile(), loc.getOffset(), loc.getEndOffset());
+		}
 	}
 
 	/**
@@ -197,6 +237,7 @@ public final class MarkerHandler {
 		}
 
 		List<Long> markersTobeDeleted = new ArrayList<Long>();
+		List<InternalMarker> fileSpecificMarkers = null;
 
 		synchronized (MARKERS) {
 			Map<IResource, Set<Long>> typeSpecificRemovable = MARKERS_TO_BE_REMOVED.get(markerTypeID);
@@ -205,21 +246,35 @@ public final class MarkerHandler {
 				return;
 			}
 
+			Map<IResource, List<InternalMarker>> typeSpecificMarkers = MARKERS.get(markerTypeID);
+			fileSpecificMarkers = typeSpecificMarkers.get(file);
+
 			markersTobeDeleted.addAll(typeSpecificRemovable.get(file));
 
 			typeSpecificRemovable.remove(file);
+
+
+			for (long markerID : markersTobeDeleted) {
+				try {
+					IMarker externalMarker = file.findMarker(markerID);
+					if (externalMarker != null) {
+						externalMarker.delete();
+					}
+
+					//removes the marker from the MARKERS, too:
+					for(int i = fileSpecificMarkers.size()-1; i>=0; i--) {
+						if( fileSpecificMarkers.get(i).markerID ==markerID ) {
+							fileSpecificMarkers.remove(i);
+						}
+					}
+				} catch (CoreException e) {
+					ErrorReporter.logExceptionStackTrace(MARKER_HANDLING_ERROR, e);
+				}
+			}
+
 		}
 
-		for (long markerID : markersTobeDeleted) {
-			try {
-				IMarker externalMarker = file.findMarker(markerID);
-				if (externalMarker != null) {
-					externalMarker.delete();
-				}
-			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(MARKER_HANDLING_ERROR, e);
-			}
-		}
+
 	}
 
 	/**
@@ -762,7 +817,7 @@ public final class MarkerHandler {
 	 *
 	 * @param resource the resource whose markers can be removed.
 	 * */
-	public static void markAllTaskMarkersForRemoval(final IFile resource) {
+	public static void markAllTaskMarkersForRemoval(final IResource resource) {
 		markMarkersForRemoval(GeneralConstants.ONTHEFLY_TASK_MARKER, resource);
 	}
 
@@ -771,7 +826,7 @@ public final class MarkerHandler {
 	 *
 	 * @param resource the resource whose markers can be removed.
 	 * */
-	public static void markAllSemanticMarkersForRemoval(final IFile resource) {
+	public static void markAllSemanticMarkersForRemoval(final IResource resource) {
 		markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, resource);
 		markMarkersForRemoval(GeneralConstants.ONTHEFLY_MIXED_MARKER, resource); // this is for ASN.1 Blocks and extension attributes
 	}
@@ -792,6 +847,7 @@ public final class MarkerHandler {
 			}
 		}
 	}
+
 
 	/**
 	 * Re-enable all of the On-the-fly markers on the provided file inside the selected interval.
@@ -918,6 +974,31 @@ public final class MarkerHandler {
 			removeMarkedMarkers(GeneralConstants.ONTHEFLY_MIXED_MARKER, tempResource);
 		}
 	}
+
+	public static void removeAllSemanticMarkedMarkers(final IResource resource) {
+		List<IResource> resources = new ArrayList<IResource>();
+		resources.add(resource);
+
+		if (!(resource instanceof IFile)) {
+			FileFinder finder = new FileFinder();
+			try {
+				resource.accept(finder);
+				for (IFile file : finder.getFiles()) {
+					resources.add(file);
+				}
+			} catch (CoreException e) {
+				ErrorReporter.logExceptionStackTrace(MARKER_HANDLING_ERROR, e);
+			}
+		}
+
+		IResource tempResource;
+		for (int i = 0, size = resources.size(); i < size; i++) {
+			tempResource = resources.get(i);
+			removeMarkedMarkers(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, tempResource);
+			removeMarkedMarkers(GeneralConstants.ONTHEFLY_MIXED_MARKER, tempResource);
+		}
+	}
+
 
 	/**
 	 * Mark the provided markers as deprecated.

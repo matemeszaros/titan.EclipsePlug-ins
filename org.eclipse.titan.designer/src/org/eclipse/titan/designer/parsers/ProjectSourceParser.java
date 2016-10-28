@@ -673,14 +673,11 @@ public final class ProjectSourceParser {
 		if (OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
 			return Status.CANCEL_STATUS;
 		}
-				
-		MarkerHandler.markAllMarkersForRemoval(project, GeneralConstants.ONTHEFLY_SEMANTIC_MARKER);
-		MarkerHandler.markAllMarkersForRemoval(project, GeneralConstants.ONTHEFLY_MIXED_MARKER);
 
 		List<IProject> tobeAnalyzed = ProjectBasedBuilder.getProjectBasedBuilder(project).getAllReachableProjects();
 
-		// analyze the project referencing the just now analyzed
-		// projects in a bottom up order.
+		// collect the projects referencing the just now analyzed
+		// projects in a bottom up order into the list "tobeAnalyzed"
 		Deque<IProject> temporalList = new LinkedList<IProject>();
 		temporalList.addLast(project);
 		tobeAnalyzed.remove(project);
@@ -739,11 +736,6 @@ public final class ProjectSourceParser {
 				PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
 		if (reportDebugInformation) {
 			TITANDebugConsole.println("On-the-fly analyzation of project " + project.getName() + " started");
-		}
-
-		for (IProject project : tobeAnalyzed) {
-			MarkerHandler.markAllMarkersForRemoval(project, GeneralConstants.ONTHEFLY_SEMANTIC_MARKER);
-			MarkerHandler.markAllMarkersForRemoval(project, GeneralConstants.ONTHEFLY_MIXED_MARKER);
 		}
 
 		List<IProject> tobeSemanticallyAnalyzed = new ArrayList<IProject>();
@@ -853,7 +845,6 @@ public final class ProjectSourceParser {
 					boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
 							PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
 					if (reportDebugInformation) {
-						//MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream(); //only once called
 						TITANDebugConsole.println("The whole analysis block took " + (System.nanoTime() - absoluteStart)
 										* (1e-9) + " seconds to complete");
 					}
