@@ -26,7 +26,6 @@ import org.eclipse.titan.designer.AST.IOutlineElement;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
-import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.Reference;
@@ -51,7 +50,6 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
  * 
  * @author Kristof Szabados
  * @author Arpad Lovassy
- * @author Jeno Attila Balasko
  */
 public final class Definitions extends Assignments implements ILocateableNode {
 	/** The list of definitions contained in this scope. */
@@ -378,13 +376,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			return;
 		}
 
-		//Remove only the old markers. Cannot this be done earlier????
-		for( final Assignment assignment : assignments) {
-			if(assignment.getLastTimeChecked() == null ||  assignment.getLastTimeChecked().isLess(timestamp) ){
-				MarkerHandler.markAllSemanticMarkersForRemoval(assignment);
-			}
-		}
-		
 		checkUniqueness(timestamp);
 		checkGroups(timestamp);
 

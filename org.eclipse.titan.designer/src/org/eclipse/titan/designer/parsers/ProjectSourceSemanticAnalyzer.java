@@ -403,7 +403,7 @@ public class ProjectSourceSemanticAnalyzer {
 				TITANDebugConsole.println("  **On-the-fly semantic checking of projects (" + allModules.size() + " modules) took " + (System.nanoTime() - semanticCheckStart) * (1e-9) + " seconds", stream);
 			}
 			progress.subTask("Cleanup operations");
-
+			
 			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
 				ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
 				synchronized (semanticAnalyzer.semanticallyUptodateModules) {
@@ -430,10 +430,10 @@ public class ProjectSourceSemanticAnalyzer {
 				collector.addKnownModule(module.getIdentifier());
 				module.extractStructuralInformation(collector);
 			}
-
+			
 			MarkerHandler.removeAllOnTheFlyMarkedMarkers(tobeSemanticallyAnalyzed.get(i));
 		}
-
+		
 		return Status.OK_STATUS;
 	}
 }

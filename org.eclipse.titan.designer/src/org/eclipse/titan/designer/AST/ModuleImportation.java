@@ -18,7 +18,6 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
  * Import module statement.
  * 
  * @author Kristof Szabados
- * @author Jeno Attila Balasko
  */
 public abstract class ModuleImportation implements IReferenceChainElement, IOutlineElement, IVisitableNode {
 	protected static final String KIND = "imported module";
@@ -144,10 +143,6 @@ public abstract class ModuleImportation implements IReferenceChainElement, IOutl
 	 */
 	public final void setUsedForImportation() {
 		usedForImportation = true;
-	}
-	
-	public final void setUsedForImportation(boolean used) {
-		usedForImportation = used;
 	}
 
 	/**

@@ -275,7 +275,7 @@ public final class ImportModule extends ModuleImportation implements ILocateable
 				}
 			}
 			if (hasNormalImport) {
-				referredModule.checkImports(timestamp, referenceChain, moduleStack);//TODO: Check, this is not recursive!!!!
+				referredModule.checkImports(timestamp, referenceChain, moduleStack);
 			}
 		}
 		moduleStack.remove(moduleStack.size() - 1);

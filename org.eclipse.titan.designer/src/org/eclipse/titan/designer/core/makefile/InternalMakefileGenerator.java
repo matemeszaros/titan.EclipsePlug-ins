@@ -1756,8 +1756,6 @@ public final class InternalMakefileGenerator {
 				contents.append("\n\n");
 				contents.append("port: $(TTCN3_MODULES) $(BASE_TTCN3_MODULES) \\\n");
 				contents.append("$(PREPROCESSED_TTCN3_MODULES) $(BASE_PREPROCESSED_TTCN3_MODULES)\n");
-				contents.append("\\\n");
-				contents.append("$(ASN1_MODULES) $(BASE_ASN1_MODULES)\n");
 				contents.append("\t$(TTCN3_DIR)/bin/compiler -t $(COMPILER_FLAGS) ");
 				if (gnuMake) {
 					contents.append("$^");
@@ -1804,7 +1802,6 @@ public final class InternalMakefileGenerator {
 				}
 				contents.append("\n\n");
 				contents.append("port: $(TTCN3_MODULES) $(BASE_TTCN3_MODULES)\n");
-				contents.append("$(ASN1_MODULES) $(BASE_ASN1_MODULES)\n");
 				contents.append("\t$(TTCN3_DIR)/bin/compiler -t $(COMPILER_FLAGS) ");
 				if (gnuMake) {
 					contents.append("$^");
@@ -1914,7 +1911,7 @@ public final class InternalMakefileGenerator {
 			if (preprocess) {
 				contents.append("$(PREPROCESSED_TTCN3_MODULES) ");
 			}
-			contents.append("$(ASN1_MODULES)\n");
+			contents.append('\n');
 			contents.append("\t$(TTCN3_DIR)/bin/compiler -t $(COMPILER_FLAGS) ");
 			if (gnuMake) {
 				contents.append("$^");
