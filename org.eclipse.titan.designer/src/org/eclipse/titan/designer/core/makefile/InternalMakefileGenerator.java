@@ -72,7 +72,8 @@ import org.eclipse.ui.console.MessageConsole;
  *
  * @author Kristof Szabados
  * @author Jeno Balasko
- * */
+ * @author Arpad Lovassy
+ */
 //check out IWorkspaceRoot.findFilesForLocation
 public final class InternalMakefileGenerator {
 	private static final String INVALID_OPTIONS = "Invalid build options found, for more information please refer to the Error Log view";
@@ -1755,7 +1756,7 @@ public final class InternalMakefileGenerator {
 				}
 				contents.append("\n\n");
 				contents.append("port: $(TTCN3_MODULES) $(BASE_TTCN3_MODULES) \\\n");
-				contents.append("$(PREPROCESSED_TTCN3_MODULES) $(BASE_PREPROCESSED_TTCN3_MODULES)\n");
+				contents.append("$(PREPROCESSED_TTCN3_MODULES) $(BASE_PREPROCESSED_TTCN3_MODULES) ");
 				contents.append("\\\n");
 				contents.append("$(ASN1_MODULES) $(BASE_ASN1_MODULES)\n");
 				contents.append("\t$(TTCN3_DIR)/bin/compiler -t $(COMPILER_FLAGS) ");
@@ -1803,7 +1804,7 @@ public final class InternalMakefileGenerator {
 					contents.append("\t$(ASN1_MODULES) $(BASE_ASN1_MODULES)");
 				}
 				contents.append("\n\n");
-				contents.append("port: $(TTCN3_MODULES) $(BASE_TTCN3_MODULES)\n");
+				contents.append("port: $(TTCN3_MODULES) $(BASE_TTCN3_MODULES) \\\n");
 				contents.append("$(ASN1_MODULES) $(BASE_ASN1_MODULES)\n");
 				contents.append("\t$(TTCN3_DIR)/bin/compiler -t $(COMPILER_FLAGS) ");
 				if (gnuMake) {
