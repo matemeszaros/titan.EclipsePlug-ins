@@ -17,10 +17,11 @@ import org.eclipse.titan.designer.properties.data.FolderBuildPropertyData;
  * Constants that did not fit into any other group.
  * 
  * @author Kristof Szabados
+ * @author Arpad Lovassy
  */
 public final class GeneralConstants {
 	public static final ProductIdentity ON_THE_FLY_ANALYZER_VERSION =
-			ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 5, 5, 1, 0);
+			ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 6, 1, 0, 0);
 	public static final boolean DEBUG = true;
 	public static final boolean ETSI_BUILD = false;
 

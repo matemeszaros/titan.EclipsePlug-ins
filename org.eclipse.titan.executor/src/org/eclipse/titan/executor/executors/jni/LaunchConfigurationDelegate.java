@@ -20,12 +20,13 @@ import org.eclipse.titan.executor.jni.JNIMiddleWare;
 
 /**
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class LaunchConfigurationDelegate extends TitanLaunchConfigurationDelegate {
 
 	/** { ttcn3_major, ttcn3_minor, ttcn3_patchlevel, ttcn3_buildnumber } */
-	private final ProductIdentity versionLow = ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 5, 5, 1, 0);
-	private final ProductIdentity versionHigh = ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 5, 5, 1, 0);
+	private final ProductIdentity versionLow = ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 6, 1, 0, 0);
+	private final ProductIdentity versionHigh = ProductIdentity.getProductIdentity(ProductIdentity.TITAN_PRODUCT_NUMBER, 6, 1, 0, 0);
 
 	@Override
 	public void launch(final ILaunchConfiguration arg0, final String arg1, final ILaunch arg2, final IProgressMonitor arg3) throws CoreException {
