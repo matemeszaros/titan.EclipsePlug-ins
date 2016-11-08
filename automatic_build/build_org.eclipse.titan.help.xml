@@ -29,6 +29,7 @@
 	</target>
 
 	<target name="build.pdf" depends="check.doc2pdf.jar" if="doc2pdf.jar.present">
+		<build.usrguide usrguide.dir="${usrguide.eclipse.titanium.dir}"/>
 		<build.usrguide usrguide.dir="${usrguide.eclipse.dir}"/>
 		<build.usrguide usrguide.dir="${usrguide.compiler.dir}"/>
 	</target>

@@ -85,6 +85,7 @@
 	<property name="online.help.dir" location="${compiler.location}/help"/>
 	<property name="usrguide.compiler.dir" location="${compiler.location}/usrguide"/>
 	<property name="usrguide.eclipse.dir" location="${base.dir}/../"/>
+	<property name="usrguide.eclipse.titanium.dir" location="${base.dir}/../org.eclipse.titanium/docs/"/>
 	<property name="doc2pdf.jar" location="${lib.dir}/doc2pdf.jar"/>
 
     <property environment="env"/>
