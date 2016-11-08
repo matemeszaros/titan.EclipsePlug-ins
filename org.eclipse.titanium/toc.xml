@@ -10,6 +10,6 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Titanium Help">
-  <topic label="Titanium Description" href="docs/Titanium_Description.doc" />
-  <topic label="Titanium Reference Guide" href="docs/referenceguide.docx" />
+  <topic label="Titanium Description" href="docs/Titanium_Description.pdf" />
+  <topic label="Titanium Reference Guide" href="docs/referenceguide.pdf" />
 </toc>
