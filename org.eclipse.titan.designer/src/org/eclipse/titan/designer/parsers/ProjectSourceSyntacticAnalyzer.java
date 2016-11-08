@@ -438,6 +438,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 						@Override
 						public void run() {
 							if (parseProgress.isCanceled()) {
+								latch.countDown();
+								parseProgress.worked(1);
 								return;
 							}
 
@@ -475,6 +477,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 						@Override
 						public void run() {
 							if (parseProgress.isCanceled()) {
+								latch.countDown();
+								parseProgress.worked(1);
 								return;
 							}
 
@@ -488,6 +492,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 					});
 				}
 			}
+			asn1FilesToCheck.clear();
 
 			try {
 				latch.await();
@@ -505,7 +510,6 @@ public final class ProjectSourceSyntacticAnalyzer {
 			MarkerHandler.removeAllOnTheFlyMarkedMarkers(project);
 
 			parseProgress.done();
-			asn1FilesToCheck.clear();
 			if (reportDebugInformation) {
 				//MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
 				TITANDebugConsole.println("  **It took " + (System.nanoTime() - absoluteStart) * (1e-9) + " seconds till the files ("
@@ -660,6 +664,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 					}
 					latch.countDown();
 				} else if (OutOfMemoryCheck.isOutOfMemory()) {
+					latch.countDown();
 					if (!OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
 						OutOfMemoryCheck.outOfMemoryEvent();
 						return Status.CANCEL_STATUS;
@@ -722,6 +727,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 					}
 					latch.countDown();
 				} else if (OutOfMemoryCheck.isOutOfMemory()) {
+					latch.countDown();
 					if (!OutOfMemoryCheck.isOutOfMemoryAlreadyReported()) {
 						OutOfMemoryCheck.outOfMemoryEvent();
 						return Status.CANCEL_STATUS;
@@ -754,6 +760,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 					});
 				}
 			}
+			asn1FilesToCheck.clear();
 
 			try {
 				latch.await();
@@ -775,7 +782,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 			}
 
 			parseProgress.done();
-			asn1FilesToCheck.clear();
+
 			if (reportDebugInformation) {
 				//MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
 				TITANDebugConsole.println("  **It took " + (System.nanoTime() - absoluteStart) * (1e-9) + " seconds till the files ("
