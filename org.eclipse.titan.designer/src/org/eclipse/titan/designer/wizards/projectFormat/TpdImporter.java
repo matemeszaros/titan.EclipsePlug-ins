@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -572,12 +573,15 @@ public class TpdImporter {
 				try {
 					if (relativeURINode != null) {
 						String relativeLocation = relativeURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.resolvePath(relativeLocation, projectFileFolderURI);
-						if (absoluteURI == null) {
-							// The URI cannot be resolved - for example it
-							// contains not existing environment variables
-							continue; 
+						URI locationURI;
+						try {
+							locationURI = org.eclipse.core.runtime.URIUtil.fromString(relativeLocation);
+						} catch(URISyntaxException e) {
+							continue;
 						}
+						
+						URI absoluteURI = org.eclipse.core.runtime.URIUtil.makeAbsolute(locationURI, projectFileFolderURI);
+						
 						if (TitanURIUtil.isPrefix(projectLocationURI, absoluteURI)) {
 							folder.create(false, true, null);
 						} else {
@@ -592,19 +596,7 @@ public class TpdImporter {
 						}
 					} else if (rawURINode != null) {
 						String rawLocation = rawURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.resolvePath(rawLocation, projectFileFolderURI);
-						if (TitanURIUtil.isPrefix(projectLocationURI, absoluteURI)) {
-							folder.create(false, true, null);
-						} else {
-							File tmpFolder = new File(absoluteURI);
-							if (tmpFolder.exists()) {
-								folder.createLink(absoluteURI, IResource.ALLOW_MISSING_LOCAL, null);
-							} else {
-								ErrorReporter.logError("Error while importing folders into project `" + project.getName() + "'. Folder `"
-										+ absoluteURI + "' does not exist");
-								continue;
-							}
-						}
+						folder.createLink(URI.create(rawLocation), IResource.ALLOW_MISSING_LOCAL, null);
 					} else {
 						TITANDebugConsole
 								.getConsole()
@@ -665,7 +657,8 @@ public class TpdImporter {
 				try {
 					if (relativeURINode != null) {
 						String relativeLocation = relativeURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.resolvePath(relativeLocation, projectFileFolderURI);
+						//perhaps the next few lines should be implemented as in the function loadFoldersData()
+						URI absoluteURI = TITANPathUtilities.resolvePathURI(relativeLocation, URIUtil.toPath(projectFileFolderURI).toOSString());
 						if (absoluteURI == null) {
 							continue;
 						}
@@ -679,18 +672,7 @@ public class TpdImporter {
 						}
 					} else if (rawURINode != null) {
 						String rawURI = rawURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.resolvePath(rawURI, projectFileFolderURI);
-						if (absoluteURI == null) {
-							continue;
-						}
-						File file = new File(absoluteURI);
-						if (file.exists()) {
-							targetFile.createLink(absoluteURI, IResource.ALLOW_MISSING_LOCAL, null);
-						} else {
-							ErrorReporter.logError("Error while importing files into project `" + project.getName() + "'. File `"
-									+ absoluteURI + "' does not exist");
-							continue;
-						}
+						targetFile.createLink(URI.create(rawURI), IResource.ALLOW_MISSING_LOCAL, null);
 					} else {
 						TITANDebugConsole
 								.getConsole()
