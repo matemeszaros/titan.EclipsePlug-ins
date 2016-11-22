@@ -29,6 +29,12 @@
   </extension>
   <extension point="org.eclipse.ui.commands">
     <command
+      defaultHandler="org.eclipse.titan.designer.actions.MakeArchive"
+      id="org.eclipse.titan.designer.actions.MakeArchive"
+      name="MakeArchive" />
+  </extension>
+  <extension point="org.eclipse.ui.commands">
+    <command
       defaultHandler="org.eclipse.titan.designer.editors.ttcnppeditor.actions.RenameRefactoringAction"
       id="org.eclipse.titan.designer.editors.ttcnppeditor.RenameRefactoringAction"
       name="Rename refactoring" />
@@ -426,6 +432,22 @@
         </command>
         <command commandId="org.eclipse.titan.designer.actions.RemoteBuilder"
           id="org.eclipse.titan.designer.core.RemoteBuilder" label="Build remotely">
+          <visibleWhen checkEnabled="false">
+            <with variable="selection">
+              <iterate operator="or">
+                <adapt type="org.eclipse.core.resources.IProject">
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.eclipse.titan.designer.core.TITANNature">
+                  </test>
+                </adapt>
+              </iterate>
+            </with>
+          </visibleWhen>
+        </command>
+        <command
+          commandId="org.eclipse.titan.designer.actions.MakeArchive"
+          id="org.eclipse.titan.designer.actions.MakeArchive"
+          label="Make archive" mode="FORCE_TEXT">
           <visibleWhen checkEnabled="false">
             <with variable="selection">
               <iterate operator="or">
