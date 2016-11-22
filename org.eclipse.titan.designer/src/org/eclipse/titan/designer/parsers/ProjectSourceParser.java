@@ -854,7 +854,7 @@ public final class ProjectSourceParser {
 							PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
 					if (reportDebugInformation) {
 						//MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream(); //only once called
-						TITANDebugConsole.println("The whole analysis block took " + (System.nanoTime() - absoluteStart)
+						TITANDebugConsole.println("The whole syntax only analysis block took " + (System.nanoTime() - absoluteStart)
 										* (1e-9) + " seconds to complete");
 					}
 				} catch (Exception e) {

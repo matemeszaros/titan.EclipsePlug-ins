@@ -359,13 +359,14 @@ public final class ProjectSourceSyntacticAnalyzer {
 		SubMonitor progress = SubMonitor.convert(monitor, 1);
 		progress.setTaskName("On-the-fly syntactic checking of project: " + project.getName());
 
+		IPreferencesService preferenceService = Platform.getPreferencesService();
+		boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
+				PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
+
 		if (syntacticallyOutdated) {
 			syntacticallyOutdated = false;
 
 			long absoluteStart = System.nanoTime();
-			IPreferencesService preferenceService = Platform.getPreferencesService();
-			boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-					PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
 
 			removedReferencestoRemovedFiles();
 
@@ -398,6 +399,10 @@ public final class ProjectSourceSyntacticAnalyzer {
 				MarkerHandler.markAllTaskMarkersForRemoval(file);
 			}
 			allCheckedFiles.addAll(asn1FilesToCheck);
+
+			if (reportDebugInformation) {
+				TITANDebugConsole.println("  **Syntax only check to be done on  " + ttcn3FilesToCheck.size() + asn1FilesToCheck.size() + " files.",stream);
+			}
 
 			// parsing the files
 			final SubMonitor parseProgress = SubMonitor.convert(progress, ttcn3FilesToCheck.size() + asn1FilesToCheck.size());
@@ -517,6 +522,9 @@ public final class ProjectSourceSyntacticAnalyzer {
 								+ " got syntactically analyzed",stream);
 			}
 		} else {
+			if (reportDebugInformation) {
+				TITANDebugConsole.println("  **The project " + project.getName() + " does not seem to need syntax only check.",stream);
+			}
 			progress.worked(1);
 			progress.done();
 		}
@@ -568,13 +576,14 @@ public final class ProjectSourceSyntacticAnalyzer {
 		SubMonitor progress = SubMonitor.convert(monitor, 1);
 		progress.setTaskName("On-the-fly syntactic checking of project: " + project.getName());
 
+		IPreferencesService preferenceService = Platform.getPreferencesService();
+		boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
+				PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
+
 		if (syntacticallyOutdated) {
 			syntacticallyOutdated = false;
 
 			long absoluteStart = System.nanoTime();
-			IPreferencesService preferenceService = Platform.getPreferencesService();
-			boolean reportDebugInformation = preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER,
-					PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null);
 
 			removedReferencestoRemovedFiles();
 
@@ -632,6 +641,10 @@ public final class ProjectSourceSyntacticAnalyzer {
 				}
 			}
 			allCheckedFiles.addAll(asn1FilesToCheck);
+
+			if (reportDebugInformation) {
+				TITANDebugConsole.println("  **Syntax check to be done on  " + ttcn3FilesToCheck.size() + asn1FilesToCheck.size() + " files.",stream);
+			}
 
 			// parsing the files
 			final SubMonitor parseProgress = SubMonitor.convert(progress, ttcn3FilesToCheck.size() + asn1FilesToCheck.size());
@@ -790,6 +803,9 @@ public final class ProjectSourceSyntacticAnalyzer {
 								+ " got syntactically analyzed",stream);
 			}
 		} else {
+			if (reportDebugInformation) {
+				TITANDebugConsole.println("  **The project " + project.getName() + " does not seem to need syntax check.",stream);
+			}
 			progress.worked(1);
 			progress.done();
 		}
