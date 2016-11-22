@@ -66,7 +66,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  * In not noted elsewhere all operations that modify the internal states are
  * executed in a parallel WorkspaceJob, which will have scheduling rules
  * required to access related resources.
- * 
+ *
  * @author Kristof Szabados
  * @author Arpad Lovassy
  */
@@ -92,7 +92,7 @@ public final class ProjectConfigurationParser {
 	/**
 	 * Basic constructor initializing the class's members, for the given
 	 * project.
-	 * 
+	 *
 	 * @param project
 	 *                the project for which this instance will be
 	 *                responsible for.
@@ -108,7 +108,7 @@ public final class ProjectConfigurationParser {
 	/**
 	 * Get all constant definitions with location information for the
 	 * current project.
-	 * 
+	 *
 	 * @return the constant definitions.
 	 */
 	public Map<String, CfgDefinitionInformation> getAllDefinitions() {
@@ -118,7 +118,7 @@ public final class ProjectConfigurationParser {
 	/**
 	 * Checks if a given file is already identified as a Runtime
 	 * Configuration file.
-	 * 
+	 *
 	 * @param file
 	 *                the file to check
 	 * @return true if it is known by the on-the-fly configuration file
@@ -136,10 +136,10 @@ public final class ProjectConfigurationParser {
 	 * <li>If it is not enabled, only stores that this file is out of date
 	 * for later
 	 * </ul>
-	 * 
+	 *
 	 * @param outdatedFile
 	 *                the file which seems to have changed
-	 * 
+	 *
 	 * @return the WorkspaceJob in which the operation is running
 	 * */
 	public WorkspaceJob reportOutdating(final IFile outdatedFile) {
@@ -170,10 +170,10 @@ public final class ProjectConfigurationParser {
 	 * <li>If it is not enabled, only stores that this file is out of date
 	 * for later
 	 * </ul>
-	 * 
+	 *
 	 * @param outdatedFiles
 	 *                the file which seems to have changed
-	 * 
+	 *
 	 * @return the WorkspaceJob in which the operation is running
 	 * */
 	public WorkspaceJob reportOutdating(final List<IFile> outdatedFiles) {
@@ -246,7 +246,7 @@ public final class ProjectConfigurationParser {
 
 		final List<Macro> macros = new ArrayList<Macro>();
 		final Map<String, String> env = System.getenv();
- 
+
 		final List<IFile> filesChecked = new ArrayList<IFile>();
 		while( !filesToCheck.isEmpty() ) {
 			final IFile file = filesToCheck.get( 0 );
@@ -324,7 +324,7 @@ public final class ProjectConfigurationParser {
 	 * this list
 	 * <li>the files left in the list are analyzed in a new workspace job
 	 * </ul>
-	 * 
+	 *
 	 * @return the WorkspaceJob in which the operation is running
 	 * */
 	public WorkspaceJob analyzeAll() {
@@ -378,11 +378,11 @@ public final class ProjectConfigurationParser {
 
 	/**
 	 * Parses the provided file.
-	 * 
+	 *
 	 * @param file (in) the file to be parsed
 	 * @param aMacros (in/out) collected macro references
-	 * @param filesChecked 
-	 * @param filesToCheck 
+	 * @param aFilesChecked files, which are already processed (there are no duplicates)
+	 * @param aFilesToCheck files, which will be processed (there are no duplicates)
 	 */
 	private void fileBasedAnalysis( final IFile file,
 									final List<Macro> aMacros,
@@ -410,45 +410,47 @@ public final class ProjectConfigurationParser {
 
 		CfgAnalyzer cfgAnalyzer = new CfgAnalyzer();
 		cfgAnalyzer.parse(file, document == null ? null : document.get());
-		final CfgParseResult cfgParseResult = cfgAnalyzer.getCfgParseResult();
 		errorsStored = cfgAnalyzer.getErrorStorage();
-		warnings = cfgParseResult.getWarnings();
-		aMacros.addAll( cfgParseResult.getMacros() );
-		definitions.putAll( cfgParseResult.getDefinitions() );
-		
-		// add included files to the aFilesToCheck list
-		final List<String> includeFilenames = cfgParseResult.getIncludeFiles();
-		for ( final String includeFilename : includeFilenames ) {
-			// example value: includeFilename == MyExample2.cfg
-			// example value: file == L/hw/src/MyExample.cfg
-			final IPath includeFilePath = PathConverter.getProjectRelativePath( file, includeFilename );
-			// example value: includeFilePath == src/MyExample2.cfg
-			if ( includeFilePath != null ) {
-				final IFile includeFile = project.getFile( includeFilePath );
-				// example value: includeFile == L/hw/src/MyExample2.cfg
-				// includeFile is null if the file does not exist in the project
-				if ( includeFile != null &&
-					 !uptodateFiles.containsKey( includeFile ) &&
-					 !aFilesChecked.contains( includeFile ) &&
-					 !aFilesToCheck.contains( includeFile ) ) {
-					removeMarkersAndDefinitions( includeFile );
-					aFilesToCheck.add( includeFile );
+		final CfgParseResult cfgParseResult = cfgAnalyzer.getCfgParseResult();
+		if ( cfgParseResult != null ) {
+			warnings = cfgParseResult.getWarnings();
+			aMacros.addAll( cfgParseResult.getMacros() );
+			definitions.putAll( cfgParseResult.getDefinitions() );
+
+			// add included files to the aFilesToCheck list
+			final List<String> includeFilenames = cfgParseResult.getIncludeFiles();
+			for ( final String includeFilename : includeFilenames ) {
+				// example value: includeFilename == MyExample2.cfg
+				// example value: file == L/hw/src/MyExample.cfg
+				final IPath includeFilePath = PathConverter.getProjectRelativePath( file, includeFilename );
+				// example value: includeFilePath == src/MyExample2.cfg
+				if ( includeFilePath != null ) {
+					final IFile includeFile = project.getFile( includeFilePath );
+					// example value: includeFile == L/hw/src/MyExample2.cfg
+					// includeFile is null if the file does not exist in the project
+					if ( includeFile != null &&
+						 !uptodateFiles.containsKey( includeFile ) &&
+						 !aFilesChecked.contains( includeFile ) &&
+						 !aFilesToCheck.contains( includeFile ) ) {
+						removeMarkersAndDefinitions( includeFile );
+						aFilesToCheck.add( includeFile );
+					}
 				}
 			}
-		}
-		
-		if (editor != null && editor.getDocument() != null) {
-			ConfigEditor parentEditor = editor.getParentEditor();
-			if ( errorsStored == null || errorsStored.isEmpty() ) {
-				parentEditor.setParseTreeRoot(cfgParseResult.getParseTreeRoot());
-				parentEditor.setTokens(cfgParseResult.getTokens());
-				parentEditor.refresh(cfgAnalyzer);
-				parentEditor.setErrorMessage(null);
-			} else {
-				if(errorsStored.size()>1) {
-					parentEditor.setErrorMessage("There were " + errorsStored.size() + " problems found while parsing");
+
+			if (editor != null && editor.getDocument() != null) {
+				ConfigEditor parentEditor = editor.getParentEditor();
+				if ( errorsStored == null || errorsStored.isEmpty() ) {
+					parentEditor.setParseTreeRoot(cfgParseResult.getParseTreeRoot());
+					parentEditor.setTokens(cfgParseResult.getTokens());
+					parentEditor.refresh(cfgAnalyzer);
+					parentEditor.setErrorMessage(null);
 				} else {
-					parentEditor.setErrorMessage("There was 1 problem found while parsing");
+					if(errorsStored.size()>1) {
+						parentEditor.setErrorMessage("There were " + errorsStored.size() + " problems found while parsing");
+					} else {
+						parentEditor.setErrorMessage("There was 1 problem found while parsing");
+					}
 				}
 			}
 		}
