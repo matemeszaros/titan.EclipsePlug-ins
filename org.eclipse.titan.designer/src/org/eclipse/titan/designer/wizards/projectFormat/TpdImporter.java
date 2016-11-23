@@ -573,15 +573,12 @@ public class TpdImporter {
 				try {
 					if (relativeURINode != null) {
 						String relativeLocation = relativeURINode.getTextContent();
-						URI locationURI;
-						try {
-							locationURI = org.eclipse.core.runtime.URIUtil.fromString(relativeLocation);
-						} catch(URISyntaxException e) {
-							continue;
+						URI absoluteURI = TITANPathUtilities.resolvePath(relativeLocation, projectFileFolderURI);
+						if (absoluteURI == null) {
+							// The URI cannot be resolved - for example it
+							// contains not existing environment variables
+							continue; 
 						}
-						
-						URI absoluteURI = org.eclipse.core.runtime.URIUtil.makeAbsolute(locationURI, projectFileFolderURI);
-						
 						if (TitanURIUtil.isPrefix(projectLocationURI, absoluteURI)) {
 							folder.create(false, true, null);
 						} else {
