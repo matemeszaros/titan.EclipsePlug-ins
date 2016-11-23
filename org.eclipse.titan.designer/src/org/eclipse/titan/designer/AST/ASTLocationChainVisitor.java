@@ -14,7 +14,8 @@ import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 
 /**
  * @author Adam Delic
- * */
+ * @author Arpad Lovassy
+ */
 public class ASTLocationChainVisitor extends ASTVisitor {
 	private List<IVisitableNode> chain = new ArrayList<IVisitableNode>();
 	private int offset;
@@ -51,7 +52,7 @@ public class ASTLocationChainVisitor extends ASTVisitor {
 			} else {
 				first = false;
 			}
-			sb.append(node.getClass().getName());
+			sb.append(node.getClass().getSimpleName());
 		}
 		TITANDebugConsole.println(sb.toString());
 	}
