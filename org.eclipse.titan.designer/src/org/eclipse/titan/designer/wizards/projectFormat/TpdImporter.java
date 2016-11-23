@@ -573,7 +573,7 @@ public class TpdImporter {
 				try {
 					if (relativeURINode != null) {
 						String relativeLocation = relativeURINode.getTextContent();
-						URI absoluteURI = TITANPathUtilities.resolvePath(relativeLocation, projectFileFolderURI);
+						URI absoluteURI = TITANPathUtilities.resolvePathURI(relativeLocation, URIUtil.toPath(projectFileFolderURI).toOSString());
 						if (absoluteURI == null) {
 							// The URI cannot be resolved - for example it
 							// contains not existing environment variables
