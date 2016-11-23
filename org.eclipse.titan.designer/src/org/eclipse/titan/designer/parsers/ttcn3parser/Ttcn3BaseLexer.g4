@@ -291,14 +291,14 @@ tokens {
   
 }
 
-WS:				[ \t\r\n\f]+	-> skip;
+WS:				[ \t\r\n\f]+	-> channel(HIDDEN);
 
-LINE_COMMENT:	'//' ~[\r\n]*	{detectTasks(getText(), false);} -> skip ;
+LINE_COMMENT:	'//' ~[\r\n]*	{detectTasks(getText(), false);} -> channel(HIDDEN);
 
 BLOCK_COMMENT:	'/*' .*? '*/'	{
 	intervalDetector.pushInterval(_tokenStartCharIndex, _tokenStartLine, interval_type.MULTILINE_COMMENT);
 	intervalDetector.popInterval(_input.index(), _interp.getLine());
-} {detectTasks(getText(), true);} -> skip ;
+} {detectTasks(getText(), true);} -> channel(HIDDEN);
 
 //TODO: check that nothing else preceeds it in current line
 PREPROCESSOR_DIRECTIVE:

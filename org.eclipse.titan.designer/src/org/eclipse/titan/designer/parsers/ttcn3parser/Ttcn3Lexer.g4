@@ -15,7 +15,7 @@ import Ttcn3BaseLexer;
  * author Arpad Lovassy
  */
 
-//Overriding tokens inherited from TTCN3BaseLexer4
+//Overriding tokens inherited from TTCN3BaseLexer.g4
 /*------------------------------------------- Keywords -------------------------------------------*/
 
   ACTION: 'action';                 ACTIVATE: 'activate';       ADDRESS: 'address';
