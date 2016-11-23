@@ -23,15 +23,7 @@ public final class CfgLocation {
 	private int line;
 	private int offset;
 	private int endOffset;
-	
-	public CfgLocation(final CfgLocation location) {
-		setLocation(location);
-	}
-	
-	public CfgLocation(final IFile file, final int line, final int offset, final int endOffset) {
-		setLocation(file, line, offset, endOffset);
-	}
-	
+
 	/**
 	 * Constructor for ANTLR v4 tokens
 	 * @param aFile the parsed file
@@ -43,39 +35,32 @@ public final class CfgLocation {
 	 */
 	public CfgLocation( final IFile aFile, final Token aStartToken, final Token aEndToken ) {
 		setLocation( aFile, aStartToken.getLine(), aStartToken.getStartIndex(),
-				     aEndToken.getStopIndex()+1);
+					 aEndToken.getStopIndex() + 1 );
 	}
-	
-	private final void setLocation(final CfgLocation location) {
-		file = location.getFile();
-		line = location.getLine();
-		offset = location.getOffset();
-		endOffset = location.getEndOffset();
-	}
-	
+
 	private final void setLocation(final IFile file, final int line, final int offset, final int endOffset) {
 		this.file = file;
 		this.line = line;
 		this.offset = offset;
 		this.endOffset = endOffset;
 	}
-	
+
 	public IFile getFile() {
 		return file;
 	}
-	
+
 	public int getLine() {
 		return line;
 	}
-	
+
 	public int getOffset() {
 		return offset;
 	}
-	
+
 	public int getEndOffset() {
 		return endOffset;
 	}
-	
+
 	public String toString() {
 		return "{ " + file + ", "  + line + ", " + offset + ", " + endOffset + " }";
 	}
