@@ -34,7 +34,8 @@ import org.eclipse.titan.designer.AST.Location;
 
 /*
  * @author Laszlo Baji
- * */
+ * @author Arpad Lovassy
+ */
 
 tokens {
 BLOCK //THE great block token
@@ -48,8 +49,7 @@ WS:
 |  '\u000B'
 |  '\u000C'
 |  '\r\n'
-)->skip
-;
+) -> channel(HIDDEN);
 
 fragment NEWLINE:
 (  '\r'
@@ -123,12 +123,12 @@ SINGLELINECOMMENT:
 	|	NEWLINE
 	|	EOF
 	)
-);//->skip;
+) -> channel(HIDDEN);
 
 MULTILINECOMMENT:
 (
 	'/*' (.*?) (MULTILINECOMMENT)* '*/'
-);//->skip;
+) -> channel(HIDDEN);
 
 fragment BIN:
 (

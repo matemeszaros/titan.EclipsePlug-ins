@@ -22,13 +22,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.CommonTokenFactory;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenSource;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
@@ -283,7 +282,7 @@ class ConditionalStateStack {
 /**
  * Helper class to store data related to lexers in lexer stack
  */
-class TokenStreamData extends BufferedTokenStream {
+class TokenStreamData extends CommonTokenStream {
 	public IFile file;
 	public Ttcn3Lexer lexer;
 	public Reader reader;
@@ -296,7 +295,7 @@ class TokenStreamData extends BufferedTokenStream {
 	}
 }
 
-public class PreprocessedTokenStream extends BufferedTokenStream {
+public class PreprocessedTokenStream extends CommonTokenStream {
 	private static final int RECURSION_LIMIT = 20;
 	
 	IFile actualFile;
@@ -496,13 +495,15 @@ public class PreprocessedTokenStream extends BufferedTokenStream {
 				lexer.addErrorListener(lexerListener);
 				lexer.setLine(t.getLine());
 				lexer.setCharPositionInLine(t.getCharPositionInLine());
-				
-				// Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
+
+				// 1. Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
 				// Read this: https://groups.google.com/forum/#!topic/antlr-discussion/gsAu-6d3pKU
 				// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
 				//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
-				TokenStream tokens = new BufferedTokenStream( lexer );
-				PreprocessorDirectiveParser localParser = new PreprocessorDirectiveParser(tokens);
+				// 2. Changed from BufferedTokenStream to CommonTokenStream, otherwise tokens with "-> channel(HIDDEN)" are not filtered out in lexer.
+				final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
+
+				PreprocessorDirectiveParser localParser = new PreprocessorDirectiveParser( tokenStream );
 				localParser.setBuildParseTree(false);
 				parserListener = new PPListener(localParser);
 				localParser.removeErrorListeners();
