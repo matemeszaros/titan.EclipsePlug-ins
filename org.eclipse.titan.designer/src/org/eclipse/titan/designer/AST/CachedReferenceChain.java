@@ -93,7 +93,7 @@ public final class CachedReferenceChain implements IReferenceChain {
 		for (int i = errorStates.empty() ? 0 : errorStates.peek(); i < safeCopy.size(); ++i) {
 			List<IReferenceChainElement> current = safeCopy.get(i);
 			// for every element of the circle
-			for (int j = 0; j < current.size(); j++) {
+			for (int j = 0; j < current.size()-1; j++) {
 				builder.setLength(0);
 
 				// add the elements till the end of the chain
