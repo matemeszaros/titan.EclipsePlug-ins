@@ -26,19 +26,16 @@ WS:
 |  '\n' 
 |  '\u000B'
 |  '\u000C'
-) -> skip
-;
+) -> channel(HIDDEN);
 
 SL_COMMENT:
-'//' (~'\n')* -> skip
-;
+'//' (~'\n')* -> channel(HIDDEN);
 
 
 ML_COMMENT:
 (
 	'/*' (.*?) (ML_COMMENT)* '*/'
-) -> skip
-;
+) -> channel(HIDDEN);
 
 CSTRING:
 (

@@ -21,8 +21,7 @@ import org.eclipse.titan.designer.core.LoadBalancingUtilities;
 
 
 WS:
-[ \t\r\n\f]+ ->skip// channel(HIDDEN)
-;
+[ \t\r\n\f]+ -> channel(HIDDEN);
 
 LINE_COMMENT:
 (	'//' ~[\r\n]* 

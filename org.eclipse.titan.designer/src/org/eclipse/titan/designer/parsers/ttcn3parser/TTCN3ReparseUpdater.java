@@ -16,11 +16,10 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenFactory;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -526,13 +525,14 @@ public final class TTCN3ReparseUpdater {
 		lexer.removeErrorListeners();
 		lexer.addErrorListener(parserListener);
 
-		// Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
+		// 1. Previously it was UnbufferedTokenStream(lexer), but it was changed to BufferedTokenStream, because UnbufferedTokenStream seems to be unusable. It is an ANTLR 4 bug.
 		// Read this: https://groups.google.com/forum/#!topic/antlr-discussion/gsAu-6d3pKU
 		// pr_PatternChunk[StringBuilder builder, boolean[] uni]:
 		//   $builder.append($v.text); <-- exception is thrown here: java.lang.UnsupportedOperationException: interval 85..85 not in token buffer window: 86..341
-		TokenStream tokens = new BufferedTokenStream( lexer );
-		
-		Ttcn3Reparser parser = new Ttcn3Reparser( tokens );
+		// 2. Changed from BufferedTokenStream to CommonTokenStream, otherwise tokens with "-> channel(HIDDEN)" are not filtered out in lexer.
+		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
+
+		Ttcn3Reparser parser = new Ttcn3Reparser( tokenStream );
 
 		lexer.setActualFile(file);
 		parser.setActualFile(file);

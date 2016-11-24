@@ -10,10 +10,9 @@ package org.eclipse.titan.designer.parsers.ttcn3parser;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenFactory;
-import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.titan.designer.AST.Reference;
@@ -41,8 +40,8 @@ public final class TTCN3ReferenceAnalyzer {
 
 		lexer.removeErrorListeners();
 
-		TokenStream tokens = new BufferedTokenStream( lexer );
-		Ttcn3Parser parser = new Ttcn3Parser(tokens);
+		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
+		Ttcn3Parser parser = new Ttcn3Parser( tokenStream );
 
 		lexer.setActualFile(file);
 		parser.setActualFile(file);
@@ -77,8 +76,8 @@ public final class TTCN3ReferenceAnalyzer {
 
 		lexer.removeErrorListeners();
 
-		TokenStream tokens = new BufferedTokenStream( lexer );
-		Ttcn3Parser parser = new Ttcn3Parser(tokens);
+		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
+		Ttcn3Parser parser = new Ttcn3Parser( tokenStream );
 
 		lexer.setActualFile(file);
 		parser.setActualFile(file);
