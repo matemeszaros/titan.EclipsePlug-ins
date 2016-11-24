@@ -18,6 +18,7 @@ import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
@@ -143,7 +144,8 @@ public final class Def_ModulePar extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		lastTimeChecked = timestamp;
 		T3Doc.check(this.getCommentLocation(), KIND);
 
 		isUsed = false;
@@ -161,7 +163,6 @@ public final class Def_ModulePar extends Definition {
 		}
 
 		type.check(timestamp);
-		lastTimeChecked = timestamp;
 
 		IType lastType = type.getTypeRefdLast(timestamp);
 		switch (lastType.getTypetype()) {

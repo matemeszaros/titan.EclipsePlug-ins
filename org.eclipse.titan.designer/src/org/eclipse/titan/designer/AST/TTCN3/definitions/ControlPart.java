@@ -15,6 +15,7 @@ import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
@@ -171,7 +172,10 @@ public final class ControlPart extends Scope implements ILocateableNode, IAppend
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		lastTimeChecked = timestamp;
+		
 		T3Doc.check(this.getCommentLocation(), KIND);
 
 		statementblock.check(timestamp);
@@ -181,7 +185,7 @@ public final class ControlPart extends Scope implements ILocateableNode, IAppend
 			withAttributesPath.checkAttributes(timestamp);
 		}
 
-		lastTimeChecked = timestamp;
+		
 	}
 
 	/**

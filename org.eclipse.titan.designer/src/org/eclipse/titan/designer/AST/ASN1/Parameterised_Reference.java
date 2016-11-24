@@ -58,7 +58,7 @@ public final class Parameterised_Reference extends Defined_Reference {
 	protected ASN1Assignments assignments;
 	private Defined_Reference finalReference;
 
-	private CompilationTimeStamp lastChekTimeStamp;
+	private CompilationTimeStamp lastCheckTimeStamp;	
 
 	private NameReStarter newAssignmentNameStart;
 
@@ -155,8 +155,12 @@ public final class Parameterised_Reference extends Defined_Reference {
 
 		// This is a little trick, but otherwise we would not have the
 		// true compilation timestamp
-		final CompilationTimeStamp compilationTimeStamp = module.getLastImportationCheckTimeStamp();
-		if (null != lastChekTimeStamp && !lastChekTimeStamp.isLess(compilationTimeStamp)) {
+		CompilationTimeStamp compilationTimeStamp = module.getLastImportationCheckTimeStamp();
+		if( compilationTimeStamp == null ) {
+			//compilationTimeStamp = CompilationTimeStamp.getNewCompilationCounter(); //this forces re-check
+			return null;
+		}
+		if (null != lastCheckTimeStamp && !lastCheckTimeStamp.isLess(compilationTimeStamp)) {
 			if (isErroneous) {
 				return null;
 			}
@@ -164,7 +168,7 @@ public final class Parameterised_Reference extends Defined_Reference {
 			return finalReference;
 		}
 
-		lastChekTimeStamp = compilationTimeStamp;
+		lastCheckTimeStamp = compilationTimeStamp;
 
 		final Assignment parass = assignmentReference.getRefdAssignment(compilationTimeStamp, true, null);
 		if (null == parass) {

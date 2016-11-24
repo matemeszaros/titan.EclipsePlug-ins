@@ -165,7 +165,7 @@ public final class Def_Var_Template extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		lastTimeChecked = timestamp;
 		isUsed = false;
 		wasAssigned = false;
 
@@ -178,7 +178,6 @@ public final class Def_Var_Template extends Definition {
 		}
 
 		type.check(timestamp);
-		lastTimeChecked = timestamp;
 
 		if (initialValue == null) {
 			return;

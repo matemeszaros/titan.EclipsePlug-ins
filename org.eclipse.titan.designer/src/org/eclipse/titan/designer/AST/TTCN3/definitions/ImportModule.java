@@ -19,6 +19,7 @@ import org.eclipse.titan.designer.AST.IReferencingElement;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportation;
 import org.eclipse.titan.designer.AST.ModuleImportationChain;
@@ -236,8 +237,9 @@ public final class ImportModule extends ModuleImportation implements ILocateable
 	public void checkImports(final CompilationTimeStamp timestamp, final ModuleImportationChain referenceChain, final List<Module> moduleStack) {
 		if (lastImportCheckTimeStamp != null && !lastImportCheckTimeStamp.isLess(timestamp)) {
 			return;
-		}
-
+		}		
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		
 		final Module temp = referredModule;
 		referredModule = null;
 
@@ -275,12 +277,12 @@ public final class ImportModule extends ModuleImportation implements ILocateable
 				}
 			}
 			if (hasNormalImport) {
-				referredModule.checkImports(timestamp, referenceChain, moduleStack);
+				referredModule.checkImports(timestamp, referenceChain, moduleStack);//TODO: Check, this is not recursive!!!!
 			}
 		}
 		moduleStack.remove(moduleStack.size() - 1);
 
-		lastImportCheckTimeStamp = timestamp;
+//		lastImportCheckTimeStamp = timestamp; //timestamp can be set only here to handle circular import chains!
 	}
 
 	@Override
@@ -292,12 +294,15 @@ public final class ImportModule extends ModuleImportation implements ILocateable
 			// should be reset only once per semantic check cycle.
 			return;
 		}
+		
+		lastImportCheckTimeStamp = timestamp; 
 
 		if (referredModule != null) {
 			referredModule.check(timestamp);
 		}
 
 		if (withAttributesPath != null) {
+			MarkerHandler.markAllSemanticMarkersForRemoval(withAttributesPath);
 			withAttributesPath.checkGlobalAttributes(timestamp, false);
 			withAttributesPath.checkAttributes(timestamp);
 		}

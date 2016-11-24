@@ -94,7 +94,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> SemanticErrors1_asn_initializer() {
 		//SemanticErrors1.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(16);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(17);
 		int lineNum = 7;
 		markersToCheck.add(new MarkerToCheck("Duplicate symbol with name `Duplicate-symbol' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate symbol with name `Duplicate-symbol' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
@@ -117,6 +117,8 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `nonexi' in module `SemanticErrors1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 32;
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 3;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `NONEXI' in module `SemanticErrors1'",  lineNum, IMarker.SEVERITY_ERROR));
 
 		return markersToCheck;
@@ -232,7 +234,7 @@ public class Semantic_errors_tests {
 
 	private ArrayList<MarkerToCheck> Semantic_errors_ttcn_initializer() {
 		//Semantic_errors.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(55);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(52);
 		int lineNum = 11;
 		markersToCheck.add(new MarkerToCheck("There is no module with name `nonexiModule'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
@@ -266,7 +268,6 @@ public class Semantic_errors_tests {
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `x' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `x' was first declared here",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 10;
-		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.no_choice -> type reference: @Semantic_errors.no_choice -> type reference: no_choice'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.no_choice -> type reference: no_choice -> type reference: @Semantic_errors.no_choice'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		int i = 0;
@@ -274,13 +275,11 @@ public class Semantic_errors_tests {
 			markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: no_choice -> type reference: @Semantic_errors.no_choice -> type reference: @Semantic_errors.no_choice'", lineNum++, IMarker.SEVERITY_ERROR));
 		}
 		lineNum += 2;
-		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0'",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: @Semantic_errors.MyUnion0'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 3;
-		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion1 -> type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: @Semantic_errors.MyUnion1 -> type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Circular reference chain: `type reference: MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: @Semantic_errors.MyUnion0 -> type reference: MyUnion1 -> type reference: @Semantic_errors.MyUnion1'",  ++lineNum, IMarker.SEVERITY_ERROR));

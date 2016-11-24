@@ -22,6 +22,7 @@ import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.NamedBridgeScope;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
@@ -274,12 +275,13 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		lastTimeChecked = timestamp;
+		
 		T3Doc.check(this.getCommentLocation(), KIND);
 
 		isUsed = false;
 		runsOnType = null;
-		lastTimeChecked = timestamp;
 		isStartable = false;
 
 		if (runsOnRef != null) {

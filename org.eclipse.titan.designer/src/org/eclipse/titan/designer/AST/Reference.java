@@ -448,6 +448,8 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 			return referredAssignment;
 		}
 		
+		lastTimeChecked = timestamp;
+		
 		final boolean newChain = null == referenceChain;
 		IReferenceChain tempReferenceChain;
 		if (newChain) {
@@ -463,7 +465,6 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 		referredAssignment = myScope.getAssBySRef(timestamp, this, referenceChain);
 		if (referredAssignment == null) {
 			isErroneous = true;
-			lastTimeChecked = timestamp;
 			return referredAssignment;
 		}
 
@@ -512,8 +513,6 @@ public class Reference extends ASTNode implements ILocateableNode, IIncrementall
 				}
 			}
 		}
-
-		lastTimeChecked = timestamp;
 
 		return referredAssignment;
 	}

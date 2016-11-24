@@ -19,6 +19,7 @@ import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NamedBridgeScope;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.Reference;
@@ -321,7 +322,8 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		lastTimeChecked = timestamp;
 		T3Doc.check(this.getCommentLocation(), KIND);
 
 		isUsed = false;
@@ -334,7 +336,6 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 		NamingConventionHelper.checkNameContents(identifier, getMyScope().getModuleScope().getIdentifier(), getDescription());
 
 		if (type == null) {
-			lastTimeChecked = timestamp;
 			return;
 		}
 
@@ -346,7 +347,6 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 		}
 
 		if (body == null) {
-			lastTimeChecked = timestamp;
 			return;
 		}
 
@@ -368,8 +368,6 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 			// FIXME implement setting the pattern type, once
 			// universal charstring pattern are supported.
 		}
-
-		lastTimeChecked = timestamp;
 
 		if (formalParList != null) {
 			formalParList.reset();

@@ -19,6 +19,7 @@ import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
@@ -195,7 +196,8 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		
 		isUsed = false;
 		prototype = EncodingPrototype_type.NONE;
 		functionEncodingType = ExternalFunctionEncodingType_type.MANUAL;

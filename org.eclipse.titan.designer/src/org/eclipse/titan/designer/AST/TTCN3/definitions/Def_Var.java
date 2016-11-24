@@ -177,7 +177,8 @@ public final class Def_Var extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		lastTimeChecked = timestamp;
+		
 		isUsed = false;
 		wasAssigned = false;
 
@@ -193,8 +194,6 @@ public final class Def_Var extends Definition {
 		}
 
 		type.check(timestamp);
-
-		lastTimeChecked = timestamp;
 
 		IType lastType = type.getTypeRefdLast(timestamp);
 		switch (lastType.getTypetype()) {

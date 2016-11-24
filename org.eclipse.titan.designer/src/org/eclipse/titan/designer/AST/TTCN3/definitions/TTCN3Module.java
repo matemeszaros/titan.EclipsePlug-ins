@@ -32,6 +32,7 @@ import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Identifier.Identifier_type;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportation;
 import org.eclipse.titan.designer.AST.ModuleImportationChain;
@@ -82,6 +83,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * 
  * @author Kristof Szabados
  * @author Arpad Lovassy
+ * @author Jeno Attila Balasko
  */
 public final class TTCN3Module extends Module {
 	private static final String FULLNAMEPART = ".control";
@@ -311,18 +313,23 @@ public final class TTCN3Module extends Module {
 
 	@Override
 	public void checkImports(final CompilationTimeStamp timestamp, final ModuleImportationChain referenceChain, final List<Module> moduleStack) {
+		
 		if (lastImportCheckTimeStamp != null && !lastImportCheckTimeStamp.isLess(timestamp)) {
 			return;
 		}
-
+			
+		for (ImportModule impmod : importedModules) {
+			impmod.setUsedForImportation(false);
+		}
+		
 		for (ImportModule impmod : importedModules) {
 			referenceChain.markState();
-			impmod.checkImports(timestamp, referenceChain, moduleStack);
+			impmod.checkImports(timestamp, referenceChain, moduleStack);//This checks only existence, not "used or not used"
+			//timestamp is set!!!, markers are refreshed
 			referenceChain.previousState();
 			LoadBalancingUtilities.astNodeChecked();
 		}
-
-		lastImportCheckTimeStamp = timestamp;
+		lastImportCheckTimeStamp = timestamp; //timestamp can be set only here to handle circular import chains!
 	}
 
 	/**
@@ -407,6 +414,7 @@ public final class TTCN3Module extends Module {
 		missingReferences.clear();
 
 		if (withAttributesPath != null) {
+			MarkerHandler.markAllSemanticMarkersForRemoval(withAttributesPath);
 			withAttributesPath.checkGlobalAttributes(timestamp, false);
 			withAttributesPath.checkAttributes(timestamp);
 		}
@@ -439,7 +447,7 @@ public final class TTCN3Module extends Module {
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
 			return;
 		}
-
+        
 		T3Doc.check(this.getCommentLocation(), MODULE);
 
 		lastCompilationTimeStamp = timestamp;
@@ -452,6 +460,7 @@ public final class TTCN3Module extends Module {
 		missingReferences.clear();
 
 		if (withAttributesPath != null) {
+			MarkerHandler.markAllSemanticMarkersForRemoval(withAttributesPath);
 			withAttributesPath.checkGlobalAttributes(timestamp, false);
 			withAttributesPath.checkAttributes(timestamp);
 		}

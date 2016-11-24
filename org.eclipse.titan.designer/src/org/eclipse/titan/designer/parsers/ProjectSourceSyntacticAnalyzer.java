@@ -69,6 +69,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
  * source code of the projects
  * 
  * @author Kristof Szabados
+ * @author Jeno Attila Balasko
  * */
 public final class ProjectSourceSyntacticAnalyzer {
 	private final IProject project;
@@ -610,20 +611,13 @@ public final class ProjectSourceSyntacticAnalyzer {
 
 			List<IFile> allCheckedFiles = new ArrayList<IFile>();
 
-			// remove the semantic markers from all of the uptodate
-			// files;
-			for (IFile file : uptodateFiles.keySet()) {
-				MarkerHandler.markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, file);
-				MarkerHandler.markMarkersForRemoval(GeneralConstants.ONTHEFLY_MIXED_MARKER, file);
-			}
 			allCheckedFiles.addAll(uptodateFiles.keySet());
 
 			// remove all markers from the files that need to be
 			// parsed
 			for (IFile file : ttcn3FilesToCheck) {
-				MarkerHandler.markAllOnTheFlyMarkersForRemoval(file);
-				MarkerHandler.markAllTaskMarkersForRemoval(file);
-
+				//MarkerHandler.markAllOnTheFlyMarkersForRemoval(file);//TODO:is it not too much????
+				MarkerHandler.markAllMarkersForRemoval(file, GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER);
 				if (!fileMap.containsKey(file)) {
 					ParserMarkerSupport.removeAllCompilerMarkers(file);
 					ParserMarkerSupport.removeAllOnTheFlyMarkers(file);
@@ -632,9 +626,8 @@ public final class ProjectSourceSyntacticAnalyzer {
 			allCheckedFiles.addAll(ttcn3FilesToCheck);
 
 			for (IFile file : asn1FilesToCheck) {
-				MarkerHandler.markAllOnTheFlyMarkersForRemoval(file);
-				MarkerHandler.markAllTaskMarkersForRemoval(file);
-
+				//MarkerHandler.markAllOnTheFlyMarkersForRemoval(file);//TODO:is it not too much????
+				MarkerHandler.markAllMarkersForRemoval(file, GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER);
 				if (!fileMap.containsKey(file)) {
 					ParserMarkerSupport.removeAllCompilerMarkers(file);
 					ParserMarkerSupport.removeAllOnTheFlyMarkers(file);

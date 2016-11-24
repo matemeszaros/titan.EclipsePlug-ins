@@ -13,7 +13,7 @@ c-ASNboolean2 BOOLEAN ::= FALSE
 
 c-ASNinteger1 INTEGER ::= 1
 NamedNumberType ::= INTEGER { firstvalue(-100), secondvalue(0), othervalue(100) } -- named numbers
-c-ASNInteger2 NamedNumberType ::= firstvalue
+c-ASNInteger2 NamedNumberType ::= firstvalue  --wrong marker
 
 c-ASNreal1 REAL ::= {mantissa 314159,base 10, exponent -10}
 c-ASNreal2 REAL ::= {mantissa 1234,base 2, exponent 1}
@@ -21,7 +21,7 @@ c-ASNreal3 REAL ::= PLUS-INFINITY
 c-ASNreal4 REAL ::= MINUS-INFINITY
 
 ASNEnumeratedType ::= ENUMERATED {a(2),b(1),..., c(0)}
-c-ASNenum ASNEnumeratedType ::= a
+c-ASNenum ASNEnumeratedType ::= a --wrong marker
 
 c-ASNbitstring1 BIT STRING ::= '0101010101010101'B
 c-ASNbitstring2 BIT STRING ::= '01234567890ABCDEF'H

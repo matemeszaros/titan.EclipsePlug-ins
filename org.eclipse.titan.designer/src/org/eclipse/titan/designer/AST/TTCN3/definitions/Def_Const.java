@@ -18,6 +18,7 @@ import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.IValue;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.ReferenceChain;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
@@ -166,7 +167,10 @@ public final class Def_Const extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		lastTimeChecked = timestamp;
+		
 		isUsed = false;
 		if (getMyScope() instanceof ComponentTypeBody) {
 			NamingConventionHelper.checkConvention(PreferenceConstants.REPORTNAMINGCONVENTION_COMPONENT_CONSTANT, identifier, this);
@@ -197,8 +201,7 @@ public final class Def_Const extends Definition {
 
 		value.setMyGovernor(type);
 		IValue temporalValue = type.checkThisValueRef(timestamp, value);
-		lastTimeChecked = timestamp;
-
+		
 		IType lastType = type.getTypeRefdLast(timestamp);
 		switch (lastType.getTypetype()) {
 		case TYPE_PORT:

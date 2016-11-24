@@ -110,8 +110,12 @@ public class AST_tests {
 
 	private ArrayList<MarkerToCheck> ASNValues_asn_initializer() {
 		//ASNValues.asn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1);
-		int lineNum = 66;
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(3);
+		int lineNum = 16;
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `firstvalue' in module `ASNValues'",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 8;
+		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `a' in module `ASNValues'",  lineNum, IMarker.SEVERITY_ERROR)); //TODO:wrong, repair
+		lineNum += 42;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `myObjectIdentifierValue1' in module `ASNValues'",  lineNum, IMarker.SEVERITY_ERROR));
 
 		return markersToCheck;
@@ -376,7 +380,7 @@ public class AST_tests {
 
 	private ArrayList<MarkerToCheck> expression_tests_ttcn_initializer() {
 		//expression_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1514);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(1515);
 		int lineNum = 122;
 		int i = 0;
 		for (i = 0; i < 8; i++) {
@@ -1871,6 +1875,7 @@ public class AST_tests {
 		}
 		markersToCheck.add(new MarkerToCheck("The second operand of the `decvalue' operation is unable to hold a decoded value",  --lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `encdecres1' in module `expression_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `vl_i' in module `expression_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `t_encdecvar3' in module `expression_tests'",  lineNum, IMarker.SEVERITY_ERROR));
@@ -1893,6 +1898,7 @@ public class AST_tests {
 
 		return markersToCheck;
 	}
+
 	private ArrayList<MarkerToCheck> negativeTesting_ttcn_initializer() {
 		//negativeTesting.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(73);
@@ -3870,7 +3876,7 @@ public class AST_tests {
 
 	private ArrayList<MarkerToCheck> statement_tests_ttcn_initializer() {
 		//statement_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(969);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(983);
 		int lineNum = 41;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `compTimer' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 6;
@@ -3959,7 +3965,22 @@ public class AST_tests {
 		}
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `i' in module `statement_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 96; i++) {
+		for (i = 0; i < 89; i++) {
+			markersToCheck.add(new MarkerToCheck("The operand of the `setverdict' operation should be a verdict value", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `t' in module `statement_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The operand of the `setverdict' operation should be a verdict value", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `statement_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("The operand of the `setverdict' operation should be a verdict value", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `f_functiontypeValueTest' in module `statement_tests'",  --lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
+		for (i = 0; i < 3; i++) {
 			markersToCheck.add(new MarkerToCheck("The operand of the `setverdict' operation should be a verdict value", lineNum++, IMarker.SEVERITY_ERROR));
 		}
 		lineNum += 11;
@@ -3995,8 +4016,10 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `statement_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the argument",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `f_functiontypeValueTest' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < 3; i++) {
 			markersToCheck.add(new MarkerToCheck("Cannot determine the type of the argument", lineNum++, IMarker.SEVERITY_ERROR));
 		}
 		lineNum += 10;
@@ -4025,8 +4048,10 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `statement_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the argument",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `f_functiontypeValueTest' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < 3; i++) {
 			markersToCheck.add(new MarkerToCheck("Cannot determine the type of the argument", lineNum++, IMarker.SEVERITY_ERROR));
 		}
 		lineNum += 2;
@@ -4051,8 +4076,10 @@ public class AST_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `temp_altstep_pointer' in module `statement_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the argument",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `f_functiontypeValueTest' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < 3; i++) {
 			markersToCheck.add(new MarkerToCheck("Cannot determine the type of the argument", lineNum++, IMarker.SEVERITY_ERROR));
 		}
 		lineNum += 4;
@@ -4069,6 +4096,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("The function has a return type, but it does not have any return statement",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 11;
 		markersToCheck.add(new MarkerToCheck("Component type `@statement_tests.componentName_CT' does not have a port with name `portname1_PT'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `portname1_PT' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Definition `v_variable' in component type `@statement_tests.componentName_CT' is a variable and not a port", lineNum, IMarker.SEVERITY_ERROR));
@@ -4083,6 +4111,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("The mapping between port types `@statement_tests.testPortonlyOut' and `@statement_tests.testPortName_PT' is not consistent",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
 		markersToCheck.add(new MarkerToCheck("Component type `@statement_tests.componentName_CT' does not have a port with name `portname1_PT'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `portname1_PT' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Definition `v_variable' in component type `@statement_tests.componentName_CT' is a variable and not a port", lineNum, IMarker.SEVERITY_ERROR));
@@ -4097,6 +4126,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("The mapping between port types `@statement_tests.testPortonlyOut' and `@statement_tests.testPortName_PT' is not consistent",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
 		markersToCheck.add(new MarkerToCheck("Component type `@statement_tests.componentName_CT' does not have a port with name `portname1_PT'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `portname1_PT' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Definition `v_variable' in component type `@statement_tests.componentName_CT' is a variable and not a port", lineNum, IMarker.SEVERITY_ERROR));
@@ -4110,6 +4140,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("The connection between port types `@statement_tests.testPortonlyOut' and `@statement_tests.testPortName_PT' is not consistent",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 7;
 		markersToCheck.add(new MarkerToCheck("Component type `@statement_tests.componentName_CT' does not have a port with name `portname1_PT'",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `portname1_PT' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Definition `v_variable' in component type `@statement_tests.componentName_CT' is a variable and not a port", lineNum, IMarker.SEVERITY_ERROR));
@@ -4562,8 +4593,10 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `templateInstance' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 14;
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used without signature template",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `akarmi' in module `statement_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Value redirect cannot be used without signature template",  lineNum, IMarker.SEVERITY_ERROR));
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("There is no visible definition with name `akarmi' in module `statement_tests'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("Value redirect cannot be used without signature template",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Operation `any port.getreply' cannot have parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Incompatible explicit type specification: `integer' was expected instead of @statement_tests.S_ProvedureSignatureID4",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Operation `any port.getreply' cannot have parameter",  lineNum, IMarker.SEVERITY_ERROR));
@@ -4577,7 +4610,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("The type of parameter is `charstring', which is not a signature",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the template",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used without signature template",  lineNum, IMarker.SEVERITY_ERROR));
-		for (i = 0; i < 2; i++) {
+		for (i = 0; i < 3; i++) {
 			markersToCheck.add(new MarkerToCheck("There is no visible definition with name `nonExi' in module `statement_tests'", lineNum, IMarker.SEVERITY_ERROR));
 		}
 		markersToCheck.add(new MarkerToCheck("Too many variable entries compared to the number of out/inout parameters in signature `@statement_tests.S_ProvedureSignatureID': 0 was expected instead of 2",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -4607,8 +4640,10 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Port type `@statement_tests.reply_PT' does not have any outgoing signatures that support reply",  ++lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used without signature template",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `akarmi' in module `statement_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Value redirect cannot be used without signature template",  lineNum, IMarker.SEVERITY_ERROR));
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("There is no visible definition with name `akarmi' in module `statement_tests'", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("Value redirect cannot be used without signature template",  --lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Operation `any port.check-getreply' cannot have parameter",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Incompatible explicit type specification: `integer' was expected instead of @statement_tests.S_ProvedureSignatureID4",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Operation `any port.check-getreply' cannot have parameter",  lineNum, IMarker.SEVERITY_ERROR));
@@ -4623,6 +4658,7 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the template",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Parameter redirect cannot be used without signature template",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Port type `@statement_tests.reply_PT' does not have any outgoing signatures that support reply",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `akarmi' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `myPeer' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `myVar' in module `statement_tests'",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Cannot determine the type of the template",  ++lineNum, IMarker.SEVERITY_ERROR));
@@ -4874,7 +4910,7 @@ public class AST_tests {
 
 	private ArrayList<MarkerToCheck> subtype_tests_ttcn_initializer() {
 		//subtype_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(748);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(754);
 		int lineNum = 24;
 		markersToCheck.add(new MarkerToCheck("Range subtyping is not allowed for type `boolean'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
@@ -5248,14 +5284,18 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("lower boundary is bigger than upper boundary in universal charstring subtype range",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("lower boundary is bigger than upper boundary in universal charstring subtype range",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 1;
-		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again", lineNum++, IMarker.SEVERITY_ERROR));
-		}
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring4' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring5' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring6' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("upper boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring4' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring5' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring6' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("Reference to a constant value was expected instead of the return value of function `@subtype_tests.f_universalcharstringFunction'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
@@ -5668,6 +5708,7 @@ public class AST_tests {
 
 		return markersToCheck;
 	}
+
 
 	private ArrayList<MarkerToCheck> template_assignment_tests_ttcn_initializer() {
 		//template_assignment_tests.ttcn
@@ -7392,7 +7433,7 @@ public class AST_tests {
 
 	private ArrayList<MarkerToCheck> template_formalparlist_tests_ttcn_initializer() {
 		//template_formalparlist_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(20);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(22);
 		int lineNum = 27;
 		markersToCheck.add(new MarkerToCheck("Reference to a template was expected in the `modifies' definition instead of constant `@template_formalparlist_tests.cg_int'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
@@ -7423,11 +7464,11 @@ public class AST_tests {
 		for (i = 0; i < 2; i++) {
 			markersToCheck.add(new MarkerToCheck("Using not used symbol (`-') as the default parameter is allowed only for modified templates", lineNum++, IMarker.SEVERITY_ERROR));
 		}
-		lineNum += 1;
-		for (i = 0; i < 2; i++) {
-			markersToCheck.add(new MarkerToCheck("Using not used symbol (`-') as the default parameter is allowed only for modified templates", lineNum++, IMarker.SEVERITY_ERROR));
-		}
-		lineNum += 6;
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `T' in module `template_formalparlist_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Using not used symbol (`-') as the default parameter is allowed only for modified templates",  lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("There is no visible definition with name `T' in module `template_formalparlist_tests'",  ++lineNum, IMarker.SEVERITY_ERROR));
+		markersToCheck.add(new MarkerToCheck("Using not used symbol (`-') as the default parameter is allowed only for modified templates",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 7;
 		markersToCheck.add(new MarkerToCheck("Too few parameters: at least 1 was expected instaed of 0",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Reference to parameterized definition `t_MyTTemp1' without actual parameter list",  ++lineNum, IMarker.SEVERITY_ERROR));
 

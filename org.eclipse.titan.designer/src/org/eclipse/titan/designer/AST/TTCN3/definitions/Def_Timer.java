@@ -194,7 +194,7 @@ public final class Def_Timer extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		lastTimeChecked = timestamp;
 		isUsed = false;
 
 		if (getMyScope() instanceof ComponentTypeBody) {

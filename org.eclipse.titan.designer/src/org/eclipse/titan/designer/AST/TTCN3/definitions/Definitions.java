@@ -26,6 +26,7 @@ import org.eclipse.titan.designer.AST.IOutlineElement;
 import org.eclipse.titan.designer.AST.IReferenceChain;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.AST.Reference;
@@ -50,6 +51,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
  * 
  * @author Kristof Szabados
  * @author Arpad Lovassy
+ * @author Jeno Attila Balasko
  */
 public final class Definitions extends Assignments implements ILocateableNode {
 	/** The list of definitions contained in this scope. */
@@ -237,11 +239,20 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	 * @param timestamp
 	 *                the timestamp of the actual semantic check cycle.
 	 * */
+	//checkUniquiness has been splitted into to parts because 
+	//the check should be done at the beginning of the check but the reporting shall be done finally
 	protected void checkUniqueness(final CompilationTimeStamp timestamp) {
+		createDefinitionMap(timestamp); //creates a hash map
+		reportDoubleDefinitions();	
+	}
+
+	// creates or refreshes DefinitionMap and doubleDefinitions but not reports the found double definitons
+	protected void createDefinitionMap(final CompilationTimeStamp timestamp) {
 		if (lastUniquenessCheckTimeStamp != null && !lastUniquenessCheckTimeStamp.isLess(timestamp)) {
 			return;
 		}
-
+		lastUniquenessCheckTimeStamp = timestamp;
+		
 		if (doubleDefinitions != null) {
 			doubleDefinitions.clear();
 		}
@@ -262,9 +273,20 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				definitionMap.put(definitionName, definition);
 			}
 		}
-
-
+		//TODO: check if this is necessary or not:
 		if (doubleDefinitions != null) {
+			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
+				definitions.remove(doubleDefinitions.get(i));
+			}
+		}
+		
+	}
+
+	//reports the found double definitons. It is supposed doubleDefinition to be created already
+	protected void reportDoubleDefinitions() {
+		if (doubleDefinitions != null) {
+			String definitionName;
+			Definition definition;
 			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
 				definitions.remove(doubleDefinitions.get(i));
 			}
@@ -287,8 +309,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				}
 			}
 		}
-
-		lastUniquenessCheckTimeStamp = timestamp;
 	}
 
 	/**
@@ -348,24 +368,25 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
 			return;
 		}
-
+		lastCompilationTimeStamp = timestamp;
+		
 		Module module = getModuleScope();
 		if (module != null) {
 			if (module.getSkippedFromSemanticChecking()) {
-				lastCompilationTimeStamp = timestamp;
 				return;
 			}
 		}
-
-		checkUniqueness(timestamp);
+		
+		// MarkerHandler.markAllSemanticMarkersForRemoval(this); //this removes the imports as well
+		
 		checkGroups(timestamp);
-
-		lastCompilationTimeStamp = timestamp;
 
 		for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
 			iterator.next().check(timestamp);
 			LoadBalancingUtilities.astNodeChecked();
 		}
+		
+		checkUniqueness(timestamp);
 	}
 	
 	/**
@@ -375,12 +396,18 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
 			return;
 		}
-
+		lastCompilationTimeStamp = timestamp;
+		
+		//Remove only the old markers. Cannot this be done even more earlier????
+		for( final Assignment assignment : assignments) {
+			if(assignment.getLastTimeChecked() == null ||  assignment.getLastTimeChecked().isLess(timestamp) ){
+				MarkerHandler.markAllSemanticMarkersForRemoval(assignment);
+			}
+		}
+		
 		checkUniqueness(timestamp);
 		checkGroups(timestamp);
 
-		lastCompilationTimeStamp = timestamp;
-		
 		for (Iterator<Assignment> iterator = assignments.iterator(); iterator.hasNext();) {
 			Assignment assignmentFrom  = iterator.next();
 			if(definitionMap.containsKey(assignmentFrom.getIdentifier().getName())) {
@@ -421,19 +448,19 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		if (identifier == null) {
 			return getModuleScope().getAssBySRef(timestamp, reference);
 		}
-
+				
 		if (lastUniquenessCheckTimeStamp == null) {
-			checkUniqueness(timestamp);
-		}
+			createDefinitionMap(timestamp);
+		} //uniqueness shall be reported only after checking all the definitions
 
 		Definition result = definitionMap.get(identifier.getName());
 		if (result != null) {
 			return result;
 		}
-
+		
 		return getParentScope().getAssBySRef(timestamp, reference);
 	}
-
+	
 	/**
 	 * Searches the definitions for one with a given Identifier.
 	 * 
@@ -810,6 +837,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 								doubleDefinitions.clear();
 							}
 							lastUniquenessCheckTimeStamp = null;
+							lastCompilationTimeStamp = null; //to recheck the whole module 
+							//TODO: BAAT:trigger the recheck of the importing modules as well!!
 							reparser.setNameChanged(false);
 							// This could also spread
 						}

@@ -297,7 +297,6 @@ public class ProjectSourceSemanticAnalyzer {
 		}
 		
 		final long semanticCheckStart = System.nanoTime();
-		final IPreferencesService preferenceService = Platform.getPreferencesService();
 
 		for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
 			ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
@@ -312,21 +311,7 @@ public class ProjectSourceSemanticAnalyzer {
 		progress.subTask("Checking the importations of the modules");
 		
 		try{
-			final String option = preferenceService.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.REPORTUNSUPPORTEDCONSTRUCTS, GeneralConstants.WARNING, null);
-			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
-				// report the unsupported constructs in the project
-				ProjectSourceSyntacticAnalyzer syntacticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSyntacticAnalyzer();
-				for (IFile file : syntacticAnalyzer.unsupportedConstructMap.keySet()) {
-					List<TITANMarker> markers = syntacticAnalyzer.unsupportedConstructMap.get(file);
-					if (markers != null && file.isAccessible()) {
-						for (TITANMarker marker : markers) {
-							Location location = new Location(file, marker.getLine(), marker.getOffset(), marker.getEndOffset());
-							location.reportConfigurableSemanticProblem(option, marker.getMessage());
-						}
-					}
-				}
-			}
-			
+	
 			// clean the instantiated parameterized assignments,
 			// from their instances
 			Ass_pard.resetAllInstanceCounters();
@@ -362,13 +347,15 @@ public class ProjectSourceSemanticAnalyzer {
 
 			int nofModulesTobeChecked = 0;
 			if(allModules.size() > semanticallyChecked.size()) {
+
 				// check and build the import hierarchy of the modules
 				ModuleImportationChain referenceChain = new ModuleImportationChain(CIRCULARIMPORTCHAIN, false);
 				for(Module module : allModules) {
 					module.checkImports(compilationCounter, referenceChain, new ArrayList<Module>());
 					referenceChain.clear();
-				}
-
+				}//TODO: copy after the check
+				//checking imports moved after doChecking, otherwise their markers would be removed!
+				
 				progress.subTask("Calculating the list of modules to be checked");
 
 				IBaseAnalyzer selectionMethod = new BrokenPartsViaReferences(SelectionAlgorithm.BROKENREFERENCESINVERTED, compilationCounter);
@@ -383,27 +370,44 @@ public class ProjectSourceSemanticAnalyzer {
 				
 				BrokenPartsChecker brokenPartsChecker = new BrokenPartsChecker(progress.newChild(1), compilationCounter, selectionMethodBase);
 				brokenPartsChecker.doChecking();
-				
+								
 				// re-enable the markers on the skipped modules.
 				for (Module module2 : selectionMethodBase.getModulesToSkip()) {
 					MarkerHandler.reEnableAllMarkers((IFile) module2.getLocation().getFile());
-				}
+				} //TODO: check this
 
 				nofModulesTobeChecked = selectionMethodBase.getModulesToCheck().size();
 			} else {
 				//re-enable all markers
 				for (Module module2 : allModules) {
 					MarkerHandler.reEnableAllMarkers((IFile) module2.getLocation().getFile());
+				}//TODO: check this
+			}
+			
+			//Not supported markers are handled here, at the and of checking. Otherwise they would be deleted
+			final IPreferencesService preferenceService = Platform.getPreferencesService();
+			final String option = preferenceService.getString(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.REPORTUNSUPPORTEDCONSTRUCTS, GeneralConstants.WARNING, null);
+			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
+				// report the unsupported constructs in the project
+				ProjectSourceSyntacticAnalyzer syntacticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSyntacticAnalyzer();
+				for (IFile file : syntacticAnalyzer.unsupportedConstructMap.keySet()) {
+					List<TITANMarker> markers = syntacticAnalyzer.unsupportedConstructMap.get(file);
+					if (markers != null && file.isAccessible()) {
+						for (TITANMarker marker : markers) {
+							Location location = new Location(file, marker.getLine(), marker.getOffset(), marker.getEndOffset());
+							location.reportConfigurableSemanticProblem(option, marker.getMessage());
+						}
+					}
 				}
 			}
-
+			
 			if (preferenceService.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.DISPLAYDEBUGINFORMATION, true, null)) {
 				MessageConsoleStream stream = TITANDebugConsole.getConsole().newMessageStream();
 				TITANDebugConsole.println("  ** Had to start checking at " + nofModulesTobeChecked + " modules. ", stream);
 				TITANDebugConsole.println("  **On-the-fly semantic checking of projects (" + allModules.size() + " modules) took " + (System.nanoTime() - semanticCheckStart) * (1e-9) + " seconds", stream);
 			}
 			progress.subTask("Cleanup operations");
-			
+
 			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
 				ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
 				synchronized (semanticAnalyzer.semanticallyUptodateModules) {
@@ -430,10 +434,10 @@ public class ProjectSourceSemanticAnalyzer {
 				collector.addKnownModule(module.getIdentifier());
 				module.extractStructuralInformation(collector);
 			}
-			
+
 			MarkerHandler.removeAllOnTheFlyMarkedMarkers(tobeSemanticallyAnalyzed.get(i));
 		}
-		
+
 		return Status.OK_STATUS;
 	}
 }

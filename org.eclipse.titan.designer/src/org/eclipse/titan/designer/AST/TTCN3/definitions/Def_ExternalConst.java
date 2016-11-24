@@ -17,6 +17,7 @@ import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IType;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.ReferenceFinder;
 import org.eclipse.titan.designer.AST.Scope;
@@ -106,7 +107,9 @@ public final class Def_ExternalConst extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-
+		MarkerHandler.markAllSemanticMarkersForRemoval(this);
+		
+		lastTimeChecked = timestamp;
 		isUsed = false;
 
 		NamingConventionHelper.checkConvention(PreferenceConstants.REPORTNAMINGCONVENTION_EXTERNALCONSTANT, identifier, this);
@@ -135,7 +138,6 @@ public final class Def_ExternalConst extends Definition {
 			withAttributesPath.checkAttributes(timestamp);
 		}
 
-		lastTimeChecked = timestamp;
 	}
 
 	@Override
