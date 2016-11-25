@@ -10,12 +10,13 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
-public class BITSTRING extends BINARY_STRING{
+public class BITSTRING extends BINARY_STRING implements Indexable<BITSTRING> {
 
     public BITSTRING(){
     }
@@ -49,7 +50,16 @@ public class BITSTRING extends BINARY_STRING{
 		if(anyField) return "?";
 		if(omitField) return "omit";
 		if(anyOrOmitField) return "*";
-		return "B'" + new String(value) + "'";
+		return "'" + new String(value) + "'B";
 	}
 
+	@Override
+	public BITSTRING get(int index) {
+		return new BITSTRING(new String(new byte[]{value[index]}));
+	}
+
+	@Override
+	public void set(int index, BITSTRING bitstring) {
+		value[index] = bitstring.value[0];
+	}
 }

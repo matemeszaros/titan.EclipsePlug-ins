@@ -1,0 +1,17 @@
+### Build files
+bin/
+
+### Project files
+## IDEA
+*.iml
+.idea/
+## Eclipse (uncomment if necessary)
+#.classpath
+#.project
+
+### Generated content
+debug/
+generated/
+src/org/eclipse/titan/codegenerator/javagen/*
+## Except the placeholder classes
+!src/org/eclipse/titan/codegenerator/javagen/HCType.java

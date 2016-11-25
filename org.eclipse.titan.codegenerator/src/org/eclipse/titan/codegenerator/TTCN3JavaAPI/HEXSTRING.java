@@ -10,12 +10,13 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
-public class HEXSTRING extends BINARY_STRING {
+public class HEXSTRING extends BINARY_STRING implements Indexable<HEXSTRING> {
 
     public HEXSTRING() {
     }
@@ -49,7 +50,16 @@ public class HEXSTRING extends BINARY_STRING {
 		if(anyField) return "?";
 		if(omitField) return "omit";
 		if(anyOrOmitField) return "*";
-		return "H'" + new String(value) + "'";
+		return "'" + new String(value) + "'H";
 	}
 
+	@Override
+	public HEXSTRING get(int index) {
+		return new HEXSTRING(new String(new byte[]{value[index]}));
+	}
+
+	@Override
+	public void set(int index, HEXSTRING hexstring) {
+		value[index] = hexstring.value[0];
+	}
 }

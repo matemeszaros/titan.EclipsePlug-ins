@@ -15,11 +15,14 @@
 
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
+import java.util.List;
+
 public abstract class TypeDef extends ModuleDef{
     public boolean anyField; //stores if the given data instance has special value ?
     public boolean omitField; //stores if the given data instance has special value omit
     public boolean anyOrOmitField; //stores if the given data instance has special value *
     
+    public abstract void checkValue(); //subtype correctness verification method
     public abstract String toString(String tabs);
     public abstract String toString();
     

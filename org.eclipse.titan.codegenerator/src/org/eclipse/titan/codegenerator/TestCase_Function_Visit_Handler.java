@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -17,8 +18,8 @@ package org.eclipse.titan.codegenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.titan.designer.AST.ArraySubReference;
+import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.IVisitableNode;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.ParameterisedSubReference;
@@ -35,6 +36,7 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.Assignment_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Connect_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Definition_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Disconnect_Statement;
+import org.eclipse.titan.designer.AST.TTCN3.statements.DoWhile_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.If_Clause;
 import org.eclipse.titan.designer.AST.TTCN3.statements.If_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Map_Statement;
@@ -54,6 +56,7 @@ import org.eclipse.titan.designer.AST.TTCN3.templates.TemplateInstance;
 import org.eclipse.titan.designer.AST.TTCN3.types.BitString_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Boolean_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.CharString_Type;
+import org.eclipse.titan.designer.AST.TTCN3.types.Float_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Integer_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.OctetString_Type;
 import org.eclipse.titan.designer.AST.TTCN3.values.Bitstring_Value;
@@ -62,24 +65,40 @@ import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Octetstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Real_Value;
+import org.eclipse.titan.designer.AST.TTCN3.values.SequenceOf_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.AddExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.And4bExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ComponentCreateExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.DivideExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.EqualsExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.GreaterThanExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.GreaterThanOrEqualExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Int2StrExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.IsBoundExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.IsChoosenExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.IsPresentExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.IsValueExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.LengthofExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.LessThanExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.LessThanOrEqualExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.MTCComponentExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ModuloExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.MultiplyExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Not4bExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.NotExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.NotequalesExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Or4bExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RemainderExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RotateLeftExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RotateRightExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.SelfComponentExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ShiftLeftExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ShiftRightExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.StringConcatenationExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.SubstractExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.SystemComponentExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Xor4bExpression;
 
 public class TestCase_Function_Visit_Handler {
 
@@ -91,8 +110,11 @@ public class TestCase_Function_Visit_Handler {
 
 	private static String returnType = null;
 	private static String returnStatementValue = null;
-	private static String unknownStartReference = null;
+	private List<String> unknownStartReference = new ArrayList<String>();
+	private List<String> unknownStopReference = new ArrayList<String>();
+	
 	private static String runsOnValue = null;
+	private static String currentIdentifier = null;
 
 	// Counters
 	private int tcCreateCounter = -1;
@@ -119,6 +141,7 @@ public class TestCase_Function_Visit_Handler {
 	private boolean waitForTcIfCondition = false;
 
 	private boolean isSendStatement = false;
+	private boolean isDoWhileStatement = false;
 	private boolean waitForTcStartParameter = false;
 	private boolean waitForTcStopParameter = false;
 	private boolean isAltGuards = false;
@@ -134,6 +157,7 @@ public class TestCase_Function_Visit_Handler {
 	private boolean waitForTcStartValues = false;
 	private boolean waitForFunction = false;
 	private boolean waitForStatements = true;
+	private boolean waitForReceiveParameter = false;
 	private boolean isAnyValValue = false;
 	private boolean waitForReceiveAnyValTemplateValue = false;
 	private boolean isDefinition = false;
@@ -175,6 +199,8 @@ public class TestCase_Function_Visit_Handler {
 	private List<String> altGuardReceiveType = new ArrayList<String>();
 	private List<String> altGuardTimeout = new ArrayList<String>();
 
+	private List<String> doWhileExpressions = new ArrayList<String>();
+	
 	private List<String> receivePortReference = new ArrayList<String>();
 	private List<String> receiveValue = new ArrayList<String>();
 	private List<String> receiveAnyValValue = new ArrayList<String>();
@@ -204,10 +230,11 @@ public class TestCase_Function_Visit_Handler {
 	private boolean waitForTcStopValues = false;
 	private int tcStopCounter = -1;
 	private boolean waitForUnknownStopStatement = false;
-	private String unknownStopReference = null;
-	private boolean waitForRecord = false;
-	private boolean isCreate;
 
+	private boolean waitForRecord = false;
+	private boolean isCreate = false;
+	private boolean isSendValue = false;
+	private boolean blockReferenceListing = false;
 	Statement currentAltGuardStatement = null;
 
 	public void visit(IVisitableNode node) {
@@ -286,28 +313,42 @@ public class TestCase_Function_Visit_Handler {
 	public void leave(IVisitableNode node) {
 
 		if (waitForTC || waitForFunction) {
+			
 			if (node instanceof Definition_Statement) {
 
 				if (!waitForRecord) {
 					nodeVarIsRecord.add(false);
 				}
+				waitForRecord = false;
 				waitForValue = false;
 
 				evaluateExpression();
+			}
+
+			if (node instanceof Undefined_LowerIdentifier_Value) {
+				blockReferenceListing = false;
 			}
 
 			if ((node instanceof Assignment_Statement) || ((node instanceof If_Clause))) {
 				waitForValue = false;
 
 				// if assignment is a createExpression
-				if ((node instanceof Assignment_Statement)
-						&& ((SpecificValue_Template) ((Assignment_Statement) node).getTemplate())
-								.getSpecificValue() instanceof ComponentCreateExpression) {
-					isCreate = true;
+				if (node instanceof Assignment_Statement) {
+					if (((Assignment_Statement) node).getTemplate() instanceof SpecificValue_Template) {
+						SpecificValue_Template specValTemplate = (SpecificValue_Template) ((Assignment_Statement) node)
+								.getTemplate();
+						if (specValTemplate.getSpecificValue() instanceof ComponentCreateExpression) {
+							isCreate = true;
+						}
+					}
 				}
 
 				evaluateExpression();
 
+			}
+
+			if (node instanceof SequenceOf_Value) {
+				evaluateExpression();
 			}
 
 			if ((waitForFunction && (node instanceof Return_Statement))
@@ -348,6 +389,7 @@ public class TestCase_Function_Visit_Handler {
 
 					waitForValue = false;
 				}
+
 			}
 
 			if (node instanceof Map_Statement) {
@@ -410,6 +452,16 @@ public class TestCase_Function_Visit_Handler {
 			if (node instanceof Unknown_Stop_Statement) {
 				waitForUnknownStopStatement = false;
 			}
+			
+			
+			if (node instanceof Receive_Port_Statement) {
+				if(waitForReceiveParameter){
+					altGuardReceiveType.add("noparam");
+				}
+				//TODO checkAnyport = true;
+				
+				
+			}
 		}
 
 		if (node instanceof Def_Testcase) {
@@ -435,7 +487,22 @@ public class TestCase_Function_Visit_Handler {
 		boolean unaryOperatorFound = false;
 		String rightHand = "";
 		String leftHand = "";
+		String currentType = "";
 
+		if (nodeVars.contains(currentIdentifier)) {
+
+				currentType = nodeVarTypes.get(nodeVars.indexOf(currentIdentifier));
+			
+		}
+		
+		if(isSendStatement){
+			currentType=nodeSendParameterType.get(nodeSendParameterType.size()-1);
+			if(currentType.equals("IDENTIFIER")){
+				currentType="CHARSTRING";
+			}
+			
+		}
+		
 		for (int i = size; i >= 0; i--) {
 
 			if (myASTVisitor.nodeNameNodeTypeHashMap.containsKey(expressionValue.get(i))) {
@@ -459,9 +526,51 @@ public class TestCase_Function_Visit_Handler {
 
 				expressionValue.set(i - 1, expressionValue.get(i - 1) + ".get(" + index[1] + ")");
 				arrayOperatorFound = true;
+			} else if (expressionValue.get(i).equals("LengthofExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").lengthof()");
+				unaryOperatorFound = true;
+			} else if (expressionValue.get(i).equals("IsChoosenExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").isChosen()");
+				unaryOperatorFound = true;
+			} else if (expressionValue.get(i).equals("IsPresentExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").isPresent()");
+				unaryOperatorFound = true;
+			} else if (expressionValue.get(i).equals("IsValueExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").isValue()");
+				unaryOperatorFound = true;
+			} else if (expressionValue.get(i).equals("IsBoundExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").isBound()");
+				unaryOperatorFound = true;
 			} else if (expressionValue.get(i).equals("NotExpression")) {
 				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").not()");
 				unaryOperatorFound = true;
+			} else if (expressionValue.get(i).equals("Not4bExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").bitwiseNot()");
+				unaryOperatorFound = true;
+			} else if (expressionValue.get(i).equals("Xor4bExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").bitwiseXor(" + rightHand + ")");
+				operatorFound = true;
+			} else if (expressionValue.get(i).equals("Or4bExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").bitwiseOr(" + rightHand + ")");
+				operatorFound = true;
+			} else if (expressionValue.get(i).equals("And4bExpression")) {
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").bitwiseAnd(" + rightHand + ")");
+				operatorFound = true;
+			} else if (expressionValue.get(i).equals("ShiftRightExpression")) {
+				expressionValue.set(i, "((" + currentType + ")(" + leftHand + ").shiftRight(" + rightHand + "))");
+				operatorFound = true;
+			} else if (expressionValue.get(i).equals("ShiftLeftExpression")) {
+				expressionValue.set(i, "((" + currentType + ")(" + leftHand + ").shiftLeft(" + rightHand + "))");
+				operatorFound = true;
+			} else if (expressionValue.get(i).equals("RotateRightExpression")) {
+				expressionValue.set(i, "((" + currentType + ")(" + leftHand + ").rotateRight(" + rightHand + "))");
+				operatorFound = true;
+			} else if (expressionValue.get(i).equals("RotateLeftExpression")) {
+				expressionValue.set(i, "((" + currentType + ")(" + leftHand + ").rotateLeft(" + rightHand + "))");
+				operatorFound = true;
+			} else if (expressionValue.get(i).equals("StringConcatenationExpression")) {
+				expressionValue.set(i, "((" + currentType + ")(" + leftHand + ").concatenate(" + rightHand + "))");
+				operatorFound = true;
 			} else if (expressionValue.get(i).equals("AddExpression")) {
 				expressionValue.set(i, "(" + leftHand + ").plus(" + rightHand + ")");
 				operatorFound = true;
@@ -496,7 +605,7 @@ public class TestCase_Function_Visit_Handler {
 				expressionValue.set(i, "(" + leftHand + ").isGreaterOrEqualThan(" + rightHand + ")");
 				operatorFound = true;
 			} else if (expressionValue.get(i).equals("EqualsExpression")) {
-				expressionValue.set(i, "(" + leftHand + ").equals(" + rightHand + ")");
+				expressionValue.set(i, "(" + leftHand + ").equalsWith(" + rightHand + ")");
 				operatorFound = true;
 			}
 
@@ -529,14 +638,17 @@ public class TestCase_Function_Visit_Handler {
 
 		if (waitForIndexSetValue) {
 			value = value + ")";
-			waitForIndexSetValue=false;
-			
+			waitForIndexSetValue = false;
+
 		}
 
 		// Set value for the appropriate list
 		if (isCreate) {
 			testCaseCreateCharValues.addAll(expressionValue);
 			testCaseCreateCounter.add(String.valueOf(tcCreateCounter));
+		} else if(isDoWhileStatement) {
+			doWhileExpressions.add(value);
+		//	isDoWhileStatement=false;
 		} else if (isDefinition) {
 
 			if (isNextValueConstant) {
@@ -553,7 +665,7 @@ public class TestCase_Function_Visit_Handler {
 
 			if (waitForRecord) {
 				nodeVarValues.addAll(expressionValue);
-				waitForRecord = false;
+				// waitForRecord = false;
 			} else {
 				nodeVarValues.add(value);
 			}
@@ -578,6 +690,7 @@ public class TestCase_Function_Visit_Handler {
 			} else {
 				receiveValue.add(value);
 			}
+			//waitForReceiveParameter=false;
 		} else if (isAltGuards) {
 			altGuardConditions.add(value);
 			isAltGuards = false;
@@ -597,6 +710,7 @@ public class TestCase_Function_Visit_Handler {
 		waitForReceiveAnyValTemplateValue = false;
 
 		isSendStatement = false;
+		isSendValue = false;
 		isReceiveValue = false;
 		isDefinition = false;
 		isAssignment = false;
@@ -652,6 +766,13 @@ public class TestCase_Function_Visit_Handler {
 			isIf = false;
 
 		}
+		if (isDoWhileStatement && (node instanceof StatementBlock)) {
+			// has to be here, If always has a statemnt block
+			evaluateExpression();
+			isDoWhileStatement = false;
+
+		}
+
 
 		if (waitForTC && (node instanceof Unknown_Start_Statement)) {
 			waitForTcStartValues = true;
@@ -681,9 +802,9 @@ public class TestCase_Function_Visit_Handler {
 			visitMapIdentifiers(node);
 		}
 
-		if (isSendStatement) {
+	/*	if (isSendStatement) {
 			visitSendStatements(node);
-		}
+		}*/
 
 		if (waitForTcDisconnectValues) {
 			visitDisconnectValueSetters(node);
@@ -702,6 +823,13 @@ public class TestCase_Function_Visit_Handler {
 		if (waitForStatements && (node instanceof Send_Statement)) {
 			isSendStatement = true;
 		}
+		
+		if (waitForStatements && (node instanceof DoWhile_Statement)) {
+			isDoWhileStatement = true;
+			waitForValue=true;
+		}
+		
+		
 
 		if (waitForStatements && (node instanceof Operation_Altguard)) {
 			isAltGuards = true;
@@ -726,18 +854,20 @@ public class TestCase_Function_Visit_Handler {
 
 		if (waitForDefStatement && (node instanceof Def_Var)) {
 			nodeVars.add(((Def_Var) node).getIdentifier().toString());
+			currentIdentifier = ((Def_Var) node).getIdentifier().toString();
 		}
 
 		if (waitForDefStatement && (node instanceof Def_Var_Template)) {
 			nodeVars.add(((Def_Var_Template) node).getIdentifier().toString());
 			isNextValueTemplate = true;
-
+			currentIdentifier = ((Def_Var_Template) node).getIdentifier().toString();
 		}
 
 		if (waitForDefStatement && (node instanceof Def_Const)) {
 			// TODO const spec
 			nodeVars.add(((Def_Const) node).getIdentifier().toString());
 			isNextValueConstant = true;
+			currentIdentifier = ((Def_Const) node).getIdentifier().toString();
 		}
 
 		if (waitForDefStatement && (node instanceof BitString_Type)) {
@@ -747,6 +877,11 @@ public class TestCase_Function_Visit_Handler {
 		}
 		if (waitForDefStatement && (node instanceof Integer_Type)) {
 			nodeVarTypes.add("INTEGER");
+			nodeVarTypeIsAReference.add(false);
+		}
+		
+		if (waitForDefStatement && (node instanceof Float_Type)) {
+			nodeVarTypes.add("FLOAT");
 			nodeVarTypeIsAReference.add(false);
 		}
 
@@ -768,6 +903,7 @@ public class TestCase_Function_Visit_Handler {
 
 		if (waitForDefStatement && (node instanceof Def_Timer)) {
 			nodeVars.add(((Def_Timer) node).getIdentifier().toString());
+			currentIdentifier = ((Def_Timer) node).getIdentifier().toString();
 			nodeVarTypes.add("TIMER");
 			waitForDefStatement = false;
 			nodeVarTypeIsAReference.add(false);
@@ -786,10 +922,64 @@ public class TestCase_Function_Visit_Handler {
 			expressionValue.add("ArraySubReference");
 		}
 
-		// Integer_Value
-
 		if (waitForValue && (node instanceof AddExpression)) {
 			expressionValue.add("AddExpression");
+		}
+
+		if (waitForValue && (node instanceof IsValueExpression)) {
+			expressionValue.add("IsValueExpression");
+		}
+
+		if (waitForValue && (node instanceof IsChoosenExpression)) {
+			expressionValue.add("IsChoosenExpression");
+		}
+
+		if (waitForValue && (node instanceof IsBoundExpression)) {
+			expressionValue.add("IsBoundExpression");
+		}
+
+		if (waitForValue && (node instanceof IsPresentExpression)) {
+			expressionValue.add("IsPresentExpression");
+		}
+
+		if (waitForValue && (node instanceof Not4bExpression)) {
+			expressionValue.add("Not4bExpression");
+		}
+
+		if (waitForValue && (node instanceof And4bExpression)) {
+			expressionValue.add("And4bExpression");
+		}
+
+		if (waitForValue && (node instanceof Or4bExpression)) {
+			expressionValue.add("Or4bExpression");
+		}
+
+		if (waitForValue && (node instanceof Xor4bExpression)) {
+			expressionValue.add("Xor4bExpression");
+		}
+
+		if (waitForValue && (node instanceof ShiftLeftExpression)) {
+			expressionValue.add("ShiftLeftExpression");
+		}
+
+		if (waitForValue && (node instanceof ShiftRightExpression)) {
+			expressionValue.add("ShiftRightExpression");
+		}
+
+		if (waitForValue && (node instanceof RotateRightExpression)) {
+			expressionValue.add("RotateRightExpression");
+		}
+
+		if (waitForValue && (node instanceof RotateLeftExpression)) {
+			expressionValue.add("RotateLeftExpression");
+		}
+
+		if (waitForValue && (node instanceof StringConcatenationExpression)) {
+			expressionValue.add("StringConcatenationExpression");
+		}
+
+		if (waitForValue && (node instanceof LengthofExpression)) {
+			expressionValue.add("LengthofExpression");
 		}
 
 		if (waitForValue && (node instanceof SubstractExpression)) {
@@ -848,6 +1038,8 @@ public class TestCase_Function_Visit_Handler {
 
 			String value = ((Real_Value) node).createStringRepresentation();
 
+			value = "new FLOAT(" + value + ")";
+			
 			expressionValue.add(value);
 
 		}
@@ -859,7 +1051,7 @@ public class TestCase_Function_Visit_Handler {
 			if (myASTVisitor.isNextIntegerNegative) {
 				value = "-" + ((Integer_Value) node).toString();
 			}
-			value = "new INTEGER(new BigInteger(\"" + value + "\"))";
+			value = "new INTEGER(\"" + value + "\")";
 
 			expressionValue.add(value);
 
@@ -873,6 +1065,7 @@ public class TestCase_Function_Visit_Handler {
 				} else {
 					receiveType.add("INTEGER");
 				}
+				waitForReceiveParameter=false;
 			}
 
 			myASTVisitor.isNextIntegerNegative = false;
@@ -903,16 +1096,32 @@ public class TestCase_Function_Visit_Handler {
 				} else {
 					receiveType.add("IDENTIFIER");
 				}
+				waitForReceiveParameter=false;
 			}
 
 			myASTVisitor.isNextIntegerNegative = false;
+			/*
+			 * if (nodeVarTypes.size() > 0) { if
+			 * (myASTVisitor.nodeNameNodeTypeHashMap.containsKey(nodeVarTypes.
+			 * get(nodeVarTypes.size() - 1))) {
+			 * 
+			 * if (myASTVisitor.nodeNameNodeTypeHashMap.get(nodeVarTypes.get(
+			 * nodeVarTypes.size() - 1)) .equals("record")) {
+			 * 
+			 * if (currentRecordCounter <
+			 * myASTVisitor.nodeNameChildrenNamesHashMap
+			 * .get(nodeVarTypes.get(nodeVarTypes.size() - 1)).length) {
+			 * waitForRecord = true; nodeVarIsRecord.add(true);
+			 * 
+			 * } } } }
+			 */
+			blockReferenceListing = true;
 
 		}
 
 		if (node instanceof Boolean_Value) {
 
-			String value = "new BOOLEAN(" + Boolean.toString(((Boolean_Value) node).getValue()) + ")";
-
+			String value = ((Boolean_Value) node).getValue() ? "BOOLEAN.TRUE" : "BOOLEAN.FALSE";
 			expressionValue.add(value);
 		}
 
@@ -935,7 +1144,7 @@ public class TestCase_Function_Visit_Handler {
 				} else {
 					receiveType.add("CHARSTRING");
 				}
-
+				waitForReceiveParameter=false;
 			}
 		}
 
@@ -958,7 +1167,7 @@ public class TestCase_Function_Visit_Handler {
 				} else {
 					receiveType.add("OCTETSTRING");
 				}
-
+				waitForReceiveParameter=false;
 			}
 		}
 
@@ -1018,23 +1227,44 @@ public class TestCase_Function_Visit_Handler {
 			testCaseMapCounter.add(Integer.toString(mapCounter));
 			mapValueCounter++;
 		}
+		
+		if (waitForMapIdentifiers && (node instanceof MTCComponentExpression) && (mapValueCounter <= 4)) {
+			testCaseMapValues.add("mtc");
+			testCaseMapCounter.add(Integer.toString(mapCounter));
+			mapValueCounter++;
+		}
 	}
 
 	public void checkReference(IVisitableNode node) {
 		String value = ((Reference) node).getId().toString();
-
+		
+		List<ISubReference> subrefs=((Reference) node).getSubreferences();
+		if(subrefs!=null){
+			value="";
+			for(int i=0;i<subrefs.size();i++){
+				value+=subrefs.get(i).getId();
+				if(i<subrefs.size()-1){
+					if(!(subrefs.get(i+1) instanceof ArraySubReference)){
+						value+=".";
+					}
+				}
+			}
+		}
+		
 		if (waitForMapIdentifiers && (mapValueCounter <= 4)) {
 			testCaseMapValues.add(value);
 			testCaseMapCounter.add(Integer.toString(mapCounter));
 			mapValueCounter++;
-		} else if (isSendStatement) {
+		} else if (isSendStatement && !isSendValue) {
 			nodeSendPortReference.add(value);
+			isSendValue = true;
 
 		} else if (waitForTcCreateValues) {
 			testCaseCreateRefValues.add(value);
 			testCaseCreateCounter.add(String.valueOf(tcCreateCounter));
 
-		} else if (waitForReceiveStatement && !waitForTypedParam && !waitForReceiveAnyValTemplateValue) {
+		} else if (waitForReceiveStatement && !waitForTypedParam && !waitForReceiveAnyValTemplateValue
+				&& !isReceiveValue) {
 
 			if (waitForAltStatements) {
 				altGuardPortReference.add(value);
@@ -1044,16 +1274,19 @@ public class TestCase_Function_Visit_Handler {
 
 			waitForValue = true;
 			isReceiveValue = true;
+			waitForReceiveParameter = true;
 			checkAnyport = false;
 		} else if (waitForTypedParam) {
 			if (waitForAltStatements) {
 				altGuardReceiveValue.add(value);
 				altGuardReceiveType.add("_TYPED_PARAM_");
+				
 			} else {
 				receiveValue.add(value);
 				receiveType.add("_TYPED_PARAM_");
 			}
 			waitForTypedParam = false;
+			waitForReceiveParameter=false;
 		} else if (waitForReceiveAnyValTemplateValue && !waitForTypedParam) {
 
 			if (waitForAltStatements) {
@@ -1064,7 +1297,7 @@ public class TestCase_Function_Visit_Handler {
 			isAnyValValue = true;
 
 		} else if (waitForUnknownStartStatement) {
-			unknownStartReference = value;
+			unknownStartReference.add(value);
 		} else if (waitForRunsOnValue && !isThereAFormalParameter) {
 			runsOnValue = value;
 
@@ -1074,10 +1307,11 @@ public class TestCase_Function_Visit_Handler {
 				AstWalkerJava.functionRunsOnList.add(value);
 			}
 		} else if (waitForUnknownStopStatement) {
-			unknownStopReference = value;
+			unknownStopReference.add(value);
 		} else if (waitForAssignmentIdentifiers) {
 
 			nodeAssignIdentifiers.add(value);
+			currentIdentifier = value;
 
 			if (((Reference) node).getSubreferences().size() > 1) {
 				if (((Reference) node).getSubreferences().get(1) instanceof ArraySubReference) {
@@ -1085,40 +1319,57 @@ public class TestCase_Function_Visit_Handler {
 					nodeAssignIdentifiers.set(nodeAssignIdentifiers.size() - 1,
 							nodeAssignIdentifiers.get(nodeAssignIdentifiers.size() - 1) + ".set("
 									+ subref.getValue().toString() + ",");
-					waitForIndexSetValue=true;
+					waitForIndexSetValue = true;
 				}
 			} else {
-				
+
 				nodeAssignIdentifiers.set(nodeAssignIdentifiers.size() - 1,
 						nodeAssignIdentifiers.get(nodeAssignIdentifiers.size() - 1) + "=");
-				
+
 				// Only set to false if there are no arraysubrefs
 				// For arraysubrefs the flag is set to false in the
 				// arraysubref leave part
 				waitForAssignmentIdentifiers = false;
 			}
 
-		} else if (waitForDefStatement) {
+		} else if (waitForDefStatement && !blockReferenceListing) {
+
 			nodeVarTypes.add(value);
 			nodeVarTypeIsAReference.add(true);
+
 			if (myASTVisitor.nodeNameNodeTypeHashMap.containsKey(nodeVarTypes.get(nodeVarTypes.size() - 1))) {
+
 				if (myASTVisitor.nodeNameNodeTypeHashMap.get(nodeVarTypes.get(nodeVarTypes.size() - 1))
 						.equals("record")) {
 
 					if (currentRecordCounter < myASTVisitor.nodeNameChildrenNamesHashMap
 							.get(nodeVarTypes.get(nodeVarTypes.size() - 1)).length) {
-
 						waitForRecord = true;
 						nodeVarIsRecord.add(true);
+
 					}
 				}
 			}
-		} else if (waitForValue && !isReceiveValue) {
+
+		} else if (waitForValue && !isReceiveValue && !blockReferenceListing) {
 			// has to be the last one
 			// sends the Reference value to be processed as an assignment
 			// identifier
 			expressionValue.add(value);
-		}
+		} /*
+			 * else if (nodeVarTypes.size() > 0) { if
+			 * (myASTVisitor.nodeNameNodeTypeHashMap.containsKey(value)) {
+			 * 
+			 * if (myASTVisitor.nodeNameNodeTypeHashMap.get(nodeVarTypes.get(
+			 * nodeVarTypes.size() - 1)) .equals("record")) {
+			 * 
+			 * if (currentRecordCounter <
+			 * myASTVisitor.nodeNameChildrenNamesHashMap
+			 * .get(nodeVarTypes.get(nodeVarTypes.size() - 1)).length) {
+			 * waitForRecord = true; nodeVarIsRecord.add(true);
+			 * 
+			 * } } } }
+			 */
 
 	}
 
@@ -1166,6 +1417,8 @@ public class TestCase_Function_Visit_Handler {
 		if (node instanceof Receive_Port_Statement) {
 			waitForReceiveStatement = true;
 			checkAnyport = true;
+			
+			
 		}
 
 		if (waitForReceiveStatement && (node instanceof StatementBlock)) {
@@ -1275,13 +1528,15 @@ public class TestCase_Function_Visit_Handler {
 		functionNode.receiveAnyValValue.addAll(receiveAnyValValue);
 		functionNode.receiveType.addAll(receiveType);
 
+		functionNode.doWhileExpressions.addAll(doWhileExpressions);
+		
 		functionNode.receiveStatements.addAll(receiveStatements);
 
 		Def_Function_Writer.sendPortReference.addAll(nodeSendPortReference);
 		Def_Function_Writer.sendParameter.addAll(nodeSendParameter);
 		Def_Function_Writer.sendParameterType.addAll(nodeSendParameterType);
 
-		functionNode.unknownStartReference = unknownStartReference;
+		functionNode.unknownStartReference.addAll( unknownStartReference);
 		functionNode.unknownStopReference = unknownStopReference;
 
 		if (runsOnValue != null) {
@@ -1350,6 +1605,8 @@ public class TestCase_Function_Visit_Handler {
 		testNode.receiveStatements.addAll(receiveStatements);
 		testNode.nodeVarIsRecord.addAll(nodeVarIsRecord);
 
+		testNode.doWhileExpressions.addAll(doWhileExpressions);
+		
 		myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
 		myASTVisitor.visualizeNodeToJava(testNode.writeTestcaseFile((Def_Testcase) node));
 
@@ -1389,6 +1646,10 @@ public class TestCase_Function_Visit_Handler {
 			currentTestCaseWriter.altStatements.get(currentTestCaseWriter.altStatements.size() - 1).altGuardTimeout
 					.addAll(altGuardTimeout);
 
+			currentTestCaseWriter.altStatements
+			.get(currentTestCaseWriter.altStatements.size() - 1).altGuardReceiveAnyValValue
+					.addAll(altGuardReceiveAnyValValue);
+			
 			clearAltLists();
 
 		}
@@ -1512,6 +1773,8 @@ public class TestCase_Function_Visit_Handler {
 		testCaseConnectValues.clear();
 		operatorList.clear();
 
+		doWhileExpressions.clear();
+		
 		testCaseStopValues.clear();
 		testCaseStopValueParameters.clear();
 		testCaseStopCounter.clear();
@@ -1524,6 +1787,10 @@ public class TestCase_Function_Visit_Handler {
 
 		nodeVarRecordValues.clear();
 		nodeVarIsRecord.clear();
+		
+		unknownStartReference.clear();
+		unknownStopReference.clear();
+		
 
 		isIf = false;
 		isDefinition = false;

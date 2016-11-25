@@ -10,23 +10,36 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class STRING extends Comparable<STRING>{
 
     public byte[] value;
+    protected List<STRING> allowedValues; //allowed values of subtype
+    protected List<SubTypeInterval<STRING>> allowedIntervals; //allowed intervals of subtype
+    public int minlength; //minimal length of subtype
+    public int maxlength; //maximal length of subtype, remains -1 for infinity
+    //length of subtype is always set as an upper and lower bound, even if only 
 
     public STRING() {
     	value = null;
+    	minlength=-1;
+    	maxlength=-1;
+        allowedValues = new ArrayList<STRING>();
+        allowedIntervals = new ArrayList<SubTypeInterval<STRING>>();
     }
 
     public STRING(String s) {
-        this.value = s.getBytes();
+    	this();
+    	this.value = s.getBytes();
     }
 
     public STRING concatenate(STRING other){
@@ -34,7 +47,7 @@ public class STRING extends Comparable<STRING>{
     }
 
     public BOOLEAN equalsWith(STRING string) {
-    	return new BOOLEAN(this.value.equals(string.value));
+    	return BOOLEAN.valueOf(this.value.equals(string.value));
     }
 
     //converts the input from INTEGER to int!!!
@@ -64,8 +77,8 @@ public class STRING extends Comparable<STRING>{
     
 	public BOOLEAN equals(STRING v){
 		for(int i=0;i<value.length;i++)
-			if(this.value[i]!=v.value[i]) return new BOOLEAN(false);
-		return new BOOLEAN(true);
+			if(this.value[i]!=v.value[i]) return BOOLEAN.FALSE;
+		return BOOLEAN.TRUE;
 	}
 
 	/* these are never used, only needed because STRING cannot be an abstract class due to its operator methods
@@ -79,5 +92,18 @@ public class STRING extends Comparable<STRING>{
 	public String toString() {
 		return null;
 	}
+	
+    public void checkValue() throws IndexOutOfBoundsException {
+        if (minlength!=-1)
+        	if(value.length<minlength||value.length>maxlength&&maxlength!=-1)
+                throw new IndexOutOfBoundsException("inappropriate subtype length!");
+    	if (allowedValues.size() == 0 && allowedIntervals.size() == 0)
+            return;
+        for (SubTypeInterval<STRING> i : allowedIntervals)
+            if(i.checkValue(this)) return;
+        for (STRING i : allowedValues)
+            if (i.equals(value)) return;
+        throw new IndexOutOfBoundsException("out of intervals!");
+    }
 
 }

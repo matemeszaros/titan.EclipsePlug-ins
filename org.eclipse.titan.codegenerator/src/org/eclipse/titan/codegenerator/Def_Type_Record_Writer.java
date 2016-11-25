@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -19,23 +20,22 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
 
-public class Def_Type_Record_Writer {
-	private Def_Type typeNode;
-	private StringBuilder recordString = new StringBuilder("");
+public class Def_Type_Record_Writer implements JavaSourceProvider {
 
-	public List<String> compFieldTypes = new ArrayList<String>();
-	public List<String> compFieldNames = new ArrayList<String>();
-	private String nodeName = null;
+	private SourceCode code = new SourceCode();
 
-	private static Map<String, Object> recordHashes = new LinkedHashMap<String, Object>();
+	private List<Field> fields = new ArrayList<>();
 
-	private Def_Type_Record_Writer(Def_Type typeNode) {
-		super();
-		this.typeNode = typeNode;
-		nodeName = this.typeNode.getIdentifier().toString();
+	private final String nodeName;
+
+	private static Map<String, Object> recordHashes = new LinkedHashMap<>();
+
+	Def_Type_Record_Writer(Def_Type typeNode) {
+		this.nodeName = typeNode.getIdentifier().toString();
 	}
 
 	public static Def_Type_Record_Writer getInstance(Def_Type typeNode) {
@@ -47,139 +47,139 @@ public class Def_Type_Record_Writer {
 				.getIdentifier().toString());
 	}
 
-	public void writeCompFields() {
-
-		for (int i = 0; i < compFieldTypes.size(); i++) {
-			recordString.append(compFieldTypes.get(i) + " "
-					+ compFieldNames.get(i) + ";\r\n");
+	public void add(List<String> fieldTypes, List<String> fieldNames) {
+		if (fieldTypes.size() != fieldNames.size()) {
+			// TODO : log the error, or throw an exception?
+			System.err.println("Record field type-name array size mismatch!");
+		}
+		for (int i = 0; i < fieldTypes.size(); i++) {
+			fields.add(new Field(fieldTypes.get(i), fieldNames.get(i)));
 		}
 	}
 
-	public void writeMatcher() {
+	private void writeTemplateObjects() {
+		code.indent(1).line("public static final ", nodeName, " ANY = new ", nodeName, "();");
+		code.indent(1).line("public static final ", nodeName, " OMIT = new ", nodeName, "();");
+		code.indent(1).line("public static final ", nodeName, " ANY_OR_OMIT = new ", nodeName, "();");
+		code.newLine();
+		code.indent(1).line("static {");
+		code.indent(2).line("ANY.anyField = true;");
+		code.indent(2).line("OMIT.omitField = true;");
+		code.indent(2).line("ANY_OR_OMIT.anyOrOmitField = true;");
+		code.indent(1).line("}");
+	}
 
-		recordString.append("public static boolean match(" + nodeName
-				+ " pattern, " + "Object" + " message){" + "\r\n");
+	private void writeCompFields() {
+		for (Field f : fields) {
+			code.indent(1).line(f, ";");
+		}
+	}
 
-		recordString.append("if(!(message instanceof " + nodeName
-				+ ")) return false;" + "\r\n");
+	private void writeMatcher() {
+		code.indent(1).line("public static boolean match(", nodeName, " pattern, Object object) {");
+		code.indent(2).line("if (!(object instanceof ", nodeName, ")) return false;");
+		code.indent(2).line(nodeName, " message = (", nodeName, ") object;");
+		code.indent(2).line("if (pattern.omitField && message.omitField) return true;");
+		code.indent(2).line("if (pattern.anyOrOmitField) return true;");
+		code.indent(2).line("if (pattern.anyField && !message.omitField) return true;");
+		code.indent(2).line("if (pattern.omitField && !message.omitField) return false;");
+		code.indent(2).line("if (pattern.anyField && message.omitField) return false;");
+		code.indent(2).append("return true");
+		for (Field f : fields) {
+			code.newLine();
+			code.indent(4).append("&& ", f.type, ".match(pattern.", f.name, ", message.", f.name, ")");
+		}
+		code.append(";").newLine();
+		code.indent(1).line("}");
+	}
 
-		recordString.append("if(pattern.omitField&&((" + nodeName
-				+ ")message).omitField) return true;" + "\r\n");
-		recordString.append("if(pattern.anyOrOmitField) return true;" + "\r\n");
-		recordString.append("if(pattern.anyField&&!((" + nodeName
-				+ ")message).omitField) return true;;" + "\r\n");
-		recordString.append("if(pattern.omitField&&!((" + nodeName
-				+ ")message).omitField) return false;" + "\r\n");
-		recordString.append("if(pattern.anyField&&((" + nodeName
-				+ ")message).omitField) return false;" + "\r\n");
+	private void writeEquals() {
+		code.indent(1).line("public BOOLEAN equals(", nodeName, " v) {");
+		for (Field f : fields) {
+			code.indent(2).line("if (!", f.name, ".equals(v.", f.name, ").getValue())return BOOLEAN.FALSE;");
+		}
+		code.indent(2).line("return BOOLEAN.TRUE;");
+		code.indent(1).line("}");
+	}
 
-		recordString.append("	return ");
+	private void writeConstructor() {
+		code.indent(1).line(nodeName, "() {");
+		code.indent(2).line("super();");
+		for (Field f : fields) {
+			code.indent(2).line("fieldsInOrder.add(\"", f.name, "\");");
+		}
+		code.indent(1).line("}");
 
-		for (int i = 0; i < compFieldTypes.size(); i++) {
-
-			recordString.append(compFieldTypes.get(i) + ".match(pattern."
-					+ compFieldNames.get(i) + ", ((" + nodeName + ")message)."
-					+ compFieldNames.get(i) + ")");
-
-			if ((i + 1 < compFieldTypes.size())) {
-				recordString.append("&&");
+		if (0 < fields.size()) {
+			code.newLine();
+			StringJoiner params = new StringJoiner(", ");
+			fields.forEach(f -> params.add(f.toString()));
+			code.indent(1).line("public ", nodeName, "(", params, ") {");
+			code.indent(2).line("this();");
+			for (Field f : fields) {
+				code.indent(2).line("this.", f.name, " = ", f.name, ";");
 			}
-			if ((i + 1) == compFieldTypes.size()) {
-				recordString.append(";\r\n");
+			code.indent(1).line("}");
+		}
+	}
+
+	private void writeToString() {
+		code.indent(1).line("public String toString() {");
+		code.indent(2).line("return toString(\"\");");
+		code.indent(1).line("}");
+	}
+
+	private void writeToStringWithParam() {
+		code.indent(1).line("public String toString(String tabs) {");
+		code.indent(2).line("if (anyField) return \"?\";");
+		code.indent(2).line("if (omitField) return \"omit\";");
+		code.indent(2).line("if (anyOrOmitField) return \"*\";");
+		code.indent(2).line("return \"{\\n\" + ");
+		for (int i = 0; i < fields.size(); i++) {
+			String name = fields.get(i).name;
+			code.indent(4).append("tabs + \"\\t\" + \"", name, " := \" + ", name, ".toString(tabs + \"\\t\") + \"");
+			if (i < fields.size() - 1) {
+				code.append(",");
 			}
-
+			code.line("\\n\" +");
 		}
-		recordString.append("}" + "\r\n");
-
-	}
-
-	public void writeEquals() {
-		recordString.append("public BOOLEAN equals(" + nodeName + " v){ "
-				+ "\r\n");
-
-		for (int i = 0; i < compFieldTypes.size(); i++) {
-
-			recordString.append("	if(!" + compFieldNames.get(i) + ".equals(v."
-					+ compFieldNames.get(i) + ").getValue())return new BOOLEAN(false);" + "\r\n");
-
-		}
-
-		recordString.append("	return new BOOLEAN(true);" + "\r\n");
-		recordString.append("}" + "\r\n");
-	}
-
-	public void writeConstructor() {
-
-		recordString.append(nodeName + "(){\r\n");
-
-		recordString.append("super();\r\n");
-
-		for (int i = 0; i < compFieldTypes.size(); i++) {
-
-			recordString.append("fieldsInOrder.add(\"" + compFieldNames.get(i)
-					+ "\");\r\n");
-
-		}
-
-		recordString.append("}\r\n");
-	}
-
-	public void writeToString() {
-		recordString.append("public String toString(){" + "\r\n");
-		recordString.append("return toString(\"\");" + "\r\n");
-		recordString.append("}\r\n");
-
-	}
-
-	public void writeToStringWithParam() {
-		recordString.append("public String toString(String tabs){" + "\r\n");
-		recordString.append("if(anyField) return \"?\";" + "\r\n");
-		recordString.append("if(omitField) return \"omit\";" + "\r\n");
-		recordString.append("if(anyOrOmitField) return \"*\";" + "\r\n");
-		recordString.append("return \"{\\n\" + " + "\r\n");
-
-		for (int i = 0; i < compFieldTypes.size(); i++) {
-			if ((i + 1) < compFieldTypes.size()) {
-				recordString.append("tabs + \"\\t\" + \""
-						+ compFieldNames.get(i) + " := \" + "
-						+ compFieldNames.get(i)
-						+ ".toString(tabs + \"\\t\") + \",\\n\" +" + "\r\n");
-			} else {
-				recordString.append("tabs + \"\\t\" + \""
-						+ compFieldNames.get(i) + " := \" + "
-						+ compFieldNames.get(i)
-						+ ".toString(tabs + \"\\t\") + \"\\n\" +" + "\r\n");
-			}
-		}
-
-		recordString.append("tabs + \"}\";" + "\r\n");
-		recordString.append("}\r\n");
-
+		code.indent(4).line("tabs + \"}\";");
+		code.indent(1).line("}");
 	}
 
 	public void clearLists() {
-		compFieldTypes.clear();
-		compFieldNames.clear();
+		fields.clear();
+	}
+	
+	private void writeCheckValue(){
+		code.indent(1).line(" public void checkValue() throws IndexOutOfBoundsException {");
+		code.indent(2).line("	return;");
+		code.indent(1).line("}");
 	}
 
+	@Override
 	public String getJavaSource() {
-
+		code.clear();
 		AstWalkerJava.logToConsole("	Starting processing:  Record " + nodeName);
-
-		recordString.append("class " + nodeName + " extends RecordDef{"
-				+ "\r\n");
+		code.line("public class ", nodeName, " extends RecordDef {");
+		this.writeTemplateObjects();
+		code.newLine();
 		this.writeCompFields();
-		this.writeMatcher();
-		this.writeEquals();
+		code.newLine();
 		this.writeConstructor();
-		this.writeToString();
+		code.newLine();
+		this.writeMatcher();
+		code.newLine();
+		this.writeEquals();
+		code.newLine();
 		this.writeToStringWithParam();
-		recordString.append("\r\n}");
-		String returnString = recordString.toString();
-		recordString.setLength(0);
-
+		code.newLine();
+		this.writeToString();
+		code.line();
+		this.writeCheckValue();
+		code.line();
+		code.line("}");
 		AstWalkerJava.logToConsole("	Finished processing:  Record " + nodeName);
-
-		return returnString;
+		return code.toString();
 	}
 }

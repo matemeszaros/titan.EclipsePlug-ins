@@ -15,6 +15,7 @@
 
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,4 +52,5 @@ public abstract class SubTypeDef<T extends PrimitiveTypeDef> extends PrimitiveTy
     public String toString(String tabs){
     	return value.toString();
     }
+
 }

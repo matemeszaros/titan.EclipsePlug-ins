@@ -10,14 +10,23 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
-import java.math.BigInteger;
+public class CHARSTRING extends STRING implements Indexable<CHARSTRING> {
 
-public class CHARSTRING extends STRING{
+	public static final CHARSTRING ANY = new CHARSTRING();
+	public static final CHARSTRING OMIT = new CHARSTRING();
+	public static final CHARSTRING ANY_OR_OMIT = new CHARSTRING();
+
+	static {
+		ANY.anyField = true;
+		OMIT.omitField = true;
+		ANY_OR_OMIT.anyOrOmitField = true;
+	}
 
     public CHARSTRING(String value) {
     	super(value);
@@ -34,7 +43,7 @@ public class CHARSTRING extends STRING{
 	
 	
 	public INTEGER str2int(){
-		return new INTEGER(new BigInteger(value.toString()));
+		return new INTEGER(value.toString());
 	}
 	
 	//needed even though tabs is not used, since otherwise the method of STRING would run and return null
@@ -44,5 +53,14 @@ public class CHARSTRING extends STRING{
 		if(anyOrOmitField) return "*";
 		return "\"" + new String(value) + "\"";
 	}
-    
+
+	@Override
+	public CHARSTRING get(int index) {
+		return new CHARSTRING(new String(new byte[]{value[index]}));
+	}
+
+	@Override
+	public void set(int index, CHARSTRING charstring) {
+		value[index] = charstring.value[0];
+	}
 }

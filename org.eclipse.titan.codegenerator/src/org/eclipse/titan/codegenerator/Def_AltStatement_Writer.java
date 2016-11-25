@@ -132,8 +132,11 @@ public class Def_AltStatement_Writer {
 							positiveConditions[i] = "anyPortReceive(true)";
 							negativeConditions[i] = "anyPortReceive(false)";
 						} else {
-							// no alt guard && typed port recieve
-							if (altGuardReceiveType.get(altReceiveCounter).equals(
+							// no alt guard && no receive parameter
+							if (altGuardReceiveType.get(altReceiveCounter).equals("noparam")){
+								positiveConditions[i] =altGuardPortReference.get(altReceiveCounter) +".receive(true)!=null";
+								negativeConditions[i] =altGuardPortReference.get(altReceiveCounter) +".receive(false)!=null";
+							}else if (altGuardReceiveType.get(altReceiveCounter).equals(// no alt guard && typed port recieve
 									"_TYPED_PARAM_")) {
 								negativeConditions[i] = altGuardPortReference
 										.get(altReceiveCounter)
@@ -172,7 +175,8 @@ public class Def_AltStatement_Writer {
 												.get(altReceiveCounter)
 										+ ",false)!=null";
 							}
-							if (altGuardReceiveValue.get(altReceiveCounter)
+							
+							if (altGuardReceiveValue.get(altReceiveCounter)!=null && altGuardReceiveValue.get(altReceiveCounter)
 									.startsWith("Templates")) {
 								altGuardReceiveType.set(altReceiveCounter, "Templates");
 							}
@@ -273,8 +277,16 @@ public class Def_AltStatement_Writer {
 					altString.append("rownum="
 							+ currentStatement.getLocation().getLine()
 							+ ";\r\n");
-
-					if (altGuardReceiveType.get(altReceiveCounter).equals(
+					
+					if (altGuardReceiveType.get(altReceiveCounter).equals("noparam")){
+						altString
+						.append("	TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+								+ nodeName
+								+ "\", \"RECEIVE event on port "
+								+ altGuardPortReference
+										.get(altReceiveCounter)
+								+ "\", true);" + "\r\n");
+					}else if (altGuardReceiveType.get(altReceiveCounter).equals(
 							"Templates")) {
 						String methodName = altGuardReceiveValue
 								.get(altReceiveCounter);
@@ -318,6 +330,8 @@ public class Def_AltStatement_Writer {
 										+ "\", true);" + "\r\n");
 
 					} else {
+						if(altGuardReceiveValue
+								.get(altReceiveCounter)!=null){
 						altString
 								.append("	TTCN3Logger.writeLog(compid, \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
 										+ nodeName
@@ -328,6 +342,7 @@ public class Def_AltStatement_Writer {
 										+ altGuardReceiveValue
 												.get(altReceiveCounter)
 										+ ".toString(), true);" + "\r\n");
+						}
 					}
 				} else if (currentStatement instanceof Timeout_Statement) {
 					altString

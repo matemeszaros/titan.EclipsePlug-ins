@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -21,18 +22,16 @@ import java.util.Map;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
 
 public class Def_Type_Charstring_Writer {
-	private Def_Type typeNode;
-	private StringBuilder charStringString = new StringBuilder("");
+	private SourceCode code = new SourceCode();
 
 	private String charStringValue = null;
 	private String nodeName = null;
 
-	private static Map<String, Object> charStringHashes = new LinkedHashMap<String, Object>();
+	private static Map<String, Object> charStringHashes = new LinkedHashMap<>();
 
 	private Def_Type_Charstring_Writer(Def_Type typeNode) {
 		super();
-		this.typeNode = typeNode;
-		nodeName = this.typeNode.getIdentifier().toString();
+		nodeName = typeNode.getIdentifier().toString();
 
 	}
 
@@ -50,37 +49,47 @@ public class Def_Type_Charstring_Writer {
 		charStringValue = value;
 	}
 
-	private void writeConstructor() {
-		charStringString.append(nodeName + "(" + "CHARSTRING" + " val){");
-		charStringString.append("\r\n" + "super(val);");
+	private void writeTemplateObjects() {
+		code.indent(1).line("public static final ", nodeName, " ANY = new ", nodeName, "();");
+		code.indent(1).line("public static final ", nodeName, " OMIT = new ", nodeName, "();");
+		code.indent(1).line("public static final ", nodeName, " ANY_OR_OMIT = new ", nodeName, "();");
+		code.newLine();
+		code.indent(1).line("static {");
+		code.indent(2).line("ANY.anyField = true;");
+		code.indent(2).line("OMIT.omitField = true;");
+		code.indent(2).line("ANY_OR_OMIT.anyOrOmitField = true;");
+		code.indent(1).line("}");
+	}
 
+	private void writeConstructors() {
+		code.indent(1).line("public ", nodeName, "(CHARSTRING val) {");
+		code.indent(2).line("super(val);");
 		if (charStringValue != null) {
-
-			charStringString.append("\r\n" + "allowedValues.add"
-					+ "(new CHARSTRING(\"" + charStringValue + "\"));");
-
+			code.indent(2).line("allowedValues.add(new CHARSTRING(\"", charStringValue, "\"));");
 		}
-		
-		charStringString.append("\r\n	}\r\n");
-
+		code.indent(1).line("}");
+		code.newLine();
+		code.indent(1).line("public ", nodeName, "(String val) {");
+		code.indent(2).line("this(new CHARSTRING(val));");
+		code.indent(1).line("}");
+		code.newLine();
+		code.indent(1).line("protected ", nodeName, "() {");
+		code.indent(2).line("super();");
+		code.indent(1).line("}");
 	}
 
 	private void writeMatcher() {
-		charStringString.append("public static boolean match(" + nodeName
-				+ " pattern, " + "Object " + " message){" + "\r\n");
-		charStringString.append("if(!(message instanceof " + nodeName
-				+ ")) return false;" + "\r\n");
-		charStringString.append("	return CHARSTRING.match(pattern.value, (("
-				+ nodeName + ")message).value);" + "\r\n");
-		charStringString.append("}" + "\r\n");
+		code.indent(1).line("public static boolean match(", nodeName, " pattern, Object message) {");
+		code.indent(2).line("if (!(message instanceof ", nodeName, ")) return false;");
+		// TODO any / omit / anyOrOmit checking?
+		code.indent(2).line("return CHARSTRING.match(pattern.value, ((", nodeName, ")message).value);");
+		code.indent(1).line("}");
 	}
 
 	private void writeEquals() {
-		charStringString.append("public BOOLEAN equals(" + nodeName
-				+ " v){\r\n");
-		charStringString.append("	return value.equals(v.value);\r\n");
-		charStringString.append("}\r\n");
-
+		code.indent(1).line("public BOOLEAN equals(", nodeName, " v) {");
+		code.indent(2).line("return value.equals(v.value);");
+		code.indent(1).line("}");
 	}
 	
 	public void clearLists(){
@@ -88,22 +97,21 @@ public class Def_Type_Charstring_Writer {
 	}
 	
 	public String getJavaSource() {
-		
+		code.clear();
 		AstWalkerJava.logToConsole("	Starting processing:  Charstring " + nodeName );
-		
-		charStringString.append("class " + nodeName
-				+ " extends SubTypeDef<CHARSTRING>{" + "\r\n");
-		this.writeConstructor();
+		code.line("public class ", nodeName, " extends SubTypeDef<CHARSTRING> {");
+		this.writeTemplateObjects();
+		code.newLine();
+		this.writeConstructors();
+		code.newLine();
 		this.writeMatcher();
+		code.newLine();
 		this.writeEquals();
-		charStringString.append("\r\n}");
-		String returnString = charStringString.toString();
-		charStringString.setLength(0);
+		code.line("}");
+		// TODO why clear charStringValue?
 		charStringValue = null;
-		
 		AstWalkerJava.logToConsole("	Finished processing:  Charstring " + nodeName );
-		
-		return returnString;
+		return code.toString();
 	}
 
 }

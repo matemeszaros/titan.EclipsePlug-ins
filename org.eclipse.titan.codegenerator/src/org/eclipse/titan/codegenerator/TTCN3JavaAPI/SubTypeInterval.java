@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -26,7 +27,7 @@ public class SubTypeInterval<T> {
 
     boolean checkValue(T value) {
     	if(lowerbound instanceof Relational<?>)
-    		return ((Relational<T>)lowerbound).isLessOrEqualThan(value).value&&((Relational<T>)upperbound).isGreaterOrEqualThan(value).value;
+    		return ((Relational<T>)lowerbound).isLessOrEqualThan(value).getValue()&&((Relational<T>)upperbound).isGreaterOrEqualThan(value).getValue();
     	else throw new IndexOutOfBoundsException("bound is not relational");
     }
 }

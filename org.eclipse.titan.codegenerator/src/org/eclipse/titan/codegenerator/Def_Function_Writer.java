@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -25,6 +26,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Timer;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Alt_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Assignment_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Definition_Statement;
+import org.eclipse.titan.designer.AST.TTCN3.statements.DoWhile_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Receive_Port_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Send_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Setverdict_Statement;
@@ -35,16 +37,26 @@ import org.eclipse.titan.designer.AST.TTCN3.values.Bitstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Boolean_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
+import org.eclipse.titan.designer.AST.TTCN3.values.Octetstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Referenced_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Verdict_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.AddExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.And4bExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.DivideExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ModuloExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.MultiplyExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Not4bExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Or4bExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RemainderExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RotateLeftExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RotateRightExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ShiftLeftExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ShiftRightExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.StringConcatenationExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.SubstractExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.UnaryMinusExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Xor4bExpression;
 
 public class Def_Function_Writer {
 	private Def_Function functionNode;
@@ -62,8 +74,10 @@ public class Def_Function_Writer {
 	public String runsOnValue = null;
 	public String returnType = null;
 
-	public String unknownStartReference = null;
-	public String unknownStopReference = null;
+
+	public static List<String> unknownStartReference = new ArrayList<String>();
+	public static List<String> unknownStopReference = new ArrayList<String>();
+
 	public static List<String> sendPortReference = new ArrayList<String>();
 	public static List<String> sendParameter = new ArrayList<String>();
 	public static List<String> sendParameterType = new ArrayList<String>();
@@ -78,7 +92,11 @@ public class Def_Function_Writer {
 	public List<String> functionAssignIdentifiers = new ArrayList<String>();
 	public List<String> functionAssignValues = new ArrayList<String>();
 
+	public List<String> doWhileExpressions = new ArrayList<String>();
+	
 	public int receiveCounter = -1;
+	public int doWhileCounter = -1;
+	public int startCounter = -1;
 
 	public List<String> receivePortReference = new ArrayList<String>();
 	public List<String> receiveValue = new ArrayList<String>();
@@ -108,8 +126,7 @@ public class Def_Function_Writer {
 		this.statementBlock = statementBlock;
 	}
 
-	public void writeFunction() {
-
+	public void writeFunctionHeader(StatementBlock statementBlock) {
 		if (returnType != null) {
 			if (returnType.equals("Integer_Type")) {
 				functionString.append("public static INTEGER " + nodeName + "(){\r\n");
@@ -128,6 +145,11 @@ public class Def_Function_Writer {
 					+ nodeName + "\", \"Function started on \" + compid + \".\", false);" + "\r\n");
 
 		}
+	}
+	
+	public void writeFunction(StatementBlock statementBlock) {
+
+		
 
 		for (int i = 0; i < statementBlock.getSize(); i++) {
 
@@ -139,10 +161,20 @@ public class Def_Function_Writer {
 				functionString
 						.append(writeAssignmentStatement((Assignment_Statement) statementBlock.getStatementByIndex(i)));
 
+			}else if (statementBlock.getStatementByIndex(i) instanceof Assignment_Statement) {
+				Assignment_Statement tc_assignStatement = (Assignment_Statement) statementBlock
+						.getStatementByIndex(i);
+
+				assignCounter++;
+
+				functionString
+						.append(writeAssignmentStatement(tc_assignStatement));
+
 			} else if (statementBlock.getStatementByIndex(i) instanceof Send_Statement) {
 				sendCounter++;
 				functionString.append(writeSendStatement((Send_Statement) statementBlock.getStatementByIndex(i)));
 			} else if (statementBlock.getStatementByIndex(i) instanceof Unknown_Start_Statement) {
+				startCounter++;
 				writeUnknownStartStatement((Unknown_Start_Statement) statementBlock.getStatementByIndex(i));
 			} else if (statementBlock.getStatementByIndex(i) instanceof Alt_Statement) {
 
@@ -153,7 +185,20 @@ public class Def_Function_Writer {
 
 			} else if (statementBlock.getStatementByIndex(i) instanceof Setverdict_Statement) {
 				writeSetVerdictStatement((Setverdict_Statement) statementBlock.getStatementByIndex(i));
+			}else if (statementBlock.getStatementByIndex(i) instanceof DoWhile_Statement) {
+				doWhileCounter++;
+				DoWhile_Statement doWhileStatement=(DoWhile_Statement)statementBlock.getStatementByIndex(i);
+				String test=doWhileStatement.getExpression().toString();
+				
+				functionString.append("do{"+"\r\n");
+				
+				this.writeFunction(doWhileStatement.getStatementBlock());
+				
+				functionString.append("}while("+doWhileExpressions.get(doWhileCounter)+".getValue());\r\n");
+				
 			}
+			
+		
 		}
 
 		if (returnStatementValue != null) {
@@ -170,8 +215,8 @@ public class Def_Function_Writer {
 			Def_Timer def_Timer = (Def_Timer) tc_defStatement.getDefinition();
 
 			functionString.append("rownum=" + def_Timer.getLocation().getLine() + ";\r\n");
-			functionString.append("Timer " + def_Timer.getIdentifier().toString() + " = new Timer (new FLOAT("
-					+ functionVarValues.get(defCounter) + "));\r\n");
+			functionString.append("Timer " + def_Timer.getIdentifier().toString() + " = new Timer("
+					+ functionVarValues.get(defCounter) + ");\r\n");
 
 			functionString.append("TTCN3Logger.writeLog(compid, \"TIMEROP\", sourcefilename, rownum, \"function\", \""
 					+ nodeName + "\", \"Timer " + def_Timer.getIdentifier().toString() + " set to "
@@ -185,7 +230,7 @@ public class Def_Function_Writer {
 				functionString.append("final ");
 			}
 
-			if (functionVarValues.get(defCounter).equals("null")) {
+			if (functionVarValues.get(defCounter)== null) {
 				functionString.append(functionVarTypes.get(defCounter) + " " + functionVars.get(defCounter)
 						+ "=new BITSTRING();\r\n");
 
@@ -207,7 +252,7 @@ public class Def_Function_Writer {
 				functionString.append("final ");
 			}
 
-			if (functionVarValues.get(defCounter).equals("null")) {
+			if (functionVarValues.get(defCounter)== null) {
 				functionString.append(
 						functionVarTypes.get(defCounter) + " " + functionVars.get(defCounter) + "=new INTEGER();\r\n");
 
@@ -217,7 +262,7 @@ public class Def_Function_Writer {
 
 			} else {
 				functionString.append(functionVarTypes.get(defCounter) + " " + functionVars.get(defCounter)
-						+ "=new INTEGER(new BigInteger(\"" + functionVarValues.get(defCounter) + "\"));\r\n");
+						+ "=new INTEGER(\"" + functionVarValues.get(defCounter) + "\");\r\n");
 
 			}
 			// TODO: add logging here
@@ -230,7 +275,7 @@ public class Def_Function_Writer {
 				functionString.append("final ");
 			}
 
-			if (functionVarValues.get(defCounter).equals("null")) {
+			if (functionVarValues.get(defCounter)== null) {
 				functionString.append(functionVarTypes.get(defCounter) + " " + functionVars.get(defCounter)
 						+ "=new CHARSTRING();\r\n");
 
@@ -253,7 +298,7 @@ public class Def_Function_Writer {
 				functionString.append("final ");
 			}
 
-			if (functionVarValues.get(defCounter).equals("null")) {
+			if (functionVarValues.get(defCounter)== null) {
 				functionString.append(
 						functionVarTypes.get(defCounter) + " " + functionVars.get(defCounter) + "=new BOOLEAN();\r\n");
 
@@ -263,7 +308,7 @@ public class Def_Function_Writer {
 
 			} else {
 				functionString.append(functionVarTypes.get(defCounter) + " " + functionVars.get(defCounter)
-						+ "=new BOOLEAN(" + functionVarValues.get(defCounter) + ");\r\n");
+						+ " = BOOLEAN.valueOf(" + functionVarValues.get(defCounter) + ");\r\n");
 
 			}
 			// TODO: add logging here
@@ -282,7 +327,52 @@ public class Def_Function_Writer {
 	// updated
 	public String writeAssignmentStatement(Assignment_Statement tc_assignStatement) {
 
+
 		StringBuilder functionString = new StringBuilder("");
+
+		if (tc_assignStatement.getTemplate() instanceof SpecificValue_Template) {
+			SpecificValue_Template specValTemplate = (SpecificValue_Template) tc_assignStatement
+					.getTemplate();
+			
+			 if ((specValTemplate.getSpecificValue() instanceof Bitstring_Value)
+					|| (specValTemplate.getSpecificValue() instanceof Integer_Value)
+					|| (specValTemplate.getSpecificValue() instanceof Charstring_Value)
+					|| (specValTemplate.getSpecificValue() instanceof Boolean_Value)
+					||(specValTemplate.getSpecificValue() instanceof Octetstring_Value)
+					|| (specValTemplate.getSpecificValue() instanceof Undefined_LowerIdentifier_Value)
+					|| (specValTemplate.getSpecificValue() instanceof Referenced_Value)
+					|| (specValTemplate.getSpecificValue() instanceof And4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof Xor4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof Not4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof Or4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof ShiftLeftExpression)
+					|| (specValTemplate.getSpecificValue() instanceof ShiftRightExpression)
+					|| (specValTemplate.getSpecificValue() instanceof RotateRightExpression)
+					|| (specValTemplate.getSpecificValue() instanceof RotateLeftExpression)
+					|| (specValTemplate.getSpecificValue() instanceof StringConcatenationExpression)
+					|| (specValTemplate.getSpecificValue() instanceof AddExpression)
+					|| (specValTemplate.getSpecificValue() instanceof SubstractExpression)
+					|| (specValTemplate.getSpecificValue() instanceof MultiplyExpression)
+					|| (specValTemplate.getSpecificValue() instanceof DivideExpression)
+					|| (specValTemplate.getSpecificValue() instanceof ModuloExpression)
+					|| (specValTemplate.getSpecificValue() instanceof RemainderExpression)
+					||(specValTemplate.getSpecificValue() instanceof UnaryMinusExpression)) {
+				// TODO assignments for indexed bitstrings
+				 functionString.append("rownum="
+						+ specValTemplate.getLocation().getLine() + ";\r\n");
+
+
+				 functionString.append(functionAssignIdentifiers.get(assignCounter)
+						 + functionAssignValues.get(assignCounter) + ";\r\n");
+
+				
+
+				// TODO: add logging here
+			}
+		
+		}
+		
+		/*StringBuilder functionString = new StringBuilder("");
 
 		if (tc_assignStatement.getTemplate() instanceof SpecificValue_Template) {
 			SpecificValue_Template specValTemplate = (SpecificValue_Template) tc_assignStatement.getTemplate();
@@ -302,8 +392,8 @@ public class Def_Function_Writer {
 
 				functionString.append("rownum=" + specValTemplate.getLocation().getLine() + ";\r\n");
 
-				functionString.append(functionAssignIdentifiers.get(assignCounter) + "=new INTEGER(new BigInteger(\""
-						+ functionAssignValues.get(assignCounter) + "\"));\r\n");
+				functionString.append(functionAssignIdentifiers.get(assignCounter) + "=new INTEGER(\""
+						+ functionAssignValues.get(assignCounter) + "\");\r\n");
 
 				// TODO: add logging here
 
@@ -371,18 +461,20 @@ public class Def_Function_Writer {
 
 				functionString.append("rownum=" + specValTemplate.getLocation().getLine() + ";\r\n");
 
-				functionString.append(functionAssignIdentifiers.get(assignCounter) + "=new INTEGER(new BigInteger(\""
-						+ functionAssignValues.get(assignCounter) + "\"));\r\n");
+				functionString.append(functionAssignIdentifiers.get(assignCounter) + "=new INTEGER(\""
+						+ functionAssignValues.get(assignCounter) + "\");\r\n");
 
 				// TODO: add logging here
 
 			}
 
 		}
-
+*/
 		return functionString.toString();
 	}
 
+	
+	
 	public String writeSendStatement(Send_Statement sendStatement) {
 
 		StringBuilder functionString = new StringBuilder("");
@@ -525,9 +617,9 @@ public class Def_Function_Writer {
 	// updated
 	public void writeUnknownStartStatement(Unknown_Start_Statement unknownStartStatement) {
 		functionString.append("rownum=" + unknownStartStatement.getLocation().getLine() + ";\r\n");
-		functionString.append(unknownStartReference + ".start();" + "\r\n");
+		functionString.append(unknownStartReference.get(startCounter) + ".start();" + "\r\n");
 		isThereAStartedTimer = true;
-		currentTimerName = unknownStartReference;
+		currentTimerName = unknownStartReference.get(startCounter);
 		functionString.append("TTCN3Logger.writeLog(compid, \"TIMEROP\", sourcefilename, rownum, \"function\", \""
 				+ nodeName + "\", \"Timer " + unknownStartReference + " started.\", false);" + "\r\n");
 
@@ -576,7 +668,8 @@ public class Def_Function_Writer {
 
 		sendCounter = -1;
 
-		this.writeFunction();
+		this.writeFunctionHeader(statementBlock);
+		this.writeFunction(statementBlock);
 		functionString.append("\r\n}");
 		String returnString = functionString.toString();
 		functionString.setLength(0);
@@ -619,12 +712,16 @@ public class Def_Function_Writer {
 		functionVarValues.clear();
 		functionAssignIdentifiers.clear();
 		functionAssignValues.clear();
+		
+		doWhileExpressions.clear();
 
 		functionValueIsAValueReference.clear();
 		functionVarIsConstant.clear();
 		defCounter = -1;
 		assignCounter = -1;
-
+		doWhileCounter = -1;
+		startCounter = -1;
+		
 		receiveStatements.clear();
 	}
 
