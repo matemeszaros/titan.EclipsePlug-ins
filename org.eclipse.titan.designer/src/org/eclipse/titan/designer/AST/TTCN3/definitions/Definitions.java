@@ -94,13 +94,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		location = NULL_Location.INSTANCE;
 	}
 
-	public Definitions(final List<Definition> definitions, final Location location) {
-		this.definitions = new CopyOnWriteArrayList<Definition>();
-		addDefinitions(definitions);
-		groups = new ArrayList<Group>();
-		this.location = location;
-	}
-
 	@Override
 	public StringBuilder getFullName(final INamedNode child) {
 		StringBuilder builder = super.getFullName(child);
