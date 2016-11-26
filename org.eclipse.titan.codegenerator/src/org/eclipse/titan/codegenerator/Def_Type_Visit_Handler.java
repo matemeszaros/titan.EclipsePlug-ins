@@ -19,15 +19,11 @@ package org.eclipse.titan.codegenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.titan.codegenerator.TTCN3JavaAPI.BITSTRING;
-import org.eclipse.titan.codegenerator.TTCN3JavaAPI.BOOLEAN;
-import org.eclipse.titan.codegenerator.TTCN3JavaAPI.CHARSTRING;
-import org.eclipse.titan.codegenerator.TTCN3JavaAPI.INTEGER;
-import org.eclipse.titan.codegenerator.TTCN3JavaAPI.OCTETSTRING;
 import org.eclipse.titan.designer.AST.IVisitableNode;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Port;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Var;
 import org.eclipse.titan.designer.AST.TTCN3.types.CharString_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.CompField;
 import org.eclipse.titan.designer.AST.TTCN3.types.EnumerationItems;
@@ -86,8 +82,10 @@ public class Def_Type_Visit_Handler {
 	private static boolean waitForValue = false;
 
 	public static List<String> portTypeList = new ArrayList<String>();
-	private static List<String> compPortTypes = new ArrayList<String>();
-	private static List<String> compPortNames = new ArrayList<String>();
+	private static List<String> componentPortTypes = new ArrayList<String>();
+	private static List<String> componentPortNames = new ArrayList<String>();
+	private static List<String> componentVarTypes = new ArrayList<String>();
+	private static List<String> componentVarNames = new ArrayList<String>();
 	private static List<String> compFieldTypes = new ArrayList<String>();
 	private static List<String> compFieldNames = new ArrayList<String>();
 	private static List<String> enumItems = new ArrayList<String>();
@@ -99,6 +97,8 @@ public class Def_Type_Visit_Handler {
 	private static List<String> expressionValue = new ArrayList<String>();
 	private boolean isInteger = false;
 
+	CompilationTimeStamp compilationCounter = CompilationTimeStamp.getNewCompilationCounter();
+	
 	public void visit(IVisitableNode node) {
 		if (node instanceof Def_Type) {
 			Def_Type_Integer_Writer.allowedValues.clear();
@@ -134,7 +134,20 @@ public class Def_Type_Visit_Handler {
 				} else if (myASTVisitor.nodeNameNodeTypeHashMap.get(expressionValue.get(i)).equals("template")) {
 					expressionValue.set(i, "Templates." + expressionValue.get(i) + "()");
 
+				} else if (myASTVisitor.nodeNameNodeTypeHashMap.get(expressionValue.get(i)).equals("INTEGER")
+						||myASTVisitor.nodeNameNodeTypeHashMap.get(expressionValue.get(i)).equals("CHARSTRING")
+						||myASTVisitor.nodeNameNodeTypeHashMap.get(expressionValue.get(i)).equals("BITSTRING")
+						||myASTVisitor.nodeNameNodeTypeHashMap.get(expressionValue.get(i)).equals("BOOLEAN")
+						||myASTVisitor.nodeNameNodeTypeHashMap.get(expressionValue.get(i)).equals("OCTETSTRING")
+						||myASTVisitor.nodeNameNodeTypeHashMap.get(expressionValue.get(i)).equals("HEXSTRING")
+						) {
+					if (myASTVisitor.nodeNameAllowedValuesHashmap.containsKey(expressionValue.get(i))) {
+
+						expressionValue.set(i, myASTVisitor.nodeNameAllowedValuesHashmap.get(expressionValue.get(i)));
+
+					}
 				}
+
 			}
 
 			if (i <= size - 2) {
@@ -144,10 +157,10 @@ public class Def_Type_Visit_Handler {
 
 			//
 			if (expressionValue.get(i).equals("Str2IntExpression")) {
-				expressionValue.set(i, "(" + expressionValue.get(i + 1) + "str2int())");
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ".str2int())");
 				unaryOperatorFound = true;
 			} else if (expressionValue.get(i).equals("Log2StrExpression")) {
-				expressionValue.set(i, "(" + expressionValue.get(i + 1) + "log2str())");
+				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ".log2str())");
 				unaryOperatorFound = true;
 			} else if (expressionValue.get(i).equals("ValueofExpression")) {
 				expressionValue.set(i, "(" + expressionValue.get(i + 1) + ").value");
@@ -189,7 +202,7 @@ public class Def_Type_Visit_Handler {
 				expressionValue.set(i, "(" + leftHand + ").isGreaterOrEqualThan(" + rightHand + ")");
 				operatorFound = true;
 			} else if (expressionValue.get(i).equals("EqualsExpression")) {
-				expressionValue.set(i, "(" + leftHand + ").equals(" + rightHand + ")");
+				expressionValue.set(i, "(" + leftHand + ").equalsWith(" + rightHand + ")");
 				operatorFound = true;
 			} else if (expressionValue.get(i).equals("Range_ParsedSubType")) {
 				expressionValue.set(i, "new SubTypeInterval<INTEGER>(" + expressionValue.get(i + 1) + ","
@@ -310,7 +323,7 @@ public class Def_Type_Visit_Handler {
 
 		Def_Type typeNode = (Def_Type) node;
 
-		CompilationTimeStamp compilationCounter = CompilationTimeStamp.getNewCompilationCounter();
+		
 
 		String nodeName = typeNode.getIdentifier().toString();
 		myASTVisitor.currentFileName = nodeName;
@@ -320,21 +333,15 @@ public class Def_Type_Visit_Handler {
 		Type type = typeNode.getType(compilationCounter);
 		if (type.getTypetype().equals(TYPE_TTCN3_SEQUENCE)) {// record
 
-			Def_Type_Record_Writer.getInstance(typeNode);
-
 			myASTVisitor.nodeNameNodeTypeHashMap.put(nodeName, "record");
 			parentName = nodeName;
 
 		} else if (type.getTypetype().equals(TYPE_TTCN3_SET)) {
 
-			Def_Type_Set_Writer.getInstance(typeNode);
-
 			myASTVisitor.nodeNameNodeTypeHashMap.put(nodeName, "set");
 			parentName = nodeName;
 
 		} else if (type.getTypetype().equals(TYPE_TTCN3_CHOICE)) {
-
-			Def_Type_Union_Writer.getInstance(typeNode);
 
 			myASTVisitor.nodeNameNodeTypeHashMap.put(nodeName, "union");
 			parentName = nodeName;
@@ -393,39 +400,23 @@ public class Def_Type_Visit_Handler {
 		}
 	}
 
-	/**
-	 * Primitive mapper function to map the typename to its respective class.
-	 * Returns null, if the given typename is not supported
-	 * @param typename the typename to map
-	 * @return the simple name of the respective class, or null if not supported.
-	 */
-	private String mapBaseType(String typename) {
-		switch (typename) {
-			case "boolean":
-				return BOOLEAN.class.getSimpleName();
-			case "integer":
-				return INTEGER.class.getSimpleName();
-			case "charstring":
-				return CHARSTRING.class.getSimpleName();
-			case "bitstring":
-				return BITSTRING.class.getSimpleName();
-			case "octetstring":
-				return OCTETSTRING.class.getSimpleName();
-			default:
-				System.out.println("Unknown type " + typename);
-				return null;
-		}
-	}
-
 	public void visitDefTypeChildrenNodes(IVisitableNode node) {
 
 		if (node instanceof Def_Port) {
 			Def_Port port = (Def_Port) node;
-			compPortNames.add(port.getIdentifier().toString());
+			componentPortNames.add(port.getIdentifier().toString());
+		}
+		
+		if (node instanceof Def_Var){
+			Def_Var var = (Def_Var) node;
+			componentVarNames.add(var.getIdentifier().toString());
+			if(var.getType(compilationCounter) instanceof Integer_Type){
+				componentVarTypes.add("INTEGER");
+			}
 		}
 
 		if (waitForCompReference && (node instanceof Reference)) {
-			compPortTypes.add(((Reference) node).getId().toString());
+			componentPortTypes.add(((Reference) node).getId().toString());
 		}
 
 		if (waitForSetOfFieldType) {
@@ -433,11 +424,9 @@ public class Def_Type_Visit_Handler {
 				setOfFieldType = node.toString();
 				myASTVisitor.nodeNameSetOfTypesHashMap.put(parentName, setOfFieldType);
 				waitForSetOfFieldType = false;
-			} else if (node instanceof Type
-					&& !(node instanceof Referenced_Type)
-					&& !(node instanceof SetOf_Type)) {
+			} else if (node instanceof Type && !(node instanceof Referenced_Type) && !(node instanceof SetOf_Type)) {
 				Type type = (Type) node;
-				setOfFieldType = mapBaseType(type.getTypename());
+				setOfFieldType = TypeMapper.map(type.getTypename());
 				myASTVisitor.nodeNameSetOfTypesHashMap.put(parentName, setOfFieldType);
 				waitForSetOfFieldType = false;
 			}
@@ -448,11 +437,10 @@ public class Def_Type_Visit_Handler {
 				recordOfFieldType = node.toString();
 				myASTVisitor.nodeNameRecordOfTypesHashMap.put(parentName, recordOfFieldType);
 				waitForRecordOfFieldType = false;
-			} else if (node instanceof Type
-					&& !(node instanceof Referenced_Type)
+			} else if (node instanceof Type && !(node instanceof Referenced_Type)
 					&& !(node instanceof SequenceOf_Type)) {
 				Type type = (Type) node;
-				recordOfFieldType = mapBaseType(type.getTypename());
+				recordOfFieldType = TypeMapper.map(type.getTypename());
 				myASTVisitor.nodeNameRecordOfTypesHashMap.put(parentName, recordOfFieldType);
 				waitForRecordOfFieldType = false;
 			}
@@ -486,13 +474,17 @@ public class Def_Type_Visit_Handler {
 				value = "-" + value;
 			}
 
-			expressionValue.add("new INTEGER(new BigInteger(\"" + value + "\"))");
+			expressionValue.add("new INTEGER(\"" + value + "\")");
 		}
 
 		if (node instanceof Real_Value) {
 			String value = ((Real_Value) node).toString();
 			if (myASTVisitor.isNextIntegerNegative) {
 				value = "-" + value;
+			}
+
+			if (value.equals("-Infinity") || value.equals("Infinity")) {
+				value = "null";
 			}
 
 			expressionValue.add(value);
@@ -543,44 +535,20 @@ public class Def_Type_Visit_Handler {
 
 			// check if one of the messages is inout
 			// if inout delete from both lists and add to inout
-			for (int i = 0; i < shorterListSize; i++) {
-				if (inMessageName.size() == shorterListSize) {
-					for (int j = 0; j < outMessageName.size(); j++) {
-						if (inMessageName.get(i).equals(outMessageName.get(j))) {
-							inOutMessageName.add(inMessageName.get(i));
-
-						}
-					}
-				} else {
-					for (int j = 0; j < outMessageName.size(); j++) {
-						if (outMessageName.get(i).equals(inMessageName.get(j))) {
-							inOutMessageName.add(outMessageName.get(i));
-
-						}
+			for(int i =0; i<inMessageName.size();i++){
+				for(int j =0; j<outMessageName.size();j++){
+					if (inMessageName.get(i).equals(outMessageName.get(j))){
+						inOutMessageName.add(inMessageName.get(i));
+						inMessageName.remove(i);
+						if(j==(outMessageName.size()-1)){
+							i--;
+							}
+						outMessageName.remove(j);
+						j--;
 					}
 				}
 			}
-			int counter = 0;
-			while (counter < inMessageName.size()) {
-				for (int i = 0; i < inOutMessageName.size(); i++) {
-					if (inMessageName.get(counter).equals(inOutMessageName.get(i))) {
-						inMessageName.remove(counter);
-					} else {
-						counter++;
-					}
-				}
-			}
-			counter = 0;
-			while (counter < outMessageName.size()) {
-				for (int i = 0; i < inOutMessageName.size(); i++) {
-					if (outMessageName.get(counter).equals(inOutMessageName.get(i))) {
-						outMessageName.remove(counter);
-					} else {
-						counter++;
-					}
-				}
-			}
-
+			
 			myASTVisitor.portNamePortTypeHashMap.put(currentPortName, body.getTestportType().toString());
 			portTypeList.add(body.getTestportType().toString());
 		}
@@ -602,16 +570,14 @@ public class Def_Type_Visit_Handler {
 
 		CompilationTimeStamp compilationCounter = CompilationTimeStamp.getNewCompilationCounter();
 
-		myASTVisitor.currentFileName =  typeNode.getIdentifier().toString();
+		myASTVisitor.currentFileName = typeNode.getIdentifier().toString();
 
 		Type type = typeNode.getType(compilationCounter);
 		if (type.getTypetype().equals(TYPE_TTCN3_SEQUENCE)) {// record
 
-			Def_Type_Record_Writer recordNode = Def_Type_Record_Writer.getInstance(typeNode);
-			recordNode.clearLists();
+			Def_Type_Record_Writer recordNode = new Def_Type_Record_Writer(typeNode);
 			// add component fields
-			recordNode.compFieldTypes.addAll(compFieldTypes);
-			recordNode.compFieldNames.addAll(compFieldNames);
+			recordNode.add(compFieldTypes, compFieldNames);
 
 			String[] typeArray = (String[]) compFieldTypes.toArray(new String[compFieldTypes.size()]);
 			String[] nameArray = (String[]) compFieldNames.toArray(new String[compFieldNames.size()]);
@@ -626,11 +592,9 @@ public class Def_Type_Visit_Handler {
 
 		} else if (type.getTypetype().equals(TYPE_TTCN3_SET)) {// set
 
-			Def_Type_Set_Writer setdNode = Def_Type_Set_Writer.getInstance(typeNode);
-			setdNode.clearLists();
+			Def_Type_Set_Writer setNode = new Def_Type_Set_Writer(typeNode);
 			// add component fields
-			setdNode.compFieldTypes.addAll(compFieldTypes);
-			setdNode.compFieldNames.addAll(compFieldNames);
+			setNode.add(compFieldTypes, compFieldNames);
 
 			String[] typeArray = (String[]) compFieldTypes.toArray(new String[compFieldTypes.size()]);
 			String[] nameArray = (String[]) compFieldNames.toArray(new String[compFieldNames.size()]);
@@ -641,18 +605,16 @@ public class Def_Type_Visit_Handler {
 			compFieldTypes.clear();
 			compFieldNames.clear();
 
-			myASTVisitor.visualizeNodeToJava(setdNode.getJavaSource());
+			myASTVisitor.visualizeNodeToJava(setNode.getJavaSource());
 
 		} else if (type.getTypetype().equals(TYPE_TTCN3_CHOICE)) {// union
 
-			Def_Type_Union_Writer uniondNode = Def_Type_Union_Writer.getInstance(typeNode);
-			uniondNode.clearLists();
+			Def_Type_Union_Writer union_writer = new Def_Type_Union_Writer(typeNode);
 			// add component fields
-			uniondNode.compFieldTypes.addAll(compFieldTypes);
-			uniondNode.compFieldNames.addAll(compFieldNames);
+			union_writer.add(compFieldTypes, compFieldNames);
 
-			String[] typeArray = (String[]) compFieldTypes.toArray(new String[compFieldTypes.size()]);
-			String[] nameArray = (String[]) compFieldNames.toArray(new String[compFieldNames.size()]);
+			String[] typeArray = compFieldTypes.toArray(new String[compFieldTypes.size()]);
+			String[] nameArray = compFieldNames.toArray(new String[compFieldNames.size()]);
 
 			myASTVisitor.nodeNameChildrenTypesHashMap.put(parentName, typeArray);
 			myASTVisitor.nodeNameChildrenNamesHashMap.put(parentName, nameArray);
@@ -660,7 +622,7 @@ public class Def_Type_Visit_Handler {
 			compFieldTypes.clear();
 			compFieldNames.clear();
 
-			myASTVisitor.visualizeNodeToJava(uniondNode.getJavaSource());
+			myASTVisitor.visualizeNodeToJava(union_writer.getJavaSource());
 
 		} else if (type instanceof Integer_Type) {
 
@@ -731,11 +693,15 @@ public class Def_Type_Visit_Handler {
 
 			// add component fields
 
-			compNode.compFieldTypes.addAll(compPortTypes);
-			compNode.compFieldNames.addAll(compPortNames);
+			compNode.compFieldPortTypes.addAll(componentPortTypes);
+			compNode.compFieldPortNames.addAll(componentPortNames);
+			compNode.compFieldVarTypes.addAll(componentVarTypes);
+			compNode.compFieldVarNames.addAll(componentVarNames);
 
-			compPortTypes.clear();
-			compPortNames.clear();
+			componentPortTypes.clear();
+			componentPortNames.clear();
+			componentVarTypes.clear();
+			componentVarNames.clear();
 			waitForCompReference = false;
 			myASTVisitor.visualizeNodeToJava(compNode.getJavaSource());
 

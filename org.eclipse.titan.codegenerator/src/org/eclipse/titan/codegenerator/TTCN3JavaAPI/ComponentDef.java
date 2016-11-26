@@ -28,6 +28,7 @@ public abstract class ComponentDef extends ModuleDef{
 	public abstract void prepareforconnection(String thisport, int thisportnum);
 	public abstract void domap(String thisport, String remotecomp, String remoteport);
 	public abstract void connect(String port, String ip, String portnum);
+	public abstract void disconnect(String port1, String comp2, String port2); //NEW
     public HCType hc; 
     public String compid;
 	public BlockingQueue<Boolean> queue = new ArrayBlockingQueue<Boolean>(1024);

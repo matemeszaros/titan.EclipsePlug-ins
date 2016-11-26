@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -38,23 +39,23 @@ public class ENUMERATED extends Relational<ENUMERATED> {
 	}
 	
     public BOOLEAN isGreaterThan(ENUMERATED enumerated) {
-        return new BOOLEAN(false);
+        return BOOLEAN.FALSE;
     }
 
     public BOOLEAN isGreaterOrEqualThan(ENUMERATED enumerated) {
-        return new BOOLEAN(false);
+        return BOOLEAN.FALSE;
     }
 
     public BOOLEAN isLessThan(ENUMERATED enumerated) {
-        return new BOOLEAN(false);
+        return BOOLEAN.FALSE;
     }
 
     public BOOLEAN isLessOrEqualThan(ENUMERATED enumerated) {
-        return new BOOLEAN(false);
+        return BOOLEAN.FALSE;
     }
 
     public BOOLEAN equalsWith(ENUMERATED enumerated) {
-        return new BOOLEAN(false);
+        return BOOLEAN.FALSE;
     }
     
     public static boolean match(ENUMERATED pattern, Object message){
@@ -68,7 +69,7 @@ public class ENUMERATED extends Relational<ENUMERATED> {
     }
     
 	public BOOLEAN equals(ENUMERATED v){
-		return new BOOLEAN(this.value.equals(v.getValue()));
+		return BOOLEAN.valueOf(this.value.equals(v.getValue()));
 	}
 	
 	public String toString() {
@@ -78,5 +79,10 @@ public class ENUMERATED extends Relational<ENUMERATED> {
 	public String toString(String tabs){
 		return getValue();
 	}
+	
+    public void checkValue() throws IndexOutOfBoundsException {
+    	return;
+    }
+
     
 }

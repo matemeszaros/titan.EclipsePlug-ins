@@ -49,20 +49,39 @@ public class Def_Type_Record_Of_Writer implements JavaSourceProvider {
 	public String getJavaSource() {
 		code.clear();
 		AstWalkerJava.logToConsole("	Starting processing: RecordOf " + typeName);
+		code.line("import java.util.Arrays;");
+		code.line();
 		code.line("class ", typeName, " extends RecordOfDef<", fieldType, "> {");
+		writeTemplateObjects();
+		code.line();
 		writeConstructors();
 		code.line();
 		writeMatcher();
 		code.line();
 		writeEquals();
+		code.line();
+		this.writeCheckValue();
+		code.line();
 		code.line("}");
 		AstWalkerJava.logToConsole("	Finishing processing: RecordOf " + typeName);
 		return code.toString();
 	}
 
+	private void writeTemplateObjects() {
+		code.indent(1).line("public static final ", typeName, " ANY = new ", typeName, "();");
+		code.indent(1).line("public static final ", typeName, " OMIT = new ", typeName, "();");
+		code.indent(1).line("public static final ", typeName, " ANY_OR_OMIT = new ", typeName, "();");
+		code.newLine();
+		code.indent(1).line("static {");
+		code.indent(2).line("ANY.anyField = true;");
+		code.indent(2).line("OMIT.omitField = true;");
+		code.indent(2).line("ANY_OR_OMIT.anyOrOmitField = true;");
+		code.indent(1).line("}");
+	}
+
 	private void writeConstructors() {
-		code.indent(1).line("public ", typeName, "() {");
-		code.indent(2).line("value = new ArrayList<", fieldType, ">();");
+		code.indent(1).line("public ", typeName, "(", fieldType, "... values) {");
+		code.indent(2).line("this(Arrays.asList(values));");
 		code.indent(1).line("}");
 		code.line();
 		code.indent(1).line("public ", typeName, "(List<", fieldType, "> list) {");
@@ -81,17 +100,23 @@ public class Def_Type_Record_Of_Writer implements JavaSourceProvider {
 		code.indent(2).line("if (pattern.anyField && !((", typeName, ")message).omitField) return true;");
 		code.indent(2).line("if (pattern.omitField && !((", typeName, ")message).omitField) return false;");
 		code.indent(2).line("if (pattern.anyField && ((", typeName, ")message).omitField) return false;");
-		code.indent(2).line("return new BOOLEAN(pattern.equals((", typeName, ")message)).getValue();");
+		code.indent(2).line("return pattern.equals((", typeName, ")message).getValue();");
 		code.indent(1).line("}");
 	}
 
 	private void writeEquals() {
 		code.indent(1).line("public BOOLEAN equals(RecordOfDef<", fieldType, "> v) {");
-		code.indent(2).line("if (value.size() != v.value.size()) return new BOOLEAN(false);");
+		code.indent(2).line("if (value.size() != v.value.size()) return BOOLEAN.FALSE;");
 		code.indent(2).line("for (int i = 0; i < value.size(); ++i) {");
-		code.indent(3).line("if (value.get(i) != v.value.get(i)) return new BOOLEAN(false);");
+		code.indent(3).line("if (value.get(i) != v.value.get(i)) return BOOLEAN.FALSE;");
 		code.indent(2).line("}");
-		code.indent(2).line("return new BOOLEAN(true);");
+		code.indent(2).line("return BOOLEAN.TRUE;");
+		code.indent(1).line("}");
+	}
+	
+	private void writeCheckValue(){
+		code.indent(1).line(" public void checkValue() throws IndexOutOfBoundsException {");
+		code.indent(2).line("	return;");
 		code.indent(1).line("}");
 	}
 }

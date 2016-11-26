@@ -10,229 +10,170 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
 package org.eclipse.titan.codegenerator;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
 
 public class Def_Type_Union_Writer {
-	private Def_Type typeNode;
-	private StringBuilder unionString = new StringBuilder("");
+	private SourceCode code = new SourceCode();
 
-	public List<String> compFieldTypes = new ArrayList<String>();
-	public List<String> compFieldNames = new ArrayList<String>();
+	private List<Field> fields = new ArrayList<>();
+
 	private String nodeName = null;
 
-	private static Map<String, Object> unionHashes = new LinkedHashMap<String, Object>();
-
-	private Def_Type_Union_Writer(Def_Type typeNode) {
+	public Def_Type_Union_Writer(Def_Type typeNode) {
 		super();
-		this.typeNode = typeNode;
-		nodeName = this.typeNode.getIdentifier().toString();
-
+		nodeName = typeNode.getIdentifier().toString();
 	}
 
-	public static Def_Type_Union_Writer getInstance(Def_Type typeNode) {
-		if (!unionHashes.containsKey(typeNode.getIdentifier().toString())) {
-			unionHashes.put(typeNode.getIdentifier().toString(),
-					new Def_Type_Union_Writer(typeNode));
+	public void add(List<String> fieldTypes, List<String> fieldNames) {
+		if (fieldTypes.size() != fieldNames.size()) {
+			// TODO : log the error, or throw an exception?
+			System.err.println("Record field type-name array size mismatch!");
 		}
-		return (Def_Type_Union_Writer) unionHashes.get(typeNode.getIdentifier()
-				.toString());
+		for (int i = 0; i < fieldTypes.size(); i++) {
+			fields.add(new Field(fieldTypes.get(i), fieldNames.get(i)));
+		}
 	}
 
-	private void writeCompFields() {
-		// TODO Auto-generated method stub
-
+	private String getClassName(Field field) {
+		return "SC_" + field.name + "_" + nodeName;
 	}
 
 	private void writeMatcher() {
-		unionString.append("public static boolean match(" + nodeName
-				+ " pattern, " + " Object" + " message){" + "\r\n");
-
-		unionString.append("if(!(message instanceof " + nodeName
-				+ "))return false;" + "\r\n");
-
-		unionString.append("if(pattern.omitField&&((" + nodeName
-				+ ")message).omitField) return true;" + "\r\n");
-		unionString.append("if(pattern.anyOrOmitField) return true;" + "\r\n");
-		unionString.append("if(pattern.anyField&&!((" + nodeName
-				+ ")message).omitField) return true;" + "\r\n");
-		unionString.append("if(pattern.omitField&&!((" + nodeName
-				+ ")message).omitField) return false;" + "\r\n");
-		unionString.append("if(pattern.anyField&&((" + nodeName
-				+ ")message).omitField) return false;" + "\r\n");
-
-		for (int l = 0; l < compFieldTypes.size(); l++) {
-			unionString.append("if(pattern instanceof " + "SC_" + (l + 1) + "_"
-					+ nodeName + " && message instanceof " + "SC_" + (l + 1)
-					+ "_" + nodeName + ") return " + "SC_" + (l + 1) + "_"
-					+ nodeName + ".match((" + "SC_" + (l + 1) + "_" + nodeName
-					+ ")pattern, (" + "SC_" + (l + 1) + "_" + nodeName
-					+ ")message);" + "\r\n");
+		code.indent(1).line("public static boolean match(", nodeName, " pattern, Object message) {");
+		code.indent(2).line("if (!(message instanceof ", nodeName, ")) return false;");
+		code.indent(2).line("if (pattern.omitField && ((" + nodeName + ") message).omitField) return true;");
+		code.indent(2).line("if (pattern.anyOrOmitField) return true;");
+		code.indent(2).line("if (pattern.anyField && !((", nodeName, ") message).omitField) return true;");
+		code.indent(2).line("if (pattern.omitField && !((", nodeName, ") message).omitField) return false;");
+		code.indent(2).line("if (pattern.anyField && ((", nodeName, ") message).omitField) return false;");
+		for (Field f : fields) {
+			String className = getClassName(f);
+			code.indent(2).line("if (pattern instanceof ", className, " && message instanceof ", className, ")");
+			code.indent(3).line("return ", className, ".match((", className, ") pattern, (", className, ") message);");
 		}
-
-		unionString.append("return false;" + "\r\n");
-		unionString.append("}" + "\r\n");
-
+		code.indent(2).line("return false;");
+		code.indent(1).line("}").newLine();
 	}
 
 	private void writeEquals() {
-		unionString.append("public BOOLEAN equals(" + nodeName + " v){ "
-				+ "\r\n");
-
-		for (int l = 0; l < compFieldTypes.size(); l++) {
-
-			unionString.append("if(this instanceof " + "SC_" + (l + 1) + "_"
-					+ nodeName + " && v instanceof " + "SC_" + (l + 1) + "_"
-					+ nodeName + ") return ((" + "SC_" + (l + 1) + "_"
-					+ nodeName + ")this).equals((" + "SC_" + (l + 1) + "_"
-					+ nodeName + ")v);" + "\r\n");
-
+		code.indent(1).line("public BOOLEAN equals(" + nodeName + " v) {");
+		for (Field f : fields) {
+			String className = getClassName(f);
+			code.indent(2).line("if (this instanceof ", className, " && v instanceof ", className, ")");
+			code.indent(3).line("return ((", className, ") this).equals((", className, ") v);");
 		}
-
-		unionString.append("	return new BOOLEAN(false);" + "\r\n");
-		unionString.append("}" + "\r\n");
-
+		code.indent(2).line("return BOOLEAN.FALSE;");
+		code.indent(1).line("}");
 	}
 
 	public void writeUnionClasses() {
-
-		StringBuilder unionChildString = new StringBuilder("");
 		String fileNameBackup = myASTVisitor.currentFileName;
 
-		for (int i = 0; i < compFieldTypes.size(); i++) {
+		for (Field f : fields) {
+			SourceCode code = new SourceCode();
 			// set file name
-			myASTVisitor.currentFileName = "SC_" + (i + 1) + "_" + nodeName;
+			String className = getClassName(f);
+			myASTVisitor.currentFileName = className;
 			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
 
-			unionChildString.append("\r\nclass SC_" + (i + 1) + "_" + nodeName
-					+ " extends " + nodeName + "{\r\n");
+			code.line("public class ", className, " extends ", nodeName, " {");
 
-			unionChildString.append("	");
+			String type = f.type;
+			String name = f.name;
 
-			unionChildString.append("public " + compFieldTypes.get(i) + " "
-					+ compFieldNames.get(i) + ";\r\n");
+			code.indent(1).line("public ", type, " ", name, ";").newLine();
 
-			unionChildString.append("public static boolean match(" + "SC_"
-					+ (i + 1) + "_" + nodeName + " pattern, " + "Object"
-					+ " message){" + "\r\n");
+			code.indent(1).line("public ", className, "() {}").newLine();
+			code.indent(1).line("public ", className, "(", type, " ", name,") {");
+			code.indent(2).line("this.", name, " = ", name, ";");
+			code.indent(1).line("}").newLine();
 
-			/*
-			 * if (AstWalkerJava.areCommentsAllowed) {
-			 * unionChildString.append("System.out.println(\"SC_" + (i + 1) +
-			 * "\");" + "\r\n"); }
-			 */
+			code.indent(1).line("public static boolean match(", className, " pattern, Object message) {");
+			code.indent(2).line("if (!(message instanceof ", className, ")) return false;");
+			code.indent(2).line("if (pattern.omitField && ((" + className + ") message).omitField) return true;");
+			code.indent(2).line("if (pattern.anyOrOmitField) return true;");
+			code.indent(2).line("if (pattern.anyField && !((", className, ") message).omitField) return true;");
+			code.indent(2).line("if (pattern.omitField && !((", className, ") message).omitField) return false;");
+			code.indent(2).line("if (pattern.anyField && ((", className, ") message).omitField) return false;");
+			code.indent(2).line("return ", type, ".match(pattern.", name, ", ((", className, ")message).", name, ");");
+			code.indent(1).line("}").newLine();
 
-			unionChildString.append("if(!(message instanceof " + "SC_"
-					+ (i + 1) + "_" + nodeName + ")) return false;" + "\r\n");
-			unionChildString.append("if(pattern.omitField&&((" + "SC_"
-					+ (i + 1) + "_" + nodeName
-					+ ")message).omitField) return true;" + "\r\n");
-			unionChildString.append("if(pattern.anyOrOmitField) return true;"
-					+ "\r\n");
-			unionChildString.append("if(pattern.anyField&&!((" + "SC_"
-					+ (i + 1) + "_" + nodeName
-					+ ")message).omitField) return true;" + "\r\n");
-			unionChildString.append("if(pattern.omitField&&!((" + "SC_"
-					+ (i + 1) + "_" + nodeName
-					+ ")message).omitField) return false;" + "\r\n");
-			unionChildString.append("if(pattern.anyField&&((" + "SC_" + (i + 1)
-					+ "_" + nodeName + ")message).omitField) return false;"
-					+ "\r\n");
+			code.indent(1).line("public BOOLEAN equals(", className, " v) {");
+			code.indent(2).line("return this.", name, ".equals(v.", name, ");");
+			code.indent(1).line("}").newLine();
 
-			unionChildString.append("	return " + compFieldTypes.get(i)
-					+ ".match(pattern." + compFieldNames.get(i) + ", (("
-					+ "SC_" + (i + 1) + "_" + nodeName + ")message)."
-					+ compFieldNames.get(i) + ");" + "\r\n");
+			code.indent(1).line("public String toString() {");
+			code.indent(2).line("return toString(\"\");");
+			code.indent(1).line("}").newLine();
 
-			unionChildString.append("}\r\n");
+			code.indent(1).line("public String toString(String tabs) {");
+			code.indent(2).line("if(anyField) return \"?\";");
+			code.indent(2).line("if(omitField) return \"omit\";");
+			code.indent(2).line("if(anyOrOmitField) return \"*\";");
+			code.indent(2).line("return ", name, ".toString(tabs);");
+			code.indent(1).line("}").newLine();
 
-			unionChildString.append("public BOOLEAN equals(" + "SC_" + (i + 1)
-					+ "_" + nodeName + " v){" + "\r\n");
+			code.line("}");
 
-			unionChildString.append("	return this." + compFieldNames.get(i)
-					+ ".equals(v." + compFieldNames.get(i) + ");" + "\r\n");
-
-			unionChildString.append("}" + "\r\n");
-
-			unionChildString.append("public String toString(){" + "\r\n");
-			unionChildString.append("	return toString(\"\");" + "\r\n");
-			unionChildString.append("}" + "\r\n");
-			unionChildString.append("public String toString(String tabs){"
-					+ "\r\n");
-			unionChildString.append("	if(anyField) return \"?\";" + "\r\n");
-			unionChildString.append("	if(omitField) return \"omit\";" + "\r\n");
-			unionChildString.append("	if(anyOrOmitField) return \"*\";"
-					+ "\r\n");
-			unionChildString.append("	return " + compFieldNames.get(i)
-					+ ".toString(tabs);" + "\r\n");
-			unionChildString.append("}" + "\r\n");
-
-			unionChildString.append("}" + "\r\n");
-			myASTVisitor.visualizeNodeToJava(unionChildString.toString());
-			unionChildString.delete(0, unionChildString.length());
-
+			myASTVisitor.visualizeNodeToJava(code.toString());
 		}
 		myASTVisitor.currentFileName = fileNameBackup;
-
 	}
 
 	public void writeToString() {
-		unionString.append("public String toString(){" + "\r\n");
-		unionString.append("return toString(\"\");" + "\r\n");
-		unionString.append("}\r\n");
+		code.indent(1).line("public String toString() {");
+		code.indent(2).line("return toString(\"\");");
+		code.indent(1).line("}");
 	}
 
 	public void writeToStringWithParam() {
-		unionString.append("public String toString(String tabs){" + "\r\n");
-		unionString.append("if(anyField) return \"?\";" + "\r\n");
-		unionString.append("if(omitField) return \"omit\";" + "\r\n");
-		unionString.append("if(anyOrOmitField) return \"*\";" + "\r\n");
-
-		for (int l = 0; l < compFieldTypes.size(); l++) {
-
-			unionString.append("if(this instanceof " + "SC_" + (l + 1) + "_"
-					+ nodeName + ") return ((" + "SC_" + (l + 1) + "_"
-					+ nodeName + ")this).toString(tabs);" + "\r\n");
-
+		code.indent(1).line("public String toString(String tabs) {");
+		code.indent(2).line("if (anyField) return \"?\";");
+		code.indent(2).line("if (omitField) return \"omit\";");
+		code.indent(2).line("if (anyOrOmitField) return \"*\";");
+		for (Field f : fields) {
+			String className = getClassName(f);
+			code.indent(2).line("if (this instanceof ", className, ")");
+			code.indent(3).line("return ((", className, ") this).toString(tabs);");
 		}
-
-		unionString.append("	return \"\";" + "\r\n");
-		unionString.append("}\r\n");
+		code.indent(2).line("return \"\";");
+		code.indent(1).line("}");
 	}
-
-	public void clearLists() {
-		compFieldTypes.clear();
-		compFieldNames.clear();
+	
+	public void writeCheckValue(){
+		code.indent(1).line("public void checkValue() throws IndexOutOfBoundsException {");
+		code.indent(1).line("}");
 	}
 
 	public String getJavaSource() {
-
+		code.clear();
 		AstWalkerJava.logToConsole("	Starting processing:  Union " + nodeName);
-
-		unionString.append("class " + nodeName + " extends UnionDef{" + "\r\n");
-		this.writeCompFields();
+		code.line("public class ", nodeName, " extends UnionDef {");
 		this.writeMatcher();
+		code.newLine();
 		this.writeEquals();
+		code.newLine();
 		this.writeToString();
+		code.newLine();
+		this.writeCheckValue();
+		code.newLine();
 		this.writeToStringWithParam();
+		code.newLine();
+		code.line("}");
+
 		this.writeUnionClasses();
 
-		unionString.append("\r\n}");
-		String returnString = unionString.toString();
-		unionString.setLength(0);
-
 		AstWalkerJava.logToConsole("	Finished processing:  Union " + nodeName);
-
-		return returnString;
+		return code.toString();
 	}
 
 }

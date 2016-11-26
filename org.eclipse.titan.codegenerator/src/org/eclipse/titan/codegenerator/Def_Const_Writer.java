@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -104,14 +105,33 @@ public class Def_Const_Writer {
 					} else {
 
 						constString.append(prefix + "." + childrenNodeNames[i]
-								+ "= new " + childrenNodeTypes[i] + "(new BigInteger(\""
-								+ constValues.get(valueCounter) + "\"));\r\n");
+								+ "= new " + childrenNodeTypes[i] + "(\""
+								+ constValues.get(valueCounter) + "\");\r\n");
 						
 					}
 
 					valueCounter++;
 
-				} else if (myASTVisitor.nodeNameChildrenNamesHashMap
+				} else if (childrenNodeTypes[i].equals("FLOAT")) {
+
+					// printvalue
+					if (constValues.get(valueCounter).equals("omit")) {
+						constString.append(prefix + "." + childrenNodeNames[i]
+								+ "= new " + childrenNodeTypes[i] + "();\r\n");
+						constString
+								.append(prefix + "." + "omitField=true;\r\n");
+
+					} else {
+
+						constString.append(prefix + "." + childrenNodeNames[i]
+								+ "= new " + childrenNodeTypes[i] + "("
+								+ constValues.get(valueCounter) + ");\r\n");
+						
+					}
+
+					valueCounter++;
+
+				}else if (myASTVisitor.nodeNameChildrenNamesHashMap
 						.containsKey(childrenNodeTypes[i])) {
 
 					// child, novalue
@@ -156,6 +176,16 @@ public class Def_Const_Writer {
 
 				} else {// nochild, notsimple, notset
 
+					if(myASTVisitor.nodeNameNodeTypeHashMap
+							.get(childrenNodeTypes[i]).equals("enum")){
+						constString.append(prefix
+								+ "."
+								+ childrenNodeNames[i]
+								+ "= new "
+								+ childrenNodeTypes[i]
+								+ " (\""
+								+  constValues.get(valueCounter) + "\");\r\n");
+					} else{
 					// printvalue
 					constString.append(prefix
 							+ "."
@@ -166,6 +196,7 @@ public class Def_Const_Writer {
 							+ myASTVisitor.nodeNameNodeTypeHashMap
 									.get(childrenNodeTypes[i]) + "(\""
 							+ childrenNodeNames[i] + "\"));" + "\r\n");
+					}
 					valueCounter++;
 				}
 
@@ -193,8 +224,8 @@ public class Def_Const_Writer {
 					}else{
 
 					constString.append("value=new " + constNodeType + "(new "
-							+ type + "(new BigInteger(\"" + constValues.get(valueCounter)
-							+ "\")));\r\n");
+							+ type + "(\"" + constValues.get(valueCounter)
+							+ "\"));\r\n");
 					}
 					valueCounter++;
 				}
@@ -204,8 +235,8 @@ public class Def_Const_Writer {
 					constString.append("value="+constValues.get(valueCounter)
 							+ ";\r\n");
 				}else{
-				constString.append("value=new " + constNodeType + "(new BigInteger(\"" + constValues.get(valueCounter)
-						+ "\"));\r\n");
+				constString.append("value=new " + constNodeType + "(\"" + constValues.get(valueCounter)
+						+ "\");\r\n");
 				}
 
 				valueCounter++;
@@ -230,6 +261,12 @@ public class Def_Const_Writer {
 			} else if(constNodeType.equals("BOOLEAN")){
 				constString.append("value=new "
 						+ "BOOLEAN" + "(" + constValues.get(valueCounter)
+						+ ");\r\n");
+
+				valueCounter++;
+			} else if(constNodeType.equals("FLOAT")){
+				constString.append("value=new "
+						+ "FLOAT" + "(" + constValues.get(valueCounter)
 						+ ");\r\n");
 
 				valueCounter++;

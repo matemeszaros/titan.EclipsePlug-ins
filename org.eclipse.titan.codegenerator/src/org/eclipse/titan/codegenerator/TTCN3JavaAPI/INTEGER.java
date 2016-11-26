@@ -10,46 +10,71 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class INTEGER extends Arithmetical<INTEGER> {
 
-	BigInteger value;
+	public static final INTEGER ANY = new INTEGER();
+	public static final INTEGER OMIT = new INTEGER();
+	public static final INTEGER ANY_OR_OMIT = new INTEGER();
 
-    public INTEGER() {
+	static {
+		ANY.anyField = true;
+		OMIT.omitField = true;
+		ANY_OR_OMIT.anyOrOmitField = true;
+	}
 
-    }
-    
-    public INTEGER(BigInteger value) {
-        this.value = value;
-    }
+    protected List<INTEGER> allowedValues; //allowed values of subtype
+    protected List<SubTypeInterval<INTEGER>> allowedIntervals; //allowed intervals of subtype
+	public BigInteger value;
+
+	public INTEGER() {
+        allowedValues = new ArrayList<INTEGER>();
+        allowedIntervals = new ArrayList<SubTypeInterval<INTEGER>>();
+	}
+
+	public INTEGER(BigInteger value) {
+		this.value = value;
+	}
+
+	public INTEGER(String value) {
+		this(new BigInteger(value));
+	}
 
     public INTEGER negate() {
         return new INTEGER(value.multiply(new BigInteger("-1")));
     }
 
     public INTEGER rem(INTEGER divider){
-    	BigInteger val = value.divide(divider.value.multiply((value.divide(divider.value))));
+    	BigInteger val = value.subtract(divider.value.multiply((value.divide(divider.value))));
         return new INTEGER(val);
     }
 
     public INTEGER mod(INTEGER divider){
-        if(value.compareTo( BigInteger.valueOf(0)) >= 0) {
+    	
+    	if(value.equals(divider.value)){
+    		return new INTEGER(BigInteger.valueOf(0));
+    	}else if(value.compareTo( BigInteger.valueOf(0)) >= 0) {
             if (divider.value.compareTo( BigInteger.valueOf(0)) < 0) {
                 return rem(new INTEGER(divider.value.negate()));
             } else {
                 return rem(divider);
             }
-        } else if (value.compareTo( BigInteger.valueOf(0)) < 0 && rem(this).equalsWith(new INTEGER(BigInteger.valueOf(0))).value) {
-            return new INTEGER(BigInteger.valueOf(0));
+        } else if (divider.value.compareTo( BigInteger.valueOf(0)) < 0) {
+        	
+            return rem(new INTEGER(divider.value.negate())).plus(divider.negate());
         } else {
-            return new INTEGER(divider.value.negate()).plus(rem(new INTEGER(divider.value.negate())));
+        	return rem(new INTEGER(divider.value.negate())).plus(divider);
         }
+        
     }
 
     public INTEGER plus(INTEGER integer) {
@@ -70,42 +95,42 @@ public class INTEGER extends Arithmetical<INTEGER> {
 
     public BOOLEAN isGreaterThan(INTEGER integer) {
     	if(value.compareTo(integer.value)==1){
-    		return new BOOLEAN(true);
+    		return BOOLEAN.TRUE;
     	}else{
-    		return new BOOLEAN(false);
+    		return BOOLEAN.FALSE;
     	}
     }
 
     public BOOLEAN isGreaterOrEqualThan(INTEGER integer) {
     	if(value.compareTo(integer.value)>=0){
-    		return new BOOLEAN(true);
+    		return BOOLEAN.TRUE;
     	}else{
-    		return new BOOLEAN(false);
+    		return BOOLEAN.FALSE;
     	}
     }
 
     public BOOLEAN isLessThan(INTEGER integer) {
     	if(value.compareTo(integer.value)==-1){
-    		return new BOOLEAN(true);
+    		return BOOLEAN.TRUE;
     	}else{
-    		return new BOOLEAN(false);
+    		return BOOLEAN.FALSE;
     	}
     }
 
     public BOOLEAN isLessOrEqualThan(INTEGER integer) {
     	if(value.compareTo(integer.value)<=0){
-    		return new BOOLEAN(true);
+    		return BOOLEAN.TRUE;
     	}else{
-    		return new BOOLEAN(false);
+    		return BOOLEAN.FALSE;
     	}
     }
 
     public BOOLEAN equalsWith(INTEGER integer) {
-        return new BOOLEAN(value.equals(integer.value));
+        return BOOLEAN.valueOf(value.equals(integer.value));
     }
 
     public BOOLEAN notEqualsWith(INTEGER integer) {
-        return new BOOLEAN(!value.equals(integer.value));
+        return BOOLEAN.valueOf(!value.equals(integer.value));
     }
 
     public static boolean match(INTEGER pattern, Object message){
@@ -119,7 +144,7 @@ public class INTEGER extends Arithmetical<INTEGER> {
     }
     
 	public BOOLEAN equals(INTEGER v){
-		return new BOOLEAN(this.value.equals(v.value));
+		return BOOLEAN.valueOf(this.value.equals(v.value));
 	}
 	
 	public CHARSTRING int2str(){
@@ -136,5 +161,14 @@ public class INTEGER extends Arithmetical<INTEGER> {
 		if(anyOrOmitField) return "*";
     	return value.toString();
     }
-    
+     public void checkValue() throws IndexOutOfBoundsException {
+        if (allowedValues.size() == 0 && allowedIntervals.size() == 0)
+            return;
+        for (SubTypeInterval<INTEGER> i : allowedIntervals)
+            if(i.checkValue(this)) return;
+        for (INTEGER i : allowedValues)
+            if (i.equals(value)) return;
+        throw new IndexOutOfBoundsException("out of intervals!");
+    }
+
 }

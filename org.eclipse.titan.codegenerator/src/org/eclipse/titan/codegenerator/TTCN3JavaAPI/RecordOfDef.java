@@ -22,10 +22,10 @@ public abstract class RecordOfDef<T extends TypeDef> extends StructuredTypeDef {
     public List<T> value;
     
     public BOOLEAN equals(RecordOfDef<T> v) {
-        if (this.value.size() != v.value.size()) return new BOOLEAN(false);
+        if (this.value.size() != v.value.size()) return BOOLEAN.FALSE;
         for (int i = 0; i < this.value.size(); i++)
-            if (!(this.value.get(i).equals(v.value.get(i)))) return new BOOLEAN(false);
-        return new BOOLEAN(true);
+            if (!(this.value.get(i).equals(v.value.get(i)))) return BOOLEAN.FALSE;
+        return BOOLEAN.TRUE;
     }
     
     public String toString(){

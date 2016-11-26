@@ -21,38 +21,39 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.titan.codegenerator.constant.ConstantParser;
+import org.eclipse.titan.codegenerator.constant.ModuleConstants;
+import org.eclipse.titan.codegenerator.template.ModuleTemplates;
+import org.eclipse.titan.codegenerator.template.TemplateParser;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.IVisitableNode;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Const;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Extfunction;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_ModulePar;
-import org.eclipse.titan.designer.AST.TTCN3.types.Integer_Type;
-import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Template;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.UnaryMinusExpression;
 
-public final class myASTVisitor extends ASTVisitor {
+public final class myASTVisitor extends ASTVisitor implements Scope {
+
+	private Scope scope = this;
+
+	ModuleParameters parameters = new ModuleParameters();
+	private ModuleTemplates templates = new ModuleTemplates();
+	private ModuleConstants constants = new ModuleConstants();
 
 	public static TestCase_Function_Visit_Handler myFunctionTestCaseVisitHandler = new TestCase_Function_Visit_Handler();
 	public static Def_Type_Visit_Handler myDefTypeVisitHandler = new Def_Type_Visit_Handler();
-	public static Def_Const_Visit_Handler myDefConstVisitHandler = new Def_Const_Visit_Handler();
-	public static Def_Template_Visit_Handler myDefTemplateVisitHandler = new Def_Template_Visit_Handler();
 
 	public static String currentFileName = "";
-
-	private static String moduleParNodeType = null;
 
 	public static boolean blockIdListing = false;
 	public static boolean isNextIntegerNegative = false;
 
-
-	private static boolean waitForModuleParValues = false;
-
-	private static List<String> moduleParValues = new ArrayList<String>();
 
 	public static Map<String, String[]> nodeNameChildrenNamesHashMap = new LinkedHashMap<String, String[]>();
 	public static Map<String, String[]> nodeNameChildrenTypesHashMap = new LinkedHashMap<String, String[]>();
@@ -61,7 +62,8 @@ public final class myASTVisitor extends ASTVisitor {
 	public static Map<String, String> nodeNameNodeTypeHashMap = new LinkedHashMap<String, String>();
 	public static Map<String, String> portNamePortTypeHashMap = new LinkedHashMap<String, String>();
 	public static Map<String, String> templateIdValuePairs = new LinkedHashMap<String, String>();
-
+	public static Map<String, String> nodeNameAllowedValuesHashmap = new LinkedHashMap<String,  String>();
+	
 	public static Set<String> constOmitHashes = new HashSet<String>();
 	public static Set<String> templateIDs = new HashSet<String>();
 
@@ -116,20 +118,11 @@ public final class myASTVisitor extends ASTVisitor {
 	}
 
 	public static String changeTypeToJava(String string) {
-
+		// TODO : why only CHARSTRING? does it belong here?
 		if (string.equals("CHARSTRING")) {
-			string = "SubTypeDef<CHARSTRING>";
+			return "SubTypeDef<CHARSTRING>";
 		}
-
-		if (string.equals("charstring")) {
-			string = "CHARSTRING";
-		}
-
-		if (string.equals("integer")) {
-			string = "INTEGER";
-		}
-
-		return string;
+		return TypeMapper.map(string);
 	}
 
 	public static String cutModuleNameFromBeginning(String string) {
@@ -163,87 +156,86 @@ public final class myASTVisitor extends ASTVisitor {
 		}
 	}
 
+	@Override
 	public int visit(IVisitableNode node) {
+		scope = scope.process(node);
+		return V_CONTINUE;
+	}
+
+	@Override
+	public Scope process(IVisitableNode node) {
 		// visit* submethods only serve increased readability and
 		// categorization
 
 		myDefTypeVisitHandler.visit(node);
 
-		myDefConstVisitHandler.visit(node);
+		if (node instanceof Def_Const) {
+			return new ConstantParser(this, constants);
+		}
 
-		myDefTemplateVisitHandler.visit(node);
+		if (node instanceof Def_Template) {
+			return new TemplateParser(this, templates);
+		}
 
 		if (node instanceof Def_ModulePar) {
-			currentFileName = "Constants";
-
-			Def_ModulePar_Writer.getInstance(((Def_ModulePar) node));
-			nodeNameNodeTypeHashMap.put(((Def_ModulePar) node).getIdentifier()
-					.toString(), "modulePar");
-			waitForModuleParValues = true;
-
+			return new ModuleParameterParser(this);
 		}
 
 		if (node instanceof UnaryMinusExpression) {
 			myASTVisitor.isNextIntegerNegative = true;
 		}
 
-		// module parameters
-		visitModuleParNodes(node);
-
-
+		if (node instanceof Def_Extfunction) {//FormalParameterList Boolean_Type
+			
+			String nodeName=((Def_Extfunction)node).getIdentifier().toString();
+			nodeName.toString();
+			//((Def_Extfunction)node).getFormalParameterList();
+			// return type is the next *_Type after the Formalparamlist
+			//TODO process 
+		}
 
 		// Check for Function & TC nodes
 		myFunctionTestCaseVisitHandler.visit(node);
 
+		return this;
+	}
+
+	@Override
+	public int leave(IVisitableNode node) {
+		scope = scope.finish(node);
 		return V_CONTINUE;
 	}
 
-	public void visitModuleParNodes(IVisitableNode node) {
-		if (waitForModuleParValues && (node instanceof Integer_Type)) {
-			moduleParNodeType = "INTEGER";
-		}
-
-		if (waitForModuleParValues && (node instanceof Integer_Value)) {
-			moduleParValues.add(((Integer_Value) node).toString());
-		}
-	}
-
-	public int leave(IVisitableNode node) {
+	@Override
+	public Scope finish(IVisitableNode node) {
 
 		myDefTypeVisitHandler.leave(node);
-		myDefConstVisitHandler.leave(node);
-		myDefTemplateVisitHandler.leave(node);
-		
+
 		if (node instanceof UnaryMinusExpression) {
 			myASTVisitor.isNextIntegerNegative = false;
 		}
 
-
-
-		if (node instanceof Def_ModulePar) {
-			handleModulePar(node);
-		}
-
 		myFunctionTestCaseVisitHandler.leave(node);
 
-		return V_CONTINUE;
+		return this;
 	}
 
-	public void handleModulePar(IVisitableNode node) {
-		Def_ModulePar_Writer moduleParNode = Def_ModulePar_Writer
-				.getInstance(((Def_ModulePar) node));
-		moduleParNode.clearLists();
-		moduleParNode.setModuleParNodeType(moduleParNodeType);
-
-		waitForModuleParValues = false;
-
-		moduleParNode.moduleParValues.addAll(moduleParValues);
-
-		moduleParValues.clear();
-		currentFileName = "Constants";
-		deleteLastBracket(currentFileName);
-		visualizeNodeToJava(moduleParNode.getJavaSource() + "\r\n}");
-
+	/**
+	 * Finish the visitor by writing the static parts:
+	 * - module parameters
+	 * - templates
+	 * - constants
+	 */
+	// TODO : move Constants and Templates here
+	void finish() {
+		currentFileName = parameters.getClassName();
+		visualizeNodeToJava(importListStrings);
+		visualizeNodeToJava(parameters.getJavaSource());
+		currentFileName = templates.getClassName();
+		visualizeNodeToJava(importListStrings);
+		visualizeNodeToJava(templates.getJavaSource());
+		currentFileName = constants.getClassName();
+		visualizeNodeToJava(importListStrings);
+		visualizeNodeToJava(constants.getJavaSource());
 	}
-
 }

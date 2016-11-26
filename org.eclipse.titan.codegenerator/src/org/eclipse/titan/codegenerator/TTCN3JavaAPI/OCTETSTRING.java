@@ -50,7 +50,7 @@ public class OCTETSTRING extends BINARY_STRING implements Indexable<OCTETSTRING>
 		if(anyField) return "?";
 		if(omitField) return "omit";
 		if(anyOrOmitField) return "*";
-		return "O'" + new String(value) + "'";
+		return "'" + new String(value) + "'O";
 	}
 
 	@Override
@@ -62,17 +62,5 @@ public class OCTETSTRING extends BINARY_STRING implements Indexable<OCTETSTRING>
 	public void set(int index, OCTETSTRING octetstring) {
 		value[2 * index] = octetstring.value[0];
 		value[2 * index + 1] = octetstring.value[1];
-	}
-
-	// TODO : create a unit-test from it
-	public static void main(String[] args) {
-		OCTETSTRING o = new OCTETSTRING("AABBCC");
-		System.out.println(o);
-		System.out.println(o.get(0));
-		System.out.println(o.get(1));
-		System.out.println(o.get(2));
-		o.set(0, new OCTETSTRING("DD"));
-		System.out.println(o.get(0));
-		System.out.println(o);
 	}
 }

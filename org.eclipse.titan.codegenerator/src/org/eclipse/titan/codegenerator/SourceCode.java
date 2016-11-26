@@ -33,11 +33,23 @@ public class SourceCode {
 	}
 
 	public SourceCode line(Object... objects) {
+		return append(objects).newLine();
+	}
+
+	public SourceCode append(Object... objects) {
 		for (Object o : objects) {
 			builder.append(o);
 		}
+		return this;
+	}
+
+	public SourceCode newLine() {
 		builder.append(System.lineSeparator());
 		return this;
+	}
+
+	public SourceCode write(int indent, Writable writable) {
+		return writable.write(this, indent);
 	}
 
 	public SourceCode clear() {

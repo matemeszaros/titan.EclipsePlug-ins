@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -27,6 +28,7 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.Assignment_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Connect_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Definition_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Disconnect_Statement;
+import org.eclipse.titan.designer.AST.TTCN3.statements.DoWhile_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Done_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.If_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.Map_Statement;
@@ -47,13 +49,22 @@ import org.eclipse.titan.designer.AST.TTCN3.values.Referenced_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Verdict_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.AddExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.And4bExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ComponentCreateExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.DivideExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ModuloExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.MultiplyExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Not4bExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Or4bExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RemainderExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RotateLeftExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.RotateRightExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ShiftLeftExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.ShiftRightExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.StringConcatenationExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.SubstractExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.UnaryMinusExpression;
+import org.eclipse.titan.designer.AST.TTCN3.values.expressions.Xor4bExpression;
 
 public class Def_Testcase_Writer {
 	private Def_Testcase testCaseNode;
@@ -70,7 +81,7 @@ public class Def_Testcase_Writer {
 	private String currentTimerName = null;
 
 	public StatementBlock tcMainStatementBlock;
-
+	public int doWhileCounter = -1;
 	public int sendCounter = -1;
 	public int assignCounter = -1;
 	private int createCounter = -1;
@@ -94,6 +105,9 @@ public class Def_Testcase_Writer {
 	public static List<String> sendPortReference = new ArrayList<String>();
 	public static List<String> sendParameter = new ArrayList<String>();
 	public static List<String> sendParameterType = new ArrayList<String>();
+	
+	public List<String> doWhileExpressions = new ArrayList<String>();
+	
 	public List<String> tcVars = new ArrayList<String>();
 	public List<String> tcVarTypes = new ArrayList<String>();
 	public List<String> tcVarValues = new ArrayList<String>();
@@ -271,7 +285,18 @@ public class Def_Testcase_Writer {
 
 				writeSetVerdictStatement(tc_setVerdictStatement);
 
-			} else if (tcStatementBlock.getStatementByIndex(j) instanceof Send_Statement) {
+			} else if (tcStatementBlock.getStatementByIndex(j) instanceof DoWhile_Statement) {
+				doWhileCounter++;
+				DoWhile_Statement doWhileStatement=(DoWhile_Statement)tcStatementBlock.getStatementByIndex(j);
+				String test=doWhileStatement.getExpression().toString();
+				
+				testCaseString.append("do{"+"\r\n");
+				
+				this.writeTestCaseFunction(doWhileStatement.getStatementBlock());
+				
+				testCaseString.append("while("+doWhileExpressions.get(doWhileCounter)+".getValue());\r\n");
+				
+			}else if (tcStatementBlock.getStatementByIndex(j) instanceof Send_Statement) {
 				Send_Statement tc_SendStatement = (Send_Statement) tcStatementBlock
 						.getStatementByIndex(j);
 
@@ -342,8 +367,8 @@ public class Def_Testcase_Writer {
 					+ ";\r\n");
 			testCaseString.append("Timer "
 					+ def_Timer.getIdentifier().toString()
-					+ " = new Timer (new FLOAT(" + tcVarValues.get(defCounter)
-					+ "));\r\n");
+					+ " = new Timer(" + tcVarValues.get(defCounter)
+					+ ");\r\n");
 
 			testCaseString
 					.append("TTCN3Logger.writeLog(\"mtc\", \"TIMEROP\", sourcefilename, rownum, \"function\", \""
@@ -406,8 +431,8 @@ public class Def_Testcase_Writer {
 			} else {
 				testCaseString.append(tcVarTypes.get(defCounter) + " "
 						+ tcVars.get(defCounter)
-						+ "=new INTEGER(new BigInteger(\""
-						+ tcVarValues.get(defValueCounter) + "\"));\r\n");
+						+ "=new INTEGER(\""
+						+ tcVarValues.get(defValueCounter) + "\");\r\n");
 				// TODO: add logging here
 			}
 
@@ -497,6 +522,35 @@ public class Def_Testcase_Writer {
 			} else {
 				testCaseString.append(tcVarTypes.get(defCounter) + " "
 						+ tcVars.get(defCounter) + "=new BOOLEAN("
+						+ tcVarValues.get(defValueCounter) + ");\r\n");
+				// TODO: add logging here
+			}
+
+		}else if (tcVarTypes.get(defCounter).equals("FLOAT")) {
+
+			testCaseString.append("rownum="
+					+ tc_defStatement.getLocation().getLine() + ";\r\n");
+
+			if (tcVarIsConstant.get(defCounter)) {
+				testCaseString.append("final ");
+			}
+
+			if (tcVarIsTemplate.get(defCounter)) {
+				testCaseString.append("template ");
+			}
+
+			if (tcVarValues.get(defValueCounter) == null) {
+				testCaseString.append(tcVarTypes.get(defCounter) + " "
+						+ tcVars.get(defCounter) + "=new FLOAT();\r\n");
+				// TODO: add logging here
+			} else if (tcValueIsAValueReference.get(defCounter)) {
+				testCaseString.append(tcVarTypes.get(defCounter) + " "
+						+ tcVars.get(defCounter) + "="
+						+ tcVarValues.get(defValueCounter) + ";\r\n");
+				// TODO: add logging here
+			} else {
+				testCaseString.append(tcVarTypes.get(defCounter) + " "
+						+ tcVars.get(defCounter) + "=new FLOAT("
 						+ tcVarValues.get(defValueCounter) + ");\r\n");
 				// TODO: add logging here
 			}
@@ -621,12 +675,19 @@ public class Def_Testcase_Writer {
 						.append("rownum="
 								+ componenetCreateExp.getLocation().getLine()
 								+ ";\r\n");
+				
+				if(tcAssignIdentifiers.get(assignCounter).endsWith("=")){
+					tcAssignIdentifiers.set(assignCounter,tcAssignIdentifiers.get(assignCounter).substring(0, tcAssignIdentifiers.get(assignCounter).length()-1) );
+				}
+				
 				testCaseString.append("hc.create(" + "\""
-						+ tcCreateValues.get(currentCounterValue) + "\"");
-				logValues[logWriteCounter] = tcCreateValues
-						.get(currentCounterValue);
+						+ tcAssignIdentifiers.get(assignCounter) + "\"");
+				logValues[logWriteCounter] = tcAssignIdentifiers
+						.get(assignCounter);
+				
+				
 				currentCounterValue++;
-
+				//assignCounter++;
 				logWriteCounter++;
 				while (tcCreateCounter.get(currentCounterValue).equals(
 						String.valueOf(createCounter))) {
@@ -664,6 +725,15 @@ public class Def_Testcase_Writer {
 					||(specValTemplate.getSpecificValue() instanceof Octetstring_Value)
 					|| (specValTemplate.getSpecificValue() instanceof Undefined_LowerIdentifier_Value)
 					|| (specValTemplate.getSpecificValue() instanceof Referenced_Value)
+					|| (specValTemplate.getSpecificValue() instanceof And4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof Xor4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof Not4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof Or4bExpression)
+					|| (specValTemplate.getSpecificValue() instanceof ShiftLeftExpression)
+					|| (specValTemplate.getSpecificValue() instanceof ShiftRightExpression)
+					|| (specValTemplate.getSpecificValue() instanceof RotateRightExpression)
+					|| (specValTemplate.getSpecificValue() instanceof RotateLeftExpression)
+					|| (specValTemplate.getSpecificValue() instanceof StringConcatenationExpression)
 					|| (specValTemplate.getSpecificValue() instanceof AddExpression)
 					|| (specValTemplate.getSpecificValue() instanceof SubstractExpression)
 					|| (specValTemplate.getSpecificValue() instanceof MultiplyExpression)
@@ -693,6 +763,12 @@ public class Def_Testcase_Writer {
 		testCaseString.append("rownum="
 				+ tc_connectStatement.getLocation().getLine() + ";\r\n");
 
+		for(int i=0; i<4;i++){
+			if(tcConnectValues.get(connectCounter * 4 + i).equals("self")){
+				tcConnectValues.set(connectCounter * 4 + i,testCaseRunsOn);
+			}
+		}
+			
 		testCaseString.append("hc.connect(" + "\""
 				+ tcConnectValues.get(connectCounter * 4) + "\"," + "\""
 				+ tcConnectValues.get(connectCounter * 4 + 1) + "\"," + "\""
@@ -889,6 +965,26 @@ public class Def_Testcase_Writer {
 							+ ".toString(), false);" + "\r\n");
 
 		}
+		
+		if (sendParameterType.get(sendCounter).equals("CHARSTRING")) {
+			String parameterValue =sendParameter.get(sendCounter);
+			testCaseString.append("rownum="
+					+ tc_SendStatement.getLocation().getLine() + ";\r\n");
+			testCaseString.append(sendPortReference.get(sendCounter) + ".send("
+					+ parameterValue + ");" + "\r\n");
+			testCaseString
+			.append("TTCN3Logger.writeLog(\"mtc\", \"PORTEVENT\", sourcefilename, rownum, \"function\", \""
+					+ nodeName
+					+ "\", \"SEND event on port "
+					+ sendPortReference.get(sendCounter)
+					+ ": \""
+					+ " + "
+					+ parameterValue
+					+ ".toString(), false);"
+					+ "\r\n");
+
+		}
+		
 		if (sendParameterType.get(sendCounter).equals("IDENTIFIER")) {
 			String parameterValue = sendParameter.get(sendCounter);
 			testCaseString.append("rownum="
@@ -1041,6 +1137,12 @@ public class Def_Testcase_Writer {
 
 		testCaseString.append("rownum="
 				+ tc_disconnectStatement.getLocation().getLine() + ";\r\n");
+		
+		for(int i=0; i<4;i++){
+			if(tcDisconnectValues.get(disconnectCounter * 4 + i).equals("self")){
+				tcDisconnectValues.set(disconnectCounter * 4 + i,testCaseRunsOn);
+			}
+		}
 
 		testCaseString.append("hc.disconnect(" + "\""
 				+ tcDisconnectValues.get(disconnectCounter * 4) + "\"," + "\""
@@ -1108,7 +1210,10 @@ public class Def_Testcase_Writer {
 		tcStopIdentifiers.clear();
 		tcStopCounter.clear();
 		testCaseStopValueParameters.clear();
-
+		doWhileCounter = -1;
+		
+		doWhileExpressions.clear();
+		
 		receivePortReference.clear();
 		receiveValue.clear();
 		receiveAnyValValue.clear();

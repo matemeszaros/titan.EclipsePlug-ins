@@ -47,6 +47,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("public class HCType {" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
 		hcTypeString.append("	boolean waitingforconnect;" + "\r\n");
+		hcTypeString.append("	boolean waitingfordisconnect;" + "\r\n");
 		hcTypeString.append("	boolean waitingformap;" + "\r\n");
 		hcTypeString.append("	Socket sock;" + "\r\n");
 		hcTypeString.append("	BufferedWriter writer;" + "\r\n");
@@ -87,6 +88,17 @@ public class Additional_Class_Writer {
 		hcTypeString.append("		}" + "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
+		
+		hcTypeString.append("public void disconnect(String comp1, String port1, String comp2, String port2){" + "\r\n");
+		hcTypeString.append("	this.waitingfordisconnect=true;" + "\r\n");
+		hcTypeString.append("	if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Disconnecting \" + comp1 + \":\" + port1 + \" from \" + comp2 + \":\" + port2, false);" + "\r\n");
+		hcTypeString.append("	sendtomc(\"disconnect \"+comp1+\" \"+ port1+\" \"+comp2+\" \"+port2);" + "\r\n");
+		hcTypeString.append("	for(;this.waitingfordisconnect;){" + "\r\n");
+		hcTypeString.append("		try{" + "\r\n");
+		hcTypeString.append("			Thread.sleep(100);" + "\r\n");
+		hcTypeString.append("		}catch(Exception e){}	" + "\r\n");
+		hcTypeString.append("	}" + "\r\n");
+		hcTypeString.append("}" + "\r\n");
 		
 		hcTypeString.append("public void map(String comp1, String port1, String comp2, String port2){" + "\r\n");
 		hcTypeString.append("	this.waitingformap=true;" + "\r\n");
@@ -200,6 +212,12 @@ public class Additional_Class_Writer {
 		hcTypeString.append("				if(msg.equals(\"connected\")){" + "\r\n");
 		hcTypeString.append("					this.waitingforconnect=false;" + "\r\n");
 		hcTypeString.append("				}" + "\r\n");
+		
+		hcTypeString.append("				if(msg.equals(\"disconnected\")){" + "\r\n");
+		hcTypeString.append("					this.waitingfordisconnect=false;" + "\r\n");
+		hcTypeString.append("					}" + "\r\n");
+		
+		
 		hcTypeString.append("				if(msg.equals(\"mapped\")){" + "\r\n");
 		hcTypeString.append("					this.waitingformap=false;" + "\r\n");
 		hcTypeString.append("				}" + "\r\n");
@@ -231,6 +249,7 @@ public class Additional_Class_Writer {
 
 		hcTypeString.append("				}" + "\r\n");
 		hcTypeString.append("				//logged on receiver side instead of default sender side (because of centrally generated IDs)" + "\r\n");
+		
 		hcTypeString.append("				if(command.equals(\"create\")){" + "\r\n");
 		hcTypeString.append("					String compname = msg.split(\" \")[1];"
 				+ "\r\n");
@@ -240,6 +259,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("					registercomponent(compname, comptype, compid);"
 				+ "\r\n");
 		hcTypeString.append("				}" + "\r\n");
+		
 		hcTypeString.append("				if(command.equals(\"prepareforconnection\")){"
 				+ "\r\n");
 		hcTypeString.append("					String thiscomp = msg.split(\" \")[1];"
@@ -259,6 +279,7 @@ public class Additional_Class_Writer {
 						+ "\r\n");
 		hcTypeString.append("					NEXTPORTNUM++;" + "\r\n");
 		hcTypeString.append("				}" + "\r\n");
+		
 		hcTypeString.append("				if(command.equals(\"connect\")){" + "\r\n");
 		hcTypeString.append("					String component = msg.split(\" \")[1];"
 				+ "\r\n");
@@ -272,6 +293,18 @@ public class Additional_Class_Writer {
 						+ "\r\n"); 
 		hcTypeString.append("					sendtomc(\"connected\");" + "\r\n");
 		hcTypeString.append("				}" + "\r\n");
+		
+		hcTypeString.append("			if(command.equals(\"disconnect\")){" + "\r\n");
+		hcTypeString.append("				String comp1 = msg.split(\" \")[1];" + "\r\n");
+		hcTypeString.append("				String port1 = msg.split(\" \")[2];" + "\r\n");
+		hcTypeString.append("				String comp2 = msg.split(\" \")[3];" + "\r\n");
+		hcTypeString.append("				String port2 = msg.split(\" \")[4];" + "\r\n");
+		hcTypeString.append("				if(debugmode)TTCN3Logger.writeLog(\"hc\", \"EXECUTOR\", \"Disonnecting component \" + comp1 + \" port \" + port1 + \" from component \" + comp2 + \" port \" + port2, false);" + "\r\n");
+		hcTypeString.append("				getcomponent(comp1).disconnect(port1,comp2,port2);" + "\r\n");
+		hcTypeString.append("				sendtomc(\"disconnected\");" + "\r\n");
+		hcTypeString.append("			}" + "\r\n");
+		
+		
 		
 		hcTypeString.append("if(command.equals(\"map\")){" + "\r\n");
 		hcTypeString.append("	String thiscomp = msg.split(\" \")[1];" + "\r\n");
@@ -360,7 +393,7 @@ public class Additional_Class_Writer {
 		hcTypeString.append("			this.sock.close();" + "\r\n");
 		hcTypeString.append("		}catch(Exception e){e.printStackTrace();}"
 				+ "\r\n");
-		hcTypeString.append("		for(Thread t:portlistenerpool) t.interrupt();"
+		hcTypeString.append("		for(Thread t:portlistenerpool) if(t!=null) t.interrupt(); "
 				+ "\r\n");
 		hcTypeString.append("	}" + "\r\n");
 		hcTypeString.append("	" + "\r\n");
@@ -397,7 +430,6 @@ public class Additional_Class_Writer {
 		externalPort.append("	}"+"\r\n");
 		
 		externalPort.append("	public void user_send(Object o){"+"\r\n");
-		externalPort.append("		System.out.println(\"TESTPORT OUTPUT \" + ((CHARSTRING)o).toString());"+"\r\n"); //TODO fix logging
 		externalPort.append("	}"+"\r\n");
 		
 		externalPort.append("	class TestPortDaemon extends Thread{"+"\r\n");
@@ -407,10 +439,10 @@ public class Additional_Class_Writer {
 		externalPort.append("		}"+"\r\n");
 		externalPort.append("		public void run(){"+"\r\n");
 		externalPort.append("			testport.port.mapped=true;"+"\r\n");
-		externalPort.append("			Scanner scanner = new Scanner(System.in);"+"\r\n");
-		externalPort.append("			for(;;){"+"\r\n");
-		externalPort.append("				String inmsg = scanner.nextLine();"+"\r\n");
-		externalPort.append("				testport.port.enqueue(new CHARSTRING(inmsg));"+"\r\n");
+		//externalPort.append("			Scanner scanner = new Scanner(System.in);"+"\r\n");
+		externalPort.append("			for(;;){//should block until a new message is received"+"\r\n");
+		//externalPort.append("				String inmsg = scanner.nextLine();"+"\r\n");
+		//externalPort.append("				testport.port.enqueue(new CHARSTRING(inmsg));"+"\r\n");
 		externalPort.append("			}"+"\r\n");
 		externalPort.append("		}"+"\r\n");
 		externalPort.append("	}"+"\r\n");

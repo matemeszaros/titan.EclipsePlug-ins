@@ -10,6 +10,7 @@
  *   Keremi, Andras
  *   Eros, Levente
  *   Kovacs, Gabor
+ *   Meszaros, Mate Robert
  *
  ******************************************************************************/
 
@@ -22,46 +23,37 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.titan.codegenerator.experimental.LoggerVisitor;
+import org.eclipse.titan.designer.AST.ASTVisitor;
+import org.eclipse.titan.designer.AST.Module;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.Definitions;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
+import org.eclipse.titan.designer.parsers.GlobalParser;
+import org.eclipse.titan.designer.parsers.ProjectSourceParser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Analyzer;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.titan.designer.AST.Module;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.Definitions;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.ImportModule;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
-import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Analyzer;
 
 public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 
@@ -85,16 +77,13 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 	public static List<String> functionList = new ArrayList<String>();
 	public static List<String> functionRunsOnList = new ArrayList<String>();
 
-
 	static {
 		try {
 			boolean append = true;
 			props = new Properties();
-			props.load(AstWalkerJava.class
-					.getResourceAsStream("walker.properties"));
+			props.load(AstWalkerJava.class.getResourceAsStream("walker.properties"));
 
-			FileHandler fh = new FileHandler(props.getProperty("log.path"),
-					append);
+			FileHandler fh = new FileHandler(props.getProperty("log.path"), append);
 
 			fh.setFormatter(new SimpleFormatter());
 			logger = Logger.getLogger(AstWalkerJava.class.getName());
@@ -118,209 +107,106 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 		AstWalkerJava.testCaseRunsOnList.clear();
 		AstWalkerJava.functionList.clear();
 		AstWalkerJava.functionRunsOnList.clear();
-		//initialize folder
-		//clear if exists
-		Path outputPath=Paths.get(props.getProperty("javafile.path"));
-		if(Files.exists(outputPath)){
-			System.out.println("");
-			File folder = new File(outputPath.toUri());
-			File[] listOfFiles = folder.listFiles();
-			for(int i=0;i<listOfFiles.length;i++ ){
-				if(listOfFiles[i].getPath().toString().endsWith("java")){		
-				}else{
-					listOfFiles[i]=null;
-				}
-			}
-			for(int i=0;i<listOfFiles.length;i++ ){
-				if(listOfFiles[i]!=null){
-					listOfFiles[i].delete();
-				}
-			}
 
-		}else {
-			(new File(props.getProperty("javafile.path"))).mkdirs();
-			
+		AstWalkerJava.initOutputFolder();
+		AstWalkerJava.getActiveProject();
+
+		/*
+		 * // init console logger IConsole myConsole = findConsole("myLogger");
+		 * IWorkbenchPage page = window.getActivePage(); String id =
+		 * IConsoleConstants.ID_CONSOLE_VIEW; IConsoleView view; try { view =
+		 * (IConsoleView) page.showView(id); view.display(myConsole); } catch
+		 * (PartInitException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 */
+
+		// initialize common files
+
+		myASTVisitor.currentFileName = "TTCN_functions";
+
+		myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
+		myASTVisitor.visualizeNodeToJava("class TTCN_functions{\r\n}\r\n");
+
+		Def_Template_Visit_Handler.isTemplate = false;
+
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(selectedProject);
+		sourceParser.analyzeAll();
+
+		logToConsole("Version built on 2016.10.24");
+		logToConsole("Starting to generate files into: " + props.getProperty("javafile.path"));
+
+		myASTVisitor visitor = new myASTVisitor();
+		for (Module module : sourceParser.getModules()) {
+			// start AST processing
+			walkChildren(visitor, module.getOutlineChildren());
 		}
-		
-		
-		
-		try {
+		visitor.finish();
 
-			IWorkbenchPage p = window.getActivePage();
-			IFile openFile = null;
-			if (p != null) {
-				IEditorPart e = p.getActiveEditor();
-				if (e != null) {
-					IEditorInput i = e.getEditorInput();
-					if (i instanceof IFileEditorInput) {
-						openFile = ((IFileEditorInput) i).getFile();
-						if (openFile.getName().endsWith("ttcn3")
-								|| openFile.getName().endsWith("ttcn")) {
-							AstWalkerJava.selectedProject = openFile.getProject();
-						}
-						logger.severe(openFile.getLocation().toOSString()
-								+ "\n");
-					}
-				}
-			}
+		logToConsole("Files generated into: " + props.getProperty("javafile.path"));
 
-			IWorkbench workbench = PlatformUI.getWorkbench();
-			IWorkbenchWindow window = workbench == null ? null : workbench
-					.getActiveWorkbenchWindow();
-			IWorkbenchPage activePage = window == null ? null : window
-					.getActivePage();
-			IEditorPart editor = activePage == null ? null : activePage
-					.getActiveEditor();
-			IEditorInput input = editor == null ? null : editor
-					.getEditorInput();
-			IPath path = input instanceof FileEditorInput ? ((FileEditorInput) input)
-					.getPath() : null;
+		// write additional classes
+		Additional_Class_Writer additional_class = new Additional_Class_Writer();
+		myASTVisitor.currentFileName = "HC";
 
-			IPath folderPath = path.removeLastSegments(1);
+		myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
+		myASTVisitor.visualizeNodeToJava(additional_class.writeHCClass());
 
-			// get files in the folder
-			File folder = new File(folderPath.toString());
-			File[] listOfFiles = folder.listFiles();
-			// Sort them in ascending order (temporary fix for linux)
-			Arrays.sort(listOfFiles);
-			String leadingPath = "";
+		myASTVisitor.currentFileName = "HCType";
+		myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
+		myASTVisitor.visualizeNodeToJava(additional_class.writeHCTypeClass());
 
-			for (int i = 0; i < path.segmentCount(); i++) {
-				if (path.segment(i).equals(selectedProject.getName())) {
-					leadingPath = path.removeLastSegments(
-							(path.segmentCount() - i - 1)).toString();
-				}
-			}
+		// clear lists
 
-			if (path != null) {
-
-				for (int i = 0; i < listOfFiles.length; i++) {
-					if (listOfFiles[i].getPath().endsWith(".ttcn")) {
-						// cut the first half of the path so IFile can get it
-						String filePath = listOfFiles[i].getPath().substring(
-								leadingPath.length());
-
-						IFile file = selectedProject.getFile(filePath);
-						files.add(file);
-					}
-				}
-
-			}
-
-			logger.severe(("Names:" + fileNames.size()));
-			for (String s : fileNames) {
-				logger.severe(s);
-			}
-			for (IFile f : files) {
-				logger.severe(f.getName() + " " + f.getLocation().toOSString());
-			}
-
-			Map<String, Module> modules = new TreeMap<String, Module>();
-			for (int i = 0; i < listOfFiles.length; i++) {
-				if (listOfFiles[i].getPath().endsWith(".ttcn")) {
-					fileNames.add(listOfFiles[i].getPath());
-				}
-			}
-			
-			//init console logger
-			IConsole myConsole = findConsole("myLogger");
-			IWorkbenchPage page = window.getActivePage();
-			String id = IConsoleConstants.ID_CONSOLE_VIEW;
-			IConsoleView view;
-			try {
-				view = (IConsoleView) page.showView(id);
-				view.display(myConsole);
-			} catch (PartInitException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// initialize common files
-			myASTVisitor.currentFileName = "Constants";
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-			myASTVisitor.visualizeNodeToJava("class Constants{\r\n}\r\n");
-
-			myASTVisitor.currentFileName = "Templates";
-
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-			myASTVisitor.visualizeNodeToJava("class Templates{\r\n}\r\n");
-
-			myASTVisitor.currentFileName = "TTCN_functions";
-
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-			myASTVisitor.visualizeNodeToJava("class TTCN_functions{\r\n}\r\n");
-
-			if (fileNames.size() > 0) {
-				for (int i = 0, num = files.size(); i < num; i++) {
-
-					// process files
-					currentTTCN3module = (TTCN3Module) doAnalysis(files.get(i),
-							null);
-					modules.put(fileNames.get(i), currentTTCN3module);
-					logger.severe(currentTTCN3module.getName()
-							+ " "
-							+ currentTTCN3module.getIdentifier()
-									.getDisplayName());
-					if (currentTTCN3module.getOutlineChildren().length > 1) {
-						for (@SuppressWarnings("unused") ImportModule mm : (List<ImportModule>) currentTTCN3module
-								.getOutlineChildren()[0]) {
-							logger.severe(currentTTCN3module.getName()
-									+ " imported "
-									+ currentTTCN3module.getIdentifier()
-											.getDisplayName());
-						}
-					}
-				}
-
-				for (int i = 0, num = files.size(); i < num; i++) {
-
-					Object[] modulestart = modules.get(fileNames.get(i))
-							.getOutlineChildren();
-					logToConsole("Version built on 2016.08.04.");
-					logToConsole("Starting to generate files into: " + props.getProperty("javafile.path"));
-					// start AST processing
-					walkChildren(modulestart);
-					logToConsole("Files generated into: "+props.getProperty("javafile.path"));
-				}
-
-			} else {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						MessageDialog.openError(
-								new Shell(Display.getDefault()),
-								"Generating test model", "No TTCN-3 files");
-					}
-				});
-				return;
-			}
-
-			// write additional classes
-			Additional_Class_Writer additional_class = new Additional_Class_Writer();
-			myASTVisitor.currentFileName = "HC";
-
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-			myASTVisitor.visualizeNodeToJava(additional_class.writeHCClass());
-
-			myASTVisitor.currentFileName = "HCType";
-			myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-			myASTVisitor.visualizeNodeToJava(additional_class
-					.writeHCTypeClass());
-
-			// clear lists
-
-
-
-			logger.severe("analysis complete");
-
-		} finally {
-
-		}
+		logger.severe("analysis complete");
 
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private static void getActiveProject() {
+		IWorkbenchPage p = window.getActivePage();
+		IFile openFile = null;
+		if (p != null) {
+			IEditorPart e = p.getActiveEditor();
+			if (e != null) {
+				IEditorInput i = e.getEditorInput();
+				if (i instanceof IFileEditorInput) {
+					openFile = ((IFileEditorInput) i).getFile();
+					if (openFile.getName().endsWith("ttcn3") || openFile.getName().endsWith("ttcn")) {
+						AstWalkerJava.selectedProject = openFile.getProject();
+					}
+					logger.severe(openFile.getLocation().toOSString() + "\n");
+				}
+			}
+		}
+
+	}
+
+	public static void initOutputFolder() {
+		Path outputPath = Paths.get(props.getProperty("javafile.path"));
+		if (Files.exists(outputPath)) {
+			System.out.println("");
+			File folder = new File(outputPath.toUri());
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].getPath().toString().endsWith("java")) {
+				} else {
+					listOfFiles[i] = null;
+				}
+			}
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i] != null) {
+					listOfFiles[i].delete();
+				}
+			}
+
+		} else {
+			(new File(props.getProperty("javafile.path"))).mkdirs();
+
+		}
 	}
 
 	public void dispose() {
@@ -333,8 +219,7 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 		files = new ArrayList<IFile>();
 		AstWalkerJava.window = window;
 		try {
-			FileOutputStream fos = new FileOutputStream(
-					props.getProperty("log.path"));
+			FileOutputStream fos = new FileOutputStream(props.getProperty("log.path"));
 			fos.write("open file".getBytes());
 			IWorkbenchPage p = window.getActivePage();
 			if (p != null) {
@@ -342,8 +227,7 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 				if (e != null) {
 					IEditorInput i = e.getEditorInput();
 					if (i instanceof IFileEditorInput) {
-						fos.write(((IFileEditorInput) i).getFile()
-								.getLocation().toOSString().getBytes());
+						fos.write(((IFileEditorInput) i).getFile().getLocation().toOSString().getBytes());
 					}
 				}
 			}
@@ -352,8 +236,7 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 				for (IEditorReference editor : page.getEditorReferences()) {
 					IEditorInput input = editor.getEditorInput();
 					if (input instanceof IFileEditorInput) {
-						fos.write(((IFileEditorInput) input).getFile()
-								.getLocation().toOSString().getBytes());
+						fos.write(((IFileEditorInput) input).getFile().getLocation().toOSString().getBytes());
 					}
 				}
 			}
@@ -370,8 +253,7 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 		TTCN3Analyzer ttcn3Analyzer = new TTCN3Analyzer();
 
 		if (file != null) {
-			logger.severe("Calling TTCN3 parser with " + file.getName()
-					+ " and " + null + "\n");
+			logger.severe("Calling TTCN3 parser with " + file.getName() + " and " + null + "\n");
 			ttcn3Analyzer.parse(file, null);
 		} else if (code != null) {
 			logger.severe("Calling TTCN3 parser with null and " + code + "\n");
@@ -385,23 +267,24 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 
 	}
 
-	public void walkChildren(Object[] uncastedChildren) {
+	private void walkChildren(ASTVisitor visitor, Object[] children) {
+		LoggerVisitor logger = new LoggerVisitor();
+		for (Object child : children) {
+			if (child instanceof Definitions) {
 
-		for (int i = 0; i < uncastedChildren.length; i++) {
+				Definitions definitions = (Definitions) child;
 
-			if (uncastedChildren[i] instanceof Definitions) {
+				moduleElementName = definitions.getFullName();
 
-				Definitions castedChildren = (Definitions) uncastedChildren[i];
-
-				moduleElementName = castedChildren.getFullName().toString();
-
-				logToConsole("Starting processing:  " + moduleElementName );
-				myASTVisitor v = new myASTVisitor();
+				logToConsole("Starting processing:  " + moduleElementName);
 				myASTVisitor.myFunctionTestCaseVisitHandler.clearEverything();
-				//myASTVisitor.templateIdValuePairs.clear();
-				
-				castedChildren.accept(v);
-				logToConsole("Finished processing:  " + moduleElementName );
+				// myASTVisitor.templateIdValuePairs.clear();
+
+				if (Boolean.parseBoolean(props.getProperty("ast.log.enabled"))) {
+					definitions.accept(logger);
+				}
+				definitions.accept(visitor);
+				logToConsole("Finished processing:  " + moduleElementName);
 			}
 		}
 	}

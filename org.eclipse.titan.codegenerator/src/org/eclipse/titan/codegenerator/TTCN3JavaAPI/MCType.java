@@ -96,6 +96,9 @@ public class MCType {
 					if(message.equals("connected")){
 						sendtocomponenthc("mtc", "connected");
 					}
+					if(message.equals("disconnected")){ //NEW
+						sendtocomponenthc("mtc", "disconnected");
+					}
 					if(message.equals("mapped")){
 						sendtocomponenthc("mtc", "mapped");
 					}
@@ -116,6 +119,14 @@ public class MCType {
 						String port2 = message.split(" ")[4];
 						if(debugmode)TTCN3Logger.writeLog("mc", "EXECUTOR", "Preparing test component port " + comp1 + ":" + port1 + " for connection as RESPONDER", false);
 						sendtocomponenthc(comp1, "prepareforconnection " + comp1 + " " + port1 + " " + comp2 + " " + port2);
+					}
+					if(command.equals("disconnect")){ //NEW
+						String comp1 = message.split(" ")[1];
+						String port1 = message.split(" ")[2];
+						String comp2 = message.split(" ")[3];
+						String port2 = message.split(" ")[4];
+						if(debugmode)TTCN3Logger.writeLog("mc", "EXECUTOR", "D test component port " + comp1 + ":" + port1 + " from " + comp2 + ":" + port2, false);
+						sendtocomponenthc(comp1, "disconnect " + comp1 + " " + port1 + " " + comp2 + " " + port2);
 					}
 					if(command.equals("map")){
 						String comp1 = message.split(" ")[1];

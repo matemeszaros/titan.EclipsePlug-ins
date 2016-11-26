@@ -24,9 +24,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Type;
 
 //only supports inout messages
 public class Def_Type_Port_Writer {
-
-	private Def_Type typeNode;
-	private StringBuilder portString = new StringBuilder("");
+	private SourceCode code = new SourceCode();
 
 	public List<String> inMessageName = new ArrayList<String>();
 	public List<String> outMessageName = new ArrayList<String>();
@@ -40,8 +38,7 @@ public class Def_Type_Port_Writer {
 
 	private Def_Type_Port_Writer(Def_Type typeNode) {
 		super();
-		this.typeNode = typeNode;
-		nodeName = this.typeNode.getIdentifier().toString();
+		nodeName = typeNode.getIdentifier().toString();
 
 	}
 
@@ -59,297 +56,183 @@ public class Def_Type_Port_Writer {
 	}
 
 	private void writeExternalPorts() {
-		portString.append("private TP_" + nodeName + " testport = new TP_"
-				+ nodeName + "(this); " + "\r\n");
-
+		code.indent(1).line("private TP_", nodeName, " testport = new TP_", nodeName, "(this);");
 	}
 
 	private void writeReceive() {
-		for (int i = 0; i < inMessageName.size(); i++) {
-			portString.append("public " + inMessageName.get(i) + " receive("
-					+ inMessageName.get(i) + " s, boolean take){ " + "\r\n");
-
-			portString.append("while(!mapped){" + "\r\n");
-			portString
-					.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-							+ "\r\n");
-			portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-					+ "\r\n");
-			portString.append("}\r\n");
-
-			portString.append("if(inBuffer.isEmpty()) return null;" + "\r\n");
-
-			if (isPortTypeAReferencedType) {
-				portString.append("if(!(inBuffer.get(0) instanceof "
-						+ inMessageName.get(i) + ")) return null;" + "\r\n");
-			}
-
-			portString.append("boolean matches = " + inMessageName.get(i)
-					+ ".match(s,inBuffer.get(0));" + "\r\n");
-
-			portString.append("	if(matches){" + "\r\n");
-			portString.append("		" + inMessageName.get(i) + " retv=("
-					+ inMessageName.get(i) + ")inBuffer.get(0);" + "\r\n");
-			portString.append("		if(take)inBuffer.remove(0);" + "\r\n");
-			portString.append("		return retv;" + "\r\n");
-			portString.append("	}" + "\r\n");
-			portString.append("	return null;" + "\r\n");
-			portString.append("}" + "\r\n");
+		for (String type : inMessageName) {
+			code.newLine();
+			receiveMatching(type);
 		}
-		for (int i = 0; i < outMessageName.size(); i++) {
-			portString.append("public " + outMessageName.get(i) + " receive("
-					+ outMessageName.get(i) + " s, boolean take){ " + "\r\n");
-
-			portString.append("while(!mapped){" + "\r\n");
-			portString
-					.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-							+ "\r\n");
-			portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-					+ "\r\n");
-			portString.append("}\r\n");
-			portString.append("if(inBuffer.isEmpty()) return null;" + "\r\n");
-
-			if (isPortTypeAReferencedType) {
-				portString.append("if(!(inBuffer.get(0) instanceof "
-						+ outMessageName.get(i) + ")) return null;" + "\r\n");
-			}
-
-			portString.append("boolean matches = " + outMessageName.get(i)
-					+ ".match(s,inBuffer.get(0));" + "\r\n");
-
-			portString.append("	if(matches){" + "\r\n");
-			portString.append("		" + outMessageName.get(i) + " retv=("
-					+ outMessageName.get(i) + ")inBuffer.get(0);" + "\r\n");
-			portString.append("		if(take)inBuffer.remove(0);" + "\r\n");
-			portString.append("		return retv;" + "\r\n");
-			portString.append("	}" + "\r\n");
-			portString.append("	return null;" + "\r\n");
-			portString.append("}" + "\r\n");
+		for (String type : outMessageName) {
+			code.newLine();
+			receiveMatching(type);
 		}
-		for (int i = 0; i < inOutMessageName.size(); i++) {
-			portString.append("public " + inOutMessageName.get(i) + " receive("
-					+ inOutMessageName.get(i) + " s, boolean take){ " + "\r\n");
-
-			portString.append("while(!mapped){" + "\r\n");
-			portString
-					.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-							+ "\r\n");
-			portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-					+ "\r\n");
-			portString.append("}\r\n");
-			portString.append("if(inBuffer.isEmpty()) return null;" + "\r\n");
-
-			if (isPortTypeAReferencedType) {
-				portString.append("if(!(inBuffer.get(0) instanceof "
-						+ inOutMessageName.get(i) + ")) return null;" + "\r\n");
-			}
-
-			portString.append("boolean matches = " + inOutMessageName.get(i)
-					+ ".match(s,inBuffer.get(0));" + "\r\n");
-
-			portString.append("	if(matches){" + "\r\n");
-			portString.append("		" + inOutMessageName.get(i) + " retv=("
-					+ inOutMessageName.get(i) + ")inBuffer.get(0);" + "\r\n");
-			portString.append("		if(take)inBuffer.remove(0);" + "\r\n");
-			portString.append("		return retv;" + "\r\n");
-			portString.append("	}" + "\r\n");
-			portString.append("	return null;" + "\r\n");
-			portString.append("}" + "\r\n");
+		for (String type : inOutMessageName) {
+			code.newLine();
+			receiveMatching(type);
 		}
+	}
+
+	private void receiveMatching(String type) {
+		code.indent(1).line("public ", type, " receive(", type, " s, boolean take) {");
+		code.indent(2).line("while (!mapped) {");
+		code.indent(3).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);");
+		code.indent(3).line("try { Thread.sleep(1000); } catch (Exception e) {}");
+		code.indent(2).line("}");
+		code.indent(2).line("if (inBuffer.isEmpty()) return null;");
+		if (isPortTypeAReferencedType) {
+			code.indent(2).line("if (!(inBuffer.get(0) instanceof ", type, ")) return null;");
+		}
+		code.indent(2).line("boolean matches = ", type, ".match(s, inBuffer.get(0));");
+		code.indent(2).line("if (matches) {");
+		code.indent(3).line(type, " msg = (", type, ") inBuffer.get(0);");
+		code.indent(3).line("if (take) {");
+		code.indent(4).line("TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Received \" + msg, false);");
+		code.indent(4).line("inBuffer.remove(0);");
+		code.indent(3).line("}");
+		code.indent(3).line("return msg;");
+		code.indent(2).line("}");
+		code.indent(2).line("return null;");
+		code.indent(1).line("}");
 	}
 
 	private void writeTypedReceive() {
-		for (int i = 0; i < inMessageName.size(); i++) {
-			portString.append("public " + inMessageName.get(i) + " receive_"
-					+ inMessageName.get(i) + "(boolean take){" + "\r\n");
-			portString.append("while(!mapped){" + "\r\n");
-			portString
-					.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-							+ "\r\n");
-			portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-					+ "\r\n");
-			portString.append("}\r\n");
-			portString.append("if(inBuffer.isEmpty()) return null;" + "\r\n");
-			portString.append("	if(inBuffer.get(0) instanceof "
-					+ inMessageName.get(i) + "){" + "\r\n");
-			portString.append("		" + inMessageName.get(i) + " retv=("
-					+ inMessageName.get(i) + ")inBuffer.get(0);" + "\r\n");
-			portString.append("		if(take)inBuffer.remove(0);" + "\r\n");
-			portString.append("		return retv;" + "\r\n");
-			portString.append("	}" + "\r\n");
-			portString.append("	return null;" + "\r\n");
-			portString.append("}" + "\r\n");
+		for (String type : inMessageName) {
+			code.newLine();
+			receiveType(type);
 		}
-		for (int i = 0; i < outMessageName.size(); i++) {
-			portString.append("public " + outMessageName.get(i) + " receive_"
-					+ outMessageName.get(i) + "(boolean take){" + "\r\n");
-			portString.append("while(!mapped){" + "\r\n");
-			portString
-					.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-							+ "\r\n");
-			portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-					+ "\r\n");
-			portString.append("}\r\n");
-			portString.append("if(inBuffer.isEmpty()) return null;" + "\r\n");
-			portString.append("	if(inBuffer.get(0) instanceof "
-					+ outMessageName.get(i) + "){" + "\r\n");
-			portString.append("		" + outMessageName.get(i) + " retv=("
-					+ outMessageName.get(i) + ")inBuffer.get(0);" + "\r\n");
-			portString.append("		if(take)inBuffer.remove(0);" + "\r\n");
-			portString.append("		return retv;" + "\r\n");
-			portString.append("	}" + "\r\n");
-			portString.append("	return null;" + "\r\n");
-			portString.append("}" + "\r\n");
+		for (String type : outMessageName) {
+			code.newLine();
+			receiveType(type);
 		}
-		for (int i = 0; i < inOutMessageName.size(); i++) {
-			portString.append("public " + inOutMessageName.get(i) + " receive_"
-					+ inOutMessageName.get(i) + "(boolean take){" + "\r\n");
-			portString.append("while(!mapped){" + "\r\n");
-			portString
-					.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-							+ "\r\n");
-			portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-					+ "\r\n");
-			portString.append("}\r\n");
-			portString.append("if(inBuffer.isEmpty()) return null;" + "\r\n");
-			portString.append("	if(inBuffer.get(0) instanceof "
-					+ inOutMessageName.get(i) + "){" + "\r\n");
-			portString.append("		" + inOutMessageName.get(i) + " retv=("
-					+ inOutMessageName.get(i) + ")inBuffer.get(0);" + "\r\n");
-			portString.append("		if(take)inBuffer.remove(0);" + "\r\n");
-			portString.append("		return retv;" + "\r\n");
-			portString.append("	}" + "\r\n");
-			portString.append("	return null;" + "\r\n");
-			portString.append("}" + "\r\n");
+		for (String type : inOutMessageName) {
+			code.newLine();
+			receiveType(type);
 		}
+	}
+
+	private void receiveType(String type) {
+		code.indent(1).line("public ", type, " receive_", type, "(boolean take) {");
+		code.indent(2).line("while (!mapped) {");
+		code.indent(3).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);");
+		code.indent(3).line("try { Thread.sleep(1000); } catch (Exception e) {}");
+		code.indent(2).line("}");
+		code.indent(2).line("if (inBuffer.isEmpty()) return null;");
+		code.indent(2).line("if (inBuffer.get(0) instanceof ", type, ") {");
+		code.indent(3).line(type, " msg = (", type, ") inBuffer.get(0);");
+		code.indent(3).line("if (take) {");
+		code.indent(4).line("TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Received \" + msg, false);");
+		code.indent(4).line("inBuffer.remove(0);");
+		code.indent(3).line("}");
+		code.indent(3).line("return msg;");
+		code.indent(2).line("}");
+		code.indent(2).line("return null;");
+		code.indent(1).line("}");
 	}
 
 	private void writeObjectReceive() {
-		portString.append("public Object receive(boolean take){" + "\r\n");
-		portString.append("while(!mapped){" + "\r\n");
-		portString
-				.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-						+ "\r\n");
-		portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-				+ "\r\n");
-		portString.append("}\r\n");
-		portString.append("	if(!inBuffer.isEmpty()){" + "\r\n");
-		portString.append("		Object retv = inBuffer.get(0);" + "\r\n");
-		portString.append("		if(take)inBuffer.remove(0);" + "\r\n");
-		portString.append("		return retv;" + "\r\n");
-		portString.append("	}" + "\r\n");
-		portString.append("	return null;" + "\r\n");
-		portString.append("}" + "\r\n");
-
+		code.newLine();
+		code.indent(1).line("public Object receive(boolean take){");
+		code.indent(2).line("while (!mapped) {");
+		code.indent(3).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);");
+		code.indent(3).line("try { Thread.sleep(1000); } catch (Exception e) {}");
+		code.indent(2).line("}");
+		code.indent(2).line("if (!inBuffer.isEmpty()) {");
+		code.indent(3).line("Object msg = inBuffer.get(0);");
+		code.indent(3).line("if (take) {");
+		code.indent(4).line("TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Received \" + msg, false);");
+		code.indent(4).line("inBuffer.remove(0);");
+		code.indent(3).line("}");
+		code.indent(3).line("return msg;");
+		code.indent(2).line("}");
+		code.indent(2).line("return null;");
+		code.indent(1).line("}");
 	}
 
 	private void send() {
-		portString.append("public void send(" + "Object" + " o){" + "\r\n");
-		portString.append("while(!mapped){" + "\r\n");
-		portString
-				.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);"
-						+ "\r\n");
-		portString.append("try{Thread.sleep(1000);}catch(Exception e){}"
-				+ "\r\n");
-		portString.append("}\r\n");
-		portString.append("try{ " + "\r\n");
+		code.newLine();
+		code.indent(1).line("public void send(Object o) {");
+		code.indent(2).line("while (!mapped) {");
+		code.indent(3).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Port not mapped, retrying RECEIVE operation\", false);");
+		code.indent(3).line("try { Thread.sleep(1000); } catch (Exception e) {}");
+		code.indent(2).line("}");
+		code.indent(2).line("try {");
 		if (!isPortInternal) {
-			portString.append("testport.user_send(o);" + "\r\n");
+			code.indent(3).line("testport.user_send(o);");
 		} else {
-			portString.append("owriter.writeObject(o);" + "\r\n");
+			code.indent(3).line("owriter.writeObject(o);");
 		}
-		portString.append("}catch(Exception e){e.printStackTrace();}" + "\r\n");
-
-		portString.append("}" + "\r\n");
+		code.indent(2).line("} catch (Exception e) { e.printStackTrace(); }");
+		code.indent(1).line("}");
 	}
 
 	private void writeConstructor() {
-		portString.append("public " + nodeName
-				+ "(ComponentDef c, String name){\r\n");
-		portString.append("		super(c,name);" + "\r\n");
-		portString.append("		inBuffer = new ArrayList<Object>();" + "\r\n");
-		for (int counter = 0; counter < inMessageName.size(); counter++) {
-			portString.append("		inMessages.add(\""
-					+ inMessageName.get(counter) + "\");" + "\r\n");
-
+		code.newLine();
+		code.indent(1).line("public ", nodeName, "(ComponentDef c, String name) {");
+		code.indent(2).line("super(c, name);");
+		code.indent(2).line("inBuffer = new ArrayList<Object>();");
+		for (String i : inMessageName) {
+			code.indent(2).line("inMessages.add(\"" + i + "\");");
 		}
-		for (int counter = 0; counter < outMessageName.size(); counter++) {
-			portString.append("		outMessages.add(\""
-					+ outMessageName.get(counter) + "\");" + "\r\n");
+		for (String o : outMessageName) {
+			code.indent(2).line("outMessages.add(\"" + o + "\");");
 		}
-		for (int counter = 0; counter < inOutMessageName.size(); counter++) {
-			portString.append("		inMessages.add(\""
-					+ inOutMessageName.get(counter) + "\");" + "\r\n");
-			portString.append("		outMessages.add(\""
-					+ inOutMessageName.get(counter) + "\");" + "\r\n");
+		for (String io : inOutMessageName) {
+			code.indent(2).line("inMessages.add(\"" + io + "\");");
+			code.indent(2).line("outMessages.add(\"" + io + "\");");
 		}
-
-		portString.append("		created=true;" + "\r\n");
-		portString.append("}\r\n");
+		code.indent(2).line("created=true;");
+		code.indent(1).line("}");
 	}
 
 	private void writePrepareforconnection() {
-
-		portString.append("ObjectOutputStream owriter;" + "\r\n");
-
-		portString
-				.append("public void prepareforconnection(int thisportnum) { "
-						+ "\r\n");
-
-		portString
-				.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Preparing for port connection -- Creating buffer daemon\", false);"
-						+ "\r\n");
-
-		portString
-				.append("	Thread listener = new BufferDaemon(this, thisportnum, false);"
-						+ "\r\n");
-		portString.append("	component.hc.portlistenerpool.add(listener);"
-				+ "\r\n");
-
-		portString
-				.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Preparing for port connection -- Starting buffer daemon thread\", false);"
-						+ "\r\n");
-
-		portString.append("	listener.start();" + "\r\n");
-		portString.append("}" + "\r\n");
-		portString.append("" + "\r\n");
+		code.newLine();
+		code.indent(1).line("ObjectOutputStream owriter;");
+		code.indent(1).line("Thread listener;");
+		code.newLine();
+		code.indent(1).line("public void prepareforconnection (int thisportnum) {");
+		code.indent(2).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Preparing for port connection -- Creating buffer daemon\", false);");
+		code.indent(2).line("listener = new BufferDaemon(this, thisportnum, false);");
+		code.indent(2).line("component.hc.portlistenerpool.add(listener);");
+		code.indent(2).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Preparing for port connection -- Starting buffer daemon thread\", false);");
+		code.indent(2).line("listener.start();");
+		code.indent(1).line("}");
 	}
 
 	private void writeConnect() {
-		portString.append("public void connect(String ip, int remoteportnum){ "
-				+ "\r\n");
-
-		portString
-				.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Establishing port connection -- Creating buffer daemon\", false);"
-						+ "\r\n");
-
-		portString
-				.append("	Thread listener =new BufferDaemon(this, ip, remoteportnum, true);"
-						+ "\r\n");
-		portString.append("	component.hc.portlistenerpool.add(listener);"
-				+ "\r\n");
-
-		portString
-				.append("if(component.hc.debugmode)TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Establishing port connection -- Creating buffer daemon\", false);"
-						+ "\r\n");
-
-		portString.append("	listener.start();" + "\r\n");
-		portString.append("}" + "\r\n");
-
+		code.newLine();
+		code.indent(1).line("public void connect(String ip, int remoteportnum) {");
+		code.indent(2).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Establishing port connection -- Creating buffer daemon\", false);");
+		code.indent(2).line("listener = new BufferDaemon(this, ip, remoteportnum, true);");
+		code.indent(2).line("component.hc.portlistenerpool.add(listener);");
+		code.indent(2).line("if (component.hc.debugmode) TTCN3Logger.writeLog(component.compid + \":\" + this.name, \"PORTEVENT\", \"Establishing port connection -- Creating buffer daemon\", false);");
+		code.indent(2).line("listener.start();");
+		code.indent(1).line("}");
+	}
+	
+	private void writeDisconnect() {
+		code.newLine();
+		code.indent(1).line("public void disconnect(String comp2, String port2) {");
+		code.indent(1).line("try {");
+		code.indent(2).line("owriter.writeObject(null);");
+		code.indent(2).line("component.hc.portlistenerpool.remove(listener);");
+		code.indent(1).line("} catch (Exception e) { e.printStackTrace(); }");
+		code.indent(1).line("}");
 	}
 
 	private void writeMap() {
-		portString
-				.append("public void map(String remotecomp, String remoteport){"
-						+ "\r\n");
+		code.newLine();
+		code.indent(1).line("public void map(String remotecomp, String remoteport) {");
 		if (!isPortInternal) { // TODO check if needed!
-			portString.append("	testport.user_map(remotecomp, remoteport);"
-					+ "\r\n");
+			code.indent(2).line("testport.user_map(remotecomp, remoteport);");
 		}
-		portString.append("}" + "\r\n");
+		code.indent(1).line("}");
 	}
 
 	private void writeBufferDaemon() {
+		// TODO migrate this to SourceCode
+		StringBuilder portString = new StringBuilder();
 
 		portString.append("class BufferDaemon extends Thread{ " + "\r\n");
 		portString.append("	private " + nodeName + " port;" + "\r\n");
@@ -430,6 +313,8 @@ public class Def_Type_Port_Writer {
 		portString.append("	}" + "\r\n");
 		portString.append("}" + "\r\n");
 
+		code.newLine();
+		code.append(portString);
 	}
 
 	public void clearLists() {
@@ -442,19 +327,15 @@ public class Def_Type_Port_Writer {
 	}
 
 	public String getJavaSource() {
-
+		code.clear();
 		AstWalkerJava.logToConsole("	Starting processing:  Port " + nodeName);
+		code.line("public class ", nodeName, " extends MessagePortDef {");
 
-		portString.append("class " + typeNode.getIdentifier().toString()
-				+ " extends MessagePortDef{" + "\r\n");
-
-		isPortInternal = myASTVisitor.portNamePortTypeHashMap.get(nodeName)
-				.equals("TP_INTERNAL");
+		isPortInternal = myASTVisitor.portNamePortTypeHashMap.get(nodeName).equals("TP_INTERNAL");
 		if (!isPortInternal) {
 			this.writeExternalPorts();
 			Additional_Class_Writer.writeExternalPortClass(nodeName);
 		}
-
 		this.writeReceive();
 		this.writeTypedReceive();
 		this.writeObjectReceive();
@@ -462,15 +343,12 @@ public class Def_Type_Port_Writer {
 		this.writeConstructor();
 		this.writePrepareforconnection();
 		this.writeConnect();
+		this.writeDisconnect();
 		this.writeMap();
 		this.writeBufferDaemon();
-		portString.append("\r\n}");
-		String returnString = portString.toString();
-		portString.setLength(0);
-
+		code.line("}");
 		AstWalkerJava.logToConsole("	Finished processing:  Port " + nodeName);
-
-		return returnString;
+		return code.toString();
 	}
 
 }

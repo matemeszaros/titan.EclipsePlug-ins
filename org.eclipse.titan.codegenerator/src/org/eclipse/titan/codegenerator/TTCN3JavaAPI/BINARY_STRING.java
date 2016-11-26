@@ -57,12 +57,13 @@ public class BINARY_STRING extends STRING{
         return o1 ^ o2;
     }
 
-    //converts the input from INTEGER to int!!!
+   
     public BINARY_STRING shiftLeft(INTEGER by){
         byte[] copy = new byte[value.length];
         for(int i=0;i<copy.length;i++){
             copy[i]=0;
         }
+        //converts the input from INTEGER to int!!!
         int byValue = by.value.intValue();
         if(byValue >= value.length){
             return new BINARY_STRING(new String(copy));
@@ -71,12 +72,13 @@ public class BINARY_STRING extends STRING{
         return new BINARY_STRING(new String(copy));
     }
     
-    //converts the input from INTEGER to int!!!
+    
     public BINARY_STRING shiftRight(INTEGER by){
         byte[] copy = new byte[value.length];
         for(int i=0;i<copy.length;i++){
             copy[i]=0;
         }
+      //converts the input from INTEGER to int!!!
         int byValue = by.value.intValue();
         if(byValue >= value.length){
             return new BINARY_STRING(new String(copy));

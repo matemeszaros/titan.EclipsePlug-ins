@@ -25,6 +25,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Def_Const;
 import org.eclipse.titan.designer.AST.TTCN3.types.BitString_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Boolean_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.CharString_Type;
+import org.eclipse.titan.designer.AST.TTCN3.types.Float_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.Integer_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.OctetString_Type;
 import org.eclipse.titan.designer.AST.TTCN3.types.subtypes.Range_ParsedSubType;
@@ -34,6 +35,7 @@ import org.eclipse.titan.designer.AST.TTCN3.values.Charstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Integer_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Octetstring_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Omit_Value;
+import org.eclipse.titan.designer.AST.TTCN3.values.Real_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Undefined_LowerIdentifier_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.AddExpression;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.DivideExpression;
@@ -59,26 +61,23 @@ public class Def_Const_Visit_Handler {
 
 	private static boolean waitForConstValues = false;
 	private static boolean constValueIsAReference = false;
-
+	private static boolean blockTypeListing = false;
 	// counts the members for each setof
 	// has to be -3 because the node's name and type increases it by 2
 	// should be increased to 0 only at the first constant value
 	private static int constParamCounter = -3;
 
-
 	private static List<String> constValues = new ArrayList<String>();
 	private static List<Integer> constParamCount = new ArrayList<Integer>();
 	private static List<String> expressionValue = new ArrayList<String>();
-	
+
 	public void visit(IVisitableNode node) {
 
-		if (!myASTVisitor.myFunctionTestCaseVisitHandler.waitForDefStatement
-				&& (node instanceof Def_Const)) {
+		if (!myASTVisitor.myFunctionTestCaseVisitHandler.waitForDefStatement && (node instanceof Def_Const)) {
 			myASTVisitor.currentFileName = "Constants";
 
 			Def_Const_Writer.getInstance(((Def_Const) node));
-			myASTVisitor.nodeNameNodeTypeHashMap.put(((Def_Const) node)
-					.getIdentifier().toString(), "constant");
+			myASTVisitor.nodeNameNodeTypeHashMap.put(((Def_Const) node).getIdentifier().toString(), "constant");
 			waitForConstValues = true;
 			constParamCount.add(0);
 		}
@@ -98,8 +97,8 @@ public class Def_Const_Visit_Handler {
 		}
 
 		if (waitForConstValues && (node instanceof Charstring_Value)) {
-			String value=((Charstring_Value) node).getValue();
-			
+			String value = ((Charstring_Value) node).getValue();
+
 			expressionValue.add(value);
 
 			constValueIsAReference = false;
@@ -111,20 +110,19 @@ public class Def_Const_Visit_Handler {
 				constParamCounter = 0;
 			}
 
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
 		}
 
 		if (waitForConstValues && (node instanceof Integer_Value)) {
-			
-			String value=((Integer_Value) node).toString();
-						
+
+			String value = ((Integer_Value) node).toString();
+
 			if (myASTVisitor.isNextIntegerNegative) {
-				value="-" + value;
+				value = "-" + value;
 			}
-			
+
 			expressionValue.add(value);
-			
+
 			constValueIsAReference = false;
 
 			if (constParamCounter == -1) {
@@ -134,15 +132,39 @@ public class Def_Const_Visit_Handler {
 				constParamCounter = 0;
 			}
 
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
+			myASTVisitor.isNextIntegerNegative = false;
+
+		}
+
+		if (waitForConstValues && (node instanceof Real_Value)) {
+
+			double value = ((Real_Value) node).getValue();
+			String valueString = Double.toString(value);
+			
+			if (myASTVisitor.isNextIntegerNegative) {
+				valueString="-" + valueString;
+			}
+
+			 expressionValue.add(valueString);
+
+			constValueIsAReference = false;
+
+			if (constParamCounter == -1) {
+				constParamCounter = 0;
+			}
+			if (constParamCounter == -2) {
+				constParamCounter = 0;
+			}
+
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
 			myASTVisitor.isNextIntegerNegative = false;
 
 		}
 
 		if (waitForConstValues && (node instanceof Bitstring_Value)) {
-			
-			String value=((Bitstring_Value) node).getValue();
+
+			String value = ((Bitstring_Value) node).getValue();
 
 			expressionValue.add(value);
 
@@ -155,18 +177,16 @@ public class Def_Const_Visit_Handler {
 				constParamCounter = 0;
 			}
 
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
 
 		}
 
 		if (waitForConstValues && (node instanceof Octetstring_Value)) {
-			
-			
-			String value=((Octetstring_Value) node).getValue();
+
+			String value = ((Octetstring_Value) node).getValue();
 
 			expressionValue.add(value);
-			
+
 			constValueIsAReference = false;
 
 			if (constParamCounter == -1) {
@@ -176,16 +196,15 @@ public class Def_Const_Visit_Handler {
 				constParamCounter = 0;
 			}
 
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
 
 		}
 
 		if (waitForConstValues && (node instanceof Boolean_Value)) {
-			
-			String value=Boolean.toString(((Boolean_Value) node).getValue());
 
-			expressionValue.add(value);			
+			String value = Boolean.toString(((Boolean_Value) node).getValue());
+
+			expressionValue.add(value);
 
 			constValueIsAReference = false;
 
@@ -196,14 +215,13 @@ public class Def_Const_Visit_Handler {
 				constParamCounter = 0;
 			}
 
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
 
 		}
 
 		if (waitForConstValues && (node instanceof Omit_Value)) {
 
-			expressionValue.add("omit");			
+			expressionValue.add("omit");
 
 			constValueIsAReference = false;
 
@@ -211,18 +229,17 @@ public class Def_Const_Visit_Handler {
 				constParamCounter = 0;
 			}
 
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
 
 			myASTVisitor.constOmitHashes.add(lastConstName);
 
 		}
-		
-		if (waitForConstValues && (node instanceof Undefined_LowerIdentifier_Value)) {
-			
-			String value=((Undefined_LowerIdentifier_Value) node).getIdentifier().toString();
 
-			expressionValue.add(value);		
+		if (waitForConstValues && (node instanceof Undefined_LowerIdentifier_Value)) {
+
+			String value = ((Undefined_LowerIdentifier_Value) node).getIdentifier().toString();
+
+			expressionValue.add(value);
 
 			constValueIsAReference = true;
 
@@ -233,85 +250,74 @@ public class Def_Const_Visit_Handler {
 				constParamCounter = 0;
 			}
 
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
+			constParamCount.set(constParamCounter, constParamCount.get(constParamCounter) + 1);
 
 		}
 
-		if(waitForConstValues){
-		setType(node);
-		visitExpressionTypeSelectors(node);
+		if (waitForConstValues) {
+			setType(node);
+			visitExpressionTypeSelectors(node);
 		}
 		/*
-		// AddExpression
-		if (waitForConstValues && (node instanceof AddExpression)) {
-			waitForConstAddFirstValue = true;
-		}
-
-		if (waitForConstAddSecondValue
-				&& (node instanceof Undefined_LowerIdentifier_Value)) {
-
-			String valueIdentifier = ((Undefined_LowerIdentifier_Value) node)
-					.getIdentifier().toString();
-			if (myASTVisitor.nodeNameNodeTypeHashMap
-					.containsKey(valueIdentifier)) {
-				if (myASTVisitor.nodeNameNodeTypeHashMap.get(valueIdentifier)
-						.equals("constant")) {
-					valueIdentifier = valueIdentifier + "()";
-				}
-			}
-
-			constValueIsAReference = true;
-
-			constValues.set(constAddValueIndex,
-					constValues.get(constAddValueIndex) + ".plus("
-							+ valueIdentifier + ")");
-
-			waitForConstAddSecondValue = false;
-			waitForConstValues = false;
-		}
-
-		if (waitForConstAddFirstValue
-				&& (node instanceof Undefined_LowerIdentifier_Value)) {
-			waitForConstAddFirstValue = false;
-			waitForConstAddSecondValue = true;
-
-			String valueIdentifier = ((Undefined_LowerIdentifier_Value) node)
-					.getIdentifier().toString();
-			if (myASTVisitor.nodeNameNodeTypeHashMap
-					.containsKey(valueIdentifier)) {
-				if (myASTVisitor.nodeNameNodeTypeHashMap.get(valueIdentifier)
-						.equals("constant")) {
-					valueIdentifier = valueIdentifier + "()";
-				}
-
-			}
-
-			constAddValueIndex = constValues.size();
-			constValues.add(valueIdentifier);
-
-			if (constParamCounter == -1) {
-				constParamCounter = 0;
-			}
-			if (constParamCounter == -2) {
-				constParamCounter = 0;
-			}
-
-			constParamCount.set(constParamCounter,
-					constParamCount.get(constParamCounter) + 1);
-
-		}*/
+		 * // AddExpression if (waitForConstValues && (node instanceof
+		 * AddExpression)) { waitForConstAddFirstValue = true; }
+		 * 
+		 * if (waitForConstAddSecondValue && (node instanceof
+		 * Undefined_LowerIdentifier_Value)) {
+		 * 
+		 * String valueIdentifier = ((Undefined_LowerIdentifier_Value) node)
+		 * .getIdentifier().toString(); if (myASTVisitor.nodeNameNodeTypeHashMap
+		 * .containsKey(valueIdentifier)) { if
+		 * (myASTVisitor.nodeNameNodeTypeHashMap.get(valueIdentifier)
+		 * .equals("constant")) { valueIdentifier = valueIdentifier + "()"; } }
+		 * 
+		 * constValueIsAReference = true;
+		 * 
+		 * constValues.set(constAddValueIndex,
+		 * constValues.get(constAddValueIndex) + ".plus(" + valueIdentifier +
+		 * ")");
+		 * 
+		 * waitForConstAddSecondValue = false; waitForConstValues = false; }
+		 * 
+		 * if (waitForConstAddFirstValue && (node instanceof
+		 * Undefined_LowerIdentifier_Value)) { waitForConstAddFirstValue =
+		 * false; waitForConstAddSecondValue = true;
+		 * 
+		 * String valueIdentifier = ((Undefined_LowerIdentifier_Value) node)
+		 * .getIdentifier().toString(); if (myASTVisitor.nodeNameNodeTypeHashMap
+		 * .containsKey(valueIdentifier)) { if
+		 * (myASTVisitor.nodeNameNodeTypeHashMap.get(valueIdentifier)
+		 * .equals("constant")) { valueIdentifier = valueIdentifier + "()"; }
+		 * 
+		 * }
+		 * 
+		 * constAddValueIndex = constValues.size();
+		 * constValues.add(valueIdentifier);
+		 * 
+		 * if (constParamCounter == -1) { constParamCounter = 0; } if
+		 * (constParamCounter == -2) { constParamCounter = 0; }
+		 * 
+		 * constParamCount.set(constParamCounter,
+		 * constParamCount.get(constParamCounter) + 1);
+		 * 
+		 * }
+		 */
 
 	}
 
-	public void setType(IVisitableNode node){
+	public void setType(IVisitableNode node) {
 
-		if (node instanceof Reference) {
+		if ((node instanceof Reference) && !blockTypeListing) {
 			constNodeType = ((Reference) node).getId().toString();
+			blockTypeListing = true;
 		}
 
 		if (node instanceof Integer_Type) {
 			constNodeType = "INTEGER";
+		}
+		
+		if (node instanceof Float_Type) {
+			constNodeType = "FLOAT";
 		}
 
 		if (node instanceof CharString_Type) {
@@ -403,7 +409,7 @@ public class Def_Const_Visit_Handler {
 				expressionValue.set(i, "(" + leftHand + ").isGreaterOrEqualThan(" + rightHand + ")");
 				operatorFound = true;
 			} else if (expressionValue.get(i).equals("EqualsExpression")) {
-				expressionValue.set(i, "(" + leftHand + ").equals(" + rightHand + ")");
+				expressionValue.set(i, "(" + leftHand + ").equalsWith(" + rightHand + ")");
 				operatorFound = true;
 			} else if (expressionValue.get(i).equals("Range_ParsedSubType")) {
 				expressionValue.set(i, "new SubTypeInterval<INTEGER>(" + expressionValue.get(i + 1) + ","
@@ -430,7 +436,6 @@ public class Def_Const_Visit_Handler {
 
 		expressionValue.clear();
 	}
-
 
 	public void visitExpressionTypeSelectors(IVisitableNode node) {
 
@@ -503,10 +508,9 @@ public class Def_Const_Visit_Handler {
 		}
 
 	}
-	
+
 	public void leave(IVisitableNode node) {
-		if (!myASTVisitor.myFunctionTestCaseVisitHandler.waitForDefStatement
-				&& (node instanceof Def_Const)) {
+		if (!myASTVisitor.myFunctionTestCaseVisitHandler.waitForDefStatement && (node instanceof Def_Const)) {
 			evaluateExpression();
 			handleConst(node);
 
@@ -514,10 +518,9 @@ public class Def_Const_Visit_Handler {
 	}
 
 	public void handleConst(IVisitableNode node) {
-		Def_Const_Writer constNode = Def_Const_Writer
-				.getInstance(((Def_Const) node));
+		Def_Const_Writer constNode = Def_Const_Writer.getInstance(((Def_Const) node));
 		constNode.clearLists();
-		
+
 		constNode.setConstNodeType(constNodeType);
 		constNode.constValues.addAll(constValues);
 		constNode.constParamCount.addAll(constParamCount);
@@ -528,7 +531,7 @@ public class Def_Const_Visit_Handler {
 		waitForConstValues = false;
 		constParamCounter = -3;
 		constParamCount.clear();
-
+		blockTypeListing = false;
 
 		myASTVisitor.deleteLastBracket(myASTVisitor.currentFileName);
 		myASTVisitor.visualizeNodeToJava(constNode.getJavaSource() + "\r\n}");
