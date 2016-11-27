@@ -402,7 +402,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 			allCheckedFiles.addAll(asn1FilesToCheck);
 
 			if (reportDebugInformation) {
-				TITANDebugConsole.println("  **Syntax only check to be done on  " + ttcn3FilesToCheck.size() + asn1FilesToCheck.size() + " files.",stream);
+				TITANDebugConsole.println("  **Syntax only check to be done on  " + (ttcn3FilesToCheck.size() + asn1FilesToCheck.size()) + " files.",stream);
 			}
 
 			// parsing the files
@@ -636,7 +636,7 @@ public final class ProjectSourceSyntacticAnalyzer {
 			allCheckedFiles.addAll(asn1FilesToCheck);
 
 			if (reportDebugInformation) {
-				TITANDebugConsole.println("  **Syntax check to be done on  " + ttcn3FilesToCheck.size() + asn1FilesToCheck.size() + " files.",stream);
+				TITANDebugConsole.println("  **Syntax check to be done on  " + (ttcn3FilesToCheck.size() + asn1FilesToCheck.size()) + " files.",stream);
 			}
 
 			// parsing the files
