@@ -96,10 +96,16 @@ class ChangeCreator {
 		Map<Log_Statement, Context> res = vis.getResult();
 		MultiTextEdit rootEdit = new MultiTextEdit();
 		for (Map.Entry<Log_Statement, Context> e: res.entrySet()) {
-			rootEdit.addChild(createTextEdit(e.getKey(), e.getValue()));
+			TextEdit edit = createTextEdit(e.getKey(), e.getValue());
+			if (edit != null) {
+				rootEdit.addChild(edit);
+			}
 		}
-		change = new TextFileChange("Context logging", file);
-		change.setEdit(rootEdit);
+		
+		if(rootEdit.hasChildren()) {
+			change = new TextFileChange("Context logging", file);
+			change.setEdit(rootEdit);
+		}
 	}
 	private void performOnSelectionOnly(Module module) {
 		Location selLoc = new Location(file, textSelection.getStartLine(),
@@ -109,10 +115,16 @@ class ChangeCreator {
 		Map<Log_Statement, Context> res = vis.getResult();
 		MultiTextEdit rootEdit = new MultiTextEdit();
 		for (Map.Entry<Log_Statement, Context> e: res.entrySet()) {
-			rootEdit.addChild(createTextEdit(e.getKey(), e.getValue()));
+			TextEdit edit = createTextEdit(e.getKey(), e.getValue());
+			if (edit != null) {
+				rootEdit.addChild(edit);
+			}
 		}
-		change = new TextFileChange("Context logging", file);
-		change.setEdit(rootEdit);
+		
+		if(rootEdit.hasChildren()) {
+			change = new TextFileChange("Context logging", file);
+			change.setEdit(rootEdit);
+		}
 	}
 	
 	private TextEdit createTextEdit(Log_Statement toEdit, Context toAdd) {
@@ -138,8 +150,12 @@ class ChangeCreator {
 		//create inserted text
 		toAdd.process();
 		List<String> contextInfos = toAdd.createLogParts(varsAlreadyPresent);
-		StringBuilder sb = new StringBuilder();
 		int len = Math.min(contextInfos.size(), toAdd.getVarCountLimitOption());
+		if (len == 0) {
+			return null;
+		}
+		
+		StringBuilder sb = new StringBuilder();
 		for (int i=0;i<len;i++) {
 			sb.append(contextInfos.get(i));
 		}
