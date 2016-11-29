@@ -77,7 +77,7 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
-public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
+public final class AstWalkerRunnerJava implements IWorkbenchWindowActionDelegate {
 
 	private static IWorkbenchWindow window;
 
@@ -103,12 +103,12 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 		try {
 			boolean append = true;
 			props = new Properties();
-			props.load(AstWalkerJava.class.getResourceAsStream("walker.properties"));
+			props.load(AstWalkerRunnerJava.class.getResourceAsStream("walker.properties"));
 
 			FileHandler fh = new FileHandler(props.getProperty("log.path"), append);
 
 			fh.setFormatter(new SimpleFormatter());
-			logger = Logger.getLogger(AstWalkerJava.class.getName());
+			logger = Logger.getLogger(AstWalkerRunnerJava.class.getName());
 			logger.addHandler(fh);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -116,146 +116,15 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 	}
 
 	public static void main(String args[]) {
-		new AstWalkerJava().run(null);
+		new AstWalkerRunnerJava().run(null);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 
-		/**/
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		for(IProject p:projects){
-			if(p.getName().equals("org.eclipse.titan.codegenerator.output"))
-				try{
-					p.delete(true, true, null);
-				}catch(Exception e){e.printStackTrace();}
-		}
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("org.eclipse.titan.codegenerator.output");
-		try{
-			project.create(null);
-			project.open(null);
-			IProjectDescription description = project.getDescription();
-			description.setNatureIds(new String[] { JavaCore.NATURE_ID });
-			project.setDescription(description, null);
-			IJavaProject javaProject = JavaCore.create(project);
-			IFolder binFolder = project.getFolder("bin");
-			binFolder.create(false, true, null);
-			javaProject.setOutputLocation(binFolder.getFullPath(), null);
-			List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
-			IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-			LibraryLocation[] locations = JavaRuntime.getLibraryLocations(vmInstall);
-			for (LibraryLocation element : locations) {
-			 entries.add(JavaCore.newLibraryEntry(element.getSystemLibraryPath(), null, null));
-			}
-			javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), null);
-			IFolder sourceFolder = project.getFolder("src");
-			sourceFolder.create(false, true, null);
-			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(sourceFolder);
-			IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-			IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
-			System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
-			newEntries[oldEntries.length] = JavaCore.newSourceEntry(root.getPath());
-			javaProject.setRawClasspath(newEntries, null);
-			javaProject.getPackageFragmentRoot(sourceFolder).createPackageFragment("org.eclipse.titan.codegenerator.javagen", false, null);
-			javaProject.getPackageFragmentRoot(sourceFolder).createPackageFragment("org.eclipse.titan.codegenerator.TTCN3JavaAPI", false, null);
-		}catch(Exception e){e.printStackTrace();}
-		
-		String destpath = new String("");
-		String wspath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString().replaceAll("/", "\\\\");
-		destpath += wspath;
-		destpath += "\\org.eclipse.titan.codegenerator.output\\src\\org\\eclipse\\titan\\codegenerator\\javagen\\";
-		props.setProperty("javafile.path", destpath);
-		/**/
-		
-		AstWalkerJava.files.clear();
-		AstWalkerJava.fileNames.clear();
-		AstWalkerJava.componentList.clear();
-		AstWalkerJava.testCaseList.clear();
-		AstWalkerJava.testCaseRunsOnList.clear();
-		AstWalkerJava.functionList.clear();
-		AstWalkerJava.functionRunsOnList.clear();
+		(new AstWalkerJava()).run(action);
+		(new AstRunnerJava()).run(action);
 
-		AstWalkerJava.initOutputFolder();
-		AstWalkerJava.getActiveProject();
-
-		/*
-		 * // init console logger IConsole myConsole = findConsole("myLogger");
-		 * IWorkbenchPage page = window.getActivePage(); String id =
-		 * IConsoleConstants.ID_CONSOLE_VIEW; IConsoleView view; try { view =
-		 * (IConsoleView) page.showView(id); view.display(myConsole); } catch
-		 * (PartInitException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
-
-		// initialize common files
-
-		myASTVisitor.currentFileName = "TTCN_functions";
-
-		myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-		myASTVisitor.visualizeNodeToJava("class TTCN_functions{\r\n}\r\n");
-
-		Def_Template_Visit_Handler.isTemplate = false;
-
-		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(selectedProject);
-		sourceParser.analyzeAll();
-
-		logToConsole("Version built on 2016.10.24");
-		logToConsole("Starting to generate files into: " + props.getProperty("javafile.path"));
-
-		myASTVisitor visitor = new myASTVisitor();
-		for (Module module : sourceParser.getModules()) {
-			// start AST processing
-			walkChildren(visitor, module.getOutlineChildren());
-		}
-		visitor.finish();
-
-		logToConsole("Files generated into: " + props.getProperty("javafile.path"));
-
-		// write additional classes
-		Additional_Class_Writer additional_class = new Additional_Class_Writer();
-		myASTVisitor.currentFileName = "HC";
-
-		myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-		myASTVisitor.visualizeNodeToJava(additional_class.writeHCClass());
-
-		myASTVisitor.currentFileName = "HCType";
-		myASTVisitor.visualizeNodeToJava(myASTVisitor.importListStrings);
-		myASTVisitor.visualizeNodeToJava(additional_class.writeHCTypeClass());
-
-		// clear lists
-
-		logger.severe("analysis complete");
-
-		/**/
-		File fromdir = new File(wspath + "\\org.eclipse.titan.codegenerator\\src\\org\\eclipse\\titan\\codegenerator\\TTCN3JavaAPI\\");
-		String toapidir = wspath + "\\org.eclipse.titan.codegenerator.output\\src\\org\\eclipse\\titan\\codegenerator\\TTCN3JavaAPI\\";
-		File[] fromfiles = fromdir.listFiles();
-		for(File f: fromfiles){
-			try {
-				Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(toapidir+f.getName()), StandardCopyOption.REPLACE_EXISTING);
-			}catch(Exception e){e.printStackTrace();}
-		}
-		String tppath = wspath + "\\" + selectedProject.getFullPath().toString().split("/")[1] + "\\src\\";
-		File tp_cfg_dir = new File(tppath);
-		String togendir = wspath + "\\org.eclipse.titan.codegenerator.output\\src\\org\\eclipse\\titan\\codegenerator\\javagen\\";
-		File[] from_testports_cfg = tp_cfg_dir.listFiles();
-		for(File f: from_testports_cfg){
-			if(f.getName().endsWith(".java")){
-				try{
-					Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(togendir+f.getName()), StandardCopyOption.REPLACE_EXISTING);
-				}catch(Exception e){e.printStackTrace();}
-			}
-			if(f.getName().endsWith(".cfg")){
-				try{
-					Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(toapidir+"cfg.cfg"), StandardCopyOption.REPLACE_EXISTING);
-				}catch(Exception e){e.printStackTrace();}
-			}
-		}
-		try{
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		}catch(Exception e){e.printStackTrace();}
-		/**/
-		
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -273,7 +142,7 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 				if (i instanceof IFileEditorInput) {
 					openFile = ((IFileEditorInput) i).getFile();
 					if (openFile.getName().endsWith("ttcn3") || openFile.getName().endsWith("ttcn")) {
-						AstWalkerJava.selectedProject = openFile.getProject();
+						AstWalkerRunnerJava.selectedProject = openFile.getProject();
 					}
 					logger.severe(openFile.getLocation().toOSString() + "\n");
 				}
@@ -314,7 +183,7 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 	public void init(IWorkbenchWindow window) {
 		fileNames = new ArrayList<String>();
 		files = new ArrayList<IFile>();
-		AstWalkerJava.window = window;
+		AstWalkerRunnerJava.window = window;
 		try {
 			FileOutputStream fos = new FileOutputStream(props.getProperty("log.path"));
 			fos.write("open file".getBytes());

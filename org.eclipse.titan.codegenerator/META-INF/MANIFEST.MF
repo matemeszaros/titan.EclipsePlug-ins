@@ -11,5 +11,10 @@ Require-Bundle: org.eclipse.titan.designer;bundle-version="5.4.0",
  org.eclipse.ui;bundle-version="3.106.0",
  org.eclipse.ui.ide;bundle-version="3.10.0",
  org.eclipse.ui.console;bundle-version="3.5.300",
- org.junit
+ org.junit,
+ org.eclipse.jdt;bundle-version="3.12.1",
+ org.eclipse.jdt.core;bundle-version="3.12.1",
+ org.eclipse.jdt.launching;bundle-version="3.8.100",
+ org.eclipse.debug.core;bundle-version="3.10.100",
+ org.eclipse.debug.ui;bundle-version="3.11.201"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
