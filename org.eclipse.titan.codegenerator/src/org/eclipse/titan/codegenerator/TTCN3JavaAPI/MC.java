@@ -16,6 +16,10 @@
 /* Main Controller */
 package org.eclipse.titan.codegenerator.TTCN3JavaAPI;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.net.URL;
+
 public class MC{
 
 	//these will be retrieved from the config file later.
@@ -23,13 +27,25 @@ public class MC{
 	private static String MTCIP = "127.0.0.1"; //IP of machine that has to run the MTC
 	private static int HCNUM = 1; //later from config file
 	private static boolean DEBUGMODE = false;
-	private static String TC = "tc_Controller"; //TC to be executed
+	private static String TC = ""; //TC to be executed
 	
 	private static MCType mc;
 	
 	public static void main(String[] args){
+		String tc = TC;
+		
+		try{
+			BufferedReader in = new BufferedReader(new FileReader("src\\org\\eclipse\\titan\\codegenerator\\TTCN3JavaAPI\\cfg.cfg"));
+			String line;
+			while((line = in.readLine()) != null)
+			{
+			    tc=line;
+			}
+			in.close();
+		}catch(Exception e){e.printStackTrace();}
+		
 		mc = new MCType(DEBUGMODE);
-		mc.startmc(SERVERPORTNUM, MTCIP, TC, HCNUM);
+		mc.startmc(SERVERPORTNUM, MTCIP, tc, HCNUM);
 		TTCN3Logger.writeLog("mc", "EXECUTOR", "Main Controller stopped", false);
 	}
 

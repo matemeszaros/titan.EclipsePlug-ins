@@ -17,6 +17,26 @@
               toolbarPath="Normal/additions"
               tooltip="Generate JAVA code from the TTCN sources">
         </action>
+        <action
+              class="org.eclipse.titan.codegenerator.AstWalkerRunnerJava"
+              icon="icons/generate_java_run.gif"
+              id="org.eclipse.titan.designer.action2"
+              label="GenerateJAVAfilesRun"
+              state="true"
+              style="push"
+              toolbarPath="Normal/additions"
+              tooltip="Generate JAVA code from the TTCN sources and run">
+        </action>
+        <action
+              class="org.eclipse.titan.codegenerator.AstRunnerJava"
+              icon="icons/run_java.gif"
+              id="org.eclipse.titan.designer.action3"
+              label="RunJAVAfiles"
+              state="true"
+              style="push"
+              toolbarPath="Normal/additions"
+              tooltip="Run JAVA code">
+        </action>
      </actionSet>
    </extension>
 </plugin>
