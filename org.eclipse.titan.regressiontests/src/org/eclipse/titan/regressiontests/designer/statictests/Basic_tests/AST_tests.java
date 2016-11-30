@@ -111,11 +111,7 @@ public class AST_tests {
 	private ArrayList<MarkerToCheck> ASNValues_asn_initializer() {
 		//ASNValues.asn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(3);
-		int lineNum = 16;
-		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `firstvalue' in module `ASNValues'",  lineNum, IMarker.SEVERITY_ERROR));
-		lineNum += 8;
-		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `a' in module `ASNValues'",  lineNum, IMarker.SEVERITY_ERROR)); //TODO:wrong, repair
-		lineNum += 42;
+		int lineNum = 66;
 		markersToCheck.add(new MarkerToCheck("There is no assignment or imported symbol with name `myObjectIdentifierValue1' in module `ASNValues'",  lineNum, IMarker.SEVERITY_ERROR));
 
 		return markersToCheck;
