@@ -20,6 +20,8 @@ import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignments;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
+import org.eclipse.titan.designer.AST.ASN1.ASN1Assignment;
+import org.eclipse.titan.designer.AST.ASN1.Undefined_Assignment;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.consoles.TITANDebugConsole;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
@@ -72,7 +74,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		}
 		start = System.nanoTime();
 
-		final List<Module> startModules = new ArrayList<Module>();
+		final List<Module> startModules = collectStartModules(allModules);
 		final Map<Module, List<Module>> invertedImports = buildInvertedImportStructure(allModules, startModules);
 
 		computeAnalyzeOnlyDefinitionsFlag(allModules, startModules);
@@ -119,6 +121,27 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 //		}
 		analyzeOnlyAssignments = true;
 	}
+	
+	/**
+	 * Adds modules from allModules to a list  which
+	 * - have null CompilationTimestamp or
+	 * - canbeCheckRoot or
+	 * - have not been checked semantically
+	 * 
+	 * @param allModules
+	 * @param startModules
+	 */
+	protected List<Module> collectStartModules(final List<Module> allModules) {
+		final List<Module> startModules = new ArrayList<Module>();
+		for (Module actualModule : allModules) {
+			// Collect injured modules directly into startModules, we will start the checking from these modules.
+			// Collect modules which have not been checked semantically.
+			if ((actualModule.getLastCompilationTimeStamp() == null || actualModule.isCheckRoot() || !semanticallyChecked.contains(actualModule.getName())) && !startModules.contains(actualModule) ) {
+				startModules.add(actualModule);
+			}
+		}
+		return startModules;
+	}
 
 	/**
 	 * It is build an inverted import structure and identify startmodules whose CompilationTimeStamp is null.
@@ -143,12 +166,6 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		final Map<Module, List<Module>> invertedImports = new HashMap<Module, List<Module>>();
 
 		for (Module actualModule : allModules) {
-			// Collect injured modules directly into startModules, we will start the checking from these modules.
-			// Collect modules which have not been checked semantically.
-			if ((actualModule.getLastCompilationTimeStamp() == null || actualModule.isCheckRoot() || !semanticallyChecked.contains(actualModule.getName())) && !startModules.contains(actualModule) ) {
-				startModules.add(actualModule);
-			}
-
 			// We have to add all module to get a correct inverted import structure.
 			// It covers the case when a module is a top-level module, so it has't got any import.
 			if (!invertedImports.containsKey(actualModule)) {
@@ -226,7 +243,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 			if (moduleAndBrokenAssignments.containsKey(startModule)) {
 				startAssignments = moduleAndBrokenAssignments.get(startModule);
 			} else {
-				startAssignments = getAssignmentsFrom(startModule);
+				startAssignments = getAssignmentsFrom(startModule); //<<<<<< getAssignments() used in collectBrokenModulesViaInvertedImports, too
 				moduleAndBrokenAssignments.put(startModule, startAssignments);
 			}
 
@@ -350,12 +367,11 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				}
 			} else {
 				if (startModule.getLastCompilationTimeStamp() == null) {
-					//MarkerHandler.markAllSemanticMarkersForRemoval(startModule.getLocation().getFile()); //this would overwrite the previous import markers! 
-					//TODO: rethink!
+					//The markers have been marked for removal only for ASN1 modules
 					startModule.check(timestamp);
 				}
 
-				final List<AssignmentHandler> startAssignments = getAssignmentsFrom(startModule);
+				final List<AssignmentHandler> startAssignments = getAssignmentsFrom(startModule);//puts additional markers!
 				for (AssignmentHandler assignmentHandler : startAssignments) {
 					assignmentHandler.initStartParts();
 					assignmentHandler.assignment.notCheckRoot();
@@ -379,7 +395,16 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 		for (int d = 0; d < assignments.getNofAssignments(); ++d) {
 			final Assignment assignment = assignments.getAssignmentByIndex(d);
 			final AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(assignment);
-			assignment.accept(assignmentHandler);
+			if(assignment instanceof Undefined_Assignment){
+				final ASN1Assignment realAssignment = ((Undefined_Assignment)assignment).getRealAssignment(CompilationTimeStamp.getBaseTimestamp());
+				if(realAssignment != null) {
+					realAssignment.accept(assignmentHandler);
+				} else {
+					assignment.accept(assignmentHandler);//TODO: re-fine this branch
+				}
+			} else {
+				assignment.accept(assignmentHandler);
+			}
 			assignmentHandlers.add(assignmentHandler);
 		}
 

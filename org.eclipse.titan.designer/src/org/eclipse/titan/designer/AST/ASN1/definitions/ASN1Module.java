@@ -214,6 +214,7 @@ public final class ASN1Module extends Module {
 		if (null != lastCompilationTimeStamp && !lastCompilationTimeStamp.isLess(timestamp)) {
 			return;
 		}
+		lastCompilationTimeStamp = timestamp;
 
 		if (!SpecialASN1Module.INTERNAL_MODULE.equals(identifier.getAsnName())) {
 			NamingConventionHelper.checkConvention(PreferenceConstants.REPORTNAMINGCONVENTION_ASN1MODULE, identifier, "ASN.1 module");
@@ -222,7 +223,6 @@ public final class ASN1Module extends Module {
 		imports.check(timestamp);
 		assignments.check(timestamp);
 
-		lastCompilationTimeStamp = timestamp;
 	}
 
 	@Override

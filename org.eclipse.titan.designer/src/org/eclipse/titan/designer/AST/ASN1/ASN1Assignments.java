@@ -120,7 +120,7 @@ public final class ASN1Assignments extends Assignments implements ILocateableNod
 
 		return false;
 	}
-
+	
 	@Override
 	public Assignment getLocalAssignmentByID(final CompilationTimeStamp timestamp, final Identifier identifier) {
 		if (null == lastUniqueNessCheckTimeStamp) {
