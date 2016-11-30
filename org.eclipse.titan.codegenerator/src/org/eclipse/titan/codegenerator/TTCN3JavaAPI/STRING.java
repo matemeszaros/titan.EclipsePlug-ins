@@ -42,8 +42,12 @@ public class STRING extends Comparable<STRING>{
     	this.value = s.getBytes();
     }
 
-    public STRING concatenate(STRING other){
-    	return new STRING(this.value.toString() + other.value.toString());
+    public STRING concatenate(STRING other){ //this is messy, should convert STRING to an abstract class with all the cosequences.
+    	if(other instanceof CHARSTRING) return new CHARSTRING(new String(value) + new String(other.value));
+    	else if(other instanceof BITSTRING) return new BITSTRING(new String(value) + new String(other.value));
+    	else if(other instanceof OCTETSTRING) return new OCTETSTRING(new String(value) + new String(other.value));
+    	else if(other instanceof HEXSTRING) return new HEXSTRING(new String(value) + new String(other.value));
+    	else return new STRING(new String(value) + new String(other.value));
     }
 
     public BOOLEAN equalsWith(STRING string) {

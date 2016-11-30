@@ -128,7 +128,12 @@ public class ContextLoggingRefactoring extends Refactoring {
 			ChangeCreator chCreator = new ChangeCreator(selectedFile, (TextSelection)selection, settings);
 			chCreator.perform();
 			Change ch = chCreator.getChange();
-			affectedObjects = ch.getAffectedObjects();
+			if(ch == null) {
+				affectedObjects = new Object[]{};
+				return new CompositeChange("EmptyLoggingRefactoring");
+			} else {
+				affectedObjects = ch.getAffectedObjects();
+			}
 			return ch;
 		}
 		return null;

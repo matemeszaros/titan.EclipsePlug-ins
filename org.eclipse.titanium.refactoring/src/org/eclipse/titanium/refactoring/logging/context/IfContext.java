@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.titan.designer.AST.ASTVisitor;
+import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.IVisitableNode;
 import org.eclipse.titan.designer.AST.Reference;
 import org.eclipse.titan.designer.AST.TTCN3.statements.If_Clause;
 import org.eclipse.titan.designer.AST.TTCN3.statements.If_Clauses;
 import org.eclipse.titan.designer.AST.TTCN3.statements.If_Statement;
 import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
+import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settings;
 
 /**
@@ -110,7 +112,22 @@ class IfContext extends Context {
 		public int visit(IVisitableNode node) {
 			if (node instanceof Reference) {
 				Reference ref = (Reference)node;
-				result.add(ref);
+				
+				Assignment refdAssignment = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				switch(refdAssignment.getAssignmentType()) {
+				case A_ALTSTEP:
+				case A_EXT_FUNCTION:
+				case A_EXT_FUNCTION_RTEMP:
+				case A_EXT_FUNCTION_RVAL:
+				case A_FUNCTION:
+				case A_FUNCTION_RTEMP:
+				case A_FUNCTION_RVAL:
+				case A_TESTCASE:
+					break;
+				default:
+					result.add(ref);
+				}
+				//result.add(ref);
 				return V_SKIP;
 			}
 			if (node instanceof StatementBlock) {
