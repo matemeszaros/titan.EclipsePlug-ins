@@ -35,6 +35,7 @@ import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportationChain;
 import org.eclipse.titan.designer.AST.ASN1.Ass_pard;
+import org.eclipse.titan.designer.AST.ASN1.definitions.ASN1Module;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.BrokenPartsChecker;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.BrokenPartsViaReferences;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.IBaseAnalyzer;
@@ -328,6 +329,10 @@ public class ProjectSourceSemanticAnalyzer {
 				for (Module module: semanticAnalyzer.fileModuleMap.values()) {
 					final String name = module.getIdentifier().getName();
 					allModules.add(module);
+					//ASN1 modules are not been analyzed incrementally, therefore their markers can be removed in one step:
+					if(module instanceof ASN1Module){
+						MarkerHandler.markAllSemanticMarkersForRemoval(module); 
+					}
 					if(uniqueModules.containsKey(name)) {
 						final Location location = uniqueModules.get(name).getIdentifier().getLocation();
 						final Location location2 = module.getIdentifier().getLocation();
@@ -353,8 +358,7 @@ public class ProjectSourceSemanticAnalyzer {
 				for(Module module : allModules) {
 					module.checkImports(compilationCounter, referenceChain, new ArrayList<Module>());
 					referenceChain.clear();
-				}//TODO: copy after the check
-				//checking imports moved after doChecking, otherwise their markers would be removed!
+				}
 				
 				progress.subTask("Calculating the list of modules to be checked");
 
