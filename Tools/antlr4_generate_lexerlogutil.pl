@@ -92,7 +92,7 @@ sub load
             "    public String getTokenName( int aIndex ) {\n".
             "        switch ( aIndex ) {\n";
 
-            if ( $whole_file =~ /public static final int\n\s*(.*?);/gs ) {
+            if ( $whole_file =~ /public static final int\r?\n\s*(.*?);/gs ) {
                  $const_defs = $1; #comma separated constant definition: WS=1, LINE_COMMENT=2, ..., MACRO12=451
 #                 print "\$const_defs == $const_defs\n";
                  my @list = split(/,\s*/, $const_defs);
