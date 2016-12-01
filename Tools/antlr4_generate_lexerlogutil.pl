@@ -59,7 +59,7 @@ sub load
         {
         # $filename is a file
 
-        if($filename =~ /^(.*\/)(Asn1|Cfg|Ttcn3)(Lexer)(\.java)$/)
+        if($filename =~ /^(.*\/)(Asn1|Cfg|Ttcn3|ExtensionAttribute|PreprocessorDirective)(Lexer)(\.java)$/)
             {
             $file_part1 = $1;
             $file_part2 = $2;

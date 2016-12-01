@@ -15,3 +15,5 @@
 /PreprocessorDirectiveLexer.tokens
 /PreprocessorDirectiveParser.java
 /PreprocessorDirectiveParser.tokens
+/PreprocessorDirectiveLexerLogUtil.java
+
