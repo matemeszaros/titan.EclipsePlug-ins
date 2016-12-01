@@ -238,7 +238,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	//the check should be done at the beginning of the check but the reporting shall be done finally
 	protected void checkUniqueness(final CompilationTimeStamp timestamp) {
 		createDefinitionMap(timestamp); //creates a hash map
-		reportDoubleDefinitions();	
+		reportDoubleDefinitions();
 	}
 
 	// creates or refreshes DefinitionMap and doubleDefinitions but not reports the found double definitons
@@ -363,6 +363,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
 			return;
 		}
+		
 		lastCompilationTimeStamp = timestamp;
 		
 		Module module = getModuleScope();
@@ -372,13 +373,10 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			}
 		}
 		
-		// MarkerHandler.markAllSemanticMarkersForRemoval(this); //this removes the imports as well
-		
 		checkGroups(timestamp);
 
-		for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
-			iterator.next().check(timestamp);
-			LoadBalancingUtilities.astNodeChecked();
+		for( Definition definition: definitions){
+			definition.check(timestamp);
 		}
 		
 		checkUniqueness(timestamp);
@@ -391,15 +389,14 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
 			return;
 		}
-		lastCompilationTimeStamp = timestamp;
-		
-		//Remove only the old markers. Cannot this be done even more earlier????
-		for( final Assignment assignment : assignments) {
-			if(assignment.getLastTimeChecked() == null ||  assignment.getLastTimeChecked().isLess(timestamp) ){
-				MarkerHandler.markAllSemanticMarkersForRemoval(assignment);
-			}
+		if(lastCompilationTimeStamp == null){
+			//fall back to checking each definition:
+			check(timestamp);
+			return;
 		}
 		
+		lastCompilationTimeStamp = timestamp;
+
 		checkUniqueness(timestamp);
 		checkGroups(timestamp);
 
@@ -832,7 +829,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 								doubleDefinitions.clear();
 							}
 							lastUniquenessCheckTimeStamp = null;
-							lastCompilationTimeStamp = null; //to recheck the whole module 
+							lastCompilationTimeStamp = null;//to recheck the whole module
 							//TODO: BAAT:trigger the recheck of the importing modules as well!!
 							reparser.setNameChanged(false);
 							// This could also spread

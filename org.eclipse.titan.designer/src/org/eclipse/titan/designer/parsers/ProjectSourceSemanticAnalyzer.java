@@ -331,7 +331,7 @@ public class ProjectSourceSemanticAnalyzer {
 					allModules.add(module);
 					//ASN1 modules are not been analyzed incrementally, therefore their markers can be removed in one step:
 					if(module instanceof ASN1Module){
-						MarkerHandler.markAllSemanticMarkersForRemoval(module); 
+						MarkerHandler.markAllSemanticMarkersForRemoval(module.getLocation().getFile());
 					}
 					if(uniqueModules.containsKey(name)) {
 						final Location location = uniqueModules.get(name).getIdentifier().getLocation();
