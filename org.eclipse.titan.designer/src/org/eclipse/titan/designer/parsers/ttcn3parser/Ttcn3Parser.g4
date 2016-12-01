@@ -13,7 +13,7 @@ parser grammar Ttcn3Parser;
 /*
 NOTE:
 
- pr_(Bit|Hex|Octet)String(Match?) rules are for [BHO]STRING(MATCH)? to remove
+ pr_(Bit|Hex|Octet)String(Match)? rules are for [BHO]STRING(MATCH)? to remove
  the beginning "'" and ending "'[BHO]" strings,
  as lexer cannot remove them as it was done in the ANTLR V2 Parser.
  Do NOT use [BHO]STRING(MATCH)? in any rule, use these instead.
@@ -61,7 +61,7 @@ P : NOT E4 | NOT4B E11 | ( '+' | '-' ) P | '(' E1 ')' | v
 *: without java code, but the structure is identical to the used rules, where
   En: rule for the n-th precedence level
   E1: pr_SingleExpression in case of Ttcn3Parser.g4
-  P: last rule with unary operations
+  P: last rule with unary operations, pr_UnaryExpression in case of Ttcn3Parser.g4
   v: atomic expression without any operators, pr_Primary in case of Ttcn3Parser.g4
 
 NOTE: unary operators, which are not on the highest priority level, are used twice, because they must be handled at their precedence level,
