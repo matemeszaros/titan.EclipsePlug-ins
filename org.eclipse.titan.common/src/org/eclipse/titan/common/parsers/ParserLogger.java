@@ -11,12 +11,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import org.eclipse.titan.common.parsers.cfg.CfgInterval;
@@ -27,9 +29,49 @@ import org.eclipse.titan.common.parsers.cfg.CfgInterval;
  * @author Arpad Lovassy
  */
 public class ParserLogger {
-	
+
+	private static IPrinter sPrinter = new ConsolePrinter();
+
 	private ParserLogger() {
 		// intentionally private to disable instantiation
+	}
+	
+	private static void setPrinter( final IPrinter aPrinter ) {
+		sPrinter = aPrinter;
+	}
+
+	/**
+	 * Logs a parse tree. (General version)
+	 * Token name is resolved if ...LexerLogUtil.java is generated,
+	 * otherwise only token type index is displayed
+	 * @param aRoot parse tree
+	 * @param aParser parser to get rule names
+	 * @param aTokenNameResolver resolver to get token name
+	 * @param aPrinter printer
+	 * @param aDescription description of the parsing type, for the logging (for example: TTCN-3, Cfg, ASN.1)
+	 */
+	public static void log( final ParseTree aRoot,
+							final Parser aParser,
+							final TokenNameResolver aTokenNameResolver,
+							final IPrinter aPrinter,
+							final String aDescription ) {
+		if ( !aParser.getBuildParseTree() ) {
+			// Parse tree logging is not requested
+			return;
+		}
+		setPrinter( aPrinter );
+		aPrinter.println( "---- parse tree" );
+		aPrinter.println( "Parser type: " + aDescription );
+		aPrinter.println( "Call stack: " + printCallStack( 4 ) );
+		aPrinter.println( "Prediction mode: " + aParser.getInterpreter().getPredictionMode() );
+		final TokenStream tokenStream = aParser.getTokenStream();
+		if ( ! ( tokenStream instanceof CommonTokenStream ) ) {
+			aPrinter.println("ERROR: tokenStream is not CommonTokenStream");
+			return;
+		}
+		final CommonTokenStream commonTokenStream = (CommonTokenStream)tokenStream; 
+		final List<Token> tokens = commonTokenStream.getTokens();
+		log( aRoot, aParser, tokens, aTokenNameResolver );
 	}
 
 	/**
@@ -45,7 +87,7 @@ public class ParserLogger {
 							final ILexerLogUtil aLexerLogUtil ) {
 		log( aRoot, aParser, aTokens, new TokenNameResolver( aLexerLogUtil ) );
 	}
-	
+
 	/**
 	 * Logs a parse tree
 	 * @param aRoot parse tree
@@ -59,7 +101,7 @@ public class ParserLogger {
 							final Lexer aLexer ) {
 		log( aRoot, aParser, aTokens, new TokenNameResolver( aLexer ) );
 	}
-	
+
 	/**
 	 * Logs a parse tree, token name is not resolved, only token type index is displayed
 	 * @param aRoot parse tree
@@ -71,7 +113,7 @@ public class ParserLogger {
 							final List<Token> aTokens ) {
 		log( aRoot, aParser, aTokens, new TokenNameResolver() );
 	}
-	
+
 	/**
 	 * Logs a parse tree
 	 * @param aRoot parse tree
@@ -83,9 +125,16 @@ public class ParserLogger {
 							 final Parser aParser,
 							 final List<Token> aTokens,
 							 final TokenNameResolver aTokenNameResolver ) {
-		log( aRoot, aParser, aTokens, aTokenNameResolver, 0, false );
+		try {
+			log( aRoot, aParser, aTokens, aTokenNameResolver, 0, false );
+		} catch( Exception e ) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter( sw );
+			e.printStackTrace( pw );
+			println( sw.toString() ); // stack trace as a string
+		}
 	}
-	
+
 	/**
 	 * Logs a parse tree.
 	 * Internal version.
@@ -124,8 +173,7 @@ public class ParserLogger {
 			final int count = rule.getChildCount();
 			final boolean oneChild = count == 1 && rule.exception == null;
 			if ( !oneChild ) {
-				print( ": '" + getEscapedRuleText( rule, aTokens ) + "'" );
-				println();
+				println( ": '" + getEscapedRuleText( rule, aTokens ) + "'" + getExceptionInfo( rule, aTokenNameResolver ) );
 			}
 
 			for( int i = 0; i < count; i++ ) {
@@ -135,8 +183,7 @@ public class ParserLogger {
 		} else if ( aRoot instanceof TerminalNodeImpl ) {
 			final TerminalNodeImpl tn = (TerminalNodeImpl)aRoot;
 			if ( aParentOneChild ) {
-				print( ": '" + getEscapedTokenText( tn.getSymbol() ) + "'" );
-				println();
+				println( ": '" + getEscapedTokenText( tn.getSymbol() ) + "'" );
 			}
 
 			printIndent( getTokenInfo( tn.getSymbol(), aTokenNameResolver ), aLevel );
@@ -147,8 +194,7 @@ public class ParserLogger {
 		} else if ( aRoot instanceof AddedParseTree ) {
 			final AddedParseTree apt = (AddedParseTree)aRoot;
 			if ( aParentOneChild ) {
-				print( ": '" + getEscapedText( apt.getText() ) + "'" );
-				println();
+				println( ": '" + getEscapedText( apt.getText() ) + "'" );
 			}
 			printIndent( "AddedParseString: " + getEscapedText( apt.getText() ), aLevel );
 			if ( apt.getParent() == null ) {
@@ -159,7 +205,7 @@ public class ParserLogger {
 			println( "ERROR: INVALID ParseTree type" );
 		}
 	}
-	
+
 	/**
 	 * Rule exception info in string format for logging purpose
 	 * @param aRule rule
@@ -172,9 +218,7 @@ public class ParserLogger {
 			return "";
 		}
 		final StringBuilder sb = new StringBuilder();
-		sb.append( "\naRule.getText() == " + aRule.getText() );
-		sb.append( "\ngetOffendingState() == " + e.getOffendingState() );
-		sb.append( "\ngetExpectedTokens() == [" );
+		sb.append(", ERROR: mismatch, expected tokens: [" );
 		final List<Integer> expectedTokens = e.getExpectedTokens().toList();
 		for ( int i = 0; i < expectedTokens.size(); i++ ) {
 			if ( i > 0 ) {
@@ -186,13 +230,9 @@ public class ParserLogger {
 		sb.append("]");
 		if ( e instanceof NoViableAltException ) {
 			NoViableAltException nvae = (NoViableAltException)e;
-			sb.append( "\ngetStartToken() == " + getTokenInfo( nvae.getStartToken(), aTokenNameResolver ) );
-			sb.append( "\ngetDeadEndConfigs() == " + nvae.getDeadEndConfigs() );
+			sb.append( ", start token: " + getTokenInfo( nvae.getStartToken(), aTokenNameResolver ) );
 		}
-		
-		final StringWriter errors = new StringWriter();
-		e.printStackTrace(new PrintWriter(errors));
-		sb.append( "\n" + errors.toString() );
+
 		return sb.toString();
 	}
 
@@ -206,10 +246,9 @@ public class ParserLogger {
 	private static String getRuleInfo( final ParserRuleContext aRule, final Parser aParser, final TokenNameResolver aTokenNameResolver ) {
 		// only rule name
 		String info = aParser.getRuleInvocationStack( aRule ).get( 0 );
-		info += getExceptionInfo( aRule, aTokenNameResolver );
 		return info;
 	}
-	
+
 	/**
 	 * Escaped rule text including hidden tokens
 	 * For logging purposes
@@ -241,7 +280,7 @@ public class ParserLogger {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Rule text including hidden tokens
 	 * For logging purposes
@@ -269,7 +308,7 @@ public class ParserLogger {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Token info in string format for logging purpose
 	 * @param aToken token
@@ -300,7 +339,7 @@ public class ParserLogger {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Gets escaped token text
 	 * Escaped chars are converted to printable strings.
@@ -347,7 +386,7 @@ public class ParserLogger {
 		}
 		return aTokenNameResolver.getTokenName( aTokenType );
 	}
-	
+
 	/**
 	 * Logs an interval tree.
 	 * @param aRootInterval the root of the interval tree
@@ -355,7 +394,7 @@ public class ParserLogger {
 	public static void logInterval( final Interval aRootInterval ) {
 		logInterval( aRootInterval, 0 );
 	}
-	
+
 	/**
 	 * Logs an interval tree.
 	 * Internal version.
@@ -386,7 +425,7 @@ public class ParserLogger {
 			}
 		}
 	}
-	
+
 	/**
 	 * -> aMsg
 	 * @param aMsg
@@ -395,7 +434,7 @@ public class ParserLogger {
 		print( " -> " );
 		print( aMsg );
 	}
-	
+
 	/**
 	 * Prints message to console for logging purpose
 	 * with level dependent indentation
@@ -411,16 +450,53 @@ public class ParserLogger {
 		print( aMsg );
 	}
 
+	/**
+	 * Prints full stack trace in one line
+	 * Short class name is used without full qualification.
+	 * @param aN [in] number of methods, which are not needed. These are the top of the call stack
+	 *                getStackTrace()
+	 *                this function
+	 *                logParseTree() function(s)
+	 * @return string representation of the call stack
+	 */
+	public static String printCallStack( final int aN ) {
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		final StringBuilder sb = new StringBuilder();
+		final int first = stackTrace.length - 1;
+		for ( int i = first; i >= aN; i-- ) {
+			final StackTraceElement ste = stackTrace[ i ];
+			if ( i < first ) {
+				sb.append(" -> ");
+			}
+			printStackTraceElement( sb, ste );
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Prints a stack trace element (method call of a call chain) with short class name and method name
+	 * @param aSb [in/out] the log string, where new strings are added
+	 * @param aSte stack trace element
+	 * @return string representation of the stack trace element
+	 */
+	private static void printStackTraceElement( final StringBuilder aSb, final StackTraceElement aSte ) {
+		final String className = aSte.getClassName();
+		final String shortClassName = className.substring( className.lastIndexOf('.') + 1 );
+		final String methodName = aSte.getMethodName();
+		aSb.append( shortClassName ); 
+		aSb.append( "." );
+		aSb.append( methodName );
+	}
+
 	private static void print( final String aMsg ) {
-		System.out.print( aMsg );
+		sPrinter.print( aMsg );
 	}
 
 	private static void println() {
-		System.out.println();
+		sPrinter.println();
 	}
-	
+
 	private static void println( final String aMsg ) {
-		System.out.println( aMsg );
+		sPrinter.println( aMsg );
 	}
-	
 }

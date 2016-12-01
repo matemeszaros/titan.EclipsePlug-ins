@@ -366,6 +366,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_PREFERENCE_PAGE_ENABLED, false);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_TIMESTAMP, true);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_AST_ELEM, false);
+		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_PARSE_TREE, false);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_CONSOLE_LOG_TO_SYSOUT, false);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_LOAD_TOKENS_TO_PROCESS_IN_A_ROW, 100);
 		preferenceStore.setDefault(PreferenceConstants.DEBUG_LOAD_SLEEP_BETWEEN_FILES, 10);

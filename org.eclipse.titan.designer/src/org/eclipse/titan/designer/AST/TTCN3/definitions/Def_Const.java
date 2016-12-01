@@ -10,6 +10,7 @@ package org.eclipse.titan.designer.AST.TTCN3.definitions;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.INamedNode;
 import org.eclipse.titan.designer.AST.IReferenceChain;
@@ -34,6 +35,7 @@ import org.eclipse.titan.designer.editors.ProposalCollector;
 import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
@@ -41,6 +43,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_ExpressionContext;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 
 /**
@@ -396,8 +399,12 @@ public final class Def_Const extends Definition {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				Value newValue = parser.pr_Expression().value;
-				parser.pr_EndOfFile();
+				final Pr_ExpressionContext root = parser.pr_Expression();
+				ParserUtilities.logParseTree( root, parser );
+				final Value newValue = root.value;
+
+				final ParseTree rootEof =  parser.pr_EndOfFile();
+				ParserUtilities.logParseTree( rootEof, parser );
 				if ( parser.isErrorListEmpty() ) {
 					if (newValue != null) {
 						value = newValue;

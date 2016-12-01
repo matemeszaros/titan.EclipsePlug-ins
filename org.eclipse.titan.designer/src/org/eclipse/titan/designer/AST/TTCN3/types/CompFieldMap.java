@@ -29,10 +29,12 @@ import org.eclipse.titan.designer.AST.ReferenceFinder.Hit;
 import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.AST.TTCN3.IIncrementallyUpdateable;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparse_StructFieldDefsContext;
 
 /**
  * Map of component fields.
@@ -40,7 +42,8 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
  * This class is used to represent the fields of a structured type.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public final class CompFieldMap extends ASTNode implements ILocateableNode, IIncrementallyUpdateable {
 	public static final String DUPLICATEFIELDNAMEFIRST = "Duplicate field name `{0}'' was first declared here";
 	public static final String DUPLICATEFIELDNAMEREPEATED = "Duplicate field name `{0}'' was declared here again";
@@ -444,7 +447,9 @@ public final class CompFieldMap extends ASTNode implements ILocateableNode, IInc
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				List<CompField> tempFields = parser.pr_reparse_StructFieldDefs().fields;
+				final Pr_reparse_StructFieldDefsContext root = parser.pr_reparse_StructFieldDefs();
+				ParserUtilities.logParseTree( root, parser );
+				final List<CompField> tempFields = root.fields;
 				lastUniquenessCheck = null;
 				if ( parser.isErrorListEmpty() ) {
 					if (tempFields != null) {

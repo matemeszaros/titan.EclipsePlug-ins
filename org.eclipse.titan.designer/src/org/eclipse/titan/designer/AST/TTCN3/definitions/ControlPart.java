@@ -10,6 +10,7 @@ package org.eclipse.titan.designer.AST.TTCN3.definitions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.ILocateableNode;
@@ -29,17 +30,20 @@ import org.eclipse.titan.designer.editors.SkeletonTemplateProposal;
 import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparser_optionalWithStatementContext;
 
 /**
  * The ControlPart class represents the control parts of TTCN3 modules.
  * 
  * @author Kristof Szabados
- **/
+ * @author Arpad Lovassy
+ */
 public final class ControlPart extends Scope implements ILocateableNode, IAppendableSyntax {
 
 	private static final String KIND = "controlpart";
@@ -301,8 +305,12 @@ public final class ControlPart extends Scope implements ILocateableNode, IAppend
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
-				parser.pr_EndOfFile();
+				final Pr_reparser_optionalWithStatementContext root = parser.pr_reparser_optionalWithStatement();
+				ParserUtilities.logParseTree( root, parser );
+				final MultipleWithAttributes attributes = root.attributes;
+
+				final ParseTree rootEof = parser.pr_EndOfFile();
+				ParserUtilities.logParseTree( rootEof, parser );
 				if ( parser.isErrorListEmpty() ) {
 					withAttributesPath.setWithAttributes(attributes);
 					if (attributes != null) {

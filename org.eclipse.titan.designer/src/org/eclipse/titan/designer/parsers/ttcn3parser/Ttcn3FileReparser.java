@@ -11,8 +11,10 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 
 /**
@@ -49,7 +51,8 @@ public class Ttcn3FileReparser implements ITtcn3FileReparser {
 		mReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				parser.pr_TTCN3File();
+				final ParseTree root = parser.pr_TTCN3File();
+				ParserUtilities.logParseTree( root, parser );
 				TTCN3Module actualTtcn3Module = parser.getModule();
 				if (actualTtcn3Module != null && actualTtcn3Module.getIdentifier() != null) {
 					mSourceParser.getSemanticAnalyzer().addModule(actualTtcn3Module);

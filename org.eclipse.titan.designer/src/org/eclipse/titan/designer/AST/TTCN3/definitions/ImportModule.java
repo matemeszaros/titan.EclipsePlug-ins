@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.Assignment;
 import org.eclipse.titan.designer.AST.Assignments;
@@ -34,6 +35,7 @@ import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.GlobalParser;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
@@ -42,6 +44,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparser_optionalWithStatementContext;
 
 /**
  * The ImportModule class represents a TTCN3 import statement. This class is
@@ -49,7 +52,8 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
  * and the imported module.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 /*
  * Actually this should be subclassed to the possible types to provide correct
  * handling.
@@ -395,8 +399,12 @@ public final class ImportModule extends ModuleImportation implements ILocateable
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
-				parser.pr_EndOfFile();
+				final Pr_reparser_optionalWithStatementContext root = parser.pr_reparser_optionalWithStatement();
+				ParserUtilities.logParseTree( root, parser );
+				final MultipleWithAttributes attributes = root.attributes;
+
+				final ParseTree rootEof = parser.pr_EndOfFile();
+				ParserUtilities.logParseTree( rootEof, parser );
 				if ( parser.isErrorListEmpty() ) {
 					withAttributesPath.setWithAttributes(attributes);
 					if (attributes != null) {

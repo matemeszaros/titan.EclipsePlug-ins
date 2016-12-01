@@ -27,6 +27,7 @@ import org.antlr.v4.runtime.atn.ParserATNSimulator;
 import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.filesystem.IFileStore;
@@ -39,6 +40,7 @@ import org.eclipse.titan.common.parsers.TITANMarker;
 import org.eclipse.titan.common.parsers.TitanListener;
 import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.parsers.ISourceAnalyzer;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.PreprocessedTokenStream;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
@@ -182,7 +184,7 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
 
 		Ttcn3Parser parser = new Ttcn3Parser( tokenStream );
-		parser.setBuildParseTree(false);
+		ParserUtilities.setBuildParseTree( parser );
 		PreprocessedTokenStream preprocessor = null;
 		
 		if ( aEclipseFile != null && GlobalParser.TTCNPP_EXTENSION.equals( aEclipseFile.getFileExtension() ) ) {
@@ -193,6 +195,7 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 				preprocessor.setMacros( PreprocessorSymbolsOptionsData.getTTCN3PreprocessorDefines( aEclipseFile.getProject() ) );
 			}
 			parser = new Ttcn3Parser( preprocessor );
+			ParserUtilities.setBuildParseTree( parser );
 			preprocessor.setActualLexer(lexer);
 			preprocessor.setParser(parser);
 		}
@@ -218,7 +221,8 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 		//try SLL mode
 		try {
 			parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
-			parser.pr_TTCN3File();
+			final ParseTree root = parser.pr_TTCN3File();
+			ParserUtilities.logParseTree( root, parser );
 			warnings = parser.getWarnings();
 			mErrorsStored = lexerListener.getErrorsStored();
 			mErrorsStored.addAll( parserListener.getErrorsStored() );
@@ -235,7 +239,8 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 				parser.reset();
 				parserListener.reset();
 				parser.getInterpreter().setPredictionMode(PredictionMode.LL);
-				parser.pr_TTCN3File();
+				final ParseTree root = parser.pr_TTCN3File();
+				ParserUtilities.logParseTree( root, parser );
 				warnings = parser.getWarnings();
 				mErrorsStored = lexerListener.getErrorsStored();
 				mErrorsStored.addAll( parserListener.getErrorsStored() );

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.titan.designer.AST.ASTNode;
 import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ILocateableNode;
@@ -30,11 +31,15 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.editors.T3Doc;
 import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparse_IdentifierContext;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparse_ModuleDefinitionsListContext;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparser_optionalWithStatementContext;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 
 /**
@@ -450,7 +455,9 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				identifier = parser.pr_reparse_Identifier().identifier;
+				final Pr_reparse_IdentifierContext root = parser.pr_reparse_Identifier();
+				ParserUtilities.logParseTree( root, parser );
+				identifier = root.identifier;
 			}
 		});
 	}
@@ -459,8 +466,12 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
-				parser.pr_EndOfFile();
+				final Pr_reparser_optionalWithStatementContext root = parser.pr_reparser_optionalWithStatement();
+				ParserUtilities.logParseTree( root, parser );
+				final MultipleWithAttributes attributes = root.attributes;
+
+				final ParseTree rootEof = parser.pr_EndOfFile();
+				ParserUtilities.logParseTree( rootEof, parser );
 				if ( parser.isErrorListEmpty() ) {
 					withAttributesPath.setWithAttributes(attributes);
 					if (attributes != null) {
@@ -486,8 +497,10 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 				TTCN3Module temp = getModule();
 
 				parser.setModule(temp);
-				parser.pr_reparse_ModuleDefinitionsList(null, allDefinitions, localDefinitions, localGroups, allImports,
-						localImports, allFriends, localFriends, null);
+				final Pr_reparse_ModuleDefinitionsListContext root =
+						parser.pr_reparse_ModuleDefinitionsList( null, allDefinitions, localDefinitions, localGroups, allImports,
+																 localImports, allFriends, localFriends, null );
+				ParserUtilities.logParseTree( root, parser );
 
 				if ( parser.isErrorListEmpty() ) {
 					temp.addDefinitions(allDefinitions);

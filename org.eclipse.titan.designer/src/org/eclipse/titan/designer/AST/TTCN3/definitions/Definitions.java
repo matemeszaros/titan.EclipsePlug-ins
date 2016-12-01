@@ -40,10 +40,12 @@ import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparse_ModuleDefinitionsListContext;
 
 /**
  * The Definitions class represents the scope of module level definitions inside
@@ -945,8 +947,10 @@ public final class Definitions extends Assignments implements ILocateableNode {
 
 				TTCN3Module module = (TTCN3Module) parentScope;
 				parser.setModule((TTCN3Module) parentScope);
-				parser.pr_reparse_ModuleDefinitionsList(null, allDefinitions, localDefinitions, localGroups, allImports,
-						localImports, allFriends, localFriends, controlParts);
+				final Pr_reparse_ModuleDefinitionsListContext root =
+						parser.pr_reparse_ModuleDefinitionsList( null, allDefinitions, localDefinitions, localGroups, allImports,
+																 localImports, allFriends, localFriends, controlParts );
+				ParserUtilities.logParseTree( root, parser );
 
 				if ( parser.isErrorListEmpty() ) {
 					addDefinitions(allDefinitions);

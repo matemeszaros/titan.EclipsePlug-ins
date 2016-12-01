@@ -16,6 +16,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.titan.designer.AST.Reference;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Parser.Pr_UnifiedReferenceParserContext;
 
 /**
  * @author Kristof Szabados
@@ -42,18 +44,20 @@ public final class TTCN3ReferenceAnalyzer {
 
 		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
 		Ttcn3Parser parser = new Ttcn3Parser( tokenStream );
+		ParserUtilities.setBuildParseTree( parser );
 
 		lexer.setActualFile(file);
 		parser.setActualFile(file);
 		parser.setProject(file.getProject());
 		parser.setLine(aLine);
 		parser.setOffset(aOffset);
-		parser.setBuildParseTree(false);
 		parser.setLexer(lexer);
 
 		parser.removeErrorListeners();
 
-		reference = parser.pr_UnifiedReferenceParser().reference;
+		final Pr_UnifiedReferenceParserContext root = parser.pr_UnifiedReferenceParser();
+		ParserUtilities.logParseTree( root, parser );
+		reference = root.reference;
 
 		return reference;
 	}
@@ -78,16 +82,18 @@ public final class TTCN3ReferenceAnalyzer {
 
 		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
 		Ttcn3Parser parser = new Ttcn3Parser( tokenStream );
+		ParserUtilities.setBuildParseTree( parser );
 
 		lexer.setActualFile(file);
 		parser.setActualFile(file);
 		parser.setProject(file.getProject());
-		parser.setBuildParseTree(false);
 		parser.setLexer(lexer);
 
 		parser.removeErrorListeners();
 
-		reference = parser.pr_UnifiedReferenceParser().reference;
+		final Pr_UnifiedReferenceParserContext root = parser.pr_UnifiedReferenceParser();
+		ParserUtilities.logParseTree( root, parser );
+		reference = root.reference;
 
 		return reference;
 	}

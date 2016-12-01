@@ -58,10 +58,12 @@ import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparse_FunctionStatementOrDefListContext;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -69,7 +71,8 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * The StatementBlock class represents TTCN3 statement block (the scope unit).
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 // FIXME add support for determining if this statementblock has receiving
 // statements or not.
 public final class StatementBlock extends TTCN3Scope implements ILocateableNode, IIncrementallyUpdateable {
@@ -1097,7 +1100,9 @@ public final class StatementBlock extends TTCN3Scope implements ILocateableNode,
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				final List<Statement> statements = parser.pr_reparse_FunctionStatementOrDefList().statements;
+				final Pr_reparse_FunctionStatementOrDefListContext root = parser.pr_reparse_FunctionStatementOrDefList();
+				ParserUtilities.logParseTree( root, parser );
+				final List<Statement> statements = root.statements;
 				if ( parser.isErrorListEmpty() ) {
 					if (statements != null) {
 						addStatementsOrdered(statements);

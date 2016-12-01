@@ -59,11 +59,13 @@ import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.graphics.ImageCache;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3CharstringLexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_ErroneousAttributeSpecContext;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -71,7 +73,8 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * The definition class represents general TTCN3 definitions.
  * 
  * @author Kristof Szabados
- * */
+ * @author Arpad Lovassy
+ */
 public abstract class Definition extends Assignment implements IAppendableSyntax, IIncrementallyUpdateable {
 	private static final String SHOULD_BE_PRIVATE = "{0} is referenced only locally, it should be private";
 
@@ -615,6 +618,7 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
 		
 		Ttcn3Reparser parser = new Ttcn3Reparser( tokenStream );
+		ParserUtilities.setBuildParseTree( parser );
 		IFile file = (IFile) location.getFile();
 		parser.setActualFile(file);
 		parser.setOffset( location.getOffset() + 1 );
@@ -627,7 +631,9 @@ public abstract class Definition extends Assignment implements IAppendableSyntax
 		MarkerHandler.markMarkersForRemoval(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, location.getFile(), location.getOffset(),
 				location.getEndOffset());
 
-		returnValue = parser.pr_ErroneousAttributeSpec().errAttrSpec;
+		final Pr_ErroneousAttributeSpecContext root = parser.pr_ErroneousAttributeSpec(); 
+		ParserUtilities.logParseTree( root, parser );
+		returnValue = root.errAttrSpec;
 		List<SyntacticErrorStorage> errors = parser.getErrors();
 		List<TITANMarker> warnings = parser.getWarnings();
 		List<TITANMarker> unsupportedConstructs = parser.getUnsupportedConstructs();

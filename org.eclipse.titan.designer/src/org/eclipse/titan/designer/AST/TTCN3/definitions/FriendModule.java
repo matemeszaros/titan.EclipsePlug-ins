@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.titan.designer.GeneralConstants;
@@ -27,6 +28,7 @@ import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.WithAttributesPath;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 import org.eclipse.titan.designer.parsers.GlobalParser;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.IIdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ITTCN3ReparseBase;
@@ -35,6 +37,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Lexer;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparser_optionalWithStatementContext;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -251,8 +254,12 @@ public final class FriendModule extends ASTNode implements ILocateableNode, IApp
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
-				parser.pr_EndOfFile();
+				final Pr_reparser_optionalWithStatementContext root = parser.pr_reparser_optionalWithStatement(); 
+				ParserUtilities.logParseTree( root, parser );
+				final MultipleWithAttributes attributes = root.attributes;
+
+				final ParseTree rootEof = parser.pr_EndOfFile();
+				ParserUtilities.logParseTree( rootEof, parser );
 				if ( parser.isErrorListEmpty() ) {
 					withAttributesPath.setWithAttributes(attributes);
 					if (attributes != null) {

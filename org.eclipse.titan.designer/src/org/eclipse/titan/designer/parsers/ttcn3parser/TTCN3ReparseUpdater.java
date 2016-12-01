@@ -32,6 +32,7 @@ import org.eclipse.titan.designer.AST.Location;
 import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NULL_Location;
 import org.eclipse.titan.designer.parsers.ParserMarkerSupport;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 
 /**
  * This class directs the incremental parsing. Stores all information about the nature and size of the damage done to the system, helps in reparsing
@@ -533,6 +534,7 @@ public final class TTCN3ReparseUpdater {
 		final CommonTokenStream tokenStream = new CommonTokenStream( lexer );
 
 		Ttcn3Reparser parser = new Ttcn3Reparser( tokenStream );
+		ParserUtilities.setBuildParseTree( parser );
 
 		lexer.setActualFile(file);
 		parser.setActualFile(file);

@@ -242,6 +242,7 @@ public final class PreferenceConstants {
 	private static final String DEBUG_CONSOLE = DEBUG + ".console";
 	public static final String DEBUG_CONSOLE_TIMESTAMP = DEBUG_CONSOLE + ".timestamp";
 	public static final String DEBUG_CONSOLE_AST_ELEM = DEBUG_CONSOLE + ".astelem";
+	public static final String DEBUG_CONSOLE_PARSE_TREE = DEBUG_CONSOLE + ".parsetree";
 	public static final String DEBUG_CONSOLE_LOG_TO_SYSOUT = DEBUG_CONSOLE + ".logtosysout";
 	public static final String DEBUG_LOAD_TOKENS_TO_PROCESS_IN_A_ROW = DEBUG + ".load.tokensToProcessInARow";
 	public static final String DEBUG_LOAD_THREAD_PRIORITY = DEBUG + ".load.threadPriority";

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
@@ -66,6 +67,7 @@ import org.eclipse.titan.designer.editors.actions.DeclarationCollector;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3CodeSkeletons;
 import org.eclipse.titan.designer.editors.ttcn3editor.TTCN3Keywords;
 import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ProjectStructureDataCollector;
 import org.eclipse.titan.designer.parsers.extensionattributeparser.ExtensionAttributeAnalyzer;
@@ -75,6 +77,7 @@ import org.eclipse.titan.designer.parsers.ttcn3parser.IdentifierReparser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.ReParseException;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3ReparseUpdater;
 import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser;
+import org.eclipse.titan.designer.parsers.ttcn3parser.Ttcn3Reparser.Pr_reparser_optionalWithStatementContext;
 import org.eclipse.titan.designer.preferences.PreferenceConstants;
 import org.eclipse.titan.designer.productUtilities.ProductConstants;
 
@@ -992,8 +995,12 @@ public final class TTCN3Module extends Module {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
-				parser.pr_EndOfFile();
+				final Pr_reparser_optionalWithStatementContext root = parser.pr_reparser_optionalWithStatement();
+				ParserUtilities.logParseTree( root, parser );
+				final MultipleWithAttributes attributes = root.attributes;
+
+				final ParseTree rootEof = parser.pr_EndOfFile();
+				ParserUtilities.logParseTree( rootEof, parser );
 				if ( parser.isErrorListEmpty() ) {
 					withAttributesPath = new WithAttributesPath();
 					withAttributesPath.setWithAttributes(attributes);
@@ -1009,8 +1016,12 @@ public final class TTCN3Module extends Module {
 		return aReparser.parse(new ITTCN3ReparseBase() {
 			@Override
 			public void reparse(final Ttcn3Reparser parser) {
-				MultipleWithAttributes attributes = parser.pr_reparser_optionalWithStatement().attributes;
-				parser.pr_EndOfFile();
+				final Pr_reparser_optionalWithStatementContext root = parser.pr_reparser_optionalWithStatement();
+				ParserUtilities.logParseTree( root, parser );
+				final MultipleWithAttributes attributes = root.attributes;
+
+				final ParseTree rootEof = parser.pr_EndOfFile();
+				ParserUtilities.logParseTree( rootEof, parser );
 				if ( parser.isErrorListEmpty() ) {
 					withAttributesPath.setWithAttributes(attributes);
 					getLocation().setEndOffset(attributes.getLocation().getEndOffset());

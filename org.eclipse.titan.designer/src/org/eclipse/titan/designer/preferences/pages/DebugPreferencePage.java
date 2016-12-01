@@ -29,7 +29,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
  * @author Szabolcs Beres
- * */
+ * @author Arpad Lovassy
+ */
 public class DebugPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	private static final String DESCRIPTION = "Debug options for the Titan plugins";
 
@@ -107,6 +108,7 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
 		addField(new BooleanFieldEditor(PreferenceConstants.DISPLAYDEBUGINFORMATION, "Enable debug console", comp));
 		addField(new BooleanFieldEditor(PreferenceConstants.DEBUG_CONSOLE_TIMESTAMP, "Console timestamp", comp));
 		addField(new BooleanFieldEditor(PreferenceConstants.DEBUG_CONSOLE_AST_ELEM, "Print AST element for the cursor position", comp));
+		addField(new BooleanFieldEditor(PreferenceConstants.DEBUG_CONSOLE_PARSE_TREE, "Log parse tree", comp));
 	}
 
 	private void createLoadBalancingSection(final Composite parent) {
