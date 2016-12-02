@@ -277,9 +277,9 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		
 	}
 
-	//reports the found double definitons. It is supposed doubleDefinition to be created already
+	//reports the found double definitions. It is supposed doubleDefinition to be created already
 	protected void reportDoubleDefinitions() {
-		if (doubleDefinitions != null) {
+		if (doubleDefinitions != null && !doubleDefinitions.isEmpty()) {
 			String definitionName;
 			Definition definition;
 			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
@@ -321,6 +321,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		HashMap<String, Group> groupMap = new HashMap<String, Group>(groups.size());
 		HashMap<String, Definition> defs = new HashMap<String, Definition>(definitions.size());
 
+		//This defs is necessary because the definitionMaps is not ready yet
 		Definition definition;
 		for (Iterator<Definition> iterator = definitions.iterator(); iterator.hasNext();) {
 			definition = iterator.next();
@@ -329,14 +330,19 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				String defName = definition.getIdentifier().getName();
 				if (!defs.containsKey(defName)) {
 					defs.put(defName, definition);
-				}
+				} //duplication reported by checkUniqueness
 			}
 		}
 
 		Group group;
 		for (int i = 0, size = groups.size(); i < size; i++) {
 			group = groups.get(i);
-
+			if(group == null) {
+				continue; //paranoia
+			}
+			//TODO: Perhaps this marker should not always be executed. /if( some timestamp == null).../
+			MarkerHandler.markAllSemanticMarkersForRemoval(group); //clear the most outers group level
+			
 			String groupName = group.getIdentifier().getName();
 			if (defs.containsKey(groupName)) {
 				group.getIdentifier().getLocation().reportSemanticError(MessageFormat.format(Group.GROUPCLASHGROUP, groupName));
@@ -376,7 +382,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		checkGroups(timestamp);
 
 		for( Definition definition: definitions){
-			definition.check(timestamp);
+			definition.check(timestamp); //it calls definition.checkUniqueness!
 		}
 		
 		checkUniqueness(timestamp);
@@ -397,17 +403,15 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		
 		lastCompilationTimeStamp = timestamp;
 
-		checkUniqueness(timestamp);
 		checkGroups(timestamp);
 
 		for (Iterator<Assignment> iterator = assignments.iterator(); iterator.hasNext();) {
 			Assignment assignmentFrom  = iterator.next();
-			if(definitionMap.containsKey(assignmentFrom.getIdentifier().getName())) {
-				assignmentFrom.check(timestamp);
-				LoadBalancingUtilities.astNodeChecked();
-			}
+			assignmentFrom.check(timestamp);
+			LoadBalancingUtilities.astNodeChecked();
 		}
-		
+		checkUniqueness(timestamp);
+
 	}
 	
 
