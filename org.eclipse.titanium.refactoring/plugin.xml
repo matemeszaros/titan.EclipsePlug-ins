@@ -55,6 +55,16 @@
           name="ExtractToFunction">
     </command>
     <command
+          defaultHandler="org.eclipse.titanium.refactoring.lazyfication.LazyficationActionFromEditor"
+          id="org.eclipse.titanium.commands.LazyficationModule"
+          name="LazyficationModule">
+    </command>
+    <command
+          defaultHandler="org.eclipse.titanium.refactoring.lazyfication.LazyficationActionFromBrowser"
+          id="org.eclipse.titanium.commands.LazyficationProject"
+          name="LazyficationProject">
+    </command>
+    <command
           defaultHandler="org.eclipse.titanium.refactoring.visibility.MinimizeVisibilityActionFromEditor"
           id="org.eclipse.titanium.commands.MinimizeVisibilityModule"
           name="MinimizeVisibilityModule">
