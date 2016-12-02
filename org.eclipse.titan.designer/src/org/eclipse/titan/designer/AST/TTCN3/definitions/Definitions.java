@@ -237,12 +237,15 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	//checkUniquiness has been splitted into to parts because 
 	//the check should be done at the beginning of the check but the reporting shall be done finally
 	protected void checkUniqueness(final CompilationTimeStamp timestamp) {
+		if (lastUniquenessCheckTimeStamp != null && !lastUniquenessCheckTimeStamp.isLess(timestamp)) {
+			return;
+		}
 		createDefinitionMap(timestamp); //creates a hash map
 		reportDoubleDefinitions();
 	}
 
 	// creates or refreshes DefinitionMap and doubleDefinitions but not reports the found double definitons
-	protected void createDefinitionMap(final CompilationTimeStamp timestamp) {
+	private void createDefinitionMap(final CompilationTimeStamp timestamp) {
 		if (lastUniquenessCheckTimeStamp != null && !lastUniquenessCheckTimeStamp.isLess(timestamp)) {
 			return;
 		}
@@ -268,7 +271,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				definitionMap.put(definitionName, definition);
 			}
 		}
-		//TODO: check if this is necessary or not:
+		//updateSyntax() puts back
 		if (doubleDefinitions != null) {
 			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
 				definitions.remove(doubleDefinitions.get(i));
@@ -278,14 +281,10 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	}
 
 	//reports the found double definitions. It is supposed doubleDefinition to be created already
-	protected void reportDoubleDefinitions() {
+	private void reportDoubleDefinitions() {
 		if (doubleDefinitions != null && !doubleDefinitions.isEmpty()) {
 			String definitionName;
 			Definition definition;
-			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
-				definitions.remove(doubleDefinitions.get(i));
-			}
-
 			Identifier identifier;
 			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
 				definition = doubleDefinitions.get(i);
