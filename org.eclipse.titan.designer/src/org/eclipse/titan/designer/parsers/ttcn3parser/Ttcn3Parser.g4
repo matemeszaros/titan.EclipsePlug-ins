@@ -5906,9 +5906,9 @@ pr_ValueReference returns[Reference reference]
 			$reference = new Reference(null);
 		}
 		FieldSubReference subReference = new FieldSubReference($id.identifier);
-		subReference.setLocation(getLocation( getStopToken(), getStopToken()));
+		subReference.setLocation($id.identifier.getLocation());
 		$reference.addSubReference(subReference);
-		$reference.setLocation(getLocation( $start, getStopToken()));
+		$reference.setLocation(getLocation( $start, getStopToken()));//TODO: maybe this can be improved too.
 	}
 };
 
