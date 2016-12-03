@@ -154,8 +154,9 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 				continue;
 			}
 			IResource res = (IResource)o;
-			ResourceVisitor vis = new ResourceVisitor(cchange);
+			ResourceVisitor vis = new ResourceVisitor();
 			res.accept(vis);
+			cchange.add(vis.getChange());
 		}
 		affectedObjects = cchange.getAffectedObjects();
 		return cchange;
@@ -190,8 +191,8 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 
 		private final CompositeChange change;
 		
-		public ResourceVisitor(CompositeChange change) {
-			this.change = change;
+		public ResourceVisitor() {
+			this.change = new CompositeChange("MinimizeVisibilityRefactoring");;
 		}
 		
 		CompositeChange getChange() {
