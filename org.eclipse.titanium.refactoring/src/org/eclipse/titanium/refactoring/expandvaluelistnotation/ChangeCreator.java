@@ -99,7 +99,7 @@ class ChangeCreator {
 					break;
 				}
 				rootEdit.addChild(new InsertEdit(namedValue.getValue().getLocation().getOffset(), 
-						namedValue.getName() + " := "));
+						namedValue.getName().getTtcnName() + " := "));
 			}
 		}
 
