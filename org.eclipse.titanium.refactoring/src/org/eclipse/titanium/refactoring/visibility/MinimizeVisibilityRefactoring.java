@@ -65,7 +65,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 	public MinimizeVisibilityRefactoring(IStructuredSelection selection) {
 		this.selection = selection;
 		
-		Iterator it = selection.iterator();
+		Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();
 			if (o instanceof IResource) {
@@ -147,7 +147,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 			return null;
 		}
 		CompositeChange cchange = new CompositeChange("MinimizeVisibilityRefactoring");
-		Iterator it = selection.iterator();
+		Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();
 			if (!(o instanceof IResource)) {

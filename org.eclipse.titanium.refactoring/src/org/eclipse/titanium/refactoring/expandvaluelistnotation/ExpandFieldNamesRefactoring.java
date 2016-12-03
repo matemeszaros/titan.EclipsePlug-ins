@@ -57,7 +57,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 	public ExpandFieldNamesRefactoring(IStructuredSelection selection) {
 		this.selection = selection;
 		
-		Iterator it = selection.iterator();
+		Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();
 			if (o instanceof IResource) {
@@ -139,7 +139,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 			return null;
 		}
 		CompositeChange cchange = new CompositeChange("ExpandFieldNamesRefactoring");
-		Iterator it = selection.iterator();
+		Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();
 			if (!(o instanceof IResource)) {

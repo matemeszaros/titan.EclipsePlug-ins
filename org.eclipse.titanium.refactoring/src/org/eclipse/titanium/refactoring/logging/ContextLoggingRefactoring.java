@@ -112,7 +112,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 		if (selection instanceof IStructuredSelection) {
 			CompositeChange cchange = new CompositeChange("ContextLoggingRefactoring");
 			IStructuredSelection ssel = (IStructuredSelection)selection;
-			Iterator it = ssel.iterator();
+			Iterator<?> it = ssel.iterator();
 			while (it.hasNext()) {
 				Object o = it.next();
 				if (!(o instanceof IResource)) {

@@ -215,7 +215,7 @@ public class Utils {
 		if (ssel == null) {
 			return projs;
 		}
-		Iterator it = ssel.iterator();
+		Iterator<?> it = ssel.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();
 			if (!(o instanceof IResource)) {

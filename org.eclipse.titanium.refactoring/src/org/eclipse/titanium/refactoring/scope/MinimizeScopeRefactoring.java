@@ -101,7 +101,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 		if (fileSelection != null) {
 			//resource(s) selected
 			CompositeChange cchange = new CompositeChange("MinimizeScopeRefactoring");
-			Iterator it = fileSelection.iterator();
+			Iterator<?> it = fileSelection.iterator();
 			while (it.hasNext()) {
 				Object o = it.next();
 				if (!(o instanceof IResource)) {
