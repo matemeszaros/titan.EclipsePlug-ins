@@ -2,7 +2,6 @@ package org.eclipse.titan.designer.editors.configeditor;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
-import org.eclipse.titan.common.parsers.cfg.ConfigTreeNodeUtilities;
 
 /**
  * Base class for ...ItemTransfer classes,

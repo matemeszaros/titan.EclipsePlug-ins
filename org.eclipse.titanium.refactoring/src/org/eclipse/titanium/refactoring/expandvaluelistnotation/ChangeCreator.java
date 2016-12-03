@@ -16,7 +16,6 @@ import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.IVisitableNode;
 import org.eclipse.titan.designer.AST.Module;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.VisibilityModifier;
 import org.eclipse.titan.designer.AST.TTCN3.values.NamedValue;
 import org.eclipse.titan.designer.AST.TTCN3.values.SequenceOf_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Sequence_Value;
