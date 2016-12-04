@@ -275,9 +275,8 @@ public final class Def_Function extends Definition implements IParameterisedAssi
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		lastTimeChecked = timestamp;
-		
+
 		T3Doc.check(this.getCommentLocation(), KIND);
 
 		isUsed = false;

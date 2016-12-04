@@ -107,7 +107,6 @@ public final class Def_ExternalConst extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		
 		lastTimeChecked = timestamp;
 		isUsed = false;

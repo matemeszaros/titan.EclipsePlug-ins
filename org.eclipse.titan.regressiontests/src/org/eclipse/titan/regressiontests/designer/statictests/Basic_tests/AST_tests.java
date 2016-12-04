@@ -4904,9 +4904,11 @@ public class AST_tests {
 		return markersToCheck;
 	}
 
+	//subtype_tests_ttcn
+	
 	private ArrayList<MarkerToCheck> subtype_tests_ttcn_initializer() {
 		//subtype_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(754);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(748);
 		int lineNum = 24;
 		markersToCheck.add(new MarkerToCheck("Range subtyping is not allowed for type `boolean'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 2;
@@ -5280,18 +5282,14 @@ public class AST_tests {
 		markersToCheck.add(new MarkerToCheck("lower boundary is bigger than upper boundary in universal charstring subtype range",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was first declared here",  ++lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("lower boundary is bigger than upper boundary in universal charstring subtype range",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("upper boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring4' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
+		lineNum += 1;
+		for (i = 0; i < 2; i++) {
+			markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again", lineNum++, IMarker.SEVERITY_ERROR));
+		}
+		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring4' was declared here again",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring5' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring6' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
 		markersToCheck.add(new MarkerToCheck("Duplicate definition with name `FaultyUniversalCharstring7' was declared here again",  ++lineNum, IMarker.SEVERITY_ERROR));
-		markersToCheck.add(new MarkerToCheck("lower boundary of universal charstring subtype range must be a single element string",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 4;
 		markersToCheck.add(new MarkerToCheck("Reference to a constant value was expected instead of the return value of function `@subtype_tests.f_universalcharstringFunction'",  lineNum, IMarker.SEVERITY_ERROR));
 		lineNum += 1;
@@ -5704,7 +5702,6 @@ public class AST_tests {
 
 		return markersToCheck;
 	}
-
 
 	private ArrayList<MarkerToCheck> template_assignment_tests_ttcn_initializer() {
 		//template_assignment_tests.ttcn

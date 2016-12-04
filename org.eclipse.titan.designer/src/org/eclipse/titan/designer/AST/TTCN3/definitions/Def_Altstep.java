@@ -201,7 +201,6 @@ public final class Def_Altstep extends Definition implements IParameterisedAssig
 
 		isUsed = false;
 		runsOnType = null;
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		lastTimeChecked = timestamp;
 
 		T3Doc.check(this.getCommentLocation(), KIND);

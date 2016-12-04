@@ -168,7 +168,6 @@ public final class Def_Type extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		lastTimeChecked = timestamp;
 		isUsed = false;
 

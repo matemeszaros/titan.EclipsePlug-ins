@@ -226,7 +226,6 @@ public final class Def_Testcase extends Definition implements IParameterisedAssi
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		lastTimeChecked = timestamp;
 		
 		isUsed = false;

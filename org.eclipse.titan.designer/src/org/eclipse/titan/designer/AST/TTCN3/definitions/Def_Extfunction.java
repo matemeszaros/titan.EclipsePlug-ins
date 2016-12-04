@@ -196,8 +196,7 @@ public final class Def_Extfunction extends Definition implements IParameterisedA
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
-		
+
 		isUsed = false;
 		prototype = EncodingPrototype_type.NONE;
 		functionEncodingType = ExternalFunctionEncodingType_type.MANUAL;

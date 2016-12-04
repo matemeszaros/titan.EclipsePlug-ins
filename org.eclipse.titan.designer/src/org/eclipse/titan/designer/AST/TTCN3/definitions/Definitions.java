@@ -339,9 +339,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			if(group == null) {
 				continue; //paranoia
 			}
-			//TODO: Perhaps this marker should not always be executed. /if( some timestamp == null).../
-			MarkerHandler.markAllSemanticMarkersForRemoval(group); //clear the most outers group level
-			
 			String groupName = group.getIdentifier().getName();
 			if (defs.containsKey(groupName)) {
 				group.getIdentifier().getLocation().reportSemanticError(MessageFormat.format(Group.GROUPCLASHGROUP, groupName));
@@ -363,6 +360,9 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		}
 	}
 
+	/**
+	 * Refresh all markers on groups, definitions
+	 */
 	@Override
 	public void check(final CompilationTimeStamp timestamp) {
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
@@ -378,13 +378,24 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			}
 		}
 		
+		//markers on imports cannot be removed, they are already refreshed
+		
+		for(Definition definition : definitions){
+			MarkerHandler.markAllSemanticMarkersForRemoval(definition);
+		}
+		
+		for(Group group: groups){
+			MarkerHandler.markAllSemanticMarkersForRemoval(group);
+		}
+		
+		//TODO: remove markers on commented lines
+		
+		checkUniqueness(timestamp);
 		checkGroups(timestamp);
-
 		for( Definition definition: definitions){
 			definition.check(timestamp); //it calls definition.checkUniqueness!
 		}
 		
-		checkUniqueness(timestamp);
 	}
 	
 	/**
@@ -401,9 +412,21 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		}
 		
 		lastCompilationTimeStamp = timestamp;
-
+		
+		//markers on imports cannot be removed, the are already fresh
+		
+		for(Assignment assignment : assignments){
+			MarkerHandler.markAllSemanticMarkersForRemoval(assignment);
+		}
+		
+		for(Group group: groups){
+			MarkerHandler.markAllSemanticMarkersForRemoval(group);
+		}
+		
+		//TODO: remove markers on commented lines
+		
+		checkUniqueness(timestamp);
 		checkGroups(timestamp);
-
 		for (Iterator<Assignment> iterator = assignments.iterator(); iterator.hasNext();) {
 			Assignment assignmentFrom  = iterator.next();
 			assignmentFrom.check(timestamp);
