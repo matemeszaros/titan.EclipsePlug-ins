@@ -69,7 +69,7 @@ public class ExtractModuleParRefactoring  {
 
 	private static final IPath PATH_MODULEPAR_LIST_FILE_OUTPUT = Path.fromOSString("modulepars.txt");
 	
-	private IProject sourceProj;
+	private final IProject sourceProj;
 	/** the new project to extract function dependencies into */
 	private IProject targetProj;
 	

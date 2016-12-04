@@ -242,8 +242,8 @@ public class Utils {
 	 * */
 	private static class UpdateASTOp implements IRunnableWithProgress {
 		
-		private Set<IProject> toUpdate;
-		private String name;
+		private final Set<IProject> toUpdate;
+		private final String name;
 		
 		/**
 		 * @param toUpdate the projects to reanalyze

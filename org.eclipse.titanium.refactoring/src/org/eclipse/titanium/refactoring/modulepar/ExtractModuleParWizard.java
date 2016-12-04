@@ -64,11 +64,11 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	private static final String CREATING_PROJECT = "creating project";
 	private static final String CREATION_FAILED = "Project creation failed";
 
-	private String windowTitle;
+	private final String windowTitle;
 	
 	private IProject newProject;
 
-	private boolean wasAutoBuilding;
+	private final boolean wasAutoBuilding;
 	private boolean isCreated;
 	private IConfigurationElement config;
 	private ExtractModuleParWizardMainPage mainPage;

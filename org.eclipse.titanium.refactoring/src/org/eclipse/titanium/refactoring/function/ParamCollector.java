@@ -50,7 +50,7 @@ class ParamCollector {
 	
 	//out
 	private List<Param> params;
-	private boolean removeReturnClause = false;
+	private final boolean removeReturnClause = false;
 	private final List<RefactoringStatusEntry> warnings;
 	
 	ParamCollector(final IProject project, final StatementList selectedStatements, final Module selectedModule) {
@@ -100,7 +100,7 @@ class ParamCollector {
 		
 		private static final boolean DEBUG = ExtractToFunctionRefactoring.DEBUG_MESSAGES_ON;
 		private StatementList toVisit;
-		private StringBuilder debugInfo = new StringBuilder();
+		private final StringBuilder debugInfo = new StringBuilder();
 		
 		@Override
 		public int visit(final IVisitableNode node) {

@@ -339,7 +339,7 @@ class SelectionFinder {
 	 * */
 	private static class SelectionVisitor extends ASTVisitor {
 
-		private List<Statement> statements;
+		private final List<Statement> statements;
 		private StatementBlock parentBlock;
 
 		private final int offset;

@@ -22,7 +22,7 @@ public class ExtractToFunctionWizard extends RefactoringWizard implements IExecu
 	
 	private static final String WIZ_WINDOWTITLE = "Extract selected code into new function";
 	
-	private ExtractToFunctionRefactoring refactoring;
+	private final ExtractToFunctionRefactoring refactoring;
 	
 	public ExtractToFunctionWizard(final Refactoring refactoring) {
 		super(refactoring, DIALOG_BASED_USER_INTERFACE);

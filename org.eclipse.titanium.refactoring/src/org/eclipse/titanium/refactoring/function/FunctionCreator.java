@@ -57,11 +57,11 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	private static final String FUNCTION_CALL_PARAMS_END = ");";
 	
 	//in
-	private StatementList selectedStatements;
-	private IFile selectedFile;
-	private List<Param> params;
-	private Reference runsOnRef;
-	private Type returnType;
+	private final StatementList selectedStatements;
+	private final IFile selectedFile;
+	private final List<Param> params;
+	private final Reference runsOnRef;
+	private final Type returnType;
 	private final StringBuilder newFuncName;
 	private final List<RefactoringStatusEntry> warnings;
 	private final ReturnCertainty returnCertainity;

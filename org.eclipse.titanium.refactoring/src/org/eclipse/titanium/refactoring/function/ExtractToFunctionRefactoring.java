@@ -81,7 +81,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	
 	private IProject project;
 	
-	private StringBuilder newFuncName = new StringBuilder("newFunction"); 
+	private final StringBuilder newFuncName = new StringBuilder("newFunction"); 
 	private IVisitableNode parentFunc;
 	
 	//StringBuilders are used as mutable Strings

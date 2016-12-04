@@ -49,8 +49,8 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 			+ "Refactoring is not supported with the memory minimise option turned on, "
 			+ "we do not take any responsibility for it.";
 
-	private IStructuredSelection selection;
-	private Set<IProject> projects = new HashSet<IProject>();
+	private final IStructuredSelection selection;
+	private final Set<IProject> projects = new HashSet<IProject>();
 
 	private Object[] affectedObjects;		//the list of objects affected by the change
 	

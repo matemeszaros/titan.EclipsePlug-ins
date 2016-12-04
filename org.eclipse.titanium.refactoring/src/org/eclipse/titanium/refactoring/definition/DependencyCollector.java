@@ -69,7 +69,7 @@ class DependencyCollector {
 	private static final String DOUBLE_SEPARATOR = "\n\n";
 	private static final String SINGLE_SEPARATOR = "\n";
 	
-	private Definition selection;
+	private final Definition selection;
 	/** parts of files to copy */
 	private Map<IPath, StringBuilder> copyMap;
 	/** files to copy completely */

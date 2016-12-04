@@ -102,7 +102,7 @@ class IfContext extends Context {
 	 * */
 	private static class ClauseVisitor extends ASTVisitor {
 
-		private List<Reference> result = new ArrayList<Reference>();
+		private final List<Reference> result = new ArrayList<Reference>();
 		
 		List<Reference> getResult() {
 			return result;

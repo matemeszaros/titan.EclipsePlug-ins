@@ -210,7 +210,7 @@ class ChangeCreator {
 	 *  */
 	private static class LogInsertLocationFinder extends ASTVisitor {
 		
-		private List<LogArgument> args = new ArrayList<LogArgument>();
+		private final List<LogArgument> args = new ArrayList<LogArgument>();
 		
 		int calculateEndOffset() {
 			int endOffset = -1;

@@ -126,7 +126,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 	 * */
 	private class NameEditingSupport extends EditingSupport {
 
-		private TextCellEditor cellEditor;
+		private final TextCellEditor cellEditor;
 
 		public NameEditingSupport(final ColumnViewer viewer) {
 			super(viewer);

@@ -555,9 +555,9 @@ public class ChangeCreator {
 	 * */
 	private class FunctionAnalyzer extends ASTVisitor {
 
-		private Environment env = new Environment(settings);
+		private final Environment env = new Environment(settings);
 		
-		private LinkedList<Node> currStack = new LinkedList<Node>();
+		private final LinkedList<Node> currStack = new LinkedList<Node>();
 		
 		private IVisitableNode suspendStackBuildingForNode;	// if not null: until this node is not left, the stack is not modified
 		private IVisitableNode suspendDeclarationsForNode;	// if not null: until this node is not left, no declarations are recorded

@@ -67,7 +67,7 @@ class ForContext extends Context {
 	 * */
 	private static class ForVisitor extends ASTVisitor {
 
-		private List<Identifier> result = new ArrayList<Identifier>();
+		private final List<Identifier> result = new ArrayList<Identifier>();
 		
 		List<Identifier> getResult() {
 			return result;

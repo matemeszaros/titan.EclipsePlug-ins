@@ -66,11 +66,11 @@ public class ExtractDefinitionRefactoring {
 	
 	static final boolean ENABLE_COPY_COMMENTS = false;
 
-	private IProject sourceProj;
+	private final IProject sourceProj;
 	/** the new project to extract function dependencies into */
 	private IProject targetProj;
 	/** the definition which is being extracted */
-	private Definition selection;
+	private final Definition selection;
 	
 	/** this contains the copied dependencies during the operation */
 	private Map<IPath, StringBuilder> copyMap;

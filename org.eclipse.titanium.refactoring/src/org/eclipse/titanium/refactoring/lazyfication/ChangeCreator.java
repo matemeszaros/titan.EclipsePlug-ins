@@ -121,7 +121,7 @@ class ChangeCreator {
 	 * */
 	private class DefinitionVisitor extends ASTVisitor {
 		
-		private LazyChecker lazychecker;
+		private final LazyChecker lazychecker;
 		
 		DefinitionVisitor() {
 			lazychecker = new LazyChecker();
