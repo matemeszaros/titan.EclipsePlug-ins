@@ -30,7 +30,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeVisibilityActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
@@ -45,7 +45,7 @@ public class MinimizeVisibilityActionFromBrowser extends AbstractHandler impleme
 	@Override
 	public void run(final IAction action) {
 		performMinimizeVisibility();
-		
+
 	}
 	@Override
 	public void selectionChanged(final IAction action, final ISelection selection) {
@@ -64,11 +64,11 @@ public class MinimizeVisibilityActionFromBrowser extends AbstractHandler impleme
 		}
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
 		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
-		
+
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "MinimizeVisibility");
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
 		final MinimizeVisibilityRefactoring refactoring = new MinimizeVisibilityRefactoring(structSelection);
 		//open wizard
@@ -88,6 +88,6 @@ public class MinimizeVisibilityActionFromBrowser extends AbstractHandler impleme
 		//update AST after refactoring
 		Utils.updateASTAfterRefactoring(wiz, refactoring.getAffectedObjects(), refactoring.getName());
 	}
-	
-	
+
+
 }

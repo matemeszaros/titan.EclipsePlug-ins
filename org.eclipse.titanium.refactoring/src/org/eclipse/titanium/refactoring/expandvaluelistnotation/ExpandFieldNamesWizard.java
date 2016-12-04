@@ -8,12 +8,12 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 
 /**
  * Wizard for the 'Minimize visibility modifiers' refactoring operation.
- * 
+ *
  * @author Zsolt Tabi
  */
 public class ExpandFieldNamesWizard extends RefactoringWizard implements
 		IExecutableExtension {
-	
+
 	private static final String WIZ_WINDOWTITLE = "Expand record field names";
 
 	ExpandFieldNamesWizard(final Refactoring refactoring) {
@@ -23,7 +23,7 @@ public class ExpandFieldNamesWizard extends RefactoringWizard implements
 	@Override
 	public void setInitializationData(final IConfigurationElement config,
 			final String propertyName, final Object data) throws CoreException {
-		
+
 	}
 
 	@Override

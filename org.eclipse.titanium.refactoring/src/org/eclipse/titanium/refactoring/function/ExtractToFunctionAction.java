@@ -23,18 +23,18 @@ import org.eclipse.titanium.refactoring.Utils;
 /**
  * This class handles the <code>ExtractToFunctionRefactoring</code> class.
  * <code>execute()</code> is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractToFunctionAction extends AbstractHandler {
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		
+
 		//update AST
 		//TODO: force saving before refactoring (like in RenameRefactoring)
 		Utils.updateASTForProjectActiveInEditor("ExtractToFunction");
-		
+
 		//get selected statements
 		final ExtractToFunctionRefactoring refactoring = new ExtractToFunctionRefactoring();
 		refactoring.findSelection();
@@ -42,12 +42,12 @@ public class ExtractToFunctionAction extends AbstractHandler {
 			ErrorReporter.logError("ExtractToFunctionAction: Invalid selection! ");
 			return null;
 		}
-		
+
 		final IFile selectedFile = refactoring.getSelectedFile();
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selectedFile.getProject());
-		
+
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//find params & create function from string builders
 		try {
 			final WorkspaceJob job1 = refactoring.createFunction();
@@ -74,15 +74,15 @@ public class ExtractToFunctionAction extends AbstractHandler {
 			ErrorReporter.logError("ExtractToFunctionAction: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//report outdating
 		projectSourceParser.reportOutdating(selectedFile);
 		projectSourceParser.analyzeAll();
-		
+
 		Activator.getDefault().resumeHandlingResourceChanges();
 		return null;
 	}
-	
-	
+
+
 
 }

@@ -69,7 +69,7 @@ import org.eclipse.titanium.refactoring.scope.nodes.Variable;
  * By passing the selection through the constructor and calling {@link ChangeCreator#perform()}, this class
  *  creates a {@link Change} object, which can be returned by the standard
  *  {@link Refactoring#createChange(IProgressMonitor)} method in the refactoring class.
- * 
+ *
  * @author Viktor Varga
  */
 public class ChangeCreator {
@@ -93,12 +93,12 @@ public class ChangeCreator {
 		this.defSelection = selectedDef;
 		this.settings = settings;
 	}
-	
+
 	public Change getChange() {
 		return change;
 	}
-	
-	/** 
+
+	/**
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
@@ -108,8 +108,8 @@ public class ChangeCreator {
 		}
 		change = createFileChange(fileSelection);
 	}
-	
-	/** 
+
+	/**
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
@@ -117,7 +117,7 @@ public class ChangeCreator {
 		if (toVisit == null) {
 			return null;
 		}
-		
+
 		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
 		final Module module = sourceParser.containedModule(toVisit);
 		if(module == null) {
@@ -151,11 +151,11 @@ public class ChangeCreator {
 			}
 			allEdits.addAll(edits);
 		}
-		
+
 		if(allEdits.isEmpty()) {
 			return null;
 		}
-		
+
 		final String fileContents = loadFileContent(toVisit);
 		//create text edits
 		//
@@ -205,7 +205,7 @@ public class ChangeCreator {
 		}
 		return tfc;
 	}
-	
+
 	private TextEdit[] createTextEdit(final IFile toVisit, final String fileContent, final Edit e, final Map<Edit, InsertEdit> editsDone) {
 		//check for multi-declaration statement
 		if (e.declSt.isMultiDeclaration()) {
@@ -279,7 +279,7 @@ public class ChangeCreator {
 					"DeleteEdits are not overlapping! ");
 			return null;
 		}
-		
+
 		final int offset = Math.min(de0.getOffset(), de1.getOffset());
 		final int endOffset = Math.max(de0.getExclusiveEnd(), de1.getExclusiveEnd());
 		return new DeleteEdit(offset, endOffset-offset);
@@ -288,7 +288,7 @@ public class ChangeCreator {
 		return (de0.getOffset() < de1.getExclusiveEnd() &&
 				de0.getExclusiveEnd() > de1.getOffset());
 	}
-	
+
 	/**
 	 * Returns the exact location of a statement including the prefix whitespace and the suffix semicolon and whitespace (and comment)
 	 * */
@@ -359,7 +359,7 @@ public class ChangeCreator {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Returns the {@link Location} of the {@DeleteEdit} to remove a variable from a declaration list
 	 * */
@@ -409,7 +409,7 @@ public class ChangeCreator {
 		//System.err.println("mdcutloc -->>>" + fileContent.substring(cutOffset, cutEndOffset) + "<<<");
 		return new Location(declStmtLoc.getFile(), declStmtLoc.getLine(), cutOffset, cutEndOffset);
 	}
-	
+
 	private int calculateOffsetIncludingLeadingComma(final String fileContent, int offset, final int stopAtOffset) {
 		boolean insideBlockComment = false;
 		while (offset>stopAtOffset) {
@@ -492,7 +492,7 @@ public class ChangeCreator {
 		}
 		return endOffset;
 	}
-	
+
 	/**
 	 * Returns the content of an {@InsertEdit} to move a variable from a declaration list
 	 * */
@@ -536,7 +536,7 @@ public class ChangeCreator {
 		//System.err.println("mdcopyloc -->>>" + prefixContent + "<>" + varContent + "<>" + suffixContent + "<<<");
 		return prefixContent + varContent + suffixContent;
 	}
-	
+
 	/**
 	 * Analyze a function or testcase
 	 * */
@@ -546,31 +546,31 @@ public class ChangeCreator {
 			ErrorReporter.logError("ChangeCreator.analyzeFunction(): def must be a Def_Function or a Def_Testcase! def type: " + def.getClass());
 			return null;
 		}
-		
+
 		final FunctionAnalyzer vis = new FunctionAnalyzer();
 		def.accept(vis);
 		final Environment env = vis.getResult();
 		final List<Edit> eds = env.refactor();
 		return eds;
 	}
-	
+
 	/**
 	 * Analyzes a function or testcase
 	 * */
 	private class FunctionAnalyzer extends ASTVisitor {
 
 		private final Environment env = new Environment(settings);
-		
+
 		private final LinkedList<Node> currStack = new LinkedList<Node>();
-		
+
 		private IVisitableNode suspendStackBuildingForNode;	// if not null: until this node is not left, the stack is not modified
 		private IVisitableNode suspendDeclarationsForNode;	// if not null: until this node is not left, no declarations are recorded
 		private IVisitableNode suspendReferencesForNode;	// if not null: until this node is not left, no references are recorded
-		
+
 		public Environment getResult() {
 			return env;
 		}
-		
+
 		private void setSuspendStackBuildingForNode(final IVisitableNode node) {
 			if (suspendStackBuildingForNode == null) {
 				suspendStackBuildingForNode = node;
@@ -597,7 +597,7 @@ public class ChangeCreator {
 				suspendReferencesForNode = null;
 			}
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Loop_Definitions && suspendDeclarationsForNode == null) {
@@ -650,7 +650,7 @@ public class ChangeCreator {
 				if (!(currStack.peek() instanceof StatementNode)) {
 					//System.err.println("DEBUG > At a var def: stacktop is not a SN! (5) st: " + node + ",\n         stacktop: " + currStack.peek());
 				}
-				
+
 				final StatementNode declSt = (StatementNode)currStack.peek();
 				final Variable var = new Variable((Def_Var)node, declSt, false);
 				if (declSt == null) {
@@ -703,7 +703,7 @@ public class ChangeCreator {
 			}
 			return V_CONTINUE;
 		}
-		
+
 		@Override
 		public int leave(final IVisitableNode node) {
 			if (node instanceof For_Loop_Definitions) {
@@ -727,21 +727,21 @@ public class ChangeCreator {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Collects Def_Functions and Def_Testcases in a module.
 	 * */
 	private static class FunctionCollector extends ASTVisitor {
-		
+
 		private Set<Definition> result = new HashSet<Definition>();
-		
+
 		public Set<Definition> getResult() {
 			return result;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Def_Function ||
@@ -750,13 +750,13 @@ public class ChangeCreator {
 				return V_SKIP;
 			}
 			return V_CONTINUE;
-			
+
 		}
-		
-		
+
+
 	}
-	
-	
+
+
 	private static String loadFileContent(final IFile toLoad) {
 		StringBuilder fileContents;
 		try {
@@ -778,6 +778,6 @@ public class ChangeCreator {
 		}
 		return fileContents.toString();
 	}
-	
-	
+
+
 }

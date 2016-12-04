@@ -31,28 +31,28 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * This refactoring operation adds context info to existing log statements, if necessary.
  * The user can specify settings for the operation in the wizard dialog.
  * The operation can be executed using the mechanisms in the superclass, through a wizard for example.
- * 
+ *
  * @author Viktor Varga
  */
 public class ContextLoggingRefactoring extends Refactoring {
 
 	private final IFile selectedFile;	//not null only if selection is of TextSelection
 	private final ISelection selection;
-	
+
 	private final Settings settings;
-	
+
 	private Object[] affectedObjects;		//the list of objects affected by the change
-	
+
 
 	/*
 	 * TODO dev:
-	 *  
+	 *
 	 *  what about expressions like lengthof(...)?
 	 *  wizard: param count limit input field, link it to Context.getVarCountLimitOption()
 	 *  local variable contexts
-	 * 
+	 *
 	 * */
-	
+
 	/** Use this constructor when the selection is a set of files, folders, or projects. */
 	public ContextLoggingRefactoring(final IStructuredSelection selection, final Settings settings) {
 		this.selectedFile = null;
@@ -73,15 +73,15 @@ public class ContextLoggingRefactoring extends Refactoring {
 			this.settings = settings;
 		}
 	}
-	
+
 	public Settings getSettings() {
 		return settings;
 	}
-	
+
 	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
-	
+
 	//METHODS FROM REFACTORING
 
 	@Override
@@ -117,7 +117,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 				if (!(o instanceof IResource)) {
 					continue;
 				}
-				
+
 				final IResource res = (IResource)o;
 				final ResourceVisitor vis = new ResourceVisitor();
 				res.accept(vis);
@@ -141,7 +141,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 	}
 
 	//METHODS FROM REFACTORING END
-	
+
 
 	/**
 	 * Visits all the files of a folder or project (any {@link IResource}).
@@ -153,15 +153,15 @@ public class ContextLoggingRefactoring extends Refactoring {
 	private class ResourceVisitor implements IResourceVisitor {
 
 		private final CompositeChange change;
-		
+
 		public ResourceVisitor() {
 			this.change = new CompositeChange("ContextLoggingRefactoring");;
 		}
-		
+
 		private CompositeChange getChange() {
 			return change;
 		}
-		
+
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
@@ -177,14 +177,14 @@ public class ContextLoggingRefactoring extends Refactoring {
 			//CONTINUE
 			return true;
 		}
-		
+
 	}
-	
-	/** 
+
+	/**
 	 * This class contains the settings configuration for a refactoring operation.
 	 * */
 	public static class Settings {
-		
+
 		/** log function parameters. */
 		public static final int SETTING_LOG_FUNCPAR = 0x1;
 		/** log varaibles in if condition */
@@ -197,17 +197,17 @@ public class ContextLoggingRefactoring extends Refactoring {
 		public static final int SETTING_LOG_LOCAL_VARS_PARENT_BLOCK_ONLY = 0x10;
 		/** modify log statements which already log variables */
 		public static final int SETTING_MODIFY_LOG_STATEMENTS = 0x20;
-		
+
 		private int settings = 0;
-		
+
 		/** the maximum number of variables in log statements (including the ones
 		 *  in them before the refactoring) */
 		private int countLimit;
-		
+
 		public Settings() {
 			createDefaultSettings();
 		}
-		
+
 		private void createDefaultSettings() {
 			setSetting(SETTING_LOG_FUNCPAR, true);
 			setSetting(SETTING_LOG_IF, true);
@@ -217,14 +217,14 @@ public class ContextLoggingRefactoring extends Refactoring {
 			setSetting(SETTING_MODIFY_LOG_STATEMENTS, true);
 			countLimit = 8;
 		}
-		
+
 		public int getCountLimit() {
 			return countLimit;
 		}
 		public void setCountLimit(final int countLimit) {
 			this.countLimit = countLimit;
 		}
-		
+
 		public boolean getSetting(final int setting) {
 			return (settings & setting) == setting;
 		}
@@ -239,7 +239,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 				settings -= setting;
 			}
 		}
-		
+
 	}
-	
+
 }

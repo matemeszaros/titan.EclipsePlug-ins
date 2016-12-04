@@ -52,7 +52,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 /**
  * Wizard for the 'Extract definition' operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractDefinitionWizard extends BasicNewResourceWizard implements IExecutableExtension {
@@ -64,16 +64,16 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	private static final String SOURCE_DIR = "src";
 	private static final String CREATING_PROJECT = "creating project";
 	private static final String CREATION_FAILED = "Project creation failed";
-	
+
 	private final String windowTitle;
-	
+
 	private IProject newProject;
 
 	private final boolean wasAutoBuilding;
 	private boolean isCreated;
 	private IConfigurationElement config;
 	private ExtractDefinitionWizardMainPage mainPage;
-	
+
 	public ExtractDefinitionWizard(final String selectionName) {
 		windowTitle = MessageFormat.format(WIZ_WINDOWTITLE, selectionName);
 		final IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
@@ -87,7 +87,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 		Activator.getDefault().pauseHandlingResourceChanges();
 		isCreated = false;
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		if (!isCreated) {
@@ -103,7 +103,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 		} catch (CoreException ce) {
 			ErrorReporter.logExceptionStackTrace(ce);
 		}
-		
+
 		try {
 			newProject.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakeAttributesData.TEMPORAL_WORKINGDIRECTORY_PROPERTY), WORKING_DIR);
@@ -179,17 +179,17 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 		mainPage.setDescription(WIZ_DESCRIPTION);
 		addPage(mainPage);
 	}
-	
+
 	public IProject getProject() {
 		return newProject;
 	}
-	
+
 	public IPath getProjectPath() {
 		final IPath path = mainPage.getLocationPath();
 		final String name = mainPage.getProjectName();
 		return path.append(name);
 	}
-	
+
 	@Override
 	public void init(final IWorkbench workbench, final IStructuredSelection currentSelection) {
 		super.init(workbench, currentSelection);
@@ -201,7 +201,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	public void setInitializationData(final IConfigurationElement config, final String propertyName, final Object data) {
 		this.config = config;
 	}
-	
+
 	private void createProject(final IProjectDescription description, final IProject projectHandle, final IProgressMonitor monitor)
 			throws CoreException {
 		final IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
@@ -244,7 +244,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 			@Override
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				createProject(description, newProjectHandle, monitor);
-				
+
 				String sourceFolder = SOURCE_DIR;
 				IFolder folder = newProjectHandle.getFolder(sourceFolder);
 				if (!folder.exists()) {

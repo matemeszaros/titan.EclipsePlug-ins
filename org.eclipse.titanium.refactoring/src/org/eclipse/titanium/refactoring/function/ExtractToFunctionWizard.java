@@ -15,21 +15,21 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 
 /**
  * Wizard for the 'Extract to function' operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractToFunctionWizard extends RefactoringWizard implements IExecutableExtension {
-	
+
 	private static final String WIZ_WINDOWTITLE = "Extract selected code into new function";
-	
+
 	private final ExtractToFunctionRefactoring refactoring;
-	
+
 	public ExtractToFunctionWizard(final Refactoring refactoring) {
 		super(refactoring, DIALOG_BASED_USER_INTERFACE);
 		this.refactoring = (ExtractToFunctionRefactoring)refactoring;
 	}
-	
-	
+
+
 	@Override
 	public void setInitializationData(final IConfigurationElement config,
 			final String propertyName, final Object data) throws CoreException {

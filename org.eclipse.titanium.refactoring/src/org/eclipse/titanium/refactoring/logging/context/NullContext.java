@@ -16,8 +16,8 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 
 /**
  * Context class representing uninteresting nodes.
- * All the nodes from which no log arguments are created are represented by this class. 
- * 
+ * All the nodes from which no log arguments are created are represented by this class.
+ *
  * @author Viktor Varga
  */
 class NullContext extends Context {
@@ -25,10 +25,10 @@ class NullContext extends Context {
 	NullContext(final IVisitableNode node, final Settings settings) {
 		super(node, settings);
 	}
-	
+
 	@Override
 	protected void process_internal() {}
-	
+
 	@Override
 	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
 		return new ArrayList<String>();

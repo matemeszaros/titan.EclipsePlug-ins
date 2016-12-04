@@ -54,26 +54,26 @@ import org.eclipse.titan.designer.parsers.ProjectSourceParser;
  * By passing the selection through the constructor and calling {@link ChangeCreator#perform()}, this class
  *  creates a {@link Change} object, which can be returned by the standard
  *  {@link Refactoring#createChange(IProgressMonitor)} method in the refactoring class.
- * 
+ *
  * @author Viktor Varga
  */
 class ChangeCreator {
 
 	//in
 	private final IFile selectedFile;
-	
+
 	//out
 	private Change change;
-	
+
 	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
-	
+
 	public Change getChange() {
 		return change;
 	}
-	
-	/** 
+
+	/**
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
@@ -83,7 +83,7 @@ class ChangeCreator {
 		}
 		change = createFileChange(selectedFile);
 	}
-	
+
 	private Change createFileChange(final IFile toVisit) {
 		if (toVisit == null) {
 			return null;
@@ -97,7 +97,7 @@ class ChangeCreator {
 		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
 		final NavigableSet<ILocateableNode> nodes = vis.getLocations();
-		
+
 		if (nodes.isEmpty()) {
 			return null;
 		}
@@ -130,11 +130,11 @@ class ChangeCreator {
 		}
 		return tfc;
 	}
-	
+
 	private WorkspaceJob calculateEditLocations(final NavigableSet<ILocateableNode> nodes, final IFile file
 			, final List<Location> locations_out) throws CoreException {
 		final WorkspaceJob job = new WorkspaceJob("MinimizeVisibilityRefactoring: calculate edit locations") {
-			
+
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				final int BUF_LEN = 8;
@@ -147,7 +147,7 @@ class ChangeCreator {
 						int toSkip = node.getLocation().getOffset()-currOffset;
 						if (toSkip < 0) {
 							ErrorReporter.logError("MinimizeVisibilityRefactoring.ChangeCreator: Negative skip value" +
-									" while parsing file: " + file.getName() + ", offset: " + 
+									" while parsing file: " + file.getName() + ", offset: " +
 									node.getLocation().getOffset() + "->" + currOffset);
 							continue;
 						}
@@ -171,7 +171,7 @@ class ChangeCreator {
 						}
 						locations_out.add(new Location(node.getLocation().getFile(), node.getLocation().getLine(),
 								node.getLocation().getOffset(), node.getLocation().getOffset()+vmLen));
-						
+
 						currOffset = node.getLocation().getOffset()+BUF_LEN;
 					}
 					isr.close();
@@ -188,7 +188,7 @@ class ChangeCreator {
 		job.schedule();
 		return job;
 	}
-	
+
 	/**
 	 * Collects the locations of all the definitions in a module where the visibility modifier
 	 *  is not yet minimal.
@@ -196,17 +196,17 @@ class ChangeCreator {
 	 * Call on modules.
 	 * */
 	private static class DefinitionVisitor extends ASTVisitor {
-		
+
 		private final NavigableSet<ILocateableNode> locations;
-		
+
 		DefinitionVisitor() {
 			locations = new TreeSet<ILocateableNode>(new LocationComparator());
 		}
-		
+
 		private NavigableSet<ILocateableNode> getLocations() {
 			return locations;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Definition && isGoodType(node)) {
@@ -223,7 +223,7 @@ class ChangeCreator {
 			}
 			return V_CONTINUE;
 		}
-		
+
 		private boolean isGoodType(final IVisitableNode node) {
 			if (node instanceof Def_Altstep ||
 					node instanceof Def_Const ||
@@ -237,7 +237,7 @@ class ChangeCreator {
 			}
 			return false;
 		}
-		
+
 		private boolean hasValidLocation(final Definition def) {
 			if (def.getLocation() == null) {
 				return false;
@@ -247,7 +247,7 @@ class ChangeCreator {
 			}
 			return true;
 		}
-		
+
 	}
 
 	/**
@@ -267,7 +267,7 @@ class ChangeCreator {
 			final int o1 = arg1.getLocation().getOffset();
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
-		
+
 	}
 
 	private static VisibilityModifier parseVisibilityModifier(final String str) {
@@ -282,5 +282,5 @@ class ChangeCreator {
 		}
 		return null;
 	}
-	
+
 }

@@ -20,16 +20,16 @@ import org.eclipse.titan.common.logging.ErrorReporter;
 
 /**
  * Extract Module Parameters to a new TITAN project, from headless environment.
- * 
+ *
  * @author Istvan Bohm
  * */
 public class ExtractModuleParHeadlessRunner implements IApplication {
-	
+
 	@Override
 	public Object start(final IApplicationContext context) {
-		
+
 		final String[] cmdArguments = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
-		
+
 		Map<String, String> args;
 		try {
 			args = processArgs(cmdArguments);
@@ -38,7 +38,7 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 			System.out.println(e.getMessage());
 			return -1;
 		}
-		
+
 		final String sourceProjName = args.get("in");
 		final String targetProjName = args.get("out");
 		final boolean save = args.get("save")!=null;
@@ -49,16 +49,16 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 			System.out.println("ExtractModuleParHeadless: Source project is not exist: " + sourceProjName);
 			return -1;
 		}
-		
+
 		final IProject targetProj = ResourcesPlugin.getWorkspace().getRoot().getProject(targetProjName);
 		if(targetProj.exists()) {
 			ErrorReporter.logError("ExtractModuleParHeadless: Output project is already exist: " + targetProjName);
 			System.out.println("ExtractModuleParHeadless: Output project is already exist: " + targetProjName );
 			return -1;
 		}
-		
+
 		final ExtractModuleParHeadless headless = new ExtractModuleParHeadless();
-		
+
 		final String location = args.get("location");
 		if(location!=null) {
 			try {
@@ -66,14 +66,14 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 				if(!d.exists()) {
 				    try{
 				    	d.mkdirs();
-				    } 
+				    }
 				    catch(Exception e){
 				    	throw new Exception("Could not create the parent folder of the project: " + d.getAbsolutePath() );
 				    }
 				} else if(!d.isDirectory()) {
 					throw new Exception("Provided location must be a directory.");
 				}
-				
+
 				final File f = new File(location,targetProjName);
 				if(f.exists()) {
 					throw new Exception("Project folder is already exist: " + f.getAbsolutePath() );
@@ -88,11 +88,11 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 				System.out.println("ExtractModuleParHeadless: " + e.getMessage());
 				return -1;
 			}
-		} 
-		
-		
+		}
+
+
 		headless.run(sourceProj,targetProjName,save);
-		
+
 		return IApplication.EXIT_OK;
 	}
 
@@ -100,7 +100,7 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 	public void stop() {
 		//do nothing
 	}
-	
+
 	private Map<String, String> processArgs(final String[] cliArgs) throws ArgumentException {
 		final HashMap<String, String> arguments = new HashMap<String, String>(cliArgs.length);
 		for(int i=0;i<cliArgs.length;++i) {
@@ -115,17 +115,17 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 				arguments.put(cliArgs[i-1].substring(1), cliArgs[i]);
 			}
 		}
-		
+
 		if(!arguments.containsKey("in") || arguments.get("in").length()==0) {
 			throw new ArgumentException("Error, missing mandatory argument: -in");
 		}
 		if(!arguments.containsKey("out") || arguments.get("out").length()==0) {
 			throw new ArgumentException("Error, missing mandatory argument: -out");
 		}
-		
+
 		return arguments;
 	}
-	
+
 	private class ArgumentException extends Exception {
 		private static final long serialVersionUID = 1L;
 

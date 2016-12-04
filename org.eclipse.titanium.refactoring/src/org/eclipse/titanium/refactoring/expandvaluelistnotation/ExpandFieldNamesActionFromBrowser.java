@@ -24,7 +24,7 @@ import org.eclipse.titanium.refactoring.Utils;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Zsolt Tabi
  */
 public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
@@ -39,7 +39,7 @@ public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implement
 	@Override
 	public void run(final IAction action) {
 		performMinimizeVisibility();
-		
+
 	}
 	@Override
 	public void selectionChanged(final IAction action, final ISelection selection) {
@@ -54,14 +54,14 @@ public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implement
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		
+
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
 		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
-		
+
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExpandFieldNames");
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
 		final ExpandFieldNamesRefactoring refactoring = new ExpandFieldNamesRefactoring(structSelection);
 		//open wizard
@@ -83,6 +83,6 @@ public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implement
 		//update AST after refactoring
 		Utils.updateASTAfterRefactoring(wiz, refactoring.getAffectedObjects(), refactoring.getName());
 	}
-	
-	
+
+
 }

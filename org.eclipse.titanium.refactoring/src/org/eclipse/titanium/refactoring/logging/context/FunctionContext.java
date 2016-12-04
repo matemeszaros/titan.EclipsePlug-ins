@@ -22,17 +22,17 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 
 /**
  * Context class representing {@link Def_Function} nodes.
- * 
+ *
  * @author Viktor Varga
  */
 class FunctionContext extends Context {
-	
+
 	private List<Identifier> paramIds;
 
 	public FunctionContext(final Def_Function func, final Settings settings) {
 		super(func, settings);
 	}
-	
+
 	@Override
 	public Def_Function getNode() {
 		return (Def_Function)super.getNode();
@@ -64,7 +64,7 @@ class FunctionContext extends Context {
 		return ret;
 	}
 
-	/** 
+	/**
 	 * Collects all the necessary variable identifiers from an {@link FormalParameterList}.
 	 * <p>
 	 * Call on {@link FormalParameterList}.
@@ -72,11 +72,11 @@ class FunctionContext extends Context {
 	private static class ParameterListVisitor extends ASTVisitor {
 
 		private final List<Identifier> result = new ArrayList<Identifier>();
-		
+
 		private List<Identifier> getResult() {
 			return result;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Identifier) {
@@ -93,7 +93,7 @@ class FunctionContext extends Context {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
 
 }

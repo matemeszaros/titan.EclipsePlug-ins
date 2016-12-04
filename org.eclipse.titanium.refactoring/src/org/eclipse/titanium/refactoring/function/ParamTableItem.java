@@ -9,7 +9,7 @@ package org.eclipse.titanium.refactoring.function;
 
 /**
  * This class represents a line of the params' table on wizard page#2
- * 
+ *
  * @author Viktor Varga
  */
 class ParamTableItem {

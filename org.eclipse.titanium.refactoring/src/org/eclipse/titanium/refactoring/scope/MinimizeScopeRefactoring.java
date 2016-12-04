@@ -25,26 +25,26 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 
 /**
  * This class represents the 'Minimize scope of local variables' refactoring operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeScopeRefactoring extends Refactoring {
 
 	private final IStructuredSelection fileSelection;	//not null only if selection is one or multiple resource(s)
 	private final Definition defSelection;				//not null only if selection is a single definition
-	
+
 	private final Settings settings;
-	
+
 	private Object[] affectedObjects;		//the list of objects affected by the change
-	
+
 	/*
-	 * TODO 
+	 * TODO
 	 * 	check javadoc
 	 *  remove unused code from the package
-	 *  
+	 *
 	 *  use Utils.createLocationString()
-	 * 
-	 * 
+	 *
+	 *
 	 * */
 
 	/** Use this constructor when the selection is a set of files, folders, or projects. */
@@ -67,11 +67,11 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			this.settings = settings;
 		}
 	}
-	
+
 	public Settings getSettings() {
 		return settings;
 	}
-	
+
 	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
@@ -82,7 +82,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 	public String getName() {
 		return "Minimize scope";
 	}
-	
+
 	@Override
 	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
@@ -106,7 +106,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 				if (!(o instanceof IResource)) {
 					continue;
 				}
-				
+
 				final IResource res = (IResource)o;
 				final ResourceVisitor vis = new ResourceVisitor();
 				res.accept(vis);
@@ -121,7 +121,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			if (!(file instanceof IFile)) {
 				ErrorReporter.logError("MinimizeScopeRefactoring.createChange(): File container of defSelection is not an IFile! ");
 			}
-			
+
 			final ChangeCreator chCreator = new ChangeCreator((IFile)file, defSelection, settings);
 			chCreator.perform();
 			final Change ch = chCreator.getChange();
@@ -147,15 +147,15 @@ public class MinimizeScopeRefactoring extends Refactoring {
 	private class ResourceVisitor implements IResourceVisitor {
 
 		private final CompositeChange change;
-		
+
 		public ResourceVisitor() {
 			this.change = new CompositeChange("MinimizeScopeRefactoring");;
 		}
-		
+
 		private CompositeChange getChange() {
 			return change;
 		}
-		
+
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
@@ -171,44 +171,44 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			//CONTINUE
 			return true;
 		}
-		
+
 	}
 
-	/** 
+	/**
 	 * This class contains the settings configuration for a refactoring operation.
 	 * */
 	public static class Settings {
-		
+
 		/** Enable moving variables at all (can be false if the refactoring is used for removing unused variables). */
 		public static final int MOVE_VARS = 0x1;
 		/** Enable moving variables when their scope is correct. */
 		public static final int MOVE_VARS_IN_CORRECT_SCOPE = 0x2;
 		/** Enable removing unused variables. */
 		public static final int REMOVE_UNUSED_VARS = 0x4;
-		/** 
+		/**
 		 * Avoid moving or removing declarations when there is a function call in them.
 		 * <p>
 		 * Refactoring the code while disabling this option might change the refactored code behaviour.
 		 * */
 		public static final int AVOID_MOVING_WHEN_FUNCCALL = 0x8;
-		/** 
+		/**
 		 * Avoid moving declarations when there is an unchecked reference in the declaration stmt.
 		 * <p>
 		 * Some of the variables referred in the declaration stmt are not checked for write occurrences
 		 * at the moment. Refactoring the code while disabling this option may lead to variable declarations
 		 * moved past these write occurrences of the referred variables. This might change the refactored
-		 * code behaviour. 
+		 * code behaviour.
 		 *  */
 		public static final int AVOID_MOVING_WHEN_UNCHECKED_REF = 0x10;
 		/** Avoid moving and/or taking apart declaration lists (unused variables can still be removed from it). */
 		public static final int AVOID_MOVING_MULTIDECLARATIONS = 0x20;
-		
+
 		private int settings = 0;
-		
+
 		public Settings() {
 			createDefaultSettings();
 		}
-		
+
 		private void createDefaultSettings() {
 			setSetting(MOVE_VARS, true);
 			setSetting(MOVE_VARS_IN_CORRECT_SCOPE, true);
@@ -217,7 +217,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			setSetting(AVOID_MOVING_WHEN_UNCHECKED_REF, true);
 			setSetting(AVOID_MOVING_MULTIDECLARATIONS, false);
 		}
-		
+
 		public boolean getSetting(final int setting) {
 			return (settings & setting) == setting;
 		}
@@ -232,8 +232,8 @@ public class MinimizeScopeRefactoring extends Refactoring {
 				settings -= setting;
 			}
 		}
-		
+
 	}
-	
-	
+
+
 }

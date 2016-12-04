@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Classes implementing this interface should be able to provide a model for a
  * table view. <code>T</code> is a class representing a line of the table.
- * 
+ *
  * @author Viktor Varga
  */
 interface IModelProvider<T> {

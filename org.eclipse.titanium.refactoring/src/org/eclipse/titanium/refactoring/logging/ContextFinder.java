@@ -32,17 +32,17 @@ import org.eclipse.titanium.refactoring.logging.context.ContextFactory;
  *  {@link Log_Statement}. The root {@link Context} is mostly the {@link Context} object derived from
  *  a {@link Module} node. Its child context is derived from the {@link IVisitableNode} child of the
  *  module in which the current {@link Log_Statement} is located. The end of the context chain (the last
- *  descendant) is the context derived from the current {@link Log_Statement}. 
- * 
+ *  descendant) is the context derived from the current {@link Log_Statement}.
+ *
  * @author Viktor Varga
  */
 class ContextFinder extends ASTVisitor {
-	
+
 	private final Settings settings;
-	
+
 	private final ContextFactory factory;
 	private final Deque<IVisitableNode> ancestorStack;
-	
+
 	private final Map<Log_Statement, Context> result;
 
 	ContextFinder(final Settings settings) {
@@ -73,7 +73,7 @@ class ContextFinder extends ASTVisitor {
 
 		return curr;
 	}
-	
+
 	@Override
 	public int visit(final IVisitableNode node) {
 		ancestorStack.addFirst(node);
@@ -97,20 +97,20 @@ class ContextFinder extends ASTVisitor {
 		}
 		return V_CONTINUE;
 	}
-	
-	/** 
+
+	/**
 	 * Searches a log statement for arguments that are variables (and not text literals).
 	 * <p>
 	 * Call on a {@link Log_Statement}}
 	 * */
 	private static class LogStatementVisitor extends ASTVisitor {
-		
+
 		private boolean result = false;
-		
+
 		private boolean getResult() {
 			return result;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
@@ -119,7 +119,7 @@ class ContextFinder extends ASTVisitor {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
-	
+
 }

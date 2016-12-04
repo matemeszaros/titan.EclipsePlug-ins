@@ -23,16 +23,16 @@ import org.eclipse.titanium.refactoring.scope.MinimizeScopeRefactoring;
 
 /**
  * A node representing a Statement.
- * 
+ *
  * @author Viktor Varga
  */
 public class StatementNode extends Node {
 
 	protected BlockNode parent;
-	
+
 	protected final List<BlockNode> blocks;
 	protected final Set<Variable> referedVars;
-	
+
 	protected Variable declaredVar;
 	protected MultiDeclaration multiDeclaration;	//null if this node is not a multi-declaration
 	/**
@@ -45,7 +45,7 @@ public class StatementNode extends Node {
 	 * See {@link MinimizeScopeRefactoring.Settings#AVOID_MOVING_WHEN_UNCHECKED_REF}
 	 * */
 	protected boolean hasUncheckedRef = false;
-	
+
 	protected boolean moved = false;
 
 	public StatementNode(final IVisitableNode astNode) {
@@ -53,7 +53,7 @@ public class StatementNode extends Node {
 		this.blocks = new ArrayList<BlockNode>();
 		this.referedVars = new HashSet<Variable>();
 	}
-	
+
 	public BlockNode getParent() {
 		return parent;
 	}
@@ -65,20 +65,20 @@ public class StatementNode extends Node {
 	}
 	public Variable getDeclaredVar() {
 		return declaredVar;
-	}	
+	}
 	public MultiDeclaration getMultiDeclaration() {
 		return multiDeclaration;
 	}
-	
+
 	public boolean isLocationEqualTo(final StatementNode sn) {
 		if (!(this.getAstNode() instanceof ILocateableNode)) {
 			return false;
 		}
-		
+
 		if (!(sn.getAstNode() instanceof ILocateableNode)) {
 			return false;
 		}
-		
+
 		final Location loc0 = ((ILocateableNode)this.getAstNode()).getLocation();
 		final Location loc1 = ((ILocateableNode)sn.getAstNode()).getLocation();
 		return loc0.getFile().equals(loc1.getFile()) &&
@@ -94,11 +94,11 @@ public class StatementNode extends Node {
 	public boolean hasFunctionCall() {
 		return hasFunctionCall;
 	}
-	
+
 	public boolean isMoved() {
 		return moved;
 	}
-	
+
 	public void setParent(final BlockNode parent) {
 		this.parent = parent;
 	}
@@ -120,7 +120,7 @@ public class StatementNode extends Node {
 	public void setHasFunctionCall() {
 		hasFunctionCall = true;
 	}
-	
+
 	public void setHasUncheckedRef() {
 		this.hasUncheckedRef = true;
 	}
@@ -155,11 +155,11 @@ public class StatementNode extends Node {
 		}*/
 		multiDeclaration = null;
 	}
-	
+
 	public void setMoved() {
 		this.moved = true;
 	}
-	
+
 	@Override
 	protected boolean containsNode(final Node n) {
 		if (this.equals(n)) {
@@ -172,7 +172,7 @@ public class StatementNode extends Node {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean isBlockAncestorOfThis(final BlockNode bn) {
 		BlockNode parent = this.getParent();
@@ -200,7 +200,7 @@ public class StatementNode extends Node {
 			return false;
 		}
 		return true;
-	} 
+	}
 
 	public BlockNode findBlockInStmtWhichContainsNode(final Node containedNode) {
 		if (!containedNode.isStmtAncestorOfThis(this)) {
@@ -267,8 +267,8 @@ public class StatementNode extends Node {
 		ErrorReporter.logError("StatementNode.compareCurrentPositionTo(): Erroneous state: " + Utils.createLocationString(astNode));
 		return 0;
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -293,7 +293,7 @@ public class StatementNode extends Node {
 		}
 		return sb.toString();
 	}
-	
+
 	public String toStringRecursive(final boolean recursive, final int prefixLen) {
 		final String prefix = new String(new char[prefixLen]).replace('\0', ' ');
 		final StringBuilder sb = new StringBuilder();
@@ -310,5 +310,5 @@ public class StatementNode extends Node {
 		}
 		return sb.toString();
 	}
-	
+
 }

@@ -60,7 +60,7 @@ import org.eclipse.titan.designer.parsers.ProjectSourceParser;
  * a {@link WorkspaceJob} which collects all dependencies. After running the job,
  * the <code>copyMap</code> contains all the pieces of code from the files of the
  * source project, which are going to be copied to the new project.
- * 
+ *
  * @author Viktor Varga
  */
 public class DependencyCollector {
@@ -68,30 +68,30 @@ public class DependencyCollector {
 	private static final String MODULE_TRAILER = "\n\n}\n";
 	private static final String DOUBLE_SEPARATOR = "\n\n";
 	private static final String SINGLE_SEPARATOR = "\n";
-	
+
 	private final IProject sourceProj;
 	private final ProjectSourceParser projectSourceParser;
-	
+
 	private final Set<Def_ModulePar> selection;
 	/** parts of files to copy */
 	private Map<IPath, StringBuilder> copyMap;
 	/** files to copy completely */
 	private List<IFile> filesToCopy;
-	
+
 	DependencyCollector(final Set<Def_ModulePar> selection, final IProject sourceProj) {
 		this.selection = selection;
 		this.sourceProj = sourceProj;
 		this.projectSourceParser = GlobalParser.getProjectSourceParser(sourceProj);
 	}
-	
+
 	public Map<IPath, StringBuilder> getCopyMap() {
 		return copyMap;
 	}
-	
+
 	public List<IFile> getFilesToCopy() {
 		return filesToCopy;
 	}
-	
+
 	public WorkspaceJob readDependencies() {
 		final WorkspaceJob job = new WorkspaceJob("ExtractModulePar: reading dependencies from source project") {
 
@@ -107,7 +107,7 @@ public class DependencyCollector {
 					 * Def_ModulePars with mutliple entries in a single modulepar block have incorrect location info
 					 *  (all entries have a location info equal to the location of their parent block)
 					 *  that is why the dependencies must be collected into a set that is not sorted by location
-					 *  
+					 *
 					 *  TODO fix grammar definitions
 					 * */
 					Set<ILocateableNode> nonSortedTempSet = new HashSet<ILocateableNode>();
@@ -214,13 +214,13 @@ public class DependencyCollector {
 				}
 				return Status.OK_STATUS;
 			}
-			
+
 			private void insertDependency(final ILocateableNode d, final IResource res, final InputStreamReader isr) throws IOException {
 				char[] content = new char[d.getLocation().getEndOffset()-getNodeOffset(d)];
 				isr.read(content, 0, content.length);
 				addToCopyMap(res.getProjectRelativePath(), new String(content));
 			}
-			
+
 		};
 		job.setUser(true);
 		job.schedule();
@@ -242,7 +242,7 @@ public class DependencyCollector {
 			prevDefs = currDefs;
 		}
 	}
-	
+
 	/**
 	 * Compares {@link ILocateableNode}s by comparing the file paths as strings.
 	 * If the paths are equal, the two offset integers are compared.
@@ -251,18 +251,18 @@ public class DependencyCollector {
 
 		@Override
 		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
-			
+
 			final IResource f0 = arg0.getLocation().getFile();
 			final IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {
 				return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 			}
-			
+
 			final int o0 = getNodeOffset(arg0);
 			final int o1 = getNodeOffset(arg1);
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
-		
+
 	}
 
 	/**
@@ -273,13 +273,13 @@ public class DependencyCollector {
 		private final Set<Definition> definitions;
 		private final Set<IResource> imports;
 		private final Set<IResource> asnFiles;
-		
+
 		DependencyFinderVisitor(final Set<Definition> definitions, final Set<IResource> imports, final Set<IResource> asnFiles) {
 			this.definitions = definitions;
 			this.imports = imports;
 			this.asnFiles = asnFiles;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			//when finding a reference, check if the referred definition has already been found:
@@ -294,7 +294,7 @@ public class DependencyCollector {
 				if (as == null) {
 					return V_CONTINUE;
 				}
-				
+
 				final IResource asFile = as.getLocation().getFile();
 				if ("asn".equals(asFile.getFileExtension())) {
 					//copy .asn files completely
@@ -316,10 +316,10 @@ public class DependencyCollector {
 				}
 				return V_CONTINUE;
 			}
-			
+
 			return V_CONTINUE;
 		}
-		
+
 		private boolean isGoodType(final Definition definition) {
 			if (definition instanceof Def_Var
 					|| definition instanceof Def_Var_Template
@@ -330,7 +330,7 @@ public class DependencyCollector {
 			}
 			return !definition.isLocal();
 		}
-		
+
 		/**
 		 * Recursively collects all ASN files through the import statements of the ASN file given as argument.
 		 * */
@@ -349,30 +349,30 @@ public class DependencyCollector {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Searches for import & friend definitions in a {@link Module}.
 	 * */
 	static class ImportFinderVisitor extends ASTVisitor {
-		
+
 		private final List<ImportModule> importDefs;
 		private final List<FriendModule> friendDefs;
-		
+
 		ImportFinderVisitor() {
 			importDefs = new ArrayList<ImportModule>();
 			friendDefs = new ArrayList<FriendModule>();
 		}
-		
+
 		private List<ImportModule> getImportDefs() {
 			return importDefs;
 		}
-		
+
 		private List<FriendModule> getFriendDefs() {
 			return friendDefs;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof ImportModule) {
@@ -384,11 +384,11 @@ public class DependencyCollector {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
 
 
-	/** 
+	/**
 	 * Returns the <code>importDefs</code> list, with the {@link ImportModule}s removed which refer to
 	 * modules that are not contained in the <code>allFiles</code> set.
 	 * */
@@ -398,12 +398,12 @@ public class DependencyCollector {
 			if (!(r instanceof IFile)) {
 				continue;
 			}
-			
+
 			final IFile f = (IFile)r;
 			final Module m = projParser.containedModule(f);
 			allFileIds.add(m.getIdentifier());
 		}
-		
+
 		final ListIterator<ImportModule> importIt = importDefs.listIterator();
 		while (importIt.hasNext()) {
 			final ImportModule im = importIt.next();
@@ -423,12 +423,12 @@ public class DependencyCollector {
 			if (!(r instanceof IFile)) {
 				continue;
 			}
-			
+
 			final IFile f = (IFile)r;
 			final Module m = projParser.containedModule(f);
 			allFileIds.add(m.getIdentifier());
 		}
-		
+
 		final ListIterator<FriendModule> importIt = friendDefs.listIterator();
 		while (importIt.hasNext()) {
 			final FriendModule fm = importIt.next();
@@ -449,7 +449,7 @@ public class DependencyCollector {
 			copyMap.put(relativePath, sb);
 		}
 	}
-	
+
 	private int getNodeOffset(final ILocateableNode node) {
 		int o = node.getLocation().getOffset();
 		if (ExtractModuleParRefactoring.ENABLE_COPY_COMMENTS && node instanceof Definition) {
@@ -481,13 +481,13 @@ public class DependencyCollector {
 			idCurr = "FriendModule{" + ((FriendModule)defCurrent).getIdentifier().toString() + "}";
 		}
 		final String msg1 = (dLocCurr == null) ? "null" :
-				"Definition id: " + idCurr + 
-				" (" + defCurrent.getClass().getSimpleName() + 
+				"Definition id: " + idCurr +
+				" (" + defCurrent.getClass().getSimpleName() +
 				") at " + dLocCurr.getFile() + ", offset " + dLocCurr.getOffset()
-				+ "-" + dLocCurr.getEndOffset(); 
-		final String msg2 = (dLocOverlap == null) ? "null" : 
-				"Definition id: " + idOverlap + 
-				" (" + defOverlapping.getClass().getSimpleName() + 
+				+ "-" + dLocCurr.getEndOffset();
+		final String msg2 = (dLocOverlap == null) ? "null" :
+				"Definition id: " + idOverlap +
+				" (" + defOverlapping.getClass().getSimpleName() +
 				") at " + dLocOverlap.getFile() + ", offset " + dLocOverlap.getOffset()
 				+ "-" + dLocOverlap.getEndOffset();
 		ErrorReporter.logError("Warning! Locations overlap while reading source project: \n" + msg1

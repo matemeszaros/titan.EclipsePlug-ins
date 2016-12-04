@@ -32,7 +32,7 @@ enum ArgumentPassingType {
 
 /**
  * This class represents a parameter of the new function.
- * 
+ *
  * @author Viktor Varga
  */
 class Param {
@@ -185,12 +185,12 @@ class Param {
 		if (type == null) {
 			return "null";
 		}
-		
+
 		final String tname = type.getTypename();
 		if (tname == null) {
 			return "null";
 		}
-		
+
 		final int ind = tname.lastIndexOf('.');
 		return (ind == -1 || ind >= tname.length()) ? tname : tname
 				.substring(ind + 1);
@@ -204,7 +204,7 @@ class Param {
 		if (!(arg0 instanceof Param)) {
 			return false;
 		}
-		
+
 		final Param o = (Param) arg0;
 		return def.equals(o.def);
 	}

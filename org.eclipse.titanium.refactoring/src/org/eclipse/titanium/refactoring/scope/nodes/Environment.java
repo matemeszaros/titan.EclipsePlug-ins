@@ -23,38 +23,38 @@ import org.eclipse.titanium.refactoring.scope.MinimizeScopeRefactoring.Settings;
 
 /**
  * The main class contatining the simplified representation of the AST.
- * 
+ *
  * @author Viktor Varga
  */
 public class Environment {
-	
+
 	private final Settings settings;
 
 	private BlockNode rootNode;	//the block of the function or testcase
 
 	private final List<Variable> vars;
-	
+
 	public Environment(final Settings settings) {
 		vars = new ArrayList<Variable>();
 		this.settings = settings;
 	}
-	
+
 	public BlockNode getRootNode() {
 		return rootNode;
 	}
 	public List<Variable> getVars() {
 		return vars;
 	}
-	
+
 	public void setRootNode(final BlockNode rootNode) {
 		this.rootNode = rootNode;
 	}
 	public void addVariable(final Variable var) {
 		this.vars.add(var);
 	}
-	
+
 	//queries
-	
+
 	public Variable getVariable(final Assignment as) {
 		for (Variable var: vars) {
 			if (var.assmnt.equals(as)) {
@@ -63,9 +63,9 @@ public class Environment {
 		}
 		return null;
 	}
-	
+
 	//refactoring
-	
+
 	public List<Edit> refactor() {
 		final List<Edit> edits = new ArrayList<Edit>();
 		final ListIterator<Variable> it = vars.listIterator(vars.size());
@@ -74,7 +74,7 @@ public class Environment {
 			if (var.isParameter) {
 				continue;
 			}
-			
+
 			final Edit e = refactorVar(var);
 			if (e != null) {
 				edits.add(e);
@@ -82,7 +82,7 @@ public class Environment {
 		}
 		return edits;
 	}
-	
+
 	private Edit refactorVar(final Variable var) {
 		final StatementNode declSt = var.getDeclaration();
 		// if "avoid moving declarations with function calls" setting is enables, skip variable
@@ -142,7 +142,7 @@ public class Environment {
 			ErrorReporter.logError("Environment.refactorVar(): Declaration statement is the last one in the block: " + errmsg);
 			return null;
 		}
-		
+
 		final StatementNode currNextSt = declSt.getParent().getStatements().get(declInd+1);
 		if (currNextSt.equals(insertionPoint)) {
 			//variable is at its correct location
@@ -159,7 +159,7 @@ public class Environment {
 		//create edit
 		return new Edit(declSt, insertionPoint);
 	}
-	
+
 	private BlockNode findSmallestCommonAncestorBlock(final List<Reference> refs) {
 		if (refs.isEmpty()) {
 			//TODO remove after debugging
@@ -184,13 +184,13 @@ public class Environment {
 		ErrorReporter.logError("Environment.findSmallestCommonAncestorBlock(): No common scope was found. ");
 		return currScope;
 	}
-	
+
 	private StatementNode findInsertionPointInScope(final Variable var, final BlockNode oldScope, final BlockNode newScope) {
 		if (var.getReferences().isEmpty()) {
 			ErrorReporter.logError("Environment.findInsertionPointInScope(): Parent block did not contain the statement to remove! ");
 			return null;
 		}
-		
+
 		final StatementNode firstRef = var.getReferences().get(0).getRef();
 		StatementNode insertionPoint = newScope.findStmtInBlockWhichContainsNode(firstRef);
 		//for all variables which are referred in the declaration stmt, find the earliest lhs occurrence (single one for all vars)
@@ -247,7 +247,7 @@ public class Environment {
 			return insertionPoint;
 		}
 	}
-	
+
 	/**
 	 * Updates the Variable.references lists for each variable referred in the given declaration statement.
 	 *  Call this if the given declaration statement was moved and it might refer to any variables.
@@ -271,7 +271,7 @@ public class Environment {
 			refsToV.add(refInDeclNewInd, new Reference(declSt, refInDeclLhs));
 		}
 	}
-	
+
 	/**
 	 * Returns true if the given BlockNode is a statement block of a loop statement (for, while, alt)
 	 * */
@@ -280,7 +280,7 @@ public class Environment {
 		if (parentSN == null) {
 			return false;
 		}
-		
+
 		final IVisitableNode scopeSt = parentSN.getAstNode();
 		if (scopeSt instanceof For_Statement ||
 				scopeSt instanceof While_Statement ||
@@ -289,7 +289,7 @@ public class Environment {
 		}
 		return false;
 	}
-	
+
 	public String toStringRecursive() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Env {\n").append("  vars:\n");
@@ -303,6 +303,6 @@ public class Environment {
 		sb.append("}\n");
 		return sb.toString();
 	}
-	
-	
+
+
 }

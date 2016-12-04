@@ -24,7 +24,7 @@ public class ContextLoggingHeadless {
 
 	private final IFile selectedFile;	//not null only if selection is of TextSelection
 	private final ISelection selection;
-	
+
 	private final Settings settings;
 
 	/** Use this constructor when the selection is a set of files, folders, or projects. */
@@ -39,7 +39,7 @@ public class ContextLoggingHeadless {
 		this.selection = selection;
 		this.settings = settings;
 	}
-	
+
 	public Settings getSettings() {
 		return settings;
 	}
@@ -58,8 +58,8 @@ public class ContextLoggingHeadless {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 }

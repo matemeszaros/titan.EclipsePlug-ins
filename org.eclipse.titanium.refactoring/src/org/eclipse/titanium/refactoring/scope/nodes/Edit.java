@@ -9,21 +9,21 @@ package org.eclipse.titanium.refactoring.scope.nodes;
 
 /**
  * A class representing an edit operation in the simplified representation of the AST.
- * 
+ *
  * @author Viktor Varga
  */
 public class Edit {
 
 	public final StatementNode declSt;
 	public final StatementNode insertionPoint;	//if null -> remove edit
-	
+
 	public Edit(final StatementNode declSt, final StatementNode insertionPoint) {
 		this.declSt = declSt;
 		this.insertionPoint = insertionPoint;
 	}
-	
+
 	public boolean isRemoveEdit() {
 		return insertionPoint == null;
 	}
-	
+
 }

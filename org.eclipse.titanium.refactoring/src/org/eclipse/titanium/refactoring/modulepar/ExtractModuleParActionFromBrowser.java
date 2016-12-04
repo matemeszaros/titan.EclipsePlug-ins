@@ -40,7 +40,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
@@ -55,7 +55,7 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 	@Override
 	public void run(final IAction action) {
 		performExtractModulePar();
-		
+
 	}
 	@Override
 	public void selectionChanged(final IAction action, final ISelection selection) {
@@ -70,21 +70,21 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		
+
 		final Set<IProject> sourceProjs = Utils.findAllProjectsInSelection((IStructuredSelection)selection);
 		if (sourceProjs.isEmpty()) {
 			return;
 		}
-		
+
 		final IProject sourceProj = sourceProjs.iterator().next();
-		final IStructuredSelection ssel = new StructuredSelection(sourceProj); 
-		
+		final IStructuredSelection ssel = new StructuredSelection(sourceProj);
+
 		//update AST before refactoring
 		final Set<IProject> projsToUpdate = new HashSet<IProject>();
 		projsToUpdate.add(sourceProj);
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExtractModulePar");
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
 		final ExtractModuleParRefactoring refactoring = new ExtractModuleParRefactoring(sourceProj);
 		//open wizard
@@ -116,7 +116,7 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 				ErrorReporter.logError("ExtractModuleParActionFromEditor: Copying project settings to new project failed.");
 			}
 		}
-		
+
 		final WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
 
 			@Override

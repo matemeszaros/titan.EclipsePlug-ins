@@ -26,7 +26,7 @@ import org.eclipse.titanium.refactoring.Utils;
  * called from the editor for a single module.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeVisibilityActionFromEditor extends AbstractHandler {
@@ -62,14 +62,14 @@ public class MinimizeVisibilityActionFromEditor extends AbstractHandler {
 			ErrorReporter.logError("MinimizeVisibilityActionFromEditor: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
 		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
-		
+
 		return null;
 	}
 

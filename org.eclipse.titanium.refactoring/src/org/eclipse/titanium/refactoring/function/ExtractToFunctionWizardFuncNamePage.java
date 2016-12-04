@@ -22,7 +22,7 @@ import org.eclipse.titan.designer.AST.Identifier;
 
 /**
  * Wizard page #1: edit the name of the new function.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
@@ -30,7 +30,7 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 	private static final String LABEL_NEWFUNCNAME = "New function name:";
 	private static final String DEFAULT_FUNC_NAME = "newFunction";
 	private Text newFuncName;
-	
+
 	public ExtractToFunctionWizardFuncNamePage(final String name) {
 		super(name);
 	}
@@ -59,10 +59,10 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 		newFuncName.setFocus();
 		newFuncName.selectAll();
 		checkNewNameValidity();
-		
+
 	}
-	
-	
+
+
 	private boolean checkNewNameValidity() {
 		final String newName = newFuncName.getText();
 		if (newName.length() == 0) {

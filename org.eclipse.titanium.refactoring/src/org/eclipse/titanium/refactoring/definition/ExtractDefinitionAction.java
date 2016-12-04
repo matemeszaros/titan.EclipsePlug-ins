@@ -30,19 +30,19 @@ import org.eclipse.ui.PlatformUI;
 /**
  * This class handles the {@link ExtractDefinitionRefactoring} class.
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractDefinitionAction extends AbstractHandler {
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		
+
 		Utils.updateASTForProjectActiveInEditor("ExtractDefinition");
 		//getting current text selection in editor
 		final ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 		final ISelection sel = selectionService.getSelection();
-		
+
 		if (sel == null) {
 			//no selection
 			return null;
@@ -50,19 +50,19 @@ public class ExtractDefinitionAction extends AbstractHandler {
 			ErrorReporter.logError("ExtractDefinitionAction: Selection is not a TextSelection!");
 			return null;
 		}
-		
+
 		final TextSelection textSelection = (TextSelection)sel;
-		
+
 		//getting selected def
 		final ExtractDefinitionRefactoring refactoring = new ExtractDefinitionRefactoring();
 		final Definition selectedDef = refactoring.getSelection();
-		
+
 		//create wizard and ask for the project name, only if the selection is valid & create project
 		if (selectedDef == null) {
 			ErrorReporter.logError("ExtractDefinitionAction: Selected definition is null.");
 			return null;
 		}
-		
+
 		final ExtractDefinitionWizard wiz = new ExtractDefinitionWizard(selectedDef.getIdentifier().getName());
 		//
 		final StructuredSelection ssel = new StructuredSelection(textSelection);
@@ -91,7 +91,7 @@ public class ExtractDefinitionAction extends AbstractHandler {
 				ErrorReporter.logError("ExtractDefinitionAction: Copying project settings to new project failed.");
 			}
 		}
-		
+
 		//performing the refactor operation
 		refactoring.perform();
 		//reanalyze project
@@ -105,5 +105,5 @@ public class ExtractDefinitionAction extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 }

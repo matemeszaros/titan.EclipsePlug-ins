@@ -35,22 +35,22 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 import org.eclipse.titanium.refactoring.logging.context.Context;
 
 /**
- * This class is only instantiated by the {@link ContextLoggingRefactoring} once 
+ * This class is only instantiated by the {@link ContextLoggingRefactoring} once
  *  for each file in the selection.
  * <p>
  * By passing the selection through the constructor and calling {@link ChangeCreator#perform()}, this class
  *  creates a {@link Change} object, which can be then used by the refactoring class.
- * 
+ *
  * @author Viktor Varga
  */
 class ChangeCreator {
-	
+
 	private final Settings settings;
-	
+
 	//in
 	private final IFile file;
 	private final ITextSelection textSelection;	//null if only whole resources are selected
-	
+
 	//out
 	private TextFileChange change;
 
@@ -70,13 +70,13 @@ class ChangeCreator {
 	public Change getChange() {
 		return change;
 	}
-	
+
 	public void perform() {
 		//get module in selected file
 		if (file == null) {
 			return;
 		}
-		
+
 		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(file.getProject());
 		final Module module = sourceParser.containedModule(file);
 		if(module == null) {
@@ -88,9 +88,9 @@ class ChangeCreator {
 		} else {
 			performOnWholeModule(module);
 		}
-		
+
 	}
-	
+
 	private void performOnWholeModule(final Module module) {
 		final ContextFinder vis = new ContextFinder(settings);
 		module.accept(vis);
@@ -102,7 +102,7 @@ class ChangeCreator {
 				rootEdit.addChild(edit);
 			}
 		}
-		
+
 		if(rootEdit.hasChildren()) {
 			change = new TextFileChange("Context logging", file);
 			change.setEdit(rootEdit);
@@ -121,13 +121,13 @@ class ChangeCreator {
 				rootEdit.addChild(edit);
 			}
 		}
-		
+
 		if(rootEdit.hasChildren()) {
 			change = new TextFileChange("Context logging", file);
 			change.setEdit(rootEdit);
 		}
 	}
-	
+
 	private TextEdit createTextEdit(final Log_Statement toEdit, final Context toAdd) {
 		//get insert location
 		final LogInsertLocationFinder vis = new LogInsertLocationFinder();
@@ -155,7 +155,7 @@ class ChangeCreator {
 		if (len == 0) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		for (int i=0;i<len;i++) {
 			sb.append(contextInfos.get(i));
@@ -163,8 +163,8 @@ class ChangeCreator {
 		//create edit from location and text
 		return new InsertEdit(insertOffset, sb.toString());
 	}
-	
-	/** 
+
+	/**
 	 * Runs the superclass {@link ContextFinder} on all the
 	 * {@link IVisitableNode}s included in the selection.
 	 * <p>
@@ -173,12 +173,12 @@ class ChangeCreator {
 	private class SelectionVisitor extends ContextFinder {
 
 		private final Location selection;
-		
+
 		SelectionVisitor(final Location selection) {
 			super(settings);
 			this.selection = selection;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof ILocateableNode) {
@@ -192,27 +192,27 @@ class ChangeCreator {
 			}
 			return super.visit(node);
 		}
-		
+
 		private boolean isOverlapping(final Location l1, final Location l2) {
 			if (!l1.getFile().equals(l2.getFile())) {
 				return false;
 			}
 			return (l1.getOffset() <= l2.getEndOffset() && l1.getEndOffset() >= l2.getOffset());
 		}
-		
+
 	}
-	
-	/** 
+
+	/**
 	 * Locates the insertion point for an existing log statement.
 	 * The insertion point is the end location of the last parameter
-	 *  of the {@link Log_Statement}}. 
+	 *  of the {@link Log_Statement}}.
 	 * <p>
 	 * Call on log statements.
 	 *  */
 	private static class LogInsertLocationFinder extends ASTVisitor {
-		
+
 		private final List<LogArgument> args = new ArrayList<LogArgument>();
-		
+
 		private int calculateEndOffset() {
 			int endOffset = -1;
 			for (LogArgument la: args) {
@@ -222,7 +222,7 @@ class ChangeCreator {
 			}
 			return endOffset;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof LogArgument) {
@@ -231,22 +231,22 @@ class ChangeCreator {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
-	
-	/** 
+
+	/**
 	 * Collects the identifier strings of all the variables already present
 	 *  in the {@link Log_Statement}.
 	 * <p>
 	 * Call on log statements. */
 	private static class LoggedVariableFinder extends ASTVisitor {
-		
+
 		private final Set<String> varsAlreadyPresent = new HashSet<String>();
-		
+
 		Set<String> getVarsAlreadyPresent() {
 			return varsAlreadyPresent;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
@@ -255,8 +255,8 @@ class ChangeCreator {
 			}
 			return V_CONTINUE;
 		}
-		
-		
+
+
 	}
-	
+
 }

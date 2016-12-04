@@ -25,21 +25,21 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settings;
 
 /**
- * 
+ *
  * @author Viktor Varga
  */
 public class StatementBlockContext extends Context {
-	
+
 	private List<Identifier> localVarIds;
 
 	StatementBlockContext(final StatementBlock st, final Settings settings) {
 		super(st, settings);
 	}
-	
+
 	public StatementBlock getNode() {
 		return (StatementBlock)super.getNode();
 	}
-	
+
 	@Override
 	protected void process_internal() {
 		localVarIds = new ArrayList<Identifier>();
@@ -49,7 +49,7 @@ public class StatementBlockContext extends Context {
 			ErrorReporter.logError("StatementBlockContext.process_internal(): Warning! Context chain bottom node is not a Log_Statement! ");
 			return;
 		}
-		
+
 		final Log_Statement logst = (Log_Statement)bottomNode;
 		final Location logLoc = logst.getLocation();
 		//
@@ -75,32 +75,32 @@ public class StatementBlockContext extends Context {
 		}
 		return ret;
 	}
-	
+
 	/** @return true if the end offset of l1 is <= than the offset of l2 */
 	private static boolean isLocationBefore(final Location l1, final Location l2) {
 		return l1.getEndOffset() <= l2.getOffset();
 	}
 
-	/** 
-	 * Collects all variable identifiers from a {@link StatementBlock} which are 
+	/**
+	 * Collects all variable identifiers from a {@link StatementBlock} which are
 	 *  located before the given location.
 	 * <p>
 	 * Call on {@link StatementBlock}
 	 * */
 	private static class StatementBlockVisitor extends ASTVisitor {
-		
+
 		private final Location beforeLoc;
 		private final List<Identifier> idsFound;
-		
+
 		public StatementBlockVisitor(final Location beforeLoc) {
 			this.beforeLoc = beforeLoc;
 			idsFound = new ArrayList<Identifier>();
 		}
-		
+
 		public List<Identifier> getIdsFound() {
 			return idsFound;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Statement) {
@@ -119,7 +119,7 @@ public class StatementBlockContext extends Context {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
 
 }

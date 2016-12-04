@@ -28,7 +28,7 @@ import org.eclipse.titanium.refactoring.Utils;
  * <p>
  * Use {@link #run(IProject, String, boolean)} to perform the refactoring operation.
  * </p>
- * 
+ *
  * @author Viktor Varga, Istvan Bohm
  * */
 public class ExtractModuleParHeadless {
@@ -36,34 +36,34 @@ public class ExtractModuleParHeadless {
 	private URI location;
 
 	public void run(final IProject sourceProj, final String targetProjName, final boolean saveModuleParList) {
-		
+
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IProject newProj = workspace.getRoot().getProject(targetProjName);
 		final IProjectDescription description = workspace.newProjectDescription(targetProjName);
 		description.setLocationURI(location);
 		TITANNature.addTITANNatureToProject(description);
-		
+
 		if (newProj == null) {
 			ErrorReporter.logError("ExtractModuleParHeadless: Target project is null. ");
 			return;
 		}
-		
+
 		//update AST
 		final Set<IProject> projsToUpdate = new HashSet<IProject>();
 		projsToUpdate.add(sourceProj);
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExtractModulePar");
-			
+
 		try {
 			if (Utils.createProject(description, newProj)) {
-				
+
 
 				try {
-					TITANNature.addTITANBuilderToProject(newProj);	
+					TITANNature.addTITANBuilderToProject(newProj);
 				} catch (CoreException ce) {
 					ErrorReporter.logExceptionStackTrace(ce);
 					return;
 				}
-				
+
 				// copy project settings to new project
 				final ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
 				if (pfh.projectFileExists()) {
@@ -79,7 +79,7 @@ public class ExtractModuleParHeadless {
 						ErrorReporter.logError("ExtractModuleParHeadless: Copying project settings to new project failed.");
 					}
 				}
-				
+
 				// executing refactoring
 				final ExtractModuleParRefactoring refactoring = new ExtractModuleParRefactoring(sourceProj);
 				refactoring.setOption_saveModuleParList(saveModuleParList);
@@ -91,9 +91,9 @@ public class ExtractModuleParHeadless {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 	}
-	
+
 	public void setLocation(final URI location) {
 		this.location = location;
 	}
-	
+
 }

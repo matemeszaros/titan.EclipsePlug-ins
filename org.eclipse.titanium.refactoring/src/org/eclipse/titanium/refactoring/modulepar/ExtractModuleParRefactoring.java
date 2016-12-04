@@ -49,7 +49,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  *  <ul>
  *  <li>{@link #perform()} collects the module parameter statements in the source project, using the
  *   {@link SelectionFinder} class; after that {@link DependencyCollector} creates the <code>copyMap</code>,
- *   which contains the parts to copy from the source project, and writes its contents 
+ *   which contains the parts to copy from the source project, and writes its contents
  *   into the (new and empty) target project</li>
  *  </ul>
  * </li>
@@ -57,10 +57,10 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * Headless mode:
  * <p>
  * Use {@link #ExtractModuleParRefactoring(IProject)}
- *  constructor, then optionally use {@link #setOption_saveModuleParList(boolean)} 
+ *  constructor, then optionally use {@link #setOption_saveModuleParList(boolean)}
  *  and then call {@link #perform()}.
  * <p>
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParRefactoring  {
@@ -68,24 +68,24 @@ public class ExtractModuleParRefactoring  {
 	public static final boolean ENABLE_COPY_COMMENTS = false;
 
 	private static final IPath PATH_MODULEPAR_LIST_FILE_OUTPUT = Path.fromOSString("modulepars.txt");
-	
+
 	private final IProject sourceProj;
 	/** the new project to extract function dependencies into */
 	private IProject targetProj;
-	
+
 	private boolean option_saveModuleParList = false;
 
 	/** this contains the copied dependencies during the operation */
 	private Map<IPath, StringBuilder> copyMap;
 	/** this contains the list of files to be copied completely */
 	private List<IFile> filesToCopy;
-	
+
 	/*
 	 * TODO
-	 * 
-	 * 
+	 *
+	 *
 	 * */
-	
+
 
 	/** Use this constructor only when a workbench is available. */
 	ExtractModuleParRefactoring(final IProject sourceProj) {
@@ -95,7 +95,7 @@ public class ExtractModuleParRefactoring  {
 	public void setTargetProject(final IProject targetProj) {
 		this.targetProj = targetProj;
 	}
-	
+
 	public void setOption_saveModuleParList(final boolean option_saveModuleParList) {
 		this.option_saveModuleParList = option_saveModuleParList;
 	}
@@ -113,7 +113,7 @@ public class ExtractModuleParRefactoring  {
 				if (option_saveModuleParList) {
 					saveModuleParListToFile(selFinder.createModuleParListForSaving());
 				}
-				
+
 				final DependencyCollector dc = new DependencyCollector(selFinder.getModulePars(), sourceProj);
 				final WorkspaceJob job1 = dc.readDependencies();
 				job1.join();
@@ -139,7 +139,7 @@ public class ExtractModuleParRefactoring  {
 
 	private WorkspaceJob createChange() {
 		final WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
-			
+
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				if (copyMap == null) {
@@ -179,7 +179,7 @@ public class ExtractModuleParRefactoring  {
 		job.schedule();
 		return job;
 	}
-	
+
 	private void saveModuleParListToFile(final String content) {
 		final IFile newFile = targetProj.getFile(PATH_MODULEPAR_LIST_FILE_OUTPUT);
 		if (!newFile.exists()) {
@@ -192,7 +192,7 @@ public class ExtractModuleParRefactoring  {
 				return;
 			}
 		}
-		
+
 		final InputStream is = new ByteArrayInputStream(content.getBytes(Charset.forName("UTF-8"))); //TODO update with Java 1.7 to StandardCharsets.UTF_8
 
 		try {
@@ -201,7 +201,7 @@ public class ExtractModuleParRefactoring  {
 			ErrorReporter.logError("ExtractModuleParRefactoring.saveModuleParListToFile(): CoreException while writing to file: " + e.getLocalizedMessage());
 		}
 	}
-	
+
 
 	private IFile createFile(final IPath relativePath) {
 		final IFile ret = targetProj.getFile(relativePath);

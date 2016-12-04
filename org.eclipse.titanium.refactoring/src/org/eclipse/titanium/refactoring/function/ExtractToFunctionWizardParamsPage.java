@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * Wizard page #2: edit parameter names.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {

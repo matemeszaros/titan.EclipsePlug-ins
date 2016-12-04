@@ -30,7 +30,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ContextLoggingActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
@@ -60,14 +60,14 @@ public class ContextLoggingActionFromBrowser extends AbstractHandler implements 
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		
+
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
 		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
-		
+
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ContextLogging");
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
 		final ContextLoggingRefactoring refactoring = new ContextLoggingRefactoring(structSelection, null);
 		//open wizard
@@ -88,5 +88,5 @@ public class ContextLoggingActionFromBrowser extends AbstractHandler implements 
 		//update AST after refactoring
 		Utils.updateASTAfterRefactoring(wiz, refactoring.getAffectedObjects(), refactoring.getName());
 	}
-	
+
 }

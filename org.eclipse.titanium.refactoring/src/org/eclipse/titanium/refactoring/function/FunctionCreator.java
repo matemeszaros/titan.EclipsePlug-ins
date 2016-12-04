@@ -37,11 +37,11 @@ import org.eclipse.titanium.refactoring.function.ReturnVisitor.ReturnCertainty;
  * A list of StringBuilders contain the function body and function call texts.
  * The StringBuilders are used as mutable Strings and allow a later editing of the texts by the wizard
  * (for example, to change the names of the parameters)
- * 
+ *
  * @author Viktor Varga
  */
 class FunctionCreator implements IModelProvider<ParamTableItem> {
-	
+
 	private static final String FUNCTION_TEXT_NL = "\r\n";
 	private static final String FUNCTION_TEXT_PREFIX = "function ";
 	private static final String FUNCTION_TEXT_PARAMS_START = "(";
@@ -55,7 +55,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	private static final String FUNCTION_CALL_RETURN_SUFFIX = "return; ";
 	private static final String FUNCTION_CALL_PARAMS_START = "(";
 	private static final String FUNCTION_CALL_PARAMS_END = ");";
-	
+
 	//in
 	private final StatementList selectedStatements;
 	private final IFile selectedFile;
@@ -65,15 +65,15 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	private final StringBuilder newFuncName;
 	private final List<RefactoringStatusEntry> warnings;
 	private final ReturnCertainty returnCertainity;
-	
+
 	//out
 	/**
 	 * StringBuilders are used as mutable Strings to provide edit support for the wizard
 	 * */
 	private List<StringBuilder> functionText;
 	private List<StringBuilder> functionCallText;
-	
-	FunctionCreator(final StatementList selectedStatements, final IFile selectedFile, final StringBuilder funcName, final List<Param> params, 
+
+	FunctionCreator(final StatementList selectedStatements, final IFile selectedFile, final StringBuilder funcName, final List<Param> params,
 			final Reference runsOnRef, final Type returnType, final ReturnCertainty returnCertainty) {
 		this.selectedStatements = selectedStatements;
 		this.selectedFile = selectedFile;
@@ -89,7 +89,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		createFunctionText();
 		createFunctionCallText();
 	}
-	
+
 	public List<RefactoringStatusEntry> getWarnings() {
 		return warnings;
 	}
@@ -123,7 +123,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	//MODEL PROVEIDER FOR WIZARD END
 
 	//private methods for creating parts of the new function body/call text
-	
+
 	/**
 	 * @return a set in which the TextReplaceItems (parameter occurences) are sorted by their location
 	 */
@@ -143,9 +143,9 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		}
 		return hitSet;
 	}
-	
-	/** 
-	 * Creates function text from <code>params</code> into <code>newFunctionText</code>. 
+
+	/**
+	 * Creates function text from <code>params</code> into <code>newFunctionText</code>.
 	 * Call after the user specified param and func names in the wizard
 	 */
 	private void createFunctionText() {
@@ -196,7 +196,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		//insert all declarations before the function header
 		functionCallText.addAll(declarationsBeforeFunc);
 	}
-	
+
 	private List<StringBuilder> createFunctionBody(final List<StringBuilder> declarationsBeforeFunc) {
 		final List<StringBuilder> body = new ArrayList<StringBuilder>();
 		try {
@@ -205,7 +205,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 			final int startOffset = selectedStatements.getLocation().getOffset();
 			final int endOffset = selectedStatements.getLocation().getEndOffset();
 			br.skip(startOffset);
-			
+
 			final char[] contentBuf = new char[endOffset-startOffset];
 			br.read(contentBuf, 0, endOffset-startOffset);
 			br.close();
@@ -248,7 +248,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 
 		return body;
 	}
-	
+
 	private void createFunctionCallText() {
 		final boolean returnOnAllBranches = (returnCertainity == ReturnCertainty.YES);
 		if (returnType != null && returnOnAllBranches) {

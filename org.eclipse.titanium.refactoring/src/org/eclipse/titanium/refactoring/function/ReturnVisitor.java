@@ -30,16 +30,16 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.While_Statement;
  * Unlike the Statement.hasReturn() method, this class only handles return statements.
  * <p>
  * {@link ReturnVisitor} and its nested classes start an instance of each other recursively, normally in the
- * following order: {@link ReturnVisitor} -> {@link BranchMerger} -> {@link StatementBlockVisitor} -> 
+ * following order: {@link ReturnVisitor} -> {@link BranchMerger} -> {@link StatementBlockVisitor} ->
  * {@link ReturnVisitor} -> ...
- * 
+ *
  * @author Viktor Varga
  * */
 class ReturnVisitor extends ASTVisitor {
-	
+
 	enum ReturnCertainty {
 		NO, MAYBE, YES;
-		
+
 		/** merges the {@link ReturnCertainty} of two branches */
 		ReturnCertainty or(final ReturnCertainty other) {
 			if (this == YES && other == YES) {
@@ -63,11 +63,11 @@ class ReturnVisitor extends ASTVisitor {
 	}
 
 	private ReturnCertainty certainty = ReturnCertainty.NO;
-	
+
 	public ReturnCertainty getCertainty() {
 		return certainty;
 	}
-	
+
 	@Override
 	public int visit(final IVisitableNode node) {
 		//certain YES
@@ -142,8 +142,8 @@ class ReturnVisitor extends ASTVisitor {
 		}
 		return V_ABORT;
 	}
-	
-	/** 
+
+	/**
 	 * Call for {@link StatementBlock} or {@link StatementList}.
 	 * <p>
 	 * Starts a {@link ReturnVisitor} for each {@link Statement} found in it.
@@ -151,11 +151,11 @@ class ReturnVisitor extends ASTVisitor {
 	private class StatementBlockVisitor extends ASTVisitor {
 
 		private ReturnCertainty blockCertainty = ReturnCertainty.NO;
-		
+
 		private ReturnCertainty getCertainty() {
 			return blockCertainty;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
@@ -185,11 +185,11 @@ class ReturnVisitor extends ASTVisitor {
 			}
 			return V_ABORT;
 		}
-		
+
 	}
-	
-	/** 
-	 * Call for any {@link ASTNode}. 
+
+	/**
+	 * Call for any {@link ASTNode}.
 	 * <p>
 	 * Starts a {@link StatementBlockVisitor} on each {@link StatementBlock} found.
 	 * However the visitor does not enter {@link StatementBlock} nodes.
@@ -200,11 +200,11 @@ class ReturnVisitor extends ASTVisitor {
 
 		private ReturnCertainty blockCertainty = ReturnCertainty.NO;
 		private boolean foundAnyBlocksBefore = false;
-		
+
 		private ReturnCertainty getCertainty() {
 			return blockCertainty;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
@@ -220,7 +220,7 @@ class ReturnVisitor extends ASTVisitor {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
 
 }

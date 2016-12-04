@@ -18,7 +18,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * */
 public class LazyficationHeadless {
 	private final IStructuredSelection selection;
-	
+
 	public LazyficationHeadless(final IStructuredSelection selection) {
 		this.selection = selection;
 	}

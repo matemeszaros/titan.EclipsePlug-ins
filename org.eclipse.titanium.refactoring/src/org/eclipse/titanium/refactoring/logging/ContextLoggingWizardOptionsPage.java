@@ -19,15 +19,15 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 
 /**
  * Wizard page #1: modify the settings for the refactoring operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 
 	private static final String LABEL_PAGECONTENT = "Modify refactoring settings:";
-	
+
 	private final Settings settings;
-	
+
 	public ContextLoggingWizardOptionsPage(final String name, final Settings settings) {
 		super(name);
 		this.settings = settings;
@@ -72,25 +72,25 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 		setPageComplete(true);
 		setErrorMessage(null);
 	}
-	
-	/** 
+
+	/**
 	 * Modifies the {@link ContextLoggingWizardOptionsPage#settings} field whenever
 	 *   the specified check box is selected or deselected.
 	 * */
 	private class CHBSelectionListener implements SelectionListener {
 
 		private final int setting;
-		
+
 		public CHBSelectionListener(final int setting) {
 			this.setting = setting;
 		}
-		
+
 		@Override
 		public void widgetSelected(final SelectionEvent e) {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
-			
+
 			final Button checkBox = (Button)e.getSource();
 			settings.setSetting(setting, checkBox.getSelection());
 		}
@@ -99,36 +99,36 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 		public void widgetDefaultSelected(final SelectionEvent e) {
 
 		}
-		
+
 	}
 
-	/** 
+	/**
 	 * Disables the specified check box whenever the source check box is deselected and
 	 *  enables it when the source is selected.
 	 * */
 	private class CHBSelectionListenerDisabler implements SelectionListener {
 
 		private final Button toDisable;
-		
+
 		public CHBSelectionListenerDisabler(final Button toDisable) {
 			this.toDisable = toDisable;
 		}
-		
+
 		@Override
 		public void widgetSelected(final SelectionEvent e) {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
-			
+
 			final Button source = (Button)e.getSource();
 			toDisable.setEnabled(source.getSelection());
 		}
 
 		@Override
 		public void widgetDefaultSelected(final SelectionEvent e) {
-			
+
 		}
-		
+
 	}
 
 }

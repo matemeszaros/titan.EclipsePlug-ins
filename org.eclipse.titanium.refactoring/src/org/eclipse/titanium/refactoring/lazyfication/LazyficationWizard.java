@@ -23,7 +23,7 @@ public class LazyficationWizard extends RefactoringWizard implements IExecutable
 	@Override
 	public void setInitializationData(final IConfigurationElement config,
 			final String propertyName, final Object data) throws CoreException {
-		
+
 	}
 
 	@Override

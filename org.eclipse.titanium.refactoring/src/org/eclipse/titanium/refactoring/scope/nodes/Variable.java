@@ -16,23 +16,23 @@ import org.eclipse.titan.designer.AST.Assignment;
 
 /**
  * A class representing a variable.
- * 
+ *
  * @author Viktor Varga
  */
 public class Variable {
-	
+
 	public final Assignment assmnt;	//the def_var, or FormalParameter object
-	
+
 	public final StatementNode declaration;
-	
+
 	/**
 	 * StatementNodes in which this variable is referred to.
-	 * The second argument is true if the reference is a left hand side reference (write occurrence). 
+	 * The second argument is true if the reference is a left hand side reference (write occurrence).
 	 * */
 	public final List<Reference> references;
-	
-	/** 
-	 * True if this variable is a formal parameter of a function 
+
+	/**
+	 * True if this variable is a formal parameter of a function
 	 * (in this case there is no declaration statement).
 	 * If true, the variable cannot be refactored. */
 	public final boolean isParameter;
@@ -43,7 +43,7 @@ public class Variable {
 		this.isParameter = isParameter;
 		this.references = new ArrayList<Reference>();
 	}
-	
+
 	public Assignment getAssmnt() {
 		return assmnt;
 	}
@@ -56,7 +56,7 @@ public class Variable {
 	public boolean isParameter() {
 		return isParameter;
 	}
-	
+
 	public void addReference(final StatementNode st, final boolean leftHandSideRef) {
 		//avoid multiple instances of the same SN in the list
 		if (!references.isEmpty()) {
@@ -80,7 +80,7 @@ public class Variable {
 		final String fname = assmnt.getLocation().getFile().toString();
 		ErrorReporter.logError("Variable.removeReference(): Could not remove reference for variable: " + toString() + "; in file " + fname);
 	}
-	
+
 	@Override
 	public String toString() {
 		return assmnt == null ? "null" : assmnt.getIdentifier().toString();
@@ -98,5 +98,5 @@ public class Variable {
 		}
 		return sb.toString();
 	}
-	
+
 }

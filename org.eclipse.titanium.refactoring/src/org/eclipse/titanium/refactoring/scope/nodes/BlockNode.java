@@ -17,13 +17,13 @@ import org.eclipse.titan.designer.AST.Location;
 
 /**
  * A node representing a StatementBlock.
- * 
+ *
  * @author Viktor Varga
  */
 public class BlockNode extends Node {
 
 	protected StatementNode parent;
-	
+
 	protected final List<StatementNode> sts;
 
 	public BlockNode(final IVisitableNode astNode) {
@@ -44,7 +44,7 @@ public class BlockNode extends Node {
 			return null;
 		}
 		return sts.get(ind-1);
-	}	
+	}
 	public StatementNode getNextStatement(final StatementNode sn) {
 		final int ind = sts.indexOf(sn);
 		if (ind >= sts.size()-1) {
@@ -52,14 +52,14 @@ public class BlockNode extends Node {
 		}
 		return sts.get(ind+1);
 	}
-	
+
 	public void setParent(final StatementNode parent) {
 		this.parent = parent;
 	}
 	public void addStatement(final StatementNode st) {
 		sts.add(st);
 	}
-	
+
 	@Override
 	protected boolean containsNode(final Node n) {
 		if (this.equals(n)) {
@@ -100,8 +100,8 @@ public class BlockNode extends Node {
 			return false;
 		}
 		return true;
-	} 
-	
+	}
+
 	public BlockNode findSmallestCommonAncestorBlock(final BlockNode bn) {
 		if (bn.equals(this)) {
 			return this;
@@ -121,7 +121,7 @@ public class BlockNode extends Node {
 			return null;
 		}
 	}
-	
+
 	public StatementNode findStmtInBlockWhichContainsNode(final Node containedNode) {
 		if (!containedNode.isBlockAncestorOfThis(this)) {
 			//System.err.println("x");
@@ -141,8 +141,8 @@ public class BlockNode extends Node {
 		//System.err.println("y");
 		return null;
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

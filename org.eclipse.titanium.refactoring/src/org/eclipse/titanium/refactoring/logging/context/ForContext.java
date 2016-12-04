@@ -20,17 +20,17 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 
 /**
  * Context class representing {@link For_Statement} nodes.
- * 
+ *
  * @author Viktor Varga
  */
 class ForContext extends Context {
-	
+
 	private List<Identifier> initialAssignmentIds;
 
 	ForContext(final For_Statement st, final Settings settings) {
 		super(st, settings);
 	}
-	
+
 	@Override
 	public For_Statement getNode() {
 		return (For_Statement)super.getNode();
@@ -42,7 +42,7 @@ class ForContext extends Context {
 		st.accept(vis);
 		initialAssignmentIds = vis.getResult();
 	}
-	
+
 	@Override
 	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
 		final List<String> ret = new ArrayList<String>();
@@ -60,15 +60,15 @@ class ForContext extends Context {
 		return ret;
 	}
 
-	/** 
+	/**
 	 * Collects all the necessary variable identifiers from a {@link For_Statement}.
 	 * <p>
-	 * Call on {@link For_Statement} 
+	 * Call on {@link For_Statement}
 	 * */
 	private static class ForVisitor extends ASTVisitor {
 
 		private final List<Identifier> result = new ArrayList<Identifier>();
-		
+
 		private List<Identifier> getResult() {
 			return result;
 		}
@@ -87,8 +87,8 @@ class ForContext extends Context {
 			}
 			return V_SKIP;
 		}
-		
-		
-		
+
+
+
 	}
 }

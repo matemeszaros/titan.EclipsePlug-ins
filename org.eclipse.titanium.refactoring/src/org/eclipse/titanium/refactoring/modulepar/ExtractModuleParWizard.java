@@ -51,7 +51,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 /**
  * Wizard for the 'Extract modulepar' operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParWizard extends BasicNewResourceWizard implements IExecutableExtension {
@@ -65,14 +65,14 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	private static final String CREATION_FAILED = "Project creation failed";
 
 	private final String windowTitle;
-	
+
 	private IProject newProject;
 
 	private final boolean wasAutoBuilding;
 	private boolean isCreated;
 	private IConfigurationElement config;
 	private ExtractModuleParWizardMainPage mainPage;
-	
+
 	ExtractModuleParWizard() {
 		windowTitle = WIZ_WINDOWTITLE;
 		final IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
@@ -97,14 +97,14 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	public IProject getProject() {
 		return newProject;
 	}
-	
+
 	public boolean getSaveModuleParsOption() {
 		if (mainPage != null) {
 			return mainPage.getSaveModuleParsOption();
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void setInitializationData(final IConfigurationElement config,
 			final String propertyName, final Object data) throws CoreException {
@@ -119,7 +119,7 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 		mainPage.setDescription(WIZ_DESCRIPTION);
 		addPage(mainPage);
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		if (!isCreated) {
@@ -135,7 +135,7 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 		} catch (CoreException ce) {
 			ErrorReporter.logExceptionStackTrace(ce);
 		}
-		
+
 		try {
 			newProject.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakeAttributesData.TEMPORAL_WORKINGDIRECTORY_PROPERTY), WORKING_DIR);
@@ -224,7 +224,7 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 			@Override
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				createProject(description, newProjectHandle, monitor);
-				
+
 				String sourceFolder = SOURCE_DIR;
 				IFolder folder = newProjectHandle.getFolder(sourceFolder);
 				if (!folder.exists()) {
@@ -265,7 +265,7 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 
 		return newProject;
 	}
-	
+
 	private void createProject(final IProjectDescription description, final IProject projectHandle, final IProgressMonitor monitor)
 			throws CoreException {
 		final IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;

@@ -40,7 +40,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
  * <li>INIT
  *  <ul>
  *  <li>instantiate by using the constructor: {@link #ExtractDefinitionRefactoring()};
- *   the constructor calls {@link SelectionFinder#perform()}, 
+ *   the constructor calls {@link SelectionFinder#perform()},
  *   that determines which statements are selected by the user</li>
  *  <li>create a new project using the ExtractDefinitionWizard</li>
  *  <li>call {@link #setTargetProject(IProject)} with the new project as a parameter</li>
@@ -59,11 +59,11 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
  * Use {@link #ExtractDefinitionRefactoring(IProject, Definition)}
  *  constructor instead and then call {@link #perform()}.
  * <p>
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractDefinitionRefactoring {
-	
+
 	public static final boolean ENABLE_COPY_COMMENTS = false;
 
 	private final IProject sourceProj;
@@ -71,12 +71,12 @@ public class ExtractDefinitionRefactoring {
 	private IProject targetProj;
 	/** the definition which is being extracted */
 	private final Definition selection;
-	
+
 	/** this contains the copied dependencies during the operation */
 	private Map<IPath, StringBuilder> copyMap;
 	/** this contains the list of files to be copied completely */
 	private List<IFile> filesToCopy;
-	
+
 	/** Use this constructor only when a workbench is available. */
 	ExtractDefinitionRefactoring() {
 		final SelectionFinder sf = new SelectionFinder();
@@ -84,13 +84,13 @@ public class ExtractDefinitionRefactoring {
 		selection = sf.getSelection();
 		sourceProj = sf.getSourceProj();
 	}
-	
+
 	/** Use this constructor in headless mode. */
 	ExtractDefinitionRefactoring(final IProject sourceProj, final Definition selection) {
 		this.selection = selection;
 		this.sourceProj = sourceProj;
 	}
-	
+
 	public String getName() {
 		return "Extract definition";
 	}
@@ -111,14 +111,14 @@ public class ExtractDefinitionRefactoring {
 		final RefactoringStatus result = new RefactoringStatus();
 		if (selection == null) {
 			result.addError("Selection is not a definition (selection is null)! ");
-			
+
 		}
 		if (targetProj == null) {
 			result.addError("Target project is null! ");
 		}
 		return result;
 	}
-	
+
 	public void perform() {
 		final RefactoringStatus rs = checkInitialConditions();
 		if (!rs.hasError()) {
@@ -136,12 +136,12 @@ public class ExtractDefinitionRefactoring {
 		} else {
 			ErrorReporter.logError("Initial conditions are not fulfilled for the ExtractDefinition operation");
 		}
-		
+
 	}
 
 	private WorkspaceJob createChange() {
 		final WorkspaceJob job = new WorkspaceJob("ExtractDefinition: writing to target project") {
-			
+
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				if (copyMap == null) {
@@ -180,9 +180,9 @@ public class ExtractDefinitionRefactoring {
 		job.setUser(true);
 		job.schedule();
 		return job;
-		
+
 	}
-	
+
 	private IFile createFile(final IPath relativePath) {
 		final IFile ret = targetProj.getFile(relativePath);
 
@@ -211,7 +211,7 @@ public class ExtractDefinitionRefactoring {
 		}
 		return toCopy;
 	}
-	
+
 	private void createTargetFolderHierarchy(final IFile file) throws CoreException {
 		IContainer parent = file.getParent();
 		final List<IFolder> folders = new LinkedList<IFolder>();

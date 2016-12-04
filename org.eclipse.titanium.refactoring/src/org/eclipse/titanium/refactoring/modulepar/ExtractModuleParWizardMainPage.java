@@ -18,17 +18,17 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 /**
  * Wizard page #1: edit the name of the new project.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage {
-	
+
 	private boolean saveModuleParsOption = false;
 
 	public ExtractModuleParWizardMainPage(final String pageName) {
 		super(pageName);
 	}
-	
+
 	public boolean getSaveModuleParsOption() {
 		return saveModuleParsOption;
 	}
@@ -42,13 +42,13 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 			ErrorReporter.logError("ExtractModuleParWizardMainPage: Control is not of Composite type. ");
 			return;
 		}
-		
+
 		final Composite composite = (Composite)control;
 		final Button chb_saveModulePars = new Button(composite, SWT.CHECK);
 		chb_saveModulePars.setText("Save a list of the module parameters into a text file");
 		chb_saveModulePars.addSelectionListener(new CHBSelectionListener());
 	}
-	
+
 	@Override
 	protected boolean validatePage() {
 		if (!super.validatePage()) {
@@ -64,19 +64,19 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 		setErrorMessage(null);
 		return true;
 	}
-	
 
-	/** 
+
+	/**
 	 * Listens to the 'Save module parameters to a text file' checkbox.
 	 * */
 	private class CHBSelectionListener implements SelectionListener {
-		
+
 		@Override
 		public void widgetSelected(final SelectionEvent e) {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
-			
+
 			final Button checkBox = (Button)e.getSource();
 			saveModuleParsOption = checkBox.getSelection();
 		}
@@ -85,7 +85,7 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 		public void widgetDefaultSelected(final SelectionEvent e) {
 
 		}
-		
+
 	}
 
 }

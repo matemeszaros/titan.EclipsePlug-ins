@@ -11,7 +11,7 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 /**
  * Wizard page #1: edit the name of the new project.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractDefinitionWizardMainPage extends WizardNewProjectCreationPage {

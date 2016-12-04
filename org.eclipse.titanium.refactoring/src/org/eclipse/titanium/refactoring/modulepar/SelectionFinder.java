@@ -31,7 +31,7 @@ import org.eclipse.titan.designer.parsers.GlobalParser;
  * This class is only instantiated by {@link ExtractModuleParRefactoring} once per
  * each refactoring operation. By calling {@link #perform()}, all module parameters
  * are collected from the source project.
- * 
+ *
  * @author Viktor Varga
  */
 public class SelectionFinder {
@@ -40,15 +40,15 @@ public class SelectionFinder {
 	private final IProject project;
 	//out
 	private Set<Def_ModulePar> modulePars;
-	
+
 	public SelectionFinder(final IProject project) {
 		this.project = project;
 	}
-	
+
 	public Set<Def_ModulePar> getModulePars() {
 		return modulePars;
 	}
-	
+
 	public void perform() {
 		modulePars = new HashSet<Def_ModulePar>();
 		final Collection<Module> modules = GlobalParser.getProjectSourceParser(project).getModules();
@@ -58,12 +58,12 @@ public class SelectionFinder {
 			modulePars.addAll(vis.getModulePars());
 		}
 	}
-	
+
 	public String createModuleParListForSaving() {
 		if (modulePars == null || modulePars.isEmpty()) {
 			return "<empty>";
 		}
-		
+
 		final List<ModuleParListRecord> records = new ArrayList<ModuleParListRecord>();
 		for (Def_ModulePar def: modulePars) {
 			final IResource f = def.getLocation().getFile();
@@ -71,7 +71,7 @@ public class SelectionFinder {
 				ErrorReporter.logError("ExtractModulePar/SelectionFinder: IResource `" + f.getName() + "' is not an IFile.");
 				continue;
 			}
-			
+
 			final Identifier id = def.getIdentifier();
 			final Type t = def.getType(CompilationTimeStamp.getBaseTimestamp());
 			records.add(new ModuleParListRecord(def.getMyScope().getModuleScope().getIdentifier().getDisplayName(), id.getDisplayName(), t.getTypename()));
@@ -84,19 +84,19 @@ public class SelectionFinder {
 		}
 		return sb.toString();
 	}
-	
+
 	private static class ModuleParListRecord implements Comparable<ModuleParListRecord> {
-		
+
 		public ModuleParListRecord(final String moduleName, final String id, final String typeId) {
 			this.moduleName = moduleName;
 			this.id = id;
 			this.typeId = typeId;
 		}
-		
+
 		private final String moduleName;
 		private final String id;
 		private final String typeId;
-		
+
 		@Override
 		public int compareTo(final ModuleParListRecord arg0) {
 			final int cmp = moduleName.compareTo(arg0.moduleName);
@@ -105,7 +105,7 @@ public class SelectionFinder {
 			}
 			return id.compareTo(arg0.id);
 		}
-		
+
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -126,7 +126,7 @@ public class SelectionFinder {
 			if (!(obj instanceof ModuleParListRecord)) {
 				return false;
 			}
-			
+
 			final ModuleParListRecord other = (ModuleParListRecord)obj;
 			if (id == null) {
 				if (other.id != null) {
@@ -159,11 +159,11 @@ public class SelectionFinder {
 	private class ModuleParFinder extends ASTVisitor {
 
 		private final Set<Def_ModulePar> modulePars = new HashSet<Def_ModulePar>();
-		
+
 		public Set<Def_ModulePar> getModulePars() {
 			return modulePars;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Def_ModulePar) {
@@ -172,8 +172,8 @@ public class SelectionFinder {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
-	
-	
+
+
 }

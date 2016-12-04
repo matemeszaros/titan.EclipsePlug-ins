@@ -25,23 +25,23 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 
 /**
  * Context class representing {@link If_Statement} nodes.
- * 
+ *
  * @author Viktor Varga
  */
 class IfContext extends Context {
-	
+
 	private final Set<String> varNamesInConditions;
-	
+
 	IfContext(final If_Statement st, final Settings settings) {
 		super(st, settings);
 		varNamesInConditions = new HashSet<String>();
 	}
-	
+
 	@Override
 	public If_Statement getNode() {
 		return (If_Statement)super.getNode();
 	}
-	
+
 	protected void process_internal() {
 		final If_Statement st = getNode();
 		final If_Clauses ics = st.getIfClauses();
@@ -67,7 +67,7 @@ class IfContext extends Context {
 			}
 		}
 	}
-	
+
 	private static List<Reference> extractAllIdsFromClauses(final If_Clauses ics) {
 		final List<If_Clause> icl = ics.getClauses();
 		final List<Reference> ret = new ArrayList<Reference>();
@@ -94,25 +94,25 @@ class IfContext extends Context {
 		}
 		return ret;
 	}
-	
-	/** 
+
+	/**
 	 * Collects all the references from an {@link If_Clause}.
 	 * <p>
-	 * Call on {@link If_Clause} 
+	 * Call on {@link If_Clause}
 	 * */
 	private static class ClauseVisitor extends ASTVisitor {
 
 		private final List<Reference> result = new ArrayList<Reference>();
-		
+
 		private List<Reference> getResult() {
 			return result;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
 				final Reference ref = (Reference)node;
-				
+
 				final Assignment refdAssignment = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				switch(refdAssignment.getAssignmentType()) {
 				case A_ALTSTEP:
@@ -135,7 +135,7 @@ class IfContext extends Context {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
 
 }

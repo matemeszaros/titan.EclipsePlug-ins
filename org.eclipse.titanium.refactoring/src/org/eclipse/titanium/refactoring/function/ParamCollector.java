@@ -38,28 +38,28 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 /**
  * This class is only instantiated by the ExtractToFunctionRefactoring once per each refactoring operation.
  * By calling <code>perform()</code>, a list of parameters (<code>Param</code>) is created from a list of statements (StatementList node).
- * 
+ *
  * @author Viktor Varga
  */
 class ParamCollector {
-	
+
 	//in
 	private final IProject project;
 	private final StatementList selectedStatements;
 	private final Module selectedModule;
-	
+
 	//out
 	private List<Param> params;
 	private final boolean removeReturnClause = false;
 	private final List<RefactoringStatusEntry> warnings;
-	
+
 	ParamCollector(final IProject project, final StatementList selectedStatements, final Module selectedModule) {
 		this.selectedStatements = selectedStatements;
 		this.selectedModule = selectedModule;
 		this.project = project;
 		warnings = new ArrayList<RefactoringStatusEntry>();
 	}
-	
+
 	List<RefactoringStatusEntry> getWarnings() {
 		return warnings;
 	}
@@ -69,7 +69,7 @@ class ParamCollector {
 	boolean isRemoveReturnClause() {
 		return removeReturnClause;
 	}
-	
+
 	void perform() {
 		//collect params
 		params = new ArrayList<Param>();
@@ -82,7 +82,7 @@ class ParamCollector {
 			ErrorReporter.logError(createDebugInfo());
 		}
 	}
-	
+
 	private String createDebugInfo() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("ExtractToFunctionRefactoring->ParamCollector debug info: \n");
@@ -97,11 +97,11 @@ class ParamCollector {
 	 * Collects definitions from outside of the StatementList. Call for a StatementList.
 	 * */
 	private class ParamFinder extends ASTVisitor {
-		
+
 		private static final boolean DEBUG = ExtractToFunctionRefactoring.DEBUG_MESSAGES_ON;
 		private StatementList toVisit;
 		private final StringBuilder debugInfo = new StringBuilder();
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementList) {
@@ -118,7 +118,7 @@ class ParamCollector {
 					final 	Definition def = (Definition)as;
 					//def is outside of the selection
 					//TODO: does ReferenceFinder handle Undefined_LowerIdentifier_Values?
-					
+
 					//DO NOT use ReferenceFinder.scope, because it returns an incorrect scope for formal parameters
 					final ReferenceFinder refFinder = new ReferenceFinder(def);
 					final Map<Module, List<Hit>> refs = refFinder.findAllReferences(selectedModule, project, null, false);
@@ -135,7 +135,7 @@ class ParamCollector {
 					if (def instanceof FormalParameter) {
 						at = ((FormalParameter)def).getAssignmentType();
 					}
-					
+
 					final Param p = new Param();
 					p.setDef((Definition)as);
 					p.setDeclaredInside(false);
@@ -177,7 +177,7 @@ class ParamCollector {
 						//variable has no refs outside, so it will be a new local variable
 						return V_CONTINUE;
 					}
-					
+
 					final Param p = new Param();
 					p.setDef(def);
 					p.setDeclaredInside(true);
@@ -187,7 +187,7 @@ class ParamCollector {
 					} else {
 						params.add(p);
 					}
-					
+
 					final List<ISubReference> refsInRange = getRefsInRange(selectedModule, refs);
 					if (isDefWithoutInit(def) && refsInRange.isEmpty()) {
 						//variable has no refs inside, and its declaration (inside) has no init part
@@ -207,14 +207,14 @@ class ParamCollector {
 			}
 			return V_CONTINUE;
 		}
-		
+
 		public String createDebugInfo() {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("ExtractToFunctionRefactoring->ParamCollector debug info: \n");
 			sb.append(debugInfo);
 			return sb.toString();
 		}
-		
+
 		private boolean isGoodDefType(final IVisitableNode node) {
 			if (node instanceof Def_Var ||
 					node instanceof Def_Const ||
@@ -226,7 +226,7 @@ class ParamCollector {
 			}
 			return false;
 		}
-		
+
 		/**
 		 * @return whether there are any refs that are located in <code>locationModule</code> beyond location <code>loc</code>
 		 */
@@ -235,7 +235,7 @@ class ParamCollector {
 				if (!e.getKey().equals(locationModule)) {
 					continue;
 				}
-				
+
 				final List<Hit> hs = e.getValue();
 				final ListIterator<Hit> it = hs.listIterator();
 				while (it.hasNext()) {
@@ -247,7 +247,7 @@ class ParamCollector {
 			}
 			return false;
 		}
-		
+
 		/**
 		 * @return a list of references (subset of all references in <code>refs</code>) that are inside <code>toVisit</code> in <code>module</code>
 		 */
@@ -257,7 +257,7 @@ class ParamCollector {
 				if (!e.getKey().equals(module)) {
 					continue;
 				}
-				
+
 				final List<Hit> hs = e.getValue();
 				final ListIterator<Hit> it = hs.listIterator();
 				while (it.hasNext()) {
@@ -274,7 +274,7 @@ class ParamCollector {
 			}
 			return subrefs;
 		}
-		
+
 		/**
 		 * @return whether there are any references located outside of <code>toVisit</code> from the <code>refs</code> list
 		 */
@@ -287,7 +287,7 @@ class ParamCollector {
 				if (!e.getKey().equals(moduleOfRange)) {
 					return true;
 				}
-				
+
 				final List<Hit> hs = e.getValue();
 				for (Hit h: hs) {
 					if (!isInsideRange(h.reference.getLocation())) {
@@ -297,7 +297,7 @@ class ParamCollector {
 			}
 			return false;
 		}
-		
+
 		/**
 		 * @return whether location <code>toCheck</code> is inside the location of <code>toVisit</code>
 		 */
@@ -306,11 +306,11 @@ class ParamCollector {
 				ErrorReporter.logError("ParamFinderVisitor::isInsideRange(): StatementList 'toVisit' is null! ");
 				return false;
 			}
-			
+
 			final Location range = toVisit.getLocation();
 			return toCheck.getOffset() >= range.getOffset() && toCheck.getEndOffset() <= range.getEndOffset();
 		}
-		
+
 		/**
 		 * @return whether Definition <code>toCheck</code> has no initialization part
 		 */
@@ -320,7 +320,7 @@ class ParamCollector {
 			}
 			return toCheck.getLocation().getEndOffset() == toCheck.getIdentifier().getLocation().getEndOffset();
 		}
-		
+
 	}
-	
+
 }

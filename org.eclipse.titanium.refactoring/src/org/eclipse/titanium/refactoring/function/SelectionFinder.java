@@ -69,7 +69,7 @@ import org.eclipse.ui.PlatformUI;
  * <p>
  * Use {@link #performHeadless(IFile, ITextSelection)} when no GUI is available:
  * for testing, for example.
- * 
+ *
  * @author Viktor Varga
  */
 class SelectionFinder {
@@ -154,7 +154,7 @@ class SelectionFinder {
 					+ selFile.getFullPath());
 			return;
 		}
-		
+
 		final IDocument doc = new Document(fileContents);
 		textSelection = new TextSelection(doc, textSel.getOffset(), textSel.getLength());
 		//
@@ -210,7 +210,7 @@ class SelectionFinder {
 			warnings.add(new RefactoringStatusEntry(RefactoringStatus.WARNING, WARNING_UNCERTAIN_RETURN));
 		}
 	}
-	
+
 	void perform() {
 		// getting the active editor
 		final IEditorPart editor = PlatformUI.getWorkbench()
@@ -218,7 +218,7 @@ class SelectionFinder {
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return;
 		}
-		
+
 		final TTCN3Editor targetEditor = (TTCN3Editor) editor;
 		statusLineManager = targetEditor.getEditorSite().getActionBars()
 				.getStatusLineManager();
@@ -287,7 +287,7 @@ class SelectionFinder {
 			warnings.add(new RefactoringStatusEntry(RefactoringStatus.WARNING, WARNING_UNCERTAIN_RETURN));
 		}
 	}
-	
+
 	private IResource extractResource(final IEditorPart editor) {
 		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
@@ -332,7 +332,7 @@ class SelectionFinder {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Collects Statements that are located inside the selection region (call
 	 * for the enclosing Module)
@@ -364,7 +364,7 @@ class SelectionFinder {
 			if (textSel == null || sl.isEmpty()) {
 				return sl;
 			}
-			
+
 			final String content = textSel.getText();
 			final int ind = sl.getLocation().getEndOffset() - textSel.getOffset();
 			if (ind < 0 || ind >= textSel.getLength()) {
@@ -418,7 +418,7 @@ class SelectionFinder {
 		if (selectedStatements == null) {
 			return;
 		}
-		
+
 		final GotoFinder vis = new GotoFinder();
 		selectedStatements.accept(vis);
 		final List<Identifier> gotos = vis.getGotoStatements();
@@ -489,7 +489,7 @@ class SelectionFinder {
 		if (selectedStatements == null) {
 			return false;
 		}
-		
+
 		final BreakFinder vis = new BreakFinder();
 		selectedStatements.accept(vis);
 		return vis.isFound();
@@ -503,7 +503,7 @@ class SelectionFinder {
 		if (selectedStatements == null) {
 			return false;
 		}
-		
+
 		final ContinueFinder vis = new ContinueFinder();
 		selectedStatements.accept(vis);
 		return vis.isFound();

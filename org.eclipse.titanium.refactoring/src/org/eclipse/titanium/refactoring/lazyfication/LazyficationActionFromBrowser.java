@@ -30,7 +30,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Istvan Bohm
  */
 public class LazyficationActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
@@ -61,14 +61,14 @@ public class LazyficationActionFromBrowser extends AbstractHandler implements IO
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		
+
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
 		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
-		
+
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "Lazyfication");
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
 		final LazyficationRefactoring refactoring = new LazyficationRefactoring(structSelection);
 		//open wizard
@@ -86,5 +86,5 @@ public class LazyficationActionFromBrowser extends AbstractHandler implements IO
 		//update AST after refactoring
 		Utils.updateASTAfterRefactoring(wiz, refactoring.getAffectedObjects(), refactoring.getName());
 	}
-	
+
 }

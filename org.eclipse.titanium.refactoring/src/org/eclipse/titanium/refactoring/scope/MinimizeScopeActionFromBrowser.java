@@ -30,7 +30,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeScopeActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
@@ -63,12 +63,12 @@ public class MinimizeScopeActionFromBrowser extends AbstractHandler implements I
 		}
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
 		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
-		
+
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "MinimizeScope");
-		
+
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
 		final MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(structSelection, null);
 		//open wizard
@@ -83,7 +83,7 @@ public class MinimizeScopeActionFromBrowser extends AbstractHandler implements I
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 		Activator.getDefault().resumeHandlingResourceChanges();
-		
+
 		//update AST after refactoring
 		Utils.updateASTAfterRefactoring(wiz, refactoring.getAffectedObjects(), refactoring.getName());
 	}

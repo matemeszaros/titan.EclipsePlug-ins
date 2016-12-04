@@ -15,12 +15,12 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 
 /**
  * Wizard for the 'Minimize visibility modifiers' refactoring operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeVisibilityWizard extends RefactoringWizard implements
 		IExecutableExtension {
-	
+
 	private static final String WIZ_WINDOWTITLE = "Minimize visibility modifiers";
 
 	MinimizeVisibilityWizard(final Refactoring refactoring) {
@@ -30,7 +30,7 @@ public class MinimizeVisibilityWizard extends RefactoringWizard implements
 	@Override
 	public void setInitializationData(final IConfigurationElement config,
 			final String propertyName, final Object data) throws CoreException {
-		
+
 	}
 
 	@Override

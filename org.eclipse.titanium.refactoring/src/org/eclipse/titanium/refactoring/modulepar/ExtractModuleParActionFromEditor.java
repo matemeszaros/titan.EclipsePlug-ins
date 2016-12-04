@@ -32,13 +32,13 @@ import org.eclipse.ui.PlatformUI;
  * called from the editor for a part of a single file.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParActionFromEditor extends AbstractHandler {
 
 	private IProject sourceProj;
-	
+
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
@@ -47,27 +47,27 @@ public class ExtractModuleParActionFromEditor extends AbstractHandler {
 		if (targetEditor == null) {
 			return null;
 		}
-		
+
 		final IFile selectedFile = Utils.getSelectedFileInEditor("ExtractModulePar");
 		if (selectedFile == null) {
 			return null;
 		}
-		
+
 		//getting current project
 		sourceProj = selectedFile.getProject();
 		if (sourceProj == null) {
 			ErrorReporter.logError("ExtractModuleParActionFromEditor: Source project is null. ");
 			return null;
 		}
-		
+
 		//update AST
 		final Set<IProject> projsToUpdate = new HashSet<IProject>();
 		projsToUpdate.add(sourceProj);
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExtractModulePar");
-		
+
 		//create refactoring
 		final ExtractModuleParRefactoring refactoring = new ExtractModuleParRefactoring(sourceProj);
-		
+
 		final ExtractModuleParWizard wiz = new ExtractModuleParWizard();
 		//
 		final StructuredSelection ssel = new StructuredSelection(sourceProj);
@@ -97,7 +97,7 @@ public class ExtractModuleParActionFromEditor extends AbstractHandler {
 				ErrorReporter.logError("ExtractModuleParActionFromEditor: Copying project settings to new project failed.");
 			}
 		}
-		
+
 		//performing the refactor operation
 		refactoring.perform();
 		//reanalyze project
@@ -111,5 +111,5 @@ public class ExtractModuleParActionFromEditor extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 }

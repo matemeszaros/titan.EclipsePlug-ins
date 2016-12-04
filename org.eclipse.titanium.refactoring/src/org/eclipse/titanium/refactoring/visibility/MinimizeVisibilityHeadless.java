@@ -17,9 +17,9 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * @author Viktor Varga
  * */
 public class MinimizeVisibilityHeadless {
-	
+
 	private final IStructuredSelection selection;
-	
+
 	public MinimizeVisibilityHeadless(final IStructuredSelection selection) {
 		this.selection = selection;
 	}
@@ -33,7 +33,7 @@ public class MinimizeVisibilityHeadless {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 	}
-	
-	
-	
+
+
+
 }

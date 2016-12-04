@@ -19,15 +19,15 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 
 /**
  * A special ASTNode which contains a list of Statement nodes.
- * 
+ *
  * @author Viktor Varga
  */
 class StatementList extends ASTNode implements ILocateableNode {
-	
+
 	protected Location location;
 	protected List<Statement> statements;
 	protected StatementBlock myStatementBlock;
-	
+
 	protected StatementList(List<Statement> statements) {
 		this.statements = statements;
 		if (statements == null) {
@@ -42,18 +42,18 @@ class StatementList extends ASTNode implements ILocateableNode {
 					statements.get(statements.size()-1).getLocation().getEndOffset());
 		}
 	}
-	
+
 	protected boolean isEmpty() {
 		return statements.isEmpty();
 	}
-	
+
 	protected int getSize() {
 		return statements.size();
 	}
 	protected Statement getStatementByIndex(final int ind) {
 		return statements.get(ind);
 	}
-	
+
 	@Override
 	public void setLocation(final Location location) {
 		this.location = location;
@@ -80,7 +80,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 		}
 		return true;
 	}
-	
+
 	public String createDebugInfo() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("ExtractToFunctionRefactoring->StatementList debug info:");
@@ -126,7 +126,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 		sb.append('\n');
 		return sb.toString();
 	}
-	
+
 }
 
 

@@ -35,11 +35,11 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
 /**
  * This class represents the 'Lazyfication' refactoring operation.
  * <p>
- * This refactoring operation adds @lazy modifiers to formal parameters if 
- * they are not evaluated in all cases in the given 
+ * This refactoring operation adds @lazy modifiers to formal parameters if
+ * they are not evaluated in all cases in the given
  * files/folders/projects, which are contained in a {@link IStructuredSelection} object.
  * The operation can be executed using the mechanisms in the superclass, through a wizard for example
- * 
+ *
  * @author Istvan Bohm
  */
 public class LazyficationRefactoring extends Refactoring {
@@ -49,15 +49,15 @@ public class LazyficationRefactoring extends Refactoring {
 	private static final String MINIMISEWARNING = "Minimise memory usage is enabled, which can cause unexpected behaviour in the refactoring process!\n"
 			+ "Refactoring is not supported with the memory minimise option turned on, "
 			+ "we do not take any responsibility for it.";
-	
+
 	private final IStructuredSelection selection;
 	private final Set<IProject> projects = new HashSet<IProject>();
 
 	private Object[] affectedObjects;		//the list of objects affected by the change
-	
+
 	public LazyficationRefactoring(final IStructuredSelection selection) {
 		this.selection = selection;
-		
+
 		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
 			final Object o = it.next();
@@ -71,7 +71,7 @@ public class LazyficationRefactoring extends Refactoring {
 	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
-	
+
 	//METHODS FROM REFACTORING
 
 	@Override
@@ -132,7 +132,7 @@ public class LazyficationRefactoring extends Refactoring {
 		if (selection == null) {
 			return null;
 		}
-		
+
 		final CompositeChange cchange = new CompositeChange("LazyficationRefactoring");
 		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
@@ -140,7 +140,7 @@ public class LazyficationRefactoring extends Refactoring {
 			if (!(o instanceof IResource)) {
 				continue;
 			}
-			
+
 			final IResource res = (IResource)o;
 			final ResourceVisitor vis = new ResourceVisitor();
 			res.accept(vis);
@@ -150,7 +150,7 @@ public class LazyficationRefactoring extends Refactoring {
 		return cchange;
 	}
 
-	
+
 	public static boolean hasTtcnppFiles(final IResource resource) throws CoreException {
 		if (resource instanceof IProject || resource instanceof IFolder) {
 			final IResource[] children = resource instanceof IFolder ? ((IFolder) resource).members() : ((IProject) resource).members();
@@ -166,7 +166,7 @@ public class LazyficationRefactoring extends Refactoring {
 		return false;
 	}
 	//METHODS FROM REFACTORING END
-	
+
 	/**
 	 * Visits all the files of a folder or project (any {@link IResource}).
 	 * Creates the {@link Change} for all files and then merges them into a single
@@ -177,15 +177,15 @@ public class LazyficationRefactoring extends Refactoring {
 	private class ResourceVisitor implements IResourceVisitor {
 
 		private final CompositeChange change;
-		
+
 		public ResourceVisitor() {
 			this.change = new CompositeChange("LazyficationRefactoring");
 		}
-		
+
 		private CompositeChange getChange() {
 			return change;
 		}
-		
+
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
@@ -201,6 +201,6 @@ public class LazyficationRefactoring extends Refactoring {
 			//CONTINUE
 			return true;
 		}
-		
+
 	}
 }

@@ -29,26 +29,26 @@ import org.eclipse.titan.designer.parsers.ProjectSourceParser;
  * By passing the selection through the constructor and calling {@link ChangeCreator#perform()}, this class
  *  creates a {@link Change} object, which can be returned by the standard
  *  {@link Refactoring#createChange(IProgressMonitor)} method in the refactoring class.
- * 
+ *
  * @author Zsolt Tabi
  */
 class ChangeCreator {
 
-	//in
+	// in
 	private final IFile selectedFile;
-	
-	//out
+
+	// out
 	private Change change;
-	
+
 	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
-	
+
 	public Change getChange() {
 		return change;
 	}
-	
-	/** 
+
+	/**
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
@@ -58,27 +58,27 @@ class ChangeCreator {
 		}
 		change = createFileChange(selectedFile);
 	}
-	
+
 	private Change createFileChange(final IFile toVisit) {
 		if (toVisit == null) {
 			return null;
 		}
-		
+
 		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
 		final Module module = sourceParser.containedModule(toVisit);
-		if(module == null) {
+		if (module == null) {
 			return null;
 		}
-		//find all locations in the module that should be edited
+		// find all locations in the module that should be edited
 		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
 		final NavigableSet<ILocateableNode> nodes = vis.getLocations();
-		
+
 		if (nodes.isEmpty()) {
 			return null;
 		}
 
-		//create a change for each edit location
+		// create a change for each edit location
 		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
 		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
@@ -98,7 +98,7 @@ class ChangeCreator {
 				if (namedValue == null) { // record with unnamed fields
 					break;
 				}
-				rootEdit.addChild(new InsertEdit(namedValue.getValue().getLocation().getOffset(), 
+				rootEdit.addChild(new InsertEdit(namedValue.getValue().getLocation().getOffset(),
 						namedValue.getName().getTtcnName() + " := "));
 			}
 		}
@@ -109,7 +109,7 @@ class ChangeCreator {
 
 		return tfc;
 	}
-	
+
 	/**
 	 * Collects the locations of all the definitions in a module where the visibility modifier
 	 *  is not yet minimal.
@@ -117,21 +117,21 @@ class ChangeCreator {
 	 * Call on modules.
 	 * */
 	private static class DefinitionVisitor extends ASTVisitor {
-		
+
 		private final NavigableSet<ILocateableNode> locations;
-		
+
 		DefinitionVisitor() {
 			locations = new TreeSet<ILocateableNode>(new LocationComparator());
 		}
-		
+
 		private NavigableSet<ILocateableNode> getLocations() {
 			return locations;
 		}
-		
+
 		@Override
 		public int visit(final IVisitableNode node) {
-			
-			if (node instanceof SequenceOf_Value) { 
+
+			if (node instanceof SequenceOf_Value) {
 				locations.add((SequenceOf_Value) node);
 			}
 
@@ -152,12 +152,12 @@ class ChangeCreator {
 			if (!f0.equals(f1)) {
 				return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 			}
-			
+
 			final int o0 = arg0.getLocation().getOffset();
 			final int o1 = arg1.getLocation().getOffset();
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
-		
+
 	}
-	
+
 }

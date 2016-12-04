@@ -18,17 +18,17 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.Definition_Statement;
 
 /**
  * A class which links together declaration {@link StatementNode}s with the same location.
- * 
+ *
  * @author Viktor Varga
  */
 public class MultiDeclaration {
 
 	public final SortedSet<StatementNode> declStmts = new TreeSet<StatementNode>(new MultiDeclarationComparator());	//multi-declaration parts in the right order
-	
+
 	public int getSize() {
 		return declStmts.size();
 	}
-	
+
 	public StatementNode getFirstStatement() {
 		return declStmts.first();
 	}
@@ -42,7 +42,7 @@ public class MultiDeclaration {
 		return declStmts.last().equals(toTest);
 	}
 	public boolean isIntermediateStatement(final StatementNode toTest) {
-		return !isFirstStatement(toTest) && !isLastStatement(toTest); 
+		return !isFirstStatement(toTest) && !isLastStatement(toTest);
 	}
 	public boolean isAllStatementsMoved() {
 		final Iterator<StatementNode> it = declStmts.iterator();
@@ -53,7 +53,7 @@ public class MultiDeclaration {
 		}
 		return true;
 	}
-	
+
 	public void addDeclarationStatement(final StatementNode sn) {
 		if (!declStmts.add(sn)) {
 			ErrorReporter.logError("MultiDeclaration.addDeclarationStatement(): " +
@@ -62,9 +62,9 @@ public class MultiDeclaration {
 			//System.out.println("MD(" + this + "), sn added: " + sn);
 		}
 	}
-	
+
 	private class MultiDeclarationComparator implements Comparator<StatementNode> {
-		
+
 		@Override
 		public int compare(final StatementNode arg0, final StatementNode arg1) {
 			if (!(arg0.getAstNode() instanceof Definition_Statement) ||
@@ -86,7 +86,7 @@ public class MultiDeclaration {
 			}
 			return result;
 		}
-		
+
 	}
-	
+
 }

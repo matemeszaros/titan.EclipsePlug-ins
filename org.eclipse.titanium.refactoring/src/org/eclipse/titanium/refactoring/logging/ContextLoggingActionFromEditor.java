@@ -32,12 +32,12 @@ import org.eclipse.ui.PlatformUI;
  * called from the editor for a part of a single file.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ContextLoggingActionFromEditor extends AbstractHandler {
 	private static final String ERR_MSG_NO_SELECTION = "Empty selection! ";
-	
+
 	private TextSelection selection;
 	private IStatusLineManager statusLineManager;
 
@@ -61,7 +61,7 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 		if (selectedFile == null) {
 			return null;
 		}
-		
+
 		// getting selection
 		final ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 		final ISelection sel = selectionService.getSelection();
@@ -74,7 +74,7 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 			return null;
 		}
 		selection = (TextSelection)sel;
-		
+
 		//
 		ContextLoggingRefactoring refactoring;
 		if (selection.getLength() == 0) {
@@ -83,7 +83,7 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 		} else {
 			refactoring = new ContextLoggingRefactoring(selectedFile, selection, null);
 		}
-		
+
 		//open wizard
 		final ContextLoggingWizard wiz = new ContextLoggingWizard(refactoring);
 		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
@@ -95,26 +95,26 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 			ErrorReporter.logError("ContextLoggingActionFromEditor: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
 		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
-		
+
 		return null;
 	}
 
 	private static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
 		Display.getDefault().asyncExec(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				toSet.setErrorMessage(msg);
-				
+
 			}
 		});
 	}
-	
+
 }

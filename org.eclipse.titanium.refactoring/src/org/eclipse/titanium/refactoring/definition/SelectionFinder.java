@@ -41,18 +41,18 @@ import org.eclipse.ui.PlatformUI;
  * This class is only instantiated by {@link ExtractDefinitionRefactoring} once per
  * each refactoring operation. By calling {@link #perform()}, the currently
  * selected project and piece of code ({@link Definition}) is determined.
- * 
+ *
  * @author Viktor Varga
  */
 class SelectionFinder {
 
 	private static final String ERR_MSG_NO_SELECTION = "No definition to extract was found! ";
-	
+
 	/** the project from which we extract the definition */
 	private IProject sourceProj;
 	/** the definition which is being extracted */
 	private Definition selection;
-	
+
 	public IProject getSourceProj() {
 		return sourceProj;
 	}
@@ -60,7 +60,7 @@ class SelectionFinder {
 	public Definition getSelection() {
 		return selection;
 	}
-	
+
 	public void perform() {
 		selection = findSelection();
 	}
@@ -71,7 +71,7 @@ class SelectionFinder {
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return null;
 		}
-		
+
 		final TTCN3Editor targetEditor = (TTCN3Editor) editor;
 
 		//iterating through part of the module
@@ -80,7 +80,7 @@ class SelectionFinder {
 			ErrorReporter.logError("SelectionFinder.findSelection(): Selected resource `" + selectedRes.getName() + "' is not a file.");
 			return null;
 		}
-		
+
 		final IFile selectedFile = (IFile)selectedRes;
 		sourceProj = selectedFile.getProject();
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(sourceProj);
@@ -108,14 +108,14 @@ class SelectionFinder {
 	 * (selection is inside the node).
 	 */
 	private static class SelectionFinderVisitor extends ASTVisitor {
-		
+
 		private Definition def;
 		private final int offset;
-		
+
 		SelectionFinderVisitor(final int selectionOffset) {
 			offset = selectionOffset;
 		}
-		
+
 		private Definition getSelection() {
 			return def;
 		}
@@ -157,7 +157,7 @@ class SelectionFinder {
 			}
 			return V_CONTINUE;
 		}
-		
+
 		private static boolean isGoodType(final IVisitableNode node) {
 			if (node instanceof Definition &&
 					!(node instanceof Def_Var) &&
@@ -167,10 +167,10 @@ class SelectionFinder {
 			}
 			return false;
 		}
-		
+
 	}
-	
-	
+
+
 	private IResource extractResource(final IEditorPart editor) {
 		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
@@ -178,7 +178,7 @@ class SelectionFinder {
 		}
 		return ((IFileEditorInput)input).getFile();
 	}
-	
+
 	private TextSelection extractSelection(final ISelection sel) {
 		if (!(sel instanceof TextSelection)) {
 			ErrorReporter.logError("Selection is not a TextSelection.");
@@ -186,5 +186,5 @@ class SelectionFinder {
 		}
 		return (TextSelection)sel;
 	}
-	
+
 }

@@ -46,20 +46,20 @@ import org.eclipse.ui.PlatformUI;
  * called from the editor for a single function definition.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeScopeActionFromEditor extends AbstractHandler {
-	
+
 	private static final String ERR_MSG_NO_SELECTION = "Move the cursor into a function or testcase body! ";
 
 	/** the definition which is being refactored */
 	private Definition selection;
-	
+
 	public Definition getSelection() {
 		return selection;
 	}
-	
+
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
@@ -72,13 +72,13 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		if (targetEditor == null) {
 			return null;
 		}
-		
+
 		//get selected definition
 		selection = findSelection();
 		if (selection == null) {
 			return null;
 		}
-		
+
 		final IResource selectedRes = selection.getLocation().getFile();
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("MinimizeScopeActionFromEditor.execute(): Selected resource `"
@@ -101,17 +101,17 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 			ErrorReporter.logError("MinimizeScopeActionFromEditor: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
 		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
-		
+
 		return null;
 	}
-	
+
 
 	private Definition findSelection() {
 		//getting the active editor
@@ -126,14 +126,14 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		//getting current selection
 		final ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
 		final TextSelection textSelection = extractSelection(selectionService.getSelection());
-		
+
 		//iterating through part of the module
 		final IResource selectedRes = extractResource(targetEditor);
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("SelectionFinder.findSelection(): Selected resource `" + selectedRes.getName() + "' is not a file.");
 			return null;
 		}
-		
+
 		final IFile selectedFile = (IFile)selectedRes;
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selectedFile.getProject());
 		final Module selectedModule = projectSourceParser.containedModule(selectedFile);
@@ -172,14 +172,14 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 	 * (selection is inside the node).
 	 */
 	private static class SelectionFinderVisitor extends ASTVisitor {
-		
+
 		private Definition def;
 		private final int offset;
-		
+
 		SelectionFinderVisitor(final int selectionOffset) {
 			offset = selectionOffset;
 		}
-		
+
 		private Definition getSelection() {
 			return def;
 		}
@@ -221,12 +221,12 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 			}
 			return V_CONTINUE;
 		}
-		
+
 		private static boolean isGoodType(final IVisitableNode node) {
 			return (node instanceof Def_Function ||
 					node instanceof Def_Testcase);
 		}
-		
+
 	}
-	
+
 }

@@ -20,13 +20,13 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 
 /**
  * Special class to store ISubReferences and Definition occurrences in text
- * and be able to sort them by Location. Immutable. 
- * 
+ * and be able to sort them by Location. Immutable.
+ *
  * @author Viktor Varga
  */
 final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<TextReplaceItem> {
 	private static final char SEMICOLON = ';';
-	
+
 	/**
 	 * <code>true</code>: reference (Hit), <code>false</code>: declaration
 	 * <p>
@@ -35,18 +35,18 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	private final boolean ref;
 	private final ISubReference subref;
 	private final Definition def;
-	
+
 	/**
 	 * the param of which this subref/def is an occurrence
 	 */
 	private final Param param;
-	
+
 	private final String source;
 	/**
 	 * references/definitions can be found in <code>source[ref.location+sourceOffset]</code> as text
 	 */
 	private final int sourceOffset;
-	
+
 	/**
 	 * start location of this node in the text
 	 * */
@@ -55,7 +55,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	 * end location of this node in the text
 	 * */
 	private final int endOffset;
-	
+
 	TextReplaceItem(final ISubReference subref, final Param param, final String sourceText, final int sourceOffset) {
 		ref = true;
 		this.subref = subref;
@@ -65,7 +65,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		this.sourceOffset = sourceOffset;
 		startOffset = calculateStartOffset();
 		endOffset = calculateEndOffset();
-		
+
 	}
 	TextReplaceItem(final Definition def, final Param param, final String sourceText, final int sourceOffset) {
 		ref = false;
@@ -76,9 +76,9 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		this.sourceOffset = sourceOffset;
 		startOffset = calculateStartOffset();
 		endOffset = calculateEndOffset();
-		
+
 	}
-	
+
 	private int calculateStartOffset() {
 		return getLocation().getOffset()-sourceOffset;
 	}
@@ -93,7 +93,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		if (end > source.length()) {
 			end = source.length();
 		}
-		
+
 		final int lastInd = end-1;
 		if (lastInd >= 0 && source.charAt(lastInd) == SEMICOLON) {
 			return end;
@@ -103,7 +103,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		}
 		return end;
 	}
-	
+
 	public boolean isReference() {
 		return ref;
 	}
@@ -111,7 +111,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	public StringBuilder getNewParamName() {
 		return param.getName();
 	}
-	
+
 	public Location getLocation() {
 		if (ref) {
 			return subref == null ? null : subref.getLocation();
@@ -119,9 +119,9 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 			return def == null ? null : def.getLocation();
 		}
 	}
-	
+
 	//methods for function text creation
-	
+
 	/**
 	 * @return a substring of <code>sourceText</code> which contains this TextReplaceItem
 	 */
@@ -193,9 +193,9 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		ret.add(sb);
 		return ret;
 	}
-	
+
 	//
-	
+
 	@Override
 	public int compare(final TextReplaceItem arg0, final TextReplaceItem arg1) {
 		if (arg0 == arg1) {
@@ -207,14 +207,14 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		if (arg1 == null) {
 			return 1;
 		}
-		
+
 		final IResource f0 = arg0.getLocation().getFile();
 		final IResource f1 = arg1.getLocation().getFile();
 		if (!f0.equals(f1)) {
 			ErrorReporter.logError("TextReplaceItem::compare(): Files differ! ");
 			return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 		}
-		
+
 		int o0 = arg0.getLocation().getOffset();
 		int o1 = arg1.getLocation().getOffset();
 		final int comp1 = (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
@@ -229,7 +229,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	public int compareTo(final TextReplaceItem arg0) {
 		return compare(this, arg0);
 	}
-	
+
 	@Override
 	public boolean equals(final Object arg0) {
 		if (arg0 == this) {
@@ -249,7 +249,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		result = prime * result + getLocation().getEndOffset();
 		return result;
 	}
-	
-	
-	
+
+
+
 }

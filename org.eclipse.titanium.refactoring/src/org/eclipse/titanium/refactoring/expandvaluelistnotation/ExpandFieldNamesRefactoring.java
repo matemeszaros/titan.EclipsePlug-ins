@@ -30,7 +30,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * This refactoring operation minimizes all visibility modifiers in the given
  *   files/folders/projects, which are contained in a {@link IStructuredSelection} object.
  * The operation can be executed using the mechanisms in the superclass, through a wizard for example
- * 
+ *
  * @author Zsolt Tabi
  */
 public class ExpandFieldNamesRefactoring extends Refactoring {
@@ -45,18 +45,18 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 	private final Set<IProject> projects = new HashSet<IProject>();
 
 	private Object[] affectedObjects;		//the list of objects affected by the change
-	
+
 	/*
 	 * TODO dev:
 	 *
-	 * 
+	 *
 	 * TODO fix:
-	 * 
+	 *
 	 * */
-	
+
 	public ExpandFieldNamesRefactoring(final IStructuredSelection selection) {
 		this.selection = selection;
-		
+
 		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
 			final Object o = it.next();
@@ -70,7 +70,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
-	
+
 	//METHODS FROM REFACTORING
 
 	@Override
@@ -84,7 +84,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 		final RefactoringStatus result = new RefactoringStatus();
 		try {
 			pm.beginTask("Checking preconditions...", 3);
-			
+
 			final IPreferencesService prefs = Platform.getPreferencesService();//PreferenceConstants.USEONTHEFLYPARSING
 			if (! prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.USEONTHEFLYPARSING, false, null)) {
 				result.addError(ONTHEFLYANALAYSISDISABLED);
@@ -97,7 +97,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 					result.addError(MessageFormat.format(PROJECTCONTAINSTTCNPPFILES, project));
 				}
 			}
-			
+
 			pm.worked(1);
 			// check that there are no error markers in the
 			// project
@@ -112,7 +112,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 			}
 			pm.worked(1);
 
-			
+
 			if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MINIMISEMEMORYUSAGE, false, null)) {
 				result.addError(MINIMISEWARNING);
 			}
@@ -137,7 +137,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 		if (selection == null) {
 			return null;
 		}
-		
+
 		final CompositeChange cchange = new CompositeChange("ExpandFieldNamesRefactoring");
 		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
@@ -145,7 +145,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 			if (!(o instanceof IResource)) {
 				continue;
 			}
-			
+
 			final IResource res = (IResource)o;
 			final ResourceVisitor vis = new ResourceVisitor();
 			res.accept(vis);
@@ -170,9 +170,9 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 		return false;
 	}
 	//METHODS FROM REFACTORING END
-	
 
-	
+
+
 	/**
 	 * Visits all the files of a folder or project (any {@link IResource}).
 	 * Creates the {@link Change} for all files and then merges them into a single
@@ -183,15 +183,15 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 	private class ResourceVisitor implements IResourceVisitor {
 
 		private final CompositeChange change;
-		
+
 		public ResourceVisitor() {
 			this.change = new CompositeChange("ExpandFieldNamesRefactoring");
 		}
-		
+
 		private CompositeChange getChange() {
 			return change;
 		}
-		
+
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
@@ -207,7 +207,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 			//CONTINUE
 			return true;
 		}
-		
+
 	}
-	
+
 }
