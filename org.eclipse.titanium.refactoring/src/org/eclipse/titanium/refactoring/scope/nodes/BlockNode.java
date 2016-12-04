@@ -26,7 +26,7 @@ public class BlockNode extends Node {
 	
 	protected final List<StatementNode> sts;
 
-	public BlockNode(IVisitableNode astNode) {
+	public BlockNode(final IVisitableNode astNode) {
 		super(astNode);
 		this.sts = new ArrayList<StatementNode>();
 	}
@@ -38,14 +38,14 @@ public class BlockNode extends Node {
 		return sts;
 	}
 
-	public StatementNode getPreviousStatement(StatementNode sn) {
+	public StatementNode getPreviousStatement(final StatementNode sn) {
 		int ind = sts.indexOf(sn);
 		if (ind <= 0) {
 			return null;
 		}
 		return sts.get(ind-1);
 	}	
-	public StatementNode getNextStatement(StatementNode sn) {
+	public StatementNode getNextStatement(final StatementNode sn) {
 		int ind = sts.indexOf(sn);
 		if (ind >= sts.size()-1) {
 			return null;
@@ -53,15 +53,15 @@ public class BlockNode extends Node {
 		return sts.get(ind+1);
 	}
 	
-	public void setParent(StatementNode parent) {
+	public void setParent(final StatementNode parent) {
 		this.parent = parent;
 	}
-	public void addStatement(StatementNode st) {
+	public void addStatement(final StatementNode st) {
 		sts.add(st);
 	}
 	
 	@Override
-	protected boolean containsNode(Node n) {
+	protected boolean containsNode(final Node n) {
 		if (this.equals(n)) {
 			return true;
 		}
@@ -75,7 +75,7 @@ public class BlockNode extends Node {
 
 	/** Returns false if they are equal. */
 	@Override
-	public boolean isBlockAncestorOfThis(BlockNode bn) {
+	public boolean isBlockAncestorOfThis(final BlockNode bn) {
 		if (this.equals(bn)) {
 			return false;
 		}
@@ -90,7 +90,7 @@ public class BlockNode extends Node {
 		return true;
 	}
 	@Override
-	public boolean isStmtAncestorOfThis(StatementNode sn) {
+	public boolean isStmtAncestorOfThis(final StatementNode sn) {
 		StatementNode parent = this.getParent();
 		while (parent != null && !parent.equals(sn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
@@ -102,7 +102,7 @@ public class BlockNode extends Node {
 		return true;
 	} 
 	
-	public BlockNode findSmallestCommonAncestorBlock(BlockNode bn) {
+	public BlockNode findSmallestCommonAncestorBlock(final BlockNode bn) {
 		if (bn.equals(this)) {
 			return this;
 		}
@@ -122,7 +122,7 @@ public class BlockNode extends Node {
 		}
 	}
 	
-	public StatementNode findStmtInBlockWhichContainsNode(Node containedNode) {
+	public StatementNode findStmtInBlockWhichContainsNode(final Node containedNode) {
 		if (!containedNode.isBlockAncestorOfThis(this)) {
 			//System.err.println("x");
 			return null;
@@ -162,7 +162,7 @@ public class BlockNode extends Node {
 		return sb.toString();
 	}
 
-	public String toStringRecursive(boolean recursive, int prefixLen) {
+	public String toStringRecursive(final boolean recursive, final int prefixLen) {
 		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix).append("BN: ").append(toString()).append("\n");

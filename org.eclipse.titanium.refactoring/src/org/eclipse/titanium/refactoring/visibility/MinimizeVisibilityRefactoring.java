@@ -62,7 +62,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 	 * 
 	 * */
 	
-	public MinimizeVisibilityRefactoring(IStructuredSelection selection) {
+	public MinimizeVisibilityRefactoring(final IStructuredSelection selection) {
 		this.selection = selection;
 		
 		Iterator<?> it = selection.iterator();
@@ -87,7 +87,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		try {
@@ -135,14 +135,14 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(final IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		if (selection == null) {
 			return null;
 		}
@@ -200,7 +200,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 		}
 		
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
 				ChangeCreator chCreator = new ChangeCreator((IFile)resource);
 				chCreator.perform();

@@ -24,7 +24,7 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 public class ContextFactory {
 	
 	/** The factory method. */
-	public Context createContext(IVisitableNode node, Context child, Settings settings) {
+	public Context createContext(final IVisitableNode node, final Context child, final Settings settings) {
 		if (node instanceof If_Statement && settings.getSetting(Settings.SETTING_LOG_IF)) {
 			return new IfContext((If_Statement)node, settings);
 		}

@@ -34,14 +34,14 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 	private TableViewer tableViewer;
 	private final IModelProvider<ParamTableItem> modelProvider;
 
-	public ExtractToFunctionWizardParamsPage(String name,
-			IModelProvider<ParamTableItem> modelProvider) {
+	public ExtractToFunctionWizardParamsPage(final String name,
+			final IModelProvider<ParamTableItem> modelProvider) {
 		super(name);
 		this.modelProvider = modelProvider;
 	}
 
 	@Override
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(composite);
 		setControl(composite);
@@ -81,7 +81,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element) {
+			public String getText(final Object element) {
 				ParamTableItem p = (ParamTableItem) element;
 				return p.getPassType();
 			}
@@ -92,7 +92,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		col.setLabelProvider(new ColumnLabelProvider() {
 
 			@Override
-			public String getText(Object element) {
+			public String getText(final Object element) {
 				ParamTableItem p = (ParamTableItem) element;
 				return p.getType();
 			}
@@ -103,14 +103,14 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		col.setEditingSupport(new NameEditingSupport(col.getViewer()));
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element) {
+			public String getText(final Object element) {
 				ParamTableItem p = (ParamTableItem) element;
 				return p.getName();
 			}
 		});
 	}
 
-	private TableViewerColumn createTableViewerColumn(String title, int bound) {
+	private TableViewerColumn createTableViewerColumn(final String title, final int bound) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(
 				tableViewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
@@ -128,32 +128,32 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 
 		private TextCellEditor cellEditor;
 
-		public NameEditingSupport(ColumnViewer viewer) {
+		public NameEditingSupport(final ColumnViewer viewer) {
 			super(viewer);
 			this.cellEditor = new TextCellEditor(tableViewer.getTable());
 			viewer.setCellEditors(new CellEditor[] { cellEditor });
 		}
 
 		@Override
-		protected CellEditor getCellEditor(Object element) {
+		protected CellEditor getCellEditor(final Object element) {
 			ParamTableItem pti = (ParamTableItem) element;
 			cellEditor.setValue(pti.getName());
 			return cellEditor;
 		}
 
 		@Override
-		protected boolean canEdit(Object element) {
+		protected boolean canEdit(final Object element) {
 			return true;
 		}
 
 		@Override
-		protected Object getValue(Object element) {
+		protected Object getValue(final Object element) {
 			ParamTableItem pti = (ParamTableItem) element;
 			return pti.getName();
 		}
 
 		@Override
-		protected void setValue(Object element, Object value) {
+		protected void setValue(final Object element, final Object value) {
 			ParamTableItem pti = (ParamTableItem) element;
 			if (!(value instanceof String)) {
 				return;

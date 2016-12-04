@@ -28,13 +28,13 @@ public class ContextLoggingHeadless {
 	private final Settings settings;
 
 	/** Use this constructor when the selection is a set of files, folders, or projects. */
-	public ContextLoggingHeadless(IStructuredSelection selection, Settings settings) {
+	public ContextLoggingHeadless(final IStructuredSelection selection, final Settings settings) {
 		this.selectedFile = null;
 		this.selection = selection;
 		this.settings = settings;
 	}
 	/** Use this constructor when the selection is a part of a single file. */
-	public ContextLoggingHeadless(IFile selectedFile, ITextSelection selection, Settings settings) {
+	public ContextLoggingHeadless(final IFile selectedFile, final ITextSelection selection, final Settings settings) {
 		this.selectedFile = selectedFile;
 		this.selection = selection;
 		this.settings = settings;

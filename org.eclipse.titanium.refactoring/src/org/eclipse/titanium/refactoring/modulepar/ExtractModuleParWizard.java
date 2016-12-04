@@ -106,8 +106,8 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	}
 	
 	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(final IConfigurationElement config,
+			final String propertyName, final Object data) throws CoreException {
 		this.config = config;
 	}
 

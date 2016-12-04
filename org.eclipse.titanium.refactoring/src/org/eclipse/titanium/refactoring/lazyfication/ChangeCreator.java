@@ -52,7 +52,7 @@ class ChangeCreator {
 	//out
 	private Change change;
 	
-	ChangeCreator(IFile selectedFile) {
+	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
 	
@@ -71,7 +71,7 @@ class ChangeCreator {
 		change = createFileChange(selectedFile);
 	}
 	
-	private Change createFileChange(IFile toVisit) {
+	private Change createFileChange(final IFile toVisit) {
 		
 		if (toVisit == null) {
 			return null;
@@ -128,14 +128,14 @@ class ChangeCreator {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Definition && isGoodType(node)) {
 				lazychecker.process(node);
 			}
 			return V_CONTINUE;
 		}
 		
-		private boolean isGoodType(IVisitableNode node) {
+		private boolean isGoodType(final IVisitableNode node) {
 			if (node instanceof Def_Altstep || node instanceof Def_Function || node instanceof Def_Testcase) {
 				return true;
 			}
@@ -154,7 +154,7 @@ class ChangeCreator {
 		WorkspaceJob job = new WorkspaceJob("LazyficationRefactoring: calculate edit locations") {
 			
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				for (FormalParameter fparam : fparamlist) {
 					System.out.println("reading: "+file.getName());
 					Location typeloc = fparam.getType(CompilationTimeStamp.getBaseTimestamp()).getLocation();

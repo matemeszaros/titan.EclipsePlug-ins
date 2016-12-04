@@ -36,15 +36,15 @@ public abstract class Context {
 	private Context parent;
 	private Context child;
 	
-	public Context(IVisitableNode node, Settings settings) {
+	public Context(final IVisitableNode node, final Settings settings) {
 		this.node = node;
 		this.settings = settings;
 	}
 	
-	public void setParent(Context parent) {
+	public void setParent(final Context parent) {
 		this.parent = parent;
 	}
-	public void setChild(Context child) {
+	public void setChild(final Context child) {
 		this.child = child;
 	}
 	public Context getParent() {
@@ -87,7 +87,7 @@ public abstract class Context {
 	 * @param idsAlreadyHandled The variable names which are already in the log statements
 	 * (they were either present before the refactoring, or added with another context)
 	 */
-	public final List<String> createLogParts(Set<String> idsAlreadyHandled) {
+	public final List<String> createLogParts(final Set<String> idsAlreadyHandled) {
 		if (child == null) {
 			return new ArrayList<String>();
 		}
@@ -96,9 +96,9 @@ public abstract class Context {
 		return parts;
 	}
 	/** @return a list of the log arguments to be appended to the current {@link Log_Statement} */
-	protected abstract List<String> createLogParts_internal(Set<String> idsAlreadyHandled);
+	protected abstract List<String> createLogParts_internal(final Set<String> idsAlreadyHandled);
 
-	protected String formatLogPart(String varName) {
+	protected String formatLogPart(final String varName) {
 		return ", \", " + varName + ": \", " + varName;
 	}
 }

@@ -22,7 +22,7 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
  */
 class NullContext extends Context {
 
-	NullContext(IVisitableNode node, Settings settings) {
+	NullContext(final IVisitableNode node, final Settings settings) {
 		super(node, settings);
 	}
 	
@@ -30,7 +30,7 @@ class NullContext extends Context {
 	protected void process_internal() {}
 	
 	@Override
-	protected List<String> createLogParts_internal(Set<String> idsAlreadyHandled) {
+	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
 		return new ArrayList<String>();
 	}
 

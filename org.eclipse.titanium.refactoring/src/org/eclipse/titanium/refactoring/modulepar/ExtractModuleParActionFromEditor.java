@@ -40,7 +40,7 @@ public class ExtractModuleParActionFromEditor extends AbstractHandler {
 	private IProject sourceProj;
 	
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		// getting the active editor
 		TTCN3Editor targetEditor = Utils.getActiveEditor();

@@ -48,7 +48,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 	 * */
 
 	/** Use this constructor when the selection is a set of files, folders, or projects. */
-	public MinimizeScopeRefactoring(IStructuredSelection selection, Settings settings) {
+	public MinimizeScopeRefactoring(final IStructuredSelection selection, final Settings settings) {
 		this.defSelection = null;
 		this.fileSelection = selection;
 		if (settings == null) {
@@ -58,7 +58,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 		}
 	}
 	/** Use this constructor when the selection is a part of a single file. */
-	public MinimizeScopeRefactoring(Definition selection, Settings settings) {
+	public MinimizeScopeRefactoring(final Definition selection, final Settings settings) {
 		this.defSelection = selection;
 		this.fileSelection = null;
 		if (settings == null) {
@@ -83,20 +83,20 @@ public class MinimizeScopeRefactoring extends Refactoring {
 	}
 	
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
+	public Change createChange(final IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 		if (fileSelection != null) {
 			//resource(s) selected
@@ -156,7 +156,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 		}
 		
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
 				ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
 				chCreator.perform();
@@ -217,10 +217,10 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			setSetting(AVOID_MOVING_MULTIDECLARATIONS, false);
 		}
 		
-		public boolean getSetting(int setting) {
+		public boolean getSetting(final int setting) {
 			return (settings & setting) == setting;
 		}
-		public void setSetting(int setting, boolean value) {
+		public void setSetting(final int setting, final boolean value) {
 			boolean prevVal = getSetting(setting);
 			if (prevVal == value) {
 				return;

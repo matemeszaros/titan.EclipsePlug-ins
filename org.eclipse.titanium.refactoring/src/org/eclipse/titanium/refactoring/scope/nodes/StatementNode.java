@@ -48,7 +48,7 @@ public class StatementNode extends Node {
 	
 	protected boolean moved = false;
 
-	public StatementNode(IVisitableNode astNode) {
+	public StatementNode(final IVisitableNode astNode) {
 		super(astNode);
 		this.blocks = new ArrayList<BlockNode>();
 		this.referedVars = new HashSet<Variable>();
@@ -70,7 +70,7 @@ public class StatementNode extends Node {
 		return multiDeclaration;
 	}
 	
-	public boolean isLocationEqualTo(StatementNode sn) {
+	public boolean isLocationEqualTo(final StatementNode sn) {
 		if (!(this.getAstNode() instanceof ILocateableNode)) {
 			return false;
 		}
@@ -97,22 +97,22 @@ public class StatementNode extends Node {
 		return moved;
 	}
 	
-	public void setParent(BlockNode parent) {
+	public void setParent(final BlockNode parent) {
 		this.parent = parent;
 	}
-	public void addBlock(BlockNode bl) {
+	public void addBlock(final BlockNode bl) {
 		blocks.add(bl);
 	}
-	public void addReferedVars(Variable var) {
+	public void addReferedVars(final Variable var) {
 		referedVars.add(var);
 	}
-	public void setDeclaredVar(Variable declaredVar) {
+	public void setDeclaredVar(final Variable declaredVar) {
 		if (this.declaredVar != null) {
 			ErrorReporter.logError("StatementNode.setDeclaredVar(): A declared variable is already present! ");
 		}
 		this.declaredVar = declaredVar;
 	}
-	public void setMultiDeclaration(MultiDeclaration multiDeclaration) {
+	public void setMultiDeclaration(final MultiDeclaration multiDeclaration) {
 		this.multiDeclaration = multiDeclaration;
 	}
 	public void setHasFunctionCall() {
@@ -122,7 +122,7 @@ public class StatementNode extends Node {
 	public void setHasUncheckedRef() {
 		this.hasUncheckedRef = true;
 	}
-	public void linkWithOtherAsMultiDeclaration(StatementNode sn) {
+	public void linkWithOtherAsMultiDeclaration(final StatementNode sn) {
 		if (this.multiDeclaration != null && sn.multiDeclaration != null) {
 			ErrorReporter.logError("StatementNode.linkWithOtherAsMultiDeclaration(): Both nodes are already part of a multi-declaration! ");
 			return;
@@ -159,7 +159,7 @@ public class StatementNode extends Node {
 	}
 	
 	@Override
-	protected boolean containsNode(Node n) {
+	protected boolean containsNode(final Node n) {
 		if (this.equals(n)) {
 			return true;
 		}
@@ -172,7 +172,7 @@ public class StatementNode extends Node {
 	}
 	
 	@Override
-	public boolean isBlockAncestorOfThis(BlockNode bn) {
+	public boolean isBlockAncestorOfThis(final BlockNode bn) {
 		BlockNode parent = this.getParent();
 		while (parent != null && !parent.equals(bn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
@@ -185,7 +185,7 @@ public class StatementNode extends Node {
 	}
 	/** Returns false if they are equal. */
 	@Override
-	public boolean isStmtAncestorOfThis(StatementNode sn) {
+	public boolean isStmtAncestorOfThis(final StatementNode sn) {
 		if (this.equals(sn)) {
 			return false;
 		}
@@ -200,7 +200,7 @@ public class StatementNode extends Node {
 		return true;
 	} 
 
-	public BlockNode findBlockInStmtWhichContainsNode(Node containedNode) {
+	public BlockNode findBlockInStmtWhichContainsNode(final Node containedNode) {
 		if (!containedNode.isStmtAncestorOfThis(this)) {
 			return null;
 		}
@@ -220,7 +220,7 @@ public class StatementNode extends Node {
 	 * Any modification of the tree invalidates all previous comparison results.
 	 * Comparison is based on the {@link Node} position in the tree, not on the location of its {@link #astNode}
 	 * */
-	protected int compareCurrentPositionTo(StatementNode other) {
+	protected int compareCurrentPositionTo(final StatementNode other) {
 		if (this.equals(other)) {return 0;}
 		if (this.isStmtAncestorOfThis(other)) {return 0;}
 		if (other.isStmtAncestorOfThis(this)) {return 0;}
@@ -291,7 +291,7 @@ public class StatementNode extends Node {
 		return sb.toString();
 	}
 	
-	public String toStringRecursive(boolean recursive, int prefixLen) {
+	public String toStringRecursive(final boolean recursive, final int prefixLen) {
 		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix).append("SN: ").append(toString()).append("\n");

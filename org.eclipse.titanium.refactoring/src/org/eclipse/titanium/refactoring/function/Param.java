@@ -68,7 +68,7 @@ class Param {
 	 * Creates the text representation of this parameter as a member of a
 	 * function's formal parameter list
 	 */
-	List<StringBuilder> createParamText(boolean addCommaBefore) {
+	List<StringBuilder> createParamText(final boolean addCommaBefore) {
 		List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
@@ -100,7 +100,7 @@ class Param {
 	 * Creates the text representation of this parameter as a member of a
 	 * function call statement's actual parameter list.
 	 * */
-	List<StringBuilder> createParamCallText(boolean addCommaBefore) {
+	List<StringBuilder> createParamCallText(final boolean addCommaBefore) {
 		List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
@@ -153,11 +153,11 @@ class Param {
 		return refs;
 	}
 
-	void setPassingType(ArgumentPassingType passingType) {
+	void setPassingType(final ArgumentPassingType passingType) {
 		this.passingType = passingType;
 	}
 
-	void setName(String name) {
+	void setName(final String name) {
 		if (this.name == null) {
 			this.name = new StringBuilder(name);
 		} else {
@@ -166,22 +166,22 @@ class Param {
 		}
 	}
 
-	void setDeclaredInside(boolean declaredInside) {
+	void setDeclaredInside(final boolean declaredInside) {
 		this.declaredInside = declaredInside;
 	}
 
-	void setDef(Definition def) {
+	void setDef(final Definition def) {
 		this.def = def;
 		this.type = this.def.getType(CompilationTimeStamp.getBaseTimestamp());
 	}
 
-	void setRefs(List<ISubReference> refs) {
+	void setRefs(final List<ISubReference> refs) {
 		this.refs = refs;
 	}
 
 	// GETTERS, SETTERS END
 
-	static String getShortTypename(IType type) {
+	static String getShortTypename(final IType type) {
 		if (type == null) {
 			return "null";
 		}
@@ -195,7 +195,7 @@ class Param {
 	}
 
 	@Override
-	public boolean equals(Object arg0) {
+	public boolean equals(final Object arg0) {
 		if (arg0 == this) {
 			return true;
 		}

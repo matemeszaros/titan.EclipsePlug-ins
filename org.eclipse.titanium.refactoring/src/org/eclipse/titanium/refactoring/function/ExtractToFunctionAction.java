@@ -29,7 +29,7 @@ import org.eclipse.titanium.refactoring.Utils;
 public class ExtractToFunctionAction extends AbstractHandler {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		
 		//update AST
 		//TODO: force saving before refactoring (like in RenameRefactoring)

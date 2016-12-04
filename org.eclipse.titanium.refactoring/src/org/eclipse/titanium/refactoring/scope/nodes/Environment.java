@@ -34,7 +34,7 @@ public class Environment {
 
 	private final List<Variable> vars;
 	
-	public Environment(Settings settings) {
+	public Environment(final Settings settings) {
 		vars = new ArrayList<Variable>();
 		this.settings = settings;
 	}
@@ -46,16 +46,16 @@ public class Environment {
 		return vars;
 	}
 	
-	public void setRootNode(BlockNode rootNode) {
+	public void setRootNode(final BlockNode rootNode) {
 		this.rootNode = rootNode;
 	}
-	public void addVariable(Variable var) {
+	public void addVariable(final Variable var) {
 		this.vars.add(var);
 	}
 	
 	//queries
 	
-	public Variable getVariable(Assignment as) {
+	public Variable getVariable(final Assignment as) {
 		for (Variable var: vars) {
 			if (var.assmnt.equals(as)) {
 				return var;
@@ -82,7 +82,7 @@ public class Environment {
 		return edits;
 	}
 	
-	private Edit refactorVar(Variable var) {
+	private Edit refactorVar(final Variable var) {
 		StatementNode declSt = var.getDeclaration();
 		// if "avoid moving declarations with function calls" setting is enables, skip variable
 		if (settings.getSetting(Settings.AVOID_MOVING_WHEN_FUNCCALL) && declSt.hasFunctionCall()) {
@@ -158,7 +158,7 @@ public class Environment {
 		return new Edit(declSt, insertionPoint);
 	}
 	
-	private BlockNode findSmallestCommonAncestorBlock(List<Reference> refs) {
+	private BlockNode findSmallestCommonAncestorBlock(final List<Reference> refs) {
 		if (refs.isEmpty()) {
 			//TODO remove after debugging
 			ErrorReporter.logError("Environment.findSmallestCommonScope(): Statements list is empty! ");
@@ -183,7 +183,7 @@ public class Environment {
 		return currScope;
 	}
 	
-	private StatementNode findInsertionPointInScope(Variable var, BlockNode oldScope, BlockNode newScope) {
+	private StatementNode findInsertionPointInScope(final Variable var, final BlockNode oldScope, final BlockNode newScope) {
 		if (var.getReferences().isEmpty()) {
 			ErrorReporter.logError("Environment.findInsertionPointInScope(): Parent block did not contain the statement to remove! ");
 			return null;
@@ -249,7 +249,7 @@ public class Environment {
 	 * Updates the Variable.references lists for each variable referred in the given declaration statement.
 	 *  Call this if the given declaration statement was moved and it might refer to any variables.
 	 * */
-	private void updateReferencePositions(StatementNode declSt) {
+	private void updateReferencePositions(final StatementNode declSt) {
 		Set<Variable> refdVars = declSt.getReferredVars();
 		for (Variable v: refdVars) {
 			List<Reference> refsToV = v.getReferences();
@@ -272,7 +272,7 @@ public class Environment {
 	/**
 	 * Returns true if the given BlockNode is a statement block of a loop statement (for, while, alt)
 	 * */
-	private static boolean isLoopScope(BlockNode scope) {
+	private static boolean isLoopScope(final BlockNode scope) {
 		StatementNode parentSN = scope.getParent();
 		if (parentSN == null) {
 			return false;

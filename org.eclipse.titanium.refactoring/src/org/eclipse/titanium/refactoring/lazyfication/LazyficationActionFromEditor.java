@@ -32,7 +32,7 @@ import org.eclipse.titanium.refactoring.Utils;
 public class LazyficationActionFromEditor extends AbstractHandler  {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		//update AST
 		Utils.updateASTForProjectActiveInEditor("Lazyfication");

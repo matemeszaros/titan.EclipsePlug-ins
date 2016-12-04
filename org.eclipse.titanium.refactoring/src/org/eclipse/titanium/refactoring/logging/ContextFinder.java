@@ -45,7 +45,7 @@ class ContextFinder extends ASTVisitor {
 	
 	private final Map<Log_Statement, Context> result;
 
-	ContextFinder(Settings settings) {
+	ContextFinder(final Settings settings) {
 		this.settings = settings;
 		factory = new ContextFactory();
 		ancestorStack = new ArrayDeque<IVisitableNode>();
@@ -75,7 +75,7 @@ class ContextFinder extends ASTVisitor {
 	}
 	
 	@Override
-	public int visit(IVisitableNode node) {
+	public int visit(final IVisitableNode node) {
 		ancestorStack.addFirst(node);
 		if (node instanceof Log_Statement) {
 			if (settings.getSetting(Settings.SETTING_MODIFY_LOG_STATEMENTS)) {
@@ -91,7 +91,7 @@ class ContextFinder extends ASTVisitor {
 		return V_CONTINUE;
 	}
 	@Override
-	public int leave(IVisitableNode node) {
+	public int leave(final IVisitableNode node) {
 		if (ancestorStack.getFirst() == node) {
 			ancestorStack.removeFirst();
 		}
@@ -112,7 +112,7 @@ class ContextFinder extends ASTVisitor {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
 				result = true;
 				return V_ABORT;

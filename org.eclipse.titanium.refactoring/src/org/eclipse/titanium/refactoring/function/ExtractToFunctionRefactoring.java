@@ -118,14 +118,14 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	}
 	
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		ListIterator<RefactoringStatusEntry> it = selectionFinder.getWarnings().listIterator();
@@ -144,7 +144,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(final IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		createFunctionText();
 		createFunctionCallText();
 		//
@@ -170,7 +170,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 		selectionFinder.perform();
 		project = selectionFinder.getProject();
 	}
-	void findSelectionHeadless(IFile selFile, ITextSelection textSel) {
+	void findSelectionHeadless(final IFile selFile, final ITextSelection textSel) {
 		selectionFinder = new SelectionFinder();
 		selectionFinder.performHeadless(selFile, textSel);
 		project = selectionFinder.getProject();
@@ -190,7 +190,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 		WorkspaceJob job = new WorkspaceJob("ExtractToFunction: creating new function text") {
 			
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				final StatementList selectedStatements = selectionFinder.getSelectedStatements();
 				final Module selectedModule = getSelectedModule();
 				final IFile selectedFile = getSelectedFile();

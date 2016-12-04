@@ -25,14 +25,14 @@ public class ContextLoggingWizard extends RefactoringWizard implements
 	
 	private final ContextLoggingRefactoring refactoring;
 
-	public ContextLoggingWizard(Refactoring refactoring) {
+	public ContextLoggingWizard(final Refactoring refactoring) {
 		super(refactoring, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
 		this.refactoring = (ContextLoggingRefactoring)refactoring;
 	}
 
 	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(final IConfigurationElement config,
+			final String propertyName, final Object data) throws CoreException {
 	}
 
 	@Override

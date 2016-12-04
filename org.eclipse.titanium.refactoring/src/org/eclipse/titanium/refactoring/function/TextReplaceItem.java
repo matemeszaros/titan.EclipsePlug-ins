@@ -56,7 +56,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	 * */
 	private final int endOffset;
 	
-	TextReplaceItem(ISubReference subref, Param param, String sourceText, int sourceOffset) {
+	TextReplaceItem(final ISubReference subref, final Param param, final String sourceText, final int sourceOffset) {
 		ref = true;
 		this.subref = subref;
 		this.def = null;
@@ -67,7 +67,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		endOffset = calculateEndOffset();
 		
 	}
-	TextReplaceItem(Definition def, Param param, String sourceText, int sourceOffset) {
+	TextReplaceItem(final Definition def, final Param param, final String sourceText, final int sourceOffset) {
 		ref = false;
 		this.def = def;
 		this.subref = null;
@@ -144,7 +144,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	 * @return a substring of <code>sourceText</code> from the end of this TextReplaceItem
 	 *  to the beginning of <code>till</code>
 	 */
-	StringBuilder createIntermediateText(TextReplaceItem till) {
+	StringBuilder createIntermediateText(final TextReplaceItem till) {
 		return new StringBuilder(source.substring(endOffset, till.startOffset));
 	}
 	/**
@@ -195,7 +195,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	//
 	
 	@Override
-	public int compare(TextReplaceItem arg0, TextReplaceItem arg1) {
+	public int compare(final TextReplaceItem arg0, final TextReplaceItem arg1) {
 		if (arg0 == arg1) {
 			return 0;
 		}
@@ -222,12 +222,12 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 	}
 	@Override
-	public int compareTo(TextReplaceItem arg0) {
+	public int compareTo(final TextReplaceItem arg0) {
 		return compare(this, arg0);
 	}
 	
 	@Override
-	public boolean equals(Object arg0) {
+	public boolean equals(final Object arg0) {
 		if (arg0 == this) {
 			return true;
 		}

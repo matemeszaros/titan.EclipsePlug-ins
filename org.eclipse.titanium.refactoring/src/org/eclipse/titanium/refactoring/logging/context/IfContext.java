@@ -32,7 +32,7 @@ class IfContext extends Context {
 	
 	Set<String> varNamesInConditions;
 	
-	IfContext(If_Statement st, Settings settings) {
+	IfContext(final If_Statement st, final Settings settings) {
 		super(st, settings);
 		varNamesInConditions = new HashSet<String>();
 	}
@@ -68,7 +68,7 @@ class IfContext extends Context {
 		}
 	}
 	
-	private static List<Reference> extractAllIdsFromClauses(If_Clauses ics) {
+	private static List<Reference> extractAllIdsFromClauses(final If_Clauses ics) {
 		List<If_Clause> icl = ics.getClauses();
 		List<Reference> ret = new ArrayList<Reference>();
 		for (If_Clause ic: icl) {
@@ -80,7 +80,7 @@ class IfContext extends Context {
 	}
 
 	@Override
-	protected List<String> createLogParts_internal(Set<String> idsAlreadyHandled) {
+	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
 		List<String> ret = new ArrayList<String>();
 		if (varNamesInConditions == null) {
 			return ret;
@@ -109,7 +109,7 @@ class IfContext extends Context {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
 				Reference ref = (Reference)node;
 				

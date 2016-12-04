@@ -20,7 +20,7 @@ public class MinimizeVisibilityHeadless {
 	
 	private final IStructuredSelection selection;
 	
-	public MinimizeVisibilityHeadless(IStructuredSelection selection) {
+	public MinimizeVisibilityHeadless(final IStructuredSelection selection) {
 		this.selection = selection;
 	}
 

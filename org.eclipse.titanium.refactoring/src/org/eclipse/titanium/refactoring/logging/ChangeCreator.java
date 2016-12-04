@@ -55,13 +55,13 @@ class ChangeCreator {
 	private TextFileChange change;
 
 	/** Use this constructor when the change should be created for the whole file. */
-	ChangeCreator(IFile file, Settings settings) {
+	ChangeCreator(final IFile file, final Settings settings) {
 		this.file = file;
 		this.textSelection = null;
 		this.settings = settings;
 	}
 	/** Use this constructor when the change should only be created for a part of the file. */
-	ChangeCreator(IFile file, ITextSelection textSelection, Settings settings) {
+	ChangeCreator(final IFile file, final ITextSelection textSelection, final Settings settings) {
 		this.file = file;
 		this.textSelection = textSelection;
 		this.settings = settings;
@@ -90,7 +90,7 @@ class ChangeCreator {
 		
 	}
 	
-	private void performOnWholeModule(Module module) {
+	private void performOnWholeModule(final Module module) {
 		ContextFinder vis = new ContextFinder(settings);
 		module.accept(vis);
 		Map<Log_Statement, Context> res = vis.getResult();
@@ -107,7 +107,7 @@ class ChangeCreator {
 			change.setEdit(rootEdit);
 		}
 	}
-	private void performOnSelectionOnly(Module module) {
+	private void performOnSelectionOnly(final Module module) {
 		Location selLoc = new Location(file, textSelection.getStartLine(),
 				textSelection.getOffset(), textSelection.getOffset()+textSelection.getLength());
 		SelectionVisitor vis = new SelectionVisitor(selLoc);
@@ -127,7 +127,7 @@ class ChangeCreator {
 		}
 	}
 	
-	private TextEdit createTextEdit(Log_Statement toEdit, Context toAdd) {
+	private TextEdit createTextEdit(final Log_Statement toEdit, final Context toAdd) {
 		//get insert location
 		LogInsertLocationFinder vis = new LogInsertLocationFinder();
 		toEdit.accept(vis);
@@ -173,13 +173,13 @@ class ChangeCreator {
 
 		private final Location selection;
 		
-		SelectionVisitor(Location selection) {
+		SelectionVisitor(final Location selection) {
 			super(settings);
 			this.selection = selection;
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof ILocateableNode) {
 				Location loc = ((ILocateableNode)node).getLocation();
 				if (loc.getFile() == null) {
@@ -192,7 +192,7 @@ class ChangeCreator {
 			return super.visit(node);
 		}
 		
-		private boolean isOverlapping(Location l1, Location l2) {
+		private boolean isOverlapping(final Location l1, final Location l2) {
 			if (!l1.getFile().equals(l2.getFile())) {
 				return false;
 			}
@@ -223,7 +223,7 @@ class ChangeCreator {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof LogArgument) {
 				args.add((LogArgument)node);
 				return V_SKIP;
@@ -247,7 +247,7 @@ class ChangeCreator {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
 				varsAlreadyPresent.add(((Reference)node).getDisplayName());
 				return V_SKIP;

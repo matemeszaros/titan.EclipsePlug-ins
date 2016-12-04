@@ -54,7 +54,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 	 * 
 	 * */
 	
-	public ExpandFieldNamesRefactoring(IStructuredSelection selection) {
+	public ExpandFieldNamesRefactoring(final IStructuredSelection selection) {
 		this.selection = selection;
 		
 		Iterator<?> it = selection.iterator();
@@ -79,7 +79,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		try {
@@ -127,14 +127,14 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(final IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		if (selection == null) {
 			return null;
 		}
@@ -192,7 +192,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 		}
 		
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
 				ChangeCreator chCreator = new ChangeCreator((IFile)resource);
 				chCreator.perform();

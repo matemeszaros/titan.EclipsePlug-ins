@@ -55,7 +55,7 @@ public class LazyficationRefactoring extends Refactoring {
 
 	private Object[] affectedObjects;		//the list of objects affected by the change
 	
-	public LazyficationRefactoring(IStructuredSelection selection) {
+	public LazyficationRefactoring(final IStructuredSelection selection) {
 		this.selection = selection;
 		
 		Iterator<?> it = selection.iterator();
@@ -80,7 +80,7 @@ public class LazyficationRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		try {
@@ -122,14 +122,14 @@ public class LazyficationRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(final IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		if (selection == null) {
 			return null;
 		}
@@ -176,12 +176,12 @@ public class LazyficationRefactoring extends Refactoring {
 
 		private final CompositeChange change;
 		
-		public ResourceVisitor(CompositeChange change) {
-			this.change = change;
+		public ResourceVisitor(final CompositeChange change) {
+			this.change = change;//TODO should not receive this as parameter
 		}
 		
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
 				ChangeCreator chCreator = new ChangeCreator((IFile)resource);
 				chCreator.perform();

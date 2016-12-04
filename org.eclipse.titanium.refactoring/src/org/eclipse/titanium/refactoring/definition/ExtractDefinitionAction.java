@@ -36,7 +36,7 @@ import org.eclipse.ui.PlatformUI;
 public class ExtractDefinitionAction extends AbstractHandler {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		
 		Utils.updateASTForProjectActiveInEditor("ExtractDefinition");
 		//getting current text selection in editor

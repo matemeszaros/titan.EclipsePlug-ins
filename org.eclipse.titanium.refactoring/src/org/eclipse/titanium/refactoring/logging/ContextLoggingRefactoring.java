@@ -54,7 +54,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 	 * */
 	
 	/** Use this constructor when the selection is a set of files, folders, or projects. */
-	public ContextLoggingRefactoring(IStructuredSelection selection, Settings settings) {
+	public ContextLoggingRefactoring(final IStructuredSelection selection, final Settings settings) {
 		this.selectedFile = null;
 		this.selection = selection;
 		if (settings == null) {
@@ -64,7 +64,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 		}
 	}
 	/** Use this constructor when the selection is a part of a single file. */
-	public ContextLoggingRefactoring(IFile selectedFile, ITextSelection selection, Settings settings) {
+	public ContextLoggingRefactoring(final IFile selectedFile, final ITextSelection selection, final Settings settings) {
 		this.selectedFile = selectedFile;
 		this.selection = selection;
 		if (settings == null) {
@@ -89,21 +89,21 @@ public class ContextLoggingRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
 		RefactoringStatus result = new RefactoringStatus();
 		return result;
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
+	public Change createChange(final IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 		if (selection == null) {
 			ErrorReporter.logError("ContextLoggingRefactoring: Selection is null! ");
@@ -163,7 +163,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 		}
 		
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
 				ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
 				chCreator.perform();
@@ -221,14 +221,14 @@ public class ContextLoggingRefactoring extends Refactoring {
 		public int getCountLimit() {
 			return countLimit;
 		}
-		public void setCountLimit(int countLimit) {
+		public void setCountLimit(final int countLimit) {
 			this.countLimit = countLimit;
 		}
 		
-		public boolean getSetting(int setting) {
+		public boolean getSetting(final int setting) {
 			return (settings & setting) == setting;
 		}
-		public void setSetting(int setting, boolean value) {
+		public void setSetting(final int setting, final boolean value) {
 			boolean prevVal = getSetting(setting);
 			if (prevVal == value) {
 				return;

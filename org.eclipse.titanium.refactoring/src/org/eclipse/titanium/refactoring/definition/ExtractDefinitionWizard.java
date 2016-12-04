@@ -74,7 +74,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	private IConfigurationElement config;
 	private ExtractDefinitionWizardMainPage mainPage;
 	
-	public ExtractDefinitionWizard(String selectionName) {
+	public ExtractDefinitionWizard(final String selectionName) {
 		windowTitle = MessageFormat.format(WIZ_WINDOWTITLE, selectionName);
 		IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
 		wasAutoBuilding = description.isAutoBuilding();

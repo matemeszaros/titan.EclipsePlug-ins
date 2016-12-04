@@ -86,7 +86,7 @@ public class ExtractDefinitionRefactoring {
 	}
 	
 	/** Use this constructor in headless mode. */
-	ExtractDefinitionRefactoring(IProject sourceProj, Definition selection) {
+	ExtractDefinitionRefactoring(final IProject sourceProj, final Definition selection) {
 		this.selection = selection;
 		this.sourceProj = sourceProj;
 	}
@@ -101,7 +101,7 @@ public class ExtractDefinitionRefactoring {
 		return sourceProj;
 	}
 
-	void setTargetProject(IProject targetProj) {
+	void setTargetProject(final IProject targetProj) {
 		this.targetProj = targetProj;
 	}
 
@@ -141,7 +141,7 @@ public class ExtractDefinitionRefactoring {
 		WorkspaceJob job = new WorkspaceJob("ExtractDefinition: writing to target project") {
 			
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				if (copyMap == null) {
 					ErrorReporter.logError("ExtractDefinition::createChange(): Reading dependencies did not finish.");
 					return Status.CANCEL_STATUS;
@@ -181,7 +181,7 @@ public class ExtractDefinitionRefactoring {
 		
 	}
 	
-	private IFile createFile(IPath relativePath) {
+	private IFile createFile(final IPath relativePath) {
 		IFile ret = targetProj.getFile(relativePath);
 
 		//create the file
@@ -196,7 +196,7 @@ public class ExtractDefinitionRefactoring {
 		}
 		return ret;
 	}
-	private IFile copyFile(IFile toCopy) {
+	private IFile copyFile(final IFile toCopy) {
 		IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
 
 		//copy the file

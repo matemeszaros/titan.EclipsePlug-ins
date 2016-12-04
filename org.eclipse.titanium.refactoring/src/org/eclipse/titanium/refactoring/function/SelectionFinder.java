@@ -146,7 +146,7 @@ class SelectionFinder {
 		return selectedStatements != null && !selectedStatements.isEmpty();
 	}
 
-	void performHeadless(IFile selFile, ITextSelection textSel) {
+	void performHeadless(final IFile selFile, final ITextSelection textSel) {
 		selectedFile = selFile;
 		String fileContents = readFileContents(selFile);
 		if (fileContents == null) {
@@ -288,7 +288,7 @@ class SelectionFinder {
 		}
 	}
 	
-	private IResource extractResource(IEditorPart editor) {
+	private IResource extractResource(final IEditorPart editor) {
 		IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			return null;
@@ -296,7 +296,7 @@ class SelectionFinder {
 		return ((IFileEditorInput) input).getFile();
 	}
 
-	private TextSelection extractSelection(ISelection sel) {
+	private TextSelection extractSelection(final ISelection sel) {
 
 		if (!(sel instanceof TextSelection)) {
 			ErrorReporter
@@ -306,7 +306,7 @@ class SelectionFinder {
 		return (TextSelection) sel;
 	}
 
-	private String readFileContents(IFile toRead) {
+	private String readFileContents(final IFile toRead) {
 		StringBuilder sb = new StringBuilder();
 		if (toRead == null || !toRead.exists()) {
 			return null;
@@ -345,7 +345,7 @@ class SelectionFinder {
 		private final int offset;
 		private final int endOffset;
 
-		private SelectionVisitor(int selOffset, int selLen) {
+		private SelectionVisitor(final int selOffset, final int selLen) {
 			offset = selOffset;
 			endOffset = offset + selLen;
 			statements = new ArrayList<Statement>();
@@ -358,7 +358,7 @@ class SelectionFinder {
 		 * to include possible ending semicolons (location interval extension
 		 * only if the semicolon itself is selected).
 		 * */
-		StatementList createStatementList(ITextSelection textSel) {
+		StatementList createStatementList(final ITextSelection textSel) {
 			final char SEMICOLON = ';';
 			StatementList sl = new StatementList(statements);
 			if (textSel == null || sl.isEmpty()) {
@@ -377,7 +377,7 @@ class SelectionFinder {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof ILocateableNode) {
 				final Location loc = ((ILocateableNode) node).getLocation();
 				if (loc == null) {
@@ -456,7 +456,7 @@ class SelectionFinder {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Goto_statement) {
 				insideGoto = true;
 				return V_CONTINUE;
@@ -520,7 +520,7 @@ class SelectionFinder {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Statement
 					|| node instanceof DoWhile_Statement
 					|| node instanceof While_Statement
@@ -552,7 +552,7 @@ class SelectionFinder {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Statement
 					|| node instanceof DoWhile_Statement
 					|| node instanceof While_Statement) {
@@ -579,7 +579,7 @@ class SelectionFinder {
 		private Reference runsOnRef;
 		private Type returnType;
 
-		RunsOnClauseFinder(Location atLocation) {
+		RunsOnClauseFinder(final Location atLocation) {
 			this.atLocation = atLocation;
 		}
 
@@ -596,7 +596,7 @@ class SelectionFinder {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (insideFunc) {
 				if (node instanceof Reference) {
 					runsOnRef = (Reference) node;

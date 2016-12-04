@@ -34,7 +34,7 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 	}
 
 	@Override
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(top);
 		setControl(top);
@@ -81,12 +81,12 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 
 		private final int setting;
 		
-		public CHBSelectionListener(int setting) {
+		public CHBSelectionListener(final int setting) {
 			this.setting = setting;
 		}
 		
 		@Override
-		public void widgetSelected(SelectionEvent e) {
+		public void widgetSelected(final SelectionEvent e) {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
@@ -95,7 +95,7 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 		}
 
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
+		public void widgetDefaultSelected(final SelectionEvent e) {
 
 		}
 		
@@ -109,12 +109,12 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 
 		private final Button toDisable;
 		
-		public CHBSelectionListenerDisabler(Button toDisable) {
+		public CHBSelectionListenerDisabler(final Button toDisable) {
 			this.toDisable = toDisable;
 		}
 		
 		@Override
-		public void widgetSelected(SelectionEvent e) {
+		public void widgetSelected(final SelectionEvent e) {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
@@ -123,7 +123,7 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 		}
 
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
+		public void widgetDefaultSelected(final SelectionEvent e) {
 			
 		}
 		

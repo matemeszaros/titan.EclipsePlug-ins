@@ -73,8 +73,8 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	private List<StringBuilder> functionText;
 	private List<StringBuilder> functionCallText;
 	
-	FunctionCreator(StatementList selectedStatements, IFile selectedFile, StringBuilder funcName, List<Param> params, 
-			Reference runsOnRef, Type returnType, ReturnCertainty returnCertainty) {
+	FunctionCreator(final StatementList selectedStatements, final IFile selectedFile, final StringBuilder funcName, final List<Param> params, 
+			final Reference runsOnRef, final Type returnType, final ReturnCertainty returnCertainty) {
 		this.selectedStatements = selectedStatements;
 		this.selectedFile = selectedFile;
 		this.newFuncName = funcName;
@@ -127,7 +127,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	/**
 	 * @return a set in which the TextReplaceItems (parameter occurences) are sorted by their location
 	 */
-	private SortedSet<TextReplaceItem> createSortedTextReplaceItemSet(String sourceText, int sourceOffset) {
+	private SortedSet<TextReplaceItem> createSortedTextReplaceItemSet(final String sourceText, final int sourceOffset) {
 		SortedSet<TextReplaceItem> hitSet = new TreeSet<TextReplaceItem>();
 		if (params == null) {
 			return hitSet;
@@ -197,7 +197,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		functionCallText.addAll(declarationsBeforeFunc);
 	}
 	
-	private List<StringBuilder> createFunctionBody(List<StringBuilder> declarationsBeforeFunc) {
+	private List<StringBuilder> createFunctionBody(final List<StringBuilder> declarationsBeforeFunc) {
 		List<StringBuilder> body = new ArrayList<StringBuilder>();
 		try {
 			InputStream istream = selectedFile.getContents();

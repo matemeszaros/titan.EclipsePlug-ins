@@ -66,7 +66,7 @@ public class Utils {
 		return (TTCN3Editor)editor;
 	}
 	
-	public static IFile getSelectedFileInEditor(String refactoringName) {
+	public static IFile getSelectedFileInEditor(final String refactoringName) {
 		TTCN3Editor targetEditor = getActiveEditor();
 		if (targetEditor == null) {
 			ErrorReporter.logError("Utils.getSelectedFileInEditor(): " +
@@ -76,7 +76,7 @@ public class Utils {
 		return extractFile(targetEditor, refactoringName);
 	}
 	
-	private static IFile extractFile(IEditorPart editor, String refactoringName) {
+	private static IFile extractFile(final IEditorPart editor, final String refactoringName) {
 		IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			TITANDebugConsole.getConsole().newMessageStream()
@@ -90,7 +90,7 @@ public class Utils {
 	/**
 	 * Reanalyzes the project which contains the file that is currently active in the editor window.
 	 * */
-	public static void updateASTForProjectActiveInEditor(String refactoringName) {
+	public static void updateASTForProjectActiveInEditor(final String refactoringName) {
 		//getting editor
 		IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		TTCN3Editor editor;
@@ -142,7 +142,7 @@ public class Utils {
 	/**
 	 * Reanalyzes the given projects.
 	 * */
-	public static void updateASTBeforeRefactoring(Set<IProject> projsToUpdate, String name) {
+	public static void updateASTBeforeRefactoring(final Set<IProject> projsToUpdate, final String name) {
 		UpdateASTOp updateAST = new UpdateASTOp(projsToUpdate, name);
 		final ProgressMonitorDialog pmd = new ProgressMonitorDialog(null);
 		try {
@@ -167,7 +167,7 @@ public class Utils {
 	 * @param refactoringName The name of the operation
 	 * 
 	 * */
-	public static void updateASTAfterRefactoring(RefactoringWizard wiz, Object[] affectedObjects, String refactoringName) {
+	public static void updateASTAfterRefactoring(final RefactoringWizard wiz, final Object[] affectedObjects, final String refactoringName) {
 		if (wiz.getChange() == null || wiz.getChange().getAffectedObjects() == null) {
 			return;
 		}
@@ -210,7 +210,7 @@ public class Utils {
 	/**
 	 * Returns the projects contained in the selection object.
 	 * */
-	public static Set<IProject> findAllProjectsInSelection(IStructuredSelection ssel) {
+	public static Set<IProject> findAllProjectsInSelection(final IStructuredSelection ssel) {
 		Set<IProject> projs = new HashSet<IProject>();
 		if (ssel == null) {
 			return projs;
@@ -249,13 +249,13 @@ public class Utils {
 		 * @param toUpdate the projects to reanalyze
 		 * @param name the string (name of the refactoring operation) to display in error messages
 		 * */
-		public UpdateASTOp(Set<IProject> toUpdate, String name) {
+		public UpdateASTOp(final Set<IProject> toUpdate, final String name) {
 			this.toUpdate = toUpdate;
 			this.name = name;
 		}
 		
 		@Override
-		public void run(IProgressMonitor monitor)
+		public void run(final IProgressMonitor monitor)
 				throws InvocationTargetException, InterruptedException {
 			if (toUpdate == null) {
 				return;
@@ -306,7 +306,7 @@ public class Utils {
 		}
 		
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
 				files.add((IFile)resource);
 				//SKIP
@@ -327,7 +327,7 @@ public class Utils {
 		private String prefix = "";
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			prefix = prefix + "    ";
 			System.out.print(prefix + node.getClass() + "; " + node);
 			if (node instanceof ILocateableNode) {
@@ -343,14 +343,14 @@ public class Utils {
 		}
 		
 		@Override
-		public int leave(IVisitableNode node) {
+		public int leave(final IVisitableNode node) {
 			prefix = prefix.substring(4);
 			return V_CONTINUE;
 		}
 		
 	}
 	
-	public static String createLocationString(IVisitableNode node) {
+	public static String createLocationString(final IVisitableNode node) {
 		if (node == null) {
 			return "<null node>";
 		}

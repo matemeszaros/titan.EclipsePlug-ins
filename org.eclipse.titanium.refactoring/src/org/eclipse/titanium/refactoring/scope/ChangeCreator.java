@@ -82,13 +82,13 @@ public class ChangeCreator {
 	private Change change;
 
 	/** Use this constructor when the change should be created for the whole file. */
-	ChangeCreator(IFile file, Settings settings) {
+	ChangeCreator(final IFile file, final Settings settings) {
 		this.fileSelection = file;
 		this.defSelection = null;
 		this.settings = settings;
 	}
 	/** Use this constructor when the change should only be created for a part of the file. */
-	ChangeCreator(IFile file, Definition selectedDef, Settings settings) {
+	ChangeCreator(final IFile file, final Definition selectedDef, final Settings settings) {
 		this.fileSelection = file;
 		this.defSelection = selectedDef;
 		this.settings = settings;
@@ -113,7 +113,7 @@ public class ChangeCreator {
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
-	private Change createFileChange(IFile toVisit) {
+	private Change createFileChange(final IFile toVisit) {
 		if (toVisit == null) {
 			return null;
 		}
@@ -205,7 +205,7 @@ public class ChangeCreator {
 		return tfc;
 	}
 	
-	private TextEdit[] createTextEdit(IFile toVisit, String fileContent, Edit e, Map<Edit, InsertEdit> editsDone) {
+	private TextEdit[] createTextEdit(final IFile toVisit, final String fileContent, final Edit e, final Map<Edit, InsertEdit> editsDone) {
 		//check for multi-declaration statement
 		if (e.declSt.isMultiDeclaration()) {
 			Location cutLoc = calculateMultiDeclarationCutLoc(fileContent, e.declSt);
@@ -271,7 +271,7 @@ public class ChangeCreator {
 		}
 	}
 
-	private DeleteEdit mergeDeleteEdits(DeleteEdit de0, DeleteEdit de1) {
+	private DeleteEdit mergeDeleteEdits(final DeleteEdit de0, final DeleteEdit de1) {
 		if (!doesDeleteEditsOverlap(de0, de1)) {
 			ErrorReporter.logError("ChangeCreator.mergeDeleteEdits(): " +
 					"DeleteEdits are not overlapping! ");
@@ -281,7 +281,7 @@ public class ChangeCreator {
 		int endOffset = Math.max(de0.getExclusiveEnd(), de1.getExclusiveEnd());
 		return new DeleteEdit(offset, endOffset-offset);
 	}
-	private boolean doesDeleteEditsOverlap(DeleteEdit de0, DeleteEdit de1) {
+	private boolean doesDeleteEditsOverlap(final DeleteEdit de0, final DeleteEdit de1) {
 		return (de0.getOffset() < de1.getExclusiveEnd() &&
 				de0.getExclusiveEnd() > de1.getOffset());
 	}
@@ -289,7 +289,7 @@ public class ChangeCreator {
 	/**
 	 * Returns the exact location of a statement including the prefix whitespace and the suffix semicolon and whitespace (and comment)
 	 * */
-	private Location findStatementLocation(String fileContent, Location loc, boolean includePrefix) {
+	private Location findStatementLocation(final String fileContent, final Location loc, final boolean includePrefix) {
 		int offset = loc.getOffset();
 		int endOffset = loc.getEndOffset();
 		if (includePrefix) {
@@ -344,7 +344,7 @@ public class ChangeCreator {
 	/**
 	 * Returns the offset of the beginning of whitespace in front of a statement starting in the specified 'fromOffset'.
 	 * */
-	private int findLineBeginningOffset(String fileContent, int fromOffset) {
+	private int findLineBeginningOffset(final String fileContent, final int fromOffset) {
 		for (int i=fromOffset-1;i>=0;i--) {
 			switch (fileContent.charAt(i)) {
 				case ' ':
@@ -360,7 +360,7 @@ public class ChangeCreator {
 	/**
 	 * Returns the {@link Location} of the {@DeleteEdit} to remove a variable from a declaration list
 	 * */
-	private Location calculateMultiDeclarationCutLoc(String fileContent, StatementNode declStNode) {
+	private Location calculateMultiDeclarationCutLoc(final String fileContent, final StatementNode declStNode) {
 		/*
 		 * rules for removing multideclaration parts:
 		 * 	if part is only one left: remove statement
@@ -407,7 +407,7 @@ public class ChangeCreator {
 		return new Location(declStmtLoc.getFile(), declStmtLoc.getLine(), cutOffset, cutEndOffset);
 	}
 	
-	private int calculateOffsetIncludingLeadingComma(String fileContent, int offset, int stopAtOffset) {
+	private int calculateOffsetIncludingLeadingComma(final String fileContent, int offset, final int stopAtOffset) {
 		boolean insideBlockComment = false;
 		while (offset>stopAtOffset) {
 			switch (fileContent.charAt(offset-1)) {
@@ -448,7 +448,7 @@ public class ChangeCreator {
 		}
 		return offset;
 	}
-	private int calculateEndOffsetIncludingTrailingComma(String fileContent, int endOffset, int stopAtEndOffset) {
+	private int calculateEndOffsetIncludingTrailingComma(final String fileContent, int endOffset, final int stopAtEndOffset) {
 		boolean insideBlockComment = false;
 		while (endOffset<stopAtEndOffset) {
 			switch (fileContent.charAt(endOffset)) {
@@ -493,7 +493,7 @@ public class ChangeCreator {
 	/**
 	 * Returns the content of an {@InsertEdit} to move a variable from a declaration list
 	 * */
-	private String calculateMultiDeclarationMoveContent(String fileContent, StatementNode declStNode) {
+	private String calculateMultiDeclarationMoveContent(final String fileContent, final StatementNode declStNode) {
 		MultiDeclaration md = declStNode.getMultiDeclaration();
 		StatementNode firstDeclPart = md.getFirstStatement();
 		Definition firstDefInStmt = (Definition)firstDeclPart.getDeclaredVar().getAssmnt();
@@ -537,7 +537,7 @@ public class ChangeCreator {
 	/**
 	 * Analyze a function or testcase
 	 * */
-	private List<Edit> analyzeFunction(Definition def) {
+	private List<Edit> analyzeFunction(final Definition def) {
 		if (!(def instanceof Def_Function ||
 				def instanceof Def_Testcase)) {
 			ErrorReporter.logError("ChangeCreator.analyzeFunction(): def must be a Def_Function or a Def_Testcase! def type: " + def.getClass());
@@ -567,22 +567,22 @@ public class ChangeCreator {
 			return env;
 		}
 		
-		private void setSuspendStackBuildingForNode(IVisitableNode node) {
+		private void setSuspendStackBuildingForNode(final IVisitableNode node) {
 			if (suspendStackBuildingForNode == null) {
 				suspendStackBuildingForNode = node;
 			}
 		}
-		private void setSuspendDeclarationsForNode(IVisitableNode node) {
+		private void setSuspendDeclarationsForNode(final IVisitableNode node) {
 			if (suspendDeclarationsForNode == null) {
 				suspendDeclarationsForNode = node;
 			}
 		}
-		private void setSuspendReferencesForNode(IVisitableNode node) {
+		private void setSuspendReferencesForNode(final IVisitableNode node) {
 			if (suspendReferencesForNode == null) {
 				suspendReferencesForNode = node;
 			}
 		}
-		private void checkForUnsuspend(IVisitableNode node) {
+		private void checkForUnsuspend(final IVisitableNode node) {
 			if (node == suspendStackBuildingForNode) {
 				suspendStackBuildingForNode = null;
 			}
@@ -595,7 +595,7 @@ public class ChangeCreator {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Loop_Definitions && suspendDeclarationsForNode == null) {
 				setSuspendDeclarationsForNode(node);
 				//System.err.println("*** suspended decl when entering: " + node);
@@ -700,7 +700,7 @@ public class ChangeCreator {
 		}
 		
 		@Override
-		public int leave(IVisitableNode node) {
+		public int leave(final IVisitableNode node) {
 			if (node instanceof For_Loop_Definitions) {
 				checkForUnsuspend(node);
 				//System.err.println("*** unsuspended decl when leaving: " + node);
@@ -738,7 +738,7 @@ public class ChangeCreator {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Def_Function ||
 					node instanceof Def_Testcase) {
 				result.add((Definition)node);
@@ -752,7 +752,7 @@ public class ChangeCreator {
 	}
 	
 	
-	private static String loadFileContent(IFile toLoad) {
+	private static String loadFileContent(final IFile toLoad) {
 		StringBuilder fileContents;
 		try {
 			InputStream is = toLoad.getContents();

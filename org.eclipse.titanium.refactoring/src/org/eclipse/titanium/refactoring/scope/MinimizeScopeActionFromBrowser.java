@@ -37,21 +37,21 @@ public class MinimizeScopeActionFromBrowser extends AbstractHandler implements I
 	private ISelection selection;
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		performMinimizeScope();
 		return null;
 	}
 	@Override
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		performMinimizeScope();
 	}
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 	}
 	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 	}
 
 	private void performMinimizeScope() {

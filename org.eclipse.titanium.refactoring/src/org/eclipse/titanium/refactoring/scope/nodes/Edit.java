@@ -17,7 +17,7 @@ public class Edit {
 	public final StatementNode declSt;
 	public final StatementNode insertionPoint;	//if null -> remove edit
 	
-	public Edit(StatementNode declSt, StatementNode insertionPoint) {
+	public Edit(final StatementNode declSt, final StatementNode insertionPoint) {
 		this.declSt = declSt;
 		this.insertionPoint = insertionPoint;
 	}

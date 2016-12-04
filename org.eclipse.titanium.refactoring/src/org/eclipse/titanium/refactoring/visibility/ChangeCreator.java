@@ -65,7 +65,7 @@ class ChangeCreator {
 	//out
 	private Change change;
 	
-	ChangeCreator(IFile selectedFile) {
+	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
 	
@@ -84,7 +84,7 @@ class ChangeCreator {
 		change = createFileChange(selectedFile);
 	}
 	
-	private Change createFileChange(IFile toVisit) {
+	private Change createFileChange(final IFile toVisit) {
 		if (toVisit == null) {
 			return null;
 		}
@@ -136,7 +136,7 @@ class ChangeCreator {
 		WorkspaceJob job = new WorkspaceJob("MinimizeVisibilityRefactoring: calculate edit locations") {
 			
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				final int BUF_LEN = 8;
 				try {
 					InputStream is = file.getContents();
@@ -208,7 +208,7 @@ class ChangeCreator {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Definition && isGoodType(node)) {
 				Definition d = (Definition)node;
 				if (!d.isLocal() && !VisibilityModifier.Private.equals(d.getVisibilityModifier()) &&
@@ -224,7 +224,7 @@ class ChangeCreator {
 			return V_CONTINUE;
 		}
 		
-		private boolean isGoodType(IVisitableNode node) {
+		private boolean isGoodType(final IVisitableNode node) {
 			if (node instanceof Def_Altstep ||
 					node instanceof Def_Const ||
 					node instanceof Def_ExternalConst ||
@@ -238,7 +238,7 @@ class ChangeCreator {
 			return false;
 		}
 		
-		private boolean hasValidLocation(Definition def) {
+		private boolean hasValidLocation(final Definition def) {
 			if (def.getLocation() == null) {
 				return false;
 			}
@@ -257,7 +257,7 @@ class ChangeCreator {
 	private static class LocationComparator implements Comparator<ILocateableNode> {
 
 		@Override
-		public int compare(ILocateableNode arg0, ILocateableNode arg1) {
+		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
 			IResource f0 = arg0.getLocation().getFile();
 			IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {
@@ -270,7 +270,7 @@ class ChangeCreator {
 		
 	}
 
-	private static VisibilityModifier parseVisibilityModifier(String str) {
+	private static VisibilityModifier parseVisibilityModifier(final String str) {
 		if (str.contains("public ")) {
 			return VisibilityModifier.Public;
 		}

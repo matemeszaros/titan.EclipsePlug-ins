@@ -35,8 +35,8 @@ public class ExtractToFunctionHeadless {
 	
 	private boolean selectionValid = true;
 	
-	public ExtractToFunctionHeadless(IFile selFile, ITextSelection textSel, 
-			String newFuncName, List<String> newParamNames) {
+	public ExtractToFunctionHeadless(final IFile selFile, final ITextSelection textSel, 
+			final String newFuncName, final List<String> newParamNames) {
 		this.selectedFile = selFile;
 		this.textSelection = textSel;
 		this.newFuncName = newFuncName;
@@ -89,7 +89,7 @@ public class ExtractToFunctionHeadless {
 		}
 	}
 	
-	private void editFuncName(StringBuilder funcName) {
+	private void editFuncName(final StringBuilder funcName) {
 		if (newFuncName == null) {
 			return;
 		}
@@ -97,7 +97,7 @@ public class ExtractToFunctionHeadless {
 		funcName.append(newFuncName);
 	}
 	
-	private void editParamNames(List<ParamTableItem> params) {
+	private void editParamNames(final List<ParamTableItem> params) {
 		if (newParamNames == null || newParamNames.isEmpty()) {
 			return;
 		}

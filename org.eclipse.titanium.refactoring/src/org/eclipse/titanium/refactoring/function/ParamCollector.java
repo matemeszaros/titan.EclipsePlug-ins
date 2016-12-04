@@ -53,7 +53,7 @@ class ParamCollector {
 	private boolean removeReturnClause = false;
 	private final List<RefactoringStatusEntry> warnings;
 	
-	ParamCollector(IProject project, StatementList selectedStatements, Module selectedModule) {
+	ParamCollector(final IProject project, final StatementList selectedStatements, final Module selectedModule) {
 		this.selectedStatements = selectedStatements;
 		this.selectedModule = selectedModule;
 		this.project = project;
@@ -103,7 +103,7 @@ class ParamCollector {
 		private StringBuilder debugInfo = new StringBuilder();
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementList) {
 				toVisit = (StatementList)node;
 			}
@@ -212,7 +212,7 @@ class ParamCollector {
 			return sb.toString();
 		}
 		
-		private boolean isGoodDefType(IVisitableNode node) {
+		private boolean isGoodDefType(final IVisitableNode node) {
 			if (node instanceof Def_Var ||
 					node instanceof Def_Const ||
 					node instanceof Def_ModulePar ||
@@ -227,7 +227,7 @@ class ParamCollector {
 		/**
 		 * @return whether there are any refs that are located in <code>locationModule</code> beyond location <code>loc</code>
 		 */
-		private boolean isAnyRefsAfterLocation(Module locationModule, Location loc, Map<Module, List<Hit>> refs) {
+		private boolean isAnyRefsAfterLocation(final Module locationModule, final Location loc, final Map<Module, List<Hit>> refs) {
 			for (Map.Entry<Module, List<Hit>> e: refs.entrySet()) {
 				if (!e.getKey().equals(locationModule)) {
 					continue;
@@ -247,7 +247,7 @@ class ParamCollector {
 		/**
 		 * @return a list of references (subset of all references in <code>refs</code>) that are inside <code>toVisit</code> in <code>module</code>
 		 */
-		private List<ISubReference> getRefsInRange(Module module, Map<Module, List<Hit>> refs) {
+		private List<ISubReference> getRefsInRange(final Module module, final Map<Module, List<Hit>> refs) {
 			List<ISubReference> subrefs = new ArrayList<ISubReference>();
 			for (Map.Entry<Module, List<Hit>> e: refs.entrySet()) {
 				if (!e.getKey().equals(module)) {
@@ -273,7 +273,7 @@ class ParamCollector {
 		/**
 		 * @return whether there are any references located outside of <code>toVisit</code> from the <code>refs</code> list
 		 */
-		private boolean isAnyReferenceOutsideRange(Module moduleOfRange, Map<Module, List<Hit>> refs) {
+		private boolean isAnyReferenceOutsideRange(final Module moduleOfRange, final Map<Module, List<Hit>> refs) {
 			if (toVisit == null) {
 				ErrorReporter.logError("ParamFinderVisitor::isAnyReferenceOutsideRange(): StatementList 'toVisit' is null! ");
 				return false;
@@ -295,7 +295,7 @@ class ParamCollector {
 		/**
 		 * @return whether location <code>toCheck</code> is inside the location of <code>toVisit</code>
 		 */
-		private boolean isInsideRange(Location toCheck) {
+		private boolean isInsideRange(final Location toCheck) {
 			if (toVisit == null) {
 				ErrorReporter.logError("ParamFinderVisitor::isInsideRange(): StatementList 'toVisit' is null! ");
 				return false;
@@ -307,7 +307,7 @@ class ParamCollector {
 		/**
 		 * @return whether Definition <code>toCheck</code> has no initialization part
 		 */
-		private boolean isDefWithoutInit(Definition toCheck) {
+		private boolean isDefWithoutInit(final Definition toCheck) {
 			if (toCheck == null) {
 				return false;
 			}

@@ -32,7 +32,7 @@ public class StatementBlockContext extends Context {
 	
 	private List<Identifier> localVarIds;
 
-	StatementBlockContext(StatementBlock st, Settings settings) {
+	StatementBlockContext(final StatementBlock st, final Settings settings) {
 		super(st, settings);
 	}
 	
@@ -59,7 +59,7 @@ public class StatementBlockContext extends Context {
 	}
 
 	@Override
-	protected List<String> createLogParts_internal(Set<String> idsAlreadyHandled) {
+	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
 		List<String> ret = new ArrayList<String>();
 		if (localVarIds == null) {
 			return ret;
@@ -76,7 +76,7 @@ public class StatementBlockContext extends Context {
 	}
 	
 	/** @return true if the end offset of l1 is <= than the offset of l2 */
-	private static boolean isLocationBefore(Location l1, Location l2) {
+	private static boolean isLocationBefore(final Location l1, final Location l2) {
 		return l1.getEndOffset() <= l2.getOffset();
 	}
 
@@ -91,7 +91,7 @@ public class StatementBlockContext extends Context {
 		private final Location beforeLoc;
 		private final List<Identifier> idsFound;
 		
-		public StatementBlockVisitor(Location beforeLoc) {
+		public StatementBlockVisitor(final Location beforeLoc) {
 			this.beforeLoc = beforeLoc;
 			idsFound = new ArrayList<Identifier>();
 		}
@@ -101,7 +101,7 @@ public class StatementBlockContext extends Context {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Statement) {
 				Statement st = (Statement)node;
 				if (!isLocationBefore(st.getLocation(), beforeLoc)) {

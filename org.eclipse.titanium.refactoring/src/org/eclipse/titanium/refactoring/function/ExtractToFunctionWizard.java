@@ -24,15 +24,15 @@ public class ExtractToFunctionWizard extends RefactoringWizard implements IExecu
 	
 	private ExtractToFunctionRefactoring refactoring;
 	
-	public ExtractToFunctionWizard(Refactoring refactoring) {
+	public ExtractToFunctionWizard(final Refactoring refactoring) {
 		super(refactoring, DIALOG_BASED_USER_INTERFACE);
 		this.refactoring = (ExtractToFunctionRefactoring)refactoring;
 	}
 	
 	
 	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(final IConfigurationElement config,
+			final String propertyName, final Object data) throws CoreException {
 	}
 
 	@Override

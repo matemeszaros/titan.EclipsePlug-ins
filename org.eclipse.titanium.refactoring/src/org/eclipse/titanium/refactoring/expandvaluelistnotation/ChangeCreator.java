@@ -40,7 +40,7 @@ class ChangeCreator {
 	//out
 	private Change change;
 	
-	ChangeCreator(IFile selectedFile) {
+	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
 	
@@ -59,7 +59,7 @@ class ChangeCreator {
 		change = createFileChange(selectedFile);
 	}
 	
-	private Change createFileChange(IFile toVisit) {
+	private Change createFileChange(final IFile toVisit) {
 		if (toVisit == null) {
 			return null;
 		}
@@ -128,7 +128,7 @@ class ChangeCreator {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			
 			if (node instanceof SequenceOf_Value) { 
 				locations.add((SequenceOf_Value) node);
@@ -145,7 +145,7 @@ class ChangeCreator {
 	private static class LocationComparator implements Comparator<ILocateableNode> {
 
 		@Override
-		public int compare(ILocateableNode arg0, ILocateableNode arg1) {
+		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
 			IResource f0 = arg0.getLocation().getFile();
 			IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {

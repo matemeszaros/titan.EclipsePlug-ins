@@ -111,7 +111,7 @@ class SelectionFinder {
 		private Definition def;
 		private final int offset;
 		
-		SelectionFinderVisitor(int selectionOffset) {
+		SelectionFinderVisitor(final int selectionOffset) {
 			offset = selectionOffset;
 		}
 		
@@ -120,7 +120,7 @@ class SelectionFinder {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (!(node instanceof ILocateableNode)) {
 				return V_CONTINUE;
 			}
@@ -157,7 +157,7 @@ class SelectionFinder {
 			return V_CONTINUE;
 		}
 		
-		private static boolean isGoodType(IVisitableNode node) {
+		private static boolean isGoodType(final IVisitableNode node) {
 			if (node instanceof Definition &&
 					!(node instanceof Def_Var) &&
 					!(node instanceof Def_Var_Template) &&
@@ -170,14 +170,14 @@ class SelectionFinder {
 	}
 	
 	
-	private IResource extractResource(IEditorPart editor) {
+	private IResource extractResource(final IEditorPart editor) {
 		IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			return null;
 		}
 		return ((IFileEditorInput)input).getFile();
 	}
-	private TextSelection extractSelection(ISelection sel) {
+	private TextSelection extractSelection(final ISelection sel) {
 		if (!(sel instanceof TextSelection)) {
 			ErrorReporter.logError("Selection is not a TextSelection.");
 			return null;

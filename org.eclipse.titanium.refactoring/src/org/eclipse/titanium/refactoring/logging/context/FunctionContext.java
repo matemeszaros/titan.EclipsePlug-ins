@@ -29,7 +29,7 @@ class FunctionContext extends Context {
 	
 	List<Identifier> paramIds;
 
-	public FunctionContext(Def_Function func, Settings settings) {
+	public FunctionContext(final Def_Function func, final Settings settings) {
 		super(func, settings);
 	}
 	
@@ -48,7 +48,7 @@ class FunctionContext extends Context {
 	}
 
 	@Override
-	protected List<String> createLogParts_internal(Set<String> idsAlreadyHandled) {
+	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
 		List<String> ret = new ArrayList<String>();
 		if (paramIds == null) {
 			return ret;
@@ -78,7 +78,7 @@ class FunctionContext extends Context {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Identifier) {
 				result.add((Identifier)node);
 				return V_SKIP;

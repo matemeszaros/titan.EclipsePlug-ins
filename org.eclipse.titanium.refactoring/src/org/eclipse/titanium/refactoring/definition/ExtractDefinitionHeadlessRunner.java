@@ -37,7 +37,7 @@ import org.eclipse.titanium.refactoring.Utils;
 public class ExtractDefinitionHeadlessRunner implements IApplication {
 	
 	@Override
-	public Object start(IApplicationContext context) {
+	public Object start(final IApplicationContext context) {
 		
 		final String[] cmdArguments = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 		

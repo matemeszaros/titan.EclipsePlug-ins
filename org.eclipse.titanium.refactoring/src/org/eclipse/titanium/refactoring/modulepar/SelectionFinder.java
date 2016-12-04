@@ -41,7 +41,7 @@ public class SelectionFinder {
 	//out
 	private Set<Def_ModulePar> modulePars;
 	
-	public SelectionFinder(IProject project) {
+	public SelectionFinder(final IProject project) {
 		this.project = project;
 	}
 	
@@ -85,7 +85,7 @@ public class SelectionFinder {
 	
 	private static class ModuleParListRecord implements Comparable<ModuleParListRecord> {
 		
-		public ModuleParListRecord(String moduleName, String id, String typeId) {
+		public ModuleParListRecord(final String moduleName, final String id, final String typeId) {
 			this.moduleName = moduleName;
 			this.id = id;
 			this.typeId = typeId;
@@ -96,7 +96,7 @@ public class SelectionFinder {
 		final String typeId;
 		
 		@Override
-		public int compareTo(ModuleParListRecord arg0) {
+		public int compareTo(final ModuleParListRecord arg0) {
 			int cmp = moduleName.compareTo(arg0.moduleName);
 			if (cmp != 0) {
 				return cmp;
@@ -114,7 +114,7 @@ public class SelectionFinder {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(final Object obj) {
 			if (this == obj) {
 				return true;
 			}
@@ -162,7 +162,7 @@ public class SelectionFinder {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Def_ModulePar) {
 				modulePars.add((Def_ModulePar)node);
 				return V_SKIP;

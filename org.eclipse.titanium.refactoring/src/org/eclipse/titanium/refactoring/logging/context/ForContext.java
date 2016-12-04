@@ -27,7 +27,7 @@ class ForContext extends Context {
 	
 	List<Identifier> initialAssignmentIds;
 
-	ForContext(For_Statement st, Settings settings) {
+	ForContext(final For_Statement st, final Settings settings) {
 		super(st, settings);
 	}
 	
@@ -44,7 +44,7 @@ class ForContext extends Context {
 	}
 	
 	@Override
-	protected List<String> createLogParts_internal(Set<String> idsAlreadyHandled) {
+	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
 		List<String> ret = new ArrayList<String>();
 		if (initialAssignmentIds == null) {
 			return ret;
@@ -74,7 +74,7 @@ class ForContext extends Context {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Statement) {
 				return V_CONTINUE;
 			}

@@ -35,13 +35,13 @@ public class MultiDeclaration {
 	public StatementNode getLastStatement() {
 		return declStmts.last();
 	}
-	public boolean isFirstStatement(StatementNode toTest) {
+	public boolean isFirstStatement(final StatementNode toTest) {
 		return declStmts.first().equals(toTest);
 	}
-	public boolean isLastStatement(StatementNode toTest) {
+	public boolean isLastStatement(final StatementNode toTest) {
 		return declStmts.last().equals(toTest);
 	}
-	public boolean isIntermediateStatement(StatementNode toTest) {
+	public boolean isIntermediateStatement(final StatementNode toTest) {
 		return !isFirstStatement(toTest) && !isLastStatement(toTest); 
 	}
 	public boolean isAllStatementsMoved() {
@@ -54,7 +54,7 @@ public class MultiDeclaration {
 		return true;
 	}
 	
-	void addDeclarationStatement(StatementNode sn) {
+	void addDeclarationStatement(final StatementNode sn) {
 		if (!declStmts.add(sn)) {
 			ErrorReporter.logError("MultiDeclaration.addDeclarationStatement(): " +
 					"The StatementNode is already present: " + sn);
@@ -66,7 +66,7 @@ public class MultiDeclaration {
 	private class MultiDeclarationComparator implements Comparator<StatementNode> {
 		
 		@Override
-		public int compare(StatementNode arg0, StatementNode arg1) {
+		public int compare(final StatementNode arg0, final StatementNode arg1) {
 			if (!(arg0.getAstNode() instanceof Definition_Statement) ||
 					!(arg1.getAstNode() instanceof Definition_Statement)) {
 				ErrorReporter.logError("MultiDeclarationComparator: " +

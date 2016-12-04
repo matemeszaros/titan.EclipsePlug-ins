@@ -36,7 +36,7 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 	}
 
 	@Override
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(top);
 		setControl(top);

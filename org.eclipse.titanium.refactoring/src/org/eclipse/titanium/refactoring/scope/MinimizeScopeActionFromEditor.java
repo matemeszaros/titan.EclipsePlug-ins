@@ -61,7 +61,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 	}
 	
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		//update AST
 		Utils.updateASTForProjectActiveInEditor("MinimizeScope");
@@ -149,7 +149,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		return selectedDef;
 	}
 
-	private TextSelection extractSelection(ISelection sel) {
+	private TextSelection extractSelection(final ISelection sel) {
 		if (!(sel instanceof TextSelection)) {
 			ErrorReporter.logError("ContextLoggingActionFromEditor.extractSelection():" +
 					" selection is not a TextSelection");
@@ -157,7 +157,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		}
 		return (TextSelection)sel;
 	}
-	private IResource extractResource(IEditorPart editor) {
+	private IResource extractResource(final IEditorPart editor) {
 		IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			return null;
@@ -174,7 +174,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		private Definition def;
 		private final int offset;
 		
-		SelectionFinderVisitor(int selectionOffset) {
+		SelectionFinderVisitor(final int selectionOffset) {
 			offset = selectionOffset;
 		}
 		
@@ -183,7 +183,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (!(node instanceof ILocateableNode)) {
 				return V_CONTINUE;
 			}
@@ -220,7 +220,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 			return V_CONTINUE;
 		}
 		
-		private static boolean isGoodType(IVisitableNode node) {
+		private static boolean isGoodType(final IVisitableNode node) {
 			return (node instanceof Def_Function ||
 					node instanceof Def_Testcase);
 		}

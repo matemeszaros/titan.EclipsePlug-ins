@@ -31,6 +31,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 	protected StatementList(List<Statement> statements) {
 		this.statements = statements;
 		if (statements == null) {
+			//TODO check should probably use this. here
 			statements = new ArrayList<Statement>();
 		}
 		if (!statements.isEmpty()) {
@@ -49,7 +50,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 	protected int getSize() {
 		return statements.size();
 	}
-	protected Statement getStatementByIndex(int ind) {
+	protected Statement getStatementByIndex(final int ind) {
 		return statements.get(ind);
 	}
 	
@@ -57,7 +58,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 	public void setLocation(final Location location) {
 		this.location = location;
 	}
-	protected void increaseLocationEndOffset(int incBy) {
+	protected void increaseLocationEndOffset(final int incBy) {
 		location.setEndOffset(location.getEndOffset()+incBy);
 	}
 	@Override
@@ -69,7 +70,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (statements != null) {
 			for (Statement s: statements) {
 				if (!s.accept(v)) {

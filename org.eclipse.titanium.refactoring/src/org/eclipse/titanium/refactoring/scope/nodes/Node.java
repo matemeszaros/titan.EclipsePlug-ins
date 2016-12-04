@@ -18,7 +18,7 @@ public abstract class Node {
 
 	protected final IVisitableNode astNode;
 
-	protected Node(IVisitableNode astNode) {
+	protected Node(final IVisitableNode astNode) {
 		this.astNode = astNode;
 	}
 

@@ -37,7 +37,7 @@ public class Variable {
 	 * If true, the variable cannot be refactored. */
 	final boolean isParameter;
 
-	public Variable(Assignment assmnt, StatementNode declaration, boolean isParameter) {
+	public Variable(final Assignment assmnt, final StatementNode declaration, final boolean isParameter) {
 		this.assmnt = assmnt;
 		this.declaration = declaration;
 		this.isParameter = isParameter;
@@ -57,7 +57,7 @@ public class Variable {
 		return isParameter;
 	}
 	
-	public void addReference(StatementNode st, boolean leftHandSideRef) {
+	public void addReference(final StatementNode st, final boolean leftHandSideRef) {
 		//avoid multiple instances of the same SN in the list
 		if (!references.isEmpty()) {
 			if (references.get(references.size()-1).getRef().equals(st)) {
@@ -69,7 +69,7 @@ public class Variable {
 		}
 		references.add(new Reference(st, leftHandSideRef));
 	}
-	public void removeReference(StatementNode st) {
+	public void removeReference(final StatementNode st) {
 		ListIterator<Reference> it = references.listIterator();
 		while (it.hasNext()) {
 			if (it.next().getRef().equals(st)) {
@@ -86,7 +86,7 @@ public class Variable {
 		return assmnt == null ? "null" : assmnt.getIdentifier().toString();
 	}
 
-	public String toStringRecursive(boolean includeRefs, int prefixLen) {
+	public String toStringRecursive(final boolean includeRefs, final int prefixLen) {
 		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix).append("VAR: ").append(assmnt == null ? "null" : assmnt.getIdentifier().toString());

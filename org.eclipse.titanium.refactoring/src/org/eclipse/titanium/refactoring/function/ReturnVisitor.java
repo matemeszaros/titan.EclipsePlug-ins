@@ -41,7 +41,7 @@ class ReturnVisitor extends ASTVisitor {
 		NO, MAYBE, YES;
 		
 		/** merges the {@link ReturnCertainty} of two branches */
-		ReturnCertainty or(ReturnCertainty other) {
+		ReturnCertainty or(final ReturnCertainty other) {
 			if (this == YES && other == YES) {
 				return YES;
 			}
@@ -51,7 +51,7 @@ class ReturnVisitor extends ASTVisitor {
 			return MAYBE;
 		}
 		/** merges the {@link ReturnCertainty} of two consecutive statements */
-		ReturnCertainty and(ReturnCertainty other) {
+		ReturnCertainty and(final ReturnCertainty other) {
 			if (this == YES || other == YES) {
 				return YES;
 			}
@@ -69,7 +69,7 @@ class ReturnVisitor extends ASTVisitor {
 	}
 	
 	@Override
-	public int visit(IVisitableNode node) {
+	public int visit(final IVisitableNode node) {
 		//certain YES
 		if (node instanceof Return_Statement) {
 			certainty = ReturnCertainty.YES;
@@ -157,7 +157,7 @@ class ReturnVisitor extends ASTVisitor {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
 				StatementBlock sb = (StatementBlock)node;
 				for (int i=0;i<sb.getSize();i++) {
@@ -206,7 +206,7 @@ class ReturnVisitor extends ASTVisitor {
 		}
 		
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
 				StatementBlockVisitor sbVis = new StatementBlockVisitor();
 				node.accept(sbVis);

@@ -35,7 +35,7 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 
 
 	@Override
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		super.createControl(parent);
 		Control control = getControl();
 		if (!(control instanceof Composite)) {
@@ -71,7 +71,7 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 	private class CHBSelectionListener implements SelectionListener {
 		
 		@Override
-		public void widgetSelected(SelectionEvent e) {
+		public void widgetSelected(final SelectionEvent e) {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
@@ -80,7 +80,7 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 		}
 
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
+		public void widgetDefaultSelected(final SelectionEvent e) {
 
 		}
 		

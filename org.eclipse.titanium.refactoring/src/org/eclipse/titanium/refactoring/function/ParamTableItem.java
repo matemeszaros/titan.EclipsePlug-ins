@@ -21,7 +21,7 @@ class ParamTableItem {
 	 */
 	private final StringBuilder name;
 
-	ParamTableItem(ArgumentPassingType passType, String type, StringBuilder name) {
+	ParamTableItem(final ArgumentPassingType passType, final String type, final StringBuilder name) {
 		this.passType = passType;
 		this.type = type;
 		this.name = name;
@@ -39,7 +39,7 @@ class ParamTableItem {
 		return name.toString();
 	}
 
-	void setName(String newName) {
+	void setName(final String newName) {
 		name.setLength(0);
 		name.append(newName);
 	}

@@ -88,14 +88,14 @@ public class ExtractModuleParRefactoring  {
 	
 
 	/** Use this constructor only when a workbench is available. */
-	ExtractModuleParRefactoring(IProject sourceProj) {
+	ExtractModuleParRefactoring(final IProject sourceProj) {
 		this.sourceProj = sourceProj;
 	}
 
-	void setTargetProject(IProject targetProj) {
+	void setTargetProject(final IProject targetProj) {
 		this.targetProj = targetProj;
 	}
-	void setOption_saveModuleParList(boolean option_saveModuleParList) {
+	void setOption_saveModuleParList(final boolean option_saveModuleParList) {
 		this.option_saveModuleParList = option_saveModuleParList;
 	}
 	public IProject getSourceProj() {
@@ -139,7 +139,7 @@ public class ExtractModuleParRefactoring  {
 		WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
 			
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				if (copyMap == null) {
 					ErrorReporter.logError("ExtractModuleParRefactoring::createChange(): Reading dependencies did not finish.");
 					return Status.CANCEL_STATUS;
@@ -178,7 +178,7 @@ public class ExtractModuleParRefactoring  {
 		return job;
 	}
 	
-	private void saveModuleParListToFile(String content) {
+	private void saveModuleParListToFile(final String content) {
 		IFile newFile = targetProj.getFile(PATH_MODULEPAR_LIST_FILE_OUTPUT);
 		if (!newFile.exists()) {
 			try {
@@ -200,7 +200,7 @@ public class ExtractModuleParRefactoring  {
 	}
 	
 
-	private IFile createFile(IPath relativePath) {
+	private IFile createFile(final IPath relativePath) {
 		IFile ret = targetProj.getFile(relativePath);
 		//create the file
 		if (!ret.exists()) {
@@ -214,7 +214,7 @@ public class ExtractModuleParRefactoring  {
 		}
 		return ret;
 	}
-	private IFile copyFile(IFile toCopy) {
+	private IFile copyFile(final IFile toCopy) {
 		IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
 		//copy the file
 		try {

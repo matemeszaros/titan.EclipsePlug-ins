@@ -23,13 +23,13 @@ public class MinimizeVisibilityWizard extends RefactoringWizard implements
 	
 	private static final String WIZ_WINDOWTITLE = "Minimize visibility modifiers";
 
-	MinimizeVisibilityWizard(Refactoring refactoring) {
+	MinimizeVisibilityWizard(final Refactoring refactoring) {
 		super(refactoring, DIALOG_BASED_USER_INTERFACE);
 	}
 
 	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(final IConfigurationElement config,
+			final String propertyName, final Object data) throws CoreException {
 		
 	}
 
