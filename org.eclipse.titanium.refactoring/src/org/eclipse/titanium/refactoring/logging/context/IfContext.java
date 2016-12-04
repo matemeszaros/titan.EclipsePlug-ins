@@ -30,7 +30,7 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
  */
 class IfContext extends Context {
 	
-	private Set<String> varNamesInConditions;
+	private final Set<String> varNamesInConditions;
 	
 	IfContext(final If_Statement st, final Settings settings) {
 		super(st, settings);
