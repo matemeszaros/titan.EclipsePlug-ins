@@ -331,6 +331,7 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				return;
 			}
 			if (startModule instanceof TTCN3Module && startModule.getLastCompilationTimeStamp() != null && !startModule.isCheckRoot()) {
+				//definition name has not changed but module semantically has not been checked:
 				final Assignments startAssignments = startModule.getAssignments();
 				final List<AssignmentHandler> brokens = new ArrayList<AssignmentHandler>();
 				final List<AssignmentHandler> notBrokens = new ArrayList<AssignmentHandler>();
@@ -340,10 +341,8 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				for (int d = 0; d < startAssignments.getNofAssignments(); ++d) {
 					final Assignment startAssignment = startAssignments.getAssignmentByIndex(d);
 					final AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(startAssignment);
-//					if (startAssignment.getLastTimeChecked() == null) {
-						startAssignment.check(timestamp);
-//					}
 
+					startAssignment.check(timestamp);
 					startAssignment.accept(assignmentHandler);
 
 					if (startAssignment.isCheckRoot()) {
