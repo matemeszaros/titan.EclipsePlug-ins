@@ -55,8 +55,7 @@ public class ContextLoggingActionFromBrowser extends AbstractHandler implements 
 	}
 
 	private void performContextLogging() {
-		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+
 		//find selection
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
@@ -73,6 +72,8 @@ public class ContextLoggingActionFromBrowser extends AbstractHandler implements 
 		//open wizard
 		ContextLoggingWizard wiz = new ContextLoggingWizard(refactoring);
 		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		// getting the active editor
+		TTCN3Editor targetEditor = Utils.getActiveEditor();
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {

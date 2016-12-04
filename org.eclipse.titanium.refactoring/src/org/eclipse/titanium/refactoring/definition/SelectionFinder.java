@@ -74,11 +74,7 @@ class SelectionFinder {
 		} else {
 			targetEditor = (TTCN3Editor) editor;
 		}
-		final IStatusLineManager statusLineManager = targetEditor.getEditorSite().getActionBars().getStatusLineManager();
-		//getting current selection
-		ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-		TextSelection textSelection = extractSelection(selectionService.getSelection());
-		
+
 		//iterating through part of the module
 		IResource selectedRes = extractResource(targetEditor);
 		if (!(selectedRes instanceof IFile)) {
@@ -90,6 +86,9 @@ class SelectionFinder {
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(sourceProj);
 		final Module selectedModule = projectSourceParser.containedModule(selectedFile);
 
+		//getting current selection
+		ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+		TextSelection textSelection = extractSelection(selectionService.getSelection());
 		//getting current selection nodes
 		int selectionOffset = textSelection.getOffset() + textSelection.getLength();
 		SelectionFinderVisitor selVisitor = new SelectionFinderVisitor(selectionOffset);
@@ -97,6 +96,7 @@ class SelectionFinder {
 		Definition selectedDef = selVisitor.getSelection();
 		if (selectedDef == null) {
 			ErrorReporter.logWarning("SelectionFinder.findSelection(): Visitor did not find a definition in the selection.");
+			final IStatusLineManager statusLineManager = targetEditor.getEditorSite().getActionBars().getStatusLineManager();
 			statusLineManager.setErrorMessage(ERR_MSG_NO_SELECTION);
 			return null;
 		}

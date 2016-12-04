@@ -50,8 +50,6 @@ public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implement
 	}
 
 	private void performMinimizeVisibility() {
-		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
 		//find selection
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
@@ -68,6 +66,8 @@ public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implement
 		//open wizard
 		ExpandFieldNamesWizard wiz = new ExpandFieldNamesWizard(refactoring);
 		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		// getting the active editor
+		TTCN3Editor targetEditor = Utils.getActiveEditor();
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
