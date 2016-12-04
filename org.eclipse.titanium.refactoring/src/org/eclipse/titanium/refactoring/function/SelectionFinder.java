@@ -639,16 +639,16 @@ class SelectionFinder {
 		} else if (parentFunc instanceof ControlPart) {
 			sb.append("<controlpart>");
 		} else {
-			sb.append("<invalid: ").append(parentFunc).append(">");
+			sb.append("<invalid: ").append(parentFunc).append('>');
 		}
-		sb.append("\n");
+		sb.append('\n');
 		sb.append("  Return clause: ");
 		sb.append(returnType == null ? "null" : returnType.getIdentifier());
 		sb.append("  Warnings: ");
 		for (RefactoringStatusEntry rse : warnings) {
 			sb.append("severity: " + rse.getSeverity() + "; msg: "
 					+ rse.getMessage());
-			sb.append("\n");
+			sb.append('\n');
 		}
 		return sb.toString();
 	}

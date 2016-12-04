@@ -120,10 +120,10 @@ class StatementList extends ASTNode implements ILocateableNode {
 					sb.append(" in line ");
 					sb.append(s.getLocation().getLine());
 				}
-				sb.append("\n");
+				sb.append('\n');
 			}
 		}
-		sb.append("\n");
+		sb.append('\n');
 		return sb.toString();
 	}
 	

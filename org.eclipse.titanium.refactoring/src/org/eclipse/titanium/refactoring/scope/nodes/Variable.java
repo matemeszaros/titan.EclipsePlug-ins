@@ -91,9 +91,9 @@ public class Variable {
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix).append("VAR: ").append(assmnt == null ? "null" : assmnt.getIdentifier().toString());
 		if (includeRefs) {
-			sb.append("\n").append(prefix).append("  refs:\n");
+			sb.append('\n').append(prefix).append("  refs:\n");
 			for (Reference r: references) {
-				sb.append(" LHS:" + r.isLeftHandSide() + " " + r.getRef().toStringRecursive(false, 8)).append("\n");
+				sb.append(" LHS:" + r.isLeftHandSide() + " " + r.getRef().toStringRecursive(false, 8)).append('\n');
 			}
 		}
 		return sb.toString();

@@ -149,7 +149,7 @@ public class BlockNode extends Node {
 		sb.append("BN(").append(astNode.toString()).append("), loc: ");
 		if (astNode instanceof ILocateableNode) {
 			Location loc = ((ILocateableNode)astNode).getLocation();
-			sb.append(loc.getOffset()).append("-").append(loc.getEndOffset()).append(";");
+			sb.append(loc.getOffset()).append('-').append(loc.getEndOffset()).append(';');
 		} else {
 			sb.append("<none>;");
 		}
@@ -157,7 +157,7 @@ public class BlockNode extends Node {
 		if (parent == null) {
 			sb.append("<null>");
 		} else {
-			sb.append("SN(").append(parent.astNode.toString()).append(")");
+			sb.append("SN(").append(parent.astNode.toString()).append(')');
 		}
 		return sb.toString();
 	}
@@ -165,10 +165,10 @@ public class BlockNode extends Node {
 	public String toStringRecursive(final boolean recursive, final int prefixLen) {
 		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
 		StringBuilder sb = new StringBuilder();
-		sb.append(prefix).append("BN: ").append(toString()).append("\n");
+		sb.append(prefix).append("BN: ").append(toString()).append('\n');
 		if (recursive) {
 			for (StatementNode sn: sts) {
-				sb.append(sn.toStringRecursive(true, prefixLen+2)).append("\n");
+				sb.append(sn.toStringRecursive(true, prefixLen+2)).append('\n');
 			}
 		}
 		return sb.toString();

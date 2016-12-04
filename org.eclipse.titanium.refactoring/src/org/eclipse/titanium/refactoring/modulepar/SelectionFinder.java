@@ -78,7 +78,7 @@ public class SelectionFinder {
 		Collections.sort(records);
 		StringBuilder sb = new StringBuilder();
 		for (ModuleParListRecord rec: records) {
-			sb.append(rec.toString()).append("\n");
+			sb.append(rec.toString()).append('\n');
 		}
 		return sb.toString();
 	}

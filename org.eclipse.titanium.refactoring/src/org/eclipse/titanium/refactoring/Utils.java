@@ -359,9 +359,9 @@ public class Utils {
 		}
 		StringBuilder sb = new StringBuilder();
 		ILocateableNode lnode = (ILocateableNode)node;
-		sb.append(" ").append(lnode.getLocation().getOffset()).append("-").append(lnode.getLocation().getEndOffset());
-		sb.append(" in file ").append(lnode.getLocation().getFile().getName()).append(":");
-		sb.append(lnode.getLocation().getLine()).append(" ");
+		sb.append(' ').append(lnode.getLocation().getOffset()).append('-').append(lnode.getLocation().getEndOffset());
+		sb.append(" in file ").append(lnode.getLocation().getFile().getName()).append(':');
+		sb.append(lnode.getLocation().getLine()).append(' ');
 		return sb.toString();
 	}
 	

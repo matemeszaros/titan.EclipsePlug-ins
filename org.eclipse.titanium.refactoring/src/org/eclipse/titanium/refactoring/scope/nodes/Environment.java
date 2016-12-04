@@ -290,11 +290,11 @@ public class Environment {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Env {\n").append("  vars:\n");
 		for (Variable var: vars) {
-			sb.append(var.toStringRecursive(false, 4)).append("\n");
+			sb.append(var.toStringRecursive(false, 4)).append('\n');
 		}
 		sb.append("  TREE:\n");
 		if (rootNode != null) {
-			sb.append(rootNode.toStringRecursive(true, 4)).append("\n");
+			sb.append(rootNode.toStringRecursive(true, 4)).append('\n');
 		}
 		sb.append("}\n");
 		return sb.toString();

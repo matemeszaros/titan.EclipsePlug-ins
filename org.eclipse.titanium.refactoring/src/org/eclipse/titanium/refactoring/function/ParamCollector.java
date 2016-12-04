@@ -88,7 +88,7 @@ class ParamCollector {
 		sb.append("ExtractToFunctionRefactoring->ParamCollector debug info: \n");
 		for (Param p: params) {
 			sb.append(p.createDebugInfo());
-			sb.append("\n");
+			sb.append('\n');
 		}
 		return sb.toString();
 	}
