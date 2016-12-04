@@ -64,7 +64,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
  */
 public class ExtractDefinitionRefactoring {
 	
-	static final boolean ENABLE_COPY_COMMENTS = false;
+	public static final boolean ENABLE_COPY_COMMENTS = false;
 
 	private final IProject sourceProj;
 	/** the new project to extract function dependencies into */
@@ -91,17 +91,19 @@ public class ExtractDefinitionRefactoring {
 		this.sourceProj = sourceProj;
 	}
 	
-	String getName() {
+	public String getName() {
 		return "Extract definition";
 	}
-	Definition getSelection() {
+
+	public Definition getSelection() {
 		return selection;
 	}
-	IProject getSourceProject() {
+
+	public IProject getSourceProject() {
 		return sourceProj;
 	}
 
-	void setTargetProject(final IProject targetProj) {
+	public void setTargetProject(final IProject targetProj) {
 		this.targetProj = targetProj;
 	}
 
@@ -117,7 +119,7 @@ public class ExtractDefinitionRefactoring {
 		return result;
 	}
 	
-	void perform() {
+	public void perform() {
 		RefactoringStatus rs = checkInitialConditions();
 		if (!rs.hasError()) {
 			try {

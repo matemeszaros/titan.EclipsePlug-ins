@@ -68,7 +68,7 @@ public class LazyficationRefactoring extends Refactoring {
 		}
 	}
 
-	Object[] getAffectedObjects() {
+	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
 	
@@ -181,7 +181,7 @@ public class LazyficationRefactoring extends Refactoring {
 			this.change = new CompositeChange("LazyficationRefactoring");
 		}
 		
-		CompositeChange getChange() {
+		private CompositeChange getChange() {
 			return change;
 		}
 		

@@ -29,7 +29,7 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 		super(pageName);
 	}
 	
-	boolean getSaveModuleParsOption() {
+	public boolean getSaveModuleParsOption() {
 		return saveModuleParsOption;
 	}
 

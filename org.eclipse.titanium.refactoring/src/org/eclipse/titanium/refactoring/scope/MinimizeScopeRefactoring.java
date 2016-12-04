@@ -71,7 +71,8 @@ public class MinimizeScopeRefactoring extends Refactoring {
 	public Settings getSettings() {
 		return settings;
 	}
-	Object[] getAffectedObjects() {
+	
+	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
 
@@ -151,7 +152,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			this.change = new CompositeChange("MinimizeScopeRefactoring");;
 		}
 		
-		CompositeChange getChange() {
+		private CompositeChange getChange() {
 			return change;
 		}
 		

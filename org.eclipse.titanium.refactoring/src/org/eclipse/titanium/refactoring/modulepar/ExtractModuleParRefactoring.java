@@ -65,7 +65,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  */
 public class ExtractModuleParRefactoring  {
 
-	static final boolean ENABLE_COPY_COMMENTS = false;
+	public static final boolean ENABLE_COPY_COMMENTS = false;
 
 	private static final IPath PATH_MODULEPAR_LIST_FILE_OUTPUT = Path.fromOSString("modulepars.txt");
 	
@@ -92,17 +92,18 @@ public class ExtractModuleParRefactoring  {
 		this.sourceProj = sourceProj;
 	}
 
-	void setTargetProject(final IProject targetProj) {
+	public void setTargetProject(final IProject targetProj) {
 		this.targetProj = targetProj;
 	}
-	void setOption_saveModuleParList(final boolean option_saveModuleParList) {
+	
+	public void setOption_saveModuleParList(final boolean option_saveModuleParList) {
 		this.option_saveModuleParList = option_saveModuleParList;
 	}
 	public IProject getSourceProj() {
 		return sourceProj;
 	}
 
-	void perform() {
+	public void perform() {
 		RefactoringStatus rs = checkInitialConditions();
 		if (!rs.hasError()) {
 			try {

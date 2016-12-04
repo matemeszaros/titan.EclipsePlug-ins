@@ -77,7 +77,8 @@ public class ContextLoggingRefactoring extends Refactoring {
 	public Settings getSettings() {
 		return settings;
 	}
-	Object[] getAffectedObjects() {
+	
+	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
 	
@@ -158,7 +159,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 			this.change = new CompositeChange("ContextLoggingRefactoring");;
 		}
 		
-		CompositeChange getChange() {
+		private CompositeChange getChange() {
 			return change;
 		}
 		

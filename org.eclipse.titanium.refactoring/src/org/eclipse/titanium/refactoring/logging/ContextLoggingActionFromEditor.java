@@ -106,7 +106,7 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 		return null;
 	}
 
-	static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
+	private static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
 		Display.getDefault().asyncExec(new Runnable() {
 			
 			@Override

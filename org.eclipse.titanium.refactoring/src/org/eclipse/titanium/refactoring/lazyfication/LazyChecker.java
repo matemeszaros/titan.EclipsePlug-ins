@@ -54,7 +54,7 @@ class LazyChecker {
 		lazyParameterList = new ArrayList<FormalParameter>();
 	}
 	
-	void process(final IVisitableNode node) {
+	public void process(final IVisitableNode node) {
 		// This variable indicates occurrence of Return_Statement.
 		haveToContinue = true;
 
@@ -76,7 +76,7 @@ class LazyChecker {
 		}
 	}
 	
-	List<FormalParameter> getLazyParameterList() {
+	public List<FormalParameter> getLazyParameterList() {
 		return lazyParameterList;
 	}
 	

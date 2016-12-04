@@ -53,14 +53,15 @@ class SelectionFinder {
 	/** the definition which is being extracted */
 	private Definition selection;
 	
-	IProject getSourceProj() {
+	public IProject getSourceProj() {
 		return sourceProj;
 	}
-	Definition getSelection() {
+
+	public Definition getSelection() {
 		return selection;
 	}
 	
-	void perform() {
+	public void perform() {
 		selection = findSelection();
 	}
 
@@ -115,7 +116,7 @@ class SelectionFinder {
 			offset = selectionOffset;
 		}
 		
-		Definition getSelection() {
+		private Definition getSelection() {
 			return def;
 		}
 

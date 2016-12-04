@@ -64,7 +64,7 @@ class ReturnVisitor extends ASTVisitor {
 
 	private ReturnCertainty certainty = ReturnCertainty.NO;
 	
-	ReturnCertainty getCertainty() {
+	public ReturnCertainty getCertainty() {
 		return certainty;
 	}
 	
@@ -152,7 +152,7 @@ class ReturnVisitor extends ASTVisitor {
 
 		private ReturnCertainty blockCertainty = ReturnCertainty.NO;
 		
-		ReturnCertainty getCertainty() {
+		private ReturnCertainty getCertainty() {
 			return blockCertainty;
 		}
 		
@@ -201,7 +201,7 @@ class ReturnVisitor extends ASTVisitor {
 		private ReturnCertainty blockCertainty = ReturnCertainty.NO;
 		private boolean foundAnyBlocksBefore = false;
 		
-		ReturnCertainty getCertainty() {
+		private ReturnCertainty getCertainty() {
 			return blockCertainty;
 		}
 		

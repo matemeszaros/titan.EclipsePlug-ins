@@ -75,7 +75,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 		}
 	}
 
-	Object[] getAffectedObjects() {
+	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
 	
@@ -195,7 +195,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 			this.change = new CompositeChange("MinimizeVisibilityRefactoring");;
 		}
 		
-		CompositeChange getChange() {
+		private CompositeChange getChange() {
 			return change;
 		}
 		

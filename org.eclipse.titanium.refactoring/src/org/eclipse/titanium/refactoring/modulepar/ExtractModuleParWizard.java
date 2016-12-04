@@ -59,8 +59,8 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	private static final String WIZ_WINDOWTITLE = "Extract module parameters into a new project";
 	private static final String WIZ_TITLE = "Create a new project to extract module parameters into";
 	private static final String WIZ_DESCRIPTION = "Extract all module parameters and their dependencies into a new project";
-	static final String WORKING_DIR = "bin";
-	static final String SOURCE_DIR = "src";
+	private static final String WORKING_DIR = "bin";
+	private static final String SOURCE_DIR = "src";
 	private static final String CREATING_PROJECT = "creating project";
 	private static final String CREATION_FAILED = "Project creation failed";
 
@@ -94,11 +94,11 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 		setWindowTitle(windowTitle);
 	}
 
-	IProject getProject() {
+	public IProject getProject() {
 		return newProject;
 	}
 	
-	boolean getSaveModuleParsOption() {
+	public boolean getSaveModuleParsOption() {
 		if (mainPage != null) {
 			return mainPage.getSaveModuleParsOption();
 		}

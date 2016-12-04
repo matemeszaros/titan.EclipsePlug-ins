@@ -84,14 +84,15 @@ public class DependencyCollector {
 		this.projectSourceParser = GlobalParser.getProjectSourceParser(sourceProj);
 	}
 	
-	Map<IPath, StringBuilder> getCopyMap() {
+	public Map<IPath, StringBuilder> getCopyMap() {
 		return copyMap;
 	}
-	List<IFile> getFilesToCopy() {
+	
+	public List<IFile> getFilesToCopy() {
 		return filesToCopy;
 	}
 	
-	WorkspaceJob readDependencies() {
+	public WorkspaceJob readDependencies() {
 		WorkspaceJob job = new WorkspaceJob("ExtractModulePar: reading dependencies from source project") {
 
 			@Override
@@ -362,10 +363,11 @@ public class DependencyCollector {
 			friendDefs = new ArrayList<FriendModule>();
 		}
 		
-		List<ImportModule> getImportDefs() {
+		private List<ImportModule> getImportDefs() {
 			return importDefs;
 		}
-		List<FriendModule> getFriendDefs() {
+		
+		private List<FriendModule> getFriendDefs() {
 			return friendDefs;
 		}
 		

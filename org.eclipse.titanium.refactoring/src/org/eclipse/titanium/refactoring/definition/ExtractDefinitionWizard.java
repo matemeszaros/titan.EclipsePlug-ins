@@ -60,8 +60,8 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	private static final String WIZ_WINDOWTITLE = "Extract definition `{0}'' into a new project";
 	private static final String WIZ_TITLE = "Create a new project to extract definition into";
 	private static final String WIZ_DESCRIPTION = "Extract definition and its dependencies into a new project";
-	static final String WORKING_DIR = "bin";
-	static final String SOURCE_DIR = "src";
+	private static final String WORKING_DIR = "bin";
+	private static final String SOURCE_DIR = "src";
 	private static final String CREATING_PROJECT = "creating project";
 	private static final String CREATION_FAILED = "Project creation failed";
 	
@@ -180,11 +180,11 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 		addPage(mainPage);
 	}
 	
-	IProject getProject() {
+	public IProject getProject() {
 		return newProject;
 	}
 	
-	IPath getProjectPath() {
+	public IPath getProjectPath() {
 		IPath path = mainPage.getLocationPath();
 		String name = mainPage.getProjectName();
 		return path.append(name);

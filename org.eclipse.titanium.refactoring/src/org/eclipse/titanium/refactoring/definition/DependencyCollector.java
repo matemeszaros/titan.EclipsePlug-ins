@@ -79,14 +79,15 @@ class DependencyCollector {
 		this.selection = selection;
 	}
 	
-	Map<IPath, StringBuilder> getCopyMap() {
+	public Map<IPath, StringBuilder> getCopyMap() {
 		return copyMap;
 	}
-	List<IFile> getFilesToCopy() {
+
+	public List<IFile> getFilesToCopy() {
 		return filesToCopy;
 	}
 	
-	WorkspaceJob readDependencies() {
+	public WorkspaceJob readDependencies() {
 		WorkspaceJob job = new WorkspaceJob("ExtractDefinition: reading dependencies from source project") {
 
 			@Override
@@ -323,15 +324,16 @@ class DependencyCollector {
 		private final List<ImportModule> importDefs;
 		private final List<FriendModule> friendDefs;
 		
-		ImportFinderVisitor() {
+		private ImportFinderVisitor() {
 			importDefs = new ArrayList<ImportModule>();
 			friendDefs = new ArrayList<FriendModule>();
 		}
 		
-		List<ImportModule> getImportDefs() {
+		private List<ImportModule> getImportDefs() {
 			return importDefs;
 		}
-		List<FriendModule> getFriendDefs() {
+
+		private List<FriendModule> getFriendDefs() {
 			return friendDefs;
 		}
 		

@@ -44,7 +44,7 @@ class ChangeCreator {
 		this.selectedFile = selectedFile;
 	}
 	
-	Change getChange() {
+	public Change getChange() {
 		return change;
 	}
 	
@@ -52,7 +52,7 @@ class ChangeCreator {
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
-	void perform() {
+	public void perform() {
 		if (selectedFile == null) {
 			return;
 		}
@@ -123,7 +123,7 @@ class ChangeCreator {
 			locations = new TreeSet<ILocateableNode>(new LocationComparator());
 		}
 		
-		NavigableSet<ILocateableNode> getLocations() {
+		private NavigableSet<ILocateableNode> getLocations() {
 			return locations;
 		}
 		

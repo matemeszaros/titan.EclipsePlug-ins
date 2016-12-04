@@ -358,7 +358,7 @@ class SelectionFinder {
 		 * to include possible ending semicolons (location interval extension
 		 * only if the semicolon itself is selected).
 		 * */
-		StatementList createStatementList(final ITextSelection textSel) {
+		private StatementList createStatementList(final ITextSelection textSel) {
 			final char SEMICOLON = ';';
 			StatementList sl = new StatementList(statements);
 			if (textSel == null || sl.isEmpty()) {
@@ -447,11 +447,11 @@ class SelectionFinder {
 			labelStatements = new ArrayList<Identifier>();
 		}
 
-		List<Identifier> getGotoStatements() {
+		private List<Identifier> getGotoStatements() {
 			return gotoStatements;
 		}
 
-		List<Identifier> getLabelStatements() {
+		private List<Identifier> getLabelStatements() {
 			return labelStatements;
 		}
 
@@ -515,7 +515,7 @@ class SelectionFinder {
 
 		private boolean found = false;
 
-		boolean isFound() {
+		private boolean isFound() {
 			return found;
 		}
 
@@ -547,7 +547,7 @@ class SelectionFinder {
 
 		private boolean found = false;
 
-		boolean isFound() {
+		private boolean isFound() {
 			return found;
 		}
 
@@ -583,15 +583,15 @@ class SelectionFinder {
 			this.atLocation = atLocation;
 		}
 
-		IVisitableNode getFuncDef() {
+		private IVisitableNode getFuncDef() {
 			return funcDef;
 		}
 
-		Reference getRunsOnRef() {
+		private Reference getRunsOnRef() {
 			return runsOnRef;
 		}
 
-		Type getReturnType() {
+		private Type getReturnType() {
 			return returnType;
 		}
 

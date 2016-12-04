@@ -21,21 +21,21 @@ import org.eclipse.titan.designer.AST.Assignment;
  */
 public class Variable {
 	
-	final Assignment assmnt;	//the def_var, or FormalParameter object
+	public final Assignment assmnt;	//the def_var, or FormalParameter object
 	
-	final StatementNode declaration;
+	public final StatementNode declaration;
 	
 	/**
 	 * StatementNodes in which this variable is referred to.
 	 * The second argument is true if the reference is a left hand side reference (write occurrence). 
 	 * */
-	final List<Reference> references;
+	public final List<Reference> references;
 	
 	/** 
 	 * True if this variable is a formal parameter of a function 
 	 * (in this case there is no declaration statement).
 	 * If true, the variable cannot be refactored. */
-	final boolean isParameter;
+	public final boolean isParameter;
 
 	public Variable(final Assignment assmnt, final StatementNode declaration, final boolean isParameter) {
 		this.assmnt = assmnt;

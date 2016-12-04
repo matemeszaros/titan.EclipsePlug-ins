@@ -68,7 +68,7 @@ class Param {
 	 * Creates the text representation of this parameter as a member of a
 	 * function's formal parameter list
 	 */
-	List<StringBuilder> createParamText(final boolean addCommaBefore) {
+	public List<StringBuilder> createParamText(final boolean addCommaBefore) {
 		List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
@@ -100,7 +100,7 @@ class Param {
 	 * Creates the text representation of this parameter as a member of a
 	 * function call statement's actual parameter list.
 	 * */
-	List<StringBuilder> createParamCallText(final boolean addCommaBefore) {
+	public List<StringBuilder> createParamCallText(final boolean addCommaBefore) {
 		List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
@@ -112,7 +112,7 @@ class Param {
 		return ret;
 	}
 
-	String createDebugInfo() {
+	public String createDebugInfo() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Param {");
 		sb.append("\n    def: ").append(
@@ -129,35 +129,35 @@ class Param {
 
 	// GETTERS, SETTERS
 
-	ArgumentPassingType getPassingType() {
+	public ArgumentPassingType getPassingType() {
 		return passingType;
 	}
 
-	StringBuilder getName() {
+	public StringBuilder getName() {
 		return name;
 	}
 
-	String getTypeName() {
+	public String getTypeName() {
 		return getShortTypename(type);
 	}
 
-	boolean isDeclaredInside() {
+	public boolean isDeclaredInside() {
 		return declaredInside;
 	}
 
-	Definition getDef() {
+	public Definition getDef() {
 		return def;
 	}
 
-	List<ISubReference> getRefs() {
+	public List<ISubReference> getRefs() {
 		return refs;
 	}
 
-	void setPassingType(final ArgumentPassingType passingType) {
+	public void setPassingType(final ArgumentPassingType passingType) {
 		this.passingType = passingType;
 	}
 
-	void setName(final String name) {
+	public void setName(final String name) {
 		if (this.name == null) {
 			this.name = new StringBuilder(name);
 		} else {
@@ -166,22 +166,22 @@ class Param {
 		}
 	}
 
-	void setDeclaredInside(final boolean declaredInside) {
+	public void setDeclaredInside(final boolean declaredInside) {
 		this.declaredInside = declaredInside;
 	}
 
-	void setDef(final Definition def) {
+	public void setDef(final Definition def) {
 		this.def = def;
 		this.type = this.def.getType(CompilationTimeStamp.getBaseTimestamp());
 	}
 
-	void setRefs(final List<ISubReference> refs) {
+	public void setRefs(final List<ISubReference> refs) {
 		this.refs = refs;
 	}
 
 	// GETTERS, SETTERS END
 
-	static String getShortTypename(final IType type) {
+	public static String getShortTypename(final IType type) {
 		if (type == null) {
 			return "null";
 		}

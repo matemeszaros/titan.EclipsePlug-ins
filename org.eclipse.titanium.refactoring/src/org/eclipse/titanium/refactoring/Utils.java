@@ -297,11 +297,11 @@ public class Utils {
 
 		private final List<IFile> files;
 		
-		ResourceVisitor() {
+		private ResourceVisitor() {
 			files = new ArrayList<IFile>();
 		}
 		
-		List<IFile> getFiles() {
+		private List<IFile> getFiles() {
 			return files;
 		}
 		

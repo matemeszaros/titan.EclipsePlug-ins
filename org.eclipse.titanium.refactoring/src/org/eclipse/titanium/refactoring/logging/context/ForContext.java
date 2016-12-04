@@ -25,7 +25,7 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
  */
 class ForContext extends Context {
 	
-	List<Identifier> initialAssignmentIds;
+	private List<Identifier> initialAssignmentIds;
 
 	ForContext(final For_Statement st, final Settings settings) {
 		super(st, settings);
@@ -69,7 +69,7 @@ class ForContext extends Context {
 
 		private final List<Identifier> result = new ArrayList<Identifier>();
 		
-		List<Identifier> getResult() {
+		private List<Identifier> getResult() {
 			return result;
 		}
 

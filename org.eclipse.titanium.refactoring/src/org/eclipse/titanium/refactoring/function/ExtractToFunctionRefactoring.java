@@ -77,7 +77,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	 * 
 	 * */
 	
-	static final boolean DEBUG_MESSAGES_ON = false;
+	public static final boolean DEBUG_MESSAGES_ON = false;
 	
 	private IProject project;
 	
@@ -165,28 +165,31 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	
 //METHODS FROM REFACTORING END
 	
-	void findSelection() {
+	public void findSelection() {
 		selectionFinder = new SelectionFinder();
 		selectionFinder.perform();
 		project = selectionFinder.getProject();
 	}
-	void findSelectionHeadless(final IFile selFile, final ITextSelection textSel) {
+	
+	public void findSelectionHeadless(final IFile selFile, final ITextSelection textSel) {
 		selectionFinder = new SelectionFinder();
 		selectionFinder.performHeadless(selFile, textSel);
 		project = selectionFinder.getProject();
 	}
 	
-	boolean isSelectionValid() {
+	public boolean isSelectionValid() {
 		return selectionFinder != null && selectionFinder.isSelectionValid() && selectionFinder.getParentFunc() != null;
 	}
-	IFile getSelectedFile() {
+	
+	public IFile getSelectedFile() {
 		return selectionFinder.getSelectedFile();
 	}
-	Module getSelectedModule() {
+	
+	public Module getSelectedModule() {
 		return selectionFinder.getModule();
 	}
 	
-	WorkspaceJob createFunction() {
+	public WorkspaceJob createFunction() {
 		WorkspaceJob job = new WorkspaceJob("ExtractToFunction: creating new function text") {
 			
 			@Override
@@ -284,7 +287,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	}
 
 	
-	static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
+	public static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
 		Display.getDefault().asyncExec(new Runnable() {
 			
 			@Override

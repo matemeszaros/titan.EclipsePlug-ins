@@ -71,7 +71,7 @@ class ChangeCreator {
 		return change;
 	}
 	
-	void perform() {
+	public void perform() {
 		//get module in selected file
 		if (file == null) {
 			return;
@@ -212,7 +212,7 @@ class ChangeCreator {
 		
 		private final List<LogArgument> args = new ArrayList<LogArgument>();
 		
-		int calculateEndOffset() {
+		private int calculateEndOffset() {
 			int endOffset = -1;
 			for (LogArgument la: args) {
 				if (la.getLocation().getEndOffset() > endOffset) {

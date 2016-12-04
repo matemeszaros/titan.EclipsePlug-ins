@@ -23,7 +23,7 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.Definition_Statement;
  */
 public class MultiDeclaration {
 
-	final SortedSet<StatementNode> declStmts = new TreeSet<StatementNode>(new MultiDeclarationComparator());	//multi-declaration parts in the right order
+	public final SortedSet<StatementNode> declStmts = new TreeSet<StatementNode>(new MultiDeclarationComparator());	//multi-declaration parts in the right order
 	
 	public int getSize() {
 		return declStmts.size();
@@ -54,7 +54,7 @@ public class MultiDeclaration {
 		return true;
 	}
 	
-	void addDeclarationStatement(final StatementNode sn) {
+	public void addDeclarationStatement(final StatementNode sn) {
 		if (!declStmts.add(sn)) {
 			ErrorReporter.logError("MultiDeclaration.addDeclarationStatement(): " +
 					"The StatementNode is already present: " + sn);

@@ -49,7 +49,7 @@ public class SelectionFinder {
 		return modulePars;
 	}
 	
-	void perform() {
+	public void perform() {
 		modulePars = new HashSet<Def_ModulePar>();
 		Collection<Module> modules = GlobalParser.getProjectSourceParser(project).getModules();
 		for (Module m: modules) {
@@ -59,7 +59,7 @@ public class SelectionFinder {
 		}
 	}
 	
-	String createModuleParListForSaving() {
+	public String createModuleParListForSaving() {
 		if (modulePars == null || modulePars.isEmpty()) {
 			return "<empty>";
 		}
@@ -91,9 +91,9 @@ public class SelectionFinder {
 			this.typeId = typeId;
 		}
 		
-		final String moduleName;
-		final String id;
-		final String typeId;
+		private final String moduleName;
+		private final String id;
+		private final String typeId;
 		
 		@Override
 		public int compareTo(final ModuleParListRecord arg0) {

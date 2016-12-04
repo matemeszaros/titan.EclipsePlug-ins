@@ -56,7 +56,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 	/** the definition which is being refactored */
 	private Definition selection;
 	
-	Definition getSelection() {
+	public Definition getSelection() {
 		return selection;
 	}
 	
@@ -178,7 +178,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 			offset = selectionOffset;
 		}
 		
-		Definition getSelection() {
+		private Definition getSelection() {
 			return def;
 		}
 

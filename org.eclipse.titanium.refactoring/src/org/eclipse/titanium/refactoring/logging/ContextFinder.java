@@ -107,7 +107,7 @@ class ContextFinder extends ASTVisitor {
 		
 		private boolean result = false;
 		
-		boolean getResult() {
+		private boolean getResult() {
 			return result;
 		}
 		

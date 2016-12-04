@@ -67,7 +67,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 		}
 	}
 
-	Object[] getAffectedObjects() {
+	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
 	
@@ -187,7 +187,7 @@ public class ExpandFieldNamesRefactoring extends Refactoring {
 			this.change = new CompositeChange("ExpandFieldNamesRefactoring");
 		}
 		
-		CompositeChange getChange() {
+		private CompositeChange getChange() {
 			return change;
 		}
 		

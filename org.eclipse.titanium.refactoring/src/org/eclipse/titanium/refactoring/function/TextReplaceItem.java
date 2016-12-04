@@ -103,14 +103,15 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		return end;
 	}
 	
-	boolean isReference() {
+	public boolean isReference() {
 		return ref;
 	}
-	StringBuilder getNewParamName() {
+
+	public StringBuilder getNewParamName() {
 		return param.getName();
 	}
 	
-	Location getLocation() {
+	public Location getLocation() {
 		if (ref) {
 			return subref == null ? null : subref.getLocation();
 		} else {
@@ -123,35 +124,35 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	/**
 	 * @return a substring of <code>sourceText</code> which contains this TextReplaceItem
 	 */
-	StringBuilder createText() {
+	public StringBuilder createText() {
 		return new StringBuilder(source.substring(startOffset, endOffset));
 	}
 	/**
 	 * @return a substring of <code>sourceText</code> from the beginning of the <code>sourceText</code>
 	 *  to the beginning of this TextReplaceItem
 	 */
-	StringBuilder createBeginningText() {
+	public StringBuilder createBeginningText() {
 		return new StringBuilder(source.substring(0, startOffset));
 	}
 	/**
 	 * @return a substring of <code>sourceText</code> from the end of this TextReplaceItem
 	 *  to the end of the <code>sourceText</code>
 	 */
-	StringBuilder createEndingText() {
+	public StringBuilder createEndingText() {
 		return new StringBuilder(source.substring(endOffset));
 	}
 	/**
 	 * @return a substring of <code>sourceText</code> from the end of this TextReplaceItem
 	 *  to the beginning of <code>till</code>
 	 */
-	StringBuilder createIntermediateText(final TextReplaceItem till) {
+	public StringBuilder createIntermediateText(final TextReplaceItem till) {
 		return new StringBuilder(source.substring(endOffset, till.startOffset));
 	}
 	/**
 	 * @return if exists, returns that part of a definition statement (<code>def</code>)
 	 *  which will be moved to before the new function call (mostly: declarations only)
 	 */
-	StringBuilder createPreDeclarationText() {
+	public StringBuilder createPreDeclarationText() {
 		//empty (invalid)
 		if (ref) {
 			return new StringBuilder();
@@ -172,7 +173,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	/**
 	 * @return if exists, returns the initialization part of a definition statement (<code>def</code>)
 	 */
-	List<StringBuilder> createInitOnlyText() {
+	public List<StringBuilder> createInitOnlyText() {
 		List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		//empty
 		if (ref || def instanceof Def_Timer) {

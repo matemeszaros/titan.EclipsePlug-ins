@@ -94,7 +94,7 @@ public class ChangeCreator {
 		this.settings = settings;
 	}
 	
-	Change getChange() {
+	public Change getChange() {
 		return change;
 	}
 	
@@ -102,7 +102,7 @@ public class ChangeCreator {
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
-	void perform() {
+	public void perform() {
 		if (fileSelection == null) {
 			return;
 		}
@@ -731,7 +731,7 @@ public class ChangeCreator {
 	 * */
 	private static class FunctionCollector extends ASTVisitor {
 		
-		Set<Definition> result = new HashSet<Definition>();
+		private Set<Definition> result = new HashSet<Definition>();
 		
 		public Set<Definition> getResult() {
 			return result;

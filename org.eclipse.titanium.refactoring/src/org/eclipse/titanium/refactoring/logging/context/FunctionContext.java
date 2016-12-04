@@ -27,7 +27,7 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
  */
 class FunctionContext extends Context {
 	
-	List<Identifier> paramIds;
+	private List<Identifier> paramIds;
 
 	public FunctionContext(final Def_Function func, final Settings settings) {
 		super(func, settings);
@@ -73,7 +73,7 @@ class FunctionContext extends Context {
 
 		private final List<Identifier> result = new ArrayList<Identifier>();
 		
-		List<Identifier> getResult() {
+		private List<Identifier> getResult() {
 			return result;
 		}
 		
