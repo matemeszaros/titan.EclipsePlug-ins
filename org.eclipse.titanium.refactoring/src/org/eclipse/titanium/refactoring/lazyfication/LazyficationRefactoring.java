@@ -141,8 +141,9 @@ public class LazyficationRefactoring extends Refactoring {
 				continue;
 			}
 			IResource res = (IResource)o;
-			ResourceVisitor vis = new ResourceVisitor(cchange);
+			ResourceVisitor vis = new ResourceVisitor();
 			res.accept(vis);
+			cchange.add(vis.getChange());
 		}
 		affectedObjects = cchange.getAffectedObjects();
 		return cchange;
@@ -176,8 +177,12 @@ public class LazyficationRefactoring extends Refactoring {
 
 		private final CompositeChange change;
 		
-		public ResourceVisitor(final CompositeChange change) {
-			this.change = change;//TODO should not receive this as parameter
+		public ResourceVisitor() {
+			this.change = new CompositeChange("LazyficationRefactoring");
+		}
+		
+		CompositeChange getChange() {
+			return change;
 		}
 		
 		@Override
