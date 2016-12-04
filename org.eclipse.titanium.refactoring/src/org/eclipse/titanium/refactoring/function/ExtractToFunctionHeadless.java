@@ -63,7 +63,7 @@ public class ExtractToFunctionHeadless {
 			Activator.getDefault().pauseHandlingResourceChanges();
 			//
 			try {
-				WorkspaceJob job1 = refactoring.createFunction();
+				final WorkspaceJob job1 = refactoring.createFunction();
 				job1.join();
 				if (!job1.getResult().isOK()) {
 					ErrorReporter.logError("ExtractToFunctionHeadless: createFunction() job failed! ");
@@ -76,12 +76,12 @@ public class ExtractToFunctionHeadless {
 			//setting new function name
 			editFuncName(refactoring.getNewFunctionName());
 			//setting new parameter names
-			IModelProvider<ParamTableItem> modelProvider = refactoring.getWizardModelProvider();
+			final IModelProvider<ParamTableItem> modelProvider = refactoring.getWizardModelProvider();
 			editParamNames(modelProvider.getItems());
 			//
 			Activator.getDefault().resumeHandlingResourceChanges();
 			
-			Change change = refactoring.createChange(null);
+			final Change change = refactoring.createChange(null);
 			change.perform(new NullProgressMonitor());
 			
 		} catch (CoreException e) {
@@ -101,8 +101,9 @@ public class ExtractToFunctionHeadless {
 		if (newParamNames == null || newParamNames.isEmpty()) {
 			return;
 		}
-		ListIterator<ParamTableItem> itPti = params.listIterator();
-		ListIterator<String> itNewNames = newParamNames.listIterator();
+		
+		final ListIterator<ParamTableItem> itPti = params.listIterator();
+		final ListIterator<String> itNewNames = newParamNames.listIterator();
 		while (itPti.hasNext() && itNewNames.hasNext()) {
 			itPti.next().setName(itNewNames.next());
 		}

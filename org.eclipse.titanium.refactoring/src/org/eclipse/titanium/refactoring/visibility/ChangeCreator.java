@@ -88,15 +88,15 @@ class ChangeCreator {
 		if (toVisit == null) {
 			return null;
 		}
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
-		Module module = sourceParser.containedModule(toVisit);
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
+		final Module module = sourceParser.containedModule(toVisit);
 		if(module == null) {
 			return null;
 		}
 		//find all locations in the module that should be edited
-		DefinitionVisitor vis = new DefinitionVisitor();
+		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
-		NavigableSet<ILocateableNode> nodes = vis.getLocations();
+		final NavigableSet<ILocateableNode> nodes = vis.getLocations();
 		
 		if (nodes.isEmpty()) {
 			return null;
@@ -104,7 +104,7 @@ class ChangeCreator {
 		//calculate edit locations
 		final List<Location> locations = new ArrayList<Location>();
 		try {
-			WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
+			final WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
 			job1.join();
 		} catch (InterruptedException ie) {
 			ErrorReporter.logExceptionStackTrace(ie);
@@ -117,11 +117,11 @@ class ChangeCreator {
 			return null;
 		}
 		//create a change for each edit location
-		TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 		for (Location l: locations) {
-			int len = l.getEndOffset()-l.getOffset();
+			final int len = l.getEndOffset()-l.getOffset();
 			if (len == 0) {
 				rootEdit.addChild(new InsertEdit(l.getOffset(), "private "));
 			} else {
@@ -133,7 +133,7 @@ class ChangeCreator {
 	
 	private WorkspaceJob calculateEditLocations(final NavigableSet<ILocateableNode> nodes, final IFile file
 			, final List<Location> locations_out) throws CoreException {
-		WorkspaceJob job = new WorkspaceJob("MinimizeVisibilityRefactoring: calculate edit locations") {
+		final WorkspaceJob job = new WorkspaceJob("MinimizeVisibilityRefactoring: calculate edit locations") {
 			
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
@@ -210,10 +210,10 @@ class ChangeCreator {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Definition && isGoodType(node)) {
-				Definition d = (Definition)node;
+				final Definition d = (Definition)node;
 				if (!d.isLocal() && !VisibilityModifier.Private.equals(d.getVisibilityModifier()) &&
 						hasValidLocation(d)) {
-					String moduleName = d.getMyScope().getModuleScope().getName();
+					final String moduleName = d.getMyScope().getModuleScope().getName();
 					if (!d.isUsed()) {
 						locations.add(d);
 					} else if (d.referingHere.size() == 1 && d.referingHere.get(0).equals(moduleName)) {
@@ -258,13 +258,13 @@ class ChangeCreator {
 
 		@Override
 		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
-			IResource f0 = arg0.getLocation().getFile();
-			IResource f1 = arg1.getLocation().getFile();
+			final IResource f0 = arg0.getLocation().getFile();
+			final IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {
 				return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 			}
-			int o0 = arg0.getLocation().getOffset();
-			int o1 = arg1.getLocation().getOffset();
+			final int o0 = arg0.getLocation().getOffset();
+			final int o1 = arg1.getLocation().getOffset();
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
 		

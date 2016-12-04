@@ -36,20 +36,21 @@ public class ExtractToFunctionAction extends AbstractHandler {
 		Utils.updateASTForProjectActiveInEditor("ExtractToFunction");
 		
 		//get selected statements
-		ExtractToFunctionRefactoring refactoring = new ExtractToFunctionRefactoring();
+		final ExtractToFunctionRefactoring refactoring = new ExtractToFunctionRefactoring();
 		refactoring.findSelection();
 		if (!refactoring.isSelectionValid()) {
 			ErrorReporter.logError("ExtractToFunctionAction: Invalid selection! ");
 			return null;
 		}
-		IFile selectedFile = refactoring.getSelectedFile();
+		
+		final IFile selectedFile = refactoring.getSelectedFile();
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selectedFile.getProject());
 		
 		Activator.getDefault().pauseHandlingResourceChanges();
 		
 		//find params & create function from string builders
 		try {
-			WorkspaceJob job1 = refactoring.createFunction();
+			final WorkspaceJob job1 = refactoring.createFunction();
 			job1.join();
 			if (!job1.getResult().isOK()) {
 				return null;
@@ -58,13 +59,13 @@ public class ExtractToFunctionAction extends AbstractHandler {
 			ErrorReporter.logExceptionStackTrace(ie);
 		}
 		//getting active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
 		//open wizard and modify function name, param names if necessary
-		ExtractToFunctionWizard wiz = new ExtractToFunctionWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final ExtractToFunctionWizard wiz = new ExtractToFunctionWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {

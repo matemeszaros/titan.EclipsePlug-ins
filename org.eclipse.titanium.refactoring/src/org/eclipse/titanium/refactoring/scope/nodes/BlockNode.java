@@ -39,14 +39,14 @@ public class BlockNode extends Node {
 	}
 
 	public StatementNode getPreviousStatement(final StatementNode sn) {
-		int ind = sts.indexOf(sn);
+		final int ind = sts.indexOf(sn);
 		if (ind <= 0) {
 			return null;
 		}
 		return sts.get(ind-1);
 	}	
 	public StatementNode getNextStatement(final StatementNode sn) {
-		int ind = sts.indexOf(sn);
+		final int ind = sts.indexOf(sn);
 		if (ind >= sts.size()-1) {
 			return null;
 		}
@@ -129,9 +129,9 @@ public class BlockNode extends Node {
 		}
 		//System.err.println("containedNode: " + containedNode + ", loc: " + Utils.createLocationString(containedNode.astNode));
 		//System.err.println("block: " + this + ", loc: " + Utils.createLocationString(this.astNode));
-		ListIterator<StatementNode> it = sts.listIterator();
+		final ListIterator<StatementNode> it = sts.listIterator();
 		while (it.hasNext()) {
-			StatementNode currSt = it.next();
+			final StatementNode currSt = it.next();
 			//System.err.println("    st: " + currSt + ", loc: " + Utils.createLocationString(currSt.astNode));
 			if (containedNode.equals(currSt) || containedNode.isStmtAncestorOfThis(currSt)) {
 				return currSt;
@@ -148,7 +148,7 @@ public class BlockNode extends Node {
 		StringBuilder sb = new StringBuilder();
 		sb.append("BN(").append(astNode.toString()).append("), loc: ");
 		if (astNode instanceof ILocateableNode) {
-			Location loc = ((ILocateableNode)astNode).getLocation();
+			final Location loc = ((ILocateableNode)astNode).getLocation();
 			sb.append(loc.getOffset()).append('-').append(loc.getEndOffset()).append(';');
 		} else {
 			sb.append("<none>;");
@@ -163,8 +163,8 @@ public class BlockNode extends Node {
 	}
 
 	public String toStringRecursive(final boolean recursive, final int prefixLen) {
-		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
-		StringBuilder sb = new StringBuilder();
+		final String prefix = new String(new char[prefixLen]).replace('\0', ' ');
+		final StringBuilder sb = new StringBuilder();
 		sb.append(prefix).append("BN: ").append(toString()).append('\n');
 		if (recursive) {
 			for (StatementNode sn: sts) {

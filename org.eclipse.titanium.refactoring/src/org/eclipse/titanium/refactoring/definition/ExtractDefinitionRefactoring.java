@@ -79,7 +79,7 @@ public class ExtractDefinitionRefactoring {
 	
 	/** Use this constructor only when a workbench is available. */
 	ExtractDefinitionRefactoring() {
-		SelectionFinder sf = new SelectionFinder();
+		final SelectionFinder sf = new SelectionFinder();
 		sf.perform();
 		selection = sf.getSelection();
 		sourceProj = sf.getSourceProj();
@@ -108,7 +108,7 @@ public class ExtractDefinitionRefactoring {
 	}
 
 	private RefactoringStatus checkInitialConditions() {
-		RefactoringStatus result = new RefactoringStatus();
+		final RefactoringStatus result = new RefactoringStatus();
 		if (selection == null) {
 			result.addError("Selection is not a definition (selection is null)! ");
 			
@@ -120,15 +120,15 @@ public class ExtractDefinitionRefactoring {
 	}
 	
 	public void perform() {
-		RefactoringStatus rs = checkInitialConditions();
+		final RefactoringStatus rs = checkInitialConditions();
 		if (!rs.hasError()) {
 			try {
-				DependencyCollector dc = new DependencyCollector(selection);
-				WorkspaceJob job1 = dc.readDependencies();
+				final DependencyCollector dc = new DependencyCollector(selection);
+				final WorkspaceJob job1 = dc.readDependencies();
 				job1.join();
 				copyMap = dc.getCopyMap();
 				filesToCopy = dc.getFilesToCopy();
-				WorkspaceJob job2 = createChange();
+				final WorkspaceJob job2 = createChange();
 				job2.join();
 			} catch (InterruptedException ie) {
 				ErrorReporter.logExceptionStackTrace(ie);
@@ -140,7 +140,7 @@ public class ExtractDefinitionRefactoring {
 	}
 
 	private WorkspaceJob createChange() {
-		WorkspaceJob job = new WorkspaceJob("ExtractDefinition: writing to target project") {
+		final WorkspaceJob job = new WorkspaceJob("ExtractDefinition: writing to target project") {
 			
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
@@ -184,13 +184,13 @@ public class ExtractDefinitionRefactoring {
 	}
 	
 	private IFile createFile(final IPath relativePath) {
-		IFile ret = targetProj.getFile(relativePath);
+		final IFile ret = targetProj.getFile(relativePath);
 
 		//create the file
 		if (!ret.exists()) {
 			try {
 				createTargetFolderHierarchy(ret);
-				InputStream source = new ByteArrayInputStream(new byte[0]);
+				final InputStream source = new ByteArrayInputStream(new byte[0]);
 				ret.create(source, IResource.NONE, null);
 			} catch (CoreException ce) {
 				return null;
@@ -199,12 +199,12 @@ public class ExtractDefinitionRefactoring {
 		return ret;
 	}
 	private IFile copyFile(final IFile toCopy) {
-		IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
+		final IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
 
 		//copy the file
 		try {
 			createTargetFolderHierarchy(newFile);
-			IPath relPath = toCopy.getProjectRelativePath();
+			final IPath relPath = toCopy.getProjectRelativePath();
 			toCopy.copy(targetProj.getFile(relPath).getFullPath(), true, null);
 		} catch (CoreException ce) {
 			return null;
@@ -214,7 +214,7 @@ public class ExtractDefinitionRefactoring {
 	
 	private void createTargetFolderHierarchy(final IFile file) throws CoreException {
 		IContainer parent = file.getParent();
-		List<IFolder> folders = new LinkedList<IFolder>();
+		final List<IFolder> folders = new LinkedList<IFolder>();
 		while (parent != null) {
 			if (parent instanceof IFolder) {
 				folders.add(0, (IFolder)parent);

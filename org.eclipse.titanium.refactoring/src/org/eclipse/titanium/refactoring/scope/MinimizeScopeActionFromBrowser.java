@@ -56,13 +56,13 @@ public class MinimizeScopeActionFromBrowser extends AbstractHandler implements I
 
 	private void performMinimizeScope() {
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		//find selection
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
-		Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
+		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
 		
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "MinimizeScope");
@@ -70,10 +70,10 @@ public class MinimizeScopeActionFromBrowser extends AbstractHandler implements I
 		Activator.getDefault().pauseHandlingResourceChanges();
 		
 		//create refactoring
-		MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(structSelection, null);
+		final MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(structSelection, null);
 		//open wizard
-		MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {

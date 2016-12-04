@@ -109,25 +109,26 @@ public class ContextLoggingRefactoring extends Refactoring {
 			return null;
 		}
 		if (selection instanceof IStructuredSelection) {
-			CompositeChange cchange = new CompositeChange("ContextLoggingRefactoring");
-			IStructuredSelection ssel = (IStructuredSelection)selection;
-			Iterator<?> it = ssel.iterator();
+			final CompositeChange cchange = new CompositeChange("ContextLoggingRefactoring");
+			final IStructuredSelection ssel = (IStructuredSelection)selection;
+			final Iterator<?> it = ssel.iterator();
 			while (it.hasNext()) {
-				Object o = it.next();
+				final Object o = it.next();
 				if (!(o instanceof IResource)) {
 					continue;
 				}
-				IResource res = (IResource)o;
-				ResourceVisitor vis = new ResourceVisitor();
+				
+				final IResource res = (IResource)o;
+				final ResourceVisitor vis = new ResourceVisitor();
 				res.accept(vis);
 				cchange.add(vis.getChange());
 			}
 			affectedObjects = cchange.getAffectedObjects();
 			return cchange;
 		} else if (selection instanceof TextSelection) {
-			ChangeCreator chCreator = new ChangeCreator(selectedFile, (TextSelection)selection, settings);
+			final ChangeCreator chCreator = new ChangeCreator(selectedFile, (TextSelection)selection, settings);
 			chCreator.perform();
-			Change ch = chCreator.getChange();
+			final Change ch = chCreator.getChange();
 			if(ch == null) {
 				affectedObjects = new Object[]{};
 				return new CompositeChange("EmptyLoggingRefactoring");
@@ -164,9 +165,9 @@ public class ContextLoggingRefactoring extends Refactoring {
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
-				ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
+				final ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
 				chCreator.perform();
-				Change ch = chCreator.getChange();
+				final Change ch = chCreator.getChange();
 				if (ch != null) {
 					change.add(ch);
 				}
@@ -228,7 +229,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 			return (settings & setting) == setting;
 		}
 		public void setSetting(final int setting, final boolean value) {
-			boolean prevVal = getSetting(setting);
+			final boolean prevVal = getSetting(setting);
 			if (prevVal == value) {
 				return;
 			}

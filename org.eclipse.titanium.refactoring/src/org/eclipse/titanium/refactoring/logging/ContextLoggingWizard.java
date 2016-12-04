@@ -38,7 +38,7 @@ public class ContextLoggingWizard extends RefactoringWizard implements
 	@Override
 	protected void addUserInputPages() {
 		setDefaultPageTitle(WIZ_WINDOWTITLE);
-		ContextLoggingWizardOptionsPage optionsPage = 
+		final ContextLoggingWizardOptionsPage optionsPage = 
 				new ContextLoggingWizardOptionsPage(WIZ_WINDOWTITLE, refactoring.getSettings());
 		addPage(optionsPage);
 	}

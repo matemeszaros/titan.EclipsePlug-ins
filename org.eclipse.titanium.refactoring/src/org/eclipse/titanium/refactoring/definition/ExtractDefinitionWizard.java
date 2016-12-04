@@ -76,7 +76,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	
 	public ExtractDefinitionWizard(final String selectionName) {
 		windowTitle = MessageFormat.format(WIZ_WINDOWTITLE, selectionName);
-		IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
+		final IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
 		wasAutoBuilding = description.isAutoBuilding();
 		description.setAutoBuilding(false);
 		try {
@@ -113,13 +113,13 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 			String executable;
 
 			if (newProject.getLocation() == null) {
-				URI projectURI = newProject.getLocationURI();
-				URI uri = TITANPathUtilities.resolvePath(WORKING_DIR, projectURI);
+				final URI projectURI = newProject.getLocationURI();
+				final URI uri = TITANPathUtilities.resolvePath(WORKING_DIR, projectURI);
 
 				executable = URIUtil.append(uri, tempExecutableName).toString();
 			} else {
-				URI uri = TITANPathUtilities.resolvePathURI(WORKING_DIR, newProject.getLocation().toOSString());
-				IPath workingDir = org.eclipse.core.filesystem.URIUtil.toPath(uri);
+				final URI uri = TITANPathUtilities.resolvePathURI(WORKING_DIR, newProject.getLocation().toOSString());
+				final IPath workingDir = org.eclipse.core.filesystem.URIUtil.toPath(uri);
 
 				executable = workingDir.append(tempExecutableName).toOSString();
 				if (Platform.OS_WIN32.equals(Platform.getOS())) {
@@ -185,8 +185,8 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	}
 	
 	public IPath getProjectPath() {
-		IPath path = mainPage.getLocationPath();
-		String name = mainPage.getProjectName();
+		final IPath path = mainPage.getLocationPath();
+		final String name = mainPage.getProjectName();
 		return path.append(name);
 	}
 	
@@ -204,7 +204,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	
 	private void createProject(final IProjectDescription description, final IProject projectHandle, final IProgressMonitor monitor)
 			throws CoreException {
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+		final IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
 		try {
 			internalMonitor.beginTask(CREATING_PROJECT, 2000);
 
@@ -224,15 +224,15 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	}
 
 	private IProject createNewProject() {
-		IProject tempProjectHandle = mainPage.getProjectHandle();
+		final IProject tempProjectHandle = mainPage.getProjectHandle();
 
 		URI location = null;
 		if (!mainPage.useDefaults()) {
 			location = mainPage.getLocationURI();
 		}
 
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		String tempExecutableName = tempProjectHandle.getName();
+		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		final String tempExecutableName = tempProjectHandle.getName();
 
 		final IProject newProjectHandle = ResourcesPlugin.getWorkspace().getRoot().getProject(tempExecutableName);
 
@@ -240,7 +240,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 		description.setLocationURI(location);
 		TITANNature.addTITANNatureToProject(description);
 
-		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				createProject(description, newProjectHandle, monitor);
@@ -287,7 +287,7 @@ public class ExtractDefinitionWizard extends BasicNewResourceWizard implements I
 	}
 
 	private void resetAutobuildOption() {
-		IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
+		final IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
 		if (description.isAutoBuilding() != wasAutoBuilding) {
 			description.setAutoBuilding(wasAutoBuilding);
 			try {

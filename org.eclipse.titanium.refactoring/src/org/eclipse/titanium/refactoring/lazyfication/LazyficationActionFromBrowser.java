@@ -56,23 +56,24 @@ public class LazyficationActionFromBrowser extends AbstractHandler implements IO
 
 	private void performLazyfication() {
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		//find selection
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
+		
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
-		Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
+		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
 		
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "Lazyfication");
 		Activator.getDefault().pauseHandlingResourceChanges();
 		
 		//create refactoring
-		LazyficationRefactoring refactoring = new LazyficationRefactoring(structSelection);
+		final LazyficationRefactoring refactoring = new LazyficationRefactoring(structSelection);
 		//open wizard
-		LazyficationWizard wiz = new LazyficationWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final LazyficationWizard wiz = new LazyficationWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {

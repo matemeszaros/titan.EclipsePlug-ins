@@ -39,21 +39,21 @@ public class LazyficationActionFromEditor extends AbstractHandler  {
 		Activator.getDefault().pauseHandlingResourceChanges();
 
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
 		//getting selected file
-		IFile selectedFile = Utils.getSelectedFileInEditor("Lazyfication");
+		final IFile selectedFile = Utils.getSelectedFileInEditor("Lazyfication");
 		if (selectedFile == null) {
 			return null;
 		}
-		IStructuredSelection structSelection = new StructuredSelection(selectedFile);
-		LazyficationRefactoring refactoring = new LazyficationRefactoring(structSelection);
+		final IStructuredSelection structSelection = new StructuredSelection(selectedFile);
+		final LazyficationRefactoring refactoring = new LazyficationRefactoring(structSelection);
 
 		//open wizard
-		LazyficationWizard wiz = new LazyficationWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final LazyficationWizard wiz = new LazyficationWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
@@ -66,7 +66,7 @@ public class LazyficationActionFromEditor extends AbstractHandler  {
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
-		IProject project = selectedFile.getProject();
+		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
 		

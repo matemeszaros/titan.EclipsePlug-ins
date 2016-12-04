@@ -40,21 +40,21 @@ class FunctionContext extends Context {
 
 	@Override
 	protected void process_internal() {
-		Def_Function func = getNode();
-		FormalParameterList fpl = func.getFormalParameterList();
-		ParameterListVisitor vis = new ParameterListVisitor();
+		final Def_Function func = getNode();
+		final FormalParameterList fpl = func.getFormalParameterList();
+		final ParameterListVisitor vis = new ParameterListVisitor();
 		fpl.accept(vis);
 		paramIds = vis.getResult();
 	}
 
 	@Override
 	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
-		List<String> ret = new ArrayList<String>();
+		final List<String> ret = new ArrayList<String>();
 		if (paramIds == null) {
 			return ret;
 		}
 		for (Identifier id: paramIds) {
-			String idS = id.toString();
+			final String idS = id.toString();
 			if (idsAlreadyHandled.contains(idS)) {
 				continue;
 			}

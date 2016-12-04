@@ -70,14 +70,14 @@ public class Variable {
 		references.add(new Reference(st, leftHandSideRef));
 	}
 	public void removeReference(final StatementNode st) {
-		ListIterator<Reference> it = references.listIterator();
+		final ListIterator<Reference> it = references.listIterator();
 		while (it.hasNext()) {
 			if (it.next().getRef().equals(st)) {
 				it.remove();
 				return;
 			}
 		}
-		String fname = assmnt.getLocation().getFile().toString();
+		final String fname = assmnt.getLocation().getFile().toString();
 		ErrorReporter.logError("Variable.removeReference(): Could not remove reference for variable: " + toString() + "; in file " + fname);
 	}
 	
@@ -87,8 +87,8 @@ public class Variable {
 	}
 
 	public String toStringRecursive(final boolean includeRefs, final int prefixLen) {
-		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
-		StringBuilder sb = new StringBuilder();
+		final String prefix = new String(new char[prefixLen]).replace('\0', ' ');
+		final StringBuilder sb = new StringBuilder();
 		sb.append(prefix).append("VAR: ").append(assmnt == null ? "null" : assmnt.getIdentifier().toString());
 		if (includeRefs) {
 			sb.append('\n').append(prefix).append("  refs:\n");

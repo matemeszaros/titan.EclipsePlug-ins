@@ -93,7 +93,7 @@ public class DependencyCollector {
 	}
 	
 	public WorkspaceJob readDependencies() {
-		WorkspaceJob job = new WorkspaceJob("ExtractModulePar: reading dependencies from source project") {
+		final WorkspaceJob job = new WorkspaceJob("ExtractModulePar: reading dependencies from source project") {
 
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
@@ -236,7 +236,7 @@ public class DependencyCollector {
 			currDefs = new HashSet<Definition>();
 			allDefs.addAll(prevDefs);
 			for (Definition d: prevDefs) {
-				DependencyFinderVisitor vis = new DependencyFinderVisitor(currDefs, imports, asnFiles);
+				final DependencyFinderVisitor vis = new DependencyFinderVisitor(currDefs, imports, asnFiles);
 				d.accept(vis);
 			}
 			prevDefs = currDefs;
@@ -252,13 +252,14 @@ public class DependencyCollector {
 		@Override
 		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
 			
-			IResource f0 = arg0.getLocation().getFile();
-			IResource f1 = arg1.getLocation().getFile();
+			final IResource f0 = arg0.getLocation().getFile();
+			final IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {
 				return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 			}
-			int o0 = getNodeOffset(arg0);
-			int o1 = getNodeOffset(arg1);
+			
+			final int o0 = getNodeOffset(arg0);
+			final int o1 = getNodeOffset(arg1);
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
 		
@@ -288,12 +289,13 @@ public class DependencyCollector {
 				return V_CONTINUE;
 			}
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
-				Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Reference ref = (Reference)node;
+				final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				if (as == null) {
 					return V_CONTINUE;
 				}
-				IResource asFile = as.getLocation().getFile();
+				
+				final IResource asFile = as.getLocation().getFile();
 				if ("asn".equals(asFile.getFileExtension())) {
 					//copy .asn files completely
 					imports.add(asFile);
@@ -301,11 +303,11 @@ public class DependencyCollector {
 					collectAllASNs(asFile);
 				} else if (as instanceof Definition) {
 					//only for .ttcn files
-					Definition def = (Definition)as;
+					final Definition def = (Definition)as;
 					if (!definitions.contains(def)) {
 						if (isGoodType(def)) {
 							definitions.add(def);
-							IResource refLoc = ref.getLocation().getFile();
+							final IResource refLoc = ref.getLocation().getFile();
 							if (asFile != refLoc) {
 								imports.add(asFile);
 							}
@@ -334,11 +336,11 @@ public class DependencyCollector {
 		 * */
 		private void collectAllASNs(final IResource asnBaseFile) {
 			if (asnBaseFile instanceof IFile) {
-				IFile f = (IFile)asnBaseFile;
-				Module mod = projectSourceParser.containedModule(f);
-				List<Module> impMods = mod.getImportedModules();
+				final IFile f = (IFile)asnBaseFile;
+				final Module mod = projectSourceParser.containedModule(f);
+				final List<Module> impMods = mod.getImportedModules();
 				for (Module m: impMods) {
-					IResource impModRes = m.getLocation().getFile();
+					final IResource impModRes = m.getLocation().getFile();
 					if (asnFiles.contains(impModRes)) {
 						continue;
 					}
@@ -391,19 +393,21 @@ public class DependencyCollector {
 	 * modules that are not contained in the <code>allFiles</code> set.
 	 * */
 	private static void filterImportDefinitions(final Set<IResource> allFiles, final List<ImportModule> importDefs, final ProjectSourceParser projParser) {
-		List<Identifier> allFileIds = new ArrayList<Identifier>(allFiles.size());
+		final List<Identifier> allFileIds = new ArrayList<Identifier>(allFiles.size());
 		for (IResource r: allFiles) {
 			if (!(r instanceof IFile)) {
 				continue;
 			}
-			IFile f = (IFile)r;
-			Module m = projParser.containedModule(f);
+			
+			final IFile f = (IFile)r;
+			final Module m = projParser.containedModule(f);
 			allFileIds.add(m.getIdentifier());
 		}
-		ListIterator<ImportModule> importIt = importDefs.listIterator();
+		
+		final ListIterator<ImportModule> importIt = importDefs.listIterator();
 		while (importIt.hasNext()) {
-			ImportModule im = importIt.next();
-			Identifier id = im.getIdentifier();
+			final ImportModule im = importIt.next();
+			final Identifier id = im.getIdentifier();
 			if (!allFileIds.contains(id)) {
 				importIt.remove();
 			}
@@ -414,19 +418,21 @@ public class DependencyCollector {
 	 * modules that are not contained in the <code>allFiles</code> set.
 	 * */
 	private static void filterFriendDefinitions(final Set<IResource> allFiles, final List<FriendModule> friendDefs, final ProjectSourceParser projParser) {
-		List<Identifier> allFileIds = new ArrayList<Identifier>(allFiles.size());
+		final List<Identifier> allFileIds = new ArrayList<Identifier>(allFiles.size());
 		for (IResource r: allFiles) {
 			if (!(r instanceof IFile)) {
 				continue;
 			}
-			IFile f = (IFile)r;
-			Module m = projParser.containedModule(f);
+			
+			final IFile f = (IFile)r;
+			final Module m = projParser.containedModule(f);
 			allFileIds.add(m.getIdentifier());
 		}
-		ListIterator<FriendModule> importIt = friendDefs.listIterator();
+		
+		final ListIterator<FriendModule> importIt = friendDefs.listIterator();
 		while (importIt.hasNext()) {
-			FriendModule fm = importIt.next();
-			Identifier id = fm.getIdentifier();
+			final FriendModule fm = importIt.next();
+			final Identifier id = fm.getIdentifier();
 			if (!allFileIds.contains(id)) {
 				importIt.remove();
 			}
@@ -435,10 +441,10 @@ public class DependencyCollector {
 
 	private void addToCopyMap(final IPath relativePath, final String toAdd) {
 		if (copyMap.containsKey(relativePath)) {
-			StringBuilder sb = copyMap.get(relativePath);
+			final StringBuilder sb = copyMap.get(relativePath);
 			sb.append(toAdd);
 		} else {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			sb.append(toAdd);
 			copyMap.put(relativePath, sb);
 		}
@@ -447,7 +453,7 @@ public class DependencyCollector {
 	private int getNodeOffset(final ILocateableNode node) {
 		int o = node.getLocation().getOffset();
 		if (ExtractModuleParRefactoring.ENABLE_COPY_COMMENTS && node instanceof Definition) {
-			Location commentLoc = ((Definition)node).getCommentLocation();
+			final Location commentLoc = ((Definition)node).getCommentLocation();
 			if (commentLoc != null) {
 				o = commentLoc.getOffset();
 			}
@@ -456,8 +462,8 @@ public class DependencyCollector {
 	}
 
 	private void reportOverlappingError(final ILocateableNode defCurrent, final ILocateableNode defOverlapping) {
-		Location dLocOverlap = defOverlapping == null ? null : defOverlapping.getLocation();
-		Location dLocCurr = defCurrent == null ? null : defCurrent.getLocation();
+		final Location dLocOverlap = defOverlapping == null ? null : defOverlapping.getLocation();
+		final Location dLocCurr = defCurrent == null ? null : defCurrent.getLocation();
 		String idOverlap = null;
 		if (defOverlapping instanceof Definition) {
 			idOverlap = ((Definition)defOverlapping).getIdentifier().toString();
@@ -474,12 +480,12 @@ public class DependencyCollector {
 		} else if (defCurrent instanceof FriendModule) {
 			idCurr = "FriendModule{" + ((FriendModule)defCurrent).getIdentifier().toString() + "}";
 		}
-		String msg1 = (dLocCurr == null) ? "null" :
+		final String msg1 = (dLocCurr == null) ? "null" :
 				"Definition id: " + idCurr + 
 				" (" + defCurrent.getClass().getSimpleName() + 
 				") at " + dLocCurr.getFile() + ", offset " + dLocCurr.getOffset()
 				+ "-" + dLocCurr.getEndOffset(); 
-		String msg2 = (dLocOverlap == null) ? "null" : 
+		final String msg2 = (dLocOverlap == null) ? "null" : 
 				"Definition id: " + idOverlap + 
 				" (" + defOverlapping.getClass().getSimpleName() + 
 				") at " + dLocOverlap.getFile() + ", offset " + dLocOverlap.getOffset()

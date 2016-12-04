@@ -38,7 +38,7 @@ public class MinimizeScopeWizard extends RefactoringWizard implements
 	@Override
 	protected void addUserInputPages() {
 		setDefaultPageTitle(WIZ_WINDOWTITLE);
-		MinimizeScopeWizardOptionsPage optionsPage = 
+		final MinimizeScopeWizardOptionsPage optionsPage = 
 				new MinimizeScopeWizardOptionsPage(WIZ_WINDOWTITLE, refactoring.getSettings());
 		addPage(optionsPage);
 	}

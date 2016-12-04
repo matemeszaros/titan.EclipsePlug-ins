@@ -43,25 +43,25 @@ class IfContext extends Context {
 	}
 	
 	protected void process_internal() {
-		If_Statement st = getNode();
-		If_Clauses ics = st.getIfClauses();
-		Context child = getChild();
+		final If_Statement st = getNode();
+		final If_Clauses ics = st.getIfClauses();
+		final Context child = getChild();
 		if (child != null && child.getNode().equals(ics)) {
 			//the log statement is in one of the conditional clauses
-			List<If_Clause> icl = ics.getClauses();
-			Context clauseContext = child.getChild();
+			final List<If_Clause> icl = ics.getClauses();
+			final Context clauseContext = child.getChild();
 			if (clauseContext != null && icl.contains(clauseContext.getNode())) {
-				IVisitableNode ic = clauseContext.getNode();
-				ClauseVisitor vis = new ClauseVisitor();
+				final IVisitableNode ic = clauseContext.getNode();
+				final ClauseVisitor vis = new ClauseVisitor();
 				ic.accept(vis);
-				List<Reference> refs = vis.getResult();
+				final List<Reference> refs = vis.getResult();
 				for (Reference ref: refs) {
 					varNamesInConditions.add(ref.getDisplayName());
 				}
 			}
 		} else {
 			//the log statement is in the else block
-			List<Reference> refs = extractAllIdsFromClauses(ics);
+			final List<Reference> refs = extractAllIdsFromClauses(ics);
 			for (Reference ref: refs) {
 				varNamesInConditions.add(ref.getDisplayName());
 			}
@@ -69,10 +69,10 @@ class IfContext extends Context {
 	}
 	
 	private static List<Reference> extractAllIdsFromClauses(final If_Clauses ics) {
-		List<If_Clause> icl = ics.getClauses();
-		List<Reference> ret = new ArrayList<Reference>();
+		final List<If_Clause> icl = ics.getClauses();
+		final List<Reference> ret = new ArrayList<Reference>();
 		for (If_Clause ic: icl) {
-			ClauseVisitor vis = new ClauseVisitor();
+			final ClauseVisitor vis = new ClauseVisitor();
 			ic.accept(vis);
 			ret.addAll(vis.getResult());
 		}
@@ -81,7 +81,7 @@ class IfContext extends Context {
 
 	@Override
 	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
-		List<String> ret = new ArrayList<String>();
+		final List<String> ret = new ArrayList<String>();
 		if (varNamesInConditions == null) {
 			return ret;
 		}
@@ -111,9 +111,9 @@ class IfContext extends Context {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
+				final Reference ref = (Reference)node;
 				
-				Assignment refdAssignment = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Assignment refdAssignment = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				switch(refdAssignment.getAssignmentType()) {
 				case A_ALTSTEP:
 				case A_EXT_FUNCTION:

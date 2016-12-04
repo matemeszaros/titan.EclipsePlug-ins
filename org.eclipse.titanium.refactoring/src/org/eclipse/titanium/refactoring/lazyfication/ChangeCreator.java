@@ -77,20 +77,20 @@ class ChangeCreator {
 			return null;
 		}
 		
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
-		Module module = sourceParser.containedModule(toVisit);
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
+		final Module module = sourceParser.containedModule(toVisit);
 		if(module == null) {
 			return null;
 		}
 		
-		DefinitionVisitor vis = new DefinitionVisitor();
+		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
-		List<FormalParameter> nodes = vis.getLocations();
+		final List<FormalParameter> nodes = vis.getLocations();
 		
 		// Calculate edit locations
 		final List<Location> locations = new ArrayList<Location>();
 		try {
-			WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
+			final WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
 			job1.join();
 		} catch (InterruptedException ie) {
 			ErrorReporter.logExceptionStackTrace(ie);
@@ -104,8 +104,8 @@ class ChangeCreator {
 		}
 		
 		// Create a change for each edit location
-		TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 		
 		for (Location l: locations) {
@@ -151,7 +151,7 @@ class ChangeCreator {
 	
 	private WorkspaceJob calculateEditLocations(final List<FormalParameter> fparamlist, final IFile file
 			, final List<Location> locations_out) throws CoreException {
-		WorkspaceJob job = new WorkspaceJob("LazyficationRefactoring: calculate edit locations") {
+		final WorkspaceJob job = new WorkspaceJob("LazyficationRefactoring: calculate edit locations") {
 			
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {

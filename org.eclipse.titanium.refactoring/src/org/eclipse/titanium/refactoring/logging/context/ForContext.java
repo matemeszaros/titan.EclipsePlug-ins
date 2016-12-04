@@ -37,20 +37,20 @@ class ForContext extends Context {
 	}
 
 	protected void process_internal() {
-		For_Statement st = getNode();
-		ForVisitor vis = new ForVisitor();
+		final For_Statement st = getNode();
+		final ForVisitor vis = new ForVisitor();
 		st.accept(vis);
 		initialAssignmentIds = vis.getResult();
 	}
 	
 	@Override
 	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
-		List<String> ret = new ArrayList<String>();
+		final List<String> ret = new ArrayList<String>();
 		if (initialAssignmentIds == null) {
 			return ret;
 		}
 		for (Identifier id: initialAssignmentIds) {
-			String idS = id.toString();
+			final String idS = id.toString();
 			if (idsAlreadyHandled.contains(idS)) {
 				continue;
 			}
@@ -79,8 +79,8 @@ class ForContext extends Context {
 				return V_CONTINUE;
 			}
 			if (node instanceof For_Loop_Definitions) {
-				For_Loop_Definitions flds = (For_Loop_Definitions)node;
-				int count = flds.getNofAssignments();
+				final For_Loop_Definitions flds = (For_Loop_Definitions)node;
+				final int count = flds.getNofAssignments();
 				for (int i=0;i<count;i++) {
 					result.add(flds.getAssignmentByIndex(i).getIdentifier());
 				}

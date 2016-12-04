@@ -51,9 +51,9 @@ public class SelectionFinder {
 	
 	public void perform() {
 		modulePars = new HashSet<Def_ModulePar>();
-		Collection<Module> modules = GlobalParser.getProjectSourceParser(project).getModules();
+		final Collection<Module> modules = GlobalParser.getProjectSourceParser(project).getModules();
 		for (Module m: modules) {
-			ModuleParFinder vis = new ModuleParFinder();
+			final ModuleParFinder vis = new ModuleParFinder();
 			m.accept(vis);
 			modulePars.addAll(vis.getModulePars());
 		}
@@ -63,20 +63,22 @@ public class SelectionFinder {
 		if (modulePars == null || modulePars.isEmpty()) {
 			return "<empty>";
 		}
-		List<ModuleParListRecord> records = new ArrayList<ModuleParListRecord>();
+		
+		final List<ModuleParListRecord> records = new ArrayList<ModuleParListRecord>();
 		for (Def_ModulePar def: modulePars) {
-			IResource f = def.getLocation().getFile();
+			final IResource f = def.getLocation().getFile();
 			if (!(f instanceof IFile)) {
 				ErrorReporter.logError("ExtractModulePar/SelectionFinder: IResource `" + f.getName() + "' is not an IFile.");
 				continue;
 			}
-			Identifier id = def.getIdentifier();
-			Type t = def.getType(CompilationTimeStamp.getBaseTimestamp());
+			
+			final Identifier id = def.getIdentifier();
+			final Type t = def.getType(CompilationTimeStamp.getBaseTimestamp());
 			records.add(new ModuleParListRecord(def.getMyScope().getModuleScope().getIdentifier().getDisplayName(), id.getDisplayName(), t.getTypename()));
 		}
 		//
 		Collections.sort(records);
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (ModuleParListRecord rec: records) {
 			sb.append(rec.toString()).append('\n');
 		}
@@ -97,7 +99,7 @@ public class SelectionFinder {
 		
 		@Override
 		public int compareTo(final ModuleParListRecord arg0) {
-			int cmp = moduleName.compareTo(arg0.moduleName);
+			final int cmp = moduleName.compareTo(arg0.moduleName);
 			if (cmp != 0) {
 				return cmp;
 			}
@@ -124,7 +126,8 @@ public class SelectionFinder {
 			if (!(obj instanceof ModuleParListRecord)) {
 				return false;
 			}
-			ModuleParListRecord other = (ModuleParListRecord)obj;
+			
+			final ModuleParListRecord other = (ModuleParListRecord)obj;
 			if (id == null) {
 				if (other.id != null) {
 					return false;

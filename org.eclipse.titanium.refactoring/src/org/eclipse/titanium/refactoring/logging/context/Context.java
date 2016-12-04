@@ -91,7 +91,8 @@ public abstract class Context {
 		if (child == null) {
 			return new ArrayList<String>();
 		}
-		List<String> parts = child.createLogParts(idsAlreadyHandled);
+		
+		final List<String> parts = child.createLogParts(idsAlreadyHandled);
 		parts.addAll(createLogParts_internal(idsAlreadyHandled));
 		return parts;
 	}

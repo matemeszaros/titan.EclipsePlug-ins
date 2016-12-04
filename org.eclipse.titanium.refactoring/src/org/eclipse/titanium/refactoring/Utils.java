@@ -59,7 +59,7 @@ public class Utils {
 	private static final String SOURCE_DIR = "src";
 	
 	public static TTCN3Editor getActiveEditor() {
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (!(editor instanceof TTCN3Editor)) {
 			return null;
 		}
@@ -67,7 +67,7 @@ public class Utils {
 	}
 	
 	public static IFile getSelectedFileInEditor(final String refactoringName) {
-		TTCN3Editor targetEditor = getActiveEditor();
+		final TTCN3Editor targetEditor = getActiveEditor();
 		if (targetEditor == null) {
 			ErrorReporter.logError("Utils.getSelectedFileInEditor(): " +
 					"No TTCN3Editor available, during refactoring: " + refactoringName);
@@ -77,7 +77,7 @@ public class Utils {
 	}
 	
 	private static IFile extractFile(final IEditorPart editor, final String refactoringName) {
-		IEditorInput input = editor.getEditorInput();
+		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			TITANDebugConsole.getConsole().newMessageStream()
 					.println("Utils.extractFile() during refactoring " +
@@ -92,24 +92,24 @@ public class Utils {
 	 * */
 	public static void updateASTForProjectActiveInEditor(final String refactoringName) {
 		//getting editor
-		IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		TTCN3Editor editor;
 		if (editorPart == null || !(editorPart instanceof TTCN3Editor)) {
 			TITANDebugConsole.getConsole().newMessageStream()
 					.println("Utils.updateASTForProjectActiveInEditor() during refactoring " +
 					refactoringName + ": Only for TTCN3 editors!");
 			return;
-		} else {
+		} else {//TODO not needed else
 			editor = (TTCN3Editor)editorPart;
 		}
 		//getting selected file
-		IFile selFile = extractFile(editor, refactoringName);
+		final IFile selFile = extractFile(editor, refactoringName);
 		if (selFile == null) {
 			return;
 		}
 		//
-		IProject selProject = selFile.getProject();
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selProject);
+		final IProject selProject = selFile.getProject();
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selProject);
 		WorkspaceJob job = projectSourceParser.reportOutdating((IFile)selFile);
 		if (job == null) {
 			TITANDebugConsole.getConsole().newMessageStream()
@@ -123,6 +123,7 @@ public class Utils {
 			ErrorReporter.logExceptionStackTrace(e);
 			return;
 		}
+		
 		job = projectSourceParser.analyzeAll();
 		if (job == null) {
 			TITANDebugConsole.getConsole().newMessageStream()
@@ -143,7 +144,7 @@ public class Utils {
 	 * Reanalyzes the given projects.
 	 * */
 	public static void updateASTBeforeRefactoring(final Set<IProject> projsToUpdate, final String name) {
-		UpdateASTOp updateAST = new UpdateASTOp(projsToUpdate, name);
+		final UpdateASTOp updateAST = new UpdateASTOp(projsToUpdate, name);
 		final ProgressMonitorDialog pmd = new ProgressMonitorDialog(null);
 		try {
 			pmd.run(true, true, updateAST);
@@ -177,15 +178,16 @@ public class Utils {
 		if (affectedObjects == null) {
 			return;
 		}
-		Map<IProject, List<IFile>> affectedProjects = new HashMap<IProject, List<IFile>>();
+		
+		final Map<IProject, List<IFile>> affectedProjects = new HashMap<IProject, List<IFile>>();
 		for (Object o: affectedObjects) {
 			if (o instanceof IFile) {
-				IFile f = (IFile)o;
-				IProject pr = f.getProject();
+				final IFile f = (IFile)o;
+				final IProject pr = f.getProject();
 				GlobalParser.getProjectSourceParser(pr).reportOutdating(f);
-				List<IFile> fs = affectedProjects.get(pr);
+				final List<IFile> fs = affectedProjects.get(pr);
 				if (fs == null) {
-					List<IFile> newFs = new ArrayList<IFile>();
+					final List<IFile> newFs = new ArrayList<IFile>();
 					newFs.add(f);
 					affectedProjects.put(pr, newFs);
 				} else {
@@ -197,9 +199,9 @@ public class Utils {
 			}
 		}
 		for (Map.Entry<IProject, List<IFile>> e: affectedProjects.entrySet()) {
-			IProject pr = e.getKey();
-			List<IFile> fs = e.getValue();
-			ProjectSourceParser psp = GlobalParser.getProjectSourceParser(pr);
+			final IProject pr = e.getKey();
+			final List<IFile> fs = e.getValue();
+			final ProjectSourceParser psp = GlobalParser.getProjectSourceParser(pr);
 			for (IFile f: fs) {
 				psp.reportOutdating(f);
 			}
@@ -211,13 +213,14 @@ public class Utils {
 	 * Returns the projects contained in the selection object.
 	 * */
 	public static Set<IProject> findAllProjectsInSelection(final IStructuredSelection ssel) {
-		Set<IProject> projs = new HashSet<IProject>();
+		final Set<IProject> projs = new HashSet<IProject>();
 		if (ssel == null) {
 			return projs;
 		}
-		Iterator<?> it = ssel.iterator();
+		
+		final Iterator<?> it = ssel.iterator();
 		while (it.hasNext()) {
-			Object o = it.next();
+			final Object o = it.next();
 			if (!(o instanceof IResource)) {
 				continue;
 			}
@@ -225,7 +228,8 @@ public class Utils {
 				projs.add((IProject)o);
 				continue;
 			}
-			IResource res = (IResource)o;
+			
+			final IResource res = (IResource)o;
 			projs.add(res.getProject());
 		}
 		return projs;
@@ -264,8 +268,8 @@ public class Utils {
 			//update AST for each project
 			for (IProject proj: toUpdate) {
 				monitor.subTask("Waiting for semantic analysis on project " + proj.getName());
-				ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(proj);
-				WorkspaceJob job = projectSourceParser.analyzeAll();
+				final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(proj);
+				final WorkspaceJob job = projectSourceParser.analyzeAll();
 				if (job == null) {
 					TITANDebugConsole.getConsole().newMessageStream()
 							.println("Utils.updateASTOp: WorkspaceJob to analyze project could not be created for project "
@@ -331,10 +335,10 @@ public class Utils {
 			prefix = prefix + "    ";
 			System.out.print(prefix + node.getClass() + "; " + node);
 			if (node instanceof ILocateableNode) {
-				ILocateableNode ln = (ILocateableNode)node;
+				final ILocateableNode ln = (ILocateableNode)node;
 				System.out.print(" loc: " + ln.getLocation().getOffset() + "-" + ln.getLocation().getEndOffset());
 				if (node instanceof Definition) {
-					Definition d = (Definition)ln;
+					final Definition d = (Definition)ln;
 					System.out.print(", cummloc: " + d.getCumulativeDefinitionLocation().getOffset() + "-" + d.getCumulativeDefinitionLocation().getEndOffset());
 				}
 			}
@@ -357,8 +361,9 @@ public class Utils {
 		if (!(node instanceof ILocateableNode)) {
 			return "<no location info>";
 		}
-		StringBuilder sb = new StringBuilder();
-		ILocateableNode lnode = (ILocateableNode)node;
+		
+		final StringBuilder sb = new StringBuilder();
+		final ILocateableNode lnode = (ILocateableNode)node;
 		sb.append(' ').append(lnode.getLocation().getOffset()).append('-').append(lnode.getLocation().getEndOffset());
 		sb.append(" in file ").append(lnode.getLocation().getFile().getName()).append(':');
 		sb.append(lnode.getLocation().getLine()).append(' ');

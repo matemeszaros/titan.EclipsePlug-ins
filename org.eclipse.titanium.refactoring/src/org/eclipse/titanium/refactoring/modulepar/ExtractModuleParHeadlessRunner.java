@@ -62,7 +62,7 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 		final String location = args.get("location");
 		if(location!=null) {
 			try {
-				File d = new File(location);
+				final File d = new File(location);
 				if(!d.exists()) {
 				    try{
 				    	d.mkdirs();
@@ -73,7 +73,8 @@ public class ExtractModuleParHeadlessRunner implements IApplication {
 				} else if(!d.isDirectory()) {
 					throw new Exception("Provided location must be a directory.");
 				}
-				File f = new File(location,targetProjName);
+				
+				final File f = new File(location,targetProjName);
 				if(f.exists()) {
 					throw new Exception("Project folder is already exist: " + f.getAbsolutePath() );
 				}

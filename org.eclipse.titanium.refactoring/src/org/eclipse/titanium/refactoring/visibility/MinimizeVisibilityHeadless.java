@@ -27,7 +27,7 @@ public class MinimizeVisibilityHeadless {
 	public void run() {
 		final MinimizeVisibilityRefactoring refactoring = new MinimizeVisibilityRefactoring(selection);
 		try {
-			Change change = refactoring.createChange(null);
+			final Change change = refactoring.createChange(null);
 			change.perform(new NullProgressMonitor());
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);

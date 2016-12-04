@@ -26,7 +26,7 @@ public class ExtractDefinitionWizardMainPage extends WizardNewProjectCreationPag
 			return false;
 		}
 
-		String projectName = getProjectName();
+		final String projectName = getProjectName();
 		if (!projectName.matches("[a-zA-Z0-9[_-]]*")) {
 			setErrorMessage("Invalid project name");
 			return false;

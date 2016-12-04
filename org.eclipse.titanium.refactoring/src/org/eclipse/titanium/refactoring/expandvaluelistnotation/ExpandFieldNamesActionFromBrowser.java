@@ -54,18 +54,19 @@ public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implement
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
+		
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
-		Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
+		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
 		
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExpandFieldNames");
 		Activator.getDefault().pauseHandlingResourceChanges();
 		
 		//create refactoring
-		ExpandFieldNamesRefactoring refactoring = new ExpandFieldNamesRefactoring(structSelection);
+		final ExpandFieldNamesRefactoring refactoring = new ExpandFieldNamesRefactoring(structSelection);
 		//open wizard
-		ExpandFieldNamesWizard wiz = new ExpandFieldNamesWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final ExpandFieldNamesWizard wiz = new ExpandFieldNamesWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		// getting the active editor
 		TTCN3Editor targetEditor = Utils.getActiveEditor();
 		try {

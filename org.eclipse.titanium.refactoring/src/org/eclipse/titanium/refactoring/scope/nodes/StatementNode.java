@@ -74,11 +74,13 @@ public class StatementNode extends Node {
 		if (!(this.getAstNode() instanceof ILocateableNode)) {
 			return false;
 		}
+		
 		if (!(sn.getAstNode() instanceof ILocateableNode)) {
 			return false;
 		}
-		Location loc0 = ((ILocateableNode)this.getAstNode()).getLocation();
-		Location loc1 = ((ILocateableNode)sn.getAstNode()).getLocation();
+		
+		final Location loc0 = ((ILocateableNode)this.getAstNode()).getLocation();
+		final Location loc1 = ((ILocateableNode)sn.getAstNode()).getLocation();
 		return loc0.getFile().equals(loc1.getFile()) &&
 				loc0.getOffset() == loc1.getOffset() &&
 				loc0.getEndOffset() == loc1.getEndOffset();
@@ -134,7 +136,7 @@ public class StatementNode extends Node {
 			sn.multiDeclaration.addDeclarationStatement(this);
 			this.setMultiDeclaration(sn.multiDeclaration);
 		} else {
-			MultiDeclaration md = new MultiDeclaration();
+			final MultiDeclaration md = new MultiDeclaration();
 			md.addDeclarationStatement(this);
 			md.addDeclarationStatement(sn);
 			this.setMultiDeclaration(md);
@@ -204,9 +206,9 @@ public class StatementNode extends Node {
 		if (!containedNode.isStmtAncestorOfThis(this)) {
 			return null;
 		}
-		ListIterator<BlockNode> it = blocks.listIterator();
+		final ListIterator<BlockNode> it = blocks.listIterator();
 		while (it.hasNext()) {
-			BlockNode currB = it.next();
+			final BlockNode currB = it.next();
 			if (containedNode.isBlockAncestorOfThis(currB)) {
 				return currB;
 			}
@@ -224,7 +226,8 @@ public class StatementNode extends Node {
 		if (this.equals(other)) {return 0;}
 		if (this.isStmtAncestorOfThis(other)) {return 0;}
 		if (other.isStmtAncestorOfThis(this)) {return 0;}
-		LinkedList<Integer> pos0 = new LinkedList<Integer>();
+
+		final LinkedList<Integer> pos0 = new LinkedList<Integer>();
 		StatementNode currSt = this;
 		BlockNode currBlock = getParent();
 		while (currBlock != null) {
@@ -238,7 +241,7 @@ public class StatementNode extends Node {
 			}
 		}
 		//
-		LinkedList<Integer> pos1 = new LinkedList<Integer>();
+		final LinkedList<Integer> pos1 = new LinkedList<Integer>();
 		currSt = other;
 		currBlock = other.getParent();
 		while (currBlock != null) {
@@ -252,11 +255,11 @@ public class StatementNode extends Node {
 			}
 		}
 		//compare lists
-		ListIterator<Integer> it0 = pos0.listIterator();
-		ListIterator<Integer> it1 = pos1.listIterator();
+		final ListIterator<Integer> it0 = pos0.listIterator();
+		final ListIterator<Integer> it1 = pos1.listIterator();
 		while (it0.hasNext() && it1.hasNext()) {
-			int ind0 = it0.next();
-			int ind1 = it1.next();
+			final int ind0 = it0.next();
+			final int ind1 = it1.next();
 			if (ind0 != ind1) {
 				return (ind0 < ind1) ? -1 : ((ind0 == ind1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 			}
@@ -268,10 +271,10 @@ public class StatementNode extends Node {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("SN(").append(astNode.toString()).append("), loc: ");
 		if (astNode instanceof ILocateableNode) {
-			Location loc = ((ILocateableNode)astNode).getLocation();
+			final Location loc = ((ILocateableNode)astNode).getLocation();
 			sb.append(loc.getOffset()).append('-').append(loc.getEndOffset()).append(';');
 		} else {
 			sb.append("<none>;");
@@ -292,8 +295,8 @@ public class StatementNode extends Node {
 	}
 	
 	public String toStringRecursive(final boolean recursive, final int prefixLen) {
-		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
-		StringBuilder sb = new StringBuilder();
+		final String prefix = new String(new char[prefixLen]).replace('\0', ' ');
+		final StringBuilder sb = new StringBuilder();
 		sb.append(prefix).append("SN: ").append(toString()).append('\n');
 		if (recursive) {
 			sb.append(prefix).append("  blocks: ").append('\n');

@@ -76,8 +76,9 @@ class ChangeCreator {
 		if (file == null) {
 			return;
 		}
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(file.getProject());
-		Module module = sourceParser.containedModule(file);
+		
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(file.getProject());
+		final Module module = sourceParser.containedModule(file);
 		if(module == null) {
 			return;
 		}
@@ -91,12 +92,12 @@ class ChangeCreator {
 	}
 	
 	private void performOnWholeModule(final Module module) {
-		ContextFinder vis = new ContextFinder(settings);
+		final ContextFinder vis = new ContextFinder(settings);
 		module.accept(vis);
-		Map<Log_Statement, Context> res = vis.getResult();
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final Map<Log_Statement, Context> res = vis.getResult();
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		for (Map.Entry<Log_Statement, Context> e: res.entrySet()) {
-			TextEdit edit = createTextEdit(e.getKey(), e.getValue());
+			final TextEdit edit = createTextEdit(e.getKey(), e.getValue());
 			if (edit != null) {
 				rootEdit.addChild(edit);
 			}
@@ -108,14 +109,14 @@ class ChangeCreator {
 		}
 	}
 	private void performOnSelectionOnly(final Module module) {
-		Location selLoc = new Location(file, textSelection.getStartLine(),
+		final Location selLoc = new Location(file, textSelection.getStartLine(),
 				textSelection.getOffset(), textSelection.getOffset()+textSelection.getLength());
-		SelectionVisitor vis = new SelectionVisitor(selLoc);
+		final SelectionVisitor vis = new SelectionVisitor(selLoc);
 		module.accept(vis);
-		Map<Log_Statement, Context> res = vis.getResult();
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final Map<Log_Statement, Context> res = vis.getResult();
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		for (Map.Entry<Log_Statement, Context> e: res.entrySet()) {
-			TextEdit edit = createTextEdit(e.getKey(), e.getValue());
+			final TextEdit edit = createTextEdit(e.getKey(), e.getValue());
 			if (edit != null) {
 				rootEdit.addChild(edit);
 			}
@@ -129,7 +130,7 @@ class ChangeCreator {
 	
 	private TextEdit createTextEdit(final Log_Statement toEdit, final Context toAdd) {
 		//get insert location
-		LogInsertLocationFinder vis = new LogInsertLocationFinder();
+		final LogInsertLocationFinder vis = new LogInsertLocationFinder();
 		toEdit.accept(vis);
 		int insertOffset = vis.calculateEndOffset();
 		if (insertOffset < 0) {
@@ -137,11 +138,11 @@ class ChangeCreator {
 			insertOffset = toEdit.getLocation().getEndOffset()-1;
 		}
 		//find variable names that are already present in the log statement
-		Set<String> varsAlreadyPresent;
-		Context bottomContext = toAdd.getBottom();
+		final Set<String> varsAlreadyPresent;
+		final Context bottomContext = toAdd.getBottom();
 		if (bottomContext.getNode() instanceof Log_Statement) {
-			LoggedVariableFinder vis2 = new LoggedVariableFinder();
-			Log_Statement logst = (Log_Statement)bottomContext.getNode();
+			final LoggedVariableFinder vis2 = new LoggedVariableFinder();
+			final Log_Statement logst = (Log_Statement)bottomContext.getNode();
 			logst.accept(vis2);
 			varsAlreadyPresent = vis2.getVarsAlreadyPresent();
 		} else {
@@ -149,13 +150,13 @@ class ChangeCreator {
 		}
 		//create inserted text
 		toAdd.process();
-		List<String> contextInfos = toAdd.createLogParts(varsAlreadyPresent);
-		int len = Math.min(contextInfos.size(), toAdd.getVarCountLimitOption());
+		final List<String> contextInfos = toAdd.createLogParts(varsAlreadyPresent);
+		final int len = Math.min(contextInfos.size(), toAdd.getVarCountLimitOption());
 		if (len == 0) {
 			return null;
 		}
 		
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (int i=0;i<len;i++) {
 			sb.append(contextInfos.get(i));
 		}
@@ -181,7 +182,7 @@ class ChangeCreator {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof ILocateableNode) {
-				Location loc = ((ILocateableNode)node).getLocation();
+				final Location loc = ((ILocateableNode)node).getLocation();
 				if (loc.getFile() == null) {
 					return V_SKIP;
 				}

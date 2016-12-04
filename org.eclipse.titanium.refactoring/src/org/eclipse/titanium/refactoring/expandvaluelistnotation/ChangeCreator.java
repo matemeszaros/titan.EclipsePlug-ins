@@ -63,37 +63,38 @@ class ChangeCreator {
 		if (toVisit == null) {
 			return null;
 		}
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
-		Module module = sourceParser.containedModule(toVisit);
+		
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
+		final Module module = sourceParser.containedModule(toVisit);
 		if(module == null) {
 			return null;
 		}
 		//find all locations in the module that should be edited
-		DefinitionVisitor vis = new DefinitionVisitor();
+		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
-		NavigableSet<ILocateableNode> nodes = vis.getLocations();
+		final NavigableSet<ILocateableNode> nodes = vis.getLocations();
 		
 		if (nodes.isEmpty()) {
 			return null;
 		}
 
 		//create a change for each edit location
-		TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 
 		for (ILocateableNode node : nodes) {
-			SequenceOf_Value seqOfValues = (SequenceOf_Value) node;
+			final SequenceOf_Value seqOfValues = (SequenceOf_Value) node;
 			if (seqOfValues.getMyGovernor() == null) {
 				continue;
 			}
 
-			Sequence_Value converted = Sequence_Value.convert(CompilationTimeStamp.getBaseTimestamp(), seqOfValues);
+			final Sequence_Value converted = Sequence_Value.convert(CompilationTimeStamp.getBaseTimestamp(), seqOfValues);
 			if (seqOfValues.getIsErroneous(CompilationTimeStamp.getBaseTimestamp())) {
 				continue;
 			}
 			for (int i = 0; i < converted.getNofComponents(); ++i) {
-				NamedValue namedValue = converted.getSeqValueByIndex(i);
+				final NamedValue namedValue = converted.getSeqValueByIndex(i);
 				if (namedValue == null) { // record with unnamed fields
 					break;
 				}
@@ -146,13 +147,14 @@ class ChangeCreator {
 
 		@Override
 		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
-			IResource f0 = arg0.getLocation().getFile();
-			IResource f1 = arg1.getLocation().getFile();
+			final IResource f0 = arg0.getLocation().getFile();
+			final IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {
 				return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 			}
-			int o0 = arg0.getLocation().getOffset();
-			int o1 = arg1.getLocation().getOffset();
+			
+			final int o0 = arg0.getLocation().getOffset();
+			final int o1 = arg1.getLocation().getOffset();
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
 		

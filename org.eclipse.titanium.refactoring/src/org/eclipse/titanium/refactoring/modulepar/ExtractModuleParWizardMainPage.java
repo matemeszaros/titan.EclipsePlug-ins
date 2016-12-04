@@ -37,13 +37,14 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 	@Override
 	public void createControl(final Composite parent) {
 		super.createControl(parent);
-		Control control = getControl();
+		final Control control = getControl();
 		if (!(control instanceof Composite)) {
 			ErrorReporter.logError("ExtractModuleParWizardMainPage: Control is not of Composite type. ");
 			return;
 		}
-		Composite composite = (Composite)control;
-		Button chb_saveModulePars = new Button(composite, SWT.CHECK);
+		
+		final Composite composite = (Composite)control;
+		final Button chb_saveModulePars = new Button(composite, SWT.CHECK);
 		chb_saveModulePars.setText("Save a list of the module parameters into a text file");
 		chb_saveModulePars.addSelectionListener(new CHBSelectionListener());
 	}
@@ -54,7 +55,7 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 			return false;
 		}
 
-		String projectName = getProjectName();
+		final String projectName = getProjectName();
 		if (!projectName.matches("[a-zA-Z0-9[_-]]*")) {
 			setErrorMessage("Invalid project name");
 			return false;
@@ -75,7 +76,8 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
-			Button checkBox = (Button)e.getSource();
+			
+			final Button checkBox = (Button)e.getSource();
 			saveModuleParsOption = checkBox.getSelection();
 		}
 

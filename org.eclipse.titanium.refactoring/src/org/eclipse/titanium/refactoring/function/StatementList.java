@@ -82,7 +82,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 	}
 	
 	public String createDebugInfo() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("ExtractToFunctionRefactoring->StatementList debug info:");
 		sb.append("\n  Loc: ");
 		if (location == null) {

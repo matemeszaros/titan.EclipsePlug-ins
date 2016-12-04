@@ -45,7 +45,7 @@ public class MultiDeclaration {
 		return !isFirstStatement(toTest) && !isLastStatement(toTest); 
 	}
 	public boolean isAllStatementsMoved() {
-		Iterator<StatementNode> it = declStmts.iterator();
+		final Iterator<StatementNode> it = declStmts.iterator();
 		while (it.hasNext()) {
 			if (!it.next().isMoved()) {
 				return false;
@@ -73,13 +73,13 @@ public class MultiDeclaration {
 						"Invalid StatementNode ASTNode type: " + arg0.getAstNode() +
 						" OR " + arg1.getAstNode());
 			}
-			Definition_Statement ds0 = (Definition_Statement)arg0.getAstNode();
-			Definition_Statement ds1 = (Definition_Statement)arg1.getAstNode();
-			Location loc0 = ds0.getDefinition().getLocation();
-			Location loc1 = ds1.getDefinition().getLocation();
-			int o0 = loc0.getOffset();
-			int o1 = loc1.getOffset();
-			int result = (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
+			final Definition_Statement ds0 = (Definition_Statement)arg0.getAstNode();
+			final Definition_Statement ds1 = (Definition_Statement)arg1.getAstNode();
+			final Location loc0 = ds0.getDefinition().getLocation();
+			final Location loc1 = ds1.getDefinition().getLocation();
+			final int o0 = loc0.getOffset();
+			final int o1 = loc1.getOffset();
+			final int result = (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 			if (result == 0 && ds0 != ds1) {
 				ErrorReporter.logError("MultiDeclarationComparator: " +
 						"Overlapping Variable declarations at: " + loc0.getOffset() + "-" + loc0.getEndOffset() + " in file: " + loc0.getFile());

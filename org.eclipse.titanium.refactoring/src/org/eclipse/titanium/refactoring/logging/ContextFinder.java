@@ -58,7 +58,7 @@ class ContextFinder extends ASTVisitor {
 
 	/** Iteration order when creating contexts is: from bottom (log statement) to root (module). */
 	protected Context createContextChain() {
-		Iterator<IVisitableNode> it = ancestorStack.iterator();
+		final Iterator<IVisitableNode> it = ancestorStack.iterator();
 		Context prev = null;
 		Context curr = null;
 		if (it.hasNext()) {
@@ -81,7 +81,7 @@ class ContextFinder extends ASTVisitor {
 			if (settings.getSetting(Settings.SETTING_MODIFY_LOG_STATEMENTS)) {
 				result.put((Log_Statement)node, createContextChain());
 			} else {
-				LogStatementVisitor vis = new LogStatementVisitor();
+				final LogStatementVisitor vis = new LogStatementVisitor();
 				node.accept(vis);
 				if (!vis.getResult()) {
 					result.put((Log_Statement)node, createContextChain());

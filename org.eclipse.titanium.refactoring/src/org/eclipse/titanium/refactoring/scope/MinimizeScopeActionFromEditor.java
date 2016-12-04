@@ -68,7 +68,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		Activator.getDefault().pauseHandlingResourceChanges();
 
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
@@ -78,20 +78,21 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		if (selection == null) {
 			return null;
 		}
-		IResource selectedRes = selection.getLocation().getFile();
+		
+		final IResource selectedRes = selection.getLocation().getFile();
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("MinimizeScopeActionFromEditor.execute(): Selected resource `"
 							+ selectedRes.getName() + "' is not a file.");
 			return null;
 		}
-		IFile selectedFile = (IFile)selectedRes;
+		final IFile selectedFile = (IFile)selectedRes;
 
 		//
-		MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(selection, null);
+		final MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(selection, null);
 
 		//open wizard
-		MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
@@ -104,7 +105,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
-		IProject project = selectedFile.getProject();
+		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
 		
@@ -114,7 +115,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 
 	private Definition findSelection() {
 		//getting the active editor
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		TTCN3Editor targetEditor;
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return null;
@@ -123,24 +124,25 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		}
 		final IStatusLineManager statusLineManager = targetEditor.getEditorSite().getActionBars().getStatusLineManager();
 		//getting current selection
-		ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-		TextSelection textSelection = extractSelection(selectionService.getSelection());
+		final ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+		final TextSelection textSelection = extractSelection(selectionService.getSelection());
 		
 		//iterating through part of the module
-		IResource selectedRes = extractResource(targetEditor);
+		final IResource selectedRes = extractResource(targetEditor);
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("SelectionFinder.findSelection(): Selected resource `" + selectedRes.getName() + "' is not a file.");
 			return null;
 		}
-		IFile selectedFile = (IFile)selectedRes;
+		
+		final IFile selectedFile = (IFile)selectedRes;
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selectedFile.getProject());
 		final Module selectedModule = projectSourceParser.containedModule(selectedFile);
 
 		//getting current selection nodes
-		int selectionOffset = textSelection.getOffset() + textSelection.getLength();
-		SelectionFinderVisitor selVisitor = new SelectionFinderVisitor(selectionOffset);
+		final int selectionOffset = textSelection.getOffset() + textSelection.getLength();
+		final SelectionFinderVisitor selVisitor = new SelectionFinderVisitor(selectionOffset);
 		selectedModule.accept(selVisitor);
-		Definition selectedDef = selVisitor.getSelection();
+		final Definition selectedDef = selVisitor.getSelection();
 		if (selectedDef == null) {
 			ErrorReporter.logWarning("SelectionFinder.findSelection(): Visitor did not find a definition in the selection.");
 			statusLineManager.setErrorMessage(ERR_MSG_NO_SELECTION);
@@ -158,7 +160,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		return (TextSelection)sel;
 	}
 	private IResource extractResource(final IEditorPart editor) {
-		IEditorInput input = editor.getEditorInput();
+		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			return null;
 		}
@@ -207,8 +209,8 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 				return V_CONTINUE;
 			}
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
-				Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Reference ref = (Reference)node;
+				final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				if (as instanceof Definition) {
 					if (isGoodType(as)) {
 						def = (Definition)as;

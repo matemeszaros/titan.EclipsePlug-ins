@@ -38,9 +38,9 @@ public class ExtractToFunctionWizard extends RefactoringWizard implements IExecu
 	@Override
 	protected void addUserInputPages() {
 		setDefaultPageTitle(WIZ_WINDOWTITLE);
-		ExtractToFunctionWizardFuncNamePage funcNamePage = new ExtractToFunctionWizardFuncNamePage(WIZ_WINDOWTITLE);
+		final ExtractToFunctionWizardFuncNamePage funcNamePage = new ExtractToFunctionWizardFuncNamePage(WIZ_WINDOWTITLE);
 		addPage(funcNamePage);
-		ExtractToFunctionWizardParamsPage paramsPage = new ExtractToFunctionWizardParamsPage(WIZ_WINDOWTITLE, refactoring.getWizardModelProvider());
+		final ExtractToFunctionWizardParamsPage paramsPage = new ExtractToFunctionWizardParamsPage(WIZ_WINDOWTITLE, refactoring.getWizardModelProvider());
 		addPage(paramsPage);
 	}
 }

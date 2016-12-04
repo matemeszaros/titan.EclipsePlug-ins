@@ -57,23 +57,23 @@ public class MinimizeVisibilityActionFromBrowser extends AbstractHandler impleme
 
 	private void performMinimizeVisibility() {
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		//find selection
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
-		Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
+		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
 		
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "MinimizeVisibility");
 		Activator.getDefault().pauseHandlingResourceChanges();
 		
 		//create refactoring
-		MinimizeVisibilityRefactoring refactoring = new MinimizeVisibilityRefactoring(structSelection);
+		final MinimizeVisibilityRefactoring refactoring = new MinimizeVisibilityRefactoring(structSelection);
 		//open wizard
-		MinimizeVisibilityWizard wiz = new MinimizeVisibilityWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final MinimizeVisibilityWizard wiz = new MinimizeVisibilityWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {

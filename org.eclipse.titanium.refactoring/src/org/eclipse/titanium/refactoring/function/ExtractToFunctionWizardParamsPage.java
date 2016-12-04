@@ -42,14 +42,14 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 
 	@Override
 	public void createControl(final Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+		final Composite composite = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(composite);
 		setControl(composite);
 
-		GridLayout layout = new GridLayout(1, false);
+		final GridLayout layout = new GridLayout(1, false);
 		composite.setLayout(layout);
 
-		Label searchLabel = new Label(composite, SWT.NONE);
+		final Label searchLabel = new Label(composite, SWT.NONE);
 		searchLabel.setText("Specify new function parameter names: ");
 
 		tableViewer = new TableViewer(composite, SWT.MULTI | SWT.V_SCROLL
@@ -63,7 +63,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setInput(modelProvider.getItems());
 
-		GridData gridData = new GridData();
+		final GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
@@ -82,7 +82,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(final Object element) {
-				ParamTableItem p = (ParamTableItem) element;
+				final ParamTableItem p = (ParamTableItem) element;
 				return p.getPassType();
 			}
 		});
@@ -93,7 +93,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 
 			@Override
 			public String getText(final Object element) {
-				ParamTableItem p = (ParamTableItem) element;
+				final ParamTableItem p = (ParamTableItem) element;
 				return p.getType();
 			}
 		});
@@ -104,7 +104,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(final Object element) {
-				ParamTableItem p = (ParamTableItem) element;
+				final ParamTableItem p = (ParamTableItem) element;
 				return p.getName();
 			}
 		});
@@ -136,7 +136,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 
 		@Override
 		protected CellEditor getCellEditor(final Object element) {
-			ParamTableItem pti = (ParamTableItem) element;
+			final ParamTableItem pti = (ParamTableItem) element;
 			cellEditor.setValue(pti.getName());
 			return cellEditor;
 		}
@@ -148,13 +148,13 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 
 		@Override
 		protected Object getValue(final Object element) {
-			ParamTableItem pti = (ParamTableItem) element;
+			final ParamTableItem pti = (ParamTableItem) element;
 			return pti.getName();
 		}
 
 		@Override
 		protected void setValue(final Object element, final Object value) {
-			ParamTableItem pti = (ParamTableItem) element;
+			final ParamTableItem pti = (ParamTableItem) element;
 			if (!(value instanceof String)) {
 				return;
 			}

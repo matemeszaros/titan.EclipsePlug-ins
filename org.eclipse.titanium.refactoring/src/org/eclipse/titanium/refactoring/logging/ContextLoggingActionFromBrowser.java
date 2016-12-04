@@ -60,20 +60,21 @@ public class ContextLoggingActionFromBrowser extends AbstractHandler implements 
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
+		
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
-		Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
+		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
 		
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ContextLogging");
 		Activator.getDefault().pauseHandlingResourceChanges();
 		
 		//create refactoring
-		ContextLoggingRefactoring refactoring = new ContextLoggingRefactoring(structSelection, null);
+		final ContextLoggingRefactoring refactoring = new ContextLoggingRefactoring(structSelection, null);
 		//open wizard
-		ContextLoggingWizard wiz = new ContextLoggingWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final ContextLoggingWizard wiz = new ContextLoggingWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {

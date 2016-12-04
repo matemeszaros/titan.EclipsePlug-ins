@@ -35,35 +35,35 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 
 	@Override
 	public void createControl(final Composite parent) {
-		Composite top = new Composite(parent, SWT.NONE);
+		final Composite top = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(top);
 		setControl(top);
 		top.setLayout(new GridLayout());
-		Label label = new Label(top, SWT.NONE);
+		final Label label = new Label(top, SWT.NONE);
 		label.setText(LABEL_PAGECONTENT);
-		Button chb_option1 = new Button(top, SWT.CHECK);
+		final Button chb_option1 = new Button(top, SWT.CHECK);
 		chb_option1.setText("Log function parameters");
 		chb_option1.setSelection(settings.getSetting(Settings.SETTING_LOG_FUNCPAR));
 		chb_option1.addSelectionListener(new CHBSelectionListener(Settings.SETTING_LOG_FUNCPAR));
-		Button chb_option2 = new Button(top, SWT.CHECK);
+		final Button chb_option2 = new Button(top, SWT.CHECK);
 		chb_option2.setText("Log variables in if conditions");
 		chb_option2.setSelection(settings.getSetting(Settings.SETTING_LOG_IF));
 		chb_option2.addSelectionListener(new CHBSelectionListener(Settings.SETTING_LOG_IF));
-		Button chb_option3 = new Button(top, SWT.CHECK);
+		final Button chb_option3 = new Button(top, SWT.CHECK);
 		chb_option3.setText("Log local variables before log statement");
 		chb_option3.setSelection(settings.getSetting(Settings.SETTING_LOG_LOCAL_VARS));
 		chb_option3.addSelectionListener(new CHBSelectionListener(Settings.SETTING_LOG_LOCAL_VARS));
-		Button chb_option4 = new Button(top, SWT.CHECK);
+		final Button chb_option4 = new Button(top, SWT.CHECK);
 		chb_option4.setText("Only log local variables in the parent block of the log statement");
 		chb_option4.setSelection(settings.getSetting(Settings.SETTING_LOG_LOCAL_VARS_PARENT_BLOCK_ONLY));
 		chb_option4.addSelectionListener(new CHBSelectionListener(Settings.SETTING_LOG_LOCAL_VARS_PARENT_BLOCK_ONLY));
 		chb_option4.setEnabled(settings.getSetting(Settings.SETTING_LOG_LOCAL_VARS));
 		chb_option3.addSelectionListener(new CHBSelectionListenerDisabler(chb_option4));
-		Button chb_option5 = new Button(top, SWT.CHECK);
+		final Button chb_option5 = new Button(top, SWT.CHECK);
 		chb_option5.setText("Log loop variables");
 		chb_option5.setSelection(settings.getSetting(Settings.SETTING_LOG_LOOP));
 		chb_option5.addSelectionListener(new CHBSelectionListener(Settings.SETTING_LOG_LOOP));
-		Button chb_option6 = new Button(top, SWT.CHECK);
+		final Button chb_option6 = new Button(top, SWT.CHECK);
 		chb_option6.setText("Modify log statements which already log variables");
 		chb_option6.setSelection(settings.getSetting(Settings.SETTING_MODIFY_LOG_STATEMENTS));
 		chb_option6.addSelectionListener(new CHBSelectionListener(Settings.SETTING_MODIFY_LOG_STATEMENTS));
@@ -90,7 +90,8 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
-			Button checkBox = (Button)e.getSource();
+			
+			final Button checkBox = (Button)e.getSource();
 			settings.setSetting(setting, checkBox.getSelection());
 		}
 
@@ -118,7 +119,8 @@ public class ContextLoggingWizardOptionsPage extends UserInputWizardPage {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
-			Button source = (Button)e.getSource();
+			
+			final Button source = (Button)e.getSource();
 			toDisable.setEnabled(source.getSelection());
 		}
 

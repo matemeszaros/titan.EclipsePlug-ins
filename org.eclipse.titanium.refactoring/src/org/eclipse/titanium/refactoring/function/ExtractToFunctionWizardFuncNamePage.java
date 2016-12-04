@@ -37,11 +37,11 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 
 	@Override
 	public void createControl(final Composite parent) {
-		Composite top = new Composite(parent, SWT.NONE);
+		final Composite top = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(top);
 		setControl(top);
 		top.setLayout(new GridLayout(2, false));
-		Label label = new Label(top, SWT.NONE);
+		final Label label = new Label(top, SWT.NONE);
 		label.setText(LABEL_NEWFUNCNAME);
 		newFuncName = new Text(top, SWT.BORDER);
 		newFuncName.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -50,7 +50,7 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 			@Override
 			public void modifyText(final ModifyEvent e) {
 				if (checkNewNameValidity()) {
-					StringBuilder newFuncNameSB = ((ExtractToFunctionRefactoring)getRefactoring()).getNewFunctionName();
+					final StringBuilder newFuncNameSB = ((ExtractToFunctionRefactoring)getRefactoring()).getNewFunctionName();
 					newFuncNameSB.setLength(0);
 					newFuncNameSB.append(newFuncName.getText());
 				}
@@ -64,7 +64,7 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 	
 	
 	private boolean checkNewNameValidity() {
-		String newName = newFuncName.getText();
+		final String newName = newFuncName.getText();
 		if (newName.length() == 0) {
 			setErrorMessage(null);
 			setPageComplete(false);

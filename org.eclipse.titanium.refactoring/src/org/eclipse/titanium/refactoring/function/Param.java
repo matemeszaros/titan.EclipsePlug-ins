@@ -69,7 +69,7 @@ class Param {
 	 * function's formal parameter list
 	 */
 	public List<StringBuilder> createParamText(final boolean addCommaBefore) {
-		List<StringBuilder> ret = new ArrayList<StringBuilder>();
+		final List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
 		}
@@ -101,7 +101,7 @@ class Param {
 	 * function call statement's actual parameter list.
 	 * */
 	public List<StringBuilder> createParamCallText(final boolean addCommaBefore) {
-		List<StringBuilder> ret = new ArrayList<StringBuilder>();
+		final List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
 		}
@@ -113,7 +113,7 @@ class Param {
 	}
 
 	public String createDebugInfo() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("Param {");
 		sb.append("\n    def: ").append(
 				def == null ? "null" : def.getIdentifier());
@@ -185,11 +185,13 @@ class Param {
 		if (type == null) {
 			return "null";
 		}
-		String tname = type.getTypename();
+		
+		final String tname = type.getTypename();
 		if (tname == null) {
 			return "null";
 		}
-		int ind = tname.lastIndexOf('.');
+		
+		final int ind = tname.lastIndexOf('.');
 		return (ind == -1 || ind >= tname.length()) ? tname : tname
 				.substring(ind + 1);
 	}
@@ -202,7 +204,8 @@ class Param {
 		if (!(arg0 instanceof Param)) {
 			return false;
 		}
-		Param o = (Param) arg0;
+		
+		final Param o = (Param) arg0;
 		return def.equals(o.def);
 	}
 

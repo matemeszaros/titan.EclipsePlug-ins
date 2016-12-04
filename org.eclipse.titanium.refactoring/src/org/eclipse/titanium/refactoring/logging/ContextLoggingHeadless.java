@@ -52,7 +52,7 @@ public class ContextLoggingHeadless {
 			refactoring = new ContextLoggingRefactoring(selectedFile, (ITextSelection)selection, settings);
 		}
 		try {
-			Change change = refactoring.createChange(null);
+			final Change change = refactoring.createChange(null);
 			change.perform(new NullProgressMonitor());
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);

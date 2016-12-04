@@ -26,7 +26,7 @@ public class LazyficationHeadless {
 	public void run() {
 		final LazyficationRefactoring refactoring = new LazyficationRefactoring(selection);
 		try {
-			Change change = refactoring.createChange(null);
+			final Change change = refactoring.createChange(null);
 			change.perform(new NullProgressMonitor());
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);

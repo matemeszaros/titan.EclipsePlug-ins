@@ -126,7 +126,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	@Override
 	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
+		final RefactoringStatus result = new RefactoringStatus();
 		ListIterator<RefactoringStatusEntry> it = selectionFinder.getWarnings().listIterator();
 		while (it.hasNext()) {
 			result.addEntry(it.next());
@@ -147,12 +147,12 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 		createFunctionText();
 		createFunctionCallText();
 		//
-		TextFileChange tfc = new TextFileChange(selectionFinder.getSelectedFile().getName(), selectionFinder.getSelectedFile());
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(selectionFinder.getSelectedFile().getName(), selectionFinder.getSelectedFile());
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 		//replace selection with function call & new declarations
-		int offset = selectionFinder.getSelectedStatements().getLocation().getOffset();
-		int len = selectionFinder.getSelectedStatements().getLocation().getEndOffset()-offset;
+		final int offset = selectionFinder.getSelectedStatements().getLocation().getOffset();
+		final int len = selectionFinder.getSelectedStatements().getLocation().getEndOffset()-offset;
 		rootEdit.addChild(new ReplaceEdit(offset, len, functionCallTextReady));
 		//add new function after the one in which the selection is
 		if (parentFunc != null && selectionFinder.getInsertLoc() >= 0) {
@@ -189,7 +189,7 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	}
 	
 	public WorkspaceJob createFunction() {
-		WorkspaceJob job = new WorkspaceJob("ExtractToFunction: creating new function text") {
+		final WorkspaceJob job = new WorkspaceJob("ExtractToFunction: creating new function text") {
 			
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
@@ -253,13 +253,14 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 			functionTextReady = null;
 			return;
 		}
-		StringBuilder ret = new StringBuilder();
+		
+		final StringBuilder ret = new StringBuilder();
 		for (StringBuilder sb: functionText) {
 			ret.append(sb);
 		}
 		functionTextReady = ret.toString();
 		if (DEBUG_MESSAGES_ON) {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			sb.append("ExtractToFunctionRefactoring->function body text debug info: >>>\n");
 			sb.append(functionTextReady);
 			sb.append("\n<<<");
@@ -271,13 +272,14 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 			functionCallTextReady = null;
 			return;
 		}
-		StringBuilder ret = new StringBuilder();
+		
+		final StringBuilder ret = new StringBuilder();
 		for (StringBuilder sb: functionCallText) {
 			ret.append(sb);
 		}
 		functionCallTextReady = ret.toString();
 		if (DEBUG_MESSAGES_ON) {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			sb.append("ExtractToFunctionRefactoring->function call text debug info: >>>\n");
 			sb.append(functionCallTextReady);
 			sb.append("\n<<<");

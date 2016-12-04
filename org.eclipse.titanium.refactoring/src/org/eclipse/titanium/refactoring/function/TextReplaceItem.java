@@ -93,7 +93,8 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		if (end > source.length()) {
 			end = source.length();
 		}
-		int lastInd = end-1;
+		
+		final int lastInd = end-1;
 		if (lastInd >= 0 && source.charAt(lastInd) == SEMICOLON) {
 			return end;
 		}
@@ -165,8 +166,8 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 			return createText();
 		}
 		//split definition and only return the declaration part
-		StringBuilder sb = new StringBuilder();
-		int end = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
+		final StringBuilder sb = new StringBuilder();
+		final int end = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
 		sb.append(source.substring(startOffset, end));
 		return sb;
 	}
@@ -174,7 +175,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	 * @return if exists, returns the initialization part of a definition statement (<code>def</code>)
 	 */
 	public List<StringBuilder> createInitOnlyText() {
-		List<StringBuilder> ret = new ArrayList<StringBuilder>();
+		final List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		//empty
 		if (ref || def instanceof Def_Timer) {
 			ret.add(new StringBuilder());
@@ -185,9 +186,9 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 			return ret;
 		}
 		//split definition and only return the initialization part
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		ret.add(param.getName());
-		int idEnd = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
+		final int idEnd = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
 		sb.append(source.substring(idEnd, endOffset));
 		ret.add(sb);
 		return ret;
@@ -206,15 +207,17 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		if (arg1 == null) {
 			return 1;
 		}
-		IResource f0 = arg0.getLocation().getFile();
-		IResource f1 = arg1.getLocation().getFile();
+		
+		final IResource f0 = arg0.getLocation().getFile();
+		final IResource f1 = arg1.getLocation().getFile();
 		if (!f0.equals(f1)) {
 			ErrorReporter.logError("TextReplaceItem::compare(): Files differ! ");
 			return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 		}
+		
 		int o0 = arg0.getLocation().getOffset();
 		int o1 = arg1.getLocation().getOffset();
-		int comp1 = (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
+		final int comp1 = (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		if (comp1 != 0) {
 			return comp1;
 		}

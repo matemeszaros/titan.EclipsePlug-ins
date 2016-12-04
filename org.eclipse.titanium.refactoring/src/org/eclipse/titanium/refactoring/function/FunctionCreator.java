@@ -107,7 +107,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	 */
 	@Override
 	public List<ParamTableItem> getItems() {
-		List<ParamTableItem> items = new LinkedList<ParamTableItem>();
+		final List<ParamTableItem> items = new LinkedList<ParamTableItem>();
 		if (params == null) {
 			return items;
 		}
@@ -128,12 +128,12 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	 * @return a set in which the TextReplaceItems (parameter occurences) are sorted by their location
 	 */
 	private SortedSet<TextReplaceItem> createSortedTextReplaceItemSet(final String sourceText, final int sourceOffset) {
-		SortedSet<TextReplaceItem> hitSet = new TreeSet<TextReplaceItem>();
+		final SortedSet<TextReplaceItem> hitSet = new TreeSet<TextReplaceItem>();
 		if (params == null) {
 			return hitSet;
 		}
 		for (Param p: params) {
-			List<ISubReference> srs = p.getRefs();
+			final List<ISubReference> srs = p.getRefs();
 			for (ISubReference isr: srs) {
 				hitSet.add(new TextReplaceItem(isr, p, sourceText, sourceOffset));
 			}
@@ -149,7 +149,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	 * Call after the user specified param and func names in the wizard
 	 */
 	private void createFunctionText() {
-		List<StringBuilder> declarationsBeforeFunc = new ArrayList<StringBuilder>();
+		final List<StringBuilder> declarationsBeforeFunc = new ArrayList<StringBuilder>();
 		if (params == null) {
 			ErrorReporter.logError("FunctionCreator.createFunctionText(): 'params' is null! ");
 			return;
@@ -165,13 +165,13 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		functionText.add(newFuncName);
 		//function params
 		functionText.add(new StringBuilder(FUNCTION_TEXT_PARAMS_START));
-		ListIterator<Param> it = params.listIterator();
+		final ListIterator<Param> it = params.listIterator();
 		if (it.hasNext()) {
-			Param first = it.next();
+			final Param first = it.next();
 			functionText.addAll(first.createParamText(false));
 		}
 		while (it.hasNext()) {
-			Param curr = it.next();
+			final Param curr = it.next();
 			functionText.addAll(curr.createParamText(true));
 		}
 		functionText.add(new StringBuilder(FUNCTION_TEXT_PARAMS_END));
@@ -198,27 +198,28 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	}
 	
 	private List<StringBuilder> createFunctionBody(final List<StringBuilder> declarationsBeforeFunc) {
-		List<StringBuilder> body = new ArrayList<StringBuilder>();
+		final List<StringBuilder> body = new ArrayList<StringBuilder>();
 		try {
-			InputStream istream = selectedFile.getContents();
-			BufferedReader br = new BufferedReader(new InputStreamReader(istream));
+			final InputStream istream = selectedFile.getContents();
+			final BufferedReader br = new BufferedReader(new InputStreamReader(istream));
 			final int startOffset = selectedStatements.getLocation().getOffset();
 			final int endOffset = selectedStatements.getLocation().getEndOffset();
 			br.skip(startOffset);
-			char[] contentBuf = new char[endOffset-startOffset];
+			
+			final char[] contentBuf = new char[endOffset-startOffset];
 			br.read(contentBuf, 0, endOffset-startOffset);
 			br.close();
 			istream.close();
 			final String selectedContent = new String(contentBuf);
-			SortedSet<TextReplaceItem> itemSet = createSortedTextReplaceItemSet(selectedContent, startOffset);
-			Iterator<TextReplaceItem> it = itemSet.iterator();
+			final SortedSet<TextReplaceItem> itemSet = createSortedTextReplaceItemSet(selectedContent, startOffset);
+			final Iterator<TextReplaceItem> it = itemSet.iterator();
 			TextReplaceItem last = null;
 			//no items
 			if (!it.hasNext()) {
 				body.add(new StringBuilder(selectedContent));
 			}
 			while (it.hasNext()) {
-				TextReplaceItem curr = it.next();
+				final TextReplaceItem curr = it.next();
 				if (last == null) {
 					body.add(curr.createBeginningText());
 				} else {
@@ -255,13 +256,13 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		}
 		functionCallText.add(newFuncName);
 		functionCallText.add(new StringBuilder(FUNCTION_CALL_PARAMS_START));
-		ListIterator<Param> it = params.listIterator();
+		final ListIterator<Param> it = params.listIterator();
 		if (it.hasNext()) {
-			Param first = it.next();
+			final Param first = it.next();
 			functionCallText.addAll(first.createParamCallText(false));
 		}
 		while (it.hasNext()) {
-			Param curr = it.next();
+			final Param curr = it.next();
 			functionCallText.addAll(curr.createParamCallText(true));
 		}
 		functionCallText.add(new StringBuilder(FUNCTION_CALL_PARAMS_END));

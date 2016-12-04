@@ -117,15 +117,16 @@ public class ChangeCreator {
 		if (toVisit == null) {
 			return null;
 		}
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
-		Module module = sourceParser.containedModule(toVisit);
+		
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
+		final Module module = sourceParser.containedModule(toVisit);
 		if(module == null) {
 			return null;
 		}
 		//
 		//collect functions
 		Set<Definition> funcs;
-		FunctionCollector vis = new FunctionCollector();
+		final FunctionCollector vis = new FunctionCollector();
 		if (defSelection == null) {
 			module.accept(vis);
 			funcs = vis.getResult();
@@ -142,9 +143,9 @@ public class ChangeCreator {
 			}
 		}
 		//create edits
-		List<Edit> allEdits = new ArrayList<Edit>();
+		final List<Edit> allEdits = new ArrayList<Edit>();
 		for (Definition def: funcs) {
-			List<Edit> edits = analyzeFunction(def);
+			final List<Edit> edits = analyzeFunction(def);
 			if (edits == null) {
 				continue;
 			}
@@ -155,22 +156,22 @@ public class ChangeCreator {
 			return null;
 		}
 		
-		String fileContents = loadFileContent(toVisit);
+		final String fileContents = loadFileContent(toVisit);
 		//create text edits
 		//
-		TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 		//TODO this is an O(n^2) algorithm
 		//merge overlapping DeleteEdits
 		//	used, when removing all parts of a multi-declaration statement:
 		//	the DeleteEdit for removing the last part covers all the DeleteEdits for the other parts
 		//WARNING merging edits might make debugging more difficult, since the overlapping edit errors are avoided
-		List<TextEdit> allTes = new LinkedList<TextEdit>();
+		final List<TextEdit> allTes = new LinkedList<TextEdit>();
 		//collect processed (insert) edits with their created insert edit
-		Map<Edit, InsertEdit> editsDone = new HashMap<Edit, InsertEdit>();
+		final Map<Edit, InsertEdit> editsDone = new HashMap<Edit, InsertEdit>();
 		for (Edit e: allEdits) {
-			TextEdit[] tes = createTextEdit(toVisit, fileContents, e, editsDone);
+			final TextEdit[] tes = createTextEdit(toVisit, fileContents, e, editsDone);
 			for (TextEdit te: tes) {
 				if (!(te instanceof DeleteEdit)) {
 					allTes.add(te);
@@ -178,13 +179,13 @@ public class ChangeCreator {
 					continue;
 				}
 				DeleteEdit dte = (DeleteEdit)te;
-				ListIterator<TextEdit> it = allTes.listIterator();
+				final ListIterator<TextEdit> it = allTes.listIterator();
 				while (it.hasNext()) {
-					TextEdit currTe = it.next();
+					final TextEdit currTe = it.next();
 					if (!(currTe instanceof DeleteEdit)) {
 						continue;
 					}
-					DeleteEdit currDte = (DeleteEdit)currTe;
+					final DeleteEdit currDte = (DeleteEdit)currTe;
 					//dte: to be added, currDte: present in the list
 					//if the new edit (dte) overlaps currDte, merge them
 					if (doesDeleteEditsOverlap(dte, currDte)) {
@@ -208,13 +209,13 @@ public class ChangeCreator {
 	private TextEdit[] createTextEdit(final IFile toVisit, final String fileContent, final Edit e, final Map<Edit, InsertEdit> editsDone) {
 		//check for multi-declaration statement
 		if (e.declSt.isMultiDeclaration()) {
-			Location cutLoc = calculateMultiDeclarationCutLoc(fileContent, e.declSt);
-			String moveContent = calculateMultiDeclarationMoveContent(fileContent, e.declSt);
+			final Location cutLoc = calculateMultiDeclarationCutLoc(fileContent, e.declSt);
+			final String moveContent = calculateMultiDeclarationMoveContent(fileContent, e.declSt);
 			//remove stmt from multi-declaration
 			e.declSt.removeFromMultiDeclaration();
 			//create remove edit
-			int cutLen = cutLoc.getEndOffset() - cutLoc.getOffset();
-			TextEdit cut = new DeleteEdit(cutLoc.getOffset(), cutLen);
+			final int cutLen = cutLoc.getEndOffset() - cutLoc.getOffset();
+			final TextEdit cut = new DeleteEdit(cutLoc.getOffset(), cutLen);
 			//create insert edit
 			InsertEdit insert = null;
 			if (!e.isRemoveEdit()) {
@@ -237,12 +238,12 @@ public class ChangeCreator {
 			return new TextEdit[]{cut};
 		} else {
 			//
-			Location cutLoc = findStatementLocation(fileContent, ((ILocateableNode)e.declSt.getAstNode()).getLocation(), true);
+			final Location cutLoc = findStatementLocation(fileContent, ((ILocateableNode)e.declSt.getAstNode()).getLocation(), true);
 			InsertEdit insert = null;
 			if (!e.isRemoveEdit()) {
-				Location copyLoc = findStatementLocation(fileContent, ((ILocateableNode)e.declSt.getAstNode()).getLocation(), false);
+				final Location copyLoc = findStatementLocation(fileContent, ((ILocateableNode)e.declSt.getAstNode()).getLocation(), false);
 				//update insert location if the insertionPoint stmt was moved
-				Location insPLoc = ((ILocateableNode)e.insertionPoint.getAstNode()).getLocation();
+				final Location insPLoc = ((ILocateableNode)e.insertionPoint.getAstNode()).getLocation();
 				int insertOffset = insPLoc.getOffset();
 				for (Map.Entry<Edit, InsertEdit> ed: editsDone.entrySet()) {
 					if (ed.getKey().declSt.equals(e.insertionPoint)) {
@@ -251,8 +252,8 @@ public class ChangeCreator {
 					}
 				}
 				//
-				int prefixStartOffset = findLineBeginningOffset(fileContent, insertOffset);
-				String insertText = fileContent.substring(copyLoc.getOffset(), copyLoc.getEndOffset()) + "\n";
+				final int prefixStartOffset = findLineBeginningOffset(fileContent, insertOffset);
+				final String insertText = fileContent.substring(copyLoc.getOffset(), copyLoc.getEndOffset()) + "\n";
 				String insertPrefix = fileContent.substring(prefixStartOffset, insertOffset);
 				//if prefix is not whitespace only, do not use the prefix
 				if (!insertPrefix.trim().equals("")) {
@@ -261,8 +262,9 @@ public class ChangeCreator {
 				insert = new InsertEdit(prefixStartOffset, insertPrefix + insertText);
 				editsDone.put(e, insert);
 			}
-			int cutLen = cutLoc.getEndOffset() - cutLoc.getOffset();
-			TextEdit cut = new DeleteEdit(cutLoc.getOffset(), cutLen);
+
+			final int cutLen = cutLoc.getEndOffset() - cutLoc.getOffset();
+			final TextEdit cut = new DeleteEdit(cutLoc.getOffset(), cutLen);
 			//System.err.println("DeleteEdit: " + fileContent.substring(cutLoc.getOffset(), cutLoc.getEndOffset()));
 			if (insert != null) {
 				return new TextEdit[]{insert, cut};
@@ -277,8 +279,9 @@ public class ChangeCreator {
 					"DeleteEdits are not overlapping! ");
 			return null;
 		}
-		int offset = Math.min(de0.getOffset(), de1.getOffset());
-		int endOffset = Math.max(de0.getExclusiveEnd(), de1.getExclusiveEnd());
+		
+		final int offset = Math.min(de0.getOffset(), de1.getOffset());
+		final int endOffset = Math.max(de0.getExclusiveEnd(), de1.getExclusiveEnd());
 		return new DeleteEdit(offset, endOffset-offset);
 	}
 	private boolean doesDeleteEditsOverlap(final DeleteEdit de0, final DeleteEdit de1) {
@@ -368,13 +371,13 @@ public class ChangeCreator {
 		 * 	if part is last: remove leading comma
 		 * 	if part is intermediate: remove trailing comma
 		 * */
-		MultiDeclaration md = declStNode.getMultiDeclaration();
-		StatementNode firstDeclPart = md.getFirstStatement();
-		Definition defVarToMove = (Definition)declStNode.getDeclaredVar().getAssmnt();
-		Definition_Statement declStmt = (Definition_Statement)declStNode.getAstNode();
-		boolean firstDefInMdMoved = firstDeclPart.isMoved();
-		Location declStmtLoc = declStmt.getLocation();
-		String stmtContent = fileContent.substring(declStmtLoc.getOffset(), declStmtLoc.getEndOffset());
+		final MultiDeclaration md = declStNode.getMultiDeclaration();
+		final StatementNode firstDeclPart = md.getFirstStatement();
+		final Definition defVarToMove = (Definition)declStNode.getDeclaredVar().getAssmnt();
+		final Definition_Statement declStmt = (Definition_Statement)declStNode.getAstNode();
+		final boolean firstDefInMdMoved = firstDeclPart.isMoved();
+		final Location declStmtLoc = declStmt.getLocation();
+		final String stmtContent = fileContent.substring(declStmtLoc.getOffset(), declStmtLoc.getEndOffset());
 		if (!stmtContent.contains(",")) {
 			ErrorReporter.logError("ChangeCreator.calculateMultiDeclarationCutLoc(): Given statement" +
 					" is not a multi-declaration statement; loc: " + declStmtLoc.getOffset() + "-" +
@@ -383,7 +386,7 @@ public class ChangeCreator {
 		}
 		//
 		if (md.getSize() <= 1) {
-			Location cutLoc = findStatementLocation(fileContent, declStmt.getLocation(), true);
+			final Location cutLoc = findStatementLocation(fileContent, declStmt.getLocation(), true);
 			//System.err.println("mdcutloc <= 1 -->>>" + fileContent.substring(cutLoc.getOffset(), cutLoc.getEndOffset()) + "<<<");
 			return cutLoc;
 		}
@@ -494,13 +497,13 @@ public class ChangeCreator {
 	 * Returns the content of an {@InsertEdit} to move a variable from a declaration list
 	 * */
 	private String calculateMultiDeclarationMoveContent(final String fileContent, final StatementNode declStNode) {
-		MultiDeclaration md = declStNode.getMultiDeclaration();
-		StatementNode firstDeclPart = md.getFirstStatement();
-		Definition firstDefInStmt = (Definition)firstDeclPart.getDeclaredVar().getAssmnt();
-		Definition defVarToMove = (Definition)declStNode.getDeclaredVar().getAssmnt();
-		Definition_Statement declStmt = (Definition_Statement)declStNode.getAstNode();
-		Location declStmtLoc = declStmt.getLocation();
-		String stmtContent = fileContent.substring(declStmtLoc.getOffset(), declStmtLoc.getEndOffset());
+		final MultiDeclaration md = declStNode.getMultiDeclaration();
+		final StatementNode firstDeclPart = md.getFirstStatement();
+		final Definition firstDefInStmt = (Definition)firstDeclPart.getDeclaredVar().getAssmnt();
+		final Definition defVarToMove = (Definition)declStNode.getDeclaredVar().getAssmnt();
+		final Definition_Statement declStmt = (Definition_Statement)declStNode.getAstNode();
+		final Location declStmtLoc = declStmt.getLocation();
+		final String stmtContent = fileContent.substring(declStmtLoc.getOffset(), declStmtLoc.getEndOffset());
 		if (!stmtContent.contains(",")) {
 			ErrorReporter.logError("ChangeCreator.calculateMultiDeclarationMoveContent(): Given statement" +
 					" is not a multi-declaration statement; loc: " + declStmtLoc.getOffset() + "-" +
@@ -520,8 +523,8 @@ public class ChangeCreator {
 		}
 		String prefixContent = fileContent.substring(prefixOffset, prefixEndOffset);
 		//
-		int varOffset = defVarToMove.getLocation().getOffset();
-		int varEndOffset = defVarToMove.getLocation().getEndOffset();
+		final int varOffset = defVarToMove.getLocation().getOffset();
+		final int varEndOffset = defVarToMove.getLocation().getEndOffset();
 		String varContent = fileContent.substring(varOffset, varEndOffset);
 		String suffixContent = "\n";
 		if (varContent.charAt(varContent.length()-1) != ';') {
@@ -543,10 +546,11 @@ public class ChangeCreator {
 			ErrorReporter.logError("ChangeCreator.analyzeFunction(): def must be a Def_Function or a Def_Testcase! def type: " + def.getClass());
 			return null;
 		}
-		FunctionAnalyzer vis = new FunctionAnalyzer();
+		
+		final FunctionAnalyzer vis = new FunctionAnalyzer();
 		def.accept(vis);
-		Environment env = vis.getResult();
-		List<Edit> eds = env.refactor();
+		final Environment env = vis.getResult();
+		final List<Edit> eds = env.refactor();
 		return eds;
 	}
 	
@@ -602,9 +606,9 @@ public class ChangeCreator {
 				return V_CONTINUE;
 			}
 			if (node instanceof Statement && suspendStackBuildingForNode == null) {
-				StatementNode sn = new StatementNode(node);
+				final StatementNode sn = new StatementNode(node);
 				if (currStack.peek() instanceof BlockNode) {
-					BlockNode parent = (BlockNode)currStack.peek();
+					final BlockNode parent = (BlockNode)currStack.peek();
 					sn.setParent(parent);
 					parent.addStatement(sn);
 					currStack.push(sn);
@@ -616,7 +620,7 @@ public class ChangeCreator {
 				}
 			}
 			if (node instanceof StatementBlock && suspendStackBuildingForNode == null) {
-				BlockNode bn = new BlockNode(node);
+				final BlockNode bn = new BlockNode(node);
 				if (currStack.isEmpty()) {
 					//root block
 					env.setRootNode(bn);
@@ -624,7 +628,7 @@ public class ChangeCreator {
 					//System.err.println("*** pushed bn as root node: " + node);
 				} else {
 					if (currStack.peek() instanceof StatementNode) {
-						StatementNode parent = (StatementNode)currStack.peek();
+						final StatementNode parent = (StatementNode)currStack.peek();
 						bn.setParent(parent);
 						parent.addBlock(bn);
 						currStack.push(bn);
@@ -637,7 +641,7 @@ public class ChangeCreator {
 				}
 			}
 			if (node instanceof FormalParameter && suspendDeclarationsForNode == null) {
-				Variable var = new Variable((FormalParameter)node, null, true);
+				final Variable var = new Variable((FormalParameter)node, null, true);
 				//System.err.println("*** var added as FormalParameter: " + var);
 				env.addVariable(var);
 				return V_SKIP;
@@ -646,8 +650,9 @@ public class ChangeCreator {
 				if (!(currStack.peek() instanceof StatementNode)) {
 					//System.err.println("DEBUG > At a var def: stacktop is not a SN! (5) st: " + node + ",\n         stacktop: " + currStack.peek());
 				}
-				StatementNode declSt = (StatementNode)currStack.peek();
-				Variable var = new Variable((Def_Var)node, declSt, false);
+				
+				final StatementNode declSt = (StatementNode)currStack.peek();
+				final Variable var = new Variable((Def_Var)node, declSt, false);
 				if (declSt == null) {
 					ErrorReporter.logError("ChangeCreator.FunctionAnalyzer: declSt is null; var: " + var + "; loc: " + Utils.createLocationString(node));
 				}
@@ -655,7 +660,7 @@ public class ChangeCreator {
 				env.addVariable(var);
 				//System.err.println("*** var added, declSt is stacktop (SN) " + var);
 				//test for multi-declaration
-				StatementNode prevSt = declSt.getParent().getPreviousStatement(declSt);
+				final StatementNode prevSt = declSt.getParent().getPreviousStatement(declSt);
 				if (prevSt != null && prevSt.isDeclaration() && prevSt.isLocationEqualTo(declSt)) {
 					prevSt.linkWithOtherAsMultiDeclaration(declSt);
 				}
@@ -666,9 +671,9 @@ public class ChangeCreator {
 				return V_CONTINUE;
 			}
 			if (node instanceof Reference && suspendReferencesForNode == null) {
-				Reference ref = (Reference)node;
-				Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
-				StatementNode refSt = (StatementNode)currStack.peek();
+				final Reference ref = (Reference)node;
+				final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final StatementNode refSt = (StatementNode)currStack.peek();
 				if (refSt == null) {
 					//should be a return type or runs on reference (ignore it)
 					return V_SKIP;
@@ -679,7 +684,7 @@ public class ChangeCreator {
 					return V_CONTINUE;
 				}
 				//
-				Variable var = env.getVariable(as);
+				final Variable var = env.getVariable(as);
 				if (var == null) {
 					//System.err.println("DEBUG > Reference to undeclared variable! (3) id: " + as.getIdentifier());
 					if (as instanceof Def_Var) {
@@ -708,14 +713,14 @@ public class ChangeCreator {
 			}
 			if (node instanceof Statement) {
 				if (suspendStackBuildingForNode == null) {
-					Node n = currStack.pop();
+					final Node n = currStack.pop();
 					//System.err.println("*** popped(" + n.getClass() + "): " + node);
 				}
 				checkForUnsuspend(node);
 			}
 			if (node instanceof StatementBlock) {
 				if (suspendStackBuildingForNode == null) {
-					Node n = currStack.pop();
+					final Node n = currStack.pop();
 					//System.err.println("*** popped(" + n.getClass() + "): " + node);
 				}
 				checkForUnsuspend(node);
@@ -755,12 +760,12 @@ public class ChangeCreator {
 	private static String loadFileContent(final IFile toLoad) {
 		StringBuilder fileContents;
 		try {
-			InputStream is = toLoad.getContents();
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			final InputStream is = toLoad.getContents();
+			final BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			fileContents = new StringBuilder();
-			char[] buff = new char[1024];
+			final char[] buff = new char[1024];
 			while (br.ready()) {
-				int len = br.read(buff);
+				final int len = br.read(buff);
 				fileContents.append(buff, 0, len);
 			}
 			br.close();

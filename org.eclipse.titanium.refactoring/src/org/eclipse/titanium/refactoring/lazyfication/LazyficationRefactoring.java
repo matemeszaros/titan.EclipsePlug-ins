@@ -58,11 +58,11 @@ public class LazyficationRefactoring extends Refactoring {
 	public LazyficationRefactoring(final IStructuredSelection selection) {
 		this.selection = selection;
 		
-		Iterator<?> it = selection.iterator();
+		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
-			Object o = it.next();
+			final Object o = it.next();
 			if (o instanceof IResource) {
-				IProject temp = ((IResource) o).getProject();
+				final IProject temp = ((IResource) o).getProject();
 				projects.add(temp);
 			}
 		}
@@ -82,7 +82,7 @@ public class LazyficationRefactoring extends Refactoring {
 	@Override
 	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
+		final RefactoringStatus result = new RefactoringStatus();
 		try {
 			pm.beginTask("Checking preconditions...", 3);
 			// check "use on the fly parsing", and "minimize memory usage" settings
@@ -103,7 +103,7 @@ public class LazyficationRefactoring extends Refactoring {
 			pm.worked(1);
 			// check that there are no error markers in the project
 			for (IProject project : projects) {
-				IMarker[] markers = project.findMarkers(null, true, IResource.DEPTH_INFINITE);
+				final IMarker[] markers = project.findMarkers(null, true, IResource.DEPTH_INFINITE);
 				for (IMarker marker : markers) {
 					if (IMarker.SEVERITY_ERROR == marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR)) {
 						result.addError(MessageFormat.format(PROJECTCONTAINSERRORS, project));
@@ -132,15 +132,17 @@ public class LazyficationRefactoring extends Refactoring {
 		if (selection == null) {
 			return null;
 		}
-		CompositeChange cchange = new CompositeChange("LazyficationRefactoring");
-		Iterator<?> it = selection.iterator();
+		
+		final CompositeChange cchange = new CompositeChange("LazyficationRefactoring");
+		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
-			Object o = it.next();
+			final Object o = it.next();
 			if (!(o instanceof IResource)) {
 				continue;
 			}
-			IResource res = (IResource)o;
-			ResourceVisitor vis = new ResourceVisitor();
+			
+			final IResource res = (IResource)o;
+			final ResourceVisitor vis = new ResourceVisitor();
 			res.accept(vis);
 			cchange.add(vis.getChange());
 		}
@@ -151,14 +153,14 @@ public class LazyficationRefactoring extends Refactoring {
 	
 	public static boolean hasTtcnppFiles(final IResource resource) throws CoreException {
 		if (resource instanceof IProject || resource instanceof IFolder) {
-			IResource[] children = resource instanceof IFolder ? ((IFolder) resource).members() : ((IProject) resource).members();
+			final IResource[] children = resource instanceof IFolder ? ((IFolder) resource).members() : ((IProject) resource).members();
 			for (IResource res : children) {
 				if (hasTtcnppFiles(res)) {
 					return true;
 				}
 			}
 		} else if (resource instanceof IFile) {
-			IFile file = (IFile) resource;
+			final IFile file = (IFile) resource;
 			return "ttcnpp".equals(file.getFileExtension());
 		}
 		return false;
@@ -187,9 +189,9 @@ public class LazyficationRefactoring extends Refactoring {
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
-				ChangeCreator chCreator = new ChangeCreator((IFile)resource);
+				final ChangeCreator chCreator = new ChangeCreator((IFile)resource);
 				chCreator.perform();
-				Change ch = chCreator.getChange();
+				final Change ch = chCreator.getChange();
 				if (ch != null) {
 					change.add(ch);
 				}

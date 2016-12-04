@@ -78,7 +78,7 @@ class ReturnVisitor extends ASTVisitor {
 		//
 		if (node instanceof StatementBlock ||
 				node instanceof StatementList) {
-			StatementBlockVisitor blockVis = new StatementBlockVisitor();
+			final StatementBlockVisitor blockVis = new StatementBlockVisitor();
 			node.accept(blockVis);
 			certainty = blockVis.getCertainty();
 			return V_SKIP;
@@ -87,15 +87,15 @@ class ReturnVisitor extends ASTVisitor {
 		if (node instanceof While_Statement ||
 				node instanceof DoWhile_Statement ||
 				node instanceof For_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 				//conditional blocks: maximum MAYBE
 			certainty = branchMerger.getCertainty().or(ReturnCertainty.NO);
 			return V_SKIP;
 		}
 		if (node instanceof If_Statement) {
-			If_Statement ifs = (If_Statement)node;
-			BranchMerger branchMerger = new BranchMerger();
+			final If_Statement ifs = (If_Statement)node;
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 			if (ifs.getStatementBlock() != null) {
 				//must enter one block: maximum YES
@@ -107,8 +107,8 @@ class ReturnVisitor extends ASTVisitor {
 			return V_SKIP;
 		}
 		if (node instanceof Alt_Statement) {
-			AltGuards ags = ((Alt_Statement)node).getAltGuards();
-			BranchMerger branchMerger = new BranchMerger();
+			final AltGuards ags = ((Alt_Statement)node).getAltGuards();
+			final BranchMerger branchMerger = new BranchMerger();
 			ags.accept(branchMerger);
 			if (ags.hasElse()) {
 				//must enter one block: maximum YES
@@ -120,21 +120,21 @@ class ReturnVisitor extends ASTVisitor {
 			return V_SKIP;
 		}
 		if (node instanceof Interleave_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 				//conditional block: maximum MAYBE
 			certainty = branchMerger.getCertainty().or(ReturnCertainty.NO);
 			return V_SKIP;
 		}
 		if (node instanceof StatementBlock_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 			//must enter block: maximum YES
 			certainty = branchMerger.getCertainty();
 			return V_SKIP;
 		}
 		if (node instanceof SelectCase_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 			//must enter one block: maximum YES
 			certainty = branchMerger.getCertainty();
@@ -159,24 +159,24 @@ class ReturnVisitor extends ASTVisitor {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
-				StatementBlock sb = (StatementBlock)node;
+				final StatementBlock sb = (StatementBlock)node;
 				for (int i=0;i<sb.getSize();i++) {
-					Statement s = sb.getStatementByIndex(i);
-					ReturnVisitor sVis = new ReturnVisitor();
+					final Statement s = sb.getStatementByIndex(i);
+					final ReturnVisitor sVis = new ReturnVisitor();
 					s.accept(sVis);
-					ReturnCertainty rc = sVis.getCertainty();
+					final ReturnCertainty rc = sVis.getCertainty();
 					blockCertainty = blockCertainty.and(rc);
 					if (blockCertainty == ReturnCertainty.YES) {
 						return V_ABORT;
 					}
 				}
 			} else if (node instanceof StatementList) {
-				StatementList sl = (StatementList)node;
+				final StatementList sl = (StatementList)node;
 				for (int i=0;i<sl.getSize();i++) {
-					Statement s = sl.getStatementByIndex(i);
-					ReturnVisitor sVis = new ReturnVisitor();
+					final Statement s = sl.getStatementByIndex(i);
+					final ReturnVisitor sVis = new ReturnVisitor();
 					s.accept(sVis);
-					ReturnCertainty rc = sVis.getCertainty();
+					final ReturnCertainty rc = sVis.getCertainty();
 					blockCertainty = blockCertainty.and(rc);
 					if (blockCertainty == ReturnCertainty.YES) {
 						return V_ABORT;
@@ -208,7 +208,7 @@ class ReturnVisitor extends ASTVisitor {
 		@Override
 		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
-				StatementBlockVisitor sbVis = new StatementBlockVisitor();
+				final StatementBlockVisitor sbVis = new StatementBlockVisitor();
 				node.accept(sbVis);
 				if (!foundAnyBlocksBefore) {
 					foundAnyBlocksBefore = true;

@@ -86,14 +86,12 @@ public class MinimizeScopeRefactoring extends Refactoring {
 	@Override
 	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 	@Override
 	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override
@@ -101,15 +99,16 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			OperationCanceledException {
 		if (fileSelection != null) {
 			//resource(s) selected
-			CompositeChange cchange = new CompositeChange("MinimizeScopeRefactoring");
-			Iterator<?> it = fileSelection.iterator();
+			final CompositeChange cchange = new CompositeChange("MinimizeScopeRefactoring");
+			final Iterator<?> it = fileSelection.iterator();
 			while (it.hasNext()) {
-				Object o = it.next();
+				final Object o = it.next();
 				if (!(o instanceof IResource)) {
 					continue;
 				}
-				IResource res = (IResource)o;
-				ResourceVisitor vis = new ResourceVisitor();
+				
+				final IResource res = (IResource)o;
+				final ResourceVisitor vis = new ResourceVisitor();
 				res.accept(vis);
 				cchange.add(vis.getChange());
 			}
@@ -117,14 +116,15 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			return cchange;
 		} else {
 			//a single definition selected
-			CompositeChange cchange = new CompositeChange("MinimizeScopeRefactoring");
-			IResource file = defSelection.getLocation().getFile();
+			final CompositeChange cchange = new CompositeChange("MinimizeScopeRefactoring");
+			final IResource file = defSelection.getLocation().getFile();
 			if (!(file instanceof IFile)) {
 				ErrorReporter.logError("MinimizeScopeRefactoring.createChange(): File container of defSelection is not an IFile! ");
 			}
-			ChangeCreator chCreator = new ChangeCreator((IFile)file, defSelection, settings);
+			
+			final ChangeCreator chCreator = new ChangeCreator((IFile)file, defSelection, settings);
 			chCreator.perform();
-			Change ch = chCreator.getChange();
+			final Change ch = chCreator.getChange();
 			if (ch != null) {
 				cchange.add(ch);
 				this.affectedObjects = ch.getAffectedObjects();
@@ -159,9 +159,9 @@ public class MinimizeScopeRefactoring extends Refactoring {
 		@Override
 		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
-				ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
+				final ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
 				chCreator.perform();
-				Change ch = chCreator.getChange();
+				final Change ch = chCreator.getChange();
 				if (ch != null) {
 					change.add(ch);
 				}
@@ -222,7 +222,7 @@ public class MinimizeScopeRefactoring extends Refactoring {
 			return (settings & setting) == setting;
 		}
 		public void setSetting(final int setting, final boolean value) {
-			boolean prevVal = getSetting(setting);
+			final boolean prevVal = getSetting(setting);
 			if (prevVal == value) {
 				return;
 			}

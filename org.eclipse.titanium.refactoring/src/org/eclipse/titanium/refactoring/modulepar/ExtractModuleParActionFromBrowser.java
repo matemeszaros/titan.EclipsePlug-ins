@@ -70,15 +70,17 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		Set<IProject> sourceProjs = Utils.findAllProjectsInSelection((IStructuredSelection)selection);
+		
+		final Set<IProject> sourceProjs = Utils.findAllProjectsInSelection((IStructuredSelection)selection);
 		if (sourceProjs.isEmpty()) {
 			return;
 		}
-		IProject sourceProj = sourceProjs.iterator().next();
+		
+		final IProject sourceProj = sourceProjs.iterator().next();
 		final IStructuredSelection ssel = new StructuredSelection(sourceProj); 
 		
 		//update AST before refactoring
-		Set<IProject> projsToUpdate = new HashSet<IProject>();
+		final Set<IProject> projsToUpdate = new HashSet<IProject>();
 		projsToUpdate.add(sourceProj);
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExtractModulePar");
 		Activator.getDefault().pauseHandlingResourceChanges();
@@ -86,13 +88,13 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 		//create refactoring
 		final ExtractModuleParRefactoring refactoring = new ExtractModuleParRefactoring(sourceProj);
 		//open wizard
-		ExtractModuleParWizard wiz = new ExtractModuleParWizard();
+		final ExtractModuleParWizard wiz = new ExtractModuleParWizard();
 
 		wiz.init(PlatformUI.getWorkbench(), ssel);
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wiz);
+		final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wiz);
 		dialog.open();
-		boolean saveModuleParsOption = wiz.getSaveModuleParsOption();
-		IProject newProj = wiz.getProject();
+		final boolean saveModuleParsOption = wiz.getSaveModuleParsOption();
+		final IProject newProj = wiz.getProject();
 		if (newProj == null) {
 			ErrorReporter.logError("ExtractModuleParActionFromBrowser: Wizard returned a null project. ");
 			return;
@@ -100,7 +102,7 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 		refactoring.setTargetProject(newProj);
 		refactoring.setOption_saveModuleParList(saveModuleParsOption);
 		//copy project settings to new project
-		ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
+		final ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
 		if (pfh.projectFileExists()) {
 			//IResource.copy(...) is used because ProjectFileHandler.getDocumentFromFile(...) is not working
 			final IFile settingsFile = sourceProj.getFile("/" + ProjectFileHandler.XML_TITAN_PROPERTIES_FILE);
@@ -115,7 +117,7 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 			}
 		}
 		
-		WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
+		final WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
 
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {

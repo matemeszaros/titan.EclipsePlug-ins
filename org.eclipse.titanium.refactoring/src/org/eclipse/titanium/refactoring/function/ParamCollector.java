@@ -73,7 +73,7 @@ class ParamCollector {
 	void perform() {
 		//collect params
 		params = new ArrayList<Param>();
-		ParamFinder visitor = new ParamFinder();
+		final ParamFinder visitor = new ParamFinder();
 		selectedStatements.accept(visitor);
 		if (ExtractToFunctionRefactoring.DEBUG_MESSAGES_ON) {
 			ErrorReporter.logError(visitor.createDebugInfo());
@@ -84,7 +84,7 @@ class ParamCollector {
 	}
 	
 	private String createDebugInfo() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("ExtractToFunctionRefactoring->ParamCollector debug info: \n");
 		for (Param p: params) {
 			sb.append(p.createDebugInfo());
@@ -112,16 +112,16 @@ class ParamCollector {
 				return V_CONTINUE;
 			}
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
-				Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Reference ref = (Reference)node;
+				final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				if (as instanceof Definition && isGoodDefType(as) && !isInsideRange(as.getLocation())) {
-					Definition def = (Definition)as;
+					final 	Definition def = (Definition)as;
 					//def is outside of the selection
 					//TODO: does ReferenceFinder handle Undefined_LowerIdentifier_Values?
 					
 					//DO NOT use ReferenceFinder.scope, because it returns an incorrect scope for formal parameters
-					ReferenceFinder refFinder = new ReferenceFinder(def);
-					Map<Module, List<Hit>> refs = refFinder.findAllReferences(selectedModule, project, null, false);
+					final ReferenceFinder refFinder = new ReferenceFinder(def);
+					final Map<Module, List<Hit>> refs = refFinder.findAllReferences(selectedModule, project, null, false);
 					if (!def.isLocal()) {
 						//module parameter, ... -> no param created
 						if (DEBUG) {
@@ -135,7 +135,8 @@ class ParamCollector {
 					if (def instanceof FormalParameter) {
 						at = ((FormalParameter)def).getAssignmentType();
 					}
-					Param p = new Param();
+					
+					final Param p = new Param();
 					p.setDef((Definition)as);
 					p.setDeclaredInside(false);
 					p.setName(as.getIdentifier().toString());
@@ -145,7 +146,7 @@ class ParamCollector {
 						params.add(p);
 					}
 					p.setRefs(getRefsInRange(selectedModule, refs));
-					boolean refsBeyondSelection = isAnyRefsAfterLocation(selectedModule, selectedStatements.getLocation(), refs);
+					final boolean refsBeyondSelection = isAnyRefsAfterLocation(selectedModule, selectedStatements.getLocation(), refs);
 					if (at == Assignment_type.A_PAR_TEMP_INOUT || at == Assignment_type.A_PAR_TEMP_OUT
 							|| at == Assignment_type.A_PAR_VAL_INOUT || at == Assignment_type.A_PAR_VAL_OUT
 							|| refsBeyondSelection) {
@@ -163,12 +164,12 @@ class ParamCollector {
 					}
 				}
 			} else if (node instanceof Definition) {
-				Definition def = (Definition)node;
+				final Definition def = (Definition)node;
 				if (isGoodDefType(def)) {
 					//variables declared inside the selection
-					ReferenceFinder refFinder = new ReferenceFinder(def);
-					Map<Module, List<Hit>> refs = refFinder.findAllReferences(selectedModule, project, null, false);
-					boolean refsOutside = isAnyReferenceOutsideRange(selectedModule, refs);
+					final ReferenceFinder refFinder = new ReferenceFinder(def);
+					final Map<Module, List<Hit>> refs = refFinder.findAllReferences(selectedModule, project, null, false);
+					final boolean refsOutside = isAnyReferenceOutsideRange(selectedModule, refs);
 					if (!refsOutside) {
 						if (DEBUG) {
 							debugInfo.append("  ").append(def.getIdentifier()).append(" -> local var, no param created\n");
@@ -176,7 +177,8 @@ class ParamCollector {
 						//variable has no refs outside, so it will be a new local variable
 						return V_CONTINUE;
 					}
-					Param p = new Param();
+					
+					final Param p = new Param();
 					p.setDef(def);
 					p.setDeclaredInside(true);
 					p.setName(def.getIdentifier().toString());
@@ -185,7 +187,8 @@ class ParamCollector {
 					} else {
 						params.add(p);
 					}
-					List<ISubReference> refsInRange = getRefsInRange(selectedModule, refs);
+					
+					final List<ISubReference> refsInRange = getRefsInRange(selectedModule, refs);
 					if (isDefWithoutInit(def) && refsInRange.isEmpty()) {
 						//variable has no refs inside, and its declaration (inside) has no init part
 						if (DEBUG) {
@@ -206,7 +209,7 @@ class ParamCollector {
 		}
 		
 		public String createDebugInfo() {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			sb.append("ExtractToFunctionRefactoring->ParamCollector debug info: \n");
 			sb.append(debugInfo);
 			return sb.toString();
@@ -232,10 +235,11 @@ class ParamCollector {
 				if (!e.getKey().equals(locationModule)) {
 					continue;
 				}
-				List<Hit> hs = e.getValue();
-				ListIterator<Hit> it = hs.listIterator();
+				
+				final List<Hit> hs = e.getValue();
+				final ListIterator<Hit> it = hs.listIterator();
 				while (it.hasNext()) {
-					Hit curr = it.next();
+					final Hit curr = it.next();
 					if (curr.reference.getLocation().getEndOffset() > loc.getEndOffset()) {
 						return true;
 					}
@@ -248,17 +252,18 @@ class ParamCollector {
 		 * @return a list of references (subset of all references in <code>refs</code>) that are inside <code>toVisit</code> in <code>module</code>
 		 */
 		private List<ISubReference> getRefsInRange(final Module module, final Map<Module, List<Hit>> refs) {
-			List<ISubReference> subrefs = new ArrayList<ISubReference>();
+			final List<ISubReference> subrefs = new ArrayList<ISubReference>();
 			for (Map.Entry<Module, List<Hit>> e: refs.entrySet()) {
 				if (!e.getKey().equals(module)) {
 					continue;
 				}
-				List<Hit> hs = e.getValue();
-				ListIterator<Hit> it = hs.listIterator();
+				
+				final List<Hit> hs = e.getValue();
+				final ListIterator<Hit> it = hs.listIterator();
 				while (it.hasNext()) {
-					Hit curr = it.next();
+					final Hit curr = it.next();
 					if (isInsideRange(curr.reference.getLocation())) {
-						Reference r = curr.reference;
+						final Reference r = curr.reference;
 						if (r.getSubreferences().isEmpty()) {
 							ErrorReporter.logError("ParamCollector::getRefsInRange(): No subrefs found in a reference! ");
 							continue;
@@ -282,7 +287,8 @@ class ParamCollector {
 				if (!e.getKey().equals(moduleOfRange)) {
 					return true;
 				}
-				List<Hit> hs = e.getValue();
+				
+				final List<Hit> hs = e.getValue();
 				for (Hit h: hs) {
 					if (!isInsideRange(h.reference.getLocation())) {
 						return true;
@@ -300,7 +306,8 @@ class ParamCollector {
 				ErrorReporter.logError("ParamFinderVisitor::isInsideRange(): StatementList 'toVisit' is null! ");
 				return false;
 			}
-			Location range = toVisit.getLocation();
+			
+			final Location range = toVisit.getLocation();
 			return toCheck.getOffset() >= range.getOffset() && toCheck.getEndOffset() <= range.getEndOffset();
 		}
 		

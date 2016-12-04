@@ -67,14 +67,15 @@ public class Environment {
 	//refactoring
 	
 	public List<Edit> refactor() {
-		List<Edit> edits = new ArrayList<Edit>();
-		ListIterator<Variable> it = vars.listIterator(vars.size());
+		final List<Edit> edits = new ArrayList<Edit>();
+		final ListIterator<Variable> it = vars.listIterator(vars.size());
 		while (it.hasPrevious()) {
-			Variable var = it.previous();
+			final Variable var = it.previous();
 			if (var.isParameter) {
 				continue;
 			}
-			Edit e = refactorVar(var);
+			
+			final Edit e = refactorVar(var);
 			if (e != null) {
 				edits.add(e);
 			}
@@ -83,7 +84,7 @@ public class Environment {
 	}
 	
 	private Edit refactorVar(final Variable var) {
-		StatementNode declSt = var.getDeclaration();
+		final StatementNode declSt = var.getDeclaration();
 		// if "avoid moving declarations with function calls" setting is enables, skip variable
 		if (settings.getSetting(Settings.AVOID_MOVING_WHEN_FUNCCALL) && declSt.hasFunctionCall()) {
 			return null;
@@ -95,7 +96,7 @@ public class Environment {
 				ErrorReporter.logError("Environment.refactorVar(): Parent block did not contain the statement to remove! ");
 			}
 			//remove references to the removed statement
-			Set<Variable> refs = declSt.getReferredVars();
+			final Set<Variable> refs = declSt.getReferredVars();
 			for (Variable v: refs) {
 				v.removeReference(declSt);
 			}
@@ -112,7 +113,7 @@ public class Environment {
 			return null;
 		}
 		//calculate smallest common scope for the references of the variable
-		BlockNode currScope = declSt.getParent();
+		final BlockNode currScope = declSt.getParent();
 		BlockNode newScope = findSmallestCommonAncestorBlock(var.references);
 		//if new scope is a loop and it is not equal to the current scope, increase the scope
 		while (newScope != null && !newScope.equals(currScope) && isLoopScope(newScope)) {
@@ -128,20 +129,21 @@ public class Environment {
 		if (declSt.hasUncheckedRef && settings.getSetting(Settings.AVOID_MOVING_WHEN_UNCHECKED_REF)) {
 			return null;
 		}
-		StatementNode insertionPoint = findInsertionPointInScope(var, currScope, newScope);
+		final StatementNode insertionPoint = findInsertionPointInScope(var, currScope, newScope);
 		newScope = insertionPoint.getParent();	//the scope could be updated
 		//
 		if (!settings.getSetting(Settings.MOVE_VARS_IN_CORRECT_SCOPE) && newScope.equals(currScope)) {
 			return null;
 		}
 		//check whether the refactored declaration is already at its desired location (right before insertionPoint)
-		int declInd = declSt.getParent().getStatements().indexOf(declSt);
+		final int declInd = declSt.getParent().getStatements().indexOf(declSt);
 		if (declInd == declSt.getParent().getStatements().size()-1) {
-			String errmsg = "variable " + declSt.declaredVar.toString() + ", loc: " + Utils.createLocationString(declSt.astNode);
+			final String errmsg = "variable " + declSt.declaredVar.toString() + ", loc: " + Utils.createLocationString(declSt.astNode);
 			ErrorReporter.logError("Environment.refactorVar(): Declaration statement is the last one in the block: " + errmsg);
 			return null;
 		}
-		StatementNode currNextSt = declSt.getParent().getStatements().get(declInd+1);
+		
+		final StatementNode currNextSt = declSt.getParent().getStatements().get(declInd+1);
 		if (currNextSt.equals(insertionPoint)) {
 			//variable is at its correct location
 			return null;
@@ -149,7 +151,7 @@ public class Environment {
 		//moving declaration to in front of the insertion point
 		declSt.getParent().getStatements().remove(declSt);
 		declSt.setParent(newScope);
-		int insertionInd = newScope.getStatements().indexOf(insertionPoint);
+		final int insertionInd = newScope.getStatements().indexOf(insertionPoint);
 		newScope.getStatements().add(insertionInd, declSt);
 		declSt.setMoved();
 		//update all references to the moved decl st (find their correct positions)
@@ -167,9 +169,9 @@ public class Environment {
 		//find smallest common ancestor block
 		BlockNode currScope = refs.get(0).getRef().parent;
 		scopeloop: while (currScope != null) {
-			ListIterator<Reference> it = refs.listIterator();
+			final ListIterator<Reference> it = refs.listIterator();
 			refloop: while (it.hasNext()) {
-				StatementNode currRef = it.next().getRef();
+				final StatementNode currRef = it.next().getRef();
 				if (currRef.parent.equals(currScope) || currRef.isBlockAncestorOfThis(currScope)) {
 					continue refloop;
 				}
@@ -188,16 +190,17 @@ public class Environment {
 			ErrorReporter.logError("Environment.findInsertionPointInScope(): Parent block did not contain the statement to remove! ");
 			return null;
 		}
-		StatementNode firstRef = var.getReferences().get(0).getRef();
+		
+		final StatementNode firstRef = var.getReferences().get(0).getRef();
 		StatementNode insertionPoint = newScope.findStmtInBlockWhichContainsNode(firstRef);
 		//for all variables which are referred in the declaration stmt, find the earliest lhs occurrence (single one for all vars)
 		if (!var.declaration.getReferredVars().isEmpty()) {
-			StatementNode declSt = var.getDeclaration();
-			Set<Variable> refdVars = declSt.getReferredVars();
+			final StatementNode declSt = var.getDeclaration();
+			final Set<Variable> refdVars = declSt.getReferredVars();
 			Reference firstLeftRref = null;
 			for (Variable rvar: refdVars) {
-				List<Reference> rrefs = rvar.getReferences();
-				int declRefInd = Reference.indexOf(declSt, rrefs);
+				final List<Reference> rrefs = rvar.getReferences();
+				final int declRefInd = Reference.indexOf(declSt, rrefs);
 				if (declRefInd < 0) {
 					ErrorReporter.logError("Environment.findInsertionPointInScope(): Ref in other vars decl stmt is not present in the ref list! " +
 							"var: " + var + "; rvar: " + rvar + "; loc: " + Utils.createLocationString(newScope.astNode));
@@ -220,13 +223,13 @@ public class Environment {
 				return insertionPoint;
 			}
 			//is the earliest referred var lhs occurrence earlier than the first own ref?
-			int result = insertionPoint.compareCurrentPositionTo(firstLeftRref.getRef());
+			final int result = insertionPoint.compareCurrentPositionTo(firstLeftRref.getRef());
 			if (result < 0) {
 				return insertionPoint;
 			}
 			//the insertion point should be changed to the earliest lhs reference of referred vars
 			//find the common scope of the lhs ref and the calculated new scope
-			BlockNode lhsScope = firstLeftRref.getRef().getParent();
+			final BlockNode lhsScope = firstLeftRref.getRef().getParent();
 			BlockNode commonScope = newScope.findSmallestCommonAncestorBlock(lhsScope);
 			//move up if scope is a loop
 			while (commonScope != null && !commonScope.equals(oldScope) && isLoopScope(commonScope)) {
@@ -250,17 +253,17 @@ public class Environment {
 	 *  Call this if the given declaration statement was moved and it might refer to any variables.
 	 * */
 	private void updateReferencePositions(final StatementNode declSt) {
-		Set<Variable> refdVars = declSt.getReferredVars();
+		final Set<Variable> refdVars = declSt.getReferredVars();
 		for (Variable v: refdVars) {
-			List<Reference> refsToV = v.getReferences();
-			int refInDeclOldInd = Reference.indexOf(declSt, refsToV);
-			boolean refInDeclLhs = refsToV.get(refInDeclOldInd).isLeftHandSide();
+			final List<Reference> refsToV = v.getReferences();
+			final int refInDeclOldInd = Reference.indexOf(declSt, refsToV);
+			final boolean refInDeclLhs = refsToV.get(refInDeclOldInd).isLeftHandSide();
 			refsToV.remove(refInDeclOldInd);
 			int refInDeclNewInd = refsToV.size();
 			//check all references in the list whether they are before the insertion point of the moved declSt
 			for (int i=refInDeclOldInd;i<refsToV.size();i++) {
-				StatementNode currSt = refsToV.get(i).getRef();
-				int compareSts = currSt.compareCurrentPositionTo(declSt);
+				final StatementNode currSt = refsToV.get(i).getRef();
+				final int compareSts = currSt.compareCurrentPositionTo(declSt);
 				if (compareSts == 1) {
 					refInDeclNewInd = i;
 				}
@@ -273,11 +276,12 @@ public class Environment {
 	 * Returns true if the given BlockNode is a statement block of a loop statement (for, while, alt)
 	 * */
 	private static boolean isLoopScope(final BlockNode scope) {
-		StatementNode parentSN = scope.getParent();
+		final StatementNode parentSN = scope.getParent();
 		if (parentSN == null) {
 			return false;
 		}
-		IVisitableNode scopeSt = parentSN.getAstNode();
+		
+		final IVisitableNode scopeSt = parentSN.getAstNode();
 		if (scopeSt instanceof For_Statement ||
 				scopeSt instanceof While_Statement ||
 				scopeSt instanceof Alt_Statement) {
@@ -287,7 +291,7 @@ public class Environment {
 	}
 	
 	public String toStringRecursive() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("Env {\n").append("  vars:\n");
 		for (Variable var: vars) {
 			sb.append(var.toStringRecursive(false, 4)).append('\n');
