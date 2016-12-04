@@ -124,8 +124,7 @@ public class LazyficationRefactoring extends Refactoring {
 	@Override
 	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override

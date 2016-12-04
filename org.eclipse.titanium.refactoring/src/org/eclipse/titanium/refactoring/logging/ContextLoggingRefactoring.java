@@ -92,15 +92,13 @@ public class ContextLoggingRefactoring extends Refactoring {
 	@Override
 	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override
 	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override

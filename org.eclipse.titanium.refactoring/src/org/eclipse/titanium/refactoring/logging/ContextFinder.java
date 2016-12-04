@@ -70,8 +70,8 @@ class ContextFinder extends ASTVisitor {
 			prev.setParent(curr);
 			prev = curr;
 		}
-		Context root = curr;
-		return root;
+
+		return curr;
 	}
 	
 	@Override
