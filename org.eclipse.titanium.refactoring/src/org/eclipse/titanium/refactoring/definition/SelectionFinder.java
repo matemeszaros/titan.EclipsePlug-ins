@@ -68,12 +68,11 @@ class SelectionFinder {
 	private Definition findSelection() {
 		//getting the active editor
 		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		TTCN3Editor targetEditor;
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return null;
-		} else {//TODO not necessary else
-			targetEditor = (TTCN3Editor) editor;
 		}
+		
+		final TTCN3Editor targetEditor = (TTCN3Editor) editor;
 
 		//iterating through part of the module
 		final IResource selectedRes = extractResource(targetEditor);

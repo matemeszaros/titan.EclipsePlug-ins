@@ -51,6 +51,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * A class for utilities used by the refactoring classes.
+ * TODO needed? used consistently?
  * 
  * @author Viktor Varga
  */
@@ -63,6 +64,7 @@ public class Utils {
 		if (!(editor instanceof TTCN3Editor)) {
 			return null;
 		}
+
 		return (TTCN3Editor)editor;
 	}
 	

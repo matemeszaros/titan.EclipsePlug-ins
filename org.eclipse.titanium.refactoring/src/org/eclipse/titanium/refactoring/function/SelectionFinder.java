@@ -215,12 +215,11 @@ class SelectionFinder {
 		// getting the active editor
 		final IEditorPart editor = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		TTCN3Editor targetEditor;
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return;
-		} else {//TODO not needed branch
-			targetEditor = (TTCN3Editor) editor;
 		}
+		
+		final TTCN3Editor targetEditor = (TTCN3Editor) editor;
 		statusLineManager = targetEditor.getEditorSite().getActionBars()
 				.getStatusLineManager();
 		// getting current selection

@@ -68,7 +68,7 @@ public class ExpandFieldNamesActionFromBrowser extends AbstractHandler implement
 		final ExpandFieldNamesWizard wiz = new ExpandFieldNamesWizard(refactoring);
 		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
