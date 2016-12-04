@@ -282,12 +282,9 @@ public class Environment {
 		}
 
 		final IVisitableNode scopeSt = parentSN.getAstNode();
-		if (scopeSt instanceof For_Statement ||
+		return (scopeSt instanceof For_Statement ||
 				scopeSt instanceof While_Statement ||
-				scopeSt instanceof Alt_Statement) {
-			return true;
-		}
-		return false;
+				scopeSt instanceof Alt_Statement);
 	}
 
 	public String toStringRecursive() {

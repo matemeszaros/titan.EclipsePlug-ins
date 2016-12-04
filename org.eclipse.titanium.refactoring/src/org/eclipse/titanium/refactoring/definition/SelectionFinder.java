@@ -159,13 +159,10 @@ class SelectionFinder {
 		}
 
 		private static boolean isGoodType(final IVisitableNode node) {
-			if (node instanceof Definition &&
+			return (node instanceof Definition &&
 					!(node instanceof Def_Var) &&
 					!(node instanceof Def_Var_Template) &&
-					!(node instanceof FormalParameter)) {
-				return true;
-			}
-			return false;
+					!(node instanceof FormalParameter));
 		}
 
 	}

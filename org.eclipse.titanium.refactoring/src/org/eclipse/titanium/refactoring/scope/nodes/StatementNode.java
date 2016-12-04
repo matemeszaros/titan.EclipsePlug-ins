@@ -179,11 +179,8 @@ public class StatementNode extends Node {
 		while (parent != null && !parent.equals(bn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
+
+		return parent != null;
 	}
 	/** Returns false if they are equal. */
 	@Override
@@ -191,15 +188,13 @@ public class StatementNode extends Node {
 		if (this.equals(sn)) {
 			return false;
 		}
+
 		StatementNode parent = this.parent == null ? null : this.parent.parent;
 		while (parent != null && !parent.equals(sn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
+
+		return parent != null;
 	}
 
 	public BlockNode findBlockInStmtWhichContainsNode(final Node containedNode) {

@@ -83,11 +83,8 @@ public class BlockNode extends Node {
 		while (parent != null && !parent.equals(bn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
+
+		return parent != null;
 	}
 	@Override
 	public boolean isStmtAncestorOfThis(final StatementNode sn) {
@@ -95,11 +92,8 @@ public class BlockNode extends Node {
 		while (parent != null && !parent.equals(sn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
+
+		return parent != null;
 	}
 
 	public BlockNode findSmallestCommonAncestorBlock(final BlockNode bn) {

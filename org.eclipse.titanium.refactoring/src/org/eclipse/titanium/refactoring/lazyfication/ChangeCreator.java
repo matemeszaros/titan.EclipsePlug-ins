@@ -136,10 +136,7 @@ class ChangeCreator {
 		}
 
 		private boolean isGoodType(final IVisitableNode node) {
-			if (node instanceof Def_Altstep || node instanceof Def_Function || node instanceof Def_Testcase) {
-				return true;
-			}
-			return false;
+			return (node instanceof Def_Altstep || node instanceof Def_Function || node instanceof Def_Testcase);
 		}
 
 		private List<FormalParameter> getLocations() {

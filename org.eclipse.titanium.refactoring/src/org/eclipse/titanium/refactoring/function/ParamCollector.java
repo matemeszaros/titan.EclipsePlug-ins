@@ -216,15 +216,12 @@ class ParamCollector {
 		}
 
 		private boolean isGoodDefType(final IVisitableNode node) {
-			if (node instanceof Def_Var ||
+			return (node instanceof Def_Var ||
 					node instanceof Def_Const ||
 					node instanceof Def_ModulePar ||
 					node instanceof FormalParameter ||
 					node instanceof Def_Var_Template ||
-					node instanceof Def_Timer) {
-				return true;
-			}
-			return false;
+					node instanceof Def_Timer);
 		}
 
 		/**

@@ -225,27 +225,19 @@ class ChangeCreator {
 		}
 
 		private boolean isGoodType(final IVisitableNode node) {
-			if (node instanceof Def_Altstep ||
+			return (node instanceof Def_Altstep ||
 					node instanceof Def_Const ||
 					node instanceof Def_ExternalConst ||
 					node instanceof Def_Extfunction ||
 					node instanceof Def_Function ||
 					node instanceof Def_ModulePar ||
 					node instanceof Def_Template ||
-					node instanceof Def_Type) {
-				return true;
-			}
-			return false;
+					node instanceof Def_Type);
 		}
 
 		private boolean hasValidLocation(final Definition def) {
-			if (def.getLocation() == null) {
-				return false;
-			}
-			if (def.getLocation().getOffset() < 0 || def.getLocation().getEndOffset() < 0) {
-				return false;
-			}
-			return true;
+			final Location location = def.getLocation();
+			return location != null && location.getOffset() >= 0 && location.getEndOffset() >= 0;
 		}
 
 	}
