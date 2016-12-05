@@ -105,6 +105,10 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		friendModules = new CopyOnWriteArrayList<FriendModule>();
 
 	}
+	
+	public final CompilationTimeStamp getLastTimeChecked() {
+		return lastCompilationTimeStamp;
+	}
 
 	@Override
 	public Identifier getIdentifier() {
