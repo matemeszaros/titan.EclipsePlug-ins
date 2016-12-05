@@ -104,12 +104,12 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 			try {
 				final File d = new File(location);
 				if(!d.exists()) {
-				    try{
-				    	d.mkdirs();
-				    }
-				    catch(Exception e){
-				    	throw new Exception("Could not create the parent folder of the project: " + d.getAbsolutePath() );
-				    }
+					try{
+						d.mkdirs();
+					}
+					catch(Exception e){
+						throw new Exception("Could not create the parent folder of the project: " + d.getAbsolutePath() );
+					}
 				} else if(!d.isDirectory()) {
 					throw new Exception("Provided location must be a directory.");
 				}
