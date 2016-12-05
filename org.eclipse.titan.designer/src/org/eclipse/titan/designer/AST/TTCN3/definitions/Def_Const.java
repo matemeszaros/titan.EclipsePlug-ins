@@ -171,7 +171,6 @@ public final class Def_Const extends Definition {
 			return;
 		}
 		
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		lastTimeChecked = timestamp;
 		
 		isUsed = false;

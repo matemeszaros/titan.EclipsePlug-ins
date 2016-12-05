@@ -322,7 +322,6 @@ public final class Def_Template extends Definition implements IParameterisedAssi
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		lastTimeChecked = timestamp;
 		T3Doc.check(this.getCommentLocation(), KIND);
 

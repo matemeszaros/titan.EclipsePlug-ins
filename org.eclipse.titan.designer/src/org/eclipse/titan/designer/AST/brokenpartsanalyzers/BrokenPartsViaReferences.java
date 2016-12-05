@@ -334,13 +334,15 @@ public final class BrokenPartsViaReferences extends SelectionMethodBase implemen
 				final Assignments startAssignments = startModule.getAssignments();
 				final List<AssignmentHandler> brokens = new ArrayList<AssignmentHandler>();
 				final List<AssignmentHandler> notBrokens = new ArrayList<AssignmentHandler>();
+				for( Assignment assignment: startAssignments){
+					MarkerHandler.markAllSemanticMarkersForRemoval(assignment);
+				}
 				for (int d = 0; d < startAssignments.getNofAssignments(); ++d) {
 					final Assignment startAssignment = startAssignments.getAssignmentByIndex(d);
 					final AssignmentHandler assignmentHandler = AssignmentHandlerFactory.getDefinitionHandler(startAssignment);
-					if (startAssignment.getLastTimeChecked() == null) {
-						MarkerHandler.markAllSemanticMarkersForRemoval(startAssignment);
+//					if (startAssignment.getLastTimeChecked() == null) {
 						startAssignment.check(timestamp);
-					}
+//					}
 
 					startAssignment.accept(assignmentHandler);
 

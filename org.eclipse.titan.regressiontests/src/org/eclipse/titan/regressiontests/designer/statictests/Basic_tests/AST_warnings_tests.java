@@ -103,7 +103,7 @@ public class AST_warnings_tests {
 
 	private ArrayList<MarkerToCheck> attribute_tests_ttcn_initializer() {
 		//attribute_tests.ttcn
-		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(250);
+		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(248);
 		int lineNum = 21;
 		markersToCheck.add(new MarkerToCheck("The group with name extension_attributes breaks the naming convention  `[A-Z].*'",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 6;
@@ -258,10 +258,7 @@ public class AST_warnings_tests {
 		lineNum += 2;
 		markersToCheck.add(new MarkerToCheck("The external function `@attribute_tests.f_decode_bad4' with name f_decode_bad4 breaks the naming convention  `ef_.*'",  lineNum, IMarker.SEVERITY_WARNING));
 		markersToCheck.add(new MarkerToCheck("The value parameter `pdu' with name pdu breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-		lineNum += 7;
-		markersToCheck.add(new MarkerToCheck("The external function `@attribute_tests' with name f_encode_good breaks the naming convention  `ef_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-		markersToCheck.add(new MarkerToCheck("The value parameter `pdu' with name pdu breaks the naming convention  `pl_.*'",  lineNum, IMarker.SEVERITY_WARNING));
-		lineNum += 28;
+		lineNum += 35;
 		markersToCheck.add(new MarkerToCheck("Duplicate attribute `internal'",  lineNum, IMarker.SEVERITY_WARNING));
 		lineNum += 7;
 		markersToCheck.add(new MarkerToCheck("Duplicate attribute `address'",  lineNum, IMarker.SEVERITY_WARNING));
@@ -494,7 +491,6 @@ public class AST_warnings_tests {
 
 		return markersToCheck;
 	}
-
 	private ArrayList<MarkerToCheck> expression_tests_ttcn_initializer() {
 		//expression_tests.ttcn
 		ArrayList<MarkerToCheck> markersToCheck = new ArrayList<MarkerToCheck>(468);

@@ -140,7 +140,6 @@ public final class Def_ModulePar_Template extends Definition {
 		if (lastTimeChecked != null && !lastTimeChecked.isLess(timestamp)) {
 			return;
 		}
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		lastTimeChecked = timestamp;
 		T3Doc.check(this.getCommentLocation(), KIND);
 
