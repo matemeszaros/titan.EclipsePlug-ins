@@ -63,7 +63,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  *
  * @author Viktor Varga
  */
-public class ExtractModuleParRefactoring  {
+public class ExtractModuleParRefactoring {
 
 	public static final boolean ENABLE_COPY_COMMENTS = false;
 
