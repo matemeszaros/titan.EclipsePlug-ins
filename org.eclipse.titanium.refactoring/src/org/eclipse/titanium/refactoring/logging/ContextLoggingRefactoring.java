@@ -31,30 +31,30 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * This refactoring operation adds context info to existing log statements, if necessary.
  * The user can specify settings for the operation in the wizard dialog.
  * The operation can be executed using the mechanisms in the superclass, through a wizard for example.
- * 
+ *
  * @author Viktor Varga
  */
 public class ContextLoggingRefactoring extends Refactoring {
 
 	private final IFile selectedFile;	//not null only if selection is of TextSelection
 	private final ISelection selection;
-	
+
 	private final Settings settings;
-	
+
 	private Object[] affectedObjects;		//the list of objects affected by the change
-	
+
 
 	/*
 	 * TODO dev:
-	 *  
+	 *
 	 *  what about expressions like lengthof(...)?
 	 *  wizard: param count limit input field, link it to Context.getVarCountLimitOption()
 	 *  local variable contexts
-	 * 
+	 *
 	 * */
-	
+
 	/** Use this constructor when the selection is a set of files, folders, or projects. */
-	public ContextLoggingRefactoring(IStructuredSelection selection, Settings settings) {
+	public ContextLoggingRefactoring(final IStructuredSelection selection, final Settings settings) {
 		this.selectedFile = null;
 		this.selection = selection;
 		if (settings == null) {
@@ -64,7 +64,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 		}
 	}
 	/** Use this constructor when the selection is a part of a single file. */
-	public ContextLoggingRefactoring(IFile selectedFile, ITextSelection selection, Settings settings) {
+	public ContextLoggingRefactoring(final IFile selectedFile, final ITextSelection selection, final Settings settings) {
 		this.selectedFile = selectedFile;
 		this.selection = selection;
 		if (settings == null) {
@@ -73,14 +73,15 @@ public class ContextLoggingRefactoring extends Refactoring {
 			this.settings = settings;
 		}
 	}
-	
+
 	public Settings getSettings() {
 		return settings;
 	}
-	Object[] getAffectedObjects() {
+
+	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
-	
+
 	//METHODS FROM REFACTORING
 
 	@Override
@@ -89,45 +90,45 @@ public class ContextLoggingRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
+	public Change createChange(final IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 		if (selection == null) {
 			ErrorReporter.logError("ContextLoggingRefactoring: Selection is null! ");
 			return null;
 		}
 		if (selection instanceof IStructuredSelection) {
-			CompositeChange cchange = new CompositeChange("ContextLoggingRefactoring");
-			IStructuredSelection ssel = (IStructuredSelection)selection;
-			Iterator it = ssel.iterator();
+			final CompositeChange cchange = new CompositeChange("ContextLoggingRefactoring");
+			final IStructuredSelection ssel = (IStructuredSelection)selection;
+			final Iterator<?> it = ssel.iterator();
 			while (it.hasNext()) {
-				Object o = it.next();
+				final Object o = it.next();
 				if (!(o instanceof IResource)) {
 					continue;
 				}
-				IResource res = (IResource)o;
-				ResourceVisitor vis = new ResourceVisitor(cchange);
+
+				final IResource res = (IResource)o;
+				final ResourceVisitor vis = new ResourceVisitor();
 				res.accept(vis);
+				cchange.add(vis.getChange());
 			}
 			affectedObjects = cchange.getAffectedObjects();
 			return cchange;
 		} else if (selection instanceof TextSelection) {
-			ChangeCreator chCreator = new ChangeCreator(selectedFile, (TextSelection)selection, settings);
+			final ChangeCreator chCreator = new ChangeCreator(selectedFile, (TextSelection)selection, settings);
 			chCreator.perform();
-			Change ch = chCreator.getChange();
+			final Change ch = chCreator.getChange();
 			if(ch == null) {
 				affectedObjects = new Object[]{};
 				return new CompositeChange("EmptyLoggingRefactoring");
@@ -140,7 +141,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 	}
 
 	//METHODS FROM REFACTORING END
-	
+
 
 	/**
 	 * Visits all the files of a folder or project (any {@link IResource}).
@@ -152,21 +153,21 @@ public class ContextLoggingRefactoring extends Refactoring {
 	private class ResourceVisitor implements IResourceVisitor {
 
 		private final CompositeChange change;
-		
-		public ResourceVisitor(CompositeChange change) {
-			this.change = change;
+
+		public ResourceVisitor() {
+			this.change = new CompositeChange("ContextLoggingRefactoring");;
 		}
-		
-		CompositeChange getChange() {
+
+		private CompositeChange getChange() {
 			return change;
 		}
-		
+
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
-				ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
+				final ChangeCreator chCreator = new ChangeCreator((IFile)resource, settings);
 				chCreator.perform();
-				Change ch = chCreator.getChange();
+				final Change ch = chCreator.getChange();
 				if (ch != null) {
 					change.add(ch);
 				}
@@ -176,14 +177,14 @@ public class ContextLoggingRefactoring extends Refactoring {
 			//CONTINUE
 			return true;
 		}
-		
+
 	}
-	
-	/** 
+
+	/**
 	 * This class contains the settings configuration for a refactoring operation.
 	 * */
 	public static class Settings {
-		
+
 		/** log function parameters. */
 		public static final int SETTING_LOG_FUNCPAR = 0x1;
 		/** log varaibles in if condition */
@@ -196,17 +197,17 @@ public class ContextLoggingRefactoring extends Refactoring {
 		public static final int SETTING_LOG_LOCAL_VARS_PARENT_BLOCK_ONLY = 0x10;
 		/** modify log statements which already log variables */
 		public static final int SETTING_MODIFY_LOG_STATEMENTS = 0x20;
-		
+
 		private int settings = 0;
-		
+
 		/** the maximum number of variables in log statements (including the ones
 		 *  in them before the refactoring) */
 		private int countLimit;
-		
+
 		public Settings() {
 			createDefaultSettings();
 		}
-		
+
 		private void createDefaultSettings() {
 			setSetting(SETTING_LOG_FUNCPAR, true);
 			setSetting(SETTING_LOG_IF, true);
@@ -216,19 +217,19 @@ public class ContextLoggingRefactoring extends Refactoring {
 			setSetting(SETTING_MODIFY_LOG_STATEMENTS, true);
 			countLimit = 8;
 		}
-		
+
 		public int getCountLimit() {
 			return countLimit;
 		}
-		public void setCountLimit(int countLimit) {
+		public void setCountLimit(final int countLimit) {
 			this.countLimit = countLimit;
 		}
-		
-		public boolean getSetting(int setting) {
+
+		public boolean getSetting(final int setting) {
 			return (settings & setting) == setting;
 		}
-		public void setSetting(int setting, boolean value) {
-			boolean prevVal = getSetting(setting);
+		public void setSetting(final int setting, final boolean value) {
+			final boolean prevVal = getSetting(setting);
 			if (prevVal == value) {
 				return;
 			}
@@ -238,7 +239,7 @@ public class ContextLoggingRefactoring extends Refactoring {
 				settings -= setting;
 			}
 		}
-		
+
 	}
-	
+
 }

@@ -18,15 +18,15 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * */
 public class LazyficationHeadless {
 	private final IStructuredSelection selection;
-	
-	public LazyficationHeadless(IStructuredSelection selection) {
+
+	public LazyficationHeadless(final IStructuredSelection selection) {
 		this.selection = selection;
 	}
 
 	public void run() {
 		final LazyficationRefactoring refactoring = new LazyficationRefactoring(selection);
 		try {
-			Change change = refactoring.createChange(null);
+			final Change change = refactoring.createChange(null);
 			change.perform(new NullProgressMonitor());
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);

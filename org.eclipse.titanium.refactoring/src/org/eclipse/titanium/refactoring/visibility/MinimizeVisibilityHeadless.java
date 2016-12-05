@@ -17,23 +17,23 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * @author Viktor Varga
  * */
 public class MinimizeVisibilityHeadless {
-	
+
 	private final IStructuredSelection selection;
-	
-	public MinimizeVisibilityHeadless(IStructuredSelection selection) {
+
+	public MinimizeVisibilityHeadless(final IStructuredSelection selection) {
 		this.selection = selection;
 	}
 
 	public void run() {
 		final MinimizeVisibilityRefactoring refactoring = new MinimizeVisibilityRefactoring(selection);
 		try {
-			Change change = refactoring.createChange(null);
+			final Change change = refactoring.createChange(null);
 			change.perform(new NullProgressMonitor());
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 	}
-	
-	
-	
+
+
+
 }

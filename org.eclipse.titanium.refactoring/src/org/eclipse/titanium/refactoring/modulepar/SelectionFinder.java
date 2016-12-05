@@ -31,7 +31,7 @@ import org.eclipse.titan.designer.parsers.GlobalParser;
  * This class is only instantiated by {@link ExtractModuleParRefactoring} once per
  * each refactoring operation. By calling {@link #perform()}, all module parameters
  * are collected from the source project.
- * 
+ *
  * @author Viktor Varga
  */
 public class SelectionFinder {
@@ -40,70 +40,72 @@ public class SelectionFinder {
 	private final IProject project;
 	//out
 	private Set<Def_ModulePar> modulePars;
-	
-	public SelectionFinder(IProject project) {
+
+	public SelectionFinder(final IProject project) {
 		this.project = project;
 	}
-	
+
 	public Set<Def_ModulePar> getModulePars() {
 		return modulePars;
 	}
-	
-	void perform() {
+
+	public void perform() {
 		modulePars = new HashSet<Def_ModulePar>();
-		Collection<Module> modules = GlobalParser.getProjectSourceParser(project).getModules();
+		final Collection<Module> modules = GlobalParser.getProjectSourceParser(project).getModules();
 		for (Module m: modules) {
-			ModuleParFinder vis = new ModuleParFinder();
+			final ModuleParFinder vis = new ModuleParFinder();
 			m.accept(vis);
 			modulePars.addAll(vis.getModulePars());
 		}
 	}
-	
-	String createModuleParListForSaving() {
+
+	public String createModuleParListForSaving() {
 		if (modulePars == null || modulePars.isEmpty()) {
 			return "<empty>";
 		}
-		List<ModuleParListRecord> records = new ArrayList<ModuleParListRecord>();
+
+		final List<ModuleParListRecord> records = new ArrayList<ModuleParListRecord>();
 		for (Def_ModulePar def: modulePars) {
-			IResource f = def.getLocation().getFile();
+			final IResource f = def.getLocation().getFile();
 			if (!(f instanceof IFile)) {
 				ErrorReporter.logError("ExtractModulePar/SelectionFinder: IResource `" + f.getName() + "' is not an IFile.");
 				continue;
 			}
-			Identifier id = def.getIdentifier();
-			Type t = def.getType(CompilationTimeStamp.getBaseTimestamp());
+
+			final Identifier id = def.getIdentifier();
+			final Type t = def.getType(CompilationTimeStamp.getBaseTimestamp());
 			records.add(new ModuleParListRecord(def.getMyScope().getModuleScope().getIdentifier().getDisplayName(), id.getDisplayName(), t.getTypename()));
 		}
 		//
 		Collections.sort(records);
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (ModuleParListRecord rec: records) {
-			sb.append(rec.toString()).append("\n");
+			sb.append(rec.toString()).append('\n');
 		}
 		return sb.toString();
 	}
-	
+
 	private static class ModuleParListRecord implements Comparable<ModuleParListRecord> {
-		
-		public ModuleParListRecord(String moduleName, String id, String typeId) {
+
+		public ModuleParListRecord(final String moduleName, final String id, final String typeId) {
 			this.moduleName = moduleName;
 			this.id = id;
 			this.typeId = typeId;
 		}
-		
-		final String moduleName;
-		final String id;
-		final String typeId;
-		
+
+		private final String moduleName;
+		private final String id;
+		private final String typeId;
+
 		@Override
-		public int compareTo(ModuleParListRecord arg0) {
-			int cmp = moduleName.compareTo(arg0.moduleName);
+		public int compareTo(final ModuleParListRecord arg0) {
+			final int cmp = moduleName.compareTo(arg0.moduleName);
 			if (cmp != 0) {
 				return cmp;
 			}
 			return id.compareTo(arg0.id);
 		}
-		
+
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -114,7 +116,7 @@ public class SelectionFinder {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(final Object obj) {
 			if (this == obj) {
 				return true;
 			}
@@ -124,7 +126,8 @@ public class SelectionFinder {
 			if (!(obj instanceof ModuleParListRecord)) {
 				return false;
 			}
-			ModuleParListRecord other = (ModuleParListRecord)obj;
+
+			final ModuleParListRecord other = (ModuleParListRecord)obj;
 			if (id == null) {
 				if (other.id != null) {
 					return false;
@@ -156,21 +159,21 @@ public class SelectionFinder {
 	private class ModuleParFinder extends ASTVisitor {
 
 		private final Set<Def_ModulePar> modulePars = new HashSet<Def_ModulePar>();
-		
+
 		public Set<Def_ModulePar> getModulePars() {
 			return modulePars;
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Def_ModulePar) {
 				modulePars.add((Def_ModulePar)node);
 				return V_SKIP;
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
-	
-	
+
+
 }

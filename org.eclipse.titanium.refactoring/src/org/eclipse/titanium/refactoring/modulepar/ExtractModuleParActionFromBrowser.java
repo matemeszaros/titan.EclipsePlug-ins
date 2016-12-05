@@ -40,29 +40,29 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
 	private ISelection selection;
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		performExtractModulePar();
 		return null;
 	}
 	@Override
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		performExtractModulePar();
-		
+
 	}
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 	}
 	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 	}
 
 	private void performExtractModulePar() {
@@ -70,29 +70,31 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		Set<IProject> sourceProjs = Utils.findAllProjectsInSelection((IStructuredSelection)selection);
+
+		final Set<IProject> sourceProjs = Utils.findAllProjectsInSelection((IStructuredSelection)selection);
 		if (sourceProjs.isEmpty()) {
 			return;
 		}
-		IProject sourceProj = sourceProjs.iterator().next();
-		final IStructuredSelection ssel = new StructuredSelection(sourceProj); 
-		
+
+		final IProject sourceProj = sourceProjs.iterator().next();
+		final IStructuredSelection ssel = new StructuredSelection(sourceProj);
+
 		//update AST before refactoring
-		Set<IProject> projsToUpdate = new HashSet<IProject>();
+		final Set<IProject> projsToUpdate = new HashSet<IProject>();
 		projsToUpdate.add(sourceProj);
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExtractModulePar");
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
 		final ExtractModuleParRefactoring refactoring = new ExtractModuleParRefactoring(sourceProj);
 		//open wizard
-		ExtractModuleParWizard wiz = new ExtractModuleParWizard();
+		final ExtractModuleParWizard wiz = new ExtractModuleParWizard();
 
 		wiz.init(PlatformUI.getWorkbench(), ssel);
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wiz);
+		final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wiz);
 		dialog.open();
-		boolean saveModuleParsOption = wiz.getSaveModuleParsOption();
-		IProject newProj = wiz.getProject();
+		final boolean saveModuleParsOption = wiz.getSaveModuleParsOption();
+		final IProject newProj = wiz.getProject();
 		if (newProj == null) {
 			ErrorReporter.logError("ExtractModuleParActionFromBrowser: Wizard returned a null project. ");
 			return;
@@ -100,7 +102,7 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 		refactoring.setTargetProject(newProj);
 		refactoring.setOption_saveModuleParList(saveModuleParsOption);
 		//copy project settings to new project
-		ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
+		final ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
 		if (pfh.projectFileExists()) {
 			//IResource.copy(...) is used because ProjectFileHandler.getDocumentFromFile(...) is not working
 			final IFile settingsFile = sourceProj.getFile("/" + ProjectFileHandler.XML_TITAN_PROPERTIES_FILE);
@@ -114,11 +116,11 @@ public class ExtractModuleParActionFromBrowser extends AbstractHandler implement
 				ErrorReporter.logError("ExtractModuleParActionFromEditor: Copying project settings to new project failed.");
 			}
 		}
-		
-		WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
+
+		final WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
 
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				refactoring.perform();
 				Activator.getDefault().resumeHandlingResourceChanges();
 				return Status.OK_STATUS;

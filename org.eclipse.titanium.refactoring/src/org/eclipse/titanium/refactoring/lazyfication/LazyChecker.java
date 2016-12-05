@@ -40,21 +40,21 @@ import org.eclipse.titan.designer.parsers.CompilationTimeStamp;
 
 /**
  * The task of this class is to find the formal parameters that could be lazy
- * 
+ *
  * @author Istvan Bohm
  */
 class LazyChecker {
 
 	private final List<FormalParameter> lazyParameterList;
-	
+
 	private RelevantFormalParameterCollector formalParameterCollector;
 	private boolean haveToContinue;
-	
+
 	LazyChecker() {
 		lazyParameterList = new ArrayList<FormalParameter>();
 	}
-	
-	void process(final IVisitableNode node) {
+
+	public void process(final IVisitableNode node) {
 		// This variable indicates occurrence of Return_Statement.
 		haveToContinue = true;
 
@@ -75,14 +75,14 @@ class LazyChecker {
 			}
 		}
 	}
-	
-	List<FormalParameter> getLazyParameterList() {
+
+	public List<FormalParameter> getLazyParameterList() {
 		return lazyParameterList;
 	}
-	
+
 	/**
 	 * This class collects default and in FormalParameters.
-	 * 
+	 *
 	 * @author Peter Olah
 	 */
 	public class RelevantFormalParameterCollector extends ASTVisitor {
@@ -118,13 +118,13 @@ class LazyChecker {
 			return items;
 		}
 	}
-	
+
 	/**
 	 * This class builds own data structure. Each root's of node is a
 	 * StatementBlock or a Statement or an AltGuard. On initializing, we set
 	 * Def_Altstep or Def_Function or Def_Testcase as root because it is the
 	 * StartNode.
-	 * 
+	 *
 	 * @author Istvan Bohm
 	 */
 	public class RelevantNodeBuilder extends ASTVisitor {
@@ -137,17 +137,17 @@ class LazyChecker {
 
 		// Contains possible FormalParameters of StatementBloc and Statement and AltGuard.
 		private Set<FormalParameter> referencedFormalParameters;
-		
+
 		// If this is a lazy formal parameter transmission, then the formal parameter is not relevant unless it is in some expression
 		private boolean nextFormalParameterIsNotRelevant;
-		
+
 		public RelevantNodeBuilder(final IVisitableNode node) {
 			root = node;
 			referencedFormalParameters = new HashSet<FormalParameter>();
 			strictFormalParameters = new HashSet<FormalParameter>();
 			nodes = new ArrayList<RelevantNodeBuilder>();
 		}
-		
+
 		public RelevantNodeBuilder(final IVisitableNode node,final boolean skipNextFormalParameter) {
 			this(node);
 			this.nextFormalParameterIsNotRelevant = skipNextFormalParameter;
@@ -155,7 +155,7 @@ class LazyChecker {
 
 		@Override
 		public int visit(final IVisitableNode node) {
-			
+
 			if(nextFormalParameterIsNotRelevant) {
 				if(node instanceof Expression_Value) {
 					nextFormalParameterIsNotRelevant = false;
@@ -163,7 +163,7 @@ class LazyChecker {
 					return V_SKIP;
 				}
 			}
-			
+
 			if ((node instanceof StatementBlock || node instanceof Statement || node instanceof AltGuard) && !node.equals(root)) {
 				final RelevantNodeBuilder statementBlockCollector = new RelevantNodeBuilder(node,nextFormalParameterIsNotRelevant);
 
@@ -186,14 +186,14 @@ class LazyChecker {
 
 				if (assignment instanceof Def_Function) {
 					final ISubReference subreference = ((Reference) node).getSubreferences().get(0);
-					
+
 					if(!(subreference instanceof ParameterisedSubReference)) {
 						return V_SKIP;
 					}
-					
+
 					final ParameterisedSubReference subref = (ParameterisedSubReference)((Reference) node).getSubreferences().get(0);
 					final ParsedActualParameters parsedActualParameters = subref.getParsedParameters();
-					
+
 					final ActualParameterList nonLazyActualParameters = new ActualParameterList();
 					final ActualParameterList lazyActualParameters = new ActualParameterList();
 					final FormalParameterList formalParameterList=((Def_Function)assignment).getFormalParameterList();
@@ -204,7 +204,7 @@ class LazyChecker {
 						nodes.add(statementBlockCollector);
 						nonLazyActualParameters.accept(statementBlockCollector);
 					}
-					final int size=lazyActualParameters.getNofParameters(); 
+					final int size=lazyActualParameters.getNofParameters();
 					for(int i=0;i<size;++i) {
 						final ActualParameter lazyActualParameter = lazyActualParameters.getParameter(i);
 						if(lazyActualParameter instanceof Value_ActualParameter) {
@@ -215,7 +215,7 @@ class LazyChecker {
 					}
 					return V_SKIP;
 				}
-				
+
 				if (assignment instanceof FormalParameter) {
 					if(nextFormalParameterIsNotRelevant) {
 						return V_CONTINUE;
@@ -239,7 +239,7 @@ class LazyChecker {
 				haveToContinue = false;
 				return referencedFormalParameters;
 			}
-			
+
 			final Set<FormalParameter> shouldBeEvaluated = new HashSet<FormalParameter>();
 
 			if (nodes.isEmpty()) {

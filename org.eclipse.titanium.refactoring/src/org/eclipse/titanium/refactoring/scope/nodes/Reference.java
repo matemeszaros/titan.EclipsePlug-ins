@@ -11,19 +11,19 @@ import java.util.List;
 
 /**
  * This class represents a reference for a variable.
- * 
+ *
  * @author Viktor Varga
  */
 class Reference {
-	
+
 	private final StatementNode ref;	// the SN containing the ASTNode which contains the reference
 	private boolean leftHandSide;		// whether the reference is lhs
-	
-	Reference(StatementNode ref, boolean leftHandSide) {
+
+	Reference(final StatementNode ref, final boolean leftHandSide) {
 		this.ref = ref;
 		this.leftHandSide = leftHandSide;
 	}
-	
+
 	public StatementNode getRef() {
 		return ref;
 	}
@@ -33,9 +33,9 @@ class Reference {
 	public void setLeftHandSide() {
 		this.leftHandSide = true;
 	}
-	
+
 	//helpers
-	public static int indexOf(StatementNode sn, List<Reference> refs) {
+	public static int indexOf(final StatementNode sn, final List<Reference> refs) {
 		for (int i=0;i<refs.size();i++) {
 			if (refs.get(i).ref.equals(sn)) {
 				return i;
@@ -43,5 +43,5 @@ class Reference {
 		}
 		return -1;
 	}
-	
+
 }

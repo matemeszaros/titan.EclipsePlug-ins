@@ -22,7 +22,7 @@ import org.eclipse.titan.designer.AST.Identifier;
 
 /**
  * Wizard page #1: edit the name of the new function.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
@@ -30,18 +30,18 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 	private static final String LABEL_NEWFUNCNAME = "New function name:";
 	private static final String DEFAULT_FUNC_NAME = "newFunction";
 	private Text newFuncName;
-	
+
 	public ExtractToFunctionWizardFuncNamePage(final String name) {
 		super(name);
 	}
 
 	@Override
-	public void createControl(Composite parent) {
-		Composite top = new Composite(parent, SWT.NONE);
+	public void createControl(final Composite parent) {
+		final Composite top = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(top);
 		setControl(top);
 		top.setLayout(new GridLayout(2, false));
-		Label label = new Label(top, SWT.NONE);
+		final Label label = new Label(top, SWT.NONE);
 		label.setText(LABEL_NEWFUNCNAME);
 		newFuncName = new Text(top, SWT.BORDER);
 		newFuncName.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -50,7 +50,7 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 			@Override
 			public void modifyText(final ModifyEvent e) {
 				if (checkNewNameValidity()) {
-					StringBuilder newFuncNameSB = ((ExtractToFunctionRefactoring)getRefactoring()).getNewFunctionName();
+					final StringBuilder newFuncNameSB = ((ExtractToFunctionRefactoring)getRefactoring()).getNewFunctionName();
 					newFuncNameSB.setLength(0);
 					newFuncNameSB.append(newFuncName.getText());
 				}
@@ -59,12 +59,12 @@ public class ExtractToFunctionWizardFuncNamePage extends UserInputWizardPage {
 		newFuncName.setFocus();
 		newFuncName.selectAll();
 		checkNewNameValidity();
-		
+
 	}
-	
-	
+
+
 	private boolean checkNewNameValidity() {
-		String newName = newFuncName.getText();
+		final String newName = newFuncName.getText();
 		if (newName.length() == 0) {
 			setErrorMessage(null);
 			setPageComplete(false);

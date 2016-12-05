@@ -20,34 +20,35 @@ import org.eclipse.titanium.refactoring.Utils;
  * called from the editor for a single module.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Zsolt Tabi
  */
 public class ExpandFieldNamesActionFromEditor extends AbstractHandler {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		//update AST
 		Utils.updateASTForProjectActiveInEditor("ExpandFieldNames");
 		Activator.getDefault().pauseHandlingResourceChanges();
 
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
 		//getting selected file
-		IFile selectedFile = Utils.getSelectedFileInEditor("ExpandFieldNames");
+		final IFile selectedFile = Utils.getSelectedFileInEditor("ExpandFieldNames");
 		if (selectedFile == null) {
 			return null;
 		}
-		IStructuredSelection structSelection = new StructuredSelection(selectedFile);
-		ExpandFieldNamesRefactoring refactoring = new ExpandFieldNamesRefactoring(structSelection);
+
+		final IStructuredSelection structSelection = new StructuredSelection(selectedFile);
+		final ExpandFieldNamesRefactoring refactoring = new ExpandFieldNamesRefactoring(structSelection);
 
 		//open wizard
-		ExpandFieldNamesWizard wiz = new ExpandFieldNamesWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final ExpandFieldNamesWizard wiz = new ExpandFieldNamesWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
@@ -56,14 +57,14 @@ public class ExpandFieldNamesActionFromEditor extends AbstractHandler {
 			ErrorReporter.logError("ExpandFieldNamesActionFromEditor: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
-		IProject project = selectedFile.getProject();
+		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
-		
+
 		return null;
 	}
 

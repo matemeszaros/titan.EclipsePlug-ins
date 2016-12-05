@@ -51,23 +51,25 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 /**
  * A class for utilities used by the refactoring classes.
+ * TODO needed? used consistently?
  * 
  * @author Viktor Varga
  */
 public class Utils {
-	
+
 	private static final String SOURCE_DIR = "src";
-	
+
 	public static TTCN3Editor getActiveEditor() {
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (!(editor instanceof TTCN3Editor)) {
 			return null;
 		}
-		return (TTCN3Editor)editor;
+
+		return (TTCN3Editor) editor;
 	}
-	
-	public static IFile getSelectedFileInEditor(String refactoringName) {
-		TTCN3Editor targetEditor = getActiveEditor();
+
+	public static IFile getSelectedFileInEditor(final String refactoringName) {
+		final TTCN3Editor targetEditor = getActiveEditor();
 		if (targetEditor == null) {
 			ErrorReporter.logError("Utils.getSelectedFileInEditor(): " +
 					"No TTCN3Editor available, during refactoring: " + refactoringName);
@@ -75,42 +77,42 @@ public class Utils {
 		}
 		return extractFile(targetEditor, refactoringName);
 	}
-	
-	private static IFile extractFile(IEditorPart editor, String refactoringName) {
-		IEditorInput input = editor.getEditorInput();
+
+	private static IFile extractFile(final IEditorPart editor, final String refactoringName) {
+		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			TITANDebugConsole.getConsole().newMessageStream()
 					.println("Utils.extractFile() during refactoring " +
 					refactoringName + ": IEditorInput is not an IFileEditorInput. ");
 			return null;
 		}
-		return ((IFileEditorInput)input).getFile();
+		return ((IFileEditorInput) input).getFile();
 	}
-	
+
 	/**
 	 * Reanalyzes the project which contains the file that is currently active in the editor window.
 	 * */
-	public static void updateASTForProjectActiveInEditor(String refactoringName) {
-		//getting editor
-		IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	public static void updateASTForProjectActiveInEditor(final String refactoringName) {
+		// getting editor
+		final IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		TTCN3Editor editor;
 		if (editorPart == null || !(editorPart instanceof TTCN3Editor)) {
 			TITANDebugConsole.getConsole().newMessageStream()
 					.println("Utils.updateASTForProjectActiveInEditor() during refactoring " +
 					refactoringName + ": Only for TTCN3 editors!");
 			return;
-		} else {
-			editor = (TTCN3Editor)editorPart;
+		} else {// TODO not needed else
+			editor = (TTCN3Editor) editorPart;
 		}
-		//getting selected file
-		IFile selFile = extractFile(editor, refactoringName);
+		// getting selected file
+		final IFile selFile = extractFile(editor, refactoringName);
 		if (selFile == null) {
 			return;
 		}
 		//
-		IProject selProject = selFile.getProject();
-		ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selProject);
-		WorkspaceJob job = projectSourceParser.reportOutdating((IFile)selFile);
+		final IProject selProject = selFile.getProject();
+		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selProject);
+		WorkspaceJob job = projectSourceParser.reportOutdating((IFile) selFile);
 		if (job == null) {
 			TITANDebugConsole.getConsole().newMessageStream()
 			.println("Utils.updateASTForProjectActiveInEditor() during refactoring " +
@@ -123,6 +125,7 @@ public class Utils {
 			ErrorReporter.logExceptionStackTrace(e);
 			return;
 		}
+
 		job = projectSourceParser.analyzeAll();
 		if (job == null) {
 			TITANDebugConsole.getConsole().newMessageStream()
@@ -138,12 +141,11 @@ public class Utils {
 		}
 	}
 
-	
 	/**
 	 * Reanalyzes the given projects.
 	 * */
-	public static void updateASTBeforeRefactoring(Set<IProject> projsToUpdate, String name) {
-		UpdateASTOp updateAST = new UpdateASTOp(projsToUpdate, name);
+	public static void updateASTBeforeRefactoring(final Set<IProject> projsToUpdate, final String name) {
+		final UpdateASTOp updateAST = new UpdateASTOp(projsToUpdate, name);
 		final ProgressMonitorDialog pmd = new ProgressMonitorDialog(null);
 		try {
 			pmd.run(true, true, updateAST);
@@ -156,7 +158,7 @@ public class Utils {
 			return;
 		}
 	}
-	
+
 	/**
 	 * Reanalyzes only the modified files after a refactoring operation.
 	 * If the operation was cancelled, nothing is reanalyzed.
@@ -167,7 +169,7 @@ public class Utils {
 	 * @param refactoringName The name of the operation
 	 * 
 	 * */
-	public static void updateASTAfterRefactoring(RefactoringWizard wiz, Object[] affectedObjects, String refactoringName) {
+	public static void updateASTAfterRefactoring(final RefactoringWizard wiz, final Object[] affectedObjects, final String refactoringName) {
 		if (wiz.getChange() == null || wiz.getChange().getAffectedObjects() == null) {
 			return;
 		}
@@ -177,15 +179,16 @@ public class Utils {
 		if (affectedObjects == null) {
 			return;
 		}
-		Map<IProject, List<IFile>> affectedProjects = new HashMap<IProject, List<IFile>>();
-		for (Object o: affectedObjects) {
+
+		final Map<IProject, List<IFile>> affectedProjects = new HashMap<IProject, List<IFile>>();
+		for (Object o : affectedObjects) {
 			if (o instanceof IFile) {
-				IFile f = (IFile)o;
-				IProject pr = f.getProject();
+				final IFile f = (IFile) o;
+				final IProject pr = f.getProject();
 				GlobalParser.getProjectSourceParser(pr).reportOutdating(f);
-				List<IFile> fs = affectedProjects.get(pr);
+				final List<IFile> fs = affectedProjects.get(pr);
 				if (fs == null) {
-					List<IFile> newFs = new ArrayList<IFile>();
+					final List<IFile> newFs = new ArrayList<IFile>();
 					newFs.add(f);
 					affectedProjects.put(pr, newFs);
 				} else {
@@ -196,11 +199,11 @@ public class Utils {
 						"An affected object is not an IFile " + o);
 			}
 		}
-		for (Map.Entry<IProject, List<IFile>> e: affectedProjects.entrySet()) {
-			IProject pr = e.getKey();
-			List<IFile> fs = e.getValue();
-			ProjectSourceParser psp = GlobalParser.getProjectSourceParser(pr);
-			for (IFile f: fs) {
+		for (Map.Entry<IProject, List<IFile>> e : affectedProjects.entrySet()) {
+			final IProject pr = e.getKey();
+			final List<IFile> fs = e.getValue();
+			final ProjectSourceParser psp = GlobalParser.getProjectSourceParser(pr);
+			for (IFile f : fs) {
 				psp.reportOutdating(f);
 			}
 			psp.analyzeAll();
@@ -210,27 +213,28 @@ public class Utils {
 	/**
 	 * Returns the projects contained in the selection object.
 	 * */
-	public static Set<IProject> findAllProjectsInSelection(IStructuredSelection ssel) {
-		Set<IProject> projs = new HashSet<IProject>();
+	public static Set<IProject> findAllProjectsInSelection(final IStructuredSelection ssel) {
+		final Set<IProject> projs = new HashSet<IProject>();
 		if (ssel == null) {
 			return projs;
 		}
-		Iterator it = ssel.iterator();
+
+		final Iterator<?> it = ssel.iterator();
 		while (it.hasNext()) {
-			Object o = it.next();
+			final Object o = it.next();
 			if (!(o instanceof IResource)) {
 				continue;
 			}
 			if (o instanceof IProject) {
-				projs.add((IProject)o);
+				projs.add((IProject) o);
 				continue;
 			}
-			IResource res = (IResource)o;
+
+			final IResource res = (IResource) o;
 			projs.add(res.getProject());
 		}
 		return projs;
 	}
-
 
 	/**
 	 * This class contains an operation which updates the AST for the given projects, while
@@ -241,35 +245,35 @@ public class Utils {
 	 * 
 	 * */
 	private static class UpdateASTOp implements IRunnableWithProgress {
-		
-		private Set<IProject> toUpdate;
-		private String name;
-		
+
+		private final Set<IProject> toUpdate;
+		private final String name;
+
 		/**
 		 * @param toUpdate the projects to reanalyze
 		 * @param name the string (name of the refactoring operation) to display in error messages
 		 * */
-		public UpdateASTOp(Set<IProject> toUpdate, String name) {
+		public UpdateASTOp(final Set<IProject> toUpdate, final String name) {
 			this.toUpdate = toUpdate;
 			this.name = name;
 		}
-		
+
 		@Override
-		public void run(IProgressMonitor monitor)
+		public void run(final IProgressMonitor monitor)
 				throws InvocationTargetException, InterruptedException {
 			if (toUpdate == null) {
 				return;
 			}
 			monitor.beginTask(name, toUpdate.size());
-			//update AST for each project
-			for (IProject proj: toUpdate) {
+			// update AST for each project
+			for (IProject proj : toUpdate) {
 				monitor.subTask("Waiting for semantic analysis on project " + proj.getName());
-				ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(proj);
-				WorkspaceJob job = projectSourceParser.analyzeAll();
+				final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(proj);
+				final WorkspaceJob job = projectSourceParser.analyzeAll();
 				if (job == null) {
 					TITANDebugConsole.getConsole().newMessageStream()
 							.println("Utils.updateASTOp: WorkspaceJob to analyze project could not be created for project "
-							+ proj.getName() + ", during the refactoring: " + name);
+									+ proj.getName() + ", during the refactoring: " + name);
 					return;
 				}
 				try {
@@ -277,7 +281,7 @@ public class Utils {
 				} catch (InterruptedException e) {
 					TITANDebugConsole.getConsole().newMessageStream()
 							.println("Utils.updateASTOp: Error during semantic analysis of the project: "
-							+ proj.getName() + ", during the refactoring: " + name);
+									+ proj.getName() + ", during the refactoring: " + name);
 					return;
 				}
 				if (monitor.isCanceled()) {
@@ -287,84 +291,85 @@ public class Utils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Collects all the files of a folder or project (any {@link IResource}).
 	 * <p>
 	 * Call on any {@link IResource} object.
-	 *  */
+	 * */
 	public static class ResourceVisitor implements IResourceVisitor {
 
 		private final List<IFile> files;
-		
-		ResourceVisitor() {
+
+		private ResourceVisitor() {
 			files = new ArrayList<IFile>();
 		}
-		
-		List<IFile> getFiles() {
+
+		private List<IFile> getFiles() {
 			return files;
 		}
-		
+
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
-				files.add((IFile)resource);
-				//SKIP
+				files.add((IFile) resource);
+				// SKIP
 				return false;
 			}
-			//CONTINUE
+			// CONTINUE
 			return true;
 		}
-		
+
 	}
-	
+
 	/**
 	 * FOR DEBUG
 	 * Lists all children nodes.
 	 * */
 	public static class DebugVisitor extends ASTVisitor {
-		
+
 		private String prefix = "";
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			prefix = prefix + "    ";
 			System.out.print(prefix + node.getClass() + "; " + node);
 			if (node instanceof ILocateableNode) {
-				ILocateableNode ln = (ILocateableNode)node;
+				final ILocateableNode ln = (ILocateableNode) node;
 				System.out.print(" loc: " + ln.getLocation().getOffset() + "-" + ln.getLocation().getEndOffset());
 				if (node instanceof Definition) {
-					Definition d = (Definition)ln;
+					final Definition d = (Definition) ln;
 					System.out.print(", cummloc: " + d.getCumulativeDefinitionLocation().getOffset() + "-" + d.getCumulativeDefinitionLocation().getEndOffset());
 				}
 			}
 			System.out.println();
 			return V_CONTINUE;
 		}
-		
+
 		@Override
-		public int leave(IVisitableNode node) {
+		public int leave(final IVisitableNode node) {
 			prefix = prefix.substring(4);
 			return V_CONTINUE;
 		}
-		
+
 	}
-	
-	public static String createLocationString(IVisitableNode node) {
+
+	public static String createLocationString(final IVisitableNode node) {
 		if (node == null) {
 			return "<null node>";
 		}
 		if (!(node instanceof ILocateableNode)) {
 			return "<no location info>";
 		}
-		StringBuilder sb = new StringBuilder();
-		ILocateableNode lnode = (ILocateableNode)node;
-		sb.append(" ").append(lnode.getLocation().getOffset()).append("-").append(lnode.getLocation().getEndOffset());
-		sb.append(" in file ").append(lnode.getLocation().getFile().getName()).append(":");
-		sb.append(lnode.getLocation().getLine()).append(" ");
+
+		final StringBuilder sb = new StringBuilder();
+		final ILocateableNode lnode = (ILocateableNode) node;
+		sb.append(' ').append(lnode.getLocation().getOffset()).append('-').append(lnode.getLocation().getEndOffset());
+		sb.append(" in file ").append(lnode.getLocation().getFile().getName()).append(':');
+		sb.append(lnode.getLocation().getLine()).append(' ');
 		return sb.toString();
 	}
-	
+
 	public static boolean createProject(final IProjectDescription description, final IProject projectHandle)
 			throws CoreException {
 
@@ -392,7 +397,7 @@ public class Utils {
 						CCompilerOptionsData.CXX_COMPILER_PROPERTY), "g++");
 			}
 		};
-		
+
 		try {
 			op.run(null);
 		} catch (InterruptedException e) {
@@ -405,6 +410,5 @@ public class Utils {
 		}
 		return true;
 	}
-	
-	
+
 }

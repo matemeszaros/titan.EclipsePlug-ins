@@ -41,7 +41,7 @@ import org.eclipse.titanium.refactoring.function.ReturnVisitor.ReturnCertainty;
  * <p>
  * <li>INIT (must be called first)
  *  <ul>
- *  <li>{@link #findSelection()} determines which statements are selected by the user; 
+ *  <li>{@link #findSelection()} determines which statements are selected by the user;
  *  use {@link #findSelectionHeadless(IFile, ITextSelection)} in headless mode</li>
  *  <li>{@link #createFunction()} creates the function body and function call texts (made up of lists of mutable StringBuilders) </li>
  *  </ul>
@@ -56,46 +56,46 @@ import org.eclipse.titanium.refactoring.function.ReturnVisitor.ReturnCertainty;
  *  <li>{@link #createChange()} is called by the wizard; this produces Strings from the StringBuilders and the TextChange is returned</li>
  *  </ul>
  * </li>
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractToFunctionRefactoring extends Refactoring {
 
 	/*
 	 * TODO errors:
-	 * 
+	 *
 	 * (not in selection: goto l1; in selection: goto l1; label l1;) error is not recognized
-	 * 
+	 *
 	 * */
-	
+
 	/*
 	 * TODO dev:
-	 * 
+	 *
 	 * debug logging only when its necessary (and print a good log)
-	 * 
+	 *
 	 * wizard params page edit support: check variable names for validity and dissimilarity
-	 * 
+	 *
 	 * */
-	
-	static final boolean DEBUG_MESSAGES_ON = false;
-	
+
+	public static final boolean DEBUG_MESSAGES_ON = false;
+
 	private IProject project;
-	
-	private StringBuilder newFuncName = new StringBuilder("newFunction"); 
+
+	private final StringBuilder newFuncName = new StringBuilder("newFunction");
 	private IVisitableNode parentFunc;
-	
+
 	//StringBuilders are used as mutable Strings
 	private List<StringBuilder> functionText;
 	private List<StringBuilder> functionCallText;
 	private String functionTextReady = "/* function body */";
 	private String functionCallTextReady = "/* function call */";
-	
+
 	private SelectionFinder selectionFinder;
 	private ParamCollector paramCollector;
 	private FunctionCreator functionCreator;
-	
+
 //CALLED FROM WIZARD
-	
+
 	public StringBuilder getNewFunctionName() {
 		return newFuncName;
 	}
@@ -103,31 +103,30 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	public IModelProvider<ParamTableItem> getWizardModelProvider() {
 		return functionCreator;
 	}
-	
+
 //CALLED FROM WIZARD END
-	
+
 	public String getNewFunctionText() {
 		return functionTextReady;
 	}
-	
+
 //METHODS FROM REFACTORING
 
 	@Override
 	public String getName() {
 		return "Extract to function";
 	}
-	
+
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
+		final RefactoringStatus result = new RefactoringStatus();
 		ListIterator<RefactoringStatusEntry> it = selectionFinder.getWarnings().listIterator();
 		while (it.hasNext()) {
 			result.addEntry(it.next());
@@ -144,62 +143,65 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(final IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		createFunctionText();
 		createFunctionCallText();
 		//
-		TextFileChange tfc = new TextFileChange(selectionFinder.getSelectedFile().getName(), selectionFinder.getSelectedFile());
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(selectionFinder.getSelectedFile().getName(), selectionFinder.getSelectedFile());
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 		//replace selection with function call & new declarations
-		int offset = selectionFinder.getSelectedStatements().getLocation().getOffset();
-		int len = selectionFinder.getSelectedStatements().getLocation().getEndOffset()-offset;
+		final int offset = selectionFinder.getSelectedStatements().getLocation().getOffset();
+		final int len = selectionFinder.getSelectedStatements().getLocation().getEndOffset()-offset;
 		rootEdit.addChild(new ReplaceEdit(offset, len, functionCallTextReady));
 		//add new function after the one in which the selection is
 		if (parentFunc != null && selectionFinder.getInsertLoc() >= 0) {
 			rootEdit.addChild(new InsertEdit(selectionFinder.getInsertLoc(), functionTextReady));
 		}
-		
+
 		return tfc;
 	}
-	
+
 //METHODS FROM REFACTORING END
-	
-	void findSelection() {
+
+	public void findSelection() {
 		selectionFinder = new SelectionFinder();
 		selectionFinder.perform();
 		project = selectionFinder.getProject();
 	}
-	void findSelectionHeadless(IFile selFile, ITextSelection textSel) {
+
+	public void findSelectionHeadless(final IFile selFile, final ITextSelection textSel) {
 		selectionFinder = new SelectionFinder();
 		selectionFinder.performHeadless(selFile, textSel);
 		project = selectionFinder.getProject();
 	}
-	
-	boolean isSelectionValid() {
+
+	public boolean isSelectionValid() {
 		return selectionFinder != null && selectionFinder.isSelectionValid() && selectionFinder.getParentFunc() != null;
 	}
-	IFile getSelectedFile() {
+
+	public IFile getSelectedFile() {
 		return selectionFinder.getSelectedFile();
 	}
-	Module getSelectedModule() {
+
+	public Module getSelectedModule() {
 		return selectionFinder.getModule();
 	}
-	
-	WorkspaceJob createFunction() {
-		WorkspaceJob job = new WorkspaceJob("ExtractToFunction: creating new function text") {
-			
+
+	public WorkspaceJob createFunction() {
+		final WorkspaceJob job = new WorkspaceJob("ExtractToFunction: creating new function text") {
+
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				final StatementList selectedStatements = selectionFinder.getSelectedStatements();
 				final Module selectedModule = getSelectedModule();
 				final IFile selectedFile = getSelectedFile();
-				
+
 				final Reference runsOnRef = selectionFinder.getRunsOnRef();
 				final Type returnType = selectionFinder.getReturnType();
 				final ReturnCertainty retCertainty = selectionFinder.getReturnCertainty();
 				parentFunc = selectionFinder.getParentFunc();
-				
+
 				if (parentFunc == null) {
 					ErrorReporter.logError("ExtractToFunctionRefactoring.createFunction(): Could not find the enclosing function of the selection! ");
 					return Status.CANCEL_STATUS;
@@ -225,14 +227,14 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 				//create new function text
 				functionCreator = new FunctionCreator(selectedStatements, selectedFile, newFuncName,
 						params, runsOnRef, returnType, retCertainty);
-				
+
 				functionCreator.perform();
 				functionText = functionCreator.getFunctionText();
 				if (functionText == null) {
 					ErrorReporter.logError("ExtractToFunctionRefactoring.createFunction(): Unable to create function text! ");
 					return Status.CANCEL_STATUS;
 				}
-				
+
 				functionCallText = functionCreator.getFunctionCallText();
 				if (functionCallText == null) {
 					ErrorReporter.logError("ExtractToFunctionRefactoring.createFunction(): Unable to create function call text! ");
@@ -245,19 +247,20 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 		job.schedule();
 		return job;
 	}
-	
+
 	private void createFunctionText() {
 		if (functionText == null) {
 			functionTextReady = null;
 			return;
 		}
-		StringBuilder ret = new StringBuilder();
+
+		final StringBuilder ret = new StringBuilder();
 		for (StringBuilder sb: functionText) {
 			ret.append(sb);
 		}
 		functionTextReady = ret.toString();
 		if (DEBUG_MESSAGES_ON) {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			sb.append("ExtractToFunctionRefactoring->function body text debug info: >>>\n");
 			sb.append(functionTextReady);
 			sb.append("\n<<<");
@@ -269,13 +272,14 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 			functionCallTextReady = null;
 			return;
 		}
-		StringBuilder ret = new StringBuilder();
+
+		final StringBuilder ret = new StringBuilder();
 		for (StringBuilder sb: functionCallText) {
 			ret.append(sb);
 		}
 		functionCallTextReady = ret.toString();
 		if (DEBUG_MESSAGES_ON) {
-			StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = new StringBuilder();
 			sb.append("ExtractToFunctionRefactoring->function call text debug info: >>>\n");
 			sb.append(functionCallTextReady);
 			sb.append("\n<<<");
@@ -283,17 +287,17 @@ public class ExtractToFunctionRefactoring extends Refactoring {
 		}
 	}
 
-	
-	static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
+
+	public static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
 		Display.getDefault().asyncExec(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				toSet.setErrorMessage(msg);
-				
+
 			}
 		});
 	}
-	
-	
+
+
 }

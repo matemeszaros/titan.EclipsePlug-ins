@@ -30,50 +30,50 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * called from the package browser for a single or multiple project(s), folder(s) or file(s).
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeScopeActionFromBrowser extends AbstractHandler implements IObjectActionDelegate {
 	private ISelection selection;
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		performMinimizeScope();
 		return null;
 	}
 	@Override
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		performMinimizeScope();
 	}
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 	}
 	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 	}
 
 	private void performMinimizeScope() {
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		//find selection
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
 		final IStructuredSelection structSelection = (IStructuredSelection)selection;
-		Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
-		
+		final Set<IProject> projsToUpdate = Utils.findAllProjectsInSelection(structSelection);
+
 		//update AST before refactoring
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "MinimizeScope");
-		
+
 		Activator.getDefault().pauseHandlingResourceChanges();
-		
+
 		//create refactoring
-		MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(structSelection, null);
+		final MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(structSelection, null);
 		//open wizard
-		MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor == null ? null : targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
@@ -83,7 +83,7 @@ public class MinimizeScopeActionFromBrowser extends AbstractHandler implements I
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 		Activator.getDefault().resumeHandlingResourceChanges();
-		
+
 		//update AST after refactoring
 		Utils.updateASTAfterRefactoring(wiz, refactoring.getAffectedObjects(), refactoring.getName());
 	}

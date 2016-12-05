@@ -17,16 +17,16 @@ import org.eclipse.titan.designer.AST.Location;
 
 /**
  * A node representing a StatementBlock.
- * 
+ *
  * @author Viktor Varga
  */
 public class BlockNode extends Node {
 
 	protected StatementNode parent;
-	
+
 	protected final List<StatementNode> sts;
 
-	public BlockNode(IVisitableNode astNode) {
+	public BlockNode(final IVisitableNode astNode) {
 		super(astNode);
 		this.sts = new ArrayList<StatementNode>();
 	}
@@ -38,30 +38,30 @@ public class BlockNode extends Node {
 		return sts;
 	}
 
-	public StatementNode getPreviousStatement(StatementNode sn) {
-		int ind = sts.indexOf(sn);
+	public StatementNode getPreviousStatement(final StatementNode sn) {
+		final int ind = sts.indexOf(sn);
 		if (ind <= 0) {
 			return null;
 		}
 		return sts.get(ind-1);
-	}	
-	public StatementNode getNextStatement(StatementNode sn) {
-		int ind = sts.indexOf(sn);
+	}
+	public StatementNode getNextStatement(final StatementNode sn) {
+		final int ind = sts.indexOf(sn);
 		if (ind >= sts.size()-1) {
 			return null;
 		}
 		return sts.get(ind+1);
 	}
-	
-	public void setParent(StatementNode parent) {
+
+	public void setParent(final StatementNode parent) {
 		this.parent = parent;
 	}
-	public void addStatement(StatementNode st) {
+	public void addStatement(final StatementNode st) {
 		sts.add(st);
 	}
-	
+
 	@Override
-	protected boolean containsNode(Node n) {
+	protected boolean containsNode(final Node n) {
 		if (this.equals(n)) {
 			return true;
 		}
@@ -75,7 +75,7 @@ public class BlockNode extends Node {
 
 	/** Returns false if they are equal. */
 	@Override
-	public boolean isBlockAncestorOfThis(BlockNode bn) {
+	public boolean isBlockAncestorOfThis(final BlockNode bn) {
 		if (this.equals(bn)) {
 			return false;
 		}
@@ -83,26 +83,20 @@ public class BlockNode extends Node {
 		while (parent != null && !parent.equals(bn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
+
+		return parent != null;
 	}
 	@Override
-	public boolean isStmtAncestorOfThis(StatementNode sn) {
+	public boolean isStmtAncestorOfThis(final StatementNode sn) {
 		StatementNode parent = this.getParent();
 		while (parent != null && !parent.equals(sn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
-	} 
-	
-	public BlockNode findSmallestCommonAncestorBlock(BlockNode bn) {
+
+		return parent != null;
+	}
+
+	public BlockNode findSmallestCommonAncestorBlock(final BlockNode bn) {
 		if (bn.equals(this)) {
 			return this;
 		}
@@ -121,17 +115,17 @@ public class BlockNode extends Node {
 			return null;
 		}
 	}
-	
-	public StatementNode findStmtInBlockWhichContainsNode(Node containedNode) {
+
+	public StatementNode findStmtInBlockWhichContainsNode(final Node containedNode) {
 		if (!containedNode.isBlockAncestorOfThis(this)) {
 			//System.err.println("x");
 			return null;
 		}
 		//System.err.println("containedNode: " + containedNode + ", loc: " + Utils.createLocationString(containedNode.astNode));
 		//System.err.println("block: " + this + ", loc: " + Utils.createLocationString(this.astNode));
-		ListIterator<StatementNode> it = sts.listIterator();
+		final ListIterator<StatementNode> it = sts.listIterator();
 		while (it.hasNext()) {
-			StatementNode currSt = it.next();
+			final StatementNode currSt = it.next();
 			//System.err.println("    st: " + currSt + ", loc: " + Utils.createLocationString(currSt.astNode));
 			if (containedNode.equals(currSt) || containedNode.isStmtAncestorOfThis(currSt)) {
 				return currSt;
@@ -141,15 +135,15 @@ public class BlockNode extends Node {
 		//System.err.println("y");
 		return null;
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("BN(").append(astNode.toString()).append("), loc: ");
 		if (astNode instanceof ILocateableNode) {
-			Location loc = ((ILocateableNode)astNode).getLocation();
-			sb.append(loc.getOffset()).append("-").append(loc.getEndOffset()).append(";");
+			final Location loc = ((ILocateableNode)astNode).getLocation();
+			sb.append(loc.getOffset()).append('-').append(loc.getEndOffset()).append(';');
 		} else {
 			sb.append("<none>;");
 		}
@@ -157,18 +151,18 @@ public class BlockNode extends Node {
 		if (parent == null) {
 			sb.append("<null>");
 		} else {
-			sb.append("SN(").append(parent.astNode.toString()).append(")");
+			sb.append("SN(").append(parent.astNode.toString()).append(')');
 		}
 		return sb.toString();
 	}
 
-	public String toStringRecursive(boolean recursive, int prefixLen) {
-		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
-		StringBuilder sb = new StringBuilder();
-		sb.append(prefix).append("BN: ").append(toString()).append("\n");
+	public String toStringRecursive(final boolean recursive, final int prefixLen) {
+		final String prefix = new String(new char[prefixLen]).replace('\0', ' ');
+		final StringBuilder sb = new StringBuilder();
+		sb.append(prefix).append("BN: ").append(toString()).append('\n');
 		if (recursive) {
 			for (StatementNode sn: sts) {
-				sb.append(sn.toStringRecursive(true, prefixLen+2)).append("\n");
+				sb.append(sn.toStringRecursive(true, prefixLen+2)).append('\n');
 			}
 		}
 		return sb.toString();

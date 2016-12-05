@@ -69,7 +69,7 @@ import org.eclipse.ui.PlatformUI;
  * <p>
  * Use {@link #performHeadless(IFile, ITextSelection)} when no GUI is available:
  * for testing, for example.
- * 
+ *
  * @author Viktor Varga
  */
 class SelectionFinder {
@@ -146,15 +146,16 @@ class SelectionFinder {
 		return selectedStatements != null && !selectedStatements.isEmpty();
 	}
 
-	void performHeadless(IFile selFile, ITextSelection textSel) {
+	void performHeadless(final IFile selFile, final ITextSelection textSel) {
 		selectedFile = selFile;
-		String fileContents = readFileContents(selFile);
+		final String fileContents = readFileContents(selFile);
 		if (fileContents == null) {
 			ErrorReporter.logError("ExtractToFunctionRefactoring.findSelection(): selFile does not exist at: "
 					+ selFile.getFullPath());
 			return;
 		}
-		IDocument doc = new Document(fileContents);
+
+		final IDocument doc = new Document(fileContents);
 		textSelection = new TextSelection(doc, textSel.getOffset(), textSel.getLength());
 		//
 		project = selFile.getProject();
@@ -166,7 +167,7 @@ class SelectionFinder {
 			return;
 		}
 		// iterating through the module for the selected statements
-		SelectionVisitor selectionVisitor = new SelectionVisitor(textSelection.getOffset(), textSelection.getLength());
+		final SelectionVisitor selectionVisitor = new SelectionVisitor(textSelection.getOffset(), textSelection.getLength());
 		selectedModule.accept(selectionVisitor);
 		selectedStatements = selectionVisitor.createStatementList(textSelection);
 		if (selectedStatements.isEmpty()) {
@@ -178,7 +179,7 @@ class SelectionFinder {
 			ErrorReporter.logError(createDebugInfo());
 		}
 		// finding return type & runs on clause
-		RunsOnClauseFinder runsonVisitor = new RunsOnClauseFinder(selectedStatements.getLocation());
+		final RunsOnClauseFinder runsonVisitor = new RunsOnClauseFinder(selectedStatements.getLocation());
 		selectedModule.accept(runsonVisitor);
 		runsOnRef = runsonVisitor.getRunsOnRef();
 		parentFunc = runsonVisitor.getFuncDef();
@@ -186,12 +187,12 @@ class SelectionFinder {
 		if (parentFunc instanceof Definition) {
 			insertLoc = ((Definition)parentFunc).getLocation().getEndOffset();
 		} else if (parentFunc instanceof ControlPart) {
-			ControlPart cp = (ControlPart)parentFunc;
-			Location commentLoc = cp.getCommentLocation();
+			final ControlPart cp = (ControlPart)parentFunc;
+			final Location commentLoc = cp.getCommentLocation();
 			insertLoc = commentLoc == null ? cp.getLocation().getOffset() : commentLoc.getOffset();
 		}
 		//
-		ReturnVisitor retVis = new ReturnVisitor();
+		final ReturnVisitor retVis = new ReturnVisitor();
 		selectedStatements.accept(retVis);
 		returnCertainty = retVis.getCertainty();
 		if (retVis.getCertainty() != ReturnCertainty.NO) {
@@ -209,21 +210,20 @@ class SelectionFinder {
 			warnings.add(new RefactoringStatusEntry(RefactoringStatus.WARNING, WARNING_UNCERTAIN_RETURN));
 		}
 	}
-	
+
 	void perform() {
 		// getting the active editor
-		IEditorPart editor = PlatformUI.getWorkbench()
+		final IEditorPart editor = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		TTCN3Editor targetEditor;
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return;
-		} else {
-			targetEditor = (TTCN3Editor) editor;
 		}
+
+		final TTCN3Editor targetEditor = (TTCN3Editor) editor;
 		statusLineManager = targetEditor.getEditorSite().getActionBars()
 				.getStatusLineManager();
 		// getting current selection
-		ISelectionService selectionService = PlatformUI.getWorkbench().
+		final ISelectionService selectionService = PlatformUI.getWorkbench().
 				getActiveWorkbenchWindow().getSelectionService();
 		textSelection = extractSelection(selectionService.getSelection());
 
@@ -233,7 +233,7 @@ class SelectionFinder {
 			return;
 		}
 		// getting selected module
-		IResource selectedRes = extractResource(targetEditor);
+		final IResource selectedRes = extractResource(targetEditor);
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("ExtractToFunctionRefactoring.findSelection(): Selected resource `"
 							+ selectedRes.getName() + "' is not a file.");
@@ -244,7 +244,7 @@ class SelectionFinder {
 		sourceParser = GlobalParser.getProjectSourceParser(project);
 		selectedModule = sourceParser.containedModule(selectedFile);
 		// iterating through the module for the selected statements
-		SelectionVisitor selectionVisitor = new SelectionVisitor(textSelection.getOffset(), textSelection.getLength());
+		final SelectionVisitor selectionVisitor = new SelectionVisitor(textSelection.getOffset(), textSelection.getLength());
 		selectedModule.accept(selectionVisitor);
 		selectedStatements = selectionVisitor.createStatementList(textSelection);
 		if (selectedStatements.isEmpty()) {
@@ -256,7 +256,7 @@ class SelectionFinder {
 			ErrorReporter.logError(createDebugInfo());
 		}
 		// finding return type & runs on clause
-		RunsOnClauseFinder runsonVisitor = new RunsOnClauseFinder(selectedStatements.getLocation());
+		final RunsOnClauseFinder runsonVisitor = new RunsOnClauseFinder(selectedStatements.getLocation());
 		selectedModule.accept(runsonVisitor);
 		runsOnRef = runsonVisitor.getRunsOnRef();
 		parentFunc = runsonVisitor.getFuncDef();
@@ -264,12 +264,12 @@ class SelectionFinder {
 		if (parentFunc instanceof Definition) {
 			insertLoc = ((Definition)parentFunc).getLocation().getEndOffset();
 		} else if (parentFunc instanceof ControlPart) {
-			ControlPart cp = (ControlPart)parentFunc;
-			Location commentLoc = cp.getCommentLocation();
+			final ControlPart cp = (ControlPart)parentFunc;
+			final Location commentLoc = cp.getCommentLocation();
 			insertLoc = commentLoc == null ? cp.getLocation().getOffset() : commentLoc.getOffset();
 		}
 		//
-		ReturnVisitor retVis = new ReturnVisitor();
+		final ReturnVisitor retVis = new ReturnVisitor();
 		selectedStatements.accept(retVis);
 		returnCertainty = retVis.getCertainty();
 		if (retVis.getCertainty() != ReturnCertainty.NO) {
@@ -287,16 +287,16 @@ class SelectionFinder {
 			warnings.add(new RefactoringStatusEntry(RefactoringStatus.WARNING, WARNING_UNCERTAIN_RETURN));
 		}
 	}
-	
-	private IResource extractResource(IEditorPart editor) {
-		IEditorInput input = editor.getEditorInput();
+
+	private IResource extractResource(final IEditorPart editor) {
+		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			return null;
 		}
 		return ((IFileEditorInput) input).getFile();
 	}
 
-	private TextSelection extractSelection(ISelection sel) {
+	private TextSelection extractSelection(final ISelection sel) {
 
 		if (!(sel instanceof TextSelection)) {
 			ErrorReporter
@@ -306,15 +306,15 @@ class SelectionFinder {
 		return (TextSelection) sel;
 	}
 
-	private String readFileContents(IFile toRead) {
-		StringBuilder sb = new StringBuilder();
+	private String readFileContents(final IFile toRead) {
+		final StringBuilder sb = new StringBuilder();
 		if (toRead == null || !toRead.exists()) {
 			return null;
 		}
 		try {
-			char[] buf = new char[1024];
-			InputStream is = toRead.getContents();
-			InputStreamReader isr = new InputStreamReader(is);
+			final char[] buf = new char[1024];
+			final InputStream is = toRead.getContents();
+			final InputStreamReader isr = new InputStreamReader(is);
 			while (isr.ready()) {
 				isr.read(buf);
 				sb.append(buf);
@@ -332,20 +332,20 @@ class SelectionFinder {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Collects Statements that are located inside the selection region (call
 	 * for the enclosing Module)
 	 * */
 	private static class SelectionVisitor extends ASTVisitor {
 
-		private List<Statement> statements;
+		private final List<Statement> statements;
 		private StatementBlock parentBlock;
 
 		private final int offset;
 		private final int endOffset;
 
-		private SelectionVisitor(int selOffset, int selLen) {
+		private SelectionVisitor(final int selOffset, final int selLen) {
 			offset = selOffset;
 			endOffset = offset + selLen;
 			statements = new ArrayList<Statement>();
@@ -358,14 +358,15 @@ class SelectionFinder {
 		 * to include possible ending semicolons (location interval extension
 		 * only if the semicolon itself is selected).
 		 * */
-		StatementList createStatementList(ITextSelection textSel) {
+		private StatementList createStatementList(final ITextSelection textSel) {
 			final char SEMICOLON = ';';
-			StatementList sl = new StatementList(statements);
+			final StatementList sl = new StatementList(statements);
 			if (textSel == null || sl.isEmpty()) {
 				return sl;
 			}
-			String content = textSel.getText();
-			int ind = sl.getLocation().getEndOffset() - textSel.getOffset();
+
+			final String content = textSel.getText();
+			final int ind = sl.getLocation().getEndOffset() - textSel.getOffset();
 			if (ind < 0 || ind >= textSel.getLength()) {
 				return sl;
 			}
@@ -377,7 +378,7 @@ class SelectionFinder {
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof ILocateableNode) {
 				final Location loc = ((ILocateableNode) node).getLocation();
 				if (loc == null) {
@@ -385,7 +386,7 @@ class SelectionFinder {
 				}
 				if (node instanceof Statement && loc.getOffset() >= offset
 						&& loc.getEndOffset() <= endOffset) {
-					Statement st = (Statement) node;
+					final Statement st = (Statement) node;
 					if (parentBlock == null) {
 						parentBlock = st.getMyStatementBlock();
 						if (parentBlock == null) {
@@ -417,10 +418,11 @@ class SelectionFinder {
 		if (selectedStatements == null) {
 			return;
 		}
-		GotoFinder vis = new GotoFinder();
+
+		final GotoFinder vis = new GotoFinder();
 		selectedStatements.accept(vis);
-		List<Identifier> gotos = vis.getGotoStatements();
-		List<Identifier> labels = vis.getLabelStatements();
+		final List<Identifier> gotos = vis.getGotoStatements();
+		final List<Identifier> labels = vis.getLabelStatements();
 		if (!labels.containsAll(gotos)) {
 			warnings.add(new RefactoringStatusEntry(RefactoringStatus.WARNING, WARNING_ERRONEOUS_GOTO));
 		}
@@ -447,16 +449,16 @@ class SelectionFinder {
 			labelStatements = new ArrayList<Identifier>();
 		}
 
-		List<Identifier> getGotoStatements() {
+		private List<Identifier> getGotoStatements() {
 			return gotoStatements;
 		}
 
-		List<Identifier> getLabelStatements() {
+		private List<Identifier> getLabelStatements() {
 			return labelStatements;
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Goto_statement) {
 				insideGoto = true;
 				return V_CONTINUE;
@@ -487,7 +489,8 @@ class SelectionFinder {
 		if (selectedStatements == null) {
 			return false;
 		}
-		BreakFinder vis = new BreakFinder();
+
+		final BreakFinder vis = new BreakFinder();
 		selectedStatements.accept(vis);
 		return vis.isFound();
 	}
@@ -500,7 +503,8 @@ class SelectionFinder {
 		if (selectedStatements == null) {
 			return false;
 		}
-		ContinueFinder vis = new ContinueFinder();
+
+		final ContinueFinder vis = new ContinueFinder();
 		selectedStatements.accept(vis);
 		return vis.isFound();
 	}
@@ -515,12 +519,12 @@ class SelectionFinder {
 
 		private boolean found = false;
 
-		boolean isFound() {
+		private boolean isFound() {
 			return found;
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Statement
 					|| node instanceof DoWhile_Statement
 					|| node instanceof While_Statement
@@ -547,12 +551,12 @@ class SelectionFinder {
 
 		private boolean found = false;
 
-		boolean isFound() {
+		private boolean isFound() {
 			return found;
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Statement
 					|| node instanceof DoWhile_Statement
 					|| node instanceof While_Statement) {
@@ -579,24 +583,24 @@ class SelectionFinder {
 		private Reference runsOnRef;
 		private Type returnType;
 
-		RunsOnClauseFinder(Location atLocation) {
+		RunsOnClauseFinder(final Location atLocation) {
 			this.atLocation = atLocation;
 		}
 
-		IVisitableNode getFuncDef() {
+		private IVisitableNode getFuncDef() {
 			return funcDef;
 		}
 
-		Reference getRunsOnRef() {
+		private Reference getRunsOnRef() {
 			return runsOnRef;
 		}
 
-		Type getReturnType() {
+		private Type getReturnType() {
 			return returnType;
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (insideFunc) {
 				if (node instanceof Reference) {
 					runsOnRef = (Reference) node;
@@ -627,7 +631,7 @@ class SelectionFinder {
 	}
 
 	private String createDebugInfo() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("ExtractToFunctionRefactoring->SelectionFinder debug info: \n");
 		sb.append("  Runs on reference: ");
 		sb.append(runsOnRef == null ? "null" : runsOnRef.getId());
@@ -639,16 +643,16 @@ class SelectionFinder {
 		} else if (parentFunc instanceof ControlPart) {
 			sb.append("<controlpart>");
 		} else {
-			sb.append("<invalid: ").append(parentFunc).append(">");
+			sb.append("<invalid: ").append(parentFunc).append('>');
 		}
-		sb.append("\n");
+		sb.append('\n');
 		sb.append("  Return clause: ");
 		sb.append(returnType == null ? "null" : returnType.getIdentifier());
 		sb.append("  Warnings: ");
 		for (RefactoringStatusEntry rse : warnings) {
 			sb.append("severity: " + rse.getSeverity() + "; msg: "
 					+ rse.getMessage());
-			sb.append("\n");
+			sb.append('\n');
 		}
 		return sb.toString();
 	}

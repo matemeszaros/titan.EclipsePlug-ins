@@ -32,49 +32,50 @@ import org.eclipse.ui.PlatformUI;
  * called from the editor for a part of a single file.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParActionFromEditor extends AbstractHandler {
 
 	private IProject sourceProj;
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
-		IFile selectedFile = Utils.getSelectedFileInEditor("ExtractModulePar");
+
+		final IFile selectedFile = Utils.getSelectedFileInEditor("ExtractModulePar");
 		if (selectedFile == null) {
 			return null;
 		}
-		
+
 		//getting current project
 		sourceProj = selectedFile.getProject();
 		if (sourceProj == null) {
 			ErrorReporter.logError("ExtractModuleParActionFromEditor: Source project is null. ");
 			return null;
 		}
-		
+
 		//update AST
-		Set<IProject> projsToUpdate = new HashSet<IProject>();
+		final Set<IProject> projsToUpdate = new HashSet<IProject>();
 		projsToUpdate.add(sourceProj);
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExtractModulePar");
-		
+
 		//create refactoring
-		ExtractModuleParRefactoring refactoring = new ExtractModuleParRefactoring(sourceProj);
-		
-		ExtractModuleParWizard wiz = new ExtractModuleParWizard();
+		final ExtractModuleParRefactoring refactoring = new ExtractModuleParRefactoring(sourceProj);
+
+		final ExtractModuleParWizard wiz = new ExtractModuleParWizard();
 		//
-		StructuredSelection ssel = new StructuredSelection(sourceProj);
+		final StructuredSelection ssel = new StructuredSelection(sourceProj);
 		wiz.init(PlatformUI.getWorkbench(), ssel);
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wiz);
+		final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wiz);
 		dialog.open();
-		boolean saveModuleParsOption = wiz.getSaveModuleParsOption();
-		IProject newProj = wiz.getProject();
+		final boolean saveModuleParsOption = wiz.getSaveModuleParsOption();
+		final IProject newProj = wiz.getProject();
 		if (newProj == null) {
 			ErrorReporter.logError("ExtractModuleParActionFromEditor: Wizard returned a null project. ");
 			return null;
@@ -82,7 +83,7 @@ public class ExtractModuleParActionFromEditor extends AbstractHandler {
 		refactoring.setTargetProject(newProj);
 		refactoring.setOption_saveModuleParList(saveModuleParsOption);
 		//copy project settings to new project
-		ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
+		final ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
 		if (pfh.projectFileExists()) {
 			//IResource.copy(...) is used because ProjectFileHandler.getDocumentFromFile(...) is not working
 			final IFile settingsFile = sourceProj.getFile("/" + ProjectFileHandler.XML_TITAN_PROPERTIES_FILE);
@@ -96,11 +97,11 @@ public class ExtractModuleParActionFromEditor extends AbstractHandler {
 				ErrorReporter.logError("ExtractModuleParActionFromEditor: Copying project settings to new project failed.");
 			}
 		}
-		
+
 		//performing the refactor operation
 		refactoring.perform();
 		//reanalyze project
-		WorkspaceJob job = GlobalParser.getProjectSourceParser(newProj).analyzeAll();
+		final WorkspaceJob job = GlobalParser.getProjectSourceParser(newProj).analyzeAll();
 		if (job != null) {
 			try {
 				job.join();
@@ -110,5 +111,5 @@ public class ExtractModuleParActionFromEditor extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 }

@@ -49,7 +49,7 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  *  <ul>
  *  <li>{@link #perform()} collects the module parameter statements in the source project, using the
  *   {@link SelectionFinder} class; after that {@link DependencyCollector} creates the <code>copyMap</code>,
- *   which contains the parts to copy from the source project, and writes its contents 
+ *   which contains the parts to copy from the source project, and writes its contents
  *   into the (new and empty) target project</li>
  *  </ul>
  * </li>
@@ -57,67 +57,69 @@ import org.eclipse.titan.common.logging.ErrorReporter;
  * Headless mode:
  * <p>
  * Use {@link #ExtractModuleParRefactoring(IProject)}
- *  constructor, then optionally use {@link #setOption_saveModuleParList(boolean)} 
+ *  constructor, then optionally use {@link #setOption_saveModuleParList(boolean)}
  *  and then call {@link #perform()}.
  * <p>
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParRefactoring  {
 
-	static final boolean ENABLE_COPY_COMMENTS = false;
+	public static final boolean ENABLE_COPY_COMMENTS = false;
 
 	private static final IPath PATH_MODULEPAR_LIST_FILE_OUTPUT = Path.fromOSString("modulepars.txt");
-	
-	private IProject sourceProj;
+
+	private final IProject sourceProj;
 	/** the new project to extract function dependencies into */
 	private IProject targetProj;
-	
+
 	private boolean option_saveModuleParList = false;
 
 	/** this contains the copied dependencies during the operation */
 	private Map<IPath, StringBuilder> copyMap;
 	/** this contains the list of files to be copied completely */
 	private List<IFile> filesToCopy;
-	
+
 	/*
 	 * TODO
-	 * 
-	 * 
+	 *
+	 *
 	 * */
-	
+
 
 	/** Use this constructor only when a workbench is available. */
-	ExtractModuleParRefactoring(IProject sourceProj) {
+	ExtractModuleParRefactoring(final IProject sourceProj) {
 		this.sourceProj = sourceProj;
 	}
 
-	void setTargetProject(IProject targetProj) {
+	public void setTargetProject(final IProject targetProj) {
 		this.targetProj = targetProj;
 	}
-	void setOption_saveModuleParList(boolean option_saveModuleParList) {
+
+	public void setOption_saveModuleParList(final boolean option_saveModuleParList) {
 		this.option_saveModuleParList = option_saveModuleParList;
 	}
 	public IProject getSourceProj() {
 		return sourceProj;
 	}
 
-	void perform() {
-		RefactoringStatus rs = checkInitialConditions();
+	public void perform() {
+		final RefactoringStatus rs = checkInitialConditions();
 		if (!rs.hasError()) {
 			try {
 				//TODO make a workspacejob from selection finder too?
-				SelectionFinder selFinder = new SelectionFinder(sourceProj);
+				final SelectionFinder selFinder = new SelectionFinder(sourceProj);
 				selFinder.perform();
 				if (option_saveModuleParList) {
 					saveModuleParListToFile(selFinder.createModuleParListForSaving());
 				}
-				DependencyCollector dc = new DependencyCollector(selFinder.getModulePars(), sourceProj);
-				WorkspaceJob job1 = dc.readDependencies();
+
+				final DependencyCollector dc = new DependencyCollector(selFinder.getModulePars(), sourceProj);
+				final WorkspaceJob job1 = dc.readDependencies();
 				job1.join();
 				copyMap = dc.getCopyMap();
 				filesToCopy = dc.getFilesToCopy();
-				WorkspaceJob job2 = createChange();
+				final WorkspaceJob job2 = createChange();
 				job2.join();
 			} catch (InterruptedException ie) {
 				ErrorReporter.logExceptionStackTrace(ie);
@@ -128,7 +130,7 @@ public class ExtractModuleParRefactoring  {
 	}
 
 	private RefactoringStatus checkInitialConditions() {
-		RefactoringStatus result = new RefactoringStatus();
+		final RefactoringStatus result = new RefactoringStatus();
 		if (targetProj == null) {
 			result.addError("Target project is null! ");
 		}
@@ -136,10 +138,10 @@ public class ExtractModuleParRefactoring  {
 	}
 
 	private WorkspaceJob createChange() {
-		WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
-			
+		final WorkspaceJob job = new WorkspaceJob("ExtractModulePar: writing to target project") {
+
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				if (copyMap == null) {
 					ErrorReporter.logError("ExtractModuleParRefactoring::createChange(): Reading dependencies did not finish.");
 					return Status.CANCEL_STATUS;
@@ -177,20 +179,21 @@ public class ExtractModuleParRefactoring  {
 		job.schedule();
 		return job;
 	}
-	
-	private void saveModuleParListToFile(String content) {
-		IFile newFile = targetProj.getFile(PATH_MODULEPAR_LIST_FILE_OUTPUT);
+
+	private void saveModuleParListToFile(final String content) {
+		final IFile newFile = targetProj.getFile(PATH_MODULEPAR_LIST_FILE_OUTPUT);
 		if (!newFile.exists()) {
 			try {
 				createTargetFolderHierarchy(newFile);
-				InputStream source = new ByteArrayInputStream(new byte[0]);
+				final InputStream source = new ByteArrayInputStream(new byte[0]);
 				newFile.create(source, IResource.NONE, null);
 			} catch (CoreException ce) {
 				ErrorReporter.logError("ExtractModuleParRefactoring.saveModuleParListToFile(): CoreException while creating file: " + ce.getLocalizedMessage());
 				return;
 			}
 		}
-		InputStream is = new ByteArrayInputStream(content.getBytes(Charset.forName("UTF-8"))); //TODO update with Java 1.7 to StandardCharsets.UTF_8
+
+		final InputStream is = new ByteArrayInputStream(content.getBytes(Charset.forName("UTF-8"))); //TODO update with Java 1.7 to StandardCharsets.UTF_8
 
 		try {
 			newFile.setContents(is, false, false, null);
@@ -198,15 +201,15 @@ public class ExtractModuleParRefactoring  {
 			ErrorReporter.logError("ExtractModuleParRefactoring.saveModuleParListToFile(): CoreException while writing to file: " + e.getLocalizedMessage());
 		}
 	}
-	
 
-	private IFile createFile(IPath relativePath) {
-		IFile ret = targetProj.getFile(relativePath);
+
+	private IFile createFile(final IPath relativePath) {
+		final IFile ret = targetProj.getFile(relativePath);
 		//create the file
 		if (!ret.exists()) {
 			try {
 				createTargetFolderHierarchy(ret);
-				InputStream source = new ByteArrayInputStream(new byte[0]);
+				final InputStream source = new ByteArrayInputStream(new byte[0]);
 				ret.create(source, IResource.NONE, null);
 			} catch (CoreException ce) {
 				return null;
@@ -214,12 +217,12 @@ public class ExtractModuleParRefactoring  {
 		}
 		return ret;
 	}
-	private IFile copyFile(IFile toCopy) {
-		IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
+	private IFile copyFile(final IFile toCopy) {
+		final IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
 		//copy the file
 		try {
 			createTargetFolderHierarchy(newFile);
-			IPath relPath = toCopy.getProjectRelativePath();
+			final IPath relPath = toCopy.getProjectRelativePath();
 			toCopy.copy(targetProj.getFile(relPath).getFullPath(), true, null);
 		} catch (CoreException ce) {
 			return null;
@@ -228,7 +231,7 @@ public class ExtractModuleParRefactoring  {
 	}
 	private void createTargetFolderHierarchy(final IFile file) throws CoreException {
 		IContainer parent = file.getParent();
-		List<IFolder> folders = new LinkedList<IFolder>();
+		final List<IFolder> folders = new LinkedList<IFolder>();
 		while (parent != null) {
 			if (parent instanceof IFolder) {
 				folders.add(0, (IFolder)parent);

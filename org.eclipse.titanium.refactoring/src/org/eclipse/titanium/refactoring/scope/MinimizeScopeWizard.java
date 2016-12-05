@@ -14,36 +14,32 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 
 /**
  * Wizard for the 'Minimize scope of local variables' refactoring operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeScopeWizard extends RefactoringWizard implements
 		IExecutableExtension {
-	
+
 	private static final String WIZ_WINDOWTITLE = "Minimize scope of local variables";
-	
+
 	private final MinimizeScopeRefactoring refactoring;
 
-	MinimizeScopeWizard(MinimizeScopeRefactoring refactoring) {
+	MinimizeScopeWizard(final MinimizeScopeRefactoring refactoring) {
 		super(refactoring, DIALOG_BASED_USER_INTERFACE);
 		this.refactoring = refactoring;
 	}
-	
-	
+
+
 	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(final IConfigurationElement config,
+			final String propertyName, final Object data) throws CoreException {
 	}
 
 	@Override
 	protected void addUserInputPages() {
 		setDefaultPageTitle(WIZ_WINDOWTITLE);
-		MinimizeScopeWizardOptionsPage optionsPage = 
+		final MinimizeScopeWizardOptionsPage optionsPage =
 				new MinimizeScopeWizardOptionsPage(WIZ_WINDOWTITLE, refactoring.getSettings());
 		addPage(optionsPage);
 	}
-	
-	
-	
-	
 }

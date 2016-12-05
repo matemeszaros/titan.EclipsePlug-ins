@@ -22,17 +22,17 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 
 /**
  * Context class representing {@link Def_Function} nodes.
- * 
+ *
  * @author Viktor Varga
  */
 class FunctionContext extends Context {
-	
-	List<Identifier> paramIds;
 
-	public FunctionContext(Def_Function func, Settings settings) {
+	private List<Identifier> paramIds;
+
+	public FunctionContext(final Def_Function func, final Settings settings) {
 		super(func, settings);
 	}
-	
+
 	@Override
 	public Def_Function getNode() {
 		return (Def_Function)super.getNode();
@@ -40,21 +40,21 @@ class FunctionContext extends Context {
 
 	@Override
 	protected void process_internal() {
-		Def_Function func = getNode();
-		FormalParameterList fpl = func.getFormalParameterList();
-		ParameterListVisitor vis = new ParameterListVisitor();
+		final Def_Function func = getNode();
+		final FormalParameterList fpl = func.getFormalParameterList();
+		final ParameterListVisitor vis = new ParameterListVisitor();
 		fpl.accept(vis);
 		paramIds = vis.getResult();
 	}
 
 	@Override
-	protected List<String> createLogParts_internal(Set<String> idsAlreadyHandled) {
-		List<String> ret = new ArrayList<String>();
+	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
+		final List<String> ret = new ArrayList<String>();
 		if (paramIds == null) {
 			return ret;
 		}
 		for (Identifier id: paramIds) {
-			String idS = id.toString();
+			final String idS = id.toString();
 			if (idsAlreadyHandled.contains(idS)) {
 				continue;
 			}
@@ -64,21 +64,21 @@ class FunctionContext extends Context {
 		return ret;
 	}
 
-	/** 
+	/**
 	 * Collects all the necessary variable identifiers from an {@link FormalParameterList}.
 	 * <p>
 	 * Call on {@link FormalParameterList}.
 	 * */
 	private static class ParameterListVisitor extends ASTVisitor {
 
-		private List<Identifier> result = new ArrayList<Identifier>();
-		
-		List<Identifier> getResult() {
+		private final List<Identifier> result = new ArrayList<Identifier>();
+
+		private List<Identifier> getResult() {
 			return result;
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Identifier) {
 				result.add((Identifier)node);
 				return V_SKIP;
@@ -93,7 +93,7 @@ class FunctionContext extends Context {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
 
 }

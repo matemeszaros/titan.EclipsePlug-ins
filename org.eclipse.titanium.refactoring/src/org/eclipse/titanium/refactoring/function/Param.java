@@ -32,7 +32,7 @@ enum ArgumentPassingType {
 
 /**
  * This class represents a parameter of the new function.
- * 
+ *
  * @author Viktor Varga
  */
 class Param {
@@ -68,8 +68,8 @@ class Param {
 	 * Creates the text representation of this parameter as a member of a
 	 * function's formal parameter list
 	 */
-	List<StringBuilder> createParamText(boolean addCommaBefore) {
-		List<StringBuilder> ret = new ArrayList<StringBuilder>();
+	public List<StringBuilder> createParamText(final boolean addCommaBefore) {
+		final List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
 		}
@@ -100,8 +100,8 @@ class Param {
 	 * Creates the text representation of this parameter as a member of a
 	 * function call statement's actual parameter list.
 	 * */
-	List<StringBuilder> createParamCallText(boolean addCommaBefore) {
-		List<StringBuilder> ret = new ArrayList<StringBuilder>();
+	public List<StringBuilder> createParamCallText(final boolean addCommaBefore) {
+		final List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		if (passingType == ArgumentPassingType.NONE) {
 			return ret;
 		}
@@ -112,8 +112,8 @@ class Param {
 		return ret;
 	}
 
-	String createDebugInfo() {
-		StringBuilder sb = new StringBuilder();
+	public String createDebugInfo() {
+		final StringBuilder sb = new StringBuilder();
 		sb.append("Param {");
 		sb.append("\n    def: ").append(
 				def == null ? "null" : def.getIdentifier());
@@ -129,35 +129,35 @@ class Param {
 
 	// GETTERS, SETTERS
 
-	ArgumentPassingType getPassingType() {
+	public ArgumentPassingType getPassingType() {
 		return passingType;
 	}
 
-	StringBuilder getName() {
+	public StringBuilder getName() {
 		return name;
 	}
 
-	String getTypeName() {
+	public String getTypeName() {
 		return getShortTypename(type);
 	}
 
-	boolean isDeclaredInside() {
+	public boolean isDeclaredInside() {
 		return declaredInside;
 	}
 
-	Definition getDef() {
+	public Definition getDef() {
 		return def;
 	}
 
-	List<ISubReference> getRefs() {
+	public List<ISubReference> getRefs() {
 		return refs;
 	}
 
-	void setPassingType(ArgumentPassingType passingType) {
+	public void setPassingType(final ArgumentPassingType passingType) {
 		this.passingType = passingType;
 	}
 
-	void setName(String name) {
+	public void setName(final String name) {
 		if (this.name == null) {
 			this.name = new StringBuilder(name);
 		} else {
@@ -166,43 +166,46 @@ class Param {
 		}
 	}
 
-	void setDeclaredInside(boolean declaredInside) {
+	public void setDeclaredInside(final boolean declaredInside) {
 		this.declaredInside = declaredInside;
 	}
 
-	void setDef(Definition def) {
+	public void setDef(final Definition def) {
 		this.def = def;
 		this.type = this.def.getType(CompilationTimeStamp.getBaseTimestamp());
 	}
 
-	void setRefs(List<ISubReference> refs) {
+	public void setRefs(final List<ISubReference> refs) {
 		this.refs = refs;
 	}
 
 	// GETTERS, SETTERS END
 
-	static String getShortTypename(IType type) {
+	public static String getShortTypename(final IType type) {
 		if (type == null) {
 			return "null";
 		}
-		String tname = type.getTypename();
+
+		final String tname = type.getTypename();
 		if (tname == null) {
 			return "null";
 		}
-		int ind = tname.lastIndexOf('.');
+
+		final int ind = tname.lastIndexOf('.');
 		return (ind == -1 || ind >= tname.length()) ? tname : tname
 				.substring(ind + 1);
 	}
 
 	@Override
-	public boolean equals(Object arg0) {
+	public boolean equals(final Object arg0) {
 		if (arg0 == this) {
 			return true;
 		}
 		if (!(arg0 instanceof Param)) {
 			return false;
 		}
-		Param o = (Param) arg0;
+
+		final Param o = (Param) arg0;
 		return def.equals(o.def);
 	}
 

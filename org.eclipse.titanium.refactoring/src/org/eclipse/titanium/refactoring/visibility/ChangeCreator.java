@@ -54,57 +54,57 @@ import org.eclipse.titan.designer.parsers.ProjectSourceParser;
  * By passing the selection through the constructor and calling {@link ChangeCreator#perform()}, this class
  *  creates a {@link Change} object, which can be returned by the standard
  *  {@link Refactoring#createChange(IProgressMonitor)} method in the refactoring class.
- * 
+ *
  * @author Viktor Varga
  */
 class ChangeCreator {
 
 	//in
 	private final IFile selectedFile;
-	
+
 	//out
 	private Change change;
-	
-	ChangeCreator(IFile selectedFile) {
+
+	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
-	
-	Change getChange() {
+
+	public Change getChange() {
 		return change;
 	}
-	
-	/** 
+
+	/**
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
-	void perform() {
+	public void perform() {
 		if (selectedFile == null) {
 			return;
 		}
 		change = createFileChange(selectedFile);
 	}
-	
-	private Change createFileChange(IFile toVisit) {
+
+	private Change createFileChange(final IFile toVisit) {
 		if (toVisit == null) {
 			return null;
 		}
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
-		Module module = sourceParser.containedModule(toVisit);
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
+		final Module module = sourceParser.containedModule(toVisit);
 		if(module == null) {
 			return null;
 		}
 		//find all locations in the module that should be edited
-		DefinitionVisitor vis = new DefinitionVisitor();
+		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
-		NavigableSet<ILocateableNode> nodes = vis.getLocations();
-		
+		final NavigableSet<ILocateableNode> nodes = vis.getLocations();
+
 		if (nodes.isEmpty()) {
 			return null;
 		}
 		//calculate edit locations
 		final List<Location> locations = new ArrayList<Location>();
 		try {
-			WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
+			final WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
 			job1.join();
 		} catch (InterruptedException ie) {
 			ErrorReporter.logExceptionStackTrace(ie);
@@ -117,11 +117,11 @@ class ChangeCreator {
 			return null;
 		}
 		//create a change for each edit location
-		TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 		for (Location l: locations) {
-			int len = l.getEndOffset()-l.getOffset();
+			final int len = l.getEndOffset()-l.getOffset();
 			if (len == 0) {
 				rootEdit.addChild(new InsertEdit(l.getOffset(), "private "));
 			} else {
@@ -130,13 +130,13 @@ class ChangeCreator {
 		}
 		return tfc;
 	}
-	
+
 	private WorkspaceJob calculateEditLocations(final NavigableSet<ILocateableNode> nodes, final IFile file
 			, final List<Location> locations_out) throws CoreException {
-		WorkspaceJob job = new WorkspaceJob("MinimizeVisibilityRefactoring: calculate edit locations") {
-			
+		final WorkspaceJob job = new WorkspaceJob("MinimizeVisibilityRefactoring: calculate edit locations") {
+
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				final int BUF_LEN = 8;
 				try {
 					InputStream is = file.getContents();
@@ -147,7 +147,7 @@ class ChangeCreator {
 						int toSkip = node.getLocation().getOffset()-currOffset;
 						if (toSkip < 0) {
 							ErrorReporter.logError("MinimizeVisibilityRefactoring.ChangeCreator: Negative skip value" +
-									" while parsing file: " + file.getName() + ", offset: " + 
+									" while parsing file: " + file.getName() + ", offset: " +
 									node.getLocation().getOffset() + "->" + currOffset);
 							continue;
 						}
@@ -171,7 +171,7 @@ class ChangeCreator {
 						}
 						locations_out.add(new Location(node.getLocation().getFile(), node.getLocation().getLine(),
 								node.getLocation().getOffset(), node.getLocation().getOffset()+vmLen));
-						
+
 						currOffset = node.getLocation().getOffset()+BUF_LEN;
 					}
 					isr.close();
@@ -188,7 +188,7 @@ class ChangeCreator {
 		job.schedule();
 		return job;
 	}
-	
+
 	/**
 	 * Collects the locations of all the definitions in a module where the visibility modifier
 	 *  is not yet minimal.
@@ -196,24 +196,24 @@ class ChangeCreator {
 	 * Call on modules.
 	 * */
 	private static class DefinitionVisitor extends ASTVisitor {
-		
+
 		private final NavigableSet<ILocateableNode> locations;
-		
+
 		DefinitionVisitor() {
 			locations = new TreeSet<ILocateableNode>(new LocationComparator());
 		}
-		
-		NavigableSet<ILocateableNode> getLocations() {
+
+		private NavigableSet<ILocateableNode> getLocations() {
 			return locations;
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Definition && isGoodType(node)) {
-				Definition d = (Definition)node;
+				final Definition d = (Definition)node;
 				if (!d.isLocal() && !VisibilityModifier.Private.equals(d.getVisibilityModifier()) &&
 						hasValidLocation(d)) {
-					String moduleName = d.getMyScope().getModuleScope().getName();
+					final String moduleName = d.getMyScope().getModuleScope().getName();
 					if (!d.isUsed()) {
 						locations.add(d);
 					} else if (d.referingHere.size() == 1 && d.referingHere.get(0).equals(moduleName)) {
@@ -223,31 +223,23 @@ class ChangeCreator {
 			}
 			return V_CONTINUE;
 		}
-		
-		private boolean isGoodType(IVisitableNode node) {
-			if (node instanceof Def_Altstep ||
+
+		private boolean isGoodType(final IVisitableNode node) {
+			return (node instanceof Def_Altstep ||
 					node instanceof Def_Const ||
 					node instanceof Def_ExternalConst ||
 					node instanceof Def_Extfunction ||
 					node instanceof Def_Function ||
 					node instanceof Def_ModulePar ||
 					node instanceof Def_Template ||
-					node instanceof Def_Type) {
-				return true;
-			}
-			return false;
+					node instanceof Def_Type);
 		}
-		
-		private boolean hasValidLocation(Definition def) {
-			if (def.getLocation() == null) {
-				return false;
-			}
-			if (def.getLocation().getOffset() < 0 || def.getLocation().getEndOffset() < 0) {
-				return false;
-			}
-			return true;
+
+		private boolean hasValidLocation(final Definition def) {
+			final Location location = def.getLocation();
+			return location != null && location.getOffset() >= 0 && location.getEndOffset() >= 0;
 		}
-		
+
 	}
 
 	/**
@@ -257,20 +249,20 @@ class ChangeCreator {
 	private static class LocationComparator implements Comparator<ILocateableNode> {
 
 		@Override
-		public int compare(ILocateableNode arg0, ILocateableNode arg1) {
-			IResource f0 = arg0.getLocation().getFile();
-			IResource f1 = arg1.getLocation().getFile();
+		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
+			final IResource f0 = arg0.getLocation().getFile();
+			final IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {
 				return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 			}
-			int o0 = arg0.getLocation().getOffset();
-			int o1 = arg1.getLocation().getOffset();
+			final int o0 = arg0.getLocation().getOffset();
+			final int o1 = arg1.getLocation().getOffset();
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
-		
+
 	}
 
-	private static VisibilityModifier parseVisibilityModifier(String str) {
+	private static VisibilityModifier parseVisibilityModifier(final String str) {
 		if (str.contains("public ")) {
 			return VisibilityModifier.Public;
 		}
@@ -282,5 +274,5 @@ class ChangeCreator {
 		}
 		return null;
 	}
-	
+
 }

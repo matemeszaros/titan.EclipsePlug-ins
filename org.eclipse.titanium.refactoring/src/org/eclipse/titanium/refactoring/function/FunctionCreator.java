@@ -37,11 +37,11 @@ import org.eclipse.titanium.refactoring.function.ReturnVisitor.ReturnCertainty;
  * A list of StringBuilders contain the function body and function call texts.
  * The StringBuilders are used as mutable Strings and allow a later editing of the texts by the wizard
  * (for example, to change the names of the parameters)
- * 
+ *
  * @author Viktor Varga
  */
 class FunctionCreator implements IModelProvider<ParamTableItem> {
-	
+
 	private static final String FUNCTION_TEXT_NL = "\r\n";
 	private static final String FUNCTION_TEXT_PREFIX = "function ";
 	private static final String FUNCTION_TEXT_PARAMS_START = "(";
@@ -55,26 +55,26 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	private static final String FUNCTION_CALL_RETURN_SUFFIX = "return; ";
 	private static final String FUNCTION_CALL_PARAMS_START = "(";
 	private static final String FUNCTION_CALL_PARAMS_END = ");";
-	
+
 	//in
-	private StatementList selectedStatements;
-	private IFile selectedFile;
-	private List<Param> params;
-	private Reference runsOnRef;
-	private Type returnType;
+	private final StatementList selectedStatements;
+	private final IFile selectedFile;
+	private final List<Param> params;
+	private final Reference runsOnRef;
+	private final Type returnType;
 	private final StringBuilder newFuncName;
 	private final List<RefactoringStatusEntry> warnings;
 	private final ReturnCertainty returnCertainity;
-	
+
 	//out
 	/**
 	 * StringBuilders are used as mutable Strings to provide edit support for the wizard
 	 * */
 	private List<StringBuilder> functionText;
 	private List<StringBuilder> functionCallText;
-	
-	FunctionCreator(StatementList selectedStatements, IFile selectedFile, StringBuilder funcName, List<Param> params, 
-			Reference runsOnRef, Type returnType, ReturnCertainty returnCertainty) {
+
+	FunctionCreator(final StatementList selectedStatements, final IFile selectedFile, final StringBuilder funcName, final List<Param> params,
+			final Reference runsOnRef, final Type returnType, final ReturnCertainty returnCertainty) {
 		this.selectedStatements = selectedStatements;
 		this.selectedFile = selectedFile;
 		this.newFuncName = funcName;
@@ -89,7 +89,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		createFunctionText();
 		createFunctionCallText();
 	}
-	
+
 	public List<RefactoringStatusEntry> getWarnings() {
 		return warnings;
 	}
@@ -107,7 +107,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	 */
 	@Override
 	public List<ParamTableItem> getItems() {
-		List<ParamTableItem> items = new LinkedList<ParamTableItem>();
+		final List<ParamTableItem> items = new LinkedList<ParamTableItem>();
 		if (params == null) {
 			return items;
 		}
@@ -123,17 +123,17 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 	//MODEL PROVEIDER FOR WIZARD END
 
 	//private methods for creating parts of the new function body/call text
-	
+
 	/**
 	 * @return a set in which the TextReplaceItems (parameter occurences) are sorted by their location
 	 */
-	private SortedSet<TextReplaceItem> createSortedTextReplaceItemSet(String sourceText, int sourceOffset) {
-		SortedSet<TextReplaceItem> hitSet = new TreeSet<TextReplaceItem>();
+	private SortedSet<TextReplaceItem> createSortedTextReplaceItemSet(final String sourceText, final int sourceOffset) {
+		final SortedSet<TextReplaceItem> hitSet = new TreeSet<TextReplaceItem>();
 		if (params == null) {
 			return hitSet;
 		}
 		for (Param p: params) {
-			List<ISubReference> srs = p.getRefs();
+			final List<ISubReference> srs = p.getRefs();
 			for (ISubReference isr: srs) {
 				hitSet.add(new TextReplaceItem(isr, p, sourceText, sourceOffset));
 			}
@@ -143,13 +143,13 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		}
 		return hitSet;
 	}
-	
-	/** 
-	 * Creates function text from <code>params</code> into <code>newFunctionText</code>. 
+
+	/**
+	 * Creates function text from <code>params</code> into <code>newFunctionText</code>.
 	 * Call after the user specified param and func names in the wizard
 	 */
 	private void createFunctionText() {
-		List<StringBuilder> declarationsBeforeFunc = new ArrayList<StringBuilder>();
+		final List<StringBuilder> declarationsBeforeFunc = new ArrayList<StringBuilder>();
 		if (params == null) {
 			ErrorReporter.logError("FunctionCreator.createFunctionText(): 'params' is null! ");
 			return;
@@ -165,13 +165,13 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		functionText.add(newFuncName);
 		//function params
 		functionText.add(new StringBuilder(FUNCTION_TEXT_PARAMS_START));
-		ListIterator<Param> it = params.listIterator();
+		final ListIterator<Param> it = params.listIterator();
 		if (it.hasNext()) {
-			Param first = it.next();
+			final Param first = it.next();
 			functionText.addAll(first.createParamText(false));
 		}
 		while (it.hasNext()) {
-			Param curr = it.next();
+			final Param curr = it.next();
 			functionText.addAll(curr.createParamText(true));
 		}
 		functionText.add(new StringBuilder(FUNCTION_TEXT_PARAMS_END));
@@ -196,29 +196,30 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		//insert all declarations before the function header
 		functionCallText.addAll(declarationsBeforeFunc);
 	}
-	
-	private List<StringBuilder> createFunctionBody(List<StringBuilder> declarationsBeforeFunc) {
-		List<StringBuilder> body = new ArrayList<StringBuilder>();
+
+	private List<StringBuilder> createFunctionBody(final List<StringBuilder> declarationsBeforeFunc) {
+		final List<StringBuilder> body = new ArrayList<StringBuilder>();
 		try {
-			InputStream istream = selectedFile.getContents();
-			BufferedReader br = new BufferedReader(new InputStreamReader(istream));
+			final InputStream istream = selectedFile.getContents();
+			final BufferedReader br = new BufferedReader(new InputStreamReader(istream));
 			final int startOffset = selectedStatements.getLocation().getOffset();
 			final int endOffset = selectedStatements.getLocation().getEndOffset();
 			br.skip(startOffset);
-			char[] contentBuf = new char[endOffset-startOffset];
+
+			final char[] contentBuf = new char[endOffset-startOffset];
 			br.read(contentBuf, 0, endOffset-startOffset);
 			br.close();
 			istream.close();
 			final String selectedContent = new String(contentBuf);
-			SortedSet<TextReplaceItem> itemSet = createSortedTextReplaceItemSet(selectedContent, startOffset);
-			Iterator<TextReplaceItem> it = itemSet.iterator();
+			final SortedSet<TextReplaceItem> itemSet = createSortedTextReplaceItemSet(selectedContent, startOffset);
+			final Iterator<TextReplaceItem> it = itemSet.iterator();
 			TextReplaceItem last = null;
 			//no items
 			if (!it.hasNext()) {
 				body.add(new StringBuilder(selectedContent));
 			}
 			while (it.hasNext()) {
-				TextReplaceItem curr = it.next();
+				final TextReplaceItem curr = it.next();
 				if (last == null) {
 					body.add(curr.createBeginningText());
 				} else {
@@ -247,7 +248,7 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 
 		return body;
 	}
-	
+
 	private void createFunctionCallText() {
 		final boolean returnOnAllBranches = (returnCertainity == ReturnCertainty.YES);
 		if (returnType != null && returnOnAllBranches) {
@@ -255,13 +256,13 @@ class FunctionCreator implements IModelProvider<ParamTableItem> {
 		}
 		functionCallText.add(newFuncName);
 		functionCallText.add(new StringBuilder(FUNCTION_CALL_PARAMS_START));
-		ListIterator<Param> it = params.listIterator();
+		final ListIterator<Param> it = params.listIterator();
 		if (it.hasNext()) {
-			Param first = it.next();
+			final Param first = it.next();
 			functionCallText.addAll(first.createParamCallText(false));
 		}
 		while (it.hasNext()) {
-			Param curr = it.next();
+			final Param curr = it.next();
 			functionCallText.addAll(curr.createParamCallText(true));
 		}
 		functionCallText.add(new StringBuilder(FUNCTION_CALL_PARAMS_END));

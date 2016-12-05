@@ -30,18 +30,18 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.While_Statement;
  * Unlike the Statement.hasReturn() method, this class only handles return statements.
  * <p>
  * {@link ReturnVisitor} and its nested classes start an instance of each other recursively, normally in the
- * following order: {@link ReturnVisitor} -> {@link BranchMerger} -> {@link StatementBlockVisitor} -> 
+ * following order: {@link ReturnVisitor} -> {@link BranchMerger} -> {@link StatementBlockVisitor} ->
  * {@link ReturnVisitor} -> ...
- * 
+ *
  * @author Viktor Varga
  * */
 class ReturnVisitor extends ASTVisitor {
-	
+
 	enum ReturnCertainty {
 		NO, MAYBE, YES;
-		
+
 		/** merges the {@link ReturnCertainty} of two branches */
-		ReturnCertainty or(ReturnCertainty other) {
+		ReturnCertainty or(final ReturnCertainty other) {
 			if (this == YES && other == YES) {
 				return YES;
 			}
@@ -51,7 +51,7 @@ class ReturnVisitor extends ASTVisitor {
 			return MAYBE;
 		}
 		/** merges the {@link ReturnCertainty} of two consecutive statements */
-		ReturnCertainty and(ReturnCertainty other) {
+		ReturnCertainty and(final ReturnCertainty other) {
 			if (this == YES || other == YES) {
 				return YES;
 			}
@@ -63,13 +63,13 @@ class ReturnVisitor extends ASTVisitor {
 	}
 
 	private ReturnCertainty certainty = ReturnCertainty.NO;
-	
-	ReturnCertainty getCertainty() {
+
+	public ReturnCertainty getCertainty() {
 		return certainty;
 	}
-	
+
 	@Override
-	public int visit(IVisitableNode node) {
+	public int visit(final IVisitableNode node) {
 		//certain YES
 		if (node instanceof Return_Statement) {
 			certainty = ReturnCertainty.YES;
@@ -78,7 +78,7 @@ class ReturnVisitor extends ASTVisitor {
 		//
 		if (node instanceof StatementBlock ||
 				node instanceof StatementList) {
-			StatementBlockVisitor blockVis = new StatementBlockVisitor();
+			final StatementBlockVisitor blockVis = new StatementBlockVisitor();
 			node.accept(blockVis);
 			certainty = blockVis.getCertainty();
 			return V_SKIP;
@@ -87,15 +87,15 @@ class ReturnVisitor extends ASTVisitor {
 		if (node instanceof While_Statement ||
 				node instanceof DoWhile_Statement ||
 				node instanceof For_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 				//conditional blocks: maximum MAYBE
 			certainty = branchMerger.getCertainty().or(ReturnCertainty.NO);
 			return V_SKIP;
 		}
 		if (node instanceof If_Statement) {
-			If_Statement ifs = (If_Statement)node;
-			BranchMerger branchMerger = new BranchMerger();
+			final If_Statement ifs = (If_Statement)node;
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 			if (ifs.getStatementBlock() != null) {
 				//must enter one block: maximum YES
@@ -107,8 +107,8 @@ class ReturnVisitor extends ASTVisitor {
 			return V_SKIP;
 		}
 		if (node instanceof Alt_Statement) {
-			AltGuards ags = ((Alt_Statement)node).getAltGuards();
-			BranchMerger branchMerger = new BranchMerger();
+			final AltGuards ags = ((Alt_Statement)node).getAltGuards();
+			final BranchMerger branchMerger = new BranchMerger();
 			ags.accept(branchMerger);
 			if (ags.hasElse()) {
 				//must enter one block: maximum YES
@@ -120,21 +120,21 @@ class ReturnVisitor extends ASTVisitor {
 			return V_SKIP;
 		}
 		if (node instanceof Interleave_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 				//conditional block: maximum MAYBE
 			certainty = branchMerger.getCertainty().or(ReturnCertainty.NO);
 			return V_SKIP;
 		}
 		if (node instanceof StatementBlock_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 			//must enter block: maximum YES
 			certainty = branchMerger.getCertainty();
 			return V_SKIP;
 		}
 		if (node instanceof SelectCase_Statement) {
-			BranchMerger branchMerger = new BranchMerger();
+			final BranchMerger branchMerger = new BranchMerger();
 			node.accept(branchMerger);
 			//must enter one block: maximum YES
 			certainty = branchMerger.getCertainty();
@@ -142,8 +142,8 @@ class ReturnVisitor extends ASTVisitor {
 		}
 		return V_ABORT;
 	}
-	
-	/** 
+
+	/**
 	 * Call for {@link StatementBlock} or {@link StatementList}.
 	 * <p>
 	 * Starts a {@link ReturnVisitor} for each {@link Statement} found in it.
@@ -151,32 +151,32 @@ class ReturnVisitor extends ASTVisitor {
 	private class StatementBlockVisitor extends ASTVisitor {
 
 		private ReturnCertainty blockCertainty = ReturnCertainty.NO;
-		
-		ReturnCertainty getCertainty() {
+
+		private ReturnCertainty getCertainty() {
 			return blockCertainty;
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
-				StatementBlock sb = (StatementBlock)node;
+				final StatementBlock sb = (StatementBlock)node;
 				for (int i=0;i<sb.getSize();i++) {
-					Statement s = sb.getStatementByIndex(i);
-					ReturnVisitor sVis = new ReturnVisitor();
+					final Statement s = sb.getStatementByIndex(i);
+					final ReturnVisitor sVis = new ReturnVisitor();
 					s.accept(sVis);
-					ReturnCertainty rc = sVis.getCertainty();
+					final ReturnCertainty rc = sVis.getCertainty();
 					blockCertainty = blockCertainty.and(rc);
 					if (blockCertainty == ReturnCertainty.YES) {
 						return V_ABORT;
 					}
 				}
 			} else if (node instanceof StatementList) {
-				StatementList sl = (StatementList)node;
+				final StatementList sl = (StatementList)node;
 				for (int i=0;i<sl.getSize();i++) {
-					Statement s = sl.getStatementByIndex(i);
-					ReturnVisitor sVis = new ReturnVisitor();
+					final Statement s = sl.getStatementByIndex(i);
+					final ReturnVisitor sVis = new ReturnVisitor();
 					s.accept(sVis);
-					ReturnCertainty rc = sVis.getCertainty();
+					final ReturnCertainty rc = sVis.getCertainty();
 					blockCertainty = blockCertainty.and(rc);
 					if (blockCertainty == ReturnCertainty.YES) {
 						return V_ABORT;
@@ -185,11 +185,11 @@ class ReturnVisitor extends ASTVisitor {
 			}
 			return V_ABORT;
 		}
-		
+
 	}
-	
-	/** 
-	 * Call for any {@link ASTNode}. 
+
+	/**
+	 * Call for any {@link ASTNode}.
 	 * <p>
 	 * Starts a {@link StatementBlockVisitor} on each {@link StatementBlock} found.
 	 * However the visitor does not enter {@link StatementBlock} nodes.
@@ -200,15 +200,15 @@ class ReturnVisitor extends ASTVisitor {
 
 		private ReturnCertainty blockCertainty = ReturnCertainty.NO;
 		private boolean foundAnyBlocksBefore = false;
-		
-		ReturnCertainty getCertainty() {
+
+		private ReturnCertainty getCertainty() {
 			return blockCertainty;
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof StatementBlock) {
-				StatementBlockVisitor sbVis = new StatementBlockVisitor();
+				final StatementBlockVisitor sbVis = new StatementBlockVisitor();
 				node.accept(sbVis);
 				if (!foundAnyBlocksBefore) {
 					foundAnyBlocksBefore = true;
@@ -220,7 +220,7 @@ class ReturnVisitor extends ASTVisitor {
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
 
 }

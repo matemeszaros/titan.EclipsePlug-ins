@@ -41,56 +41,56 @@ import org.eclipse.titan.designer.parsers.ProjectSourceParser;
  * By passing the selection through the constructor and calling {@link ChangeCreator#perform()}, this class
  *  creates a {@link Change} object, which can be returned by the standard
  *  {@link Refactoring#createChange(IProgressMonitor)} method in the refactoring class.
- * 
+ *
  * @author Istvan Bohm
  */
 class ChangeCreator {
 
 	//in
 	private final IFile selectedFile;
-	
+
 	//out
 	private Change change;
-	
-	ChangeCreator(IFile selectedFile) {
+
+	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
-	
-	Change getChange() {
+
+	public Change getChange() {
 		return change;
 	}
-	
-	/** 
+
+	/**
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
-	void perform() {
+	public void perform() {
 		if (selectedFile == null) {
 			return;
 		}
 		change = createFileChange(selectedFile);
 	}
-	
-	private Change createFileChange(IFile toVisit) {
-		
+
+	private Change createFileChange(final IFile toVisit) {
+
 		if (toVisit == null) {
 			return null;
 		}
-		
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
-		Module module = sourceParser.containedModule(toVisit);
+
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
+		final Module module = sourceParser.containedModule(toVisit);
 		if(module == null) {
 			return null;
 		}
-		
-		DefinitionVisitor vis = new DefinitionVisitor();
+
+		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
-		List<FormalParameter> nodes = vis.getLocations();
-		
+		final List<FormalParameter> nodes = vis.getLocations();
+
 		// Calculate edit locations
 		final List<Location> locations = new ArrayList<Location>();
 		try {
-			WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
+			final WorkspaceJob job1 = calculateEditLocations(nodes, toVisit, locations);
 			job1.join();
 		} catch (InterruptedException ie) {
 			ErrorReporter.logExceptionStackTrace(ie);
@@ -102,59 +102,56 @@ class ChangeCreator {
 		if (locations.isEmpty()) {
 			return null;
 		}
-		
+
 		// Create a change for each edit location
-		TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
-		
+
 		for (Location l: locations) {
 			rootEdit.addChild(new InsertEdit(l.getOffset(), "@lazy "));
 		}
 		return tfc;
 	}
-	
+
 	/**
 	 * Collects the locations of all the formal parameters in a module where they should be @lazy.
 	 * <p>
 	 * Call on modules.
 	 * */
 	private class DefinitionVisitor extends ASTVisitor {
-		
-		private LazyChecker lazychecker;
-		
+
+		private final LazyChecker lazychecker;
+
 		DefinitionVisitor() {
 			lazychecker = new LazyChecker();
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Definition && isGoodType(node)) {
 				lazychecker.process(node);
 			}
 			return V_CONTINUE;
 		}
-		
-		private boolean isGoodType(IVisitableNode node) {
-			if (node instanceof Def_Altstep || node instanceof Def_Function || node instanceof Def_Testcase) {
-				return true;
-			}
-			return false;
+
+		private boolean isGoodType(final IVisitableNode node) {
+			return (node instanceof Def_Altstep || node instanceof Def_Function || node instanceof Def_Testcase);
 		}
-		
+
 		private List<FormalParameter> getLocations() {
 			return lazychecker.getLazyParameterList();
 		}
 
 	}
-	
-	
+
+
 	private WorkspaceJob calculateEditLocations(final List<FormalParameter> fparamlist, final IFile file
 			, final List<Location> locations_out) throws CoreException {
-		WorkspaceJob job = new WorkspaceJob("LazyficationRefactoring: calculate edit locations") {
-			
+		final WorkspaceJob job = new WorkspaceJob("LazyficationRefactoring: calculate edit locations") {
+
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				for (FormalParameter fparam : fparamlist) {
 					System.out.println("reading: "+file.getName());
 					Location typeloc = fparam.getType(CompilationTimeStamp.getBaseTimestamp()).getLocation();

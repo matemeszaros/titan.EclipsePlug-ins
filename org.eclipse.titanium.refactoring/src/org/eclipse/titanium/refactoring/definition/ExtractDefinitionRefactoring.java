@@ -40,7 +40,7 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
  * <li>INIT
  *  <ul>
  *  <li>instantiate by using the constructor: {@link #ExtractDefinitionRefactoring()};
- *   the constructor calls {@link SelectionFinder#perform()}, 
+ *   the constructor calls {@link SelectionFinder#perform()},
  *   that determines which statements are selected by the user</li>
  *  <li>create a new project using the ExtractDefinitionWizard</li>
  *  <li>call {@link #setTargetProject(IProject)} with the new project as a parameter</li>
@@ -59,74 +59,76 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
  * Use {@link #ExtractDefinitionRefactoring(IProject, Definition)}
  *  constructor instead and then call {@link #perform()}.
  * <p>
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractDefinitionRefactoring {
-	
-	static final boolean ENABLE_COPY_COMMENTS = false;
 
-	private IProject sourceProj;
+	public static final boolean ENABLE_COPY_COMMENTS = false;
+
+	private final IProject sourceProj;
 	/** the new project to extract function dependencies into */
 	private IProject targetProj;
 	/** the definition which is being extracted */
-	private Definition selection;
-	
+	private final Definition selection;
+
 	/** this contains the copied dependencies during the operation */
 	private Map<IPath, StringBuilder> copyMap;
 	/** this contains the list of files to be copied completely */
 	private List<IFile> filesToCopy;
-	
+
 	/** Use this constructor only when a workbench is available. */
 	ExtractDefinitionRefactoring() {
-		SelectionFinder sf = new SelectionFinder();
+		final SelectionFinder sf = new SelectionFinder();
 		sf.perform();
 		selection = sf.getSelection();
 		sourceProj = sf.getSourceProj();
 	}
-	
+
 	/** Use this constructor in headless mode. */
-	ExtractDefinitionRefactoring(IProject sourceProj, Definition selection) {
+	ExtractDefinitionRefactoring(final IProject sourceProj, final Definition selection) {
 		this.selection = selection;
 		this.sourceProj = sourceProj;
 	}
-	
-	String getName() {
+
+	public String getName() {
 		return "Extract definition";
 	}
-	Definition getSelection() {
+
+	public Definition getSelection() {
 		return selection;
 	}
-	IProject getSourceProject() {
+
+	public IProject getSourceProject() {
 		return sourceProj;
 	}
 
-	void setTargetProject(IProject targetProj) {
+	public void setTargetProject(final IProject targetProj) {
 		this.targetProj = targetProj;
 	}
 
 	private RefactoringStatus checkInitialConditions() {
-		RefactoringStatus result = new RefactoringStatus();
+		final RefactoringStatus result = new RefactoringStatus();
 		if (selection == null) {
 			result.addError("Selection is not a definition (selection is null)! ");
-			
+
 		}
 		if (targetProj == null) {
 			result.addError("Target project is null! ");
 		}
 		return result;
 	}
-	
-	void perform() {
-		RefactoringStatus rs = checkInitialConditions();
+
+	public void perform() {
+		final RefactoringStatus rs = checkInitialConditions();
 		if (!rs.hasError()) {
 			try {
-				DependencyCollector dc = new DependencyCollector(selection);
-				WorkspaceJob job1 = dc.readDependencies();
+				final DependencyCollector dc = new DependencyCollector(selection);
+				final WorkspaceJob job1 = dc.readDependencies();
 				job1.join();
 				copyMap = dc.getCopyMap();
 				filesToCopy = dc.getFilesToCopy();
-				WorkspaceJob job2 = createChange();
+				final WorkspaceJob job2 = createChange();
 				job2.join();
 			} catch (InterruptedException ie) {
 				ErrorReporter.logExceptionStackTrace(ie);
@@ -134,14 +136,14 @@ public class ExtractDefinitionRefactoring {
 		} else {
 			ErrorReporter.logError("Initial conditions are not fulfilled for the ExtractDefinition operation");
 		}
-		
+
 	}
 
 	private WorkspaceJob createChange() {
-		WorkspaceJob job = new WorkspaceJob("ExtractDefinition: writing to target project") {
-			
+		final WorkspaceJob job = new WorkspaceJob("ExtractDefinition: writing to target project") {
+
 			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
 				if (copyMap == null) {
 					ErrorReporter.logError("ExtractDefinition::createChange(): Reading dependencies did not finish.");
 					return Status.CANCEL_STATUS;
@@ -178,17 +180,17 @@ public class ExtractDefinitionRefactoring {
 		job.setUser(true);
 		job.schedule();
 		return job;
-		
+
 	}
-	
-	private IFile createFile(IPath relativePath) {
-		IFile ret = targetProj.getFile(relativePath);
+
+	private IFile createFile(final IPath relativePath) {
+		final IFile ret = targetProj.getFile(relativePath);
 
 		//create the file
 		if (!ret.exists()) {
 			try {
 				createTargetFolderHierarchy(ret);
-				InputStream source = new ByteArrayInputStream(new byte[0]);
+				final InputStream source = new ByteArrayInputStream(new byte[0]);
 				ret.create(source, IResource.NONE, null);
 			} catch (CoreException ce) {
 				return null;
@@ -196,23 +198,23 @@ public class ExtractDefinitionRefactoring {
 		}
 		return ret;
 	}
-	private IFile copyFile(IFile toCopy) {
-		IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
+	private IFile copyFile(final IFile toCopy) {
+		final IFile newFile = targetProj.getFile(toCopy.getProjectRelativePath());
 
 		//copy the file
 		try {
 			createTargetFolderHierarchy(newFile);
-			IPath relPath = toCopy.getProjectRelativePath();
+			final IPath relPath = toCopy.getProjectRelativePath();
 			toCopy.copy(targetProj.getFile(relPath).getFullPath(), true, null);
 		} catch (CoreException ce) {
 			return null;
 		}
 		return toCopy;
 	}
-	
+
 	private void createTargetFolderHierarchy(final IFile file) throws CoreException {
 		IContainer parent = file.getParent();
-		List<IFolder> folders = new LinkedList<IFolder>();
+		final List<IFolder> folders = new LinkedList<IFolder>();
 		while (parent != null) {
 			if (parent instanceof IFolder) {
 				folders.add(0, (IFolder)parent);

@@ -51,7 +51,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 /**
  * Wizard for the 'Extract modulepar' operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParWizard extends BasicNewResourceWizard implements IExecutableExtension {
@@ -59,23 +59,23 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	private static final String WIZ_WINDOWTITLE = "Extract module parameters into a new project";
 	private static final String WIZ_TITLE = "Create a new project to extract module parameters into";
 	private static final String WIZ_DESCRIPTION = "Extract all module parameters and their dependencies into a new project";
-	static final String WORKING_DIR = "bin";
-	static final String SOURCE_DIR = "src";
+	private static final String WORKING_DIR = "bin";
+	private static final String SOURCE_DIR = "src";
 	private static final String CREATING_PROJECT = "creating project";
 	private static final String CREATION_FAILED = "Project creation failed";
 
-	private String windowTitle;
-	
+	private final String windowTitle;
+
 	private IProject newProject;
 
-	private boolean wasAutoBuilding;
+	private final boolean wasAutoBuilding;
 	private boolean isCreated;
 	private IConfigurationElement config;
 	private ExtractModuleParWizardMainPage mainPage;
-	
+
 	ExtractModuleParWizard() {
 		windowTitle = WIZ_WINDOWTITLE;
-		IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
+		final IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
 		wasAutoBuilding = description.isAutoBuilding();
 		description.setAutoBuilding(false);
 		try {
@@ -94,20 +94,20 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 		setWindowTitle(windowTitle);
 	}
 
-	IProject getProject() {
+	public IProject getProject() {
 		return newProject;
 	}
-	
-	boolean getSaveModuleParsOption() {
+
+	public boolean getSaveModuleParsOption() {
 		if (mainPage != null) {
 			return mainPage.getSaveModuleParsOption();
 		}
 		return false;
 	}
-	
+
 	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(final IConfigurationElement config,
+			final String propertyName, final Object data) throws CoreException {
 		this.config = config;
 	}
 
@@ -119,7 +119,7 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 		mainPage.setDescription(WIZ_DESCRIPTION);
 		addPage(mainPage);
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		if (!isCreated) {
@@ -135,7 +135,7 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 		} catch (CoreException ce) {
 			ErrorReporter.logExceptionStackTrace(ce);
 		}
-		
+
 		try {
 			newProject.setPersistentProperty(new QualifiedName(ProjectBuildPropertyData.QUALIFIER,
 					MakeAttributesData.TEMPORAL_WORKINGDIRECTORY_PROPERTY), WORKING_DIR);
@@ -145,13 +145,13 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 			String executable;
 
 			if (newProject.getLocation() == null) {
-				URI projectURI = newProject.getLocationURI();
-				URI uri = TITANPathUtilities.resolvePath(WORKING_DIR, projectURI);
+				final URI projectURI = newProject.getLocationURI();
+				final URI uri = TITANPathUtilities.resolvePath(WORKING_DIR, projectURI);
 
 				executable = URIUtil.append(uri, tempExecutableName).toString();
 			} else {
-				URI uri = TITANPathUtilities.resolvePathURI(WORKING_DIR, newProject.getLocation().toOSString());
-				IPath workingDir = org.eclipse.core.filesystem.URIUtil.toPath(uri);
+				final URI uri = TITANPathUtilities.resolvePathURI(WORKING_DIR, newProject.getLocation().toOSString());
+				final IPath workingDir = org.eclipse.core.filesystem.URIUtil.toPath(uri);
 
 				executable = workingDir.append(tempExecutableName).toOSString();
 				if (Platform.OS_WIN32.equals(Platform.getOS())) {
@@ -204,15 +204,15 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	}
 
 	private IProject createNewProject() {
-		IProject tempProjectHandle = mainPage.getProjectHandle();
+		final IProject tempProjectHandle = mainPage.getProjectHandle();
 
 		URI location = null;
 		if (!mainPage.useDefaults()) {
 			location = mainPage.getLocationURI();
 		}
 
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		String tempExecutableName = tempProjectHandle.getName();
+		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		final String tempExecutableName = tempProjectHandle.getName();
 
 		final IProject newProjectHandle = ResourcesPlugin.getWorkspace().getRoot().getProject(tempExecutableName);
 
@@ -220,11 +220,11 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 		description.setLocationURI(location);
 		TITANNature.addTITANNatureToProject(description);
 
-		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
 			protected void execute(final IProgressMonitor monitor) throws CoreException {
 				createProject(description, newProjectHandle, monitor);
-				
+
 				String sourceFolder = SOURCE_DIR;
 				IFolder folder = newProjectHandle.getFolder(sourceFolder);
 				if (!folder.exists()) {
@@ -265,10 +265,10 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 
 		return newProject;
 	}
-	
+
 	private void createProject(final IProjectDescription description, final IProject projectHandle, final IProgressMonitor monitor)
 			throws CoreException {
-		IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+		final IProgressMonitor internalMonitor = monitor == null ? new NullProgressMonitor() : monitor;
 		try {
 			internalMonitor.beginTask(CREATING_PROJECT, 2000);
 
@@ -288,7 +288,7 @@ public class ExtractModuleParWizard extends BasicNewResourceWizard implements IE
 	}
 
 	private void resetAutobuildOption() {
-		IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
+		final IWorkspaceDescription description = ResourcesPlugin.getWorkspace().getDescription();
 		if (description.isAutoBuilding() != wasAutoBuilding) {
 			description.setAutoBuilding(wasAutoBuilding);
 			try {

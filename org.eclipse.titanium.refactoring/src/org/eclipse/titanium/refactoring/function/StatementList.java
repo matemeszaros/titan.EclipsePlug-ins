@@ -19,18 +19,19 @@ import org.eclipse.titan.designer.AST.TTCN3.statements.StatementBlock;
 
 /**
  * A special ASTNode which contains a list of Statement nodes.
- * 
+ *
  * @author Viktor Varga
  */
 class StatementList extends ASTNode implements ILocateableNode {
-	
+
 	protected Location location;
 	protected List<Statement> statements;
 	protected StatementBlock myStatementBlock;
-	
+
 	protected StatementList(List<Statement> statements) {
 		this.statements = statements;
 		if (statements == null) {
+			//TODO check should probably use this. here
 			statements = new ArrayList<Statement>();
 		}
 		if (!statements.isEmpty()) {
@@ -41,23 +42,23 @@ class StatementList extends ASTNode implements ILocateableNode {
 					statements.get(statements.size()-1).getLocation().getEndOffset());
 		}
 	}
-	
+
 	protected boolean isEmpty() {
 		return statements.isEmpty();
 	}
-	
+
 	protected int getSize() {
 		return statements.size();
 	}
-	protected Statement getStatementByIndex(int ind) {
+	protected Statement getStatementByIndex(final int ind) {
 		return statements.get(ind);
 	}
-	
+
 	@Override
 	public void setLocation(final Location location) {
 		this.location = location;
 	}
-	protected void increaseLocationEndOffset(int incBy) {
+	protected void increaseLocationEndOffset(final int incBy) {
 		location.setEndOffset(location.getEndOffset()+incBy);
 	}
 	@Override
@@ -69,7 +70,7 @@ class StatementList extends ASTNode implements ILocateableNode {
 	}
 
 	@Override
-	protected boolean memberAccept(ASTVisitor v) {
+	protected boolean memberAccept(final ASTVisitor v) {
 		if (statements != null) {
 			for (Statement s: statements) {
 				if (!s.accept(v)) {
@@ -79,9 +80,9 @@ class StatementList extends ASTNode implements ILocateableNode {
 		}
 		return true;
 	}
-	
-	String createDebugInfo() {
-		StringBuilder sb = new StringBuilder();
+
+	public String createDebugInfo() {
+		final StringBuilder sb = new StringBuilder();
 		sb.append("ExtractToFunctionRefactoring->StatementList debug info:");
 		sb.append("\n  Loc: ");
 		if (location == null) {
@@ -119,13 +120,13 @@ class StatementList extends ASTNode implements ILocateableNode {
 					sb.append(" in line ");
 					sb.append(s.getLocation().getLine());
 				}
-				sb.append("\n");
+				sb.append('\n');
 			}
 		}
-		sb.append("\n");
+		sb.append('\n');
 		return sb.toString();
 	}
-	
+
 }
 
 

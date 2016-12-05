@@ -41,61 +41,62 @@ import org.eclipse.ui.PlatformUI;
  * This class is only instantiated by {@link ExtractDefinitionRefactoring} once per
  * each refactoring operation. By calling {@link #perform()}, the currently
  * selected project and piece of code ({@link Definition}) is determined.
- * 
+ *
  * @author Viktor Varga
  */
 class SelectionFinder {
 
 	private static final String ERR_MSG_NO_SELECTION = "No definition to extract was found! ";
-	
+
 	/** the project from which we extract the definition */
 	private IProject sourceProj;
 	/** the definition which is being extracted */
 	private Definition selection;
-	
-	IProject getSourceProj() {
+
+	public IProject getSourceProj() {
 		return sourceProj;
 	}
-	Definition getSelection() {
+
+	public Definition getSelection() {
 		return selection;
 	}
-	
-	void perform() {
+
+	public void perform() {
 		selection = findSelection();
 	}
 
 	private Definition findSelection() {
 		//getting the active editor
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		TTCN3Editor targetEditor;
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return null;
-		} else {
-			targetEditor = (TTCN3Editor) editor;
 		}
-		final IStatusLineManager statusLineManager = targetEditor.getEditorSite().getActionBars().getStatusLineManager();
-		//getting current selection
-		ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-		TextSelection textSelection = extractSelection(selectionService.getSelection());
-		
+
+		final TTCN3Editor targetEditor = (TTCN3Editor) editor;
+
 		//iterating through part of the module
-		IResource selectedRes = extractResource(targetEditor);
+		final IResource selectedRes = extractResource(targetEditor);
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("SelectionFinder.findSelection(): Selected resource `" + selectedRes.getName() + "' is not a file.");
 			return null;
 		}
-		IFile selectedFile = (IFile)selectedRes;
+
+		final IFile selectedFile = (IFile)selectedRes;
 		sourceProj = selectedFile.getProject();
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(sourceProj);
 		final Module selectedModule = projectSourceParser.containedModule(selectedFile);
 
+		//getting current selection
+		final ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+		final TextSelection textSelection = extractSelection(selectionService.getSelection());
 		//getting current selection nodes
-		int selectionOffset = textSelection.getOffset() + textSelection.getLength();
-		SelectionFinderVisitor selVisitor = new SelectionFinderVisitor(selectionOffset);
+		final int selectionOffset = textSelection.getOffset() + textSelection.getLength();
+		final SelectionFinderVisitor selVisitor = new SelectionFinderVisitor(selectionOffset);
 		selectedModule.accept(selVisitor);
-		Definition selectedDef = selVisitor.getSelection();
+		final Definition selectedDef = selVisitor.getSelection();
 		if (selectedDef == null) {
 			ErrorReporter.logWarning("SelectionFinder.findSelection(): Visitor did not find a definition in the selection.");
+			final IStatusLineManager statusLineManager = targetEditor.getEditorSite().getActionBars().getStatusLineManager();
 			statusLineManager.setErrorMessage(ERR_MSG_NO_SELECTION);
 			return null;
 		}
@@ -107,20 +108,20 @@ class SelectionFinder {
 	 * (selection is inside the node).
 	 */
 	private static class SelectionFinderVisitor extends ASTVisitor {
-		
+
 		private Definition def;
 		private final int offset;
-		
-		SelectionFinderVisitor(int selectionOffset) {
+
+		SelectionFinderVisitor(final int selectionOffset) {
 			offset = selectionOffset;
 		}
-		
-		Definition getSelection() {
+
+		private Definition getSelection() {
 			return def;
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (!(node instanceof ILocateableNode)) {
 				return V_CONTINUE;
 			}
@@ -144,8 +145,8 @@ class SelectionFinder {
 				return V_CONTINUE;
 			}
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
-				Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Reference ref = (Reference)node;
+				final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				if (as instanceof Definition) {
 					if (isGoodType(as)) {
 						def = (Definition)as;
@@ -156,33 +157,31 @@ class SelectionFinder {
 			}
 			return V_CONTINUE;
 		}
-		
-		private static boolean isGoodType(IVisitableNode node) {
-			if (node instanceof Definition &&
+
+		private static boolean isGoodType(final IVisitableNode node) {
+			return (node instanceof Definition &&
 					!(node instanceof Def_Var) &&
 					!(node instanceof Def_Var_Template) &&
-					!(node instanceof FormalParameter)) {
-				return true;
-			}
-			return false;
+					!(node instanceof FormalParameter));
 		}
-		
+
 	}
-	
-	
-	private IResource extractResource(IEditorPart editor) {
-		IEditorInput input = editor.getEditorInput();
+
+
+	private IResource extractResource(final IEditorPart editor) {
+		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			return null;
 		}
 		return ((IFileEditorInput)input).getFile();
 	}
-	private TextSelection extractSelection(ISelection sel) {
+
+	private TextSelection extractSelection(final ISelection sel) {
 		if (!(sel instanceof TextSelection)) {
 			ErrorReporter.logError("Selection is not a TextSelection.");
 			return null;
 		}
 		return (TextSelection)sel;
 	}
-	
+
 }

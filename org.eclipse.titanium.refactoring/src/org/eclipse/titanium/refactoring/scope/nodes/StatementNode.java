@@ -23,16 +23,16 @@ import org.eclipse.titanium.refactoring.scope.MinimizeScopeRefactoring;
 
 /**
  * A node representing a Statement.
- * 
+ *
  * @author Viktor Varga
  */
 public class StatementNode extends Node {
 
 	protected BlockNode parent;
-	
+
 	protected final List<BlockNode> blocks;
 	protected final Set<Variable> referedVars;
-	
+
 	protected Variable declaredVar;
 	protected MultiDeclaration multiDeclaration;	//null if this node is not a multi-declaration
 	/**
@@ -45,15 +45,15 @@ public class StatementNode extends Node {
 	 * See {@link MinimizeScopeRefactoring.Settings#AVOID_MOVING_WHEN_UNCHECKED_REF}
 	 * */
 	protected boolean hasUncheckedRef = false;
-	
+
 	protected boolean moved = false;
 
-	public StatementNode(IVisitableNode astNode) {
+	public StatementNode(final IVisitableNode astNode) {
 		super(astNode);
 		this.blocks = new ArrayList<BlockNode>();
 		this.referedVars = new HashSet<Variable>();
 	}
-	
+
 	public BlockNode getParent() {
 		return parent;
 	}
@@ -65,20 +65,22 @@ public class StatementNode extends Node {
 	}
 	public Variable getDeclaredVar() {
 		return declaredVar;
-	}	
+	}
 	public MultiDeclaration getMultiDeclaration() {
 		return multiDeclaration;
 	}
-	
-	public boolean isLocationEqualTo(StatementNode sn) {
+
+	public boolean isLocationEqualTo(final StatementNode sn) {
 		if (!(this.getAstNode() instanceof ILocateableNode)) {
 			return false;
 		}
+
 		if (!(sn.getAstNode() instanceof ILocateableNode)) {
 			return false;
 		}
-		Location loc0 = ((ILocateableNode)this.getAstNode()).getLocation();
-		Location loc1 = ((ILocateableNode)sn.getAstNode()).getLocation();
+
+		final Location loc0 = ((ILocateableNode)this.getAstNode()).getLocation();
+		final Location loc1 = ((ILocateableNode)sn.getAstNode()).getLocation();
 		return loc0.getFile().equals(loc1.getFile()) &&
 				loc0.getOffset() == loc1.getOffset() &&
 				loc0.getEndOffset() == loc1.getEndOffset();
@@ -92,37 +94,37 @@ public class StatementNode extends Node {
 	public boolean hasFunctionCall() {
 		return hasFunctionCall;
 	}
-	
+
 	public boolean isMoved() {
 		return moved;
 	}
-	
-	public void setParent(BlockNode parent) {
+
+	public void setParent(final BlockNode parent) {
 		this.parent = parent;
 	}
-	public void addBlock(BlockNode bl) {
+	public void addBlock(final BlockNode bl) {
 		blocks.add(bl);
 	}
-	public void addReferedVars(Variable var) {
+	public void addReferedVars(final Variable var) {
 		referedVars.add(var);
 	}
-	public void setDeclaredVar(Variable declaredVar) {
+	public void setDeclaredVar(final Variable declaredVar) {
 		if (this.declaredVar != null) {
 			ErrorReporter.logError("StatementNode.setDeclaredVar(): A declared variable is already present! ");
 		}
 		this.declaredVar = declaredVar;
 	}
-	public void setMultiDeclaration(MultiDeclaration multiDeclaration) {
+	public void setMultiDeclaration(final MultiDeclaration multiDeclaration) {
 		this.multiDeclaration = multiDeclaration;
 	}
 	public void setHasFunctionCall() {
 		hasFunctionCall = true;
 	}
-	
+
 	public void setHasUncheckedRef() {
 		this.hasUncheckedRef = true;
 	}
-	public void linkWithOtherAsMultiDeclaration(StatementNode sn) {
+	public void linkWithOtherAsMultiDeclaration(final StatementNode sn) {
 		if (this.multiDeclaration != null && sn.multiDeclaration != null) {
 			ErrorReporter.logError("StatementNode.linkWithOtherAsMultiDeclaration(): Both nodes are already part of a multi-declaration! ");
 			return;
@@ -134,7 +136,7 @@ public class StatementNode extends Node {
 			sn.multiDeclaration.addDeclarationStatement(this);
 			this.setMultiDeclaration(sn.multiDeclaration);
 		} else {
-			MultiDeclaration md = new MultiDeclaration();
+			final MultiDeclaration md = new MultiDeclaration();
 			md.addDeclarationStatement(this);
 			md.addDeclarationStatement(sn);
 			this.setMultiDeclaration(md);
@@ -153,13 +155,13 @@ public class StatementNode extends Node {
 		}*/
 		multiDeclaration = null;
 	}
-	
+
 	public void setMoved() {
 		this.moved = true;
 	}
-	
+
 	@Override
-	protected boolean containsNode(Node n) {
+	protected boolean containsNode(final Node n) {
 		if (this.equals(n)) {
 			return true;
 		}
@@ -170,43 +172,38 @@ public class StatementNode extends Node {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean isBlockAncestorOfThis(BlockNode bn) {
+	public boolean isBlockAncestorOfThis(final BlockNode bn) {
 		BlockNode parent = this.getParent();
 		while (parent != null && !parent.equals(bn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
+
+		return parent != null;
 	}
 	/** Returns false if they are equal. */
 	@Override
-	public boolean isStmtAncestorOfThis(StatementNode sn) {
+	public boolean isStmtAncestorOfThis(final StatementNode sn) {
 		if (this.equals(sn)) {
 			return false;
 		}
+
 		StatementNode parent = this.parent == null ? null : this.parent.parent;
 		while (parent != null && !parent.equals(sn)) {
 			parent = parent.parent == null ? null : parent.parent.parent;
 		}
-		//
-		if (parent == null) {
-			return false;
-		}
-		return true;
-	} 
 
-	public BlockNode findBlockInStmtWhichContainsNode(Node containedNode) {
+		return parent != null;
+	}
+
+	public BlockNode findBlockInStmtWhichContainsNode(final Node containedNode) {
 		if (!containedNode.isStmtAncestorOfThis(this)) {
 			return null;
 		}
-		ListIterator<BlockNode> it = blocks.listIterator();
+		final ListIterator<BlockNode> it = blocks.listIterator();
 		while (it.hasNext()) {
-			BlockNode currB = it.next();
+			final BlockNode currB = it.next();
 			if (containedNode.isBlockAncestorOfThis(currB)) {
 				return currB;
 			}
@@ -220,11 +217,12 @@ public class StatementNode extends Node {
 	 * Any modification of the tree invalidates all previous comparison results.
 	 * Comparison is based on the {@link Node} position in the tree, not on the location of its {@link #astNode}
 	 * */
-	protected int compareCurrentPositionTo(StatementNode other) {
+	protected int compareCurrentPositionTo(final StatementNode other) {
 		if (this.equals(other)) {return 0;}
 		if (this.isStmtAncestorOfThis(other)) {return 0;}
 		if (other.isStmtAncestorOfThis(this)) {return 0;}
-		LinkedList<Integer> pos0 = new LinkedList<Integer>();
+
+		final LinkedList<Integer> pos0 = new LinkedList<Integer>();
 		StatementNode currSt = this;
 		BlockNode currBlock = getParent();
 		while (currBlock != null) {
@@ -238,7 +236,7 @@ public class StatementNode extends Node {
 			}
 		}
 		//
-		LinkedList<Integer> pos1 = new LinkedList<Integer>();
+		final LinkedList<Integer> pos1 = new LinkedList<Integer>();
 		currSt = other;
 		currBlock = other.getParent();
 		while (currBlock != null) {
@@ -252,11 +250,11 @@ public class StatementNode extends Node {
 			}
 		}
 		//compare lists
-		ListIterator<Integer> it0 = pos0.listIterator();
-		ListIterator<Integer> it1 = pos1.listIterator();
+		final ListIterator<Integer> it0 = pos0.listIterator();
+		final ListIterator<Integer> it1 = pos1.listIterator();
 		while (it0.hasNext() && it1.hasNext()) {
-			int ind0 = it0.next();
-			int ind1 = it1.next();
+			final int ind0 = it0.next();
+			final int ind1 = it1.next();
 			if (ind0 != ind1) {
 				return (ind0 < ind1) ? -1 : ((ind0 == ind1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 			}
@@ -264,15 +262,15 @@ public class StatementNode extends Node {
 		ErrorReporter.logError("StatementNode.compareCurrentPositionTo(): Erroneous state: " + Utils.createLocationString(astNode));
 		return 0;
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("SN(").append(astNode.toString()).append("), loc: ");
 		if (astNode instanceof ILocateableNode) {
-			Location loc = ((ILocateableNode)astNode).getLocation();
-			sb.append(loc.getOffset()).append("-").append(loc.getEndOffset()).append(";");
+			final Location loc = ((ILocateableNode)astNode).getLocation();
+			sb.append(loc.getOffset()).append('-').append(loc.getEndOffset()).append(';');
 		} else {
 			sb.append("<none>;");
 		}
@@ -290,22 +288,22 @@ public class StatementNode extends Node {
 		}
 		return sb.toString();
 	}
-	
-	public String toStringRecursive(boolean recursive, int prefixLen) {
-		String prefix = new String(new char[prefixLen]).replace('\0', ' ');
-		StringBuilder sb = new StringBuilder();
-		sb.append(prefix).append("SN: ").append(toString()).append("\n");
+
+	public String toStringRecursive(final boolean recursive, final int prefixLen) {
+		final String prefix = new String(new char[prefixLen]).replace('\0', ' ');
+		final StringBuilder sb = new StringBuilder();
+		sb.append(prefix).append("SN: ").append(toString()).append('\n');
 		if (recursive) {
-			sb.append(prefix).append("  blocks: ").append("\n");
+			sb.append(prefix).append("  blocks: ").append('\n');
 			for (BlockNode bn: blocks) {
-				sb.append(bn.toStringRecursive(true, prefixLen+4)).append("\n");
+				sb.append(bn.toStringRecursive(true, prefixLen+4)).append('\n');
 			}
 		}
-		sb.append(prefix).append("  refdVars: ").append("\n");
+		sb.append(prefix).append("  refdVars: ").append('\n');
 		for (Variable var: referedVars) {
-			sb.append(var.toStringRecursive(false, prefixLen+4)).append("\n");
+			sb.append(var.toStringRecursive(false, prefixLen+4)).append('\n');
 		}
 		return sb.toString();
 	}
-	
+
 }

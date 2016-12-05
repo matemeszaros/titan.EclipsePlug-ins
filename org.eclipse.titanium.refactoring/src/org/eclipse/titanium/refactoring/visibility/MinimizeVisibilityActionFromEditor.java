@@ -26,34 +26,34 @@ import org.eclipse.titanium.refactoring.Utils;
  * called from the editor for a single module.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeVisibilityActionFromEditor extends AbstractHandler {
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		//update AST
 		Utils.updateASTForProjectActiveInEditor("MinimizeVisibility");
 		Activator.getDefault().pauseHandlingResourceChanges();
 
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
 		//getting selected file
-		IFile selectedFile = Utils.getSelectedFileInEditor("MinimizeVisibility");
+		final IFile selectedFile = Utils.getSelectedFileInEditor("MinimizeVisibility");
 		if (selectedFile == null) {
 			return null;
 		}
-		IStructuredSelection structSelection = new StructuredSelection(selectedFile);
-		MinimizeVisibilityRefactoring refactoring = new MinimizeVisibilityRefactoring(structSelection);
+		final IStructuredSelection structSelection = new StructuredSelection(selectedFile);
+		final MinimizeVisibilityRefactoring refactoring = new MinimizeVisibilityRefactoring(structSelection);
 
 		//open wizard
-		MinimizeVisibilityWizard wiz = new MinimizeVisibilityWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final MinimizeVisibilityWizard wiz = new MinimizeVisibilityWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
@@ -62,14 +62,14 @@ public class MinimizeVisibilityActionFromEditor extends AbstractHandler {
 			ErrorReporter.logError("MinimizeVisibilityActionFromEditor: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
-		IProject project = selectedFile.getProject();
+		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
-		
+
 		return null;
 	}
 

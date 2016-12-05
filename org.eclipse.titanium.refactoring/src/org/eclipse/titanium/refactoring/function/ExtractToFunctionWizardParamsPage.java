@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * Wizard page #2: edit parameter names.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
@@ -34,22 +34,22 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 	private TableViewer tableViewer;
 	private final IModelProvider<ParamTableItem> modelProvider;
 
-	public ExtractToFunctionWizardParamsPage(String name,
-			IModelProvider<ParamTableItem> modelProvider) {
+	public ExtractToFunctionWizardParamsPage(final String name,
+			final IModelProvider<ParamTableItem> modelProvider) {
 		super(name);
 		this.modelProvider = modelProvider;
 	}
 
 	@Override
-	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+	public void createControl(final Composite parent) {
+		final Composite composite = new Composite(parent, SWT.NONE);
 		initializeDialogUnits(composite);
 		setControl(composite);
 
-		GridLayout layout = new GridLayout(1, false);
+		final GridLayout layout = new GridLayout(1, false);
 		composite.setLayout(layout);
 
-		Label searchLabel = new Label(composite, SWT.NONE);
+		final Label searchLabel = new Label(composite, SWT.NONE);
 		searchLabel.setText("Specify new function parameter names: ");
 
 		tableViewer = new TableViewer(composite, SWT.MULTI | SWT.V_SCROLL
@@ -63,7 +63,7 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setInput(modelProvider.getItems());
 
-		GridData gridData = new GridData();
+		final GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
@@ -81,8 +81,8 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element) {
-				ParamTableItem p = (ParamTableItem) element;
+			public String getText(final Object element) {
+				final ParamTableItem p = (ParamTableItem) element;
 				return p.getPassType();
 			}
 		});
@@ -92,8 +92,8 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		col.setLabelProvider(new ColumnLabelProvider() {
 
 			@Override
-			public String getText(Object element) {
-				ParamTableItem p = (ParamTableItem) element;
+			public String getText(final Object element) {
+				final ParamTableItem p = (ParamTableItem) element;
 				return p.getType();
 			}
 		});
@@ -103,14 +103,14 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 		col.setEditingSupport(new NameEditingSupport(col.getViewer()));
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public String getText(Object element) {
-				ParamTableItem p = (ParamTableItem) element;
+			public String getText(final Object element) {
+				final ParamTableItem p = (ParamTableItem) element;
 				return p.getName();
 			}
 		});
 	}
 
-	private TableViewerColumn createTableViewerColumn(String title, int bound) {
+	private TableViewerColumn createTableViewerColumn(final String title, final int bound) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(
 				tableViewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
@@ -126,35 +126,35 @@ public class ExtractToFunctionWizardParamsPage extends UserInputWizardPage {
 	 * */
 	private class NameEditingSupport extends EditingSupport {
 
-		private TextCellEditor cellEditor;
+		private final TextCellEditor cellEditor;
 
-		public NameEditingSupport(ColumnViewer viewer) {
+		public NameEditingSupport(final ColumnViewer viewer) {
 			super(viewer);
 			this.cellEditor = new TextCellEditor(tableViewer.getTable());
 			viewer.setCellEditors(new CellEditor[] { cellEditor });
 		}
 
 		@Override
-		protected CellEditor getCellEditor(Object element) {
-			ParamTableItem pti = (ParamTableItem) element;
+		protected CellEditor getCellEditor(final Object element) {
+			final ParamTableItem pti = (ParamTableItem) element;
 			cellEditor.setValue(pti.getName());
 			return cellEditor;
 		}
 
 		@Override
-		protected boolean canEdit(Object element) {
+		protected boolean canEdit(final Object element) {
 			return true;
 		}
 
 		@Override
-		protected Object getValue(Object element) {
-			ParamTableItem pti = (ParamTableItem) element;
+		protected Object getValue(final Object element) {
+			final ParamTableItem pti = (ParamTableItem) element;
 			return pti.getName();
 		}
 
 		@Override
-		protected void setValue(Object element, Object value) {
-			ParamTableItem pti = (ParamTableItem) element;
+		protected void setValue(final Object element, final Object value) {
+			final ParamTableItem pti = (ParamTableItem) element;
 			if (!(value instanceof String)) {
 				return;
 			}

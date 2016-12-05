@@ -32,20 +32,20 @@ import org.eclipse.titanium.refactoring.logging.context.ContextFactory;
  *  {@link Log_Statement}. The root {@link Context} is mostly the {@link Context} object derived from
  *  a {@link Module} node. Its child context is derived from the {@link IVisitableNode} child of the
  *  module in which the current {@link Log_Statement} is located. The end of the context chain (the last
- *  descendant) is the context derived from the current {@link Log_Statement}. 
- * 
+ *  descendant) is the context derived from the current {@link Log_Statement}.
+ *
  * @author Viktor Varga
  */
 class ContextFinder extends ASTVisitor {
-	
+
 	private final Settings settings;
-	
+
 	private final ContextFactory factory;
 	private final Deque<IVisitableNode> ancestorStack;
-	
+
 	private final Map<Log_Statement, Context> result;
 
-	ContextFinder(Settings settings) {
+	ContextFinder(final Settings settings) {
 		this.settings = settings;
 		factory = new ContextFactory();
 		ancestorStack = new ArrayDeque<IVisitableNode>();
@@ -58,7 +58,7 @@ class ContextFinder extends ASTVisitor {
 
 	/** Iteration order when creating contexts is: from bottom (log statement) to root (module). */
 	protected Context createContextChain() {
-		Iterator<IVisitableNode> it = ancestorStack.iterator();
+		final Iterator<IVisitableNode> it = ancestorStack.iterator();
 		Context prev = null;
 		Context curr = null;
 		if (it.hasNext()) {
@@ -70,18 +70,18 @@ class ContextFinder extends ASTVisitor {
 			prev.setParent(curr);
 			prev = curr;
 		}
-		Context root = curr;
-		return root;
+
+		return curr;
 	}
-	
+
 	@Override
-	public int visit(IVisitableNode node) {
+	public int visit(final IVisitableNode node) {
 		ancestorStack.addFirst(node);
 		if (node instanceof Log_Statement) {
 			if (settings.getSetting(Settings.SETTING_MODIFY_LOG_STATEMENTS)) {
 				result.put((Log_Statement)node, createContextChain());
 			} else {
-				LogStatementVisitor vis = new LogStatementVisitor();
+				final LogStatementVisitor vis = new LogStatementVisitor();
 				node.accept(vis);
 				if (!vis.getResult()) {
 					result.put((Log_Statement)node, createContextChain());
@@ -91,35 +91,35 @@ class ContextFinder extends ASTVisitor {
 		return V_CONTINUE;
 	}
 	@Override
-	public int leave(IVisitableNode node) {
+	public int leave(final IVisitableNode node) {
 		if (ancestorStack.getFirst() == node) {
 			ancestorStack.removeFirst();
 		}
 		return V_CONTINUE;
 	}
-	
-	/** 
+
+	/**
 	 * Searches a log statement for arguments that are variables (and not text literals).
 	 * <p>
 	 * Call on a {@link Log_Statement}}
 	 * */
 	private static class LogStatementVisitor extends ASTVisitor {
-		
+
 		private boolean result = false;
-		
-		boolean getResult() {
+
+		private boolean getResult() {
 			return result;
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof Reference) {
 				result = true;
 				return V_ABORT;
 			}
 			return V_CONTINUE;
 		}
-		
+
 	}
-	
+
 }

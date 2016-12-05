@@ -16,7 +16,6 @@ import org.eclipse.titan.designer.AST.ASTVisitor;
 import org.eclipse.titan.designer.AST.ILocateableNode;
 import org.eclipse.titan.designer.AST.IVisitableNode;
 import org.eclipse.titan.designer.AST.Module;
-import org.eclipse.titan.designer.AST.TTCN3.definitions.VisibilityModifier;
 import org.eclipse.titan.designer.AST.TTCN3.values.NamedValue;
 import org.eclipse.titan.designer.AST.TTCN3.values.SequenceOf_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Sequence_Value;
@@ -30,76 +29,77 @@ import org.eclipse.titan.designer.parsers.ProjectSourceParser;
  * By passing the selection through the constructor and calling {@link ChangeCreator#perform()}, this class
  *  creates a {@link Change} object, which can be returned by the standard
  *  {@link Refactoring#createChange(IProgressMonitor)} method in the refactoring class.
- * 
+ *
  * @author Zsolt Tabi
  */
 class ChangeCreator {
 
-	//in
+	// in
 	private final IFile selectedFile;
-	
-	//out
+
+	// out
 	private Change change;
-	
-	ChangeCreator(IFile selectedFile) {
+
+	ChangeCreator(final IFile selectedFile) {
 		this.selectedFile = selectedFile;
 	}
-	
-	Change getChange() {
+
+	public Change getChange() {
 		return change;
 	}
-	
-	/** 
+
+	/**
 	 * Creates the {@link #change} object, which contains all the inserted and edited visibility modifiers
 	 * in the selected resources.
 	 * */
-	void perform() {
+	public void perform() {
 		if (selectedFile == null) {
 			return;
 		}
 		change = createFileChange(selectedFile);
 	}
-	
-	private Change createFileChange(IFile toVisit) {
+
+	private Change createFileChange(final IFile toVisit) {
 		if (toVisit == null) {
 			return null;
 		}
-		ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
-		Module module = sourceParser.containedModule(toVisit);
-		if(module == null) {
+
+		final ProjectSourceParser sourceParser = GlobalParser.getProjectSourceParser(toVisit.getProject());
+		final Module module = sourceParser.containedModule(toVisit);
+		if (module == null) {
 			return null;
 		}
-		//find all locations in the module that should be edited
-		DefinitionVisitor vis = new DefinitionVisitor();
+		// find all locations in the module that should be edited
+		final DefinitionVisitor vis = new DefinitionVisitor();
 		module.accept(vis);
-		NavigableSet<ILocateableNode> nodes = vis.getLocations();
-		
+		final NavigableSet<ILocateableNode> nodes = vis.getLocations();
+
 		if (nodes.isEmpty()) {
 			return null;
 		}
 
-		//create a change for each edit location
-		TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
-		MultiTextEdit rootEdit = new MultiTextEdit();
+		// create a change for each edit location
+		final TextFileChange tfc = new TextFileChange(toVisit.getName(), toVisit);
+		final MultiTextEdit rootEdit = new MultiTextEdit();
 		tfc.setEdit(rootEdit);
 
 		for (ILocateableNode node : nodes) {
-			SequenceOf_Value seqOfValues = (SequenceOf_Value) node;
+			final SequenceOf_Value seqOfValues = (SequenceOf_Value) node;
 			if (seqOfValues.getMyGovernor() == null) {
 				continue;
 			}
 
-			Sequence_Value converted = Sequence_Value.convert(CompilationTimeStamp.getBaseTimestamp(), seqOfValues);
+			final Sequence_Value converted = Sequence_Value.convert(CompilationTimeStamp.getBaseTimestamp(), seqOfValues);
 			if (seqOfValues.getIsErroneous(CompilationTimeStamp.getBaseTimestamp())) {
 				continue;
 			}
 			for (int i = 0; i < converted.getNofComponents(); ++i) {
-				NamedValue namedValue = converted.getSeqValueByIndex(i);
+				final NamedValue namedValue = converted.getSeqValueByIndex(i);
 				if (namedValue == null) { // record with unnamed fields
 					break;
 				}
-				rootEdit.addChild(new InsertEdit(namedValue.getValue().getLocation().getOffset(), 
-						namedValue.getName() + " := "));
+				rootEdit.addChild(new InsertEdit(namedValue.getValue().getLocation().getOffset(),
+						namedValue.getName().getTtcnName() + " := "));
 			}
 		}
 
@@ -109,7 +109,7 @@ class ChangeCreator {
 
 		return tfc;
 	}
-	
+
 	/**
 	 * Collects the locations of all the definitions in a module where the visibility modifier
 	 *  is not yet minimal.
@@ -117,21 +117,21 @@ class ChangeCreator {
 	 * Call on modules.
 	 * */
 	private static class DefinitionVisitor extends ASTVisitor {
-		
+
 		private final NavigableSet<ILocateableNode> locations;
-		
+
 		DefinitionVisitor() {
 			locations = new TreeSet<ILocateableNode>(new LocationComparator());
 		}
-		
-		NavigableSet<ILocateableNode> getLocations() {
+
+		private NavigableSet<ILocateableNode> getLocations() {
 			return locations;
 		}
-		
+
 		@Override
-		public int visit(IVisitableNode node) {
-			
-			if (node instanceof SequenceOf_Value) { 
+		public int visit(final IVisitableNode node) {
+
+			if (node instanceof SequenceOf_Value) {
 				locations.add((SequenceOf_Value) node);
 			}
 
@@ -146,17 +146,18 @@ class ChangeCreator {
 	private static class LocationComparator implements Comparator<ILocateableNode> {
 
 		@Override
-		public int compare(ILocateableNode arg0, ILocateableNode arg1) {
-			IResource f0 = arg0.getLocation().getFile();
-			IResource f1 = arg1.getLocation().getFile();
+		public int compare(final ILocateableNode arg0, final ILocateableNode arg1) {
+			final IResource f0 = arg0.getLocation().getFile();
+			final IResource f1 = arg1.getLocation().getFile();
 			if (!f0.equals(f1)) {
 				return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 			}
-			int o0 = arg0.getLocation().getOffset();
-			int o1 = arg1.getLocation().getOffset();
+
+			final int o0 = arg0.getLocation().getOffset();
+			final int o1 = arg1.getLocation().getOffset();
 			return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		}
-		
+
 	}
-	
+
 }

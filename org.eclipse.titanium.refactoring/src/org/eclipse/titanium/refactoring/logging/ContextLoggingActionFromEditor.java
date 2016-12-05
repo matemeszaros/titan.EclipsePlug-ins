@@ -32,24 +32,24 @@ import org.eclipse.ui.PlatformUI;
  * called from the editor for a part of a single file.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class ContextLoggingActionFromEditor extends AbstractHandler {
 	private static final String ERR_MSG_NO_SELECTION = "Empty selection! ";
-	
+
 	private TextSelection selection;
 	private IStatusLineManager statusLineManager;
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		//update AST
 		Utils.updateASTForProjectActiveInEditor("ContextLogging");
 		Activator.getDefault().pauseHandlingResourceChanges();
 
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
@@ -57,14 +57,14 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 		statusLineManager = targetEditor.getEditorSite().getActionBars().getStatusLineManager();
 
 		// getting selected file
-		IFile selectedFile = Utils.getSelectedFileInEditor("MinimizeVisibility");
+		final IFile selectedFile = Utils.getSelectedFileInEditor("MinimizeVisibility");
 		if (selectedFile == null) {
 			return null;
 		}
-		
+
 		// getting selection
-		ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-		ISelection sel = selectionService.getSelection();
+		final ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+		final ISelection sel = selectionService.getSelection();
 		if (sel == null) {
 			setStatusLineMsg(ERR_MSG_NO_SELECTION, statusLineManager);
 			return null;
@@ -74,19 +74,19 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 			return null;
 		}
 		selection = (TextSelection)sel;
-		
+
 		//
 		ContextLoggingRefactoring refactoring;
 		if (selection.getLength() == 0) {
-			IStructuredSelection ssel = new StructuredSelection(new Object[]{selectedFile});
+			final IStructuredSelection ssel = new StructuredSelection(new Object[]{selectedFile});
 			refactoring = new ContextLoggingRefactoring(ssel, null);
 		} else {
 			refactoring = new ContextLoggingRefactoring(selectedFile, selection, null);
 		}
-		
+
 		//open wizard
-		ContextLoggingWizard wiz = new ContextLoggingWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final ContextLoggingWizard wiz = new ContextLoggingWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
@@ -95,26 +95,26 @@ public class ContextLoggingActionFromEditor extends AbstractHandler {
 			ErrorReporter.logError("ContextLoggingActionFromEditor: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
-		IProject project = selectedFile.getProject();
+		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
-		
+
 		return null;
 	}
 
-	static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
+	private static void setStatusLineMsg(final String msg, final IStatusLineManager toSet) {
 		Display.getDefault().asyncExec(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				toSet.setErrorMessage(msg);
-				
+
 			}
 		});
 	}
-	
+
 }

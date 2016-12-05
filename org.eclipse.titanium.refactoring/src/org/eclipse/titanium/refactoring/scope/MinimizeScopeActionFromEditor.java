@@ -46,52 +46,53 @@ import org.eclipse.ui.PlatformUI;
  * called from the editor for a single function definition.
  * <p>
  * {@link #execute(ExecutionEvent)} is called by the UI (see plugin.xml).
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeScopeActionFromEditor extends AbstractHandler {
-	
+
 	private static final String ERR_MSG_NO_SELECTION = "Move the cursor into a function or testcase body! ";
 
 	/** the definition which is being refactored */
 	private Definition selection;
-	
-	Definition getSelection() {
+
+	public Definition getSelection() {
 		return selection;
 	}
-	
+
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		//update AST
 		Utils.updateASTForProjectActiveInEditor("MinimizeScope");
 		Activator.getDefault().pauseHandlingResourceChanges();
 
 		// getting the active editor
-		TTCN3Editor targetEditor = Utils.getActiveEditor();
+		final TTCN3Editor targetEditor = Utils.getActiveEditor();
 		if (targetEditor == null) {
 			return null;
 		}
-		
+
 		//get selected definition
 		selection = findSelection();
 		if (selection == null) {
 			return null;
 		}
-		IResource selectedRes = selection.getLocation().getFile();
+
+		final IResource selectedRes = selection.getLocation().getFile();
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("MinimizeScopeActionFromEditor.execute(): Selected resource `"
 							+ selectedRes.getName() + "' is not a file.");
 			return null;
 		}
-		IFile selectedFile = (IFile)selectedRes;
+		final IFile selectedFile = (IFile)selectedRes;
 
 		//
-		MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(selection, null);
+		final MinimizeScopeRefactoring refactoring = new MinimizeScopeRefactoring(selection, null);
 
 		//open wizard
-		MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
-		RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
+		final MinimizeScopeWizard wiz = new MinimizeScopeWizard(refactoring);
+		final RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wiz);
 		try {
 			operation.run(targetEditor.getEditorSite().getShell(), "");
 		} catch (InterruptedException irex) {
@@ -100,21 +101,21 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 			ErrorReporter.logError("MinimizeScopeActionFromEditor: Error while performing refactoring change! ");
 			ErrorReporter.logExceptionStackTrace(e);
 		}
-		
+
 		//update AST again
 		Activator.getDefault().resumeHandlingResourceChanges();
 
-		IProject project = selectedFile.getProject();
+		final IProject project = selectedFile.getProject();
 		GlobalParser.getProjectSourceParser(project).reportOutdating(selectedFile);
 		GlobalParser.getProjectSourceParser(project).analyzeAll();
-		
+
 		return null;
 	}
-	
+
 
 	private Definition findSelection() {
 		//getting the active editor
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		TTCN3Editor targetEditor;
 		if (editor == null || !(editor instanceof TTCN3Editor)) {
 			return null;
@@ -123,24 +124,25 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		}
 		final IStatusLineManager statusLineManager = targetEditor.getEditorSite().getActionBars().getStatusLineManager();
 		//getting current selection
-		ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-		TextSelection textSelection = extractSelection(selectionService.getSelection());
-		
+		final ISelectionService selectionService = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+		final TextSelection textSelection = extractSelection(selectionService.getSelection());
+
 		//iterating through part of the module
-		IResource selectedRes = extractResource(targetEditor);
+		final IResource selectedRes = extractResource(targetEditor);
 		if (!(selectedRes instanceof IFile)) {
 			ErrorReporter.logError("SelectionFinder.findSelection(): Selected resource `" + selectedRes.getName() + "' is not a file.");
 			return null;
 		}
-		IFile selectedFile = (IFile)selectedRes;
+
+		final IFile selectedFile = (IFile)selectedRes;
 		final ProjectSourceParser projectSourceParser = GlobalParser.getProjectSourceParser(selectedFile.getProject());
 		final Module selectedModule = projectSourceParser.containedModule(selectedFile);
 
 		//getting current selection nodes
-		int selectionOffset = textSelection.getOffset() + textSelection.getLength();
-		SelectionFinderVisitor selVisitor = new SelectionFinderVisitor(selectionOffset);
+		final int selectionOffset = textSelection.getOffset() + textSelection.getLength();
+		final SelectionFinderVisitor selVisitor = new SelectionFinderVisitor(selectionOffset);
 		selectedModule.accept(selVisitor);
-		Definition selectedDef = selVisitor.getSelection();
+		final Definition selectedDef = selVisitor.getSelection();
 		if (selectedDef == null) {
 			ErrorReporter.logWarning("SelectionFinder.findSelection(): Visitor did not find a definition in the selection.");
 			statusLineManager.setErrorMessage(ERR_MSG_NO_SELECTION);
@@ -149,7 +151,7 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		return selectedDef;
 	}
 
-	private TextSelection extractSelection(ISelection sel) {
+	private TextSelection extractSelection(final ISelection sel) {
 		if (!(sel instanceof TextSelection)) {
 			ErrorReporter.logError("ContextLoggingActionFromEditor.extractSelection():" +
 					" selection is not a TextSelection");
@@ -157,8 +159,8 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 		}
 		return (TextSelection)sel;
 	}
-	private IResource extractResource(IEditorPart editor) {
-		IEditorInput input = editor.getEditorInput();
+	private IResource extractResource(final IEditorPart editor) {
+		final IEditorInput input = editor.getEditorInput();
 		if (!(input instanceof IFileEditorInput)) {
 			return null;
 		}
@@ -170,20 +172,20 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 	 * (selection is inside the node).
 	 */
 	private static class SelectionFinderVisitor extends ASTVisitor {
-		
+
 		private Definition def;
 		private final int offset;
-		
-		SelectionFinderVisitor(int selectionOffset) {
+
+		SelectionFinderVisitor(final int selectionOffset) {
 			offset = selectionOffset;
 		}
-		
-		Definition getSelection() {
+
+		private Definition getSelection() {
 			return def;
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (!(node instanceof ILocateableNode)) {
 				return V_CONTINUE;
 			}
@@ -207,8 +209,8 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 				return V_CONTINUE;
 			}
 			if (node instanceof Reference) {
-				Reference ref = (Reference)node;
-				Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
+				final Reference ref = (Reference)node;
+				final Assignment as = ref.getRefdAssignment(CompilationTimeStamp.getBaseTimestamp(), false);
 				if (as instanceof Definition) {
 					if (isGoodType(as)) {
 						def = (Definition)as;
@@ -219,12 +221,12 @@ public class MinimizeScopeActionFromEditor extends AbstractHandler {
 			}
 			return V_CONTINUE;
 		}
-		
-		private static boolean isGoodType(IVisitableNode node) {
+
+		private static boolean isGoodType(final IVisitableNode node) {
 			return (node instanceof Def_Function ||
 					node instanceof Def_Testcase);
 		}
-		
+
 	}
-	
+
 }

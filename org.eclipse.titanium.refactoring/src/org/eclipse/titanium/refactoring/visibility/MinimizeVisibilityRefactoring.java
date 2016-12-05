@@ -38,7 +38,7 @@ import org.eclipse.titan.designer.productUtilities.ProductConstants;
  * This refactoring operation minimizes all visibility modifiers in the given
  *   files/folders/projects, which are contained in a {@link IStructuredSelection} object.
  * The operation can be executed using the mechanisms in the superclass, through a wizard for example
- * 
+ *
  * @author Viktor Varga
  */
 public class MinimizeVisibilityRefactoring extends Refactoring {
@@ -49,36 +49,36 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 			+ "Refactoring is not supported with the memory minimise option turned on, "
 			+ "we do not take any responsibility for it.";
 
-	private IStructuredSelection selection;
-	private Set<IProject> projects = new HashSet<IProject>();
+	private final IStructuredSelection selection;
+	private final Set<IProject> projects = new HashSet<IProject>();
 
 	private Object[] affectedObjects;		//the list of objects affected by the change
-	
+
 	/*
 	 * TODO dev:
 	 *
-	 * 
+	 *
 	 * TODO fix:
-	 * 
+	 *
 	 * */
-	
-	public MinimizeVisibilityRefactoring(IStructuredSelection selection) {
+
+	public MinimizeVisibilityRefactoring(final IStructuredSelection selection) {
 		this.selection = selection;
-		
-		Iterator it = selection.iterator();
+
+		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
-			Object o = it.next();
+			final Object o = it.next();
 			if (o instanceof IResource) {
-				IProject temp = ((IResource) o).getProject();
+				final IProject temp = ((IResource) o).getProject();
 				projects.add(temp);
 			}
 		}
 	}
 
-	Object[] getAffectedObjects() {
+	public Object[] getAffectedObjects() {
 		return affectedObjects;
 	}
-	
+
 	//METHODS FROM REFACTORING
 
 	@Override
@@ -87,12 +87,12 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+	public RefactoringStatus checkInitialConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
+		final RefactoringStatus result = new RefactoringStatus();
 		try {
 			pm.beginTask("Checking preconditions...", 3);
-			
+
 			final IPreferencesService prefs = Platform.getPreferencesService();//PreferenceConstants.USEONTHEFLYPARSING
 			if (! prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.USEONTHEFLYPARSING, false, null)) {
 				result.addError(ONTHEFLYANALAYSISDISABLED);
@@ -105,12 +105,12 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 					result.addError(MessageFormat.format(PROJECTCONTAINSTTCNPPFILES, project));
 				}
 			}
-			
+
 			pm.worked(1);
 			// check that there are no error markers in the
 			// project
 			for (IProject project : projects) {
-				IMarker[] markers = project.findMarkers(null, true, IResource.DEPTH_INFINITE);
+				final IMarker[] markers = project.findMarkers(null, true, IResource.DEPTH_INFINITE);
 				for (IMarker marker : markers) {
 					if (IMarker.SEVERITY_ERROR == marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR)) {
 						result.addError(MessageFormat.format(PROJECTCONTAINSERRORS, project));
@@ -120,7 +120,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 			}
 			pm.worked(1);
 
-			
+
 			if (prefs.getBoolean(ProductConstants.PRODUCT_ID_DESIGNER, PreferenceConstants.MINIMISEMEMORYUSAGE, false, null)) {
 				result.addError(MINIMISEWARNING);
 			}
@@ -135,27 +135,27 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm)
+	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm)
 			throws CoreException, OperationCanceledException {
-		RefactoringStatus result = new RefactoringStatus();
-		return result;
+		return new RefactoringStatus();
 	}
 
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(final IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		if (selection == null) {
 			return null;
 		}
-		CompositeChange cchange = new CompositeChange("MinimizeVisibilityRefactoring");
-		Iterator it = selection.iterator();
+		final CompositeChange cchange = new CompositeChange("MinimizeVisibilityRefactoring");
+		final Iterator<?> it = selection.iterator();
 		while (it.hasNext()) {
-			Object o = it.next();
+			final Object o = it.next();
 			if (!(o instanceof IResource)) {
 				continue;
 			}
-			IResource res = (IResource)o;
-			ResourceVisitor vis = new ResourceVisitor(cchange);
+			final IResource res = (IResource)o;
+			final ResourceVisitor vis = new ResourceVisitor();
 			res.accept(vis);
+			cchange.add(vis.getChange());
 		}
 		affectedObjects = cchange.getAffectedObjects();
 		return cchange;
@@ -163,22 +163,22 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 
 	public static boolean hasTtcnppFiles(final IResource resource) throws CoreException {
 		if (resource instanceof IProject || resource instanceof IFolder) {
-			IResource[] children = resource instanceof IFolder ? ((IFolder) resource).members() : ((IProject) resource).members();
+			final IResource[] children = resource instanceof IFolder ? ((IFolder) resource).members() : ((IProject) resource).members();
 			for (IResource res : children) {
 				if (hasTtcnppFiles(res)) {
 					return true;
 				}
 			}
 		} else if (resource instanceof IFile) {
-			IFile file = (IFile) resource;
+			final IFile file = (IFile) resource;
 			return "ttcnpp".equals(file.getFileExtension());
 		}
 		return false;
 	}
 	//METHODS FROM REFACTORING END
-	
 
-	
+
+
 	/**
 	 * Visits all the files of a folder or project (any {@link IResource}).
 	 * Creates the {@link Change} for all files and then merges them into a single
@@ -189,21 +189,21 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 	private class ResourceVisitor implements IResourceVisitor {
 
 		private final CompositeChange change;
-		
-		public ResourceVisitor(CompositeChange change) {
-			this.change = change;
+
+		public ResourceVisitor() {
+			this.change = new CompositeChange("MinimizeVisibilityRefactoring");;
 		}
-		
-		CompositeChange getChange() {
+
+		private CompositeChange getChange() {
 			return change;
 		}
-		
+
 		@Override
-		public boolean visit(IResource resource) throws CoreException {
+		public boolean visit(final IResource resource) throws CoreException {
 			if (resource instanceof IFile) {
-				ChangeCreator chCreator = new ChangeCreator((IFile)resource);
+				final ChangeCreator chCreator = new ChangeCreator((IFile)resource);
 				chCreator.perform();
-				Change ch = chCreator.getChange();
+				final Change ch = chCreator.getChange();
 				if (ch != null) {
 					change.add(ch);
 				}
@@ -213,7 +213,7 @@ public class MinimizeVisibilityRefactoring extends Refactoring {
 			//CONTINUE
 			return true;
 		}
-		
+
 	}
-	
+
 }

@@ -27,36 +27,36 @@ import org.eclipse.titanium.refactoring.Utils;
  * <p>
  * Use {@link #run(IProject, Definition, String)} to perform the refactoring operation.
  * </p>
- * 
+ *
  * @author Viktor Varga, Istvan Bohm
  * */
 public class ExtractDefinitionHeadless {
 
 	private URI location;
-	
+
 	public void run(final IProject sourceProj, final Definition selection, final String targetProjName) {
-		
+
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IProject newProj = workspace.getRoot().getProject(targetProjName);
 		final IProjectDescription description = workspace.newProjectDescription(targetProjName);
 		description.setLocationURI(location);
 		TITANNature.addTITANNatureToProject(description);
-		
+
 		if (newProj == null) {
 			ErrorReporter.logError("ExtractDefinitionHeadless: Target project is null. ");
 			return;
 		}
-		
+
 		try {
 			if (Utils.createProject(description, newProj)) {
-				
+
 				try {
-					TITANNature.addTITANBuilderToProject(newProj);	
+					TITANNature.addTITANBuilderToProject(newProj);
 				} catch (CoreException ce) {
 					ErrorReporter.logExceptionStackTrace(ce);
 					return;
 				}
-				
+
 				// copy project settings to new project
 				final ProjectFileHandler pfh = new ProjectFileHandler(sourceProj);
 				if (pfh.projectFileExists()) {
@@ -72,7 +72,7 @@ public class ExtractDefinitionHeadless {
 						ErrorReporter.logError("ExtractDefinitionHeadless: Copying project settings to new project failed.");
 					}
 				}
-				
+
 				final ExtractDefinitionRefactoring refactoring = new ExtractDefinitionRefactoring(sourceProj, selection);
 				refactoring.setTargetProject(newProj);
 				refactoring.perform();
@@ -80,7 +80,7 @@ public class ExtractDefinitionHeadless {
 		} catch (CoreException e) {
 			ErrorReporter.logError("ExtractDefinitionHeadless: Target project creation was unsuccessful. ");
 			ErrorReporter.logExceptionStackTrace(e);
-		}	
+		}
 	}
 
 	public void setLocation(final URI location) {

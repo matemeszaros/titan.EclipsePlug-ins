@@ -15,30 +15,30 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 
 /**
  * Wizard for the 'Context logging' refactoring operation.
- * 
+ *
  * @author Viktor Varga
  */
 public class ContextLoggingWizard extends RefactoringWizard implements
 		IExecutableExtension {
-	
+
 	private static final String WIZ_WINDOWTITLE = "Add context info to log statements";
-	
+
 	private final ContextLoggingRefactoring refactoring;
 
-	public ContextLoggingWizard(Refactoring refactoring) {
+	public ContextLoggingWizard(final Refactoring refactoring) {
 		super(refactoring, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
 		this.refactoring = (ContextLoggingRefactoring)refactoring;
 	}
 
 	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(final IConfigurationElement config,
+			final String propertyName, final Object data) throws CoreException {
 	}
 
 	@Override
 	protected void addUserInputPages() {
 		setDefaultPageTitle(WIZ_WINDOWTITLE);
-		ContextLoggingWizardOptionsPage optionsPage = 
+		final ContextLoggingWizardOptionsPage optionsPage =
 				new ContextLoggingWizardOptionsPage(WIZ_WINDOWTITLE, refactoring.getSettings());
 		addPage(optionsPage);
 	}

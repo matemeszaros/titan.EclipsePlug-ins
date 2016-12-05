@@ -27,29 +27,29 @@ public class ExtractToFunctionHeadless {
 
 	private final IFile selectedFile;
 	private final ITextSelection textSelection;
-	
+
 	private final String newFuncName;
 	private final List<String> newParamNames;
-	
+
 	private RefactoringStatus refactoringStatus;
-	
+
 	private boolean selectionValid = true;
-	
-	public ExtractToFunctionHeadless(IFile selFile, ITextSelection textSel, 
-			String newFuncName, List<String> newParamNames) {
+
+	public ExtractToFunctionHeadless(final IFile selFile, final ITextSelection textSel,
+			final String newFuncName, final List<String> newParamNames) {
 		this.selectedFile = selFile;
 		this.textSelection = textSel;
 		this.newFuncName = newFuncName;
 		this.newParamNames = newParamNames;
 	}
-	
+
 	public boolean isSelectionValid() {
 		return selectionValid;
 	}
 	public RefactoringStatus getRefactoringStatus() {
 		return refactoringStatus;
 	}
-	
+
 	public void run() {
 
 		final ExtractToFunctionRefactoring refactoring = new ExtractToFunctionRefactoring();
@@ -63,7 +63,7 @@ public class ExtractToFunctionHeadless {
 			Activator.getDefault().pauseHandlingResourceChanges();
 			//
 			try {
-				WorkspaceJob job1 = refactoring.createFunction();
+				final WorkspaceJob job1 = refactoring.createFunction();
 				job1.join();
 				if (!job1.getResult().isOK()) {
 					ErrorReporter.logError("ExtractToFunctionHeadless: createFunction() job failed! ");
@@ -76,36 +76,37 @@ public class ExtractToFunctionHeadless {
 			//setting new function name
 			editFuncName(refactoring.getNewFunctionName());
 			//setting new parameter names
-			IModelProvider<ParamTableItem> modelProvider = refactoring.getWizardModelProvider();
+			final IModelProvider<ParamTableItem> modelProvider = refactoring.getWizardModelProvider();
 			editParamNames(modelProvider.getItems());
 			//
 			Activator.getDefault().resumeHandlingResourceChanges();
-			
-			Change change = refactoring.createChange(null);
+
+			final Change change = refactoring.createChange(null);
 			change.perform(new NullProgressMonitor());
-			
+
 		} catch (CoreException e) {
 			ErrorReporter.logExceptionStackTrace(e);
 		}
 	}
-	
-	private void editFuncName(StringBuilder funcName) {
+
+	private void editFuncName(final StringBuilder funcName) {
 		if (newFuncName == null) {
 			return;
 		}
 		funcName.setLength(0);
 		funcName.append(newFuncName);
 	}
-	
-	private void editParamNames(List<ParamTableItem> params) {
+
+	private void editParamNames(final List<ParamTableItem> params) {
 		if (newParamNames == null || newParamNames.isEmpty()) {
 			return;
 		}
-		ListIterator<ParamTableItem> itPti = params.listIterator();
-		ListIterator<String> itNewNames = newParamNames.listIterator();
+
+		final ListIterator<ParamTableItem> itPti = params.listIterator();
+		final ListIterator<String> itNewNames = newParamNames.listIterator();
 		while (itPti.hasNext() && itNewNames.hasNext()) {
 			itPti.next().setName(itNewNames.next());
 		}
 	}
-	
+
 }

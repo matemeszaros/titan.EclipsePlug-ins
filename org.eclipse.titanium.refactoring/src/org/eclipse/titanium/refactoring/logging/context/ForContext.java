@@ -20,37 +20,37 @@ import org.eclipse.titanium.refactoring.logging.ContextLoggingRefactoring.Settin
 
 /**
  * Context class representing {@link For_Statement} nodes.
- * 
+ *
  * @author Viktor Varga
  */
 class ForContext extends Context {
-	
-	List<Identifier> initialAssignmentIds;
 
-	ForContext(For_Statement st, Settings settings) {
+	private List<Identifier> initialAssignmentIds;
+
+	ForContext(final For_Statement st, final Settings settings) {
 		super(st, settings);
 	}
-	
+
 	@Override
 	public For_Statement getNode() {
 		return (For_Statement)super.getNode();
 	}
 
 	protected void process_internal() {
-		For_Statement st = getNode();
-		ForVisitor vis = new ForVisitor();
+		final For_Statement st = getNode();
+		final ForVisitor vis = new ForVisitor();
 		st.accept(vis);
 		initialAssignmentIds = vis.getResult();
 	}
-	
+
 	@Override
-	protected List<String> createLogParts_internal(Set<String> idsAlreadyHandled) {
-		List<String> ret = new ArrayList<String>();
+	protected List<String> createLogParts_internal(final Set<String> idsAlreadyHandled) {
+		final List<String> ret = new ArrayList<String>();
 		if (initialAssignmentIds == null) {
 			return ret;
 		}
 		for (Identifier id: initialAssignmentIds) {
-			String idS = id.toString();
+			final String idS = id.toString();
 			if (idsAlreadyHandled.contains(idS)) {
 				continue;
 			}
@@ -60,35 +60,35 @@ class ForContext extends Context {
 		return ret;
 	}
 
-	/** 
+	/**
 	 * Collects all the necessary variable identifiers from a {@link For_Statement}.
 	 * <p>
-	 * Call on {@link For_Statement} 
+	 * Call on {@link For_Statement}
 	 * */
 	private static class ForVisitor extends ASTVisitor {
 
-		private List<Identifier> result = new ArrayList<Identifier>();
-		
-		List<Identifier> getResult() {
+		private final List<Identifier> result = new ArrayList<Identifier>();
+
+		private List<Identifier> getResult() {
 			return result;
 		}
 
 		@Override
-		public int visit(IVisitableNode node) {
+		public int visit(final IVisitableNode node) {
 			if (node instanceof For_Statement) {
 				return V_CONTINUE;
 			}
 			if (node instanceof For_Loop_Definitions) {
-				For_Loop_Definitions flds = (For_Loop_Definitions)node;
-				int count = flds.getNofAssignments();
+				final For_Loop_Definitions flds = (For_Loop_Definitions)node;
+				final int count = flds.getNofAssignments();
 				for (int i=0;i<count;i++) {
 					result.add(flds.getAssignmentByIndex(i).getIdentifier());
 				}
 			}
 			return V_SKIP;
 		}
-		
-		
-		
+
+
+
 	}
 }

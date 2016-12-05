@@ -18,43 +18,44 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 /**
  * Wizard page #1: edit the name of the new project.
- * 
+ *
  * @author Viktor Varga
  */
 public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage {
-	
+
 	private boolean saveModuleParsOption = false;
 
 	public ExtractModuleParWizardMainPage(final String pageName) {
 		super(pageName);
 	}
-	
-	boolean getSaveModuleParsOption() {
+
+	public boolean getSaveModuleParsOption() {
 		return saveModuleParsOption;
 	}
 
 
 	@Override
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		super.createControl(parent);
-		Control control = getControl();
+		final Control control = getControl();
 		if (!(control instanceof Composite)) {
 			ErrorReporter.logError("ExtractModuleParWizardMainPage: Control is not of Composite type. ");
 			return;
 		}
-		Composite composite = (Composite)control;
-		Button chb_saveModulePars = new Button(composite, SWT.CHECK);
+
+		final Composite composite = (Composite)control;
+		final Button chb_saveModulePars = new Button(composite, SWT.CHECK);
 		chb_saveModulePars.setText("Save a list of the module parameters into a text file");
 		chb_saveModulePars.addSelectionListener(new CHBSelectionListener());
 	}
-	
+
 	@Override
 	protected boolean validatePage() {
 		if (!super.validatePage()) {
 			return false;
 		}
 
-		String projectName = getProjectName();
+		final String projectName = getProjectName();
 		if (!projectName.matches("[a-zA-Z0-9[_-]]*")) {
 			setErrorMessage("Invalid project name");
 			return false;
@@ -63,27 +64,28 @@ public class ExtractModuleParWizardMainPage extends WizardNewProjectCreationPage
 		setErrorMessage(null);
 		return true;
 	}
-	
 
-	/** 
+
+	/**
 	 * Listens to the 'Save module parameters to a text file' checkbox.
 	 * */
 	private class CHBSelectionListener implements SelectionListener {
-		
+
 		@Override
-		public void widgetSelected(SelectionEvent e) {
+		public void widgetSelected(final SelectionEvent e) {
 			if (!(e.getSource() instanceof Button)) {
 				return;
 			}
-			Button checkBox = (Button)e.getSource();
+
+			final Button checkBox = (Button)e.getSource();
 			saveModuleParsOption = checkBox.getSelection();
 		}
 
 		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
+		public void widgetDefaultSelected(final SelectionEvent e) {
 
 		}
-		
+
 	}
 
 }

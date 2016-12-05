@@ -20,13 +20,13 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.Definition;
 
 /**
  * Special class to store ISubReferences and Definition occurrences in text
- * and be able to sort them by Location. Immutable. 
- * 
+ * and be able to sort them by Location. Immutable.
+ *
  * @author Viktor Varga
  */
 final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<TextReplaceItem> {
 	private static final char SEMICOLON = ';';
-	
+
 	/**
 	 * <code>true</code>: reference (Hit), <code>false</code>: declaration
 	 * <p>
@@ -35,18 +35,18 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	private final boolean ref;
 	private final ISubReference subref;
 	private final Definition def;
-	
+
 	/**
 	 * the param of which this subref/def is an occurrence
 	 */
 	private final Param param;
-	
+
 	private final String source;
 	/**
 	 * references/definitions can be found in <code>source[ref.location+sourceOffset]</code> as text
 	 */
 	private final int sourceOffset;
-	
+
 	/**
 	 * start location of this node in the text
 	 * */
@@ -55,8 +55,8 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 	 * end location of this node in the text
 	 * */
 	private final int endOffset;
-	
-	TextReplaceItem(ISubReference subref, Param param, String sourceText, int sourceOffset) {
+
+	TextReplaceItem(final ISubReference subref, final Param param, final String sourceText, final int sourceOffset) {
 		ref = true;
 		this.subref = subref;
 		this.def = null;
@@ -65,9 +65,9 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		this.sourceOffset = sourceOffset;
 		startOffset = calculateStartOffset();
 		endOffset = calculateEndOffset();
-		
+
 	}
-	TextReplaceItem(Definition def, Param param, String sourceText, int sourceOffset) {
+	TextReplaceItem(final Definition def, final Param param, final String sourceText, final int sourceOffset) {
 		ref = false;
 		this.def = def;
 		this.subref = null;
@@ -76,9 +76,9 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		this.sourceOffset = sourceOffset;
 		startOffset = calculateStartOffset();
 		endOffset = calculateEndOffset();
-		
+
 	}
-	
+
 	private int calculateStartOffset() {
 		return getLocation().getOffset()-sourceOffset;
 	}
@@ -93,7 +93,8 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		if (end > source.length()) {
 			end = source.length();
 		}
-		int lastInd = end-1;
+
+		final int lastInd = end-1;
 		if (lastInd >= 0 && source.charAt(lastInd) == SEMICOLON) {
 			return end;
 		}
@@ -102,56 +103,57 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		}
 		return end;
 	}
-	
-	boolean isReference() {
+
+	public boolean isReference() {
 		return ref;
 	}
-	StringBuilder getNewParamName() {
+
+	public StringBuilder getNewParamName() {
 		return param.getName();
 	}
-	
-	Location getLocation() {
+
+	public Location getLocation() {
 		if (ref) {
 			return subref == null ? null : subref.getLocation();
 		} else {
 			return def == null ? null : def.getLocation();
 		}
 	}
-	
+
 	//methods for function text creation
-	
+
 	/**
 	 * @return a substring of <code>sourceText</code> which contains this TextReplaceItem
 	 */
-	StringBuilder createText() {
+	public StringBuilder createText() {
 		return new StringBuilder(source.substring(startOffset, endOffset));
 	}
 	/**
 	 * @return a substring of <code>sourceText</code> from the beginning of the <code>sourceText</code>
 	 *  to the beginning of this TextReplaceItem
 	 */
-	StringBuilder createBeginningText() {
+	public StringBuilder createBeginningText() {
 		return new StringBuilder(source.substring(0, startOffset));
 	}
 	/**
 	 * @return a substring of <code>sourceText</code> from the end of this TextReplaceItem
 	 *  to the end of the <code>sourceText</code>
 	 */
-	StringBuilder createEndingText() {
+	public StringBuilder createEndingText() {
 		return new StringBuilder(source.substring(endOffset));
 	}
 	/**
 	 * @return a substring of <code>sourceText</code> from the end of this TextReplaceItem
 	 *  to the beginning of <code>till</code>
 	 */
-	StringBuilder createIntermediateText(TextReplaceItem till) {
+	public StringBuilder createIntermediateText(final TextReplaceItem till) {
 		return new StringBuilder(source.substring(endOffset, till.startOffset));
 	}
 	/**
 	 * @return if exists, returns that part of a definition statement (<code>def</code>)
 	 *  which will be moved to before the new function call (mostly: declarations only)
 	 */
-	StringBuilder createPreDeclarationText() {
+	public StringBuilder createPreDeclarationText() {
 		//empty (invalid)
 		if (ref) {
 			return new StringBuilder();
@@ -164,16 +166,16 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 			return createText();
 		}
 		//split definition and only return the declaration part
-		StringBuilder sb = new StringBuilder();
-		int end = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
+		final StringBuilder sb = new StringBuilder();
+		final int end = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
 		sb.append(source.substring(startOffset, end));
 		return sb;
 	}
 	/**
 	 * @return if exists, returns the initialization part of a definition statement (<code>def</code>)
 	 */
-	List<StringBuilder> createInitOnlyText() {
-		List<StringBuilder> ret = new ArrayList<StringBuilder>();
+	public List<StringBuilder> createInitOnlyText() {
+		final List<StringBuilder> ret = new ArrayList<StringBuilder>();
 		//empty
 		if (ref || def instanceof Def_Timer) {
 			ret.add(new StringBuilder());
@@ -184,18 +186,18 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 			return ret;
 		}
 		//split definition and only return the initialization part
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		ret.add(param.getName());
-		int idEnd = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
+		final int idEnd = def.getIdentifier().getLocation().getEndOffset() - sourceOffset;
 		sb.append(source.substring(idEnd, endOffset));
 		ret.add(sb);
 		return ret;
 	}
-	
+
 	//
-	
+
 	@Override
-	public int compare(TextReplaceItem arg0, TextReplaceItem arg1) {
+	public int compare(final TextReplaceItem arg0, final TextReplaceItem arg1) {
 		if (arg0 == arg1) {
 			return 0;
 		}
@@ -205,15 +207,17 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		if (arg1 == null) {
 			return 1;
 		}
-		IResource f0 = arg0.getLocation().getFile();
-		IResource f1 = arg1.getLocation().getFile();
+
+		final IResource f0 = arg0.getLocation().getFile();
+		final IResource f1 = arg1.getLocation().getFile();
 		if (!f0.equals(f1)) {
 			ErrorReporter.logError("TextReplaceItem::compare(): Files differ! ");
 			return f0.getFullPath().toString().compareTo(f1.getFullPath().toString());
 		}
+
 		int o0 = arg0.getLocation().getOffset();
 		int o1 = arg1.getLocation().getOffset();
-		int comp1 = (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
+		final int comp1 = (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 		if (comp1 != 0) {
 			return comp1;
 		}
@@ -222,12 +226,12 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		return (o0 < o1) ? -1 : ((o0 == o1) ? 0 : 1);//TODO update with Java 1.7 to Integer.compare
 	}
 	@Override
-	public int compareTo(TextReplaceItem arg0) {
+	public int compareTo(final TextReplaceItem arg0) {
 		return compare(this, arg0);
 	}
-	
+
 	@Override
-	public boolean equals(Object arg0) {
+	public boolean equals(final Object arg0) {
 		if (arg0 == this) {
 			return true;
 		}
@@ -245,7 +249,7 @@ final class TextReplaceItem implements Comparator<TextReplaceItem>, Comparable<T
 		result = prime * result + getLocation().getEndOffset();
 		return result;
 	}
-	
-	
-	
+
+
+
 }

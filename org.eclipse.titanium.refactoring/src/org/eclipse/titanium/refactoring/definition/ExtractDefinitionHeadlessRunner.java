@@ -31,16 +31,16 @@ import org.eclipse.titanium.refactoring.Utils;
 
 /**
  * Extract Definition and all of its dependencies to a new TITAN project, from headless environment.
- * 
+ *
  * @author Istvan Bohm
  * */
 public class ExtractDefinitionHeadlessRunner implements IApplication {
-	
+
 	@Override
-	public Object start(IApplicationContext context) {
-		
+	public Object start(final IApplicationContext context) {
+
 		final String[] cmdArguments = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
-		
+
 		Map<String, String> args;
 		try {
 			args = processArgs(cmdArguments);
@@ -49,7 +49,7 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 			System.out.println(e.getMessage());
 			return -1;
 		}
-		
+
 		final String sourceProjName = args.get("in");
 		final String targetProjName = args.get("out");
 		final String moduleName = args.get("module");
@@ -61,19 +61,19 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 			System.out.println("ExtractDefinitionHeadless: Source project is not exist: " + sourceProjName);
 			return -1;
 		}
-		
+
 		final IProject targetProj = ResourcesPlugin.getWorkspace().getRoot().getProject(targetProjName);
 		if(targetProj.exists()) {
 			ErrorReporter.logError("ExtractDefinitionHeadless: Output project is already exist: " + targetProjName);
 			System.out.println("ExtractDefinitionHeadless: Output project is already exist: " + targetProjName );
 			return -1;
 		}
-		
+
 		//update AST to get the module and definition
 		final Set<IProject> projsToUpdate = new HashSet<IProject>();
 		projsToUpdate.add(sourceProj);
 		Utils.updateASTBeforeRefactoring(projsToUpdate, "ExtractDefinition");
-		
+
 		final ProjectSourceParser parser = GlobalParser.getProjectSourceParser(sourceProj);
 		final Module sourceModule = parser.getModuleByName(moduleName);
 		if (sourceModule == null) {
@@ -81,7 +81,7 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 			System.out.println("ExtractDefinitionHeadless: Could not find module: " + moduleName);
 			return -1;
 		}
-		
+
 		final Assignment assignment = sourceModule.getAssignments().getLocalAssignmentByID(CompilationTimeStamp.getBaseTimestamp(), new Identifier(Identifier_type.ID_NAME, definitionName));
 		if (assignment == null) {
 			ErrorReporter.logError("ExtractDefinitionHeadless: Could not find definition: " + definitionName);
@@ -95,10 +95,10 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 			return -1;
 		}
 		final Definition definition = (Definition)assignment;
-		
+
 
 		final ExtractDefinitionHeadless headless = new ExtractDefinitionHeadless();
-		
+
 		final String location = args.get("location");
 		if(location!=null) {
 			try {
@@ -106,7 +106,7 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 				if(!d.exists()) {
 				    try{
 				    	d.mkdirs();
-				    } 
+				    }
 				    catch(Exception e){
 				    	throw new Exception("Could not create the parent folder of the project: " + d.getAbsolutePath() );
 				    }
@@ -129,7 +129,7 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 			}
 		}
 		headless.run(sourceProj, definition, targetProjName);
-		
+
 		return IApplication.EXIT_OK;
 	}
 
@@ -137,12 +137,12 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 	public void stop() {
 		//do nothing
 	}
-	
+
 	private Map<String, String> processArgs(final String[] cliArgs) throws ArgumentException {
 		final HashMap<String, String> arguments = new HashMap<String, String>(cliArgs.length);
 		for(int i=0;i<cliArgs.length;++i) {
 			final String arg = cliArgs[i];
-			if("-in".equals(arg) || "-out".equals(arg) || "-location".equals(arg) || 
+			if("-in".equals(arg) || "-out".equals(arg) || "-location".equals(arg) ||
 					"-definition".equals(arg) || "-module".equals(arg)) {
 				++i;
 				if(i==cliArgs.length) {
@@ -152,7 +152,7 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 				arguments.put(cliArgs[i-1].substring(1), cliArgs[i]);
 			}
 		}
-		
+
 		if(!arguments.containsKey("in") || arguments.get("in").length()==0) {
 			ErrorReporter.logError("Error, missing mandatory argument: -in");
 			throw new ArgumentException("Error, missing mandatory argument: -in");
@@ -169,10 +169,10 @@ public class ExtractDefinitionHeadlessRunner implements IApplication {
 			ErrorReporter.logError("Error, missing mandatory argument: -definition");
 			throw new ArgumentException("Error, missing mandatory argument: -definition");
 		}
-		
+
 		return arguments;
 	}
-	
+
 	private class ArgumentException extends Exception {
 		private static final long serialVersionUID = 1L;
 
