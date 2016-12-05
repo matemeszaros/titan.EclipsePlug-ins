@@ -381,11 +381,15 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		//markers on imports cannot be removed, they are already refreshed
 		
 		for(Definition definition : definitions){
-			MarkerHandler.markAllSemanticMarkersForRemoval(definition);
+			if(definition.getLastTimeChecked() == null || definition.getLastTimeChecked().isLess(timestamp)){
+				MarkerHandler.markAllSemanticMarkersForRemoval(definition);
+			}
 		}
 		
 		for(Group group: groups){
-			MarkerHandler.markAllSemanticMarkersForRemoval(group);
+			if(group.getLastTimeChecked() == null || group.getLastTimeChecked().isLess(timestamp)){
+				MarkerHandler.markAllSemanticMarkersForRemoval(group);
+			}
 		}
 		
 		//TODO: remove markers on commented lines
