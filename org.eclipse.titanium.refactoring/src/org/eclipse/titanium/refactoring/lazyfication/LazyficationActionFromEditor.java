@@ -29,7 +29,7 @@ import org.eclipse.titanium.refactoring.Utils;
  *
  * @author Istvan Bohm
  */
-public class LazyficationActionFromEditor extends AbstractHandler  {
+public class LazyficationActionFromEditor extends AbstractHandler {
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
