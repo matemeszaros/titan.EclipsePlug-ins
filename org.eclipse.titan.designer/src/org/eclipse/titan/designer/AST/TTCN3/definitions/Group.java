@@ -24,6 +24,7 @@ import org.eclipse.titan.designer.AST.IOutlineElement;
 import org.eclipse.titan.designer.AST.ISubReference;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
+import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.TTCN3.IAppendableSyntax;
 import org.eclipse.titan.designer.AST.TTCN3.attributes.MultipleWithAttributes;
@@ -401,6 +402,23 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 
 		lastUniquenessCheckTimeStamp = timestamp;
 	}
+	
+	
+	public void markMarkersForRemoval(final CompilationTimeStamp timestamp){
+		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
+			return;
+		}
+		
+		//definitions are handled separately!
+		MarkerHandler.markAllSemanticMarkersForRemoval(this.getCommentLocation());
+		MarkerHandler.markAllSemanticMarkersForRemoval(this.getIdentifier());
+		for (Group innerGroup : groups) {
+			innerGroup.markMarkersForRemoval(timestamp);
+		}
+		
+		//TODO: withAttributesPath should be cleared, as well
+		
+	}
 
 	/**
 	 * Checks the whole group for semantic errors.
@@ -412,15 +430,14 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
 			return;
 		}
-
+		lastCompilationTimeStamp = timestamp;
+		
 		T3Doc.check(this.getCommentLocation(), "group");
 
 		NamingConventionHelper.checkConvention(PreferenceConstants.REPORTNAMINGCONVENTION_GROUP, identifier, "group");
 		NamingConventionHelper.checkNameContents(identifier, getModule().getIdentifier(), "group");
 
 		checkUniqueness(timestamp);
-
-		lastCompilationTimeStamp = timestamp;
 
 		if (withAttributesPath != null) {
 			withAttributesPath.checkGlobalAttributes(timestamp, false);
