@@ -410,14 +410,12 @@ public final class Group extends ASTNode implements IOutlineElement, ILocateable
 		}
 		
 		//definitions are handled separately!
-		MarkerHandler.markAllSemanticMarkersForRemoval(this.getCommentLocation());
+		MarkerHandler.markAllSemanticMarkersForRemoval(this.getCommentLocation()); //for example t3doc markers
 		MarkerHandler.markAllSemanticMarkersForRemoval(this.getIdentifier());
+		MarkerHandler.markAllSemanticMarkersForRemoval(this.withAttributesPath);
 		for (Group innerGroup : groups) {
 			innerGroup.markMarkersForRemoval(timestamp);
 		}
-		
-		//TODO: withAttributesPath should be cleared, as well
-		
 	}
 
 	/**

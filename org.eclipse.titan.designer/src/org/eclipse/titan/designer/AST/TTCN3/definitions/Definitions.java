@@ -420,9 +420,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		}
 		
 		for(Group group: groups){
-			if(group.getLastTimeChecked() == null || group.getLastTimeChecked().isLess(timestamp)){
-				MarkerHandler.markAllSemanticMarkersForRemoval(group.getIdentifier()); //TODO: make it recursively!
-			}
+			group.markMarkersForRemoval(timestamp);
 		}
 		
 		//TODO: remove markers on commented lines
