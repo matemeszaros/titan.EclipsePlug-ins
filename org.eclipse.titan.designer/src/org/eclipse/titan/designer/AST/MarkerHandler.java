@@ -116,6 +116,13 @@ public final class MarkerHandler {
 
 	}
 	
+	public static void markAllSemanticMarkersForRemoval(final Location loc) {
+		if(loc != null && loc!= NULL_Location.INSTANCE) {
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, loc.getFile(), loc.getOffset(), loc.getEndOffset());
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_MIXED_MARKER, loc.getFile(), loc.getOffset(), loc.getEndOffset());
+		}
+	}	
+	
 	public static void markAllSemanticMarkersForRemoval(final ILocateableNode locatable) {
 		Location loc = locatable.getLocation();
 		if(loc != null && loc!= NULL_Location.INSTANCE) {
@@ -783,34 +790,15 @@ public final class MarkerHandler {
 	/**
 	 * Marks all syntactic on-the-fly markers on the provided resource to be ready for removal.
 	 *
-	 * @param resource the resource whose markers can be removed.
+	 * @param file the file whose markers can be removed.
 	 * @param startOffset the start of the interval in which the markers to be marked can be
 	 * @param endOffset the start of the interval in which the markers to be marked can be
 	 * */
-	public static void markAllOnTheFlyMarkersForRemoval(final IResource resource, final int startOffset, final int endOffset) {
-		List<IResource> resources = new ArrayList<IResource>();
-		resources.add(resource);
-
-		if (!(resource instanceof IFile)) {
-			FileFinder finder = new FileFinder();
-			try {
-				resource.accept(finder);
-				for (IFile file : finder.getFiles()) {
-					resources.add(file);
-				}
-			} catch (CoreException e) {
-				ErrorReporter.logExceptionStackTrace(MARKER_HANDLING_ERROR, e);
-			}
-		}
-
-		IResource tempResource;
-		for (int i = 0, size = resources.size(); i < size; i++) {
-			tempResource = resources.get(i);
-			markMarkersForRemoval(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, tempResource, startOffset, endOffset);
-			markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, tempResource, startOffset, endOffset);
-			markMarkersForRemoval(GeneralConstants.ONTHEFLY_TASK_MARKER, tempResource, startOffset, endOffset);
-			markMarkersForRemoval(GeneralConstants.ONTHEFLY_MIXED_MARKER, tempResource,startOffset, endOffset);
-		}
+	public static void markAllOnTheFlyMarkersForRemoval(final IFile file, final int startOffset, final int endOffset) {
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_SYNTACTIC_MARKER, file, startOffset, endOffset);
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, file, startOffset, endOffset);
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_TASK_MARKER, file, startOffset, endOffset);
+			markMarkersForRemoval(GeneralConstants.ONTHEFLY_MIXED_MARKER, file,startOffset, endOffset);
 	}
 
 	/**

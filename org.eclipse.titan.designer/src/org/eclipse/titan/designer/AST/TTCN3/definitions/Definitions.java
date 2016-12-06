@@ -271,13 +271,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				definitionMap.put(definitionName, definition);
 			}
 		}
-		//updateSyntax() puts back
-		if (doubleDefinitions != null) {
-			for (int i = 0, size = doubleDefinitions.size(); i < size; i++) {
-				definitions.remove(doubleDefinitions.get(i));
-			}
-		}
-		
+
 	}
 
 	//reports the found double definitions. It is supposed doubleDefinition to be created already
@@ -427,7 +421,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		
 		for(Group group: groups){
 			if(group.getLastTimeChecked() == null || group.getLastTimeChecked().isLess(timestamp)){
-				MarkerHandler.markAllSemanticMarkersForRemoval(group);
+				MarkerHandler.markAllSemanticMarkersForRemoval(group.getIdentifier()); //TODO: make it recursively!
 			}
 		}
 		
@@ -440,7 +434,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			assignmentFrom.check(timestamp);
 			LoadBalancingUtilities.astNodeChecked();
 		}
-		checkUniqueness(timestamp);
 
 	}
 	
@@ -578,10 +571,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			final List<FriendModule> friendModules, final ControlPart controlpart) throws ReParseException {
 		// calculate damaged region
 		int result = 0;
-		if (doubleDefinitions != null) {
-			definitions.addAll(doubleDefinitions);
-		}
-
 		boolean enveloped = false;
 		int nofDamaged = 0;
 		int leftBoundary = location.getOffset() + 1;
