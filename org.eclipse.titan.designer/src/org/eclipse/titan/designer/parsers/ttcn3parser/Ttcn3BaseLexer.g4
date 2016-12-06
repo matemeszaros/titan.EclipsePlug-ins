@@ -296,7 +296,8 @@ WS:				[ \t\r\n\f]+	-> channel(HIDDEN);
 LINE_COMMENT:	'//' ~[\r\n]*
 {
 	detectTasks(getText(), false);
-	lastComment = new Location( actualFile, _tokenStartLine, _tokenStartCharIndex, getCharIndex() );
+//TODO: remove it and handle it somewhere else, as lexer and parser are not always synchronized
+//	lastComment = new Location( actualFile, _tokenStartLine, _tokenStartCharIndex, getCharIndex() );
 } -> channel(HIDDEN);
 
 BLOCK_COMMENT:	'/*' .*? '*/'
@@ -304,7 +305,8 @@ BLOCK_COMMENT:	'/*' .*? '*/'
 	intervalDetector.pushInterval(_tokenStartCharIndex, _tokenStartLine, interval_type.MULTILINE_COMMENT);
 	intervalDetector.popInterval(_input.index(), _interp.getLine());
 	detectTasks(getText(), true);
-	lastComment = new Location( actualFile, _tokenStartLine, _tokenStartCharIndex, getCharIndex() );
+//TODO: remove it and handle it somewhere else, as lexer and parser are not always synchronized
+//	lastComment = new Location( actualFile, _tokenStartLine, _tokenStartCharIndex, getCharIndex() );
 } -> channel(HIDDEN);
 
 //TODO: check that nothing else preceeds it in current line
