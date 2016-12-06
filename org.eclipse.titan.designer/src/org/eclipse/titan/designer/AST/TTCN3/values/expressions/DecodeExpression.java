@@ -171,7 +171,7 @@ public final class DecodeExpression extends Expression_Value {
 		}
 		if (temporalType.getTypeRefdLast(timestamp).getTypetype() != Type_type.TYPE_BITSTRING) {
 			if (!isErroneous) {
-				location.reportSemanticError(OPERANDERROR1);
+				reference1.getLocation().reportSemanticError(OPERANDERROR1);
 				setIsErroneous(true);
 			}
 			return;
