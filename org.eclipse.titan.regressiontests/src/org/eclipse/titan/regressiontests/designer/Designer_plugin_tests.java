@@ -78,7 +78,7 @@ public class Designer_plugin_tests {
 		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.REPORTTYPECOMPATIBILITY, "warning");
 		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.REPORTNAMINGCONVENTIONPROBLEMS, "warning");
 		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.REPORT_STRICT_CONSTANTS, true);
-		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.T3DOC_ENABLE, true);
+		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.T3DOC_ENABLE, false);
 		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DISPLAYDEBUGINFORMATION, true);
 		Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEBUG_CONSOLE_LOG_TO_SYSOUT, true);
 
