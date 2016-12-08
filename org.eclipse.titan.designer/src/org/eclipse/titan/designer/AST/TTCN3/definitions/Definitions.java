@@ -376,6 +376,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		
 		for(Definition definition : definitions){
 			if(definition.getLastTimeChecked() == null || definition.getLastTimeChecked().isLess(timestamp)){
+				MarkerHandler.markAllSemanticMarkersForRemoval(definition.getCommentLocation()); 
 				MarkerHandler.markAllSemanticMarkersForRemoval(definition); //doubleDefinition report will be deleted!
 			}
 		}
