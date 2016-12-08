@@ -381,9 +381,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		}
 		
 		for(Group group: groups){
-			if(group.getLastTimeChecked() == null || group.getLastTimeChecked().isLess(timestamp)){
-				MarkerHandler.markAllSemanticMarkersForRemoval(group);
-			}
+			group.markMarkersForRemoval(timestamp);
 		}
 		
 		//TODO: remove markers on commented lines
@@ -399,6 +397,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 	
 	/**
 	 * Experimental method for BrokenPartsViaInvertedImports.
+	 * The only difference to check() that not all assignments will be rechecked, just the listed in "assignments"
 	 */
 	public void checkWithDefinitions(final CompilationTimeStamp timestamp, final List<Assignment> assignments) {
 		if (lastCompilationTimeStamp != null && !lastCompilationTimeStamp.isLess(timestamp)) {
@@ -577,6 +576,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		int leftBoundary = location.getOffset() + 1;
 		int rightBoundary = location.getEndOffset() - 1;
 		final int damageOffset = reparser.getDamageStart();
+		final int damageEndOffset = reparser.getDamageEnd();
 		IAppendableSyntax lastAppendableBeforeChange = null;
 		IAppendableSyntax lastPrependableBeforeChange = null;
 		boolean isControlPossible = controlpart == null;
@@ -590,8 +590,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 					leftBoundary = tempLocation.getEndOffset() + 1;
 					lastAppendableBeforeChange = controlpart;
 				}
-				if (tempLocation.getOffset() >= damageOffset && tempLocation.getOffset() < rightBoundary) {
-					rightBoundary = tempLocation.getOffset();
+				if (tempLocation.getOffset() > damageEndOffset && tempLocation.getOffset() < rightBoundary) {
+					rightBoundary = tempLocation.getOffset() - 1;
 					lastPrependableBeforeChange = controlpart;
 				}
 			}
@@ -608,11 +608,11 @@ public final class Definitions extends Assignments implements ILocateableNode {
 				nofDamaged++;
 			} else {
 				if (tempLocation.getEndOffset() < damageOffset && tempLocation.getEndOffset() > leftBoundary) {
-					leftBoundary = tempLocation.getEndOffset();
+					leftBoundary = tempLocation.getEndOffset() + 1;
 					lastAppendableBeforeChange = tempGroup;
 				}
-				if (tempLocation.getOffset() >= damageOffset && tempLocation.getOffset() < rightBoundary) {
-					rightBoundary = tempLocation.getOffset();
+				if (tempLocation.getOffset() > damageEndOffset && tempLocation.getOffset() < rightBoundary) {
+					rightBoundary = tempLocation.getOffset() - 1;
 					lastPrependableBeforeChange = tempGroup;
 				}
 			}
@@ -636,8 +636,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 						leftBoundary = tempLocation.getEndOffset() + 1;
 						lastAppendableBeforeChange = tempImport;
 					}
-					if (tempLocation.getOffset() >= damageOffset && tempLocation.getOffset() < rightBoundary) {
-						rightBoundary = tempLocation.getOffset();
+					if (tempLocation.getOffset() > damageEndOffset && tempLocation.getOffset() < rightBoundary) {
+						rightBoundary = tempLocation.getOffset() - 1;
 						lastPrependableBeforeChange = tempImport;
 					}
 				}
@@ -662,8 +662,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 						leftBoundary = tempLocation.getEndOffset() + 1;
 						lastAppendableBeforeChange = tempFriend;
 					}
-					if (tempLocation.getOffset() >= damageOffset && tempLocation.getOffset() < rightBoundary) {
-						rightBoundary = tempLocation.getOffset();
+					if (tempLocation.getOffset() > damageEndOffset && tempLocation.getOffset() < rightBoundary) {
+						rightBoundary = tempLocation.getOffset() - 1;
 						lastPrependableBeforeChange = tempFriend;
 					}
 				}
@@ -694,15 +694,15 @@ public final class Definitions extends Assignments implements ILocateableNode {
 						leftBoundary = cumulativeLocation.getEndOffset() + 1;
 						lastAppendableBeforeChange = temp;
 					}
-					if (cumulativeLocation.getOffset() > damageOffset && cumulativeLocation.getOffset() < rightBoundary) {
-						rightBoundary = cumulativeLocation.getOffset()-1 ; //BAAT temp
+					if (cumulativeLocation.getOffset() > damageEndOffset && cumulativeLocation.getOffset() < rightBoundary) {
+						rightBoundary = cumulativeLocation.getOffset() - 1;
 						lastPrependableBeforeChange = temp;
 					}
 				}
 				Location tempCommentLocation = temp.getCommentLocation();
 				if (tempCommentLocation != null && reparser.isDamaged(tempCommentLocation)) {
 					nofDamaged++;
-					rightBoundary = tempLocation.getEndOffset() + 1;
+					rightBoundary = tempLocation.getEndOffset() + 1;//check it !!! 
 				}
 			}
 		}
@@ -854,7 +854,6 @@ public final class Definitions extends Assignments implements ILocateableNode {
 							}
 							lastUniquenessCheckTimeStamp = null;
 							lastCompilationTimeStamp = null;//to recheck the whole module
-							//TODO: BAAT:trigger the recheck of the importing modules as well!!
 							reparser.setNameChanged(false);
 							// This could also spread
 						}
