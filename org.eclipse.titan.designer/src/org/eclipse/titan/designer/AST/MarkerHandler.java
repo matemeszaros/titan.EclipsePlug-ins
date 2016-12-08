@@ -102,9 +102,9 @@ public final class MarkerHandler {
 		}
 	}
 
-	public static void markAllSemanticMarkersForRemoval(final List<Assignment> assignments) {
-		for(Assignment assignment: assignments){
-			markAllSemanticMarkersForRemoval(assignment);
+	public static void markAllSemanticMarkersForRemoval(final List<ILocateableNode> locatables) {
+		for(ILocateableNode locatable: locatables){
+			markAllSemanticMarkersForRemoval(locatable);
 		}
 	}
 
@@ -124,6 +124,9 @@ public final class MarkerHandler {
 	}	
 	
 	public static void markAllSemanticMarkersForRemoval(final ILocateableNode locatable) {
+		if(locatable == null) {
+			return;
+		}
 		Location loc = locatable.getLocation();
 		if(loc != null && loc!= NULL_Location.INSTANCE) {
 			markMarkersForRemoval(GeneralConstants.ONTHEFLY_SEMANTIC_MARKER, loc.getFile(), loc.getOffset(), loc.getEndOffset());
@@ -1218,4 +1221,5 @@ public final class MarkerHandler {
 			return true;
 		}
 	}
+
 }
