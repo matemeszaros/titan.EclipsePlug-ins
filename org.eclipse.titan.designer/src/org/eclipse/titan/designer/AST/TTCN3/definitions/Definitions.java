@@ -376,7 +376,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 		
 		for(Definition definition : definitions){
 			if(definition.getLastTimeChecked() == null || definition.getLastTimeChecked().isLess(timestamp)){
-				MarkerHandler.markAllSemanticMarkersForRemoval(definition);
+				MarkerHandler.markAllSemanticMarkersForRemoval(definition); //doubleDefinition report will be deleted!
 			}
 		}
 		
@@ -394,6 +394,7 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			definition.check(timestamp); //it calls definition.checkUniqueness!
 		}
 		
+		reportDoubleDefinitions(); //perhaps checkUniqueness() was executed earlier and their markers have been removed
 	}
 	
 	/**
@@ -432,6 +433,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 			assignmentFrom.check(timestamp);
 			LoadBalancingUtilities.astNodeChecked();
 		}
+		
+		reportDoubleDefinitions();//perhaps checkUniqueness() was executed earlier and their markers have been removed
 
 	}
 	
@@ -691,8 +694,8 @@ public final class Definitions extends Assignments implements ILocateableNode {
 						leftBoundary = cumulativeLocation.getEndOffset() + 1;
 						lastAppendableBeforeChange = temp;
 					}
-					if (cumulativeLocation.getOffset() >= damageOffset && cumulativeLocation.getOffset() < rightBoundary) {
-						rightBoundary = cumulativeLocation.getOffset();
+					if (cumulativeLocation.getOffset() > damageOffset && cumulativeLocation.getOffset() < rightBoundary) {
+						rightBoundary = cumulativeLocation.getOffset()-1 ; //BAAT temp
 						lastPrependableBeforeChange = temp;
 					}
 				}
