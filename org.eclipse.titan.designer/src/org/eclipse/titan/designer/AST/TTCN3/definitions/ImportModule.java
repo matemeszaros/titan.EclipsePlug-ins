@@ -242,7 +242,6 @@ public final class ImportModule extends ModuleImportation implements ILocateable
 		if (lastImportCheckTimeStamp != null && !lastImportCheckTimeStamp.isLess(timestamp)) {
 			return;
 		}		
-		MarkerHandler.markAllSemanticMarkersForRemoval(this);
 		
 		final Module temp = referredModule;
 		referredModule = null;
@@ -286,7 +285,7 @@ public final class ImportModule extends ModuleImportation implements ILocateable
 		}
 		moduleStack.remove(moduleStack.size() - 1);
 
-//		lastImportCheckTimeStamp = timestamp; //timestamp can be set only here to handle circular import chains!
+		lastImportCheckTimeStamp = timestamp; //timestamp can be set only here to handle circular import chains!
 	}
 
 	@Override
