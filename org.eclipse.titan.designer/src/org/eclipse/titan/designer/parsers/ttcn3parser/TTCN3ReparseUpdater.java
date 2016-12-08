@@ -539,7 +539,6 @@ public final class TTCN3ReparseUpdater {
 		lexer.setActualFile(file);
 		parser.setActualFile(file);
 		parser.setProject(file.getProject());
-		parser.setLexer(lexer);
 		parser.setOffset( modificationStartOffset );
 		parser.setLine( line + 1 );
 

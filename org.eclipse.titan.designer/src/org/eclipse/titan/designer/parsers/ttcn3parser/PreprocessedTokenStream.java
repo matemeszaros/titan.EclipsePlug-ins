@@ -459,7 +459,6 @@ public class PreprocessedTokenStream extends CommonTokenStream {
 		tokenStreamStack.push(new TokenStreamData(lexer, includedFile, reader));
 		if (parser != null) {
 			parser.setActualFile(includedFile);
-			parser.setLexer(lexer);
 		}
 		includedFiles.add(includedFile);
 	}
@@ -611,10 +610,8 @@ public class PreprocessedTokenStream extends CommonTokenStream {
 					if (parser != null) {
 						if (tokenStreamStack.isEmpty()) {
 							parser.setActualFile(actualFile);
-							parser.setLexer(actualLexer);
 						} else {
 							parser.setActualFile(tokenStreamStack.peek().file);
-							parser.setLexer(tokenStreamStack.peek().lexer);
 						}
 					}
 					if (tsd.reader != null) {

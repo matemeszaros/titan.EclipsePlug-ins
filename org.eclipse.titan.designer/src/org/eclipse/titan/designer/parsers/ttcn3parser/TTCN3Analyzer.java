@@ -206,7 +206,6 @@ public class TTCN3Analyzer implements ISourceAnalyzer {
 			parser.setProject( aEclipseFile.getProject() );
 		}
 		
-		parser.setLexer( lexer );
 		// remove ConsoleErrorListener
 		parser.removeErrorListeners();
 		TitanListener parserListener = new TitanListener();

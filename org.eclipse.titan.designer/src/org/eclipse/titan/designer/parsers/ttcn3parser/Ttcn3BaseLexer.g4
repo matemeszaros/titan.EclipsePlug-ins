@@ -91,16 +91,6 @@ import org.eclipse.titan.designer.AST.Location;
     intervalDetector.initRootInterval(length);
   }
 
-  private Location lastComment = null;
-
-  public Location getLastCommentLocation() {
-  	return lastComment;
-  }
-
-  public void clearLastCommentLocation() {
-  	lastComment = null;
-  }
-  
   private Location lastPPDirectiveLocation = null;
   
   public Location getLastPPDirectiveLocation() {
@@ -296,8 +286,6 @@ WS:				[ \t\r\n\f]+	-> channel(HIDDEN);
 LINE_COMMENT:	'//' ~[\r\n]*
 {
 	detectTasks(getText(), false);
-//TODO: remove it and handle it somewhere else, as lexer and parser are not always synchronized
-//	lastComment = new Location( actualFile, _tokenStartLine, _tokenStartCharIndex, getCharIndex() );
 } -> channel(HIDDEN);
 
 BLOCK_COMMENT:	'/*' .*? '*/'
@@ -305,8 +293,6 @@ BLOCK_COMMENT:	'/*' .*? '*/'
 	intervalDetector.pushInterval(_tokenStartCharIndex, _tokenStartLine, interval_type.MULTILINE_COMMENT);
 	intervalDetector.popInterval(_input.index(), _interp.getLine());
 	detectTasks(getText(), true);
-//TODO: remove it and handle it somewhere else, as lexer and parser are not always synchronized
-//	lastComment = new Location( actualFile, _tokenStartLine, _tokenStartCharIndex, getCharIndex() );
 } -> channel(HIDDEN);
 
 //TODO: check that nothing else preceeds it in current line

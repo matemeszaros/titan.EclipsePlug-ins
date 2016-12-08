@@ -106,6 +106,7 @@ import org.eclipse.titan.designer.AST.TTCN3.templates.*;
 import org.eclipse.titan.designer.AST.TTCN3.templates.PatternString.PatternType;
 import org.eclipse.titan.designer.AST.TTCN3.values.*;
 import org.eclipse.titan.designer.AST.TTCN3.values.expressions.*;
+import org.eclipse.titan.designer.parsers.ParserUtilities;
 
 }
 
@@ -246,43 +247,6 @@ public TTCN3Module getModule() {
 	return act_ttcn3_module;
 }
 
-/**
- * Interface for lexer to get and clear last comment location
- * It was introduced with ANTLR 4, but it is ANTLR 4 independent
- */
-private interface ILexer {
-	public Location getLastCommentLocation();
-	public void clearLastCommentLocation();
-}
-
-private ILexer lexer = null;
-
-public void setLexer(final Ttcn3Lexer aLexer) {
-	this.lexer = new ILexer() {
-		@Override
-		public Location getLastCommentLocation() {
-			return aLexer.getLastCommentLocation();
-		}
-		@Override
-		public void clearLastCommentLocation() {
-			aLexer.clearLastCommentLocation();
-		}
-	};
-}
-
-public void setLexer(final Ttcn3KeywordlessLexer aLexer) {
-	this.lexer = new ILexer() {
-		@Override
-		public Location getLastCommentLocation() {
-			return aLexer.getLastCommentLocation();
-		}
-		@Override
-		public void clearLastCommentLocation() {
-			aLexer.clearLastCommentLocation();
-		}
-	};
-}
-
 public void reset() {
 	super.reset();
 	if(exceptions != null && warnings != null && unsupportedConstructs != null) {
@@ -352,7 +316,19 @@ private LargeLocation getLargeLocation(final Token aStartToken, final Token aEnd
 private Location getLocation(final Location aBaseLocation, final Token aEndToken) {
 	return new Location(actualFile, aBaseLocation.getLine(), aBaseLocation.getOffset(), offset + aEndToken.getStopIndex() + 1);
 }
-	
+
+/**
+ * Gets the location of the comments before a token.
+ * Last comment location cannot be handled in the lexer, because lexer and parser are not always synchronized,
+ * lexer reads more, than the parser, because  when the parser reaches a point, the tokens must be already tokenized
+ * at least until that point. 
+ * @param aToken the token, this will NOT be printed
+ * @return location, which contains all of the comments before the given token
+ */
+private Location getLastCommentLocation( final Token aToken ) {
+	return ParserUtilities.getCommentsBefore( aToken, this, actualFile );
+}
+
 /**
  * @return list of errors, collected by the TitanListener
  *         or null if there is no TitanListener (this case should NOT happen)
@@ -460,8 +436,6 @@ pr_TTCN3Module
 	Token definitionsEnd = null;
 	ControlPart controlpart = null;
 	MultipleWithAttributes attributes = null;
-	Location commentLocation = lexer.getLastCommentLocation();
-	lexer.clearLastCommentLocation();
 }:
 (	m = pr_TTCN3ModuleKeyword	{ col = $m.start; }
 	i = pr_TTCN3ModuleId		{ act_ttcn3_module = new TTCN3Module( $i.identifier, project ); }
@@ -476,7 +450,7 @@ pr_TTCN3Module
 	act_ttcn3_module.setLocation( getLargeLocation( col, endcol ) );
 	act_ttcn3_module.setDefinitionsLocation( getLocation( $begin.start, definitionsEnd ) );
 	act_ttcn3_module.setWithAttributes( attributes );
-	act_ttcn3_module.setCommentLocation( commentLocation );
+	act_ttcn3_module.setCommentLocation( getLastCommentLocation( $start ) );
 	if ( controlpart != null ) {
 		act_ttcn3_module.addControlpart( controlpart );
 		controlpart.setAttributeParentPath( act_ttcn3_module.getAttributePath() );
@@ -623,10 +597,6 @@ pr_ModuleDef returns [List<Definition> definitions]
 	$definitions = new ArrayList<Definition>();
 	VisibilityModifier modifier = null;
 	MultipleWithAttributes attributes = null;
-	Location commentLocation = lexer.getLastCommentLocation();
-	if (commentLocation != null) {
-			lexer.clearLastCommentLocation();
-	}
 }:
 (	(	m = pr_Visibility { modifier = $m.modifier; }	)?
 	(	d1 = pr_TypeDef { if($d1.def_type != null) { $definitions.add($d1.def_type); } }
@@ -669,12 +639,9 @@ pr_ModuleDef returns [List<Definition> definitions]
 		}
 		definition.setCumulativeDefinitionLocation(getLocation( $start, getStopToken()));
 	}
-	if (commentLocation == null) {
-		commentLocation = lexer.getLastCommentLocation();
-	}
 
 	for ( Definition definition : $definitions ) {
-		definition.setCommentLocation(commentLocation);
+		definition.setCommentLocation( getLastCommentLocation( $start ) );
 	}
 };
 
@@ -731,7 +698,6 @@ pr_RecordDef returns[Def_Type def_type]
 		type.setLocation(getLocation( $col.start, $i.stop));
 		$def_type = new Def_Type($i.identifier, type);
 	}
-	lexer.clearLastCommentLocation();
 };
 
 pr_RecordKeyword:
@@ -741,7 +707,6 @@ pr_RecordKeyword:
 pr_StructDefBody[CompFieldMap compFieldMap] returns[Identifier identifier]
 @init {
 	$identifier = null;
-	lexer.clearLastCommentLocation();
 }:
 (	(	i = pr_Identifier { $identifier = $i.identifier; }
 		pr_StructDefFormalParList?
@@ -812,12 +777,8 @@ pr_StructFieldDef returns[CompField compField]
 		}
 		$compField = new CompField($i.identifier, type, optional, null);
 		$compField.setLocation(getLocation( $start, getStopToken()));
-		Location commentLocation = lexer.getLastCommentLocation();
-		$compField.setCommentLocation(commentLocation);
-		lexer.clearLastCommentLocation();
-
+		$compField.setCommentLocation( getLastCommentLocation( $start ) );
 	}
-	lexer.clearLastCommentLocation();
 };
 
 pr_NestedTypeDef returns[Type type]
@@ -1140,7 +1101,6 @@ pr_RecordOfDef returns[Def_Type def_type]
 	$def_type = null;
 	Type_Identifier_Helper helper = null;
 	LengthRestriction restriction = null;
-	Location commentLocation = lexer.getLastCommentLocation();
 }:
 (	col = pr_RecordKeyword
 	( r = pr_StringLength { restriction = $r.restriction; } )?
@@ -1157,7 +1117,7 @@ pr_RecordOfDef returns[Def_Type def_type]
 		}
 		type.setLocation(getLocation( $col.start, $h.stop));
 		$def_type = new Def_Type(helper.identifier, type);
-		$def_type.setCommentLocation(commentLocation);
+		$def_type.setCommentLocation( getLastCommentLocation( $start ) );
 	}
 };
 
@@ -1279,11 +1239,7 @@ pr_Enumeration returns[EnumItem enumItem]
 {
 	$enumItem = new EnumItem($i.identifier, value);
 	$enumItem.setLocation(getLocation( $i.start, $i.stop));
-	Location commentLocation = lexer.getLastCommentLocation();
-	$enumItem.setCommentLocation(commentLocation);
-	if ( commentLocation != null ) {
-		lexer.clearLastCommentLocation();
-	}
+	$enumItem.setCommentLocation( getLastCommentLocation( $start ) );
 };
 
 pr_SubTypeDef returns[Def_Type def_type]
@@ -1427,7 +1383,6 @@ pr_PortType returns[Reference reference]
 pr_PortDef returns[ Def_Type def_type]
 @init {
 	$def_type = null;
-	Location commentLocation = lexer.getLastCommentLocation();
 }:
 (	col = pr_PortKeyword
 	i = pr_Identifier
@@ -1439,9 +1394,8 @@ pr_PortDef returns[ Def_Type def_type]
 		type.setLocation(getLocation( $col.start, $b.stop));
 
 		$def_type = new Def_Type($i.identifier, type);
-		$def_type.setCommentLocation(commentLocation);
+		$def_type.setCommentLocation( getLastCommentLocation( $start ) );
 	}
-	lexer.clearLastCommentLocation();
 };
 
 pr_PortKeyword:
@@ -1561,7 +1515,6 @@ pr_ComponentDef returns[Def_Type def_type]
 	$def_type = null;
 	ComponentTypeBody component = null;
 	ComponentTypeReferenceList extends_refs = new ComponentTypeReferenceList();
-	Location commentLocation = lexer.getLastCommentLocation();
 }:
 (	col = pr_ComponentKeyword
 	i = pr_Identifier
@@ -1582,8 +1535,7 @@ pr_ComponentDef returns[Def_Type def_type]
 			component = new ComponentTypeBody($i.identifier, extends_refs);
 		}
 		component.setLocation(getLocation( $i.identifier.getLocation(), $endcol.stop ) );
-	    component.setCommentLocation(commentLocation);
-	    lexer.clearLastCommentLocation();
+		component.setCommentLocation( getLastCommentLocation( $start ) );
 		Type type = new Component_Type(component);
 		type.setLocation(getLocation( $col.start, $endcol.stop));
 		$def_type = new Def_Type($i.identifier, type);
@@ -1877,7 +1829,7 @@ pr_TemplateDef returns[Def_Template def_template]
 		$def_template = new Def_Template( templateRestriction, helper.identifier, helper.type, helper.formalParList,
 										  derivedReference, $b.body.getTemplate(), isLazy );
 		$def_template.setLocation(getLocation( $col.start, $b.stop));
-		$def_template.setCommentLocation(lexer.getLastCommentLocation());
+		$def_template.setCommentLocation( getLastCommentLocation( $start ) );
 	}
 };
 
@@ -2589,10 +2541,6 @@ pr_FunctionDef returns[Def_Function def_func]
 	Type returnType = null;
 	boolean returnsTemplate = false;
 	TemplateRestriction.Restriction_type templateRestriction = TemplateRestriction.Restriction_type.TR_NONE;
-	Location commentLocation = lexer.getLastCommentLocation();
-	if (commentLocation != null) {
-		lexer.clearLastCommentLocation();
-	}
 }:
 (	col = pr_FunctionKeyword
 	pr_DeterministicModifier?
@@ -2618,7 +2566,7 @@ pr_FunctionDef returns[Def_Function def_func]
 		parameters.setLocation(getLocation( $start1.start, $end.stop));
 		$def_func = new Def_Function($i.identifier, parameters, runsonHelper.runsonReference, returnType, returnsTemplate, templateRestriction, statementBlock);
 		$def_func.setLocation(getLocation( $col.start, $s.stop));
-		$def_func.setCommentLocation(commentLocation);
+		$def_func.setCommentLocation( getLastCommentLocation( $start ) );
 	}
 };
 
@@ -2946,11 +2894,7 @@ pr_SignatureDef returns[ Def_Type def_type]
 		type.setLocation(getLocation( $col.start, getStopToken()));
 		$def_type = new Def_Type($i.identifier, type);
 		$def_type.setLocation(getLocation( $col.start, getStopToken()));
-		Location commentLocation = lexer.getLastCommentLocation();
-		$def_type.setCommentLocation(commentLocation);
-		if (commentLocation != null) {
-			lexer.clearLastCommentLocation();
-		}
+		$def_type.setCommentLocation( getLastCommentLocation( $start ) );
 	}
 };
 
@@ -3063,15 +3007,13 @@ pr_TestcaseDef returns[ Def_Testcase def_testcase]
 	s = pr_StatementBlock { statementBlock = $s.statementblock; }
 )
 {
-	Location commentLocation = lexer.getLastCommentLocation();
 	if($i.identifier != null) {
 		if(parameters == null) { parameters = new TestcaseFormalParameterList(new ArrayList<FormalParameter>()); }
 		parameters.setLocation(getLocation( $start1.start, $end.stop));
 		$def_testcase = new Def_Testcase($i.identifier, parameters, runsonReference, systemReference, statementBlock);
 		$def_testcase.setLocation(getLocation( $col.start, $s.stop));
-		$def_testcase.setCommentLocation(commentLocation);
+		$def_testcase.setCommentLocation( getLastCommentLocation( $start ) );
 	}
-	lexer.clearLastCommentLocation();
 };
 
 pr_TestcaseKeyword:
@@ -3779,14 +3721,12 @@ pr_GroupDef[Group parent_group]
 @init {
 	Group group = null;
 	MultipleWithAttributes attributes = null;
-	Location commentLocation = lexer.getLastCommentLocation();
-	lexer.clearLastCommentLocation();
 }:
 (	PUBLIC?
 	col = pr_GroupKeyword
 	i = pr_Identifier
 		{	group = new Group($i.identifier);
-			group.setCommentLocation(commentLocation);
+			group.setCommentLocation( getLastCommentLocation( $start ) );
 		}
 	begin = pr_BeginChar
 	pr_ModuleDefinitionsList[group]
@@ -3799,7 +3739,7 @@ pr_GroupDef[Group parent_group]
 		group.setParentGroup(parent_group);
 		group.setLocation(getLocation( $start, getStopToken()));
 		group.setInnerLocation(getLocation( $begin.start, getStopToken()));
-		group.setCommentLocation(commentLocation);
+		group.setCommentLocation( getLastCommentLocation( $start ) );
 		if ($parent_group != null) {
 			$parent_group.addGroup(group);
 			group.setAttributeParentPath(parent_group.getAttributePath());
@@ -4073,11 +4013,7 @@ pr_ModuleControlPart returns [ControlPart controlpart]
 	statementblock.setLocation(getLocation( $blockstart.start, $blockend.stop));
 	$controlpart = new ControlPart(statementblock);
 	$controlpart.setLocation(getLocation( $col.start, endcol));
-	Location commentLocation = lexer.getLastCommentLocation();
-	$controlpart.setCommentLocation(commentLocation);
-	if (commentLocation != null) {
-		lexer.clearLastCommentLocation();
-	}
+	$controlpart.setCommentLocation( getLastCommentLocation( $start ) );
 	$controlpart.setWithAttributes(attributes);
 };
 
@@ -5950,7 +5886,6 @@ pr_FormalValuePar returns[FormalParameter parameter]
 	Assignment_type assignmentType = Assignment_type.A_PAR_VAL;
 	boolean isLazy = false;
 	TemplateInstance default_value = null;
-	Location commentLocation = lexer.getLastCommentLocation();
 }:
 (	(	IN { assignmentType = Assignment_type.A_PAR_VAL_IN; }
 		(	lf = pr_LazyOrFuzzyModifier { isLazy = $lf.isLazy; }	)?
@@ -5974,9 +5909,8 @@ pr_FormalValuePar returns[FormalParameter parameter]
 )
 {
 	$parameter = new FormalParameter(TemplateRestriction.Restriction_type.TR_NONE, assignmentType, $t.type, $i.identifier, default_value, isLazy);
-	$parameter.setCommentLocation(commentLocation);
+	$parameter.setCommentLocation( getLastCommentLocation( $start ) );
 	$parameter.setLocation(getLocation( $start, getStopToken()));
-	lexer.clearLastCommentLocation();
 };
 
 pr_FormalTimerPar returns[FormalParameter parameter]

@@ -51,7 +51,6 @@ public final class TTCN3ReferenceAnalyzer {
 		parser.setProject(file.getProject());
 		parser.setLine(aLine);
 		parser.setOffset(aOffset);
-		parser.setLexer(lexer);
 
 		parser.removeErrorListeners();
 
@@ -87,7 +86,6 @@ public final class TTCN3ReferenceAnalyzer {
 		lexer.setActualFile(file);
 		parser.setActualFile(file);
 		parser.setProject(file.getProject());
-		parser.setLexer(lexer);
 
 		parser.removeErrorListeners();
 
