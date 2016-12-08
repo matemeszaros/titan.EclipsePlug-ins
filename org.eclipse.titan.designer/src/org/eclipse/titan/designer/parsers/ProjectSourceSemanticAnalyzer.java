@@ -36,6 +36,8 @@ import org.eclipse.titan.designer.AST.Module;
 import org.eclipse.titan.designer.AST.ModuleImportationChain;
 import org.eclipse.titan.designer.AST.ASN1.Ass_pard;
 import org.eclipse.titan.designer.AST.ASN1.definitions.ASN1Module;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.ImportModule;
+import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.BrokenPartsChecker;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.BrokenPartsViaReferences;
 import org.eclipse.titan.designer.AST.brokenpartsanalyzers.IBaseAnalyzer;
@@ -324,8 +326,21 @@ public class ProjectSourceSemanticAnalyzer {
 			// collect all modules and semantically checked modules to work on.
 			final List<Module> allModules = new ArrayList<Module>();
 			final List<String> semanticallyChecked = new ArrayList<String>();
+			
+			//remove module name dupication markers. It shall be done before starting the next for-loop!
 			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {
-				final ProjectSourceSemanticAnalyzer semanticAnalyzer = GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
+				final ProjectSourceSemanticAnalyzer semanticAnalyzer = 
+						GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
+				for (Module module: semanticAnalyzer.fileModuleMap.values()) {
+					if(module instanceof TTCN3Module){
+						MarkerHandler.markAllSemanticMarkersForRemoval(module.getIdentifier());
+					}
+				}				
+			}
+			
+			for (int i = 0; i < tobeSemanticallyAnalyzed.size(); i++) {				
+				final ProjectSourceSemanticAnalyzer semanticAnalyzer = 
+						GlobalParser.getProjectSourceParser(tobeSemanticallyAnalyzed.get(i)).getSemanticAnalyzer();
 				for (Module module: semanticAnalyzer.fileModuleMap.values()) {
 					final String name = module.getIdentifier().getName();
 					allModules.add(module);
@@ -355,6 +370,18 @@ public class ProjectSourceSemanticAnalyzer {
 
 				// check and build the import hierarchy of the modules
 				ModuleImportationChain referenceChain = new ModuleImportationChain(CIRCULARIMPORTCHAIN, false);
+				
+				//remove markers from import lines
+				for(Module module : allModules) {
+					if(module instanceof TTCN3Module) {
+						List<ImportModule> imports = ((TTCN3Module) module).getImports();
+						for(ImportModule imp : imports) {
+							MarkerHandler.markAllSemanticMarkersForRemoval(imp.getLocation());
+						}
+					} 
+					// markers are removed in one step in ASN1 modules
+				}
+				
 				for(Module module : allModules) {
 					module.checkImports(compilationCounter, referenceChain, new ArrayList<Module>());
 					referenceChain.clear();
@@ -378,14 +405,14 @@ public class ProjectSourceSemanticAnalyzer {
 				// re-enable the markers on the skipped modules.
 				for (Module module2 : selectionMethodBase.getModulesToSkip()) {
 					MarkerHandler.reEnableAllMarkers((IFile) module2.getLocation().getFile());
-				} //TODO: check this
+				}
 
 				nofModulesTobeChecked = selectionMethodBase.getModulesToCheck().size();
 			} else {
 				//re-enable all markers
 				for (Module module2 : allModules) {
 					MarkerHandler.reEnableAllMarkers((IFile) module2.getLocation().getFile());
-				}//TODO: check this
+				}
 			}
 			
 			//Not supported markers are handled here, at the and of checking. Otherwise they would be deleted
