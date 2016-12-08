@@ -18,7 +18,6 @@ import org.eclipse.titan.designer.AST.ISubReference.Subreference_type;
 import org.eclipse.titan.designer.AST.IType.Type_type;
 import org.eclipse.titan.designer.AST.Identifier;
 import org.eclipse.titan.designer.AST.Location;
-import org.eclipse.titan.designer.AST.MarkerHandler;
 import org.eclipse.titan.designer.AST.NamedBridgeScope;
 import org.eclipse.titan.designer.AST.NamingConventionHelper;
 import org.eclipse.titan.designer.AST.ReferenceChain;
