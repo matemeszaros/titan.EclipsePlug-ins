@@ -16,35 +16,9 @@
 
 package org.eclipse.titan.codegenerator;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -62,20 +36,22 @@ import org.eclipse.titan.designer.AST.TTCN3.definitions.TTCN3Module;
 import org.eclipse.titan.designer.parsers.GlobalParser;
 import org.eclipse.titan.designer.parsers.ProjectSourceParser;
 import org.eclipse.titan.designer.parsers.ttcn3parser.TTCN3Analyzer;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.MessageConsole;
-import org.eclipse.ui.console.MessageConsoleStream;
+import org.eclipse.ui.*;
+import org.eclipse.ui.console.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 
@@ -159,12 +135,11 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 			javaProject.getPackageFragmentRoot(sourceFolder).createPackageFragment("org.eclipse.titan.codegenerator.javagen", false, null);
 			javaProject.getPackageFragmentRoot(sourceFolder).createPackageFragment("org.eclipse.titan.codegenerator.TTCN3JavaAPI", false, null);
 		}catch(Exception e){e.printStackTrace();}
-		
-		String destpath = new String("");
-		String wspath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString().replaceAll("/", "\\\\");
-		destpath += wspath;
-		destpath += "\\org.eclipse.titan.codegenerator.output\\src\\org\\eclipse\\titan\\codegenerator\\javagen\\";
-		props.setProperty("javafile.path", destpath);
+
+		IPath ws;
+		ws = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		String basepackage = Paths.get("src", "org", "eclipse", "titan", "codegenerator").toString();
+		props.setProperty("javafile.path", ws.append("org.eclipse.titan.codegenerator.output").append(basepackage).append("javagen").toString());
 		/**/
 		
 		AstWalkerJava.files.clear();
@@ -227,17 +202,16 @@ public final class AstWalkerJava implements IWorkbenchWindowActionDelegate {
 		logger.severe("analysis complete");
 
 		/**/
-		File fromdir = new File(wspath + "\\org.eclipse.titan.codegenerator\\src\\org\\eclipse\\titan\\codegenerator\\TTCN3JavaAPI\\");
-		String toapidir = wspath + "\\org.eclipse.titan.codegenerator.output\\src\\org\\eclipse\\titan\\codegenerator\\TTCN3JavaAPI\\";
+		File fromdir = ws.append("org.eclipse.titan.codegenerator").append(basepackage).append("TTCN3JavaAPI").toFile();
+		String toapidir = ws.append("org.eclipse.titan.codegenerator.output").append(basepackage).append("TTCN3JavaAPI").toFile().toString();
 		File[] fromfiles = fromdir.listFiles();
 		for(File f: fromfiles){
 			try {
 				Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(toapidir+f.getName()), StandardCopyOption.REPLACE_EXISTING);
 			}catch(Exception e){e.printStackTrace();}
 		}
-		String tppath = wspath + "\\" + selectedProject.getFullPath().toString().split("/")[1] + "\\src\\";
-		File tp_cfg_dir = new File(tppath);
-		String togendir = wspath + "\\org.eclipse.titan.codegenerator.output\\src\\org\\eclipse\\titan\\codegenerator\\javagen\\";
+		File tp_cfg_dir = ws.append(selectedProject.getFullPath().segment(1)).append("src").toFile();
+		String togendir = ws.append("org.eclipse.titan.codegenerator.output").append(basepackage).append("javagen").toFile().toString();
 		File[] from_testports_cfg = tp_cfg_dir.listFiles();
 		for(File f: from_testports_cfg){
 			if(f.getName().endsWith(".java")){
