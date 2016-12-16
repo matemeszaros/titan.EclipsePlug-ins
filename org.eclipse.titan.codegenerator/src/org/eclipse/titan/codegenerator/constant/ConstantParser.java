@@ -13,11 +13,6 @@
 
 package org.eclipse.titan.codegenerator.constant;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.titan.codegenerator.Scope;
 import org.eclipse.titan.codegenerator.SourceCode;
 import org.eclipse.titan.codegenerator.Writable;
@@ -33,6 +28,11 @@ import org.eclipse.titan.designer.AST.TTCN3.values.NamedValue;
 import org.eclipse.titan.designer.AST.TTCN3.values.SequenceOf_Value;
 import org.eclipse.titan.designer.AST.TTCN3.values.Sequence_Value;
 import org.eclipse.titan.designer.AST.Type;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class ConstantParser implements Scope {
 	private final ModuleConstants repository;
@@ -73,7 +73,7 @@ public class ConstantParser implements Scope {
 		return this;
 	}
 
-	private static Scope dispatch(Scope parent, String type, ValueHolder holder, IVisitableNode node) {
+	public static Scope dispatch(Scope parent, String type, ValueHolder holder, IVisitableNode node) {
 		if (node instanceof Sequence_Value) {
 			if (Util.isUnion(type)) {
 				return new UnionValueParser(parent, holder, type);
@@ -91,10 +91,9 @@ public class ConstantParser implements Scope {
 			}
 			return new SequenceParser(parent, holder, type);
 		}
+		// extract simple value
 		holder.setValue(Util.extract(type, node));
-		return parent;
-//		Debug.println("skip " + node.getClass().getSimpleName());
-//		return Action.skip(node.getClass(), parent);
+		return Action.skip(node.getClass(), parent);
 	}
 
 	private static class NamedSequenceParser implements Scope {

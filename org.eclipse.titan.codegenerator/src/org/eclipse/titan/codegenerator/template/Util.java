@@ -52,6 +52,10 @@ public final class Util {
 		return "constant".equals(myASTVisitor.nodeNameNodeTypeHashMap.get(type));
 	}
 
+	public static boolean isEnumerated(String type) {
+		return "enum".equals(myASTVisitor.nodeNameNodeTypeHashMap.get(type));
+	}
+
 	/**
 	 * Extract the type name from the given AST.Type node.
 	 * @param node the node to extract from
@@ -104,6 +108,7 @@ public final class Util {
 		if (node instanceof Omit_Value) {
 			return Value.OMIT(type);
 		}
+		// FIXME remove: "Enumerated_Value" is always wrapped into "Undefined_LowerIdentifier_Value"
 		if (node instanceof Enumerated_Value) {
 			Enumerated_Value e = (Enumerated_Value) node;
 			return specificValue(type, e.getValue().getName());
@@ -119,6 +124,10 @@ public final class Util {
 		}
 		if (node instanceof Undefined_LowerIdentifier_Value) {
 			String name = ((Undefined_LowerIdentifier_Value) node).getIdentifier().toString();
+			if (isEnumerated(type)) {
+				// TODO enumerated-refactor: use staticValue and a prefix (eg. "_")
+				return specificValue(type, name);
+			}
 			return new Value(type, (code, indent) -> code.append(name));
 		}
 		return new Value(type);
